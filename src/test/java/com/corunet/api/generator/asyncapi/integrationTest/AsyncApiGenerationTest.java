@@ -24,7 +24,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 @MavenRepository
 @MavenJupiterExtension
 @Execution(ExecutionMode.SAME_THREAD)
-public class BaseTest {
+public class AsyncApiGenerationTest {
 
   @MavenTest
   @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
@@ -33,11 +33,11 @@ public class BaseTest {
 
     List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGeneration/assets/IPublishOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGeneration/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/Producer.java"));
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGeneration/assets/ISubscribeOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGeneration/assets/Producer.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -65,14 +65,14 @@ public class BaseTest {
     List<String> expectedSecondYmlFileNames = List.of("Producer.java", "IPublishOperation2.java");
 
     List<File> expectedFirstYmlFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Producer.java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java"));
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Producer.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java"));
 
     List<File> expectedSecondYmlFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java"));
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -101,15 +101,15 @@ public class BaseTest {
     List<String> expectedFileConsumerNames = List.of("ISubscribeOperation.java", "Subscriber.java");
 
     List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/IPublishOperation" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/IPublishOperation" +
                  ".java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Producer" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/Producer" +
                  ".java"));
 
     List<File> expectedConsumerFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/ISubscribeOperation" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/ISubscribeOperation" +
                  ".java"),
-        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Subscriber" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/Subscriber" +
                  ".java"));
 
     assertThat(result).hasTarget();
@@ -137,10 +137,10 @@ public class BaseTest {
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/IPublishOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
                                                         ".java"));
 
     assertThat(result).hasTarget();
@@ -168,10 +168,10 @@ public class BaseTest {
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets" +
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets" +
                                                         "/StreamBridgeProducer.java"));
 
     assertThat(result).hasTarget();
