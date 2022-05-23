@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.corunet</groupId>
-  <artifactId>openapi-scc-maven-plugin</artifactId>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1</version>
 
-  <name>openapi-scc-maven-plugin</name>
+  <name>scs-multiapi-maven-plugin</name>
   <url>http://www.example.com</url>
 
   <properties>
@@ -29,13 +29,13 @@
     <plugins>
       <plugin>
         <groupId>com.corunet</groupId>
-        <artifactId>asyncapi-scs-maven-plugin</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <artifactId>scs-multiapi-maven-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
             <goals>
-              <goal>configure</goal>
+              <goal>asyncapi-generation</goal>
             </goals>
           </execution>
         </executions>

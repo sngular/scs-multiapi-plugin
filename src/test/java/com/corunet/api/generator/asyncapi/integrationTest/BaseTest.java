@@ -1,4 +1,4 @@
-package com.corunet.scc.openasync.integrationTest;
+package com.corunet.api.generator.asyncapi.integrationTest;
 
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 import static junit.framework.Assert.assertTrue;
@@ -27,17 +27,17 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class BaseTest {
 
   @MavenTest
-  @MavenGoal("com.corunet:asyncapi-scs-maven-plugin:1.0.1-SNAPSHOT:configure")
+  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
   void testFileGeneration(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
 
     List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGeneration/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGeneration/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/IPublishOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGeneration/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGeneration/assets/Producer.java"));
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/ISubscribeOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGeneration/assets/Producer.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -58,21 +58,21 @@ public class BaseTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:asyncapi-scs-maven-plugin:1.0.1-SNAPSHOT:configure")
+  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
     List<String> expectedSecondYmlFileNames = List.of("Producer.java", "IPublishOperation2.java");
 
     List<File> expectedFirstYmlFiles = List.of(
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Producer.java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java"));
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Producer.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java"));
 
     List<File> expectedSecondYmlFiles = List.of(
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java"));
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java"),
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -94,22 +94,22 @@ public class BaseTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:asyncapi-scs-maven-plugin:1.0.1-SNAPSHOT:configure")
+  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
   void testFileGenerationExternalAvro(MavenProjectResult result) throws IOException {
     List<String> expectedFileProducerNames = List.of("IPublishOperation.java", "Producer.java");
 
     List<String> expectedFileConsumerNames = List.of("ISubscribeOperation.java", "Subscriber.java");
 
     List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/IPublishOperation" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/IPublishOperation" +
                  ".java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Producer" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Producer" +
                  ".java"));
 
     List<File> expectedConsumerFiles = List.of(
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/ISubscribeOperation" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/ISubscribeOperation" +
                  ".java"),
-        new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Subscriber" +
+        new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationExternalAvro/assets/Subscriber" +
                  ".java"));
 
     assertThat(result).hasTarget();
@@ -131,16 +131,16 @@ public class BaseTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:asyncapi-scs-maven-plugin:1.0.1-SNAPSHOT:configure")
+  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
   void testFileGenerationStreamBridge(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/IPublishOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
                                                         ".java"));
 
     assertThat(result).hasTarget();
@@ -162,16 +162,16 @@ public class BaseTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:asyncapi-scs-maven-plugin:1.0.1-SNAPSHOT:configure")
+  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
   void testFileGenerationWithoutOperationIds(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "ISubscribeOperation.java");
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/NombreDeClase.java"));
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets/NombreDeClase.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/scc/openasync/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets" +
+    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integrationTest/BaseTest/testFileGenerationWithoutOperationIds/assets" +
                                                         "/StreamBridgeProducer.java"));
 
     assertThat(result).hasTarget();

@@ -125,6 +125,8 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
     <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>
+    <swagger-core.version>2.2.0</swagger-core.version>
+    <swagger-parser.version>2.0.32</swagger-parser.version>
   </properties>
 
   <dependencies>
@@ -204,27 +206,27 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-core</artifactId>
-      <version>2.2.0</version>
+      <version>${swagger-core.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>2.2.0</version>
+      <version>${swagger-core.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-models</artifactId>
-      <version>2.2.0</version>
+      <version>${swagger-core.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.parser.v3</groupId>
       <artifactId>swagger-parser</artifactId>
-      <version>2.0.32</version>
+      <version>${swagger-parser.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.parser.v3</groupId>
       <artifactId>swagger-parser-core</artifactId>
-      <version>2.0.32</version>
+      <version>${swagger-parser.version}</version>
     </dependency>
   </dependencies>
 
