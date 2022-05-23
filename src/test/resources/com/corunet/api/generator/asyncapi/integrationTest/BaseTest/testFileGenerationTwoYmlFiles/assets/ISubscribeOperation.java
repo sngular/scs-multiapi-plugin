@@ -1,6 +1,6 @@
 package com.corunet;
 
-import com.corunet.scsplugin.model.CreateOrder;
+import com.corunet.apigenerator.asyncapi.model.CreateOrder;
 
 public interface ISubscribeOperation {
 

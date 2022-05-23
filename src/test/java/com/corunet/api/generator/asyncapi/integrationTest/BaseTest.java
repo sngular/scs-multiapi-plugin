@@ -42,8 +42,8 @@ public class BaseTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     assertThat(targetConsumerDirectory).isNotEmptyDirectory();
@@ -77,8 +77,8 @@ public class BaseTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet");
-    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/scsplugin/com/scsplugin/business_model/model/event/producer2");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet");
+    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/scsplugin/business_model/model/event/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
     assertThat(targetFirstYmlDirectory).isNotEmptyDirectory();
@@ -115,8 +115,8 @@ public class BaseTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     assertThat(targetConsumerDirectory).isNotEmptyDirectory();
@@ -146,8 +146,8 @@ public class BaseTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     assertThat(targetConsumerDirectory).isNotEmptyDirectory();
@@ -177,8 +177,8 @@ public class BaseTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/scsplugin/com/corunet/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     assertThat(targetConsumerDirectory).isNotEmptyDirectory();

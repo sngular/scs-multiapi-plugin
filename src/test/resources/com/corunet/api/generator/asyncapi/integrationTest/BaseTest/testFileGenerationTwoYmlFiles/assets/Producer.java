@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.corunet.scsplugin.model.OrderCreated;
+import com.corunet.apigenerator.asyncapi.model.OrderCreated;
 
 @Configuration
 public class Producer {

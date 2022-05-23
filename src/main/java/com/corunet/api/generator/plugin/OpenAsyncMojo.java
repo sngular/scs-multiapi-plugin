@@ -6,6 +6,9 @@
 
 package com.corunet.api.generator.plugin;
 
+import static com.corunet.api.generator.plugin.PluginConstraints.DEFAULT_TARGET_PACKAGE;
+import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURCES_PATH;
+
 import com.corunet.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.corunet.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.corunet.api.generator.plugin.asyncapi.exception.KafkaTopicSeparatorException;
@@ -40,17 +43,15 @@ import java.util.Objects;
 @Mojo(name = "asyncapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OpenAsyncMojo extends AbstractMojo {
 
-  private static final String DEFAULT_TARGET_PACKAGE = "com.corunet.scsplugin";
+  private static final String DEFAULT_ASYNCAPI_TARGET_PACKAGE = DEFAULT_TARGET_PACKAGE + ".asyncapi";
 
-  private static final String DEFAULT_MODEL_PACKAGE = "com.corunet.scsplugin.model";
+  private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_TARGET_PACKAGE + ".model";
 
   private static final String CONSUMER_CLASS_NAME = "Subscriber";
 
   private static final String SUPPLIER_CLASS_NAME = "Producer";
 
   private static final String STREAM_BRIDGE_CLASS_NAME = "StreamBridgeProducer";
-
-  private static final String GENERATED_SOURCES_PATH = "generated-sources/scsplugin/";
 
   public static final String SUBSCRIBE = "subscribe";
 
@@ -185,19 +186,19 @@ public class OpenAsyncMojo extends AbstractMojo {
       operation = fileParameter.getConsumer();
       checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), CONSUMER_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_TARGET_PACKAGE, CONSUMER_CLASS_NAME);
+      checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, CONSUMER_CLASS_NAME);
     }
     if (fileParameter.getSupplier() != null) {
       operation = fileParameter.getSupplier();
       checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), SUPPLIER_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_TARGET_PACKAGE, SUPPLIER_CLASS_NAME);
+      checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, SUPPLIER_CLASS_NAME);
     }
     if (fileParameter.getStreamBridge() != null) {
       operation = fileParameter.getStreamBridge();
       checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), STREAM_BRIDGE_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(STREAM_BRIDGE_CLASS_NAME, DEFAULT_TARGET_PACKAGE, STREAM_BRIDGE_CLASS_NAME);
+      checkClassPackageDuplicate(STREAM_BRIDGE_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
@@ -208,7 +209,7 @@ public class OpenAsyncMojo extends AbstractMojo {
       throw new DuplicateClassException(className, targetPackage);
     } else {
       processedClassnames.add(className != null ? className : defaultClassName);
-      processedTargetPackages.add(targetPackage != null ? targetPackage : DEFAULT_TARGET_PACKAGE);
+      processedTargetPackages.add(targetPackage != null ? targetPackage : DEFAULT_ASYNCAPI_TARGET_PACKAGE);
     }
   }
 
@@ -248,7 +249,7 @@ public class OpenAsyncMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       path = GENERATED_SOURCES_PATH + project.getModel().getGroupId().replace(".", "/");
     } else {
-      path = GENERATED_SOURCES_PATH + DEFAULT_TARGET_PACKAGE.replace(".", "/");
+      path = GENERATED_SOURCES_PATH + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
     }
     return path;
   }
@@ -267,7 +268,7 @@ public class OpenAsyncMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       return project.getModel().getGroupId();
     } else {
-      return DEFAULT_TARGET_PACKAGE;
+      return DEFAULT_ASYNCAPI_TARGET_PACKAGE;
     }
   }
 
@@ -334,7 +335,7 @@ public class OpenAsyncMojo extends AbstractMojo {
     } else if (extractedPackage.contains(".")) {
       processedPackage = extractedPackage;
     } else {
-      processedPackage = DEFAULT_MODEL_PACKAGE + "." + extractedPackage;
+      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + "." + extractedPackage;
     }
 
     return processedPackage;

@@ -1,6 +1,6 @@
 package com.corunet;
 
-import com.corunet.scsplugin.model.OrderCreated;
+import com.corunet.apigenerator.asyncapi.model.OrderCreated;
 
 public interface IPublishOperation {
 

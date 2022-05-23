@@ -1,5 +1,8 @@
 package com.corunet.api.generator.plugin;
 
+import static com.corunet.api.generator.plugin.PluginConstraints.DEFAULT_TARGET_PACKAGE;
+import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURCES_PATH;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -33,13 +36,11 @@ import org.slf4j.LoggerFactory;
 @Mojo(name = "openapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OpenapiMultiFileMojo extends AbstractMojo {
 
-  private final String DEFAULT_API_PACKAGE = "com.corunet.openapi.multifile";
+  private static final String DEFAULT_OPENAPI_TARGET_PACKAGE = DEFAULT_TARGET_PACKAGE + ".openapi";
 
-  private final String DEFAULT_MODEL_PACKAGE = "com.corunet.openapi.multifile.model";
+  private static final String DEFAULT_OPENAPI_MODEL_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".model";
 
-  private final String CLIENT_PACKAGE = "com.corunet.openapi.multifile.client";
-
-  private final String TARGET_PACKAGE = "generated-sources/src/main/java/";
+  private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".client";
 
   private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
 
@@ -97,8 +98,8 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
       OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(fileSpec);
 
       if (fileSpec.getCallMode()) {
-        templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : CLIENT_PACKAGE);
-        templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : CLIENT_PACKAGE) + ".auth");
+        templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
+        templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
         isWebClient = fileSpec.getIsReactive();
         isRestClient = fileSpec.getIsReactive() ? false : true;
       }
@@ -117,7 +118,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   private void createClients() {
 
     if (isWebClient || isRestClient) {
-      String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : CLIENT_PACKAGE, false);
+      String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE, false);
       project.addCompileSourceRoot(clientPath);
       try {
         if (isWebClient) {
@@ -138,7 +139,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void createAuthTemplates() throws TemplateException, IOException {
 
-    var authFileRoot = StringUtils.isNotBlank(clientPackage) ? clientPackage : CLIENT_PACKAGE + ".auth";
+    var authFileRoot = StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE + ".auth";
     String authFileToSave = processPath(authFileRoot, false);
     templateFactory.setAuthPackageName(authFileRoot);
     templateFactory.fillTemplateAuth(authFileToSave, "Authentication");
@@ -219,7 +220,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       templateFactory.setPackageName(project.getModel().getGroupId());
     } else {
-      templateFactory.setPackageName(DEFAULT_API_PACKAGE);
+      templateFactory.setPackageName(DEFAULT_OPENAPI_TARGET_PACKAGE);
     }
   }
 
@@ -230,7 +231,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       modelReturnPackage = project.getModel().getGroupId() + ".model";
     } else {
-      modelReturnPackage = DEFAULT_MODEL_PACKAGE;
+      modelReturnPackage = DEFAULT_OPENAPI_MODEL_PACKAGE;
     }
     return modelReturnPackage;
   }
@@ -255,12 +256,12 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     String path;
 
     if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = TARGET_PACKAGE + fileSpecPackage.trim().replaceAll("\\.", "/");
+      path = GENERATED_SOURCES_PATH + fileSpecPackage.trim().replaceAll("\\.", "/");
     } else if (project.getModel().getGroupId() != null) {
-      path = TARGET_PACKAGE + project.getModel().getGroupId().replaceAll("\\.", "/");
+      path = GENERATED_SOURCES_PATH + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
-      String pathDefault = isModel ? DEFAULT_MODEL_PACKAGE : DEFAULT_API_PACKAGE;
-      path = TARGET_PACKAGE + pathDefault.replaceAll("\\.", "/");
+      String pathDefault = isModel ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_TARGET_PACKAGE;
+      path = GENERATED_SOURCES_PATH + pathDefault.replaceAll("\\.", "/");
     }
     return path;
   }
