@@ -4,9 +4,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -16,6 +15,11 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.nio.charset.StandardCharsets;
 import springfox.documentation.annotations.ApiIgnore;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 <#assign imports=[]>
 <#list pathObject as path>
