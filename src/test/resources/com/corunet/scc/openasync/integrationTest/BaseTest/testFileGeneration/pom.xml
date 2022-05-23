@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.corunet</groupId>
+  <artifactId>openapi-scc-maven-plugin</artifactId>
+  <version>1</version>
+
+  <name>openapi-scc-maven-plugin</name>
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.corunet</groupId>
+        <artifactId>asyncapi-scs-maven-plugin</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>configure</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <fileParameterObject>
+            <param>
+              <filePath>event-api.yml</filePath>
+              <consumer>
+                <ids>publishOperation</ids>
+                <classNamePostfix>NombreDeClase</classNamePostfix>
+                <entitiesPostfix>DTO</entitiesPostfix>
+                <targetPackage>com.corunet.scsplugin.business_model.model.event.consumer</targetPackage>
+                <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
+              </consumer>
+              <supplier>
+                <ids>subscribeOperation</ids>
+                <entitiesPostfix>Mapper</entitiesPostfix>
+                <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
+                <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
+              </supplier>
+            </param>
+          </fileParameterObject>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

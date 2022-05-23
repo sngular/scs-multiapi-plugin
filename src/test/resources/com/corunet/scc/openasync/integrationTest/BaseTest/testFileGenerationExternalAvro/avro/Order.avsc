@@ -1,0 +1,106 @@
+{
+  "type": "record",
+  "name": "Order",
+  "namespace": "com.corunet.disashop.business_model.model.event",
+  "fields": [
+    {
+      "name": "ref",
+      "type": "string"
+    },
+    {
+      "name": "clientRef",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
+      "name": "lines",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "OrderLine",
+          "type": "record",
+          "fields": [
+            {
+              "name": "ref",
+              "type": "string"
+            },
+            {
+              "name": "products",
+              "type": {
+                "type": "array",
+                "items": {
+                  "type": "record",
+                  "name": "OrderProduct",
+                  "fields": [
+                    {
+                      "name": "ref",
+                      "type": "string"
+                    },
+                    {
+                      "name": "productRef",
+                      "type": "string"
+                    },
+                    {
+                      "name": "price",
+                      "type": {
+                        "type": "bytes",
+                        "logicalType": "decimal",
+                        "precision": 10,
+                        "scale": 2
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "type": {
+                        "type": "bytes",
+                        "logicalType": "decimal",
+                        "precision": 10,
+                        "scale": 2
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "promotions",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Promotion",
+          "type": "record",
+          "fields": [
+            {
+              "name": "ref",
+              "type": "string"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "discount",
+              "type": "boolean"
+            },
+            {
+              "name": "amount",
+              "type": "double"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
