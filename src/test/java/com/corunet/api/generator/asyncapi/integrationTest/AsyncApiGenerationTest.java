@@ -1,23 +1,19 @@
 package com.corunet.api.generator.asyncapi.integrationTest;
 
+import static com.corunet.api.generator.testUtils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 import static junit.framework.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
@@ -54,7 +50,8 @@ public class AsyncApiGenerationTest {
     assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
     assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
 
-    validatedFiles(expectedConsumerFiles, expectedProducerFiles, targetConsumerDirectory, targetProducerDirectory);
+    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
+    validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
 
   @MavenTest
@@ -89,7 +86,8 @@ public class AsyncApiGenerationTest {
     assertThat(targetFirstYmlDirectory.list()).containsAll(expectedFirstYmlFileNames);
     assertThat(targetSecondYmlDirectory.list()).containsAll(expectedSecondYmlFileNames);
 
-    validatedFiles(expectedFirstYmlFiles, expectedSecondYmlFiles, targetFirstYmlDirectory, targetSecondYmlDirectory);
+    validateFiles(expectedFirstYmlFiles, targetFirstYmlDirectory);
+    validateFiles(expectedSecondYmlFiles, targetSecondYmlDirectory);
 
   }
 
@@ -127,7 +125,8 @@ public class AsyncApiGenerationTest {
     assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
     assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
 
-    validatedFiles(expectedConsumerFiles, expectedProducerFiles, targetConsumerDirectory, targetProducerDirectory);
+    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
+    validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
 
   @MavenTest
@@ -158,7 +157,8 @@ public class AsyncApiGenerationTest {
     assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
     assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
 
-    validatedFiles(expectedConsumerFiles, expectedProducerFiles, targetConsumerDirectory, targetProducerDirectory);
+    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
+    validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
 
   @MavenTest
@@ -189,31 +189,7 @@ public class AsyncApiGenerationTest {
     assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
     assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
 
-    validatedFiles(expectedConsumerFiles, expectedProducerFiles, targetConsumerDirectory, targetProducerDirectory);
-  }
-
-  private void validatedFiles(
-      final List<File> expectedConsumerFiles, final List<File> expectedProducerFiles, final File targetConsumerDirectory, final File targetProducerDirectory)
-      throws IOException {
-    FileInputStream reader1;
-    FileInputStream reader2;
-
-    List<File> outputFiles = new ArrayList<>(List.of(Objects.requireNonNull(targetConsumerDirectory.listFiles())));
-    outputFiles.sort(Comparator.comparing(File::getPath));
-
-    for (int i = 0; i < outputFiles.size(); i++) {
-      reader1 = new FileInputStream(outputFiles.get(i));
-      reader2 = new FileInputStream(expectedConsumerFiles.get(i));
-      assertTrue(IOUtils.contentEquals(reader1, reader2));
-    }
-
-    outputFiles = new ArrayList<>(List.of(Objects.requireNonNull(targetProducerDirectory.listFiles())));
-    outputFiles.sort(Comparator.comparing(File::getPath));
-
-    for (int i = 0; i < outputFiles.size(); i++) {
-      reader1 = new FileInputStream(outputFiles.get(i));
-      reader2 = new FileInputStream(expectedProducerFiles.get(i));
-      assertTrue(IOUtils.contentEquals(reader1, reader2));
-    }
+    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
+    validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
 }
