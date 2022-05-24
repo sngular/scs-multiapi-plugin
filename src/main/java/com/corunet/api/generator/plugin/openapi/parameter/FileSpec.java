@@ -1,4 +1,4 @@
-package com.corunet.api.generator.plugin.openapi;
+package com.corunet.api.generator.plugin.openapi.parameter;
 
 import lombok.Data;
 import org.apache.maven.plugins.annotations.Parameter;

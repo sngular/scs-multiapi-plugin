@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.corunet.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.corunet.api.generator.plugin.openapi.model.AuthObject;
 import com.corunet.api.generator.plugin.openapi.model.GlobalObject;
 import com.corunet.api.generator.plugin.openapi.model.PathObject;
-import com.corunet.api.generator.plugin.openapi.FileSpec;
-import com.corunet.api.generator.plugin.openapi.OpenApiUtil;
-import com.corunet.api.generator.plugin.openapi.TemplateFactory;
+import com.corunet.api.generator.plugin.openapi.parameter.FileSpec;
+import com.corunet.api.generator.plugin.openapi.utils.MapperContentUtil;
+import com.corunet.api.generator.plugin.openapi.utils.MapperPathUtil;
+import com.corunet.api.generator.plugin.openapi.utils.OpenApiUtil;
+import com.corunet.api.generator.plugin.openapi.template.TemplateFactory;
 import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
@@ -158,12 +161,13 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   private void createApiTemplate(FileSpec fileSpec, String filePathToSave, OpenAPI openAPI) throws Exception {
     HashMap<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.getUseTagsGroup());
     templateFactory.addComponents(openAPI.getComponents().getSchemas());
-    GlobalObject globalObject = OpenApiUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec);
+    var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
+    GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec, authSchemaList);
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
       templateFactory.addPathItems(apisEntry.getValue());
-      ArrayList<PathObject> pathObject = OpenApiUtil.mapPathObjects(fileSpec, apisEntry, globalObject);
-      AuthObject authObject = OpenApiUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObject);
+      ArrayList<PathObject> pathObject = MapperPathUtil.mapPathObjects(fileSpec, apisEntry, globalObject);
+      AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObject);
 
       templateFactory.fillTemplate(filePathToSave, fileSpec, apisEntry.getKey().substring(0, 1).toUpperCase()
                                                              + apisEntry.getKey().substring(1), pathObject, authObject);
@@ -197,14 +201,14 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     listObjectsToCreate.forEach(pojoName -> {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                           OpenApiUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName),
-                                                                                  pojoName, fileSpec, modelPackage));
+                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName),
+                                                                                        pojoName, fileSpec, modelPackage));
       } catch (Exception e) {
         e.printStackTrace();
       }
       basicSchemaMap.forEach((schemaName, basicSchema) -> {
         try {
-          templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), OpenApiUtil.mapComponentToSchemaObject(basicSchema, schemaName,
+          templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), MapperContentUtil.mapComponentToSchemaObject(basicSchema, schemaName,
                                                                                                                                              fileSpec,
                                                                                                                                              modelPackage));
         } catch (Exception e) {

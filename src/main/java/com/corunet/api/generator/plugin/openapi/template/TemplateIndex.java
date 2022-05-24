@@ -1,4 +1,4 @@
-package com.corunet.api.generator.plugin.openapi;
+package com.corunet.api.generator.plugin.openapi.template;
 
 public class TemplateIndex {
 
