@@ -70,7 +70,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
       processFileSpec(fileSpecs);
       createClients();
     } else {
-      throw new MojoExecutionException("Code generation failed. Not exists FileSpec configuration  to generate package and class");
+      throw new MojoExecutionException("Code generation failed. Not exists FileSpec configuration to generate package and class");
     }
 
   }
