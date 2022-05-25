@@ -40,11 +40,11 @@
           </execution>
         </executions>
         <configuration>
-          <fileParameterObject>
-            <param>
+          <fileSpecs>
+            <fileSpec>
               <filePath>event-api.yml</filePath>
-            </param>
-            <param>
+            </fileSpec>
+            <fileSpec>
               <filePath>event-api2.yml</filePath>
               <supplier>
                 <ids>publishOperation2</ids>
@@ -52,8 +52,8 @@
                 <targetPackage>com.scsplugin.business_model.model.event.producer2</targetPackage>
                 <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
               </supplier>
-            </param>
-          </fileParameterObject>
+            </fileSpec>
+          </fileSpecs>
         </configuration>
       </plugin>
     </plugins>

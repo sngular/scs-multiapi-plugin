@@ -6,7 +6,7 @@
 
 package com.corunet.api.generator.plugin.asyncapi.parameter;
 
-public class FileParameterObject {
+public class FileSpec {
 
   private String filePath;
 

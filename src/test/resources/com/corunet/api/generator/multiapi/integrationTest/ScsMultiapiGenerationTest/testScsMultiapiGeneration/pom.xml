@@ -39,8 +39,8 @@
               <goal>asyncapi-generation</goal>
             </goals>
             <configuration>
-              <fileParameterObject>
-                <param>
+              <fileSpecs>
+                <fileSpec>
                   <filePath>event-api.yml</filePath>
                   <consumer>
                     <ids>publishOperation</ids>
@@ -55,8 +55,8 @@
                     <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
                     <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
                   </supplier>
-                </param>
-              </fileParameterObject>
+                </fileSpec>
+              </fileSpecs>
             </configuration>
           </execution>
           <execution>

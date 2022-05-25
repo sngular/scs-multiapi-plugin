@@ -40,8 +40,8 @@
           </execution>
         </executions>
         <configuration>
-          <fileParameterObject>
-            <param>
+          <fileSpecs>
+            <fileSpec>
               <filePath>event-api.yml</filePath>
               <consumer>
                 <classNamePostfix>NombreDeClase</classNamePostfix>
@@ -54,8 +54,8 @@
                 <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
                 <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
               </streamBridge>
-            </param>
-          </fileParameterObject>
+            </fileSpec>
+          </fileSpecs>
         </configuration>
       </plugin>
     </plugins>

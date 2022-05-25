@@ -12,7 +12,7 @@ import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURC
 import com.corunet.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.corunet.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.corunet.api.generator.plugin.asyncapi.exception.KafkaTopicSeparatorException;
-import com.corunet.api.generator.plugin.asyncapi.parameter.FileParameterObject;
+import com.corunet.api.generator.plugin.asyncapi.parameter.FileSpec;
 import com.corunet.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.corunet.api.generator.plugin.asyncapi.exception.DuplicateClassException;
 import com.corunet.api.generator.plugin.asyncapi.template.TemplateFactory;
@@ -62,8 +62,8 @@ public class OpenAsyncMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   public MavenProject project;
 
-  @Parameter(property = "fileParameter")
-  public List<FileParameterObject> fileParameterObject;
+  @Parameter(property = "fileSpecs")
+  public List<FileSpec> fileSpecs;
 
   private TemplateFactory templateFactory;
 
@@ -79,7 +79,7 @@ public class OpenAsyncMojo extends AbstractMojo {
 
     ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
-    for (FileParameterObject fileParameter : fileParameterObject) {
+    for (FileSpec fileParameter : fileSpecs) {
       setUpTemplate(fileParameter);
       processDuplicates(fileParameter);
 
@@ -158,20 +158,20 @@ public class OpenAsyncMojo extends AbstractMojo {
     return operationId;
   }
 
-  private void setUpTemplate(FileParameterObject fileParameter) {
+  private void setUpTemplate(FileSpec fileParameter) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassnames(fileParameter);
     processEntitiesPostfix(fileParameter);
   }
 
-  private void processFilePaths(FileParameterObject fileParameter) {
+  private void processFilePaths(FileSpec fileParameter) {
     templateFactory.setSupplierFilePath(processPath(fileParameter.getSupplier()));
     templateFactory.setStreamBridgeFilePath(processPath(fileParameter.getStreamBridge()));
     templateFactory.setSubscribeFilePath(processPath(fileParameter.getConsumer()));
   }
 
-  private void processEntitiesPostfix(FileParameterObject fileParameter) {
+  private void processEntitiesPostfix(FileSpec fileParameter) {
     templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null ?
                                                    fileParameter.getSupplier().getEntitiesPostfix() : null);
     templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null ?
@@ -180,7 +180,7 @@ public class OpenAsyncMojo extends AbstractMojo {
                                                     fileParameter.getConsumer().getEntitiesPostfix() : null);
   }
 
-  private void processDuplicates(FileParameterObject fileParameter) {
+  private void processDuplicates(FileSpec fileParameter) {
     OperationParameterObject operation;
     if (fileParameter.getConsumer() != null) {
       operation = fileParameter.getConsumer();
@@ -213,7 +213,7 @@ public class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private void processClassnames(FileParameterObject fileParameter) {
+  private void processClassnames(FileSpec fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null ?
                                              fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null ?
@@ -256,7 +256,7 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
 
-  private void processPackage(FileParameterObject fileParameter) {
+  private void processPackage(FileSpec fileParameter) {
     templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
     templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
     templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
