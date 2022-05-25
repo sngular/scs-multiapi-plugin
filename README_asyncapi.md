@@ -1,162 +1,113 @@
-# SCS MultiApi Maven Plugin
+# AsyncAPI SCS Maven Plugin
 
-This is a Maven plugin designed to help developers automatizing the creation of code classes from YML files based on AsyncApi and OpenAPI.
+This is a Maven plugin designed to help developers automatizing the creation of consumers and publishers for Spring Cloud Stream, based on an YML file containing the definitions created by AsyncAPI.
 
 # Index
 
-- [SCS MultiApi Maven Plugin](#scs-multiapi-maven-plugin)
+- [AsyncAPI SCS Maven Plugin](#asyncapi-scs-maven-plugin)
 - [Index](#index)
-- [Main Configuration](#main-configuration)
-  - [How to configure the POM file](#how-to-configure-the-pom-file)
-- [AsyncApi Generator](#asyncapi-generator)
-  - [Configuration](#configuration)
+- [Usage](#usage)
+  - [Installation](#installation)
+  - [Using in other projects](#using-in-other-projects)
   - [How targetPackage is setted?](#how-targetpackage-is-setted)
   - [How modelPackage is setted?](#how-modelpackage-is-setted)
-  - [Class Generation](#class-generation)
-    - [Consumer and Supplier classes](#consumer-and-supplier-classes)
-      - [Method interfaces](#method-interfaces)
-      - [Mapper](#mapper)
+- [Class Generation](#class-generation)
+  - [Consumer and Supplier classes](#consumer-and-supplier-classes)
+    - [Method interfaces](#method-interfaces)
+    - [Mapper](#mapper)
         - [Mapper](#mapper-1)
         - [Implementation](#implementation)
-    - [Stream Bridge class](#stream-bridge-class)
-- [OpenApi Generator](#openapi-generator)
+  - [Stream Bridge class](#stream-bridge-class)
 - [Information for developers](#information-for-developers)
   - [Testing](#testing)
 
-# Main Configuration
+# Usage
 
-This plugin allows developers to automatize the creation of code classes for REST and Kafka connections, based on YML files under the OpenApi and AsyncApi specifications. 
+To be able to use this plugin in your own project, you need to install it locally.
 
-The generation of the REST and Kafka connections is independent each other and could be used only one, or both at the same time. 
+## Installation
+For this, first clone or download the repository to your computer, and once it's ready, execute `mvn clean install`.
 
-## How to configure the POM file
+## Using in other projects
+Now that the plugin is installed, you can use it in other projects, including it in their's `pom.xml` file.
 
-To mantain the generation of the diferent types of classes independent, they are configured as two different goals on the plugin, `asyncapi-generation` and `openapi-generation`.
-As commented above, they both could be used at the same time, setting a double *execution* for the plugin in the `pom.xml` file.
+The plugin defined `phase` and `goal` parameters are expected to be *generate-sources* and *configure*, as they are the only values for which the plugin is designed.
 
 ```xml
 <plugin>
   <groupId>com.corunet</groupId>
-  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <artifactId>asyncapi-scs-maven-plugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <executions>
     <execution>
-      <id>asyncapi</id>
       <phase>generate-sources</phase>
       <goals>
-        <goal>asyncapi-generation</goal>
+        <goal>configure</goal>
       </goals>
-      <configuration>
-        <fileSpecs>
-          ...
-        </fileSpecs>
-      </configuration>
-    </execution>
-
-    <execution>
-      <id>openapi</id>
-      <phase>generate-sources</phase>
-      <goals>
-        <goal>openapi-generation</goal>
-      </goals>
-      <configuration>
-        <fileSpecs>
-          <fileSpec>
-            ...
-          </fileSpec>
-        </fileSpecs>
-      </configuration>
     </execution>
   </executions>
+  <configuration>
+    <fileParameterObject>
+      <param>
+        <filePath>PATH_TO_YML</filePath>
+      </param>
+      <param>
+        <filePath>PATH_TO_YML</filePath>
+        <consumer>
+          <ids>publishOperation</ids>
+          <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
+          <entitiesPostfix>DTO</entitiesPostfix>
+          <targetPackage>com.corunet.scsplugin.business_model.model.event.consumer</targetPackage>
+          <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
+        </consumer>
+        <supplier>
+          <ids>subscribeOperation</ids>
+          <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
+          <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
+        </supplier>
+      </param>
+    </fileParameterObject>
+  </configuration>
 </plugin>
+
 ```
 
-In the example above, you can see a partial configuration for the plugin with a double *execution*. This makes neccesary to set an `id` for each execution, `asyncapi` and `openapi` in this case.
+As you can see in the example above, there is a main parameter **fileParameterObject** that receives a list of **param** attributes groups, so you can set as many YML files as you want.
 
-In the case that you only want to run one of the goals of the plugin, you only need to remove the *execution* section that you don't need.
-
-In the [AsyncApi Generator](#asyncapi-generator) and the [OpenApi Generator](#openapi-generator) sections, you can find more information about how they work, and the parameters and configuration options they offer.
-
-# AsyncApi Generator
-
-## Configuration
-
-The plugin defined `phase` and `goal` parameters are expected to be *generate-sources* and *asyncapi-generation*, as they are the only values for which the plugin is designed.
-
-```xml
-<plugin>
-<groupId>com.corunet</groupId>
-<artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>1.0.0-SNAPSHOT</version>
-<executions>
-  <execution>
-    <phase>generate-sources</phase>
-    <goals>
-      <goal>asyncapi-generation</goal>
-    </goals>
-    <configuration>
-      <fileSpecs>
-        <fileSpec>
-          <filePath>PATH_TO_YML</filePath>
-        </fileSpec>
-        <fileSpec>
-          <filePath>PATH_TO_YML</filePath>
-          <consumer>
-            <ids>publishOperation</ids>
-            <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-            <entitiesPostfix>DTO</entitiesPostfix>
-            <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
-            <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
-          </consumer>
-          <supplier>
-            <ids>subscribeOperation</ids>
-            <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-            <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
-          </supplier>
-        </fileSpec>
-      </fileSpecs>
-    </configuration>
-  </execution>
-</executions>
-</plugin>
-```
-
-As you can see in the example above, there is a main parameter **fileSpecs** that receives a list of **fileSpec** attributes groups, so you can set as many YML files as you want.
-
-**fileSpecs** could be configured in two different ways:
+**fileParameterObject** could be configured in two different ways:
 
 1. The first one is to configure only the YML file. This is made using the **filePath** parameter, that expects to receive the path to the file. Using the plugin in this way, you can't configure the model package or the target package in the pom file, neither other options, so they will be configured as its explained in [targetPackage](#how-targetPackage-is-setted) and [modelPackage](#how-modelPackage-is-setted) sections.  
 This way it's limited to the usage of Consumer and Supplier methods.
 
 ```xml
-<fileSpec>
+<param>
     <filePath>PATH_TO_YML</filePath>
-</fileSpec>
+</param>
 ```
 
 1. The second one is to configure the YML file with the consumers, supplier producers and streamBrige producers that you want to generate.
 
 ``````xml
-<fileSpec>
+<param>
     <filePath>PATH_TO_YML</filePath>
     <consumer>
         <ids>publishOperation</ids>
         <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
         <entitiesPostfix>DTO</entitiesPostfix>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>com.corunet.scsplugin.business_model.model.event.consumer</targetPackage>
+        <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
     </consumer>
     <supplier>
         <ids>subscribeOperation</ids>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
+        <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
     </supplier>
     <streamBridge>
         <ids>streamBridgeOperation</ids>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>com.corunet.scsplugin.business_model.model.event.producer</targetPackage>
+        <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>
     </streamBridge>
-</fileSpec>
+</param>
 ``````
 
 As you can see in the example above, there are three blocks of parameters that can be configured in the plugin.
@@ -177,7 +128,7 @@ The configuration of `consumer`, `supplier` and `streamBridge` are independent. 
 The target package could be set in three different ways.
 - **User definition**: The user provides a package name using the parameter in the pom.xml file.
 - **GroupID from YML**: If the user doesn't provide a package name, the plugin will try to use the `groupId` attribute from the YML file that is in use.
-- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.apigenerator.asyncapi`.
+- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.scsplugin`.
 
 ## How modelPackage is setted?
 The model package could be set in four different ways.
@@ -188,7 +139,7 @@ order/createCommand:
     subscribe:
       operationId: "subscribeOperation"
       message:
-        $ref: '#/components/messages/com.corunet.apigenerator.asyncapi.model.CreateOrder'
+        $ref: '#/components/messages/com.corunet.scsplugin.example.model.CreateOrder'
 ```
 - **Namespace from Avro**: If the user doesn't provide a package name, and the entity is defined by an Avro Schema, the plugin will check for a `namespace` attribute defined in the Avro file, and if there is, it will use it. The plugin expects to receive a relative path from the `yml` file folder.
 ```yaml
@@ -198,11 +149,11 @@ order/created:
       message:
         $ref: 'path_to_Avro_file'
 ```
-- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.apigenerator.asyncapi.model`.
+- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.scsplugin.model`.
 
-## Class Generation
+# Class Generation
 
-### Consumer and Supplier classes
+## Consumer and Supplier classes
 Those are a pair of classes, separated by the directionality of the messages. They came from the plugin fully implemented by making reference to the interfaces of the next section. Their names could be modified using the `classNamePostfix` parameter specified on the [Usage section](#using-in-other-projects), being by default **Producer** and **Subscriber**.
 
 ```java
@@ -222,7 +173,7 @@ public class StreamTopicListenerConsumer {
 
 This sample class, is related to the previosly used YML file, and in it you could see that it came fully implemented, based on the related Interface that lets the personalitation and implementation to the user. Also, in this example is possible to see how the YML attribute 'operationId' is used to name the methods as `Consumer'OperationId'` or `Publisher'OperationId'`.
 
-#### Method interfaces
+### Method interfaces
 Those are a group of interfaces that are related to the previous seen classes. There are as many as operations are defined in the YML file, and in the previous classes, so there is only one operation defined in each interface.
 
 This layer is the only one that needs work by the end user, so it needs to implement these interfaces.
@@ -236,7 +187,7 @@ public interface ISubscribeOperation {
 }
 ```
 
-#### Mapper
+### Mapper
 The entities used for the definitions both on the previous seen classes and this interfaces, are auto-generated entities, based on the same YML file. Because of that, they need to be mapped to a user defined entity using a mapper utility class.
 
 This mapper must be defined by the user on it's own way to improve the personalitation capabilities of the plugin.
@@ -248,7 +199,7 @@ Down here you have an example of the mapper utility class as well as an simple c
 ```java
 @Mapper
 public interface Mapper {
-  Order map(com.corunet.apigenerator.asyncapi.business_model.model.event.Order value);
+  Order map(com.corunet.scsplugin.business_model.model.event.Order value);
 }
 ```
 
@@ -263,13 +214,13 @@ public class subscribeOperation implements ISubscribeOperation {
 
   @Override
   public void subscribeOperation(final Order value) {
-    com.corunet.apigenerator.asyncapi.business_model.model.Order orderMapped = mapper.map(value);
+    com.corunet.scsplugin.business_model.model.Order orderMapped = mapper.map(value);
     //TODO: implement the functionality
   }
 }
 ```
 
-### Stream Bridge class
+## Stream Bridge class
 
 In this case, there is only one class where all the selected operations will be included. It's name could be modified using the `classNamePostfix` parameter specified on the [Usage section](#using-in-other-projects), being by default **StreamBridgeProducer**.
 
@@ -280,54 +231,29 @@ public class StreamBridgeProducer {
     private StreamBridge streamBridge;
 
     public void streamBridgeOperation(CreateOrder createOrder){
-        streamBridge.send("publishOperation", createOrder);
+        streamBridge.send("order-createCommand", createOrder);
     }
 }
 ```
 This sample class, is related to the previosly used YML file, and in it you could see that it came fully implemented.
 
-Also, it's important to note that using Stream Bridge, the *binding* where the messages are going to be sent is included in the auto generated class. This is defined by the application properties using `function`, `binders` and `bindings`, as in the next example:
-
-```yaml
-spring:
-  kafka:
-    bootstrap-servers: localhost:xxxx
-    producer:
-      client-id: peter
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-  cloud:
-    function:
-      definition: publishOperation
-    stream:
-      defaultBinder: kafka
-      bindings:
-        publishOperation:
-          destination: orderCreated
-      binders:
-        kafka:
-          defaultCandidate: true
-          type: kafka
-          producer-properties:
-            key.serializer: org.apache.kafka.common.serialization.StringSerializer
-            value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
-```
-
-Because the plugin cannot access the application properties, the name of the corresponding *binding* must be used as the **channel identifier** in the YML file that's setted on the plugin configuration, as you can see on the next extract:
-
+Also, it's important to note that using Stream Bridge, the *topic* where the messages are going to be sent is included in the auto generated class. This topic cames from the YML file, taken from the channel identifier, as specified in the AsyncAPI documentation.
 
 ```yaml
 channels:
-  publishOperation:
+  order/created:
+    publish:
+      operationId: "publishOperation"
+      message:
+        $ref: '#/components/messages/OrderCreated'
+  order-createCommand:
     subscribe:
       operationId: "streamBridgeOperation"
       message:
         $ref: '#/components/messages/CreateOrder'
 ```
 
-Due to the limitations on topics naming, the identifier of the channels that are going to be used as Stream Bridge publishers, **only could include `-` or `.` as separators**, slash `/` is not allowed.
-
-# OpenApi Generator
+Due to the limitations on topics naming, the identifier of the channels that are going tu be used as Stream Bridge publishers, **only could include** `-` or `.` **as separators**, slash `/` is not allowed.
 
 # Information for developers
 
