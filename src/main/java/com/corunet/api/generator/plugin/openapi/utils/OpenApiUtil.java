@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import com.corunet.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.corunet.api.generator.plugin.openapi.model.SchemaObject;
 import com.corunet.api.generator.plugin.openapi.parameter.FileSpec;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.Components;
@@ -15,14 +13,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.IntegerSchema;
-import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class OpenApiUtil {

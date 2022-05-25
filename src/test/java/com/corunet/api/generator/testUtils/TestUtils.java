@@ -4,7 +4,6 @@ import static junit.framework.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,13 +13,6 @@ import java.util.Objects;
 import org.apache.commons.io.IOUtils;
 
 public class TestUtils {
-
-  public static void validateFiles(
-      final List<File> expectedConsumerFiles, final List<File> expectedProducerFiles, final File targetConsumerDirectory, final File targetProducerDirectory)
-      throws IOException {
-    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
-    validateFiles(expectedProducerFiles, targetProducerDirectory);
-  }
 
   public static void validateFiles(final List<File> expectedFiles, final File targetDirectory) throws IOException {
     FileInputStream reader1;

@@ -2,7 +2,6 @@ package com.corunet.api.generator.asyncapi.integrationTest;
 
 import static com.corunet.api.generator.testUtils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
-import static junit.framework.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
