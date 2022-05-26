@@ -23,8 +23,6 @@ This is a Maven plugin designed to help developers automatizing the creation of 
   - [Getting Started](#getting-started)
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
-- [Information for developers](#information-for-developers)
-  - [Testing](#testing)
 
 # Main Configuration
 
@@ -428,18 +426,3 @@ Only one property is configured outside the fileSpecs, the path where the RestCl
 
 We must clarify that the options to make calls are configured under the RestClient or WebClient specifications as indicated above in the configuration options. If several of the APIs to be generated are defined under the same call option, a single RestClient/Webclient will be generated for all of them, which is initialized with the specific options needed within the class that defines each API.
 
-# Information for developers
-
-## Testing
-
-This plugin uses `itf-maven-plugin` for testing purposes, so the tests are defined following it's documentation.
-
-That implies that for each test defined in the `BaseTest` class, has it's own related folder under `test/resources/.../BaseTest`, where there will be various needed files for the test execution, as a `pom.xml`, a `event-api.yml` and the expected result files. 
-
-Also, every test is annotated with 
-```java
-@MavenGoal("groupId:artifactId:version:goal")
-```
-to assure that the execution of the test will be done with an specific version of the plugin.
-
-Making the test execution linked to the plugin version, declaring it in the POM file and the annotation, makes neccesary to change it on both the file and annotation for each test every time the version of the plugin is modified.

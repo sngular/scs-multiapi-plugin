@@ -22,7 +22,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class AsyncApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGeneration(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
 
@@ -54,7 +54,7 @@ public class AsyncApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
@@ -91,7 +91,7 @@ public class AsyncApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationExternalAvro(MavenProjectResult result) throws IOException {
     List<String> expectedFileProducerNames = List.of("IPublishOperation.java", "Producer.java");
 
@@ -129,7 +129,7 @@ public class AsyncApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationStreamBridge(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
 
@@ -161,7 +161,7 @@ public class AsyncApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:asyncapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationWithoutOperationIds(MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "ISubscribeOperation.java");
 

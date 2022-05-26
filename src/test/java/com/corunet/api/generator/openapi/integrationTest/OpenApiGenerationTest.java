@@ -22,7 +22,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class OpenApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiClientGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(
         new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiClientGeneration/assets/TestApi.java"));
@@ -49,7 +49,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiReactiveGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiReactiveGeneration/assets" +
                                                "/TestApi.java"));
@@ -76,7 +76,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiTagsGeneration(MavenProjectResult result) throws IOException {
 
     List<File> expectedModelFiles = List.of(
@@ -94,7 +94,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                     "/TestFirstApi.java"));
@@ -117,7 +117,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testWebClientApiGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
                                              "/TestApi.java"));
@@ -133,7 +133,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
-  @MavenGoal("com.corunet:scs-multiapi-maven-plugin:1.0.0-SNAPSHOT:openapi-generation")
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testRestClientApiGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testRestClientApiGeneration" +
                                                     "/assets/TestApi.java"));

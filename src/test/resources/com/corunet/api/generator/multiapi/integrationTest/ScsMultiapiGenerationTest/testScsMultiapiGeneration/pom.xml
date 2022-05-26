@@ -30,7 +30,6 @@
       <plugin>
         <groupId>com.corunet</groupId>
         <artifactId>scs-multiapi-maven-plugin</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
         <executions>
           <execution>
             <id>asyncapi</id>
