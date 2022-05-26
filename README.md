@@ -332,7 +332,7 @@ Due to the limitations on topics naming, the identifier of the channels that are
 
 # OpenApi Generator
 
-## 🚀 Getting Started
+## Getting Started
 
 In order to get this plugin working, you need the following things installed in your computer:
 
@@ -348,19 +348,19 @@ After you have these installed, you need to add this plugin in your pom.xml file
 ```xml
 <plugin>
   <groupId>com.corunet</groupId>
-  <artifactId>openapi-multifile-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <executions>
     <execution>
         <goals>
-            <goal>configure</goal>
+            <goal>openapi-generation</goal>
         </goals>
         <configuration>
             <fileSpecs>
                 <fileSpec>
                     <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
-                    <apiPackage>com.corunet.challenge.gameserver.api</apiPackage>
-                    <modelPackage>com.corunet.challenge.gameserver.api.model</modelPackage>
+                    <apiPackage>com.corunet.apigenerator.openapi.api</apiPackage>
+                    <modelPackage>com.corunet.apigenerator.openapi.api.model</modelPackage>
                     <modelNameSuffix>DTO</modelNameSuffix>
                 </fileSpec>
             </fileSpecs>
@@ -370,7 +370,7 @@ After you have these installed, you need to add this plugin in your pom.xml file
 </plugin>
 ```
 
-## 🧑🏻 Initial Considerations
+## Initial Considerations
 
 Before using this plugin we have to warn that not all the complexity and support offered by the use of swagger.io yml files is supported.
 
@@ -387,7 +387,7 @@ We establish here some of these options that are not yet supported and that will
 - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
 
-## 🧑🏻‍💻 Usage
+## Usage
 
 This plugin allows us to create multiple apis with just one maven clean install execution, in this way the user can configure several fileSpecs tags with different uses, thus generating Apis in the two possible modes: send or receive calls, depending on the options of configuration selected in said fileSpecs.
 
@@ -396,8 +396,8 @@ This plugin allows us to create multiple apis with just one maven clean install 
     <fileSpecs>
         <fileSpec>
             <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
-            <apiPackage>com.corunet.challenge.gameserver.api</apiPackage>
-            <modelPackage>com.corunet.challenge.gameserver.api.model</modelPackage>
+            <apiPackage>com.corunet.apigenerator.openapi.api</apiPackage>
+            <modelPackage>com.corunet.apigenerator.openapi.api.model</modelPackage>
             <modelNameSuffix>DTO</modelNameSuffix>
         </fileSpec>
     </fileSpecs>
@@ -409,8 +409,8 @@ To customize these fileSpecs tags we are going to specify them inside the config
 | Name      | Description                                                                                                                                                                                         | Example                                           |
 | ---------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | inputSpec  | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage | Path where the api interface will be located                                                                                                                                                        | com.corunet.challenge.gameserver.api              |
-| modelPackage | Path where the models will be located                                                                                                                                                               | com.corunet.challenge.gameserver.api.model        |
+| apiPackage | Path where the api interface will be located                                                                                                                                                        | com.corunet.apigenerator.openapi              |
+| modelPackage | Path where the models will be located                                                                                                                                                               | com.corunet.apigenerator.openapi.model        |
 | modelNamePrefix | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                               |
 | modelNameSuffix | Suffix that will be used ahead of every model´s name                                                                                                                                                | DTO                                               |
 | callMode   | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                             |
@@ -424,7 +424,7 @@ Only one property is configured outside the fileSpecs, the path where the RestCl
 
 | Name      | Description                                            | Example                                 |
 | ---------- |--------------------------------------------------------|-----------------------------------------|
-| clientPackage  | Path where the RestClient and/or WebClient are located | com.corunet.challenge.gameserver.client |
+| clientPackage  | Path where the RestClient and/or WebClient are located | com.corunet.apigenerator.openapi.client |
 
 We must clarify that the options to make calls are configured under the RestClient or WebClient specifications as indicated above in the configuration options. If several of the APIs to be generated are defined under the same call option, a single RestClient/Webclient will be generated for all of them, which is initialized with the specific options needed within the class that defines each API.
 
