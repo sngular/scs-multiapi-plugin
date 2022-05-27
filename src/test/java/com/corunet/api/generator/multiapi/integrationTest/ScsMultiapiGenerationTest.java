@@ -22,9 +22,9 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class ScsMultiapiGenerationTest {
 
   @MavenTest
-  @SystemProperty(value = "groupId",content = "com.corunet")
-  @SystemProperty(value = "artifactId",content = "scs-multiapi-maven-plugin")
-  @SystemProperty(value = "version",content = "1.0.0-SNAPSHOT")
+  @SystemProperty(value = "groupId",content = "${project.groupId}")
+  @SystemProperty(value = "artifactId",content = "${project.artifactId}")
+  @SystemProperty(value = "version",content = "${project.version}")
   void testScsMultiapiGeneration(MavenProjectResult result) throws IOException {
 
     List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
