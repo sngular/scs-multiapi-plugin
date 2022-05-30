@@ -27,3 +27,6 @@ hs_err_pid*
 
 # Target Folder
 target/
+
+# Pom bak file
+pom.xml.bak
