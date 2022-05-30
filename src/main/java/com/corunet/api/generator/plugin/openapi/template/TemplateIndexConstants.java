@@ -6,7 +6,7 @@
 
 package com.corunet.api.generator.plugin.openapi.template;
 
-public class TemplateIndex {
+public class TemplateIndexConstants {
 
   public static final String TEMPLATE_INTERFACE_API = "template.ftlh";
 

@@ -6,7 +6,7 @@
 
 package com.corunet.api.generator.plugin;
 
-public class PluginConstraints {
+public class PluginConstants {
 
   public static final String DEFAULT_TARGET_PACKAGE = "com.corunet.apigenerator";
 

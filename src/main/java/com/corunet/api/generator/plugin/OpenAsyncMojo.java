@@ -6,8 +6,8 @@
 
 package com.corunet.api.generator.plugin;
 
-import static com.corunet.api.generator.plugin.PluginConstraints.DEFAULT_TARGET_PACKAGE;
-import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURCES_PATH;
+import static com.corunet.api.generator.plugin.PluginConstants.DEFAULT_TARGET_PACKAGE;
+import static com.corunet.api.generator.plugin.PluginConstants.GENERATED_SOURCES_PATH;
 
 import com.corunet.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.corunet.api.generator.plugin.asyncapi.exception.FileSystemException;
@@ -72,6 +72,8 @@ public class OpenAsyncMojo extends AbstractMojo {
   private final List<String> processedClassnames = new ArrayList<>();
 
   private final List<String> processedTargetPackages = new ArrayList<>();
+
+  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
 
   @Override
   public void execute() {
@@ -254,8 +256,6 @@ public class OpenAsyncMojo extends AbstractMojo {
     return path;
   }
 
-  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
-
   private void processPackage(FileSpec fileParameter) {
     templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
     templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
@@ -273,8 +273,7 @@ public class OpenAsyncMojo extends AbstractMojo {
   }
 
   private void processSupplierMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 

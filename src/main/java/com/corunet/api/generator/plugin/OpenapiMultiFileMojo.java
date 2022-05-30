@@ -6,8 +6,8 @@
 
 package com.corunet.api.generator.plugin;
 
-import static com.corunet.api.generator.plugin.PluginConstraints.DEFAULT_TARGET_PACKAGE;
-import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURCES_PATH;
+import static com.corunet.api.generator.plugin.PluginConstants.DEFAULT_TARGET_PACKAGE;
+import static com.corunet.api.generator.plugin.PluginConstants.GENERATED_SOURCES_PATH;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -39,8 +39,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Mojo(name = "openapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OpenapiMultiFileMojo extends AbstractMojo {
@@ -52,8 +50,6 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".client";
 
   private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
-
-  private final Logger LOGGER = LoggerFactory.getLogger(OpenapiMultiFileMojo.class);
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   public MavenProject project;

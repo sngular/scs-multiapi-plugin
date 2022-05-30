@@ -309,9 +309,6 @@ public class MapperPathUtil {
   private static String defineTypeName(Schema schema) {
     String typeName = "";
     switch (schema.getType()) {
-      case "string":
-        typeName = "String";
-        break;
       case "integer":
         if ("int32".equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
           typeName = "Integer";
@@ -330,6 +327,10 @@ public class MapperPathUtil {
         break;
       case "boolean":
         typeName = "Boolean";
+        break;
+      case "string":
+      default:
+        typeName = "String";
         break;
     }
     return typeName;

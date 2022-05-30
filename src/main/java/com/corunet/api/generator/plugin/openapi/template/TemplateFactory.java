@@ -6,14 +6,14 @@
 
 package com.corunet.api.generator.plugin.openapi.template;
 
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CALL_REST_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CALL_WEB_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CONTENT_SCHEMA;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_INTERFACE_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_REACTIVE_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_REST_CLIENT;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_WEB_CLIENT;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_WEB_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_INTERFACE_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REACTIVE_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REST_CLIENT;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_WEB_CLIENT;
 
 import java.io.File;
 import java.io.FileWriter;

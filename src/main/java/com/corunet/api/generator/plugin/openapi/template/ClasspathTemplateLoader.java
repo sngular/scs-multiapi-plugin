@@ -6,7 +6,7 @@
 
 package com.corunet.api.generator.plugin.openapi.template;
 
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.*;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
 
   @Override
   public void closeTemplateSource(Object o) throws IOException {
-
+    // Not required to implement
   }
 
   private Map<String, String> getResourceFolderFiles() throws MalformedURLException, URISyntaxException {
