@@ -6,6 +6,7 @@
 
 package com.corunet.api.generator.multiapi.integrationTest;
 
+import static com.corunet.api.generator.testUtils.TestUtils.checkTargetFiles;
 import static com.corunet.api.generator.testUtils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
@@ -67,21 +68,14 @@ public class ScsMultiapiGenerationTest {
     Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testApi/model");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    assertThat(targetConsumerDirectory).isNotEmptyDirectory();
-
     File targetProducerDirectory = pathToTargetProducer.toFile();
-    assertThat(targetProducerDirectory).isNotEmptyDirectory();
-
     File targetApiDirectory = pathToTargetApi.toFile();
-    assertThat(targetApiDirectory).isNotEmptyDirectory();
-
     File targetModelDirectory = pathToTargetModel.toFile();
-    assertThat(targetModelDirectory).isNotEmptyDirectory();
 
-    assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
-    assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
-    assertThat(targetApiDirectory.list()).containsAll(expectedFileNames);
-    assertThat(targetModelDirectory.list()).containsAll(expectedModelFileNames);
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
+    checkTargetFiles(expectedFileNames, targetApiDirectory);
+    checkTargetFiles(expectedModelFileNames, targetModelDirectory);
 
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);

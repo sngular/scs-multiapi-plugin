@@ -6,6 +6,7 @@
 
 package com.corunet.api.generator.asyncapi.integrationTest;
 
+import static com.corunet.api.generator.testUtils.TestUtils.checkTargetFiles;
 import static com.corunet.api.generator.testUtils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
@@ -47,14 +48,10 @@ public class AsyncApiGenerationTest {
     Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    assertThat(targetConsumerDirectory).isNotEmptyDirectory();
-
     File targetProducerDirectory = pathToTargetProducer.toFile();
-    assertThat(targetProducerDirectory).isNotEmptyDirectory();
 
-    assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
-    assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
-
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
@@ -83,14 +80,10 @@ public class AsyncApiGenerationTest {
     Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/scsplugin/business_model/model/event/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
-    assertThat(targetFirstYmlDirectory).isNotEmptyDirectory();
-
     File targetSecondYmlDirectory = pathToTargetSecondYml.toFile();
-    assertThat(targetSecondYmlDirectory).isNotEmptyDirectory();
 
-    assertThat(targetFirstYmlDirectory.list()).containsAll(expectedFirstYmlFileNames);
-    assertThat(targetSecondYmlDirectory.list()).containsAll(expectedSecondYmlFileNames);
-
+    checkTargetFiles(expectedFirstYmlFileNames, targetFirstYmlDirectory);
+    checkTargetFiles(expectedSecondYmlFileNames, targetSecondYmlDirectory);
     validateFiles(expectedFirstYmlFiles, targetFirstYmlDirectory);
     validateFiles(expectedSecondYmlFiles, targetSecondYmlDirectory);
 
@@ -122,14 +115,10 @@ public class AsyncApiGenerationTest {
     Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    assertThat(targetConsumerDirectory).isNotEmptyDirectory();
-
     File targetProducerDirectory = pathToTargetProducer.toFile();
-    assertThat(targetProducerDirectory).isNotEmptyDirectory();
 
-    assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
-    assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
-
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
@@ -154,14 +143,10 @@ public class AsyncApiGenerationTest {
     Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    assertThat(targetConsumerDirectory).isNotEmptyDirectory();
-
     File targetProducerDirectory = pathToTargetProducer.toFile();
-    assertThat(targetProducerDirectory).isNotEmptyDirectory();
 
-    assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
-    assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
-
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);
   }
@@ -186,14 +171,10 @@ public class AsyncApiGenerationTest {
     Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    assertThat(targetConsumerDirectory).isNotEmptyDirectory();
-
     File targetProducerDirectory = pathToTargetProducer.toFile();
-    assertThat(targetProducerDirectory).isNotEmptyDirectory();
 
-    assertThat(targetConsumerDirectory.list()).containsAll(expectedFileConsumerNames);
-    assertThat(targetProducerDirectory.list()).containsAll(expectedFileProducerNames);
-
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);
   }

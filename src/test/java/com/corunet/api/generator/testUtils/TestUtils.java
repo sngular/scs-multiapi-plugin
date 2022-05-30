@@ -7,6 +7,7 @@
 package com.corunet.api.generator.testUtils;
 
 import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,5 +34,10 @@ public class TestUtils {
       reader2 = new FileInputStream(expectedFiles.get(i));
       assertTrue(IOUtils.contentEquals(reader1, reader2));
     }
+  }
+
+  public static void checkTargetFiles(final List<String> expectedFileNames, final File targetDirectory) {
+    assertThat(targetDirectory).isNotEmptyDirectory();
+    assertThat(targetDirectory.list()).containsAll(expectedFileNames);
   }
 }
