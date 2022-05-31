@@ -19,7 +19,6 @@ code classes from YML files based on AsyncApi and OpenAPI.
     - [Consumer and Supplier classes](#consumer-and-supplier-classes)
       - [Method interfaces](#method-interfaces)
       - [Mapper](#mapper)
-        - [Mapper](#mapper-1)
         - [Implementation](#implementation)
     - [Stream Bridge class](#stream-bridge-class)
 - [OpenApi Generator](#openapi-generator)
@@ -226,6 +225,7 @@ If only one of them is configured in the pom file, only that one will be
 generated.
 
 ### How targetPackage is setted?
+
 The target package could be set in three different ways.
 
 - **User definition**: The user provides a package name using the parameter in
@@ -233,10 +233,11 @@ the pom.xml file.
 - **GroupID from YML**: If the user doesn't provide a package name, the plugin
 will try to use the `groupId` attribute from the YML file that is in use.
 - **Default package name**: If neither of the previous options were given, the
-plugin will use a default package name, that is stablished as 
+plugin will use a default package name, that is stablished as
 `com.corunet.apigenerator.asyncapi`.
 
 ### How modelPackage is setted?
+
 The model package could be set in four different ways.
 
 - **User definition**: The user provides a package name using the parameter in
@@ -277,7 +278,7 @@ plugin will use a default package name, that is stablished as
 Those are a pair of classes, separated by the directionality of the messages.
 They came from the plugin fully implemented by making reference to the
 interfaces of the next section. Their names could be modified using the
-`classNamePostfix` parameter specified on the 
+`classNamePostfix` parameter specified on the
 [Usage section](#using-in-other-projects), being by default **Producer** and
 **Subscriber**.
 
@@ -306,7 +307,7 @@ methods as `Consumer'OperationId'` or `Publisher'OperationId'`.
 ##### Method interfaces
 
 Those are a group of interfaces that are related to the previous seen classes.
-There are as many as operations are defined in the YML file, and in the 
+There are as many as operations are defined in the YML file, and in the
 previous classes, so there is only one operation defined in each interface.
 
 This layer is the only one that needs work by the end user, so it needs to
@@ -325,6 +326,7 @@ public interface ISubscribeOperation {
 ```
 
 ##### Mapper
+
 The entities used for the definitions both on the previous seen classes and
 this interfaces, are auto-generated entities, based on the same YML file.
 Because of that, they need to be mapped to a user defined entity using a mapper
@@ -335,8 +337,6 @@ personalitation capabilities of the plugin.
 
 Down here you have an example of the mapper utility class as well as an simple
 class implementing the interface defined above.
-
-###### Mapper
 
 ```java
 @Mapper
@@ -554,4 +554,3 @@ options. If several of the APIs to be generated are defined under the same call
 option, a single RestClient/Webclient will be generated for all of them, which
 is initialized with the specific options needed within the class that defines
 each API.
-
