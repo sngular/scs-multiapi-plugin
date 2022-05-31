@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testRestClient.model;
+package com.corunet.multifileplugin.testrestclient.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

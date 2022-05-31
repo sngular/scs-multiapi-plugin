@@ -42,8 +42,8 @@
           <fileSpecs>
             <fileSpec>
               <inputSpec>api-tags-test.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testTags</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testTags.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testtags</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testtags.model</modelPackage>
               <useTagsGroup>true</useTagsGroup>
               <modelNameSuffix>DTO</modelNameSuffix>
             </fileSpec>

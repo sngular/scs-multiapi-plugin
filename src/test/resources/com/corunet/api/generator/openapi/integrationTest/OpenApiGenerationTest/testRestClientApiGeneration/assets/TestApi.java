@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testRestClient;
+package com.corunet.multifileplugin.testrestclient;
 
 import com.corunet.apigenerator.openapi.client.ApiRestClient;
 
@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.corunet.multifileplugin.testRestClient.model.ApiTestInfoDTO;
-import com.corunet.multifileplugin.testRestClient.model.ApiErrorDTO;
-import com.corunet.multifileplugin.testRestClient.model.ApiTestDTO;
+import com.corunet.multifileplugin.testrestclient.model.ApiTestInfoDTO;
+import com.corunet.multifileplugin.testrestclient.model.ApiErrorDTO;
+import com.corunet.multifileplugin.testrestclient.model.ApiTestDTO;
 
 import com.corunet.apigenerator.openapi.client.auth.Authentication;
 import com.corunet.apigenerator.openapi.client.auth.HttpBasicAuth;

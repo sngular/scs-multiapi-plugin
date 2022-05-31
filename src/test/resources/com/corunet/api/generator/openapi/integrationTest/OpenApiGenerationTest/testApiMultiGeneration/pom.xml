@@ -42,14 +42,14 @@
           <fileSpecs>
             <fileSpec>
               <inputSpec>multi-test-first.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testMultiFile.first</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testMultiFile.first.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testmultifile.first</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testmultifile.first.model</modelPackage>
               <modelNameSuffix>FirstDTO</modelNameSuffix>
             </fileSpec>
             <fileSpec>
               <inputSpec>multi-test-second.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testMultiFile.second</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testMultiFile.second.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testmultifile.second</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testmultifile.second.model</modelPackage>
               <modelNameSuffix>SecondDTO</modelNameSuffix>
             </fileSpec>
           </fileSpecs>

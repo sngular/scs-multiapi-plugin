@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testTags;
+package com.corunet.multifileplugin.testtags;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.corunet.multifileplugin.testTags.model.TestInfoDTO;
-import com.corunet.multifileplugin.testTags.model.ErrorDTO;
+import com.corunet.multifileplugin.testtags.model.TestInfoDTO;
+import com.corunet.multifileplugin.testtags.model.ErrorDTO;
 
 
 public interface TestTagSecondApi {

@@ -42,8 +42,8 @@
           <fileSpecs>
             <fileSpec>
               <inputSpec>api-test.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testWebClient</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testWebClient.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testwebclient</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testwebclient.model</modelPackage>
               <callMode>true</callMode>
               <isReactive>true</isReactive>
               <modelNamePrefix>Api</modelNamePrefix>

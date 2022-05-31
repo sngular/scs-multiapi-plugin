@@ -42,8 +42,8 @@
           <fileSpecs>
             <fileSpec>
               <inputSpec>api-test.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testRestClient</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testRestClient.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testrestclient</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testrestclient.model</modelPackage>
               <callMode>true</callMode>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>

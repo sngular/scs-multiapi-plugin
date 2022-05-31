@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testMultiFile.second;
+package com.corunet.multifileplugin.testmultifile.second;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.corunet.multifileplugin.testMultiFile.second.model.TestSecondDTO;
-import com.corunet.multifileplugin.testMultiFile.second.model.ErrorSecondDTO;
-import com.corunet.multifileplugin.testMultiFile.second.model.TestInfoSecondDTO;
+import com.corunet.multifileplugin.testmultifile.second.model.TestSecondDTO;
+import com.corunet.multifileplugin.testmultifile.second.model.ErrorSecondDTO;
+import com.corunet.multifileplugin.testmultifile.second.model.TestInfoSecondDTO;
 
 
 public interface TestSecondApi {

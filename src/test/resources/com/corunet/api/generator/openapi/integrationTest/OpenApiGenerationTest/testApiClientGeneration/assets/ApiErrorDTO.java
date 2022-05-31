@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testApi.model;
+package com.corunet.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testApi;
+package com.corunet.multifileplugin.testapi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.corunet.multifileplugin.testApi.model.ApiTestInfoDTO;
-import com.corunet.multifileplugin.testApi.model.ApiErrorDTO;
-import com.corunet.multifileplugin.testApi.model.ApiTestDTO;
+import com.corunet.multifileplugin.testapi.model.ApiTestInfoDTO;
+import com.corunet.multifileplugin.testapi.model.ApiErrorDTO;
+import com.corunet.multifileplugin.testapi.model.ApiTestDTO;
 
 
 public interface TestApi {

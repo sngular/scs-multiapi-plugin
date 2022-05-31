@@ -1,4 +1,4 @@
-package com.corunet.multifileplugin.testWebClient;
+package com.corunet.multifileplugin.testwebclient;
 
 import com.corunet.apigenerator.openapi.client.ApiWebClient;
 
@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.corunet.multifileplugin.testWebClient.model.ApiTestInfoDTO;
-import com.corunet.multifileplugin.testWebClient.model.ApiErrorDTO;
-import com.corunet.multifileplugin.testWebClient.model.ApiTestDTO;
+import com.corunet.multifileplugin.testwebclient.model.ApiTestInfoDTO;
+import com.corunet.multifileplugin.testwebclient.model.ApiErrorDTO;
+import com.corunet.multifileplugin.testwebclient.model.ApiTestDTO;
 
 import com.corunet.apigenerator.openapi.client.auth.Authentication;
 import com.corunet.apigenerator.openapi.client.auth.HttpBasicAuth;
