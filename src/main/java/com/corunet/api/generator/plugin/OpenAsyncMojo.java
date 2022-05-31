@@ -278,8 +278,7 @@ public class OpenAsyncMojo extends AbstractMojo {
   }
 
   private void processStreamBridgeMethod(JsonNode channel, String modelPackage, Path ymlParentPath, String channelName) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     String regex = "[a-zA-Z0-9\\.\\-]*";
     if (!channelName.matches(regex)) {
       throw new KafkaTopicSeparatorException(channelName);
@@ -288,8 +287,7 @@ public class OpenAsyncMojo extends AbstractMojo {
   }
 
   private void processSubscribeMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 
