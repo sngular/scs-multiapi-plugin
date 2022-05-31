@@ -6,6 +6,11 @@
 
 package com.corunet.api.generator.plugin.openapi.utils;
 
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getPojoName;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getSimpleType;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getTypeArray;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getTypeMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +35,9 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
@@ -57,8 +60,6 @@ public class MapperPathUtil {
                        .authentications(authList)
                        .componentsTypeMap(getMapComponentsTypes(openAPI.getComponents(), fileSpec))
                        .build();
-
-
   }
 
   private static HashMap<String, String> getMapComponentsTypes(Components components, FileSpec fileSpec) {
@@ -339,41 +340,6 @@ public class MapperPathUtil {
     return Objects.nonNull(operation);
   }
 
-  private static String getTypeMap(MapSchema mapSchema, FileSpec fileSpec) {
-    var typeMap = "";
-    if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
-      typeMap = "String";
-    } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
-      typeMap = "Integer";
-    } else {
-      Schema schema = (Schema) mapSchema.getAdditionalProperties();
-      if (StringUtils.isNotBlank(schema.get$ref())) {
-        String[] pathObjectRef = schema.get$ref().split("/");
-        typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-      }
-    }
-    return typeMap;
-  }
-
-  private static String getTypeArray(ArraySchema array, FileSpec fileSpec) {
-    var typeArray = "";
-    if (array.getItems() instanceof StringSchema) {
-      typeArray = "String";
-    } else if (array.getItems() instanceof IntegerSchema) {
-      typeArray = "Integer";
-    } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
-      String[] pathObjectRef = array.getItems().get$ref().split("/");
-      typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-    }
-    return typeArray;
-  }
-
-  private static String getPojoName(String namePojo, FileSpec fileSpec) {
-    return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
-           + namePojo
-           + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");
-  }
-
   private static List<String> getSecurityRequirementList(List<SecurityRequirement> securityRequirementList,
       List<String> authentications) {
     var authSecList = new ArrayList<String>();
@@ -384,28 +350,6 @@ public class MapperPathUtil {
       return authentications;
     }
     return authSecList;
-  }
-
-  private static String getSimpleType(Schema schema) {
-    String type = "";
-    if ("number".equalsIgnoreCase(schema.getType())) {
-      if ("float".equalsIgnoreCase(schema.getFormat())) {
-        type = "float";
-      } else if ("double".equalsIgnoreCase(schema.getFormat())) {
-        type = "double";
-      } else {
-        type = "integer";
-      }
-    } else if ("integer".equalsIgnoreCase(schema.getType())) {
-      if ("int64".equalsIgnoreCase(schema.getType())) {
-        type = "long";
-      } else {
-        type = "integer";
-      }
-    } else {
-      type = schema.getType();
-    }
-    return type;
   }
 
 }
