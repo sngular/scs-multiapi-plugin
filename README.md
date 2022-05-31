@@ -152,7 +152,7 @@ can set as many YML files as you want.
 
 **fileSpecs** could be configured in two different ways:
 
-1. The first one is to configure only the YML file. This is made using the **filePath** parameter, that expects to receive the path to the
+1.  The first one is to configure only the YML file. This is made using the **filePath** parameter, that expects to receive the path to the
    file. Using the plugin in this way, you can't configure the model package or the target package in the pom file, neither other options,
    so they will be configured as its explained in [targetPackage](#how-targetPackage-is-setted)
    and [modelPackage](#how-modelPackage-is-setted) sections.  
@@ -165,7 +165,7 @@ can set as many YML files as you want.
 </fileSpec>
 ```
 
-2. The second one is to configure the YML file with the consumers, supplier producers and streamBrige producers that you want to generate.
+2.  The second one is to configure the YML file with the consumers, supplier producers and streamBrige producers that you want to generate.
 
 ``````xml
 
@@ -197,23 +197,24 @@ As you can see in the example above, there are three blocks of parameters that c
 
 - **consumer**, **supplier** and **streamBridge**: They are both configured in the same way and can receive the same parameters. These
   parameters are:
-    - **ids**: With this parameter you can set the operationId that you want to be generated as subscriber or publisher. If this parameter
+  -  **ids**: With this parameter you can set the operationId that you want to be generated as subscriber or publisher. If this parameter
       is not defined for the `consumer` section, all the subscribe operations defined in the YML file, will be generated. If only one
       of `supplier` and `streamBridge` sections are defined, and this parameter is not defined inside it, all the publish operations defined
       in the YML file will be generated. If both `supplier` and `streamBridge` sections are defined, it`s needed to define which operations
       belongs to each category.
 
-    - **classNamePostfix**: This parameter receive the name of the class that it's going to be generated containing the Beans. This
+  -  **classNamePostfix**: This parameter receive the name of the class that it's going to be generated containing the Beans. This
       parameter is optional, and by default the classes will be called `Producer`, `StreamBridgeProducer` and `Subscriber`.
 
-    - **entitiesPostfix**: With this parameter you can set the postfix that is going to be used in the entities of the generated classes.
+  -  **entitiesPostfix**: With this parameter you can set the postfix that is going to be used in the entities of the generated classes.
       For example if you set this to `DTO`, and there is a class named `EntityClass`, it will result as `EntityClassDTO`. This parameter is
       optional.
 
-    - **targetPackage**: This parameter receive a package name, where the generated classes will be generated. This parameter is optional.
+  -  **targetPackage**: This parameter receive a package name, where the generated classes will be generated. This parameter is optional.
       Check [how the targetPackage is setted](#how-targetPackage-is-setted) for more information about how this parameter works, and the
       values it could have.
-    - **modelPackage**: This parameter receive a package name, where the entities used for the generated classes are defined. As it's
+
+  -  **modelPackage**: This parameter receive a package name, where the entities used for the generated classes are defined. As it's
       explained in the [Mapper Section](#mapper), those entities are usually auto-generated, so the plugin expects the modelPackage to be
       the package where them are included.
       **Note that the plugin doesn't create the entities neither checks their existence**, it takes their names from the YML file and assume
@@ -243,7 +244,7 @@ The model package could be set in four different ways.
   - **User definition**: The user provides a package name using the parameter in the pom.xml file.
 
   - **Namespace from YML**: If the user doesn't provide a package name, the plugin will check if the entity name definition in the YML file,
-  includes a complete package name.
+    includes a complete package name.
 
 ```yaml
 order/createCommand:
@@ -253,7 +254,7 @@ order/createCommand:
       $ref: '#/components/messages/com.corunet.apigenerator.asyncapi.model.CreateOrder'
 ```
 
-- **Namespace from Avro**: If the user doesn't provide a package name, and the entity is defined by an Avro Schema, the plugin will check
+-  **Namespace from Avro**: If the user doesn't provide a package name, and the entity is defined by an Avro Schema, the plugin will check
   for a `namespace` attribute defined in the Avro file, and if there is, it will use it. The plugin expects to receive a relative path from
   the `yml` file folder.
 
@@ -419,13 +420,12 @@ include `-` or `.` as separators**, slash `/` is not allowed.
 
 In order to get this plugin working, you need the following things installed in your computer:
 
-  - Java 11 Version
-
-  - Maven
+-  Java 11 Version
+-  Maven
 
 Depending on the approach with which you are going to use the plugin, other dependencies will be necessary, for example:
 
-- spring-boot-starter-webflux, in case you want to implement an API with responses in Mono/Flux Reactor types or use them for external calls
+-  spring-boot-starter-webflux, in case you want to implement an API with responses in Mono/Flux Reactor types or use them for external calls
   through Spring WebClient.
 
 After you have these installed, you need to add this plugin in your pom.xml file. Here is an example of a basic configuration:
@@ -463,11 +463,11 @@ Before using this plugin we have to warn that not all the complexity and support
 We establish here some of these options that are not yet supported and that will be added to this plugin as time goes by and the existing
 need among users.
 
-  - The use of common parameters for all the operations of the same path element of the .yml file.
-  - The use of parameters defined in the component element by reference.
-  - The use of parameters with content tag.
-  - Using Multiple Authentication Types within the security options both at an operational and general level.
-  - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
+-  The use of common parameters for all the operations of the same path element of the .yml file.
+-  The use of parameters defined in the component element by reference.
+-  The use of parameters with content tag.
+-  Using Multiple Authentication Types within the security options both at an operational and general level.
+-  The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
 ### Usage
 
@@ -521,4 +521,3 @@ set in any of the fileSpecs.
 We must clarify that the options to make calls are configured under the RestClient or WebClient specifications as indicated above in the
 configuration options. If several of the APIs to be generated are defined under the same call option, a single RestClient/Webclient will be
 generated for all of them, which is initialized with the specific options needed within the class that defines each API.
-
