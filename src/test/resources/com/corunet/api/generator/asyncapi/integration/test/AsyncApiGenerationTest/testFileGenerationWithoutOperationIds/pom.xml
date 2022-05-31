@@ -43,7 +43,7 @@
             <fileSpec>
               <filePath>event-api.yml</filePath>
               <consumer>
-                <classNamePostfix>NombreDeClase</classNamePostfix>
+                <classNamePostfix>TestClassName</classNamePostfix>
                 <entitiesPostfix>DTO</entitiesPostfix>
                 <targetPackage>com.corunet.scsplugin.business_model.model.event.consumer</targetPackage>
                 <modelPackage>com.corunet.scsplugin.business_model.model.event</modelPackage>

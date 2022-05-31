@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import com.corunet.scsplugin.business_model.model.event.OrderCreatedDTO;
 
 @Configuration
-public class NombreDeClase {
+public class TestClassName {
 
     private final IPublishOperation publishOperation;
 
-    protected NombreDeClase(final IPublishOperation publishOperation){
+    protected TestClassName(final IPublishOperation publishOperation){
       this.publishOperation = publishOperation;
     }
 

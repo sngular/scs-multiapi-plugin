@@ -34,13 +34,13 @@ public class ScsMultiapiGenerationTest {
   @SystemProperty(value = "version",content = "${project.version}")
   void testScsMultiapiGeneration(MavenProjectResult result) throws IOException {
 
-    List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
+    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
 
     List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
     List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
                                                         "/testScsMultiapiGeneration/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/NombreDeClase.java"));
+                                               new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/TestClassName.java"));
 
     List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ISubscribeOperation.java"),
                                                new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/Producer.java"));

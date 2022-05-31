@@ -31,12 +31,12 @@ public class AsyncApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
+    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
 
     List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
     List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/NombreDeClase.java"));
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/TestClassName.java"));
 
     List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/ISubscribeOperation.java"),
                                                new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/Producer.java"));
@@ -126,12 +126,12 @@ public class AsyncApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationStreamBridge(MavenProjectResult result) throws IOException {
-    List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "IPublishOperation.java");
+    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
     List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/NombreDeClase.java"));
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/TestClassName.java"));
 
     List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
                                                         ".java"));
@@ -154,12 +154,12 @@ public class AsyncApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationWithoutOperationIds(MavenProjectResult result) throws IOException {
-    List<String> expectedFileConsumerNames = List.of("NombreDeClase.java", "ISubscribeOperation.java");
+    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "ISubscribeOperation.java");
 
     List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
 
     List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets/NombreDeClase.java"));
+                                               new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets/TestClassName.java"));
 
     List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets" +
                                                         "/StreamBridgeProducer.java"));
