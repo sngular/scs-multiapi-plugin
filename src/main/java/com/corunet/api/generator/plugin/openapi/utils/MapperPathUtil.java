@@ -109,82 +109,37 @@ public class MapperPathUtil {
   private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path,  GlobalObject globalObject){
     ArrayList<OperationObject> operationObjects = new ArrayList<>();
     if (checkIfOperationIsNull(path.getValue().getGet())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getGet().getOperationId())
-                                                       .operationType("GET")
-                                                       .summary(path.getValue().getGet().getSummary())
-                                                       .tags(path.getValue().getGet().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getGet(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getGet().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getGet()))
-                                                       .security(getSecurityRequirementList(path.getValue().getGet().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getGet().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getGet().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPost())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPost().getOperationId())
-                                                       .operationType("POST")
-                                                       .summary(path.getValue().getPost().getSummary())
-                                                       .tags(path.getValue().getPost().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPost(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPost().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPost()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPost().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPost().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPost().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getDelete())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getDelete().getOperationId())
-                                                       .operationType("DELETE")
-                                                       .summary(path.getValue().getDelete().getSummary())
-                                                       .tags(path.getValue().getDelete().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getDelete(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getDelete().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getDelete()))
-                                                       .security(getSecurityRequirementList(path.getValue().getDelete().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getDelete().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getDelete().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPut())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPut().getOperationId())
-                                                       .operationType("PUT")
-                                                       .summary(path.getValue().getPut().getSummary())
-                                                       .tags(path.getValue().getPut().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPut(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPut().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPut()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPut().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPut().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPut().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPatch())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPatch().getOperationId())
-                                                       .operationType("PATCH")
-                                                       .summary(path.getValue().getPatch().getSummary())
-                                                       .tags(path.getValue().getPatch().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPatch(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPatch().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPatch()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPatch().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPatch().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPatch().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
     }
 
     return operationObjects;
+  }
+
+  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject){
+    return OperationObject.builder()
+                   .operationId(operation.getOperationId())
+                   .operationType(operationType)
+                   .summary(operation.getSummary())
+                   .tags(operation.getTags())
+                   .requestObjects(mapRequestObject(fileSpec,operation, globalObject))
+                   .responseObjects(mapResponseObject(fileSpec,operation.getResponses(), globalObject))
+                   .parameterObjects(mapParameterObjects(operation))
+                   .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
+                   .consumes(getConsumesList(operation.getRequestBody()))
+                   .produces(getProducesList(operation.getResponses()))
+                   .build();
   }
 
   private static List<String> getConsumesList(RequestBody requestBody) {
