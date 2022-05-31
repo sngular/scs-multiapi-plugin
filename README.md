@@ -228,19 +228,21 @@ one will be generated.
 
 The target package could be set in three different ways.
 
-- **User definition**: The user provides a package name using the parameter in the pom.xml file.
-- **GroupID from YML**: If the user doesn't provide a package name, the plugin will try to use the `groupId` attribute from the YML file
+  - **User definition**: The user provides a package name using the parameter in the pom.xml file.
+
+  - **GroupID from YML**: If the user doesn't provide a package name, the plugin will try to use the `groupId` attribute from the YML file
   that is in use.
-- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished
+
+  - **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished
   as `com.corunet.apigenerator.asyncapi`.
 
 ### How modelPackage is setted
 
 The model package could be set in four different ways.
 
-- **User definition**: The user provides a package name using the parameter in the pom.xml file.
+  - **User definition**: The user provides a package name using the parameter in the pom.xml file.
 
-- **Namespace from YML**: If the user doesn't provide a package name, the plugin will check if the entity name definition in the YML file,
+  - **Namespace from YML**: If the user doesn't provide a package name, the plugin will check if the entity name definition in the YML file,
   includes a complete package name.
 
 ```yaml
@@ -417,9 +419,9 @@ include `-` or `.` as separators**, slash `/` is not allowed.
 
 In order to get this plugin working, you need the following things installed in your computer:
 
-- Java 11 Version
+  - Java 11 Version
 
-- Maven
+  - Maven
 
 Depending on the approach with which you are going to use the plugin, other dependencies will be necessary, for example:
 
@@ -461,11 +463,11 @@ Before using this plugin we have to warn that not all the complexity and support
 We establish here some of these options that are not yet supported and that will be added to this plugin as time goes by and the existing
 need among users.
 
-- The use of common parameters for all the operations of the same path element of the .yml file.
-- The use of parameters defined in the component element by reference.
-- The use of parameters with content tag.
-- Using Multiple Authentication Types within the security options both at an operational and general level.
-- The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
+  - The use of common parameters for all the operations of the same path element of the .yml file.
+  - The use of parameters defined in the component element by reference.
+  - The use of parameters with content tag.
+  - Using Multiple Authentication Types within the security options both at an operational and general level.
+  - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
 ### Usage
 
