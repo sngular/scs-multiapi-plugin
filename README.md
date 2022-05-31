@@ -2,9 +2,10 @@
 
 # SCS MultiApi Maven Plugin
 
-This is a Maven plugin designed to help developers automatizing the creation of code classes from YML files based on AsyncApi and OpenAPI.
+This is a Maven plugin designed to help developers automatizing the creation of
+code classes from YML files based on AsyncApi and OpenAPI.
 
-# Index
+## Index
 
 - [SCS MultiApi Maven Plugin](#scs-multiapi-maven-plugin)
 - [Index](#index)
@@ -26,16 +27,21 @@ This is a Maven plugin designed to help developers automatizing the creation of 
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
 
-# Main Configuration
+## Main Configuration
+This plugin allows developers to automatize the creation of code classes for 
+REST and Kafka connections, based on YML files under the OpenApi and AsyncApi 
+specifications.
 
-This plugin allows developers to automatize the creation of code classes for REST and Kafka connections, based on YML files under the OpenApi and AsyncApi specifications. 
+The generation of the REST and Kafka connections is independent each other and
+could be used only one, or both at the same time.
 
-The generation of the REST and Kafka connections is independent each other and could be used only one, or both at the same time. 
+### How to configure the POM file
 
-## How to configure the POM file
-
-To mantain the generation of the diferent types of classes independent, they are configured as two different goals on the plugin, `asyncapi-generation` and `openapi-generation`.
-As commented above, they both could be used at the same time, setting a double *execution* for the plugin in the `pom.xml` file.
+To mantain the generation of the diferent types of classes independent, they 
+are configured as two different goals on the plugin, `asyncapi-generation` and
+`openapi-generation`.
+As commented above, they both could be used at the same time, setting a double
+*execution* for the plugin in the `pom.xml` file.
 
 ```xml
 <plugin>
@@ -74,17 +80,24 @@ As commented above, they both could be used at the same time, setting a double *
 </plugin>
 ```
 
-In the example above, you can see a partial configuration for the plugin with a double *execution*. This makes neccesary to set an `id` for each execution, `asyncapi` and `openapi` in this case.
+In the example above, you can see a partial configuration for the plugin with
+a double *execution*. This makes neccesary to set an `id` for each execution,
+`asyncapi` and `openapi` in this case.
 
-In the case that you only want to run one of the goals of the plugin, you only need to remove the *execution* section that you don't need.
+In the case that you only want to run one of the goals of the plugin, you only
+need to remove the *execution* section that you don't need.
 
-In the [AsyncApi Generator](#asyncapi-generator) and the [OpenApi Generator](#openapi-generator) sections, you can find more information about how they work, and the parameters and configuration options they offer.
+In the [AsyncApi Generator](#asyncapi-generator) and the 
+[OpenApi Generator](#openapi-generator) sections, you can find more information
+about how they work, and the parameters and configuration options they offer.
 
-# AsyncApi Generator
+## AsyncApi Generator
 
-## Configuration
+### Configuration
 
-The plugin defined `phase` and `goal` parameters are expected to be *generate-sources* and *asyncapi-generation*, as they are the only values for which the plugin is designed.
+The plugin defined `phase` and `goal` parameters are expected to be 
+*generate-sources* and *asyncapi-generation*, as they are the only values for
+which the plugin is designed.
 
 ```xml
 <plugin>
@@ -124,11 +137,18 @@ The plugin defined `phase` and `goal` parameters are expected to be *generate-so
 </plugin>
 ```
 
-As you can see in the example above, there is a main parameter **fileSpecs** that receives a list of **fileSpec** attributes groups, so you can set as many YML files as you want.
+As you can see in the example above, there is a main parameter **fileSpecs**
+that receives a list of **fileSpec** attributes groups, so you can set as many
+YML files as you want.
 
 **fileSpecs** could be configured in two different ways:
 
-1. The first one is to configure only the YML file. This is made using the **filePath** parameter, that expects to receive the path to the file. Using the plugin in this way, you can't configure the model package or the target package in the pom file, neither other options, so they will be configured as its explained in [targetPackage](#how-targetPackage-is-setted) and [modelPackage](#how-modelPackage-is-setted) sections.  
+1. The first one is to configure only the YML file. This is made using the
+**filePath** parameter, that expects to receive the path to the file. Using
+the plugin in this way, you can't configure the model package or the target
+package in the pom file, neither other options, so they will be configured as
+its explained in [targetPackage](#how-targetPackage-is-setted) and 
+[modelPackage](#how-modelPackage-is-setted) sections.  
 This way it's limited to the usage of Consumer and Supplier methods.
 
 ```xml
@@ -137,7 +157,8 @@ This way it's limited to the usage of Consumer and Supplier methods.
 </fileSpec>
 ```
 
-1. The second one is to configure the YML file with the consumers, supplier producers and streamBrige producers that you want to generate.
+2. The second one is to configure the YML file with the consumers, supplier
+producers and streamBrige producers that you want to generate.
 
 ``````xml
 <fileSpec>
@@ -162,30 +183,67 @@ This way it's limited to the usage of Consumer and Supplier methods.
 </fileSpec>
 ``````
 
-As you can see in the example above, there are three blocks of parameters that can be configured in the plugin.
+As you can see in the example above, there are three blocks of parameters that
+can be configured in the plugin.
 
 - **filePath**: This parameter works in the same way as in the first option.
-- **consumer**, **supplier** and **streamBridge**: They are both configured in the same way and can receive the same parameters. These parameters are:
-  - **ids**: With this parameter you can set the operationId that you want to be generated as subscriber or publisher. If this parameter is not defined for the `consumer` section, all the subscribe operations defined in the YML file, will be generated. If only one of `supplier` and `streamBridge` sections are defined, and this parameter is not defined inside it, all the publish operations defined in the YML file will be generated. If both `supplier` and `streamBridge` sections are defined, it`s needed to define which operations belongs to each category.
-  - **classNamePostfix**: This parameter receive the name of the class that it's going to be generated containing the Beans. This parameter is optional, and by default the classes will be called `Producer`, `StreamBridgeProducer` and `Subscriber`.
-  - **entitiesPostfix**: With this parameter you can set the postfix that is going to be used in the entities of the generated classes. For example if you set this to `DTO`, and there is a class named `EntityClass`, it will result as `EntityClassDTO`. This parameter is optional.
-  - **targetPackage**: This parameter receive a package name, where the generated classes will be generated. This parameter is optional. Check [how the targetPackage is setted](#how-targetPackage-is-setted) for more information about how this parameter works, and the values it could have.
-  - **modelPackage**: This parameter receive a package name, where the entities used for the generated classes are defined. As it's explained in the [Mapper Section](#mapper), those entities are usually auto-generated, so the plugin expects the modelPackage to be the package where them are included.
-    **Note that the plugin doesn't create the entities neither checks their existence**, it takes their names from the YML file and assume that they are created by the user. As the previous parameter, this is also optional. Check [how the modelPackage is setted](#how-modelPackage-is-setted) for more information about how his parameter works, and the values it could have.
+- **consumer**, **supplier** and **streamBridge**: They are both configured in
+the same way and can receive the same parameters. These parameters are:
+  - **ids**: With this parameter you can set the operationId that you want to
+  be generated as subscriber or publisher. If this parameter is not defined for
+  the `consumer` section, all the subscribe operations defined in the YML file,
+  will be generated. If only one of `supplier` and `streamBridge` sections are
+  defined, and this parameter is not defined inside it, all the publish
+  operations defined in the YML file will be generated. If both `supplier` and
+  `streamBridge` sections are defined, it`s needed to define which operations
+  belongs to each category.
+  - **classNamePostfix**: This parameter receive the name of the class that
+  it's going to be generated containing the Beans. This parameter is optional,
+  and by default the classes will be called `Producer`, `StreamBridgeProducer`
+  and `Subscriber`.
+  - **entitiesPostfix**: With this parameter you can set the postfix that is
+  going to be used in the entities of the generated classes. For example if
+  you set this to `DTO`, and there is a class named `EntityClass`, it will
+  result as `EntityClassDTO`. This parameter is optional.
+  - **targetPackage**: This parameter receive a package name, where the
+  generated classes will be generated. This parameter is optional. 
+  Check [how the targetPackage is setted](#how-targetPackage-is-setted) for
+  more information about how this parameter works, and the values it 
+  could have.
+  - **modelPackage**: This parameter receive a package name, where the entities
+  used for the generated classes are defined. As it's explained in the 
+  [Mapper Section](#mapper), those entities are usually auto-generated, so the
+  plugin expects the modelPackage to be the package where them are included.
+    **Note that the plugin doesn't create the entities neither checks their 
+  existence**, it takes their names from the YML file and assume that they are
+  created by the user. As the previous parameter, this is also optional. 
+  Check [how the modelPackage is setted](#how-modelPackage-is-setted) for more
+  information about how his parameter works, and the values it could have.
 
+The configuration of `consumer`, `supplier` and `streamBridge` are independent.
+If only one of them is configured in the pom file, only that one will be
+generated.
 
-The configuration of `consumer`, `supplier` and `streamBridge` are independent. If only one of them is configured in the pom file, only that one will be generated.
-
-## How targetPackage is setted?
+### How targetPackage is setted?
 The target package could be set in three different ways.
-- **User definition**: The user provides a package name using the parameter in the pom.xml file.
-- **GroupID from YML**: If the user doesn't provide a package name, the plugin will try to use the `groupId` attribute from the YML file that is in use.
-- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.apigenerator.asyncapi`.
 
-## How modelPackage is setted?
+- **User definition**: The user provides a package name using the parameter in
+the pom.xml file.
+- **GroupID from YML**: If the user doesn't provide a package name, the plugin
+will try to use the `groupId` attribute from the YML file that is in use.
+- **Default package name**: If neither of the previous options were given, the
+plugin will use a default package name, that is stablished as 
+`com.corunet.apigenerator.asyncapi`.
+
+### How modelPackage is setted?
 The model package could be set in four different ways.
-- **User definition**: The user provides a package name using the parameter in the pom.xml file.
-- **Namespace from YML**: If the user doesn't provide a package name, the plugin will check if the entity name definition in the YML file, includes a complete package name.
+
+- **User definition**: The user provides a package name using the parameter in
+the pom.xml file.
+- **Namespace from YML**: If the user doesn't provide a package name, the
+plugin will check if the entity name definition in the YML file, includes a
+complete package name.
+
 ```yaml
 order/createCommand:
     subscribe:
@@ -193,7 +251,12 @@ order/createCommand:
       message:
         $ref: '#/components/messages/com.corunet.apigenerator.asyncapi.model.CreateOrder'
 ```
-- **Namespace from Avro**: If the user doesn't provide a package name, and the entity is defined by an Avro Schema, the plugin will check for a `namespace` attribute defined in the Avro file, and if there is, it will use it. The plugin expects to receive a relative path from the `yml` file folder.
+
+- **Namespace from Avro**: If the user doesn't provide a package name, and the
+entity is defined by an Avro Schema, the plugin will check for a `namespace`
+attribute defined in the Avro file, and if there is, it will use it. The plugin
+expects to receive a relative path from the `yml` file folder.
+
 ```yaml
 order/created:
     publish:
@@ -201,12 +264,21 @@ order/created:
       message:
         $ref: 'path_to_Avro_file'
 ```
-- **Default package name**: If neither of the previous options were given, the plugin will use a default package name, that is stablished as `com.corunet.apigenerator.asyncapi.model`.
 
-## Class Generation
+- **Default package name**: If neither of the previous options were given, the
+plugin will use a default package name, that is stablished as 
+`com.corunet.apigenerator.asyncapi.model`.
 
-### Consumer and Supplier classes
-Those are a pair of classes, separated by the directionality of the messages. They came from the plugin fully implemented by making reference to the interfaces of the next section. Their names could be modified using the `classNamePostfix` parameter specified on the [Usage section](#using-in-other-projects), being by default **Producer** and **Subscriber**.
+### Class Generation
+
+#### Consumer and Supplier classes
+
+Those are a pair of classes, separated by the directionality of the messages.
+They came from the plugin fully implemented by making reference to the
+interfaces of the next section. Their names could be modified using the
+`classNamePostfix` parameter specified on the 
+[Usage section](#using-in-other-projects), being by default **Producer** and
+**Subscriber**.
 
 ```java
 @Configuration
@@ -219,18 +291,30 @@ public class StreamTopicListenerConsumer {
     }
 
     @Bean
-    public Consumer<CreateOrder> consumerSubscribeOperation(){ return value -> subscribeOperation.subscribeOperation(value); }
+    public Consumer<CreateOrder> consumerSubscribeOperation(){ 
+      return value -> subscribeOperation.subscribeOperation(value); }
 }
 ```
 
-This sample class, is related to the previosly used YML file, and in it you could see that it came fully implemented, based on the related Interface that lets the personalitation and implementation to the user. Also, in this example is possible to see how the YML attribute 'operationId' is used to name the methods as `Consumer'OperationId'` or `Publisher'OperationId'`.
+This sample class, is related to the previosly used YML file, and in it you
+could see that it came fully implemented, based on the related Interface that
+lets the personalitation and implementation to the user. Also, in this example
+is possible to see how the YML attribute 'operationId' is used to name the
+methods as `Consumer'OperationId'` or `Publisher'OperationId'`.
 
-#### Method interfaces
-Those are a group of interfaces that are related to the previous seen classes. There are as many as operations are defined in the YML file, and in the previous classes, so there is only one operation defined in each interface.
+##### Method interfaces
 
-This layer is the only one that needs work by the end user, so it needs to implement these interfaces.
+Those are a group of interfaces that are related to the previous seen classes.
+There are as many as operations are defined in the YML file, and in the 
+previous classes, so there is only one operation defined in each interface.
 
-This interfaces are named following the "I*OperationId*" pattern, where 'OperationId' comes from the YML file definition of the channels section. Also the method is named as 'OperationId' as well as on the classes in the above section.
+This layer is the only one that needs work by the end user, so it needs to
+implement these interfaces.
+
+This interfaces are named following the "I*OperationId*" pattern, where
+'OperationId' comes from the YML file definition of the channels section.
+Also the method is named as 'OperationId' as well as on the classes in the
+above section.
 
 ```java
 public interface ISubscribeOperation {
@@ -239,14 +323,14 @@ public interface ISubscribeOperation {
 }
 ```
 
-#### Mapper
+##### Mapper
 The entities used for the definitions both on the previous seen classes and this interfaces, are auto-generated entities, based on the same YML file. Because of that, they need to be mapped to a user defined entity using a mapper utility class.
 
 This mapper must be defined by the user on it's own way to improve the personalitation capabilities of the plugin.
 
 Down here you have an example of the mapper utility class as well as an simple class implementing the interface defined above.
 
-##### Mapper
+###### Mapper
 
 ```java
 @Mapper
@@ -255,7 +339,7 @@ public interface Mapper {
 }
 ```
 
-##### Implementation
+###### Implementation
 
 ```java
 @Component
@@ -272,7 +356,7 @@ public class subscribeOperation implements ISubscribeOperation {
 }
 ```
 
-### Stream Bridge class
+#### Stream Bridge class
 
 In this case, there is only one class where all the selected operations will be included. It's name could be modified using the `classNamePostfix` parameter specified on the [Usage section](#using-in-other-projects), being by default **StreamBridgeProducer**.
 
@@ -330,9 +414,9 @@ channels:
 
 Due to the limitations on topics naming, the identifier of the channels that are going to be used as Stream Bridge publishers, **only could include `-` or `.` as separators**, slash `/` is not allowed.
 
-# OpenApi Generator
+## OpenApi Generator
 
-## Getting Started
+### Getting Started
 
 In order to get this plugin working, you need the following things installed in your computer:
 
@@ -370,7 +454,7 @@ After you have these installed, you need to add this plugin in your pom.xml file
 </plugin>
 ```
 
-## Initial Considerations
+### Initial Considerations
 
 Before using this plugin we have to warn that not all the complexity and support offered by the use of swagger.io yml files is supported.
 
@@ -387,7 +471,7 @@ We establish here some of these options that are not yet supported and that will
 - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
 
-## Usage
+### Usage
 
 This plugin allows us to create multiple apis with just one maven clean install execution, in this way the user can configure several fileSpecs tags with different uses, thus generating Apis in the two possible modes: send or receive calls, depending on the options of configuration selected in said fileSpecs.
 
