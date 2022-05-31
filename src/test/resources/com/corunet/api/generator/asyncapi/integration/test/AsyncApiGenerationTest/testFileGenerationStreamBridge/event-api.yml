@@ -20,12 +20,12 @@ servers:
     protocol: kafka
     protocolVersion: 0.9.1
 channels:
-  order/created:
+  order.created:
     publish:
       operationId: "publishOperation"
       message:
         $ref: '#/components/messages/OrderCreated'
-  order-createCommand:
+  order.createCommand:
     subscribe:
       operationId: "subscribeOperation"
       message:
