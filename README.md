@@ -268,7 +268,7 @@ order/created:
 ```
 
 - **Default package name**: If neither of the previous options were given, the
-plugin will use a default package name, that is stablished as 
+plugin will use a default package name, that is stablished as
 `com.corunet.apigenerator.asyncapi.model`.
 
 ### Class Generation
@@ -496,7 +496,6 @@ element of the .yml file.
 operational and general level.
 
 - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
-
 
 ### Usage
 
