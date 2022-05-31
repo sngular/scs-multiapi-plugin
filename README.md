@@ -28,8 +28,9 @@ code classes from YML files based on AsyncApi and OpenAPI.
   - [Usage](#usage)
 
 ## Main Configuration
-This plugin allows developers to automatize the creation of code classes for 
-REST and Kafka connections, based on YML files under the OpenApi and AsyncApi 
+
+This plugin allows developers to automatize the creation of code classes for
+REST and Kafka connections, based on YML files under the OpenApi and AsyncApi
 specifications.
 
 The generation of the REST and Kafka connections is independent each other and
@@ -37,7 +38,7 @@ could be used only one, or both at the same time.
 
 ### How to configure the POM file
 
-To mantain the generation of the diferent types of classes independent, they 
+To mantain the generation of the diferent types of classes independent, they
 are configured as two different goals on the plugin, `asyncapi-generation` and
 `openapi-generation`.
 As commented above, they both could be used at the same time, setting a double
@@ -87,7 +88,7 @@ a double *execution*. This makes neccesary to set an `id` for each execution,
 In the case that you only want to run one of the goals of the plugin, you only
 need to remove the *execution* section that you don't need.
 
-In the [AsyncApi Generator](#asyncapi-generator) and the 
+In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
@@ -95,7 +96,7 @@ about how they work, and the parameters and configuration options they offer.
 
 ### Configuration
 
-The plugin defined `phase` and `goal` parameters are expected to be 
+The plugin defined `phase` and `goal` parameters are expected to be
 *generate-sources* and *asyncapi-generation*, as they are the only values for
 which the plugin is designed.
 
@@ -147,15 +148,15 @@ YML files as you want.
 **filePath** parameter, that expects to receive the path to the file. Using
 the plugin in this way, you can't configure the model package or the target
 package in the pom file, neither other options, so they will be configured as
-its explained in [targetPackage](#how-targetPackage-is-setted) and 
+its explained in [targetPackage](#how-targetPackage-is-setted) and
 [modelPackage](#how-modelPackage-is-setted) sections.  
 This way it's limited to the usage of Consumer and Supplier methods.
 
-```xml
-<fileSpec>
-    <filePath>PATH_TO_YML</filePath>
-</fileSpec>
-```
+  ```xml
+  <fileSpec>
+      <filePath>PATH_TO_YML</filePath>
+  </fileSpec>
+  ```
 
 2. The second one is to configure the YML file with the consumers, supplier
 producers and streamBrige producers that you want to generate.
@@ -206,17 +207,17 @@ the same way and can receive the same parameters. These parameters are:
   you set this to `DTO`, and there is a class named `EntityClass`, it will
   result as `EntityClassDTO`. This parameter is optional.
   - **targetPackage**: This parameter receive a package name, where the
-  generated classes will be generated. This parameter is optional. 
+  generated classes will be generated. This parameter is optional.
   Check [how the targetPackage is setted](#how-targetPackage-is-setted) for
-  more information about how this parameter works, and the values it 
+  more information about how this parameter works, and the values it
   could have.
   - **modelPackage**: This parameter receive a package name, where the entities
-  used for the generated classes are defined. As it's explained in the 
+  used for the generated classes are defined. As it's explained in the
   [Mapper Section](#mapper), those entities are usually auto-generated, so the
   plugin expects the modelPackage to be the package where them are included.
-    **Note that the plugin doesn't create the entities neither checks their 
+    **Note that the plugin doesn't create the entities neither checks their
   existence**, it takes their names from the YML file and assume that they are
-  created by the user. As the previous parameter, this is also optional. 
+  created by the user. As the previous parameter, this is also optional.
   Check [how the modelPackage is setted](#how-modelPackage-is-setted) for more
   information about how his parameter works, and the values it could have.
 
@@ -324,11 +325,16 @@ public interface ISubscribeOperation {
 ```
 
 ##### Mapper
-The entities used for the definitions both on the previous seen classes and this interfaces, are auto-generated entities, based on the same YML file. Because of that, they need to be mapped to a user defined entity using a mapper utility class.
+The entities used for the definitions both on the previous seen classes and
+this interfaces, are auto-generated entities, based on the same YML file.
+Because of that, they need to be mapped to a user defined entity using a mapper
+utility class.
 
-This mapper must be defined by the user on it's own way to improve the personalitation capabilities of the plugin.
+This mapper must be defined by the user on it's own way to improve the
+personalitation capabilities of the plugin.
 
-Down here you have an example of the mapper utility class as well as an simple class implementing the interface defined above.
+Down here you have an example of the mapper utility class as well as an simple
+class implementing the interface defined above.
 
 ###### Mapper
 
@@ -358,7 +364,10 @@ public class subscribeOperation implements ISubscribeOperation {
 
 #### Stream Bridge class
 
-In this case, there is only one class where all the selected operations will be included. It's name could be modified using the `classNamePostfix` parameter specified on the [Usage section](#using-in-other-projects), being by default **StreamBridgeProducer**.
+In this case, there is only one class where all the selected operations will be
+included. It's name could be modified using the `classNamePostfix` parameter
+specified on the [Usage section](#using-in-other-projects), being by default
+**StreamBridgeProducer**.
 
 ```java
 @Configuration
@@ -371,9 +380,14 @@ public class StreamBridgeProducer {
     }
 }
 ```
-This sample class, is related to the previosly used YML file, and in it you could see that it came fully implemented.
 
-Also, it's important to note that using Stream Bridge, the *binding* where the messages are going to be sent is included in the auto generated class. This is defined by the application properties using `function`, `binders` and `bindings`, as in the next example:
+This sample class, is related to the previosly used YML file, and in it you
+could see that it came fully implemented.
+
+Also, it's important to note that using Stream Bridge, the *binding* where the
+messages are going to be sent is included in the auto generated class. This is
+defined by the application properties using `function`, `binders` and
+`bindings`, as in the next example:
 
 ```yaml
 spring:
@@ -400,8 +414,10 @@ spring:
             value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
 ```
 
-Because the plugin cannot access the application properties, the name of the corresponding *binding* must be used as the **channel identifier** in the YML file that's setted on the plugin configuration, as you can see on the next extract:
-
+Because the plugin cannot access the application properties, the name of the
+corresponding *binding* must be used as the **channel identifier** in the YML
+file that's setted on the plugin configuration, as you can see on the next
+extract:
 
 ```yaml
 channels:
@@ -412,22 +428,29 @@ channels:
         $ref: '#/components/messages/CreateOrder'
 ```
 
-Due to the limitations on topics naming, the identifier of the channels that are going to be used as Stream Bridge publishers, **only could include `-` or `.` as separators**, slash `/` is not allowed.
+Due to the limitations on topics naming, the identifier of the channels that
+are going to be used as Stream Bridge publishers, **only could include `-` or
+`.` as separators**, slash `/` is not allowed.
 
 ## OpenApi Generator
 
 ### Getting Started
 
-In order to get this plugin working, you need the following things installed in your computer:
+In order to get this plugin working, you need the following things installed
+in your computer:
 
 - Java 11 Version
 - Maven
 
-Depending on the approach with which you are going to use the plugin, other dependencies will be necessary, for example:
+Depending on the approach with which you are going to use the plugin, other
+dependencies will be necessary, for example:
 
-- spring-boot-starter-webflux, in case you want to implement an API with responses in Mono/Flux Reactor types or use them for external calls through Spring WebClient.
+- spring-boot-starter-webflux, in case you want to implement an API with
+responses in Mono/Flux Reactor types or use them for external calls through
+Spring WebClient.
 
-After you have these installed, you need to add this plugin in your pom.xml file. Here is an example of a basic configuration:
+After you have these installed, you need to add this plugin in your pom.xml
+file. Here is an example of a basic configuration:
 
 ```xml
 <plugin>
@@ -456,24 +479,32 @@ After you have these installed, you need to add this plugin in your pom.xml file
 
 ### Initial Considerations
 
-Before using this plugin we have to warn that not all the complexity and support offered by the use of swagger.io yml files is supported.
+Before using this plugin we have to warn that not all the complexity and
+support offered by the use of swagger.io yml files is supported.
 
-We establish here some of these options that are not yet supported and that will be added to this plugin as time goes by and the existing need among users.
+We establish here some of these options that are not yet supported and that
+will be added to this plugin as time goes by and the existing need among users.
 
-- The use of common parameters for all the operations of the same path element of the .yml file.
+- The use of common parameters for all the operations of the same path
+element of the .yml file.
 
 - The use of parameters defined in the component element by reference.
 
 - The use of parameters with content tag.
 
-- Using Multiple Authentication Types within the security options both at an operational and general level.
+- Using Multiple Authentication Types within the security options both at an
+operational and general level.
 
 - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
 
 ### Usage
 
-This plugin allows us to create multiple apis with just one maven clean install execution, in this way the user can configure several fileSpecs tags with different uses, thus generating Apis in the two possible modes: send or receive calls, depending on the options of configuration selected in said fileSpecs.
+This plugin allows us to create multiple apis with just one maven clean
+install execution, in this way the user can configure several fileSpecs tags
+with different uses, thus generating Apis in the two possible modes: send or
+receive calls, depending on the options of configuration selected in said
+fileSpecs.
 
 ```xml
 <configuration>
@@ -488,7 +519,9 @@ This plugin allows us to create multiple apis with just one maven clean install 
 </configuration>
 ```
 
-To customize these fileSpecs tags we are going to specify them inside the configuration tag, we must declare the fileSpecs tag that contains all files that will be used. Each fileSpec has their own configuration:
+To customize these fileSpecs tags we are going to specify them inside the
+configuration tag, we must declare the fileSpecs tag that contains all files
+that will be used. Each fileSpec has their own configuration:
 
 | Name      | Description                                                                                                                                                                                         | Example                                           |
 | ---------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
@@ -502,13 +535,23 @@ To customize these fileSpecs tags we are going to specify them inside the config
 | useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
 | isReactive | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
 
-As the configuration options already indicate, the data model will also be created within the specified path.This model will be created with the indicated prefixes and suffixes and the instances and imports will be made to that model within the corresponding Api.
+As the configuration options already indicate, the data model will also be
+created within the specified path.This model will be created with the indicated
+prefixes and suffixes and the instances and imports will be made to that model
+within the corresponding Api.
 
-Only one property is configured outside the fileSpecs, the path where the RestClient and the WebClient will be located, if this option is set in any of the fileSpecs.
+Only one property is configured outside the fileSpecs, the path where the
+RestClient and the WebClient will be located, if this option is set in any
+of the fileSpecs.
 
 | Name      | Description                                            | Example                                 |
 | ---------- |--------------------------------------------------------|-----------------------------------------|
 | clientPackage  | Path where the RestClient and/or WebClient are located | com.corunet.apigenerator.openapi.client |
 
-We must clarify that the options to make calls are configured under the RestClient or WebClient specifications as indicated above in the configuration options. If several of the APIs to be generated are defined under the same call option, a single RestClient/Webclient will be generated for all of them, which is initialized with the specific options needed within the class that defines each API.
+We must clarify that the options to make calls are configured under the
+RestClient or WebClient specifications as indicated above in the configuration
+options. If several of the APIs to be generated are defined under the same call
+option, a single RestClient/Webclient will be generated for all of them, which
+is initialized with the specific options needed within the class that defines
+each API.
 
