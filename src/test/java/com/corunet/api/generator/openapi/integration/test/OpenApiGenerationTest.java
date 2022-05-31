@@ -39,19 +39,7 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testApi");
-    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testApi/model");
-
-    File targetApiFolder = pathToTargetApi.toFile();
-    assertThat(targetApiFolder).isNotEmptyDirectory();
-
-    File targetModelFolder = pathToTargetModel.toFile();
-    assertThat(targetModelFolder).isNotEmptyDirectory();
-
-    validateFiles(expectedFile, targetApiFolder);
-    validateFiles(expectedModelFiles, targetModelFolder);
+    commonTest(result, expectedFile, expectedModelFiles);
   }
 
   @MavenTest
@@ -66,10 +54,14 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java")
     );
 
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
+  private void commonTest(final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles) throws IOException {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testReactiveApi");
-    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testReactiveApi/model");
+    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testApi");
+    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/com/corunet/multifileplugin/testApi/model");
 
     File targetApiFolder = pathToTargetApi.toFile();
     assertThat(targetApiFolder).isNotEmptyDirectory();

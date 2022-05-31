@@ -42,8 +42,8 @@
           <fileSpecs>
             <fileSpec>
               <inputSpec>api-test.yml</inputSpec>
-              <apiPackage>com.corunet.multifileplugin.testreactiveApi</apiPackage>
-              <modelPackage>com.corunet.multifileplugin.testreactiveApi.model</modelPackage>
+              <apiPackage>com.corunet.multifileplugin.testapi</apiPackage>
+              <modelPackage>com.corunet.multifileplugin.testapi.model</modelPackage>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>
               <isReactive>true</isReactive>
