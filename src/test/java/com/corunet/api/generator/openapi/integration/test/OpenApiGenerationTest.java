@@ -4,9 +4,9 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.corunet.api.generator.openapi.integrationTest;
+package com.corunet.api.generator.openapi.integration.test;
 
-import static com.corunet.api.generator.testUtils.TestUtils.validateFiles;
+import static com.corunet.api.generator.test.utils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
 import java.io.File;
@@ -31,12 +31,12 @@ public class OpenApiGenerationTest {
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiClientGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiClientGeneration/assets/TestApi.java"));
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/TestApi.java"));
 
     List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiClientGeneration/assets/ApiErrorDTO.java"),
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java")
     );
 
     assertThat(result).hasTarget();
@@ -57,13 +57,13 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiReactiveGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFile = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiReactiveGeneration/assets" +
+    List<File> expectedFile = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets" +
                                                "/TestApi.java"));
 
     List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiErrorDTO.java"),
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java")
     );
 
     assertThat(result).hasTarget();
@@ -86,8 +86,8 @@ public class OpenApiGenerationTest {
   void testApiTagsGeneration(MavenProjectResult result) throws IOException {
 
     List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagFirstApi.java"),
-        new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagSecondApi.java"));
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagFirstApi.java"),
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagSecondApi.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -102,9 +102,9 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                     "/TestFirstApi.java"));
-    List<File> expectedFileSecond = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+    List<File> expectedFileSecond = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                      "/TestSecondApi.java"));
 
     assertThat(result).hasTarget();
@@ -125,7 +125,7 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testWebClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
+    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
                                              "/TestApi.java"));
 
     assertThat(result).hasTarget();
@@ -141,7 +141,7 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testRestClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integrationTest/OpenApiGenerationTest/testRestClientApiGeneration" +
+    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testRestClientApiGeneration" +
                                                     "/assets/TestApi.java"));
 
     assertThat(result).hasTarget();

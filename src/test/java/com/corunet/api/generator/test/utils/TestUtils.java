@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.corunet.api.generator.testUtils;
+package com.corunet.api.generator.test.utils;
 
 import static junit.framework.Assert.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
