@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://localhost:8080/v1
+- url: http://localhost:8080/v1
 paths:
   /test:
     summary: available test
@@ -61,7 +61,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+security:
+- BasicAuth: []
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
   schemas:
     Test:
       type: object

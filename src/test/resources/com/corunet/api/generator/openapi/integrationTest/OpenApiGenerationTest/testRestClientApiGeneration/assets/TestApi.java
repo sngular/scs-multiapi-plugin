@@ -12,6 +12,7 @@ import com.corunet.multifileplugin.testRestClient.model.ApiErrorDTO;
 import com.corunet.multifileplugin.testRestClient.model.ApiTestDTO;
 
 import com.corunet.apigenerator.openapi.client.auth.Authentication;
+import com.corunet.apigenerator.openapi.client.auth.HttpBasicAuth;
 
 import org.springframework.stereotype.Component;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,6 +39,7 @@ public class TestApi {
 
     protected void init() {
       this.authenticationsApi = new HashMap< String, Authentication>();
+      this.authenticationsApi.put("BasicAuth", new HttpBasicAuth());
       this.apiRestClient = new ApiRestClient(authenticationsApi);
     }
 
@@ -72,7 +74,7 @@ public class TestApi {
          final String[] localVarContentTypes = {};
          final MediaType localVarContentType = apiRestClient.selectHeaderContentType(localVarContentTypes);
 
-         String[] localVarAuthNames = new String[] {};
+         String[] localVarAuthNames = new String[] {"BasicAuth"};
 
          ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
          return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
@@ -108,7 +110,7 @@ public class TestApi {
          final String[] localVarContentTypes = {};
          final MediaType localVarContentType = apiRestClient.selectHeaderContentType(localVarContentTypes);
 
-         String[] localVarAuthNames = new String[] {};
+         String[] localVarAuthNames = new String[] {"BasicAuth"};
 
          ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
          return apiRestClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);

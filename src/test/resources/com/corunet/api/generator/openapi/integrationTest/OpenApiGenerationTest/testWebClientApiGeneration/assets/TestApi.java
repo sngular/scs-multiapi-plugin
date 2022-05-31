@@ -12,6 +12,7 @@ import com.corunet.multifileplugin.testWebClient.model.ApiErrorDTO;
 import com.corunet.multifileplugin.testWebClient.model.ApiTestDTO;
 
 import com.corunet.apigenerator.openapi.client.auth.Authentication;
+import com.corunet.apigenerator.openapi.client.auth.HttpBasicAuth;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -38,6 +39,7 @@ public class TestApi {
 
     protected void init() {
       this.authenticationsApi = new HashMap< String, Authentication>();
+      this.authenticationsApi.put("BasicAuth", new HttpBasicAuth());
       this.apiWebClient = new ApiWebClient(authenticationsApi);
     }
 
@@ -66,7 +68,7 @@ public class TestApi {
               final String[] localVarContentTypes = {};
               final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
 
-              String[] localVarAuthNames = new String[] {};
+              String[] localVarAuthNames = new String[] {"BasicAuth"};
 
               ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
               return apiWebClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
@@ -114,7 +116,7 @@ public class TestApi {
               final String[] localVarContentTypes = {};
               final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
 
-              String[] localVarAuthNames = new String[] {};
+              String[] localVarAuthNames = new String[] {"BasicAuth"};
 
               ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
               return apiWebClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);

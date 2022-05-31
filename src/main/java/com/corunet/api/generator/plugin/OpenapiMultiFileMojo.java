@@ -150,13 +150,9 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     templateFactory.fillTemplateAuth(authFileToSave, "Authentication");
 
     if (null != authentications && !authentications.isEmpty()) {
-      authentications.forEach(authentication -> {
-        try {
-          templateFactory.fillTemplateAuth(authFileToSave, authentication);
-        } catch (IOException | TemplateException e) {
-          throw new RuntimeException(e);
-        }
-      });
+      for (String authentication : authentications) {
+        templateFactory.fillTemplateAuth(authFileToSave, authentication);
+      }
     }
   }
 
