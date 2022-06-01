@@ -75,19 +75,19 @@ public class TemplateFactory {
     File fileToSave;
     String pathToSaveMainClass;
 
-    if (!publishMethods.isEmpty()){
+    if (!publishMethods.isEmpty()) {
       fileToSave = new File(supplierFilePath);
       pathToSaveMainClass = fileToSave.toPath().resolve(supplierClassName + FILE_TYPE_JAVA).toString();
-      writeTemplateToFile("templateSuppliers.ftlh" , root, pathToSaveMainClass);
+      writeTemplateToFile("templateSuppliers.ftlh", root, pathToSaveMainClass);
     }
 
-    if (!subscribeMethods.isEmpty()){
+    if (!subscribeMethods.isEmpty()) {
       fileToSave = new File(subscribeFilePath);
       pathToSaveMainClass = fileToSave.toPath().resolve(subscribeClassName + FILE_TYPE_JAVA).toString();
       writeTemplateToFile("templateConsumers.ftlh", root, pathToSaveMainClass);
     }
 
-    if (!streamBridgeMethods.isEmpty()){
+    if (!streamBridgeMethods.isEmpty()) {
       fileToSave = new File(streamBridgeFilePath);
       pathToSaveMainClass = fileToSave.toPath().resolve(streamBridgeClassName + FILE_TYPE_JAVA).toString();
       writeTemplateToFile("templateStreamBridge.ftlh", root, pathToSaveMainClass);
@@ -95,55 +95,55 @@ public class TemplateFactory {
 
     this.generateInterfaces();
   }
-  
-  public void setSubscribePackageName(String packageName){
-    root.put(SUBSCRIBE_PACKAGE , packageName);
+
+  public void setSubscribePackageName(String packageName) {
+    root.put(SUBSCRIBE_PACKAGE, packageName);
   }
 
-  public void setSupplierPackageName(String packageName){
+  public void setSupplierPackageName(String packageName) {
     root.put(SUPPLIER_PACKAGE, packageName);
   }
 
-  public void setStreamBridgePackageName(String packageName){
+  public void setStreamBridgePackageName(String packageName) {
     root.put(STREAM_BRIDGE_PACKAGE, packageName);
   }
 
-  public void setSubscribeClassName(String className){
+  public void setSubscribeClassName(String className) {
     root.put("subscribeClassName", className);
     this.subscribeClassName = className;
   }
 
-  public void setSupplierClassName(String className){
+  public void setSupplierClassName(String className) {
     root.put("supplierClassName", className);
     this.supplierClassName = className;
   }
 
-  public void setStreamBridgeClassName(String className){
+  public void setStreamBridgeClassName(String className) {
     root.put("streamBridgeClassName", className);
     this.streamBridgeClassName = className;
   }
 
-  public void setSubscribeFilePath(Path path){
+  public void setSubscribeFilePath(Path path) {
     this.subscribeFilePath = path.toString();
   }
 
-  public void setSupplierFilePath(Path path){
+  public void setSupplierFilePath(Path path) {
     this.supplierFilePath = path.toString();
   }
 
-  public void setStreamBridgeFilePath(Path path){
+  public void setStreamBridgeFilePath(Path path) {
     this.streamBridgeFilePath = path.toString();
   }
 
-  public void addSupplierMethod(String operationId, String classNamespace){
+  public void addSupplierMethod(String operationId, String classNamespace) {
     publishMethods.add(new MethodObject(operationId, classNamespace, "publish"));
   }
 
-  public void addStreamBridgeMethod(String operationId, String classNamespace, String channelName){
+  public void addStreamBridgeMethod(String operationId, String classNamespace, String channelName) {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
-  public void addSubscribeMethod(String operationId, String classNamespace){
+  public void addSubscribeMethod(String operationId, String classNamespace) {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
 
@@ -156,10 +156,10 @@ public class TemplateFactory {
   }
 
   public void setSubscribeEntitiesPostfix(String postfix) {
-    root.put(SUBSCRIBE_ENTITIES_POSTFIX , postfix);
+    root.put(SUBSCRIBE_ENTITIES_POSTFIX, postfix);
   }
 
-  public void clearData(){
+  public void clearData() {
     root.clear();
     publishMethods.clear();
     subscribeMethods.clear();
@@ -176,11 +176,11 @@ public class TemplateFactory {
     allMethods.addAll(publishMethods);
 
     Map<String, Object> interfaceRoot = new HashMap<>();
-    interfaceRoot.put(SUBSCRIBE_PACKAGE , root.get(SUBSCRIBE_PACKAGE));
+    interfaceRoot.put(SUBSCRIBE_PACKAGE, root.get(SUBSCRIBE_PACKAGE));
     interfaceRoot.put(SUPPLIER_PACKAGE, root.get(SUPPLIER_PACKAGE));
 
     interfaceRoot.put(SUPPLIER_ENTITIES_POSTFIX, root.get(SUPPLIER_ENTITIES_POSTFIX));
-    interfaceRoot.put(SUBSCRIBE_ENTITIES_POSTFIX , root.get(SUBSCRIBE_ENTITIES_POSTFIX));
+    interfaceRoot.put(SUBSCRIBE_ENTITIES_POSTFIX, root.get(SUBSCRIBE_ENTITIES_POSTFIX));
 
     File fileToSave;
     String pathToSaveMainClass;
@@ -188,13 +188,15 @@ public class TemplateFactory {
     for (MethodObject method : allMethods) {
       interfaceRoot.put("method", method);
 
-      if (Objects.equals(method.getType(), "publish")){
+      if (Objects.equals(method.getType(), "publish")) {
         fileToSave = new File(supplierFilePath);
-        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0,1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA).toString();
+        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA)
+                                        .toString();
         writeTemplateToFile("interfaceSupplier.ftlh", interfaceRoot, pathToSaveMainClass);
-      } else if (Objects.equals(method.getType(), "subscribe")){
+      } else if (Objects.equals(method.getType(), "subscribe")) {
         fileToSave = new File(subscribeFilePath);
-        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0,1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA).toString();
+        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA)
+                                        .toString();
         writeTemplateToFile("interfaceConsumer.ftlh", interfaceRoot, pathToSaveMainClass);
       }
     }

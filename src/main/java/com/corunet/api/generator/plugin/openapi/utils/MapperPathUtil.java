@@ -6,6 +6,11 @@
 
 package com.corunet.api.generator.plugin.openapi.utils;
 
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getPojoName;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getSimpleType;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getTypeArray;
+import static com.corunet.api.generator.plugin.openapi.utils.MapperUtil.getTypeMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +35,9 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
@@ -42,7 +45,6 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
-
 
   public static GlobalObject mapOpenApiObjectToOurModels(OpenAPI openAPI, FileSpec fileSpec, List<AuthSchemaObject> authSchemaList) {
 
@@ -57,8 +59,6 @@ public class MapperPathUtil {
                        .authentications(authList)
                        .componentsTypeMap(getMapComponentsTypes(openAPI.getComponents(), fileSpec))
                        .build();
-
-
   }
 
   private static HashMap<String, String> getMapComponentsTypes(Components components, FileSpec fileSpec) {
@@ -106,85 +106,40 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path,  GlobalObject globalObject){
+  private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
     ArrayList<OperationObject> operationObjects = new ArrayList<>();
     if (checkIfOperationIsNull(path.getValue().getGet())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getGet().getOperationId())
-                                                       .operationType("GET")
-                                                       .summary(path.getValue().getGet().getSummary())
-                                                       .tags(path.getValue().getGet().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getGet(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getGet().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getGet()))
-                                                       .security(getSecurityRequirementList(path.getValue().getGet().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getGet().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getGet().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPost())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPost().getOperationId())
-                                                       .operationType("POST")
-                                                       .summary(path.getValue().getPost().getSummary())
-                                                       .tags(path.getValue().getPost().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPost(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPost().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPost()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPost().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPost().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPost().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getDelete())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getDelete().getOperationId())
-                                                       .operationType("DELETE")
-                                                       .summary(path.getValue().getDelete().getSummary())
-                                                       .tags(path.getValue().getDelete().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getDelete(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getDelete().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getDelete()))
-                                                       .security(getSecurityRequirementList(path.getValue().getDelete().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getDelete().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getDelete().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPut())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPut().getOperationId())
-                                                       .operationType("PUT")
-                                                       .summary(path.getValue().getPut().getSummary())
-                                                       .tags(path.getValue().getPut().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPut(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPut().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPut()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPut().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPut().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPut().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
     }
     if (checkIfOperationIsNull(path.getValue().getPatch())) {
-      OperationObject operationObject = OperationObject.builder()
-                                                       .operationId(path.getValue().getPatch().getOperationId())
-                                                       .operationType("PATCH")
-                                                       .summary(path.getValue().getPatch().getSummary())
-                                                       .tags(path.getValue().getPatch().getTags())
-                                                       .requestObjects(mapRequestObject(fileSpec,path.getValue().getPatch(), globalObject))
-                                                       .responseObjects(mapResponseObject(fileSpec,path.getValue().getPatch().getResponses(), globalObject))
-                                                       .parameterObjects(mapParameterObjects(path.getValue().getPatch()))
-                                                       .security(getSecurityRequirementList(path.getValue().getPatch().getSecurity(), globalObject.getAuthentications()))
-                                                       .consumes(getConsumesList(path.getValue().getPatch().getRequestBody()))
-                                                       .produces(getProducesList(path.getValue().getPatch().getResponses()))
-                                                       .build();
-      operationObjects.add(operationObject);
+      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
     }
 
     return operationObjects;
+  }
+
+  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject) {
+    return OperationObject.builder()
+                          .operationId(operation.getOperationId())
+                          .operationType(operationType)
+                          .summary(operation.getSummary())
+                          .tags(operation.getTags())
+                          .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
+                          .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
+                          .parameterObjects(mapParameterObjects(operation))
+                          .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
+                          .consumes(getConsumesList(operation.getRequestBody()))
+                          .produces(getProducesList(operation.getResponses()))
+                          .build();
   }
 
   private static List<String> getConsumesList(RequestBody requestBody) {
@@ -226,8 +181,7 @@ public class MapperPathUtil {
     return producesList;
   }
 
-
-  private static List<RequestObject> mapRequestObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject)  {
+  private static List<RequestObject> mapRequestObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject) {
     List<RequestObject> requestObjects = new ArrayList<>();
     String firstLetter = operation.getOperationId().substring(0, 1);
     String remainingLetters = operation.getOperationId().substring(1);
@@ -273,7 +227,7 @@ public class MapperPathUtil {
     return responseObjects;
   }
 
-  private static List<ContentObject> mapContentObject(FileSpec fileSpec, Content content, String inlineObject, GlobalObject globalObject){
+  private static List<ContentObject> mapContentObject(FileSpec fileSpec, Content content, String inlineObject, GlobalObject globalObject) {
     List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
       for (Entry<String, MediaType> mediaTypeEntry : content.entrySet()) {
@@ -285,14 +239,15 @@ public class MapperPathUtil {
                                           .importName(getPojoName(inlineObject, fileSpec))
                                           .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
-        } else if(Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
+        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
+                   BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
                                           .build());
-        } else{
+        } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
@@ -309,9 +264,6 @@ public class MapperPathUtil {
   private static String defineTypeName(Schema schema) {
     String typeName = "";
     switch (schema.getType()) {
-      case "string":
-        typeName = "String";
-        break;
       case "integer":
         if ("int32".equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
           typeName = "Integer";
@@ -330,6 +282,10 @@ public class MapperPathUtil {
         break;
       case "boolean":
         typeName = "Boolean";
+        break;
+      case "string":
+      default:
+        typeName = "String";
         break;
     }
     return typeName;
@@ -383,42 +339,8 @@ public class MapperPathUtil {
     return Objects.nonNull(operation);
   }
 
-  private static String getTypeMap(MapSchema mapSchema, FileSpec fileSpec) {
-    var typeMap = "";
-    if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
-      typeMap = "String";
-    } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
-      typeMap = "Integer";
-    } else {
-      Schema schema = (Schema) mapSchema.getAdditionalProperties();
-      if (StringUtils.isNotBlank(schema.get$ref())) {
-        String[] pathObjectRef = schema.get$ref().split("/");
-        typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-      }
-    }
-    return typeMap;
-  }
-
-  private static String getTypeArray(ArraySchema array, FileSpec fileSpec) {
-    var typeArray = "";
-    if (array.getItems() instanceof StringSchema) {
-      typeArray = "String";
-    } else if (array.getItems() instanceof IntegerSchema) {
-      typeArray = "Integer";
-    } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
-      String[] pathObjectRef = array.getItems().get$ref().split("/");
-      typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-    }
-    return typeArray;
-  }
-
-  private static String getPojoName(String namePojo, FileSpec fileSpec) {
-    return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
-           + namePojo
-           + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");
-  }
-
-  private static List<String> getSecurityRequirementList(List<SecurityRequirement> securityRequirementList,
+  private static List<String> getSecurityRequirementList(
+      List<SecurityRequirement> securityRequirementList,
       List<String> authentications) {
     var authSecList = new ArrayList<String>();
     if (null != securityRequirementList
@@ -428,28 +350,6 @@ public class MapperPathUtil {
       return authentications;
     }
     return authSecList;
-  }
-
-  private static String getSimpleType(Schema schema) {
-    String type = "";
-    if ("number".equalsIgnoreCase(schema.getType())) {
-      if ("float".equalsIgnoreCase(schema.getFormat())) {
-        type = "float";
-      } else if ("double".equalsIgnoreCase(schema.getFormat())) {
-        type = "double";
-      } else {
-        type = "integer";
-      }
-    } else if ("integer".equalsIgnoreCase(schema.getType())) {
-      if ("int64".equalsIgnoreCase(schema.getType())) {
-        type = "long";
-      } else {
-        type = "integer";
-      }
-    } else {
-      type = schema.getType();
-    }
-    return type;
   }
 
 }

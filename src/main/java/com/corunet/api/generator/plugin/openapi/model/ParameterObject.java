@@ -14,9 +14,14 @@ import lombok.Data;
 public class ParameterObject {
 
   String name;
+
   String in;
+
   Boolean required;
+
   String description;
+
   Boolean isCollection;
+
   String className;
 }

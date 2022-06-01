@@ -6,14 +6,14 @@
 
 package com.corunet.api.generator.plugin.openapi.template;
 
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CALL_REST_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CALL_WEB_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CONTENT_SCHEMA;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_INTERFACE_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_REACTIVE_API;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_REST_CLIENT;
-import static com.corunet.api.generator.plugin.openapi.template.TemplateIndex.TEMPLATE_WEB_CLIENT;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_WEB_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_INTERFACE_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REACTIVE_API;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REST_CLIENT;
+import static com.corunet.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_WEB_CLIENT;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,7 +43,6 @@ public class TemplateFactory {
   private final HashMap<String, PathItem> itemHashMap = new HashMap<>();
 
   private final HashMap<String, Schema> itemSchema = new HashMap<>();
-
 
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
@@ -88,7 +87,8 @@ public class TemplateFactory {
 
   }
 
-  public void fillTemplate(String filePathToSave, FileSpec fileSpec, String className,
+  public void fillTemplate(
+      String filePathToSave, FileSpec fileSpec, String className,
       ArrayList<PathObject> pathObject, AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
@@ -103,7 +103,7 @@ public class TemplateFactory {
     }
     File fileToSave = new File(filePathToSave);
 
-    if(fileSpec.getCallMode()) {
+    if (fileSpec.getCallMode()) {
       root.put("authObject", authObject);
     }
 
@@ -111,7 +111,6 @@ public class TemplateFactory {
     writeTemplateToFile(fileSpec.getCallMode() ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
 
   }
-
 
   private void writeTemplateToFile(String templateName, Map<String, Object> root, String path) throws IOException, TemplateException {
     Template template = cfg.getTemplate(templateName);
@@ -145,17 +144,17 @@ public class TemplateFactory {
     itemSchema.putAll(itemMap);
   }
 
-  private String createNameTemplate(String classNameAuth){
+  private String createNameTemplate(String classNameAuth) {
     var buffer = new StringBuffer(0);
     buffer.append("template").append(classNameAuth).append(".ftlh");
     return buffer.toString();
   }
 
-  private String getTemplateClientApi(FileSpec fileSpec){
+  private String getTemplateClientApi(FileSpec fileSpec) {
     return fileSpec.getIsReactive() ? TEMPLATE_CALL_WEB_API : TEMPLATE_CALL_REST_API;
   }
 
-  private String getTemplateApi(FileSpec fileSpec){
+  private String getTemplateApi(FileSpec fileSpec) {
     return fileSpec.getIsReactive() ? TEMPLATE_REACTIVE_API : TEMPLATE_INTERFACE_API;
   }
 

@@ -14,10 +14,15 @@ import lombok.Data;
 public class ContentObject {
 
   private String name;
+
   private String description;
+
   private String refName;
+
   private String typeData;
+
   private String importName;
+
   private SchemaObject schemaObject;
 
 }

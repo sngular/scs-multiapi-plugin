@@ -4,23 +4,35 @@
 
   <groupId>com.corunet</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
-  <description>Code generation plugin for AsyncApi. Creates Publishers and Consumers based on the provided YML file.</description>
-  <url>https://gitlab.local.corunet.com/test-training/scc-maven-plugin</url>
+  <description>Code generation plugin based on yml files under AsyncApi and OpenApi specifications.</description>
+  <url>https://github.com/corunet/scs-multiapi-plugin</url>
 
   <licenses>
     <license>
       <name>Mozilla Public License 2.0</name>
-      <url>https://github.com/corunet/kloadgen/blob/master/LICENSE</url>
+      <url>https://github.com/corunet/scs-multiapi-plugin/blob/main/LICENSE</url>
       <distribution>repo</distribution>
       <comments></comments>
     </license>
   </licenses>
 
   <developers>
+    <developer>
+      <id>jegarcia</id>
+      <name>Jose Enrique Garcia Maciñeiras</name>
+      <email>jegarcia@corunet.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Principal Engineer</role>
+        <role>Team Leader</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
     <developer>
       <id>fcampostato</id>
       <name>Fernando Campos Tato</name>
@@ -40,18 +52,6 @@
       <organizationUrl>https://corunet.github.io/</organizationUrl>
       <roles>
         <role>Junior Developer</role>
-      </roles>
-      <timezone>Europe/Madrid</timezone>
-    </developer>
-    <developer>
-      <id>jegarcia</id>
-      <name>Jose Enrique Garcia Maciñeiras</name>
-      <email>jegarcia@corunet.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
-      <roles>
-        <role>Principal Engineer</role>
-        <role>Team Leader</role>
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
@@ -90,18 +90,20 @@
     </developer>
   </developers>
 
+  <scm>
+    <connection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</developerConnection>
+    <url>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</url>
+  </scm>
+
   <distributionManagement>
     <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>releases</id>
-      <name>Internal Releases</name>
-      <url>${env.Nexus_REPO_URL}-releases/</url>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>snapshots</id>
-      <name>Internal Snapshots</name>
-      <url>${env.Nexus_REPO_URL}-snapshots/</url>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -305,6 +307,37 @@
               <goal>sort</goal>
             </goals>
             <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>

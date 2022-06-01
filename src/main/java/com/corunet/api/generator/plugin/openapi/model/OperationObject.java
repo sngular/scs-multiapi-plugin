@@ -16,14 +16,23 @@ import lombok.Data;
 public class OperationObject {
 
   private String operationType;
+
   private String summary;
+
   private String operationId;
+
   private List<String> tags;
+
   private List<ResponseObject> responseObjects;
+
   private List<RequestObject> requestObjects;
+
   private List<ParameterObject> parameterObjects;
+
   private List<String> produces;
+
   private List<String> consumes;
+
   private List<String> security;
 
 }

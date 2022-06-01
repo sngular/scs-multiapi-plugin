@@ -18,7 +18,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 
 public class MapperAuthUtil {
 
-
   public static List<AuthSchemaObject> createAuthSchemaList(OpenAPI openAPI) {
     ArrayList<AuthSchemaObject> authList = new ArrayList<>();
     if (null != openAPI.getComponents().getSecuritySchemes()
@@ -57,7 +56,6 @@ public class MapperAuthUtil {
 
     return type;
   }
-
 
   public static AuthObject getApiAuthObject(List<AuthSchemaObject> authSchemas, List<PathObject> pathObjects) {
     var authList = getApiAuthNames(pathObjects);

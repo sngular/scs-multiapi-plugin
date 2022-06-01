@@ -10,7 +10,6 @@ import java.util.Set;
 
 public class BasicTypeConstants {
 
-
   public static final String NUMBER = "number";
 
   public static final String STRING = "string";

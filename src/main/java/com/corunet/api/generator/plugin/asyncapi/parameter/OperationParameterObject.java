@@ -22,8 +22,6 @@ public class OperationParameterObject {
 
   private List<String> operationIds;
 
-  public OperationParameterObject() {}
-
   protected String getIds() {
     return ids;
   }

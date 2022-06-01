@@ -114,9 +114,6 @@ public class OpenApiUtil {
     return openAPI;
   }
 
-
-
-
   public static List<String> getListComponentsObjects(OpenAPI openAPI) {
     Components components = openAPI.getComponents();
     var listObject = new ArrayList<String>();
@@ -132,7 +129,6 @@ public class OpenApiUtil {
 
     return listObject;
   }
-
 
   public static HashMap<String, Schema> processBasicSchemas(OpenAPI openApi) {
     var basicSchemaMap = new HashMap<String, Schema>();
@@ -175,7 +171,6 @@ public class OpenApiUtil {
       }
     }
   }
-
 
 
 }

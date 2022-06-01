@@ -6,8 +6,8 @@
 
 package com.corunet.api.generator.plugin;
 
-import static com.corunet.api.generator.plugin.PluginConstraints.DEFAULT_TARGET_PACKAGE;
-import static com.corunet.api.generator.plugin.PluginConstraints.GENERATED_SOURCES_PATH;
+import static com.corunet.api.generator.plugin.PluginConstants.DEFAULT_TARGET_PACKAGE;
+import static com.corunet.api.generator.plugin.PluginConstants.GENERATED_SOURCES_PATH;
 
 import com.corunet.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.corunet.api.generator.plugin.asyncapi.exception.FileSystemException;
@@ -73,6 +73,8 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private final List<String> processedTargetPackages = new ArrayList<>();
 
+  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
+
   @Override
   public void execute() {
     templateFactory = new TemplateFactory();
@@ -100,12 +102,12 @@ public class OpenAsyncMojo extends AbstractMojo {
           String operationId = getOperationId(channel);
           JsonNode channelPayload = getChannelPayload(channel);
 
-          if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)){
-              processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
-          }else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
-              processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
+          if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
+            processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
+          } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
+            processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
           } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
-              processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
+            processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
           }
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
@@ -125,11 +127,11 @@ public class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private boolean isValidOperation(OperationParameterObject operation, String operationId,JsonNode channel, String channelType, boolean excludingOperationExists){
+  private boolean isValidOperation(OperationParameterObject operation, String operationId, JsonNode channel, String channelType, boolean excludingOperationExists) {
     return operation != null && (
         (operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)) ||
         (operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists)
-        );
+    );
   }
 
   private JsonNode getChannelPayload(JsonNode channel) {
@@ -254,8 +256,6 @@ public class OpenAsyncMojo extends AbstractMojo {
     return path;
   }
 
-  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
-
   private void processPackage(FileSpec fileParameter) {
     templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
     templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
@@ -273,14 +273,12 @@ public class OpenAsyncMojo extends AbstractMojo {
   }
 
   private void processSupplierMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
   private void processStreamBridgeMethod(JsonNode channel, String modelPackage, Path ymlParentPath, String channelName) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     String regex = "[a-zA-Z0-9\\.\\-]*";
     if (!channelName.matches(regex)) {
       throw new KafkaTopicSeparatorException(channelName);
@@ -289,8 +287,7 @@ public class OpenAsyncMojo extends AbstractMojo {
   }
 
   private void processSubscribeMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    modelPackage = Objects.isNull(modelPackage) ? null : modelPackage;
-    Pair<String, String> result = processMethod(channel, modelPackage, ymlParentPath);
+    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 

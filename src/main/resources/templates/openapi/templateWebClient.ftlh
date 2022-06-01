@@ -1,4 +1,4 @@
-package ${packageWebClient};
+package ${packageClient};
 
 import java.text.DateFormat;
 import java.text.FieldPosition;
