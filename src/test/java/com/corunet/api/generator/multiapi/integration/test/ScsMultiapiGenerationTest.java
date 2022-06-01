@@ -29,9 +29,9 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class ScsMultiapiGenerationTest {
 
   @MavenTest
-  @SystemProperty(value = "groupId",content = "${project.groupId}")
-  @SystemProperty(value = "artifactId",content = "${project.artifactId}")
-  @SystemProperty(value = "version",content = "${project.version}")
+  @SystemProperty(value = "groupId", content = "${project.groupId}")
+  @SystemProperty(value = "artifactId", content = "${project.artifactId}")
+  @SystemProperty(value = "version", content = "${project.version}")
   void testScsMultiapiGeneration(MavenProjectResult result) throws IOException {
 
     List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
@@ -40,23 +40,27 @@ public class ScsMultiapiGenerationTest {
 
     List<File> expectedConsumerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
                                                         "/testScsMultiapiGeneration/assets/IPublishOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/TestClassName.java"));
+                                               new File(
+                                                   "src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration" +
+                                                   "/assets/TestClassName.java"));
 
-    List<File> expectedProducerFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ISubscribeOperation.java"),
-                                               new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/Producer.java"));
+    List<File> expectedProducerFiles = List.of(
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ISubscribeOperation.java"),
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/Producer.java"));
 
     List<String> expectedFileNames = List.of("TestApi.java");
 
-    List<File>  expectedFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets" +
-                                                "/TestApi.java"));
+    List<File> expectedFiles = List.of(
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets" +
+                 "/TestApi.java"));
 
-    List<String> expectedModelFileNames = List.of("ApiErrorDTO.java","ApiTestDTO.java","ApiTestInfoDTO.java");
+    List<String> expectedModelFileNames = List.of("ApiErrorDTO.java", "ApiTestDTO.java", "ApiTestInfoDTO.java");
 
-    List<File> expectedModelFiles = List.of(new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiErrorDTO.java"),
-                                            new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiTestDTO.java"),
-                                            new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiTestInfoDTO.java")
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/com/corunet/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testScsMultiapiGeneration/assets/ApiTestInfoDTO.java")
     );
-
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();

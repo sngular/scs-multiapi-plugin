@@ -46,7 +46,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
 
-
   public static GlobalObject mapOpenApiObjectToOurModels(OpenAPI openAPI, FileSpec fileSpec, List<AuthSchemaObject> authSchemaList) {
 
     var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
@@ -107,7 +106,7 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path,  GlobalObject globalObject){
+  private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
     ArrayList<OperationObject> operationObjects = new ArrayList<>();
     if (checkIfOperationIsNull(path.getValue().getGet())) {
       operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
@@ -128,19 +127,19 @@ public class MapperPathUtil {
     return operationObjects;
   }
 
-  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject){
+  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject) {
     return OperationObject.builder()
-                   .operationId(operation.getOperationId())
-                   .operationType(operationType)
-                   .summary(operation.getSummary())
-                   .tags(operation.getTags())
-                   .requestObjects(mapRequestObject(fileSpec,operation, globalObject))
-                   .responseObjects(mapResponseObject(fileSpec,operation.getResponses(), globalObject))
-                   .parameterObjects(mapParameterObjects(operation))
-                   .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
-                   .consumes(getConsumesList(operation.getRequestBody()))
-                   .produces(getProducesList(operation.getResponses()))
-                   .build();
+                          .operationId(operation.getOperationId())
+                          .operationType(operationType)
+                          .summary(operation.getSummary())
+                          .tags(operation.getTags())
+                          .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
+                          .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
+                          .parameterObjects(mapParameterObjects(operation))
+                          .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
+                          .consumes(getConsumesList(operation.getRequestBody()))
+                          .produces(getProducesList(operation.getResponses()))
+                          .build();
   }
 
   private static List<String> getConsumesList(RequestBody requestBody) {
@@ -182,8 +181,7 @@ public class MapperPathUtil {
     return producesList;
   }
 
-
-  private static List<RequestObject> mapRequestObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject)  {
+  private static List<RequestObject> mapRequestObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject) {
     List<RequestObject> requestObjects = new ArrayList<>();
     String firstLetter = operation.getOperationId().substring(0, 1);
     String remainingLetters = operation.getOperationId().substring(1);
@@ -229,7 +227,7 @@ public class MapperPathUtil {
     return responseObjects;
   }
 
-  private static List<ContentObject> mapContentObject(FileSpec fileSpec, Content content, String inlineObject, GlobalObject globalObject){
+  private static List<ContentObject> mapContentObject(FileSpec fileSpec, Content content, String inlineObject, GlobalObject globalObject) {
     List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
       for (Entry<String, MediaType> mediaTypeEntry : content.entrySet()) {
@@ -241,14 +239,15 @@ public class MapperPathUtil {
                                           .importName(getPojoName(inlineObject, fileSpec))
                                           .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
-        } else if(Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
+        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
+                   BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
                                           .build());
-        } else{
+        } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
@@ -340,7 +339,8 @@ public class MapperPathUtil {
     return Objects.nonNull(operation);
   }
 
-  private static List<String> getSecurityRequirementList(List<SecurityRequirement> securityRequirementList,
+  private static List<String> getSecurityRequirementList(
+      List<SecurityRequirement> securityRequirementList,
       List<String> authentications) {
     var authSecList = new ArrayList<String>();
     if (null != securityRequirementList

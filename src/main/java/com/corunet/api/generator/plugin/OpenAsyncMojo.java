@@ -102,12 +102,12 @@ public class OpenAsyncMojo extends AbstractMojo {
           String operationId = getOperationId(channel);
           JsonNode channelPayload = getChannelPayload(channel);
 
-          if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)){
-              processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
-          }else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
-              processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
+          if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
+            processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
+          } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
+            processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
           } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
-              processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
+            processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
           }
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
@@ -127,11 +127,11 @@ public class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private boolean isValidOperation(OperationParameterObject operation, String operationId,JsonNode channel, String channelType, boolean excludingOperationExists){
+  private boolean isValidOperation(OperationParameterObject operation, String operationId, JsonNode channel, String channelType, boolean excludingOperationExists) {
     return operation != null && (
         (operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)) ||
         (operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists)
-        );
+    );
   }
 
   private JsonNode getChannelPayload(JsonNode channel) {

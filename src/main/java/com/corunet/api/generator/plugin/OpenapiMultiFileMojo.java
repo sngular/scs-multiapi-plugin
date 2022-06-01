@@ -207,8 +207,8 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
       basicSchemaMap.forEach((schemaName, basicSchema) -> {
         try {
           templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), MapperContentUtil.mapComponentToSchemaObject(basicSchema, schemaName,
-                                                                                                                                             fileSpec,
-                                                                                                                                             modelPackage));
+                                                                                                                                                   fileSpec,
+                                                                                                                                                   modelPackage));
         } catch (Exception e) {
           e.printStackTrace();
         }

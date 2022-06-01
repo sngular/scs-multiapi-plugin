@@ -26,5 +26,4 @@ public class SchemaObject {
   private List<SchemaFieldObject> fieldObjectList;
 
 
-
 }

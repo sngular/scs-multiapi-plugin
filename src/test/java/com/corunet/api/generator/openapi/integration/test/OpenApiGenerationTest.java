@@ -117,8 +117,9 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testWebClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
-                                             "/TestApi.java"));
+    List<File> expectedFileFirst = List.of(
+        new File("src/test/resources/com/corunet/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
+                 "/TestApi.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();

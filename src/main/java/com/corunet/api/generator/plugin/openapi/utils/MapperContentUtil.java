@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
 
-
   public static SchemaObject mapComponentToSchemaObject(
       Schema schema, String nameSchema,
       FileSpec fileSpec, String modelPackage) {

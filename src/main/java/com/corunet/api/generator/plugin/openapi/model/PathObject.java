@@ -16,6 +16,8 @@ import lombok.Data;
 public class PathObject {
 
   private String pathName;
+
   private GlobalObject globalObjects;
+
   private List<OperationObject> operationObject;
 }
