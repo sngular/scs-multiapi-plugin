@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.coru</groupId>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <version>1</version>
+
+  <name>scs-multiapi-maven-plugin</name>
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.coru</groupId>
+        <artifactId>scs-multiapi-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>asyncapi-generation</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <fileSpecs>
+            <fileSpec>
+              <filePath>event-api.yml</filePath>
+              <consumer>
+                <ids>subscribeOperation</ids>
+                <classNamePostfix>TestClassName</classNamePostfix>
+                <entitiesPostfix>DTO</entitiesPostfix>
+                <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
+                <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
+              </consumer>
+              <streamBridge>
+                <ids>publishOperation</ids>
+                <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
+                <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
+              </streamBridge>
+            </fileSpec>
+          </fileSpecs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
