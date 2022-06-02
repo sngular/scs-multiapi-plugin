@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/corunet/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=corunet/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
-
+[![Maven Central](https://img.shields.io/maven-central/v/net.coru/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.coru%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
 # SCS MultiApi Maven Plugin
 
 This is a Maven plugin designed to help developers automatizing the creation of
@@ -29,11 +29,19 @@ code classes from YML files based on AsyncApi and OpenAPI.
 ## Main Configuration
 
 This plugin allows developers to automatize the creation of code classes for
-REST and Kafka connections, based on YML files under the OpenApi and AsyncApi
-specifications.
+REST and Kafka connections, based on YML files under the AsyncApi and OpenApi
+specifications.In the latter case, many of the configuration options and classes 
+that are generated are based on reimplementation or modification of the OpenAPI Generator 
+models and template designs.
 
 The generation of the REST and Kafka connections is independent each other and
 could be used only one, or both at the same time.
+
+Here is the documentation for these technologies:
+
+- [OpenApi](https://swagger.io/specification/)
+- [AsyncApi](https://www.asyncapi.com/docs/getting-started)
+- [OpenAPI Generator](https://openapi-generator.tech/docs/configuration)
 
 ### How to configure the POM file
 
