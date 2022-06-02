@@ -30,8 +30,8 @@ code classes from YML files based on AsyncApi and OpenAPI.
 
 This plugin allows developers to automatize the creation of code classes for
 REST and Kafka connections, based on YML files under the AsyncApi and OpenApi
-specifications.In the latter case, many of the configuration options and classes 
-that are generated are based on reimplementation or modification of the OpenAPI Generator 
+specifications. In the latter case, many of the configuration options and classes
+that are generated are based on reimplementation or modification of the OpenAPI Generator
 models and template designs.
 
 The generation of the REST and Kafka connections is independent each other and
