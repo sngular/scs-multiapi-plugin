@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/corunet/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=corunet/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
-
+[![Maven Central](https://img.shields.io/maven-central/v/net.coru/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.coru%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
 # SCS MultiApi Maven Plugin
 
 This is a Maven plugin designed to help developers automatizing the creation of
@@ -29,11 +29,19 @@ code classes from YML files based on AsyncApi and OpenAPI.
 ## Main Configuration
 
 This plugin allows developers to automatize the creation of code classes for
-REST and Kafka connections, based on YML files under the OpenApi and AsyncApi
-specifications.
+REST and Kafka connections, based on YML files under the AsyncApi and OpenApi
+specifications. In the latter case, many of the configuration options and classes
+that are generated are based on reimplementation or modification of the OpenAPI Generator
+models and template designs.
 
 The generation of the REST and Kafka connections is independent each other and
 could be used only one, or both at the same time.
+
+Here is the documentation for these technologies:
+
+- [OpenApi](https://swagger.io/specification/)
+- [AsyncApi](https://www.asyncapi.com/docs/getting-started)
+- [OpenAPI Generator](https://openapi-generator.tech/docs/configuration)
 
 ### How to configure the POM file
 
@@ -45,7 +53,7 @@ As commented above, they both could be used at the same time, setting a double
 
 ```xml
 <plugin>
-  <groupId>com.corunet</groupId>
+  <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <executions>
@@ -101,7 +109,7 @@ which the plugin is designed.
 
 ```xml
 <plugin>
-<groupId>com.corunet</groupId>
+<groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
 <version>1.0.0-SNAPSHOT</version>
 <executions>
@@ -121,13 +129,13 @@ which the plugin is designed.
             <ids>publishOperation</ids>
             <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
             <entitiesPostfix>DTO</entitiesPostfix>
-            <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
-            <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
+            <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </consumer>
           <supplier>
             <ids>subscribeOperation</ids>
-            <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-            <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+            <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </supplier>
         </fileSpec>
       </fileSpecs>
@@ -167,18 +175,18 @@ producers and streamBrige producers that you want to generate.
         <ids>publishOperation</ids>
         <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
         <entitiesPostfix>DTO</entitiesPostfix>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
+        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </consumer>
     <supplier>
         <ids>subscribeOperation</ids>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </supplier>
     <streamBridge>
         <ids>streamBridgeOperation</ids>
-        <targetPackage>com.corunet.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
-        <modelPackage>com.corunet.apigenerator.asyncapi.business_model.model.event</modelPackage>
+        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </streamBridge>
 </fileSpec>
 ``````
@@ -234,7 +242,7 @@ the pom.xml file.
 will try to use the `groupId` attribute from the YML file that is in use.
 - **Default package name**: If neither of the previous options were given, the
 plugin will use a default package name, that is stablished as
-`com.corunet.apigenerator.asyncapi`.
+`net.coru.apigenerator.asyncapi`.
 
 ### How modelPackage is setted?
 
@@ -251,7 +259,7 @@ order/createCommand:
     subscribe:
       operationId: "subscribeOperation"
       message:
-        $ref: '#/components/messages/com.corunet.apigenerator.asyncapi.model.CreateOrder'
+        $ref: '#/components/messages/net.coru.apigenerator.asyncapi.model.CreateOrder'
 ```
 
 - **Namespace from Avro**: If the user doesn't provide a package name, and the
@@ -269,7 +277,7 @@ order/created:
 
 - **Default package name**: If neither of the previous options were given, the
 plugin will use a default package name, that is stablished as
-`com.corunet.apigenerator.asyncapi.model`.
+`net.coru.apigenerator.asyncapi.model`.
 
 ### Class Generation
 
@@ -341,7 +349,7 @@ class implementing the interface defined above.
 ```java
 @Mapper
 public interface Mapper {
-  Order map(com.corunet.apigenerator.asyncapi.business_model.model.event.Order value);
+  Order map(net.coru.apigenerator.asyncapi.business_model.model.event.Order value);
 }
 ```
 
@@ -356,7 +364,7 @@ public class subscribeOperation implements ISubscribeOperation {
 
   @Override
   public void subscribeOperation(final Order value) {
-    com.corunet.apigenerator.asyncapi.business_model.model.Order orderMapped = mapper.map(value);
+    net.coru.apigenerator.asyncapi.business_model.model.Order orderMapped = mapper.map(value);
     //TODO: implement the functionality
   }
 }
@@ -454,7 +462,7 @@ file. Here is an example of a basic configuration:
 
 ```xml
 <plugin>
-  <groupId>com.corunet</groupId>
+  <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <executions>
@@ -466,8 +474,8 @@ file. Here is an example of a basic configuration:
             <fileSpecs>
                 <fileSpec>
                     <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
-                    <apiPackage>com.corunet.apigenerator.openapi.api</apiPackage>
-                    <modelPackage>com.corunet.apigenerator.openapi.api.model</modelPackage>
+                    <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
+                    <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
                     <modelNameSuffix>DTO</modelNameSuffix>
                 </fileSpec>
             </fileSpecs>
@@ -510,8 +518,8 @@ fileSpecs.
     <fileSpecs>
         <fileSpec>
             <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
-            <apiPackage>com.corunet.apigenerator.openapi.api</apiPackage>
-            <modelPackage>com.corunet.apigenerator.openapi.api.model</modelPackage>
+            <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
+            <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
             <modelNameSuffix>DTO</modelNameSuffix>
         </fileSpec>
     </fileSpecs>
@@ -522,17 +530,17 @@ To customize these fileSpecs tags we are going to specify them inside the
 configuration tag, we must declare the fileSpecs tag that contains all files
 that will be used. Each fileSpec has their own configuration:
 
-| Name      | Description                                                                                                                                                                                         | Example                                           |
-| ---------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| Name      | Description                                                                                                                                                                                         | Example                                          |
+| ---------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
 | inputSpec  | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage | Path where the api interface will be located                                                                                                                                                        | com.corunet.apigenerator.openapi              |
-| modelPackage | Path where the models will be located                                                                                                                                                               | com.corunet.apigenerator.openapi.model        |
-| modelNamePrefix | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                               |
-| modelNameSuffix | Suffix that will be used ahead of every model´s name                                                                                                                                                | DTO                                               |
-| callMode   | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                             |
-| useTagsGroup | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                             |
-| useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
-| isReactive | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
+| apiPackage | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi              |
+| modelPackage | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model       |
+| modelNamePrefix | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                              |
+| modelNameSuffix | Suffix that will be used ahead of every model´s name                                                                                                                                                | DTO                                              |
+| callMode   | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                            |
+| useTagsGroup | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                            |
+| useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                            |
+| isReactive | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                            |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
@@ -545,7 +553,7 @@ of the fileSpecs.
 
 | Name      | Description                                            | Example                                 |
 | ---------- |--------------------------------------------------------|-----------------------------------------|
-| clientPackage  | Path where the RestClient and/or WebClient are located | com.corunet.apigenerator.openapi.client |
+| clientPackage  | Path where the RestClient and/or WebClient are located | net.coru.apigenerator.openapi.client |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
