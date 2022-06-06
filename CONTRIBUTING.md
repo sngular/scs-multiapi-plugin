@@ -6,7 +6,7 @@ This file includes best practices and guidelines for contributing to our project
 
 ## Best practices
 
-- We follow a [code of conduct](code-of-conduct), review it and honor it in all your interactions with the project.
+- We follow a [code of conduct](#code-of-conduct), review it and honor it in all your interactions with the project.
 
 - When contributing to this repository, first create an issue to explain the change you want to make.
    - The issues will be preferably written in English, although Spanish is also acceptable.
@@ -59,7 +59,7 @@ This Code of Conduct applies both within project spaces and in public spaces whe
 
 ### Enforcement
 
-Yu can report incidents related to abusive, harassing, or otherwise unacceptable behavior by contacting the project team at [**info@coru.net**]([mailto:]info@coru.net). All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain confidentiality concerning the reporter of an incident. Further details of specific enforcement policies may be posted separately.
+Yu can report incidents related to abusive, harassing, or otherwise unacceptable behavior by contacting the project team at [info@coru.net](mailto:info@coru.net). All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain confidentiality concerning the reporter of an incident. Further details of specific enforcement policies may be posted separately.
 
 Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
 
