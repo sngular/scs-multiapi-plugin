@@ -13,14 +13,18 @@ import java.util.Map;
     <#list operation.requestObjects as request>
       <#list request.contentObject as content>
         <#if (!imports?seq_contains(content.refName))>
-        		<#assign imports = imports+[content.refName]>
+          <#if (!checkBasicTypes?seq_contains(content.refName))>
+            <#assign imports = imports+[content.refName]>
+          </#if>
         </#if>
       </#list>
     </#list>
     <#list operation.responseObjects as response>
       <#list response.contentObject as content>
         <#if (!imports?seq_contains(content.refName))>
+          <#if (!checkBasicTypes?seq_contains(content.refName))>
             <#assign imports = imports+[content.refName]>
+          </#if>
         </#if>
       </#list>
     </#list>

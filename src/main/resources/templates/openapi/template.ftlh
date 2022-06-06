@@ -22,14 +22,18 @@ import java.util.Map;
     <#list operation.requestObjects as request>
       <#list request.contentObject as content>
         <#if content.importName?? && (!imports?seq_contains(content.importName))>
-        		<#assign imports = imports+[content.importName]>
+          <#if (!checkBasicTypes?seq_contains(content.importName))>
+            <#assign imports = imports+[content.importName]>
+          </#if>
         </#if>
       </#list>
     </#list>
     <#list operation.responseObjects as response>
       <#list response.contentObject as content>
         <#if content.importName?? && (!imports?seq_contains(content.importName))>
+          <#if (!checkBasicTypes?seq_contains(content.importName))>
             <#assign imports = imports+[content.importName]>
+          </#if>
         </#if>
       </#list>
     </#list>

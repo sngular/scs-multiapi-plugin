@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -44,11 +45,14 @@ public class TemplateFactory {
 
   private final HashMap<String, Schema> itemSchema = new HashMap<>();
 
+  private final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
+
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
+    root.put("checkBasicTypes", basicDataTypes);
 
   }
 
