@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import io.swagger.v3.oas.models.parameters.Parameter;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
 import net.coru.api.generator.plugin.openapi.model.ContentObject;
@@ -97,6 +98,7 @@ public class MapperPathUtil {
       PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
                                         .globalObjects(globalObject)
+                                        .parameterObjects(mapParameterObjects(Objects.isNull(pathItem.getValue().getParameters()), pathItem.getValue().getParameters()))
                                         .operationObject(mapOperationObject(fileSpec, pathItem, globalObject))
                                         .build();
 
@@ -108,19 +110,19 @@ public class MapperPathUtil {
 
   private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
     ArrayList<OperationObject> operationObjects = new ArrayList<>();
-    if (checkIfOperationIsNull(path.getValue().getGet())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
       operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPost())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
       operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getDelete())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
       operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPut())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
       operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPatch())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
       operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
     }
 
@@ -135,7 +137,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
-                          .parameterObjects(mapParameterObjects(operation))
+                          .parameterObjects(mapParameterObjects(Objects.isNull(operation.getParameters()), operation.getParameters()))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -197,17 +199,17 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(Operation operation) {
+  private static List<ParameterObject> mapParameterObjects(boolean hasParameters, final List<Parameter> parameters) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
-    if (Objects.nonNull(operation.getParameters())) {
-      operation.getParameters().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
-                                                                                         .name(parameter.getName())
-                                                                                         .required(parameter.getRequired())
-                                                                                         .description(parameter.getDescription())
-                                                                                         .in(parameter.getIn())
-                                                                                         .className(getSimpleType(parameter.getSchema()))
-                                                                                         .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
-                                                                                         .build()));
+    if (!hasParameters) {
+      parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
+                                                                          .name(parameter.getName())
+                                                                          .required(parameter.getRequired())
+                                                                          .description(parameter.getDescription())
+                                                                          .in(parameter.getIn())
+                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
+                                                                          .build()));
     }
 
     return parameterObjects;
