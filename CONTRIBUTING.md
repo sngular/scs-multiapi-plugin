@@ -17,8 +17,8 @@ This file includes best practices and guidelines for contributing to our project
 
 ## Pull request process
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a build.
-2. Update the README.md file with details of the changes to the interface. This includes new environment variables, exposed ports, useful file locations and container parameters.
+1. Ensure any install or build dependencies are solved before doing a build.
+2. Update the README.md file with details of the changes. This includes new environment variables, exposed ports, useful file locations and container parameters.
 3. Increase the version number in any examples files and in README.md to the new version that this pull request would represent. The versioning scheme we follow is [SemVer](http://semver.org/).
 4. You may squash and merge the pull request once you have the sign-off of two other developers. If you do not have permission to merge, you may request the second reviewer to merge the pull request for you.
 
