@@ -44,6 +44,21 @@ public class OpenApiGenerationTest {
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testApiPathParameterGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestInfoDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiReactiveGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets" +
                                                "/TestApi.java"));
