@@ -19,39 +19,35 @@ import java.util.Map;
 import net.coru.multifileplugin.testtags.model.TestInfoDTO;
 import net.coru.multifileplugin.testtags.model.ErrorDTO;
 
-
 public interface TestTagSecondApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
+  default Optional<NativeWebRequest> getRequest() {
+    return Optional.empty();
+  }
 
-         /**
-         * GET /test/{testId} : Info for a specific test
-         * @param testId The id of the test to retrieve true
-         *
-         * @return  Expected response to a valid request; (status code 200)
-         */
+  /**
+  * GET /test/{testId} : Info for a specific test
+  * @param testId The id of the test to retrieve true
+  *
+  * @return  Expected response to a valid request; (status code 200)
+  */
 
-         @Operation(
-            operationId = "showTestById",
-            summary = "Info for a specific test",
-            tags = { "TestTagSecond" },
-            responses = {
-                 @ApiResponse(responseCode = "200", description = "Expected response to a valid request" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = TestInfoDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ErrorDTO.class)) )
-            }
-         )
-         @RequestMapping(
-           method = RequestMethod.GET,
-           value = "/test/{testId}",
-           produces = { "application/json" }
-         )
+  @Operation(
+     operationId = "showTestById",
+     summary = "Info for a specific test",
+     tags = { "TestTagSecond" },
+     responses = {
+          @ApiResponse(responseCode = "200", description = "Expected response to a valid request" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = TestInfoDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ErrorDTO.class)) )
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = "/test/{testId}",
+    produces = { "application/json" }
+  )
 
-
-         default ResponseEntity<TestInfoDTO> showTestById (@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId) {
-                return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-          }
-
-
+  default ResponseEntity<TestInfoDTO> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 
 }
