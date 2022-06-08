@@ -20,4 +20,5 @@ public class PathObject {
   private GlobalObject globalObjects;
 
   private List<OperationObject> operationObject;
+
 }

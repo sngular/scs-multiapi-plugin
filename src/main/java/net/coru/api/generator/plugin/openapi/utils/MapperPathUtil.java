@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import io.swagger.v3.oas.models.parameters.Parameter;
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
 import net.coru.api.generator.plugin.openapi.model.ContentObject;
@@ -94,12 +96,14 @@ public class MapperPathUtil {
   public static ArrayList<PathObject> mapPathObjects(FileSpec fileSpec, Entry<String, HashMap<String, PathItem>> path, GlobalObject globalObject) {
     ArrayList<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
+      if (Objects.nonNull(pathItem.getValue().getParameters())) {
+        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters()));
+      }
       PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
                                         .globalObjects(globalObject)
                                         .operationObject(mapOperationObject(fileSpec, pathItem, globalObject))
                                         .build();
-
       pathObjects.add(pathObject);
     }
 
@@ -108,19 +112,19 @@ public class MapperPathUtil {
 
   private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
     ArrayList<OperationObject> operationObjects = new ArrayList<>();
-    if (checkIfOperationIsNull(path.getValue().getGet())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
       operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPost())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
       operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getDelete())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
       operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPut())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
       operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
     }
-    if (checkIfOperationIsNull(path.getValue().getPatch())) {
+    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
       operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
     }
 
@@ -135,7 +139,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
-                          .parameterObjects(mapParameterObjects(operation))
+                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -197,17 +201,44 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(Operation operation) {
+  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
-    if (Objects.nonNull(operation.getParameters())) {
-      operation.getParameters().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
-                                                                                         .name(parameter.getName())
-                                                                                         .required(parameter.getRequired())
-                                                                                         .description(parameter.getDescription())
-                                                                                         .in(parameter.getIn())
-                                                                                         .className(getSimpleType(parameter.getSchema()))
-                                                                                         .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
-                                                                                         .build()));
+    if (Objects.nonNull(globalObject.getParameterObjects())) {
+      if (Objects.nonNull(globalObject.getParameterObjects()) && Objects.nonNull(parameters)) {
+        throw new SCSMultiApiMavenPluginException("Defining parameters in both Path and Operations is not supported in this plugin");
+      }
+      globalObject.getParameterObjects().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
+                                                                                                  .name(parameter.getName())
+                                                                                                  .required(parameter.getRequired())
+                                                                                                  .description(parameter.getDescription())
+                                                                                                  .in(parameter.getIn())
+                                                                                                  .className(parameter.getClassName())
+                                                                                                  .isCollection(parameter.getIsCollection())
+                                                                                                  .build()));
+    } else if (Objects.nonNull(parameters)) {
+      parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
+                                                                          .name(parameter.getName())
+                                                                          .required(parameter.getRequired())
+                                                                          .description(parameter.getDescription())
+                                                                          .in(parameter.getIn())
+                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
+                                                                          .build()));
+    }
+    return parameterObjects;
+  }
+
+  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters) {
+    List<ParameterObject> parameterObjects = new ArrayList<>();
+    if (Objects.nonNull(parameters)) {
+      parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
+                                                                          .name(parameter.getName())
+                                                                          .required(parameter.getRequired())
+                                                                          .description(parameter.getDescription())
+                                                                          .in(parameter.getIn())
+                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
+                                                                          .build()));
     }
 
     return parameterObjects;

@@ -4,7 +4,7 @@
 
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -16,7 +16,6 @@
       <name>Mozilla Public License 2.0</name>
       <url>https://github.com/corunet/scs-multiapi-plugin/blob/main/LICENSE</url>
       <distribution>repo</distribution>
-      <comments></comments>
     </license>
   </licenses>
 
