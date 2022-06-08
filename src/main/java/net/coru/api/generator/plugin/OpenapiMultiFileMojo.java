@@ -144,7 +144,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void createAuthTemplates() throws TemplateException, IOException {
 
-    var authFileRoot = StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE + ".auth";
+    var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
     String authFileToSave = processPath(authFileRoot, false);
     templateFactory.setAuthPackageName(authFileRoot);
     templateFactory.fillTemplateAuth(authFileToSave, "Authentication");
