@@ -28,6 +28,8 @@ public class GlobalObject {
 
   private List<AuthSchemaObject> authSchemas;
 
+  private List<ParameterObject> parameterObjects;
+
   private List<String> authentications;
 
   private Map<String, String> componentsTypeMap;
