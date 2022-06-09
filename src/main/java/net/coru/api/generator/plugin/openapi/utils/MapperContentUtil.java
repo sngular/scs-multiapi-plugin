@@ -90,7 +90,6 @@ public class MapperContentUtil {
                                      .baseName(key)
                                      .dataTypeSimple(getSimpleType(value, fileSpec))
                                      .build();
-        System.out.println(field);
         if (value instanceof ArraySchema) {
           var typeArray = getTypeArray((ArraySchema) value, fileSpec);
           field.setDataType(typeArray);
