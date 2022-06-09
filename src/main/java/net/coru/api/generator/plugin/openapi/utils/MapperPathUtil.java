@@ -111,29 +111,31 @@ public class MapperPathUtil {
   }
 
   private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
-    ArrayList<OperationObject> operationObjects = new ArrayList<>();
+    List<OperationObject> operationObjects = new ArrayList<>();
+    List<String> operationIdList = new ArrayList<>();
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
-      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
-      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
-      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
-      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
-      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject, operationIdList));
     }
 
     return operationObjects;
   }
 
-  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject) {
+  private static OperationObject createOperation(
+      Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
-                          .operationId(operation.getOperationId())
+                          .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
                           .summary(operation.getSummary())
                           .tags(operation.getTags())
@@ -144,6 +146,16 @@ public class MapperPathUtil {
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
                           .build();
+  }
+
+  private static String mapOperationId(final String operationId, final List<String> operationIdList) {
+      if(operationIdList.contains(operationId)){
+        throw new SCSMultiApiMavenPluginException("Do not write the same operationId twice");
+      } else {
+        operationIdList.add(operationId);
+        return operationId;
+      }
+
   }
 
   private static List<String> getConsumesList(RequestBody requestBody) {
