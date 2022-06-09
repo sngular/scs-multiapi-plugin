@@ -15,7 +15,7 @@ public class ${schema.className} {
    private List<${field.dataType}> ${field.baseName} = new ArrayList<${field.dataType}>();
    <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
    private HashMap<String,${field.dataType}> ${field.baseName} = new HashMap<String,${field.dataType}>();
-   <#else>
+   <#elseif field.dataTypeSimple?has_content>
    private ${field.dataTypeSimple?cap_first} ${field.baseName};
     </#if>
  </#list>
@@ -45,7 +45,7 @@ public class ${schema.className} {
     public void set${field.baseName?cap_first}(HashMap<String,${field.dataType}> ${field.baseName}) {
         this.${field.baseName} = ${field.baseName};
     }
-    <#else>
+    <#elseif field.dataTypeSimple?has_content>
     public ${field.dataTypeSimple?cap_first} get${field.baseName?cap_first}() {
        return ${field.baseName};
     }

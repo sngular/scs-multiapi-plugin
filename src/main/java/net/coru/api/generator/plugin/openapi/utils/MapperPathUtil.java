@@ -97,7 +97,7 @@ public class MapperPathUtil {
     ArrayList<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
       if (Objects.nonNull(pathItem.getValue().getParameters())) {
-        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters()));
+        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters(), fileSpec));
       }
       PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
@@ -139,7 +139,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
-                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject))
+                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject, fileSpec))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -201,7 +201,7 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject) {
+  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject, FileSpec fileSpec) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(globalObject.getParameterObjects())) {
       if (Objects.nonNull(globalObject.getParameterObjects()) && Objects.nonNull(parameters)) {
@@ -221,14 +221,14 @@ public class MapperPathUtil {
                                                                           .required(parameter.getRequired())
                                                                           .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
                                                                           .build()));
     }
     return parameterObjects;
   }
 
-  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters) {
+  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters, FileSpec fileSpec) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters)) {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
@@ -236,7 +236,7 @@ public class MapperPathUtil {
                                                                           .required(parameter.getRequired())
                                                                           .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
                                                                           .build()));
     }
