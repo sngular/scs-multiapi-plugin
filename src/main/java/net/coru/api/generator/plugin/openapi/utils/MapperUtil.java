@@ -1,14 +1,13 @@
 package net.coru.api.generator.plugin.openapi.utils;
 
-import java.io.File;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
