@@ -28,6 +28,7 @@ import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.OperationObject;
 import net.coru.api.generator.plugin.openapi.model.ParameterObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
+import net.coru.api.generator.plugin.openapi.model.RefNameObject;
 import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
@@ -133,7 +134,7 @@ public class MapperPathUtil {
   }
 
   private static OperationObject createOperation(
-      Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
+    Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
@@ -149,12 +150,12 @@ public class MapperPathUtil {
   }
 
   private static String mapOperationId(final String operationId, final List<String> operationIdList) {
-      if(operationIdList.contains(operationId)){
-        throw new SCSMultiApiMavenPluginException("Do not write the same operationId twice");
-      } else {
-        operationIdList.add(operationId);
-        return operationId;
-      }
+    if (operationIdList.contains(operationId)) {
+      throw new SCSMultiApiMavenPluginException("Do not write the same operationId twice");
+    } else {
+      operationIdList.add(operationId);
+      return operationId;
+    }
 
   }
 
@@ -280,7 +281,7 @@ public class MapperPathUtil {
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(getPojoName(inlineObject, fileSpec))
-                                          .refName(getPojoName(inlineObject, fileSpec))
+                                          .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec),true))
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
                    BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
@@ -288,7 +289,7 @@ public class MapperPathUtil {
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
+                                          .refNameObject(mapRefNameObject(defineTypeName(mediaTypeEntry.getValue().getSchema()), false))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
@@ -296,12 +297,20 @@ public class MapperPathUtil {
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .refNameObject(mapRefNameObject(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()), true))
                                           .build());
         }
       }
     }
     return contentObjects;
+  }
+
+  private static RefNameObject mapRefNameObject(String refName, Boolean checkImport) {
+    return RefNameObject.builder()
+                        .refName(refName)
+                        .checkImport(checkImport)
+                        .build();
+
   }
 
   private static String defineTypeName(Schema schema) {
@@ -383,8 +392,8 @@ public class MapperPathUtil {
   }
 
   private static List<String> getSecurityRequirementList(
-      List<SecurityRequirement> securityRequirementList,
-      List<String> authentications) {
+    List<SecurityRequirement> securityRequirementList,
+    List<String> authentications) {
     var authSecList = new ArrayList<String>();
     if (null != securityRequirementList
         && !securityRequirementList.isEmpty()) {
