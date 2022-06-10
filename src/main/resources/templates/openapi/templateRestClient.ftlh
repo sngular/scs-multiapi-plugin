@@ -61,422 +61,410 @@ import ${packageAuth}.Authentication;
 
 @Component
 public class ApiRestClient {
-    public enum CollectionFormat {
-        CSV(","), TSV("\t"), SSV(" "), PIPES("|"), MULTI(null);
+  public enum CollectionFormat {
+    CSV(","), TSV("\t"), SSV(" "), PIPES("|"), MULTI(null);
 
-        private final String separator;
-        private CollectionFormat(String separator) {
-            this.separator = separator;
+    private final String separator;
+    private CollectionFormat(String separator) {
+      this.separator = separator;
+    }
+
+    private String collectionToString(Collection<?> collection) {
+      return StringUtils.collectionToDelimitedString(collection, separator);
+    }
+  }
+
+  private HttpHeaders defaultHeaders = new HttpHeaders();
+  private MultiValueMap< String, String> defaultCookies = new LinkedMultiValueMap< String, String>();
+  private RestTemplate restTemplate;
+  private final DateFormat dateFormat;
+  private Map< String, Authentication> authentications;
+
+
+  public ApiRestClient() {
+    this.dateFormat = createDefaultDateFormat();
+    addDefaultHeader("User-Agent", "Java-SDK");
+      this.restTemplate = buildRestTemplate();
+      authentications = new HashMap< String, Authentication>();
+      authentications = Collections.unmodifiableMap(authentications);
+  }
+
+  public ApiRestClient(Map< String, Authentication> authentications) {
+    this.dateFormat = createDefaultDateFormat();
+    addDefaultHeader("User-Agent", "Java-SDK");
+    this.restTemplate = buildRestTemplate();
+    this.authentications = Collections.unmodifiableMap(authentications);
+  }
+
+  public static DateFormat createDefaultDateFormat() {
+    DateFormat dateFormat = new DateFormat() {
+      private final StdDateFormat fmt = new StdDateFormat()
+        .withTimeZone(TimeZone.getTimeZone("UTC"))
+        .withColonInTimeZone(true);
+
+      @Override
+      public Date parse(String source) {
+        return parse(source, new ParsePosition(0));
+      }
+
+
+      @Override
+      public StringBuffer format(final Date date, final StringBuffer toAppendTo, final FieldPosition fieldPosition) {
+        return fmt.format(date, toAppendTo, fieldPosition);
+      }
+
+      @Override
+      public Date parse(final String source, final ParsePosition pos) {
+        return fmt.parse(source, pos);
+      }
+    };
+    dateFormat.setCalendar(new GregorianCalendar());
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return dateFormat;
+  }
+
+  private static ObjectMapper createDefaultObjectMapper(DateFormat dateFormat,
+   AbstractJackson2HttpMessageConverter converter) {
+     if (null == dateFormat) {
+       dateFormat = createDefaultDateFormat();
+     }
+     ObjectMapper mapper = converter.getObjectMapper();
+     mapper.setDateFormat(dateFormat);
+     mapper.registerModule(new JavaTimeModule());
+     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+     return mapper;
+  }
+
+  protected RestTemplate buildRestTemplate() {
+    RestTemplate restTemplate = new RestTemplate();
+    for(HttpMessageConverter converter:restTemplate.getMessageConverters()){
+      if(converter instanceof AbstractJackson2HttpMessageConverter){
+        ObjectMapper mapper = createDefaultObjectMapper(this.dateFormat,(AbstractJackson2HttpMessageConverter) converter);
+      }
+    }
+    // This allows us to read the response more than once - Necessary for debugging.
+    restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+    return restTemplate;
+  }
+
+  public ApiRestClient addDefaultHeader(String name, String value) {
+    if (defaultHeaders.containsKey(name)) {
+      defaultHeaders.remove(name);
+    }
+    defaultHeaders.add(name, value);
+    return this;
+  }
+
+  public ApiRestClient addDefaultCookie(String name, String value) {
+    if (defaultCookies.containsKey(name)) {
+      defaultCookies.remove(name);
+    }
+    defaultCookies.add(name, value);
+    return this;
+  }
+
+  public String parameterToString(Object param) {
+    if (param == null) {
+      return "";
+    } else if (param instanceof Date) {
+      return dateFormat.format((Date) param);
+    } else if (param instanceof OffsetDateTime) {
+      return formatOffsetDateTime((OffsetDateTime) param);
+    } else if (param instanceof Collection) {
+      StringBuilder b = new StringBuilder();
+      for(Object o : (Collection<?>) param) {
+        if(b.length() > 0) {
+          b.append(",");
         }
+          b.append(String.valueOf(o));
+      }
+      return b.toString();
+    } else {
+      return String.valueOf(param);
+    }
+  }
 
-        private String collectionToString(Collection<?> collection) {
-            return StringUtils.collectionToDelimitedString(collection, separator);
-        }
+  private String formatOffsetDateTime(OffsetDateTime offsetDateTime) {
+    return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
+  }
+
+  public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
+    // create the value based on the collection format
+    if (CollectionFormat.MULTI.equals(collectionFormat)) {
+      // not valid for path params
+      return parameterToString(values);
+    }
+    // collectionFormat is assumed to be "csv" by default
+    if(collectionFormat == null) {
+      collectionFormat = CollectionFormat.CSV;
+    }
+    return collectionFormat.collectionToString(values);
+  }
+
+  public MultiValueMap< String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
+    final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+
+    if (name == null || name.isEmpty() || value == null) {
+      return params;
     }
 
-    private HttpHeaders defaultHeaders = new HttpHeaders();
-    private MultiValueMap< String, String> defaultCookies = new LinkedMultiValueMap< String, String>();
-    private RestTemplate restTemplate;
-    private final DateFormat dateFormat;
-    private Map< String, Authentication> authentications;
-
-
-    public ApiRestClient() {
-        this.dateFormat = createDefaultDateFormat();
-        addDefaultHeader("User-Agent", "Java-SDK");
-        this.restTemplate = buildRestTemplate();
-        authentications = new HashMap< String, Authentication>();
-        authentications = Collections.unmodifiableMap(authentications);
+    if (collectionFormat == null) {
+      collectionFormat = CollectionFormat.CSV;
     }
 
-    public ApiRestClient(Map< String, Authentication> authentications) {
-        this.dateFormat = createDefaultDateFormat();
-        addDefaultHeader("User-Agent", "Java-SDK");
-        this.restTemplate = buildRestTemplate();
-        this.authentications = Collections.unmodifiableMap(authentications);
+    if (value instanceof Map) {
+      @SuppressWarnings("unchecked")
+      final Map<String, Object> valuesMap = (Map<String, Object>) value;
+      for (final Entry<String, Object> entry : valuesMap.entrySet()) {
+        params.add(entry.getKey(), parameterToString(entry.getValue()));
+      }
+      return params;
     }
 
-
-    public static DateFormat createDefaultDateFormat() {
-        DateFormat dateFormat = new DateFormat() {
-            private final StdDateFormat fmt = new StdDateFormat()
-                .withTimeZone(TimeZone.getTimeZone("UTC"))
-                .withColonInTimeZone(true);
-
-            @Override
-            public Date parse(String source) {
-                return parse(source, new ParsePosition(0));
-            }
-
-
-            @Override
-            public StringBuffer format(final Date date, final StringBuffer toAppendTo, final FieldPosition fieldPosition) {
-                return fmt.format(date, toAppendTo, fieldPosition);
-            }
-
-            @Override
-            public Date parse(final String source, final ParsePosition pos) {
-                return fmt.parse(source, pos);
-            }
-        };
-        dateFormat.setCalendar(new GregorianCalendar());
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return dateFormat;
+    Collection<?> valueCollection = null;
+    if (value instanceof Collection) {
+      valueCollection = (Collection<?>) value;
+    } else {
+      params.add(name, parameterToString(value));
+      return params;
     }
 
-    private static ObjectMapper createDefaultObjectMapper(DateFormat dateFormat,
-          AbstractJackson2HttpMessageConverter converter) {
-            if (null == dateFormat) {
-                dateFormat = createDefaultDateFormat();
-            }
-            ObjectMapper mapper = converter.getObjectMapper();
-            mapper.setDateFormat(dateFormat);
-            mapper.registerModule(new JavaTimeModule());
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            return mapper;
+    if (valueCollection.isEmpty()) {
+      return params;
     }
 
-    protected RestTemplate buildRestTemplate() {
-            RestTemplate restTemplate = new RestTemplate();
-            for(HttpMessageConverter converter:restTemplate.getMessageConverters()){
-                if(converter instanceof AbstractJackson2HttpMessageConverter){
-                    ObjectMapper mapper = createDefaultObjectMapper(this.dateFormat,(AbstractJackson2HttpMessageConverter) converter);
-                }
-            }
-            // This allows us to read the response more than once - Necessary for debugging.
-            restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
-            return restTemplate;
+    if (collectionFormat.equals(CollectionFormat.MULTI)) {
+      for (Object item : valueCollection) {
+        params.add(name, parameterToString(item));
+      }
+      return params;
     }
 
-
-
-    public ApiRestClient addDefaultHeader(String name, String value) {
-        if (defaultHeaders.containsKey(name)) {
-            defaultHeaders.remove(name);
-        }
-        defaultHeaders.add(name, value);
-        return this;
+    List<String> values = new ArrayList<String>();
+    for (Object o : valueCollection) {
+      values.add(parameterToString(o));
     }
+    params.add(name, collectionFormat.collectionToString(values));
 
-    public ApiRestClient addDefaultCookie(String name, String value) {
-        if (defaultCookies.containsKey(name)) {
-            defaultCookies.remove(name);
-        }
-        defaultCookies.add(name, value);
-        return this;
+    return params;
+  }
+
+  private boolean isJsonMime(MediaType mediaType) {
+    return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
+  }
+
+  public List< MediaType> selectHeaderAccept(String[] accepts) {
+    if (accepts.length == 0) {
+      return null;
     }
+    for (String accept : accepts) {
+      MediaType mediaType = MediaType.parseMediaType(accept);
+      if (isJsonMime(mediaType) && !"application/problem+json".equalsIgnoreCase(accept)) {
+        return Collections.singletonList(mediaType);
+      }
+    }
+    return MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(accepts));
+  }
 
-    public String parameterToString(Object param) {
-        if (param == null) {
-            return "";
-        } else if (param instanceof Date) {
-            return dateFormat.format((Date) param);
-        } else if (param instanceof OffsetDateTime) {
-            return formatOffsetDateTime((OffsetDateTime) param);
-        } else if (param instanceof Collection) {
-            StringBuilder b = new StringBuilder();
-            for(Object o : (Collection<?>) param) {
-                if(b.length() > 0) {
-                    b.append(",");
-                }
-                b.append(String.valueOf(o));
-            }
-            return b.toString();
+  public MediaType selectHeaderContentType(String[] contentTypes) {
+    if (contentTypes.length == 0) {
+      return MediaType.APPLICATION_JSON;
+    }
+    for (String contentType : contentTypes) {
+      MediaType mediaType = MediaType.parseMediaType(contentType);
+      if (isJsonMime(mediaType)) {
+        return mediaType;
+      }
+    }
+    return MediaType.parseMediaType(contentTypes[0]);
+  }
+
+  public String expandPath(String pathTemplate, Map<String, Object> variables) {
+    // disable default URL encoding
+    DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
+    uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+    final RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setUriTemplateHandler(uriBuilderFactory);
+    return restTemplate.getUriTemplateHandler().expand(pathTemplate, variables).toString();
+  }
+
+  protected Object selectBody(Object obj, MultiValueMap<String, Object> formParams, MediaType contentType) {
+    boolean isForm = MediaType.MULTIPART_FORM_DATA.isCompatibleWith(contentType) || MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(contentType);
+    return isForm ? formParams : obj;
+  }
+
+  public String generateQueryUri(MultiValueMap<String, String> queryParams, Map<String, Object> uriParams) {
+    StringBuilder queryBuilder = new StringBuilder();
+    queryParams.forEach((name, values) -> {
+      try {
+        final String encodedName = URLEncoder.encode(name.toString(), "UTF-8");
+        if (CollectionUtils.isEmpty(values)) {
+          if (queryBuilder.length() != 0) {
+            queryBuilder.append('&');
+          }
+          queryBuilder.append(encodedName);
         } else {
-            return String.valueOf(param);
-        }
-    }
-
-    private String formatOffsetDateTime(OffsetDateTime offsetDateTime) {
-        return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
-    }
-
-
-    public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
-            // create the value based on the collection format
-            if (CollectionFormat.MULTI.equals(collectionFormat)) {
-                // not valid for path params
-                return parameterToString(values);
+          int valueItemCounter = 0;
+          for (Object value : values) {
+            if (queryBuilder.length() != 0) {
+              queryBuilder.append('&');
             }
-
-             // collectionFormat is assumed to be "csv" by default
-            if(collectionFormat == null) {
-                collectionFormat = CollectionFormat.CSV;
+            queryBuilder.append(encodedName);
+            if (value != null) {
+              String templatizedKey = encodedName + valueItemCounter++;
+              final String encodedValue = URLEncoder.encode(value.toString(), "UTF-8");
+              uriParams.put(templatizedKey, encodedValue);
+              queryBuilder.append('=').append("{").append(templatizedKey).append("}");
             }
-
-            return collectionFormat.collectionToString(values);
+          }
         }
+      } catch (UnsupportedEncodingException e) {
 
-    public MultiValueMap< String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
-         final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+      }
+    });
+    return queryBuilder.toString();
+  }
 
-         if (name == null || name.isEmpty() || value == null) {
-             return params;
-         }
+  public <T> ResponseEntity<T> invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams,
+    MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams,
+    List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
 
-         if (collectionFormat == null) {
-             collectionFormat = CollectionFormat.CSV;
-         }
+      updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
+      Map<String,Object> uriParams = new HashMap<>();
+      uriParams.putAll(pathParams);
 
-         if (value instanceof Map) {
-             @SuppressWarnings("unchecked")
-             final Map<String, Object> valuesMap = (Map<String, Object>) value;
-             for (final Entry<String, Object> entry : valuesMap.entrySet()) {
-                 params.add(entry.getKey(), parameterToString(entry.getValue()));
-             }
-             return params;
-         }
+      String finalUri = path;
 
-         Collection<?> valueCollection = null;
-         if (value instanceof Collection) {
-             valueCollection = (Collection<?>) value;
-         } else {
-             params.add(name, parameterToString(value));
-             return params;
-         }
+      if (queryParams != null && !queryParams.isEmpty()) {
+        //Include queryParams in uriParams taking into account the paramName
+        String queryUri = generateQueryUri(queryParams, uriParams);
+        //Append to finalUri the templatized query string like "?param1={param1Value}&.......
+        finalUri += "?" + queryUri;
+      }
+      String expandedPath = this.expandPath(finalUri, uriParams);
+      final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(expandedPath);
 
-         if (valueCollection.isEmpty()) {
-             return params;
-         }
+      URI uri;
+      try {
+        uri = new URI(builder.build().toUriString());
+      } catch(URISyntaxException ex)  {
+        throw new RestClientException("Could not build URL: " + builder.toUriString(), ex);
+      }
 
-         if (collectionFormat.equals(CollectionFormat.MULTI)) {
-             for (Object item : valueCollection) {
-                 params.add(name, parameterToString(item));
-             }
-             return params;
-         }
+      final BodyBuilder requestBuilder = RequestEntity.method(method, uri);
+      if(accept != null) {
+        requestBuilder.accept(accept.toArray(new MediaType[accept.size()]));
+      }
+      if(contentType != null) {
+        requestBuilder.contentType(contentType);
+      }
 
-         List<String> values = new ArrayList<String>();
-         for (Object o : valueCollection) {
-             values.add(parameterToString(o));
-         }
-         params.add(name, collectionFormat.collectionToString(values));
+      addHeadersToRequest(headerParams, requestBuilder);
+      addHeadersToRequest(defaultHeaders, requestBuilder);
+      addCookiesToRequest(cookieParams, requestBuilder);
+      addCookiesToRequest(defaultCookies, requestBuilder);
 
-         return params;
+      RequestEntity<Object> requestEntity = requestBuilder.body(selectBody(body, formParams, contentType));
+
+      ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, returnType);
+
+      if (responseEntity.getStatusCode().is2xxSuccessful()) {
+        return responseEntity;
+      } else {
+        // The error handler built into the RestTemplate should handle 400 and 500 series errors.
+        throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
+      }
+  }
+
+  protected void addHeadersToRequest(HttpHeaders headers, BodyBuilder requestBuilder) {
+    for (Entry<String, List<String>> entry : headers.entrySet()) {
+      List<String> values = entry.getValue();
+      for(String value : values) {
+        if (value != null) {
+          requestBuilder.header(entry.getKey(), value);
+        }
+      }
+    }
+  }
+
+  protected void addCookiesToRequest(MultiValueMap<String, String> cookies, BodyBuilder requestBuilder) {
+    if (!cookies.isEmpty()) {
+      requestBuilder.header("Cookie", buildCookieHeader(cookies));
+    }
+  }
+
+  private String buildCookieHeader(MultiValueMap<String, String> cookies) {
+    final StringBuilder cookieValue = new StringBuilder();
+    String delimiter = "";
+    for (final Map.Entry<String, List<String>> entry : cookies.entrySet()) {
+      final String value = entry.getValue().get(entry.getValue().size() - 1);
+      cookieValue.append(String.format("%s%s=%s", delimiter, entry.getKey(), value));
+      delimiter = "; ";
+    }
+    return cookieValue.toString();
+  }
+
+  private void updateParamsForAuth(String[] authNames, MultiValueMap< String, String> queryParams, HttpHeaders headerParams, MultiValueMap< String, String> cookieParams) {
+    for (String authName : authNames) {
+      Authentication auth = authentications.get(authName);
+      if (auth == null) {
+        throw new RestClientException("Authentication undefined: " + authName);
+      }
+      auth.applyToParams(queryParams, headerParams, cookieParams);
+    }
+  }
+
+
+  private class ApiClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
+    private final Log log = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
+
+    @Override
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+      logRequest(request, body);
+      ClientHttpResponse response = execution.execute(request, body);
+      logResponse(response);
+      return response;
     }
 
-    private boolean isJsonMime(MediaType mediaType) {
-        return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
+    private void logRequest(HttpRequest request, byte[] body) throws UnsupportedEncodingException {
+      log.info("URI: " + request.getURI());
+      log.info("HTTP Method: " + request.getMethod());
+      log.info("HTTP Headers: " + headersToString(request.getHeaders()));
+      log.info("Request Body: " + new String(body, StandardCharsets.UTF_8));
     }
 
-    public List< MediaType> selectHeaderAccept(String[] accepts) {
-        if (accepts.length == 0) {
-            return null;
-        }
-        for (String accept : accepts) {
-            MediaType mediaType = MediaType.parseMediaType(accept);
-            if (isJsonMime(mediaType) && !"application/problem+json".equalsIgnoreCase(accept)) {
-                return Collections.singletonList(mediaType);
-            }
-        }
-        return MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(accepts));
+    private void logResponse(ClientHttpResponse response) throws IOException {
+      log.info("HTTP Status Code: " + response.getRawStatusCode());
+      log.info("Status Text: " + response.getStatusText());
+      log.info("HTTP Headers: " + headersToString(response.getHeaders()));
+      log.info("Response Body: " + bodyToString(response.getBody()));
     }
 
-    public MediaType selectHeaderContentType(String[] contentTypes) {
-        if (contentTypes.length == 0) {
-            return MediaType.APPLICATION_JSON;
-        }
-        for (String contentType : contentTypes) {
-            MediaType mediaType = MediaType.parseMediaType(contentType);
-            if (isJsonMime(mediaType)) {
-                return mediaType;
-            }
-        }
-        return MediaType.parseMediaType(contentTypes[0]);
+    private String headersToString(HttpHeaders headers) {
+      StringBuilder builder = new StringBuilder();
+      for(Entry<String, List<String>> entry : headers.entrySet()) {
+        builder.append(entry.getKey()).append("=[");
+          for(String value : entry.getValue()) {
+            builder.append(value).append(",");
+          }
+          builder.setLength(builder.length() - 1); // Get rid of trailing comma
+          builder.append("],");
+      }
+      builder.setLength(builder.length() - 1); // Get rid of trailing comma
+      return builder.toString();
     }
 
-    public String expandPath(String pathTemplate, Map<String, Object> variables) {
-        // disable default URL encoding
-        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
-        uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(uriBuilderFactory);
-        return restTemplate.getUriTemplateHandler().expand(pathTemplate, variables).toString();
+    private String bodyToString(InputStream body) throws IOException {
+      StringBuilder builder = new StringBuilder();
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
+      String line = bufferedReader.readLine();
+      while (line != null) {
+        builder.append(line).append(System.lineSeparator());
+        line = bufferedReader.readLine();
+      }
+      bufferedReader.close();
+      return builder.toString();
     }
-
-
-    protected Object selectBody(Object obj, MultiValueMap<String, Object> formParams, MediaType contentType) {
-        boolean isForm = MediaType.MULTIPART_FORM_DATA.isCompatibleWith(contentType) || MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(contentType);
-        return isForm ? formParams : obj;
-    }
-
-    public String generateQueryUri(MultiValueMap<String, String> queryParams, Map<String, Object> uriParams) {
-            StringBuilder queryBuilder = new StringBuilder();
-            queryParams.forEach((name, values) -> {
-                try {
-                    final String encodedName = URLEncoder.encode(name.toString(), "UTF-8");
-                    if (CollectionUtils.isEmpty(values)) {
-                        if (queryBuilder.length() != 0) {
-                            queryBuilder.append('&');
-                        }
-                        queryBuilder.append(encodedName);
-                    } else {
-                        int valueItemCounter = 0;
-                        for (Object value : values) {
-                            if (queryBuilder.length() != 0) {
-                                queryBuilder.append('&');
-                            }
-                            queryBuilder.append(encodedName);
-                            if (value != null) {
-                                String templatizedKey = encodedName + valueItemCounter++;
-                                final String encodedValue = URLEncoder.encode(value.toString(), "UTF-8");
-                                uriParams.put(templatizedKey, encodedValue);
-                                queryBuilder.append('=').append("{").append(templatizedKey).append("}");
-                            }
-                        }
-                    }
-                } catch (UnsupportedEncodingException e) {
-
-                }
-            });
-            return queryBuilder.toString();
-
-        }
-
-
-    public <T> ResponseEntity<T> invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams,
-      MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams,
-      List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
-
-        updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
-        Map<String,Object> uriParams = new HashMap<>();
-        uriParams.putAll(pathParams);
-
-        String finalUri = path;
-
-        if (queryParams != null && !queryParams.isEmpty()) {
-            //Include queryParams in uriParams taking into account the paramName
-            String queryUri = generateQueryUri(queryParams, uriParams);
-            //Append to finalUri the templatized query string like "?param1={param1Value}&.......
-            finalUri += "?" + queryUri;
-        }
-        String expandedPath = this.expandPath(finalUri, uriParams);
-        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(expandedPath);
-
-
-        URI uri;
-        try {
-            uri = new URI(builder.build().toUriString());
-        } catch(URISyntaxException ex)  {
-            throw new RestClientException("Could not build URL: " + builder.toUriString(), ex);
-        }
-
-        final BodyBuilder requestBuilder = RequestEntity.method(method, uri);
-        if(accept != null) {
-            requestBuilder.accept(accept.toArray(new MediaType[accept.size()]));
-        }
-        if(contentType != null) {
-            requestBuilder.contentType(contentType);
-        }
-
-        addHeadersToRequest(headerParams, requestBuilder);
-        addHeadersToRequest(defaultHeaders, requestBuilder);
-        addCookiesToRequest(cookieParams, requestBuilder);
-        addCookiesToRequest(defaultCookies, requestBuilder);
-
-        RequestEntity<Object> requestEntity = requestBuilder.body(selectBody(body, formParams, contentType));
-
-        ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, returnType);
-
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity;
-        } else {
-            // The error handler built into the RestTemplate should handle 400 and 500 series errors.
-            throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
-        }
-    }
-
-
-    protected void addHeadersToRequest(HttpHeaders headers, BodyBuilder requestBuilder) {
-            for (Entry<String, List<String>> entry : headers.entrySet()) {
-                List<String> values = entry.getValue();
-                for(String value : values) {
-                    if (value != null) {
-                        requestBuilder.header(entry.getKey(), value);
-                    }
-                }
-            }
-    }
-
-   protected void addCookiesToRequest(MultiValueMap<String, String> cookies, BodyBuilder requestBuilder) {
-           if (!cookies.isEmpty()) {
-               requestBuilder.header("Cookie", buildCookieHeader(cookies));
-           }
-   }
-
-
-   private String buildCookieHeader(MultiValueMap<String, String> cookies) {
-       final StringBuilder cookieValue = new StringBuilder();
-       String delimiter = "";
-       for (final Map.Entry<String, List<String>> entry : cookies.entrySet()) {
-           final String value = entry.getValue().get(entry.getValue().size() - 1);
-           cookieValue.append(String.format("%s%s=%s", delimiter, entry.getKey(), value));
-           delimiter = "; ";
-       }
-       return cookieValue.toString();
-   }
-
-
-    private void updateParamsForAuth(String[] authNames, MultiValueMap< String, String> queryParams, HttpHeaders headerParams, MultiValueMap< String, String> cookieParams) {
-        for (String authName : authNames) {
-            Authentication auth = authentications.get(authName);
-            if (auth == null) {
-                throw new RestClientException("Authentication undefined: " + authName);
-            }
-            auth.applyToParams(queryParams, headerParams, cookieParams);
-        }
-    }
-
-    private class ApiClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
-            private final Log log = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
-
-            @Override
-            public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-                logRequest(request, body);
-                ClientHttpResponse response = execution.execute(request, body);
-                logResponse(response);
-                return response;
-            }
-
-            private void logRequest(HttpRequest request, byte[] body) throws UnsupportedEncodingException {
-                log.info("URI: " + request.getURI());
-                log.info("HTTP Method: " + request.getMethod());
-                log.info("HTTP Headers: " + headersToString(request.getHeaders()));
-                log.info("Request Body: " + new String(body, StandardCharsets.UTF_8));
-            }
-
-            private void logResponse(ClientHttpResponse response) throws IOException {
-                log.info("HTTP Status Code: " + response.getRawStatusCode());
-                log.info("Status Text: " + response.getStatusText());
-                log.info("HTTP Headers: " + headersToString(response.getHeaders()));
-                log.info("Response Body: " + bodyToString(response.getBody()));
-            }
-
-            private String headersToString(HttpHeaders headers) {
-                StringBuilder builder = new StringBuilder();
-                for(Entry<String, List<String>> entry : headers.entrySet()) {
-                    builder.append(entry.getKey()).append("=[");
-                    for(String value : entry.getValue()) {
-                        builder.append(value).append(",");
-                    }
-                    builder.setLength(builder.length() - 1); // Get rid of trailing comma
-                    builder.append("],");
-                }
-                builder.setLength(builder.length() - 1); // Get rid of trailing comma
-                return builder.toString();
-            }
-
-            private String bodyToString(InputStream body) throws IOException {
-                StringBuilder builder = new StringBuilder();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
-                String line = bufferedReader.readLine();
-                while (line != null) {
-                    builder.append(line).append(System.lineSeparator());
-                    line = bufferedReader.readLine();
-                }
-                bufferedReader.close();
-                return builder.toString();
-            }
-    }
+  }
 
 }
