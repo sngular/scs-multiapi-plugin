@@ -17,7 +17,7 @@ public class ${schema.className} {
        private List<${field.dataType}> ${field.baseName} = new ArrayList<${field.dataType}>();
      <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
         private HashMap<String,${field.dataType}> ${field.baseName} = new HashMap<String,${field.dataType}>();
-     <#else>
+     <#elseif field.dataTypeSimple?has_content>
        private ${field.dataTypeSimple?cap_first} ${field.baseName};
     </#if>
  </#list>

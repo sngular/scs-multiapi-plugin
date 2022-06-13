@@ -162,15 +162,24 @@ public class OpenApiUtil {
       String remainingLetters = operation.getOperationId().substring(1);
 
       String operationId = firstLetter.toUpperCase() + remainingLetters;
-      operation.getRequestBody().getContent().entrySet().forEach(content -> basicSchemaMap.put("InlineObject" + operationId,
-                                                                                               content.getValue().getSchema()));
+      operation.getRequestBody().getContent().forEach((key, value) -> {
+        if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
+          basicSchemaMap.put("InlineObject" + operationId,
+                             value.getSchema());
+        }
+      });
     }
     for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
       if (Objects.nonNull(response.getValue().getContent())) {
-        response.getValue().getContent().entrySet().forEach(content -> basicSchemaMap.put("InlineResponse" + response.getKey(), content.getValue().getSchema()));
+        response.getValue().getContent().forEach((key, value) -> {
+          if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
+            basicSchemaMap.put("InlineResponse" + response.getKey(),
+                               value.getSchema());
+          }
+        });
       }
     }
   }
-
-
 }
+
+
