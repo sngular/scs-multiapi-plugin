@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +26,6 @@ public interface TestFirstApi {
 
   /**
   * GET /testFirst : List all available test
-  *
-  *
   * @return  A paged array of tests; (status code 200)
   */
 
@@ -53,7 +49,6 @@ public interface TestFirstApi {
   /**
   * GET /testFirst/{testId} : Info for a specific test
   * @param testId The id of the test to retrieve true
-  *
   * @return  Expected response to a valid request; (status code 200)
   */
 

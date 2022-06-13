@@ -1,4 +1,4 @@
-package ${packageClient};
+package net.coru.multifileplugin.testclientpackage.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +57,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 
-import ${packageAuth}.Authentication;
+import net.coru.multifileplugin.testclientpackage.client.auth.Authentication;
 
 @Component
 public class ApiRestClient {

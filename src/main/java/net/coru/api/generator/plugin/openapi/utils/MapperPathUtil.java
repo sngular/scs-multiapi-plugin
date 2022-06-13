@@ -28,6 +28,7 @@ import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.OperationObject;
 import net.coru.api.generator.plugin.openapi.model.ParameterObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
+import net.coru.api.generator.plugin.openapi.model.RefNameObject;
 import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
@@ -97,7 +98,7 @@ public class MapperPathUtil {
     ArrayList<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
       if (Objects.nonNull(pathItem.getValue().getParameters())) {
-        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters()));
+        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters(), fileSpec));
       }
       PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
@@ -111,39 +112,51 @@ public class MapperPathUtil {
   }
 
   private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
-    ArrayList<OperationObject> operationObjects = new ArrayList<>();
+    List<OperationObject> operationObjects = new ArrayList<>();
+    List<String> operationIdList = new ArrayList<>();
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
-      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
-      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
-      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
-      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
-      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject));
+      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject, operationIdList));
     }
 
     return operationObjects;
   }
 
-  private static OperationObject createOperation(Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject) {
+  private static OperationObject createOperation(
+    Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
-                          .operationId(operation.getOperationId())
+                          .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
                           .summary(operation.getSummary())
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
-                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject))
+                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject, fileSpec))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
                           .build();
+  }
+
+  private static String mapOperationId(final String operationId, final List<String> operationIdList) {
+    if (operationIdList.contains(operationId)) {
+      throw new SCSMultiApiMavenPluginException("Do not write the same operationId twice");
+    } else {
+      operationIdList.add(operationId);
+      return operationId;
+    }
+
   }
 
   private static List<String> getConsumesList(RequestBody requestBody) {
@@ -201,7 +214,7 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject) {
+  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject, FileSpec fileSpec) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(globalObject.getParameterObjects())) {
       if (Objects.nonNull(globalObject.getParameterObjects()) && Objects.nonNull(parameters)) {
@@ -221,14 +234,14 @@ public class MapperPathUtil {
                                                                           .required(parameter.getRequired())
                                                                           .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
                                                                           .build()));
     }
     return parameterObjects;
   }
 
-  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters) {
+  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters, FileSpec fileSpec) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters)) {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
@@ -236,7 +249,7 @@ public class MapperPathUtil {
                                                                           .required(parameter.getRequired())
                                                                           .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema()))
+                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
                                                                           .build()));
     }
@@ -268,7 +281,7 @@ public class MapperPathUtil {
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(getPojoName(inlineObject, fileSpec))
-                                          .refName(getPojoName(inlineObject, fileSpec))
+                                          .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec), true))
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
                    BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
@@ -276,7 +289,7 @@ public class MapperPathUtil {
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
+                                          .refNameObject(mapRefNameObject(defineTypeName(mediaTypeEntry.getValue().getSchema()), false))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
@@ -284,12 +297,20 @@ public class MapperPathUtil {
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .refNameObject(mapRefNameObject(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()), true))
                                           .build());
         }
       }
     }
     return contentObjects;
+  }
+
+  private static RefNameObject mapRefNameObject(String refName, Boolean checkImport) {
+    return RefNameObject.builder()
+                        .refName(refName)
+                        .checkImport(checkImport)
+                        .build();
+
   }
 
   private static String defineTypeName(Schema schema) {
@@ -371,8 +392,8 @@ public class MapperPathUtil {
   }
 
   private static List<String> getSecurityRequirementList(
-      List<SecurityRequirement> securityRequirementList,
-      List<String> authentications) {
+    List<SecurityRequirement> securityRequirementList,
+    List<String> authentications) {
     var authSecList = new ArrayList<String>();
     if (null != securityRequirementList
         && !securityRequirementList.isEmpty()) {

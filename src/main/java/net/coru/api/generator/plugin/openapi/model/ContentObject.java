@@ -17,7 +17,7 @@ public class ContentObject {
 
   private String description;
 
-  private String refName;
+  private RefNameObject refNameObject;
 
   private String typeData;
 

@@ -13,6 +13,40 @@ public class ApiTestInfoDTO {
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
 
+  private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
+    this.testName = builder.testName;
+    this.testers = builder.testers;
+  }
+
+  public static class ApiTestInfoDTOBuilder {
+
+    private String testName;
+    private List<String> testers = new ArrayList<String>();
+
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
+      if (CollectionUtils.isNotEmpty(testers)) {
+        this.testers.addAll(testers);
+      }
+      return this;
+    }
+
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
+      if (Objects.nonNull(tester)) {
+        this.testers.add(tester);
+      }
+      return this;
+    }
+
+    public ApiTestInfoDTO build() {
+      ApiTestInfoDTO apiTestInfoDTO =  new ApiTestInfoDTO(this);
+      return apiTestInfoDTO;
+    }
+  }
+
   /**
   * Get testName
   * @return testName

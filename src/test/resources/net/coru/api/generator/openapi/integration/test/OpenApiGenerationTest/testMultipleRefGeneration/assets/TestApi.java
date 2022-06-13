@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testtags;
+package net.coru.multifileplugin.testapi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,35 +14,34 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testtags.model.TestDTO;
-import net.coru.multifileplugin.testtags.model.ErrorDTO;
+import net.coru.multifileplugin.testapi.model.InlineResponse200DTO;
 
-public interface TestTagFirstApi {
+public interface TestApi {
 
   default Optional<NativeWebRequest> getRequest() {
     return Optional.empty();
   }
 
   /**
-  * GET /test : List all available testServer
-  * @return  A paged array of tests; (status code 200)
+  * POST /test : Start a Game
+  * @return  Test File for SCC MultiApi Plugin.; (status code 200)
   */
 
   @Operation(
-     operationId = "listTestServer",
-     summary = "List all available testServer",
-     tags = { "TestTagFirst" },
+     operationId = "createGame",
+     summary = "Start a Game",
+     tags = { "games" },
      responses = {
-          @ApiResponse(responseCode = "200", description = "A paged array of tests" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = TestDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ErrorDTO.class)) )
+          @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200DTO.class)) )
      }
   )
   @RequestMapping(
-    method = RequestMethod.GET,
+    method = RequestMethod.POST,
     value = "/test",
     produces = { "application/json" }
   )
 
-  default ResponseEntity<TestDTO> listTestServer() {
+  default ResponseEntity<InlineResponse200DTO> createGame() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

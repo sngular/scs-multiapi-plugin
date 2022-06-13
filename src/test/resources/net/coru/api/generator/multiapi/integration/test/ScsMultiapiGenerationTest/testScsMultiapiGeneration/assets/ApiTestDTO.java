@@ -11,6 +11,32 @@ public class ApiTestDTO {
   @JsonProperty(value ="id")
   private Integer id;
 
+  private ApiTestDTO(ApiTestDTOBuilder builder) {
+    this.name = builder.name;
+    this.id = builder.id;
+  }
+
+  public static class ApiTestDTOBuilder {
+
+    private String name;
+    private Integer id;
+
+    public ApiTestDTO.ApiTestDTOBuilder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
+      this.id = id;
+      return this;
+    }
+
+    public ApiTestDTO build() {
+      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
+      return apiTestDTO;
+    }
+  }
+
   /**
   * Get name
   * @return name

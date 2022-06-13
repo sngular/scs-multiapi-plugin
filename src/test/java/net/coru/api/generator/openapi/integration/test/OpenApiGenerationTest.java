@@ -6,8 +6,8 @@
 
 package net.coru.api.generator.openapi.integration.test;
 
-import static net.coru.api.generator.test.utils.TestUtils.validateFiles;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
+import static net.coru.api.generator.test.utils.TestUtils.validateFiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +56,21 @@ public class OpenApiGenerationTest {
 
     commonTest(result, expectedFile, expectedModelFiles);
   }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testMultipleRefGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/InlineResponse200DTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/MessageDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
@@ -123,7 +138,7 @@ public class OpenApiGenerationTest {
     assertThat(targetFirstFolder).isNotEmptyDirectory();
 
     File targetSecondFolder = pathToTargetSecond.toFile();
-    assertThat(targetFirstFolder).isNotEmptyDirectory();
+    assertThat(targetSecondFolder).isNotEmptyDirectory();
 
     validateFiles(expectedFileFirst, targetFirstFolder);
     validateFiles(expectedFileSecond, targetSecondFolder);
@@ -144,6 +159,31 @@ public class OpenApiGenerationTest {
     assertThat(targetFirstFolder).isNotEmptyDirectory();
 
     validateFiles(expectedFileFirst, targetFirstFolder);
+  }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testClientPackageWebClientApiGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                                                    "/TestClient.java"));
+    List<File> expectedFileSecond = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                                                     "/TestAuth.java"),
+                                            new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                                                     "/TestHttpBasicAuth.java"));
+
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testclientpackage/client");
+    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testclientpackage/client/auth");
+
+    File targetFirstFolder = pathToTargetFirst.toFile();
+    assertThat(targetFirstFolder).isNotEmptyDirectory();
+
+    File targetSecondFolder = pathToTargetSecond.toFile();
+    assertThat(targetSecondFolder).isNotEmptyDirectory();
+
+    validateFiles(expectedFileFirst, targetFirstFolder);
+    validateFiles(expectedFileSecond, targetSecondFolder);
   }
 
   @MavenTest
