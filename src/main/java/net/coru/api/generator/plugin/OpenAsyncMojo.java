@@ -129,8 +129,8 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private boolean isValidOperation(OperationParameterObject operation, String operationId, JsonNode channel, String channelType, boolean excludingOperationExists) {
     return operation != null && (
-        (operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)) ||
-        (operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists)
+      (operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)) ||
+      (operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists)
     );
   }
 
@@ -175,11 +175,11 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private void processEntitiesPostfix(FileSpec fileParameter) {
     templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null ?
-                                                   fileParameter.getSupplier().getEntitiesPostfix() : null);
+                                                 fileParameter.getSupplier().getEntitiesPostfix() : null);
     templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null ?
-                                                       fileParameter.getStreamBridge().getEntitiesPostfix() : null);
+                                                     fileParameter.getStreamBridge().getEntitiesPostfix() : null);
     templateFactory.setSubscribeEntitiesPostfix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getEntitiesPostfix() != null ?
-                                                    fileParameter.getConsumer().getEntitiesPostfix() : null);
+                                                  fileParameter.getConsumer().getEntitiesPostfix() : null);
   }
 
   private void processDuplicates(FileSpec fileParameter) {
@@ -217,11 +217,11 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private void processClassnames(FileSpec fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null ?
-                                             fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
+                                           fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null ?
-                                                 fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
+                                               fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null ?
-                                              fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
+                                            fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
   }
 
   private Path processPath(OperationParameterObject operationParameter) {

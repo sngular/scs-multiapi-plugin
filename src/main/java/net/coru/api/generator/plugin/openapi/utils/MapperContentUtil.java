@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 public class MapperContentUtil {
 
   public static SchemaObject mapComponentToSchemaObject(
-      Schema schema, String nameSchema,
-      FileSpec fileSpec, String modelPackage) {
+    Schema schema, String nameSchema,
+    FileSpec fileSpec, String modelPackage) {
     var listSchema = getFields(schema, fileSpec);
 
     return SchemaObject.builder()
@@ -41,8 +41,8 @@ public class MapperContentUtil {
   }
 
   private static List<String> getImportList(
-      List<SchemaFieldObject> fieldObjectList,
-      String modelPackage) {
+    List<SchemaFieldObject> fieldObjectList,
+    String modelPackage) {
     var listHashMap = new HashMap<String, List<String>>();
     var importList = new ArrayList<String>();
 
@@ -81,7 +81,6 @@ public class MapperContentUtil {
   private static List<SchemaFieldObject> getFields(Schema schema, FileSpec fileSpec) {
     var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
-
     if (Objects.nonNull(schema.getProperties())) {
       var mapperProperties = new HashMap<String, Schema>(schema.getProperties());
 
@@ -115,7 +114,6 @@ public class MapperContentUtil {
     }
     return fieldObjectArrayList;
   }
-
 
   private static String getImportClass(String type) {
     return StringUtils.isNotBlank(type) && (!type.equals("String") && !type.equals("Integer")) ? type : "";

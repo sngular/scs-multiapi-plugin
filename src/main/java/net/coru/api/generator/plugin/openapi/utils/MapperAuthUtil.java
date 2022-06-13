@@ -29,9 +29,9 @@ public class MapperAuthUtil {
                                                && value.getScheme().equalsIgnoreCase("bearer") ? "HttpBearerAuth" : getModelTypeAuth(value))
                                          .name(key)
                                          .apiKeyParam(value.getType().toString().equalsIgnoreCase("apiKey")
-                                                          ? value.getName() : "")
+                                                        ? value.getName() : "")
                                          .apiKeyPlace(value.getType().toString().equalsIgnoreCase("apiKey")
-                                                          ? value.getIn().toString() : "")
+                                                        ? value.getIn().toString() : "")
                                          .bearerSchema(value.getType().toString().equalsIgnoreCase("http")
                                                        && value.getScheme().equalsIgnoreCase("bearer") ? value.getScheme() : "")
                                          .build();

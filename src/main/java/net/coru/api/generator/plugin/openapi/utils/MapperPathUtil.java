@@ -281,7 +281,7 @@ public class MapperPathUtil {
                                           .name(mediaTypeEntry.getKey())
                                           .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(getPojoName(inlineObject, fileSpec))
-                                          .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec),true))
+                                          .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec), true))
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
                    BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
