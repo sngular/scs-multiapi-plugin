@@ -15,8 +15,6 @@ import lombok.Data;
 @Builder
 public class RequestObject {
 
-  private String description;
-
   private Boolean required;
 
   private List<ContentObject> contentObject;

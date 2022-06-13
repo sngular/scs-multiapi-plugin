@@ -15,8 +15,6 @@ import lombok.Data;
 @Builder
 public class SchemaObject {
 
-  private String description;
-
   private String schemaName;
 
   private String className;

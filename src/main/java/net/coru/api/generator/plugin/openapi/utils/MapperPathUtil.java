@@ -55,9 +55,6 @@ public class MapperPathUtil {
 
     return GlobalObject.builder()
                        .url(openAPI.getServers().get(0).getUrl())
-                       .version(openAPI.getInfo().getVersion())
-                       .title(openAPI.getInfo().getTitle())
-                       .license(openAPI.getInfo().getLicense().getName())
                        .authSchemas(authSchemaList)
                        .authentications(authList)
                        .componentsTypeMap(getMapComponentsTypes(openAPI.getComponents(), fileSpec))
@@ -138,7 +135,6 @@ public class MapperPathUtil {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
-                          .summary(operation.getSummary())
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
@@ -206,7 +202,6 @@ public class MapperPathUtil {
     String operationId = firstLetter.toUpperCase() + remainingLetters;
     if (Objects.nonNull(operation.getRequestBody())) {
       requestObjects.add(RequestObject.builder()
-                                      .description(operation.getRequestBody().getDescription())
                                       .required(operation.getRequestBody().getRequired())
                                       .contentObject(mapContentObject(fileSpec, operation.getRequestBody().getContent(), "InlineObject" + operationId, globalObject))
                                       .build());
@@ -223,7 +218,6 @@ public class MapperPathUtil {
       globalObject.getParameterObjects().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                                                   .name(parameter.getName())
                                                                                                   .required(parameter.getRequired())
-                                                                                                  .description(parameter.getDescription())
                                                                                                   .in(parameter.getIn())
                                                                                                   .className(parameter.getClassName())
                                                                                                   .isCollection(parameter.getIsCollection())
@@ -232,7 +226,6 @@ public class MapperPathUtil {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                           .name(parameter.getName())
                                                                           .required(parameter.getRequired())
-                                                                          .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
                                                                           .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
@@ -247,7 +240,6 @@ public class MapperPathUtil {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                           .name(parameter.getName())
                                                                           .required(parameter.getRequired())
-                                                                          .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
                                                                           .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
@@ -263,7 +255,6 @@ public class MapperPathUtil {
       for (Entry<String, ApiResponse> response : responses.entrySet()) {
         responseObjects.add(ResponseObject.builder()
                                           .responseName(response.getKey())
-                                          .description(response.getValue().getDescription())
                                           .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey(), globalObject))
                                           .build());
       }
@@ -279,7 +270,6 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(getPojoName(inlineObject, fileSpec))
                                           .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec), true))
                                           .build());
@@ -288,14 +278,12 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .refNameObject(mapRefNameObject(defineTypeName(mediaTypeEntry.getValue().getSchema()), false))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .refNameObject(mapRefNameObject(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()), true))
                                           .build());

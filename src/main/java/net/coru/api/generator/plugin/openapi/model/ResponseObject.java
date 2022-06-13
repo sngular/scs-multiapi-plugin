@@ -17,7 +17,5 @@ public class ResponseObject {
 
   private String responseName;
 
-  private String description;
-
   private List<ContentObject> contentObject;
 }

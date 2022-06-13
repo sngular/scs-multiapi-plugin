@@ -17,8 +17,6 @@ public class OperationObject {
 
   private String operationType;
 
-  private String summary;
-
   private String operationId;
 
   private List<String> tags;
