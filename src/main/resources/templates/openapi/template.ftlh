@@ -55,7 +55,7 @@ public interface ${className?cap_first}Api {
          /**
          * ${operation.operationType} ${path.pathName} : ${operation.summary}<#if operation.responseObjects?has_content>
          *<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list></#if>
-         *<#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObject as content> @param ${content.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list></#if>
+         *<#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObject as content> @param ${content.refNameObject.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list></#if>
          * @return<#list operation.responseObjects as response><#if response.responseName != "default">  ${response.description}; (status code ${response.responseName})</#if></#list></#if>
          */
 
