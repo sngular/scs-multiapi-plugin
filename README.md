@@ -490,8 +490,8 @@ file. Here is an example of a basic configuration:
 Before using this plugin we have to warn that not all the complexity and
 support offered by the use of swagger.io yml files is supported.
 
-Since 1.1.0 version, we support the definition of parameters in both Path 
-and Operation object, but you can only define it in one of them. 
+Since 1.1.0 version, we support the definition of parameters in both Path
+and Operation object, but you can only define it in one of them.
 If you specify them in both objects it will trigger an Exception.
 
 We establish here some of these options that are not yet supported and that
