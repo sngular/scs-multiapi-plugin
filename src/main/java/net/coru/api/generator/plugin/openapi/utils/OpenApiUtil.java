@@ -141,10 +141,10 @@ public class OpenApiUtil {
         processContentSchema(basicSchemaMap, pathItem.getValue().getPost());
       }
       if (Objects.nonNull(pathItem.getValue().getPut())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getPost());
+        processContentSchema(basicSchemaMap, pathItem.getValue().getPut());
       }
       if (Objects.nonNull(pathItem.getValue().getDelete())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getPost());
+        processContentSchema(basicSchemaMap, pathItem.getValue().getDelete());
       }
       if (Objects.nonNull(pathItem.getValue().getPatch())) {
         processContentSchema(basicSchemaMap, pathItem.getValue().getPatch());
