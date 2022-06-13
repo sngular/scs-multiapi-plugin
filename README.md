@@ -55,7 +55,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -111,7 +111,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>1.0.0-SNAPSHOT</version>
+<version>1.3.1</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -464,7 +464,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1</version>
   <executions>
     <execution>
         <goals>
@@ -490,11 +490,11 @@ file. Here is an example of a basic configuration:
 Before using this plugin we have to warn that not all the complexity and
 support offered by the use of swagger.io yml files is supported.
 
+Since 1.1.0 version, we support the definition of parameters in both Path and Operation object, but you can only define it
+in one of them. If you specify them in both objects it will trigger an Exception.
+
 We establish here some of these options that are not yet supported and that
 will be added to this plugin as time goes by and the existing need among users.
-
-- The use of common parameters for all the operations of the same path
-element of the .yml file.
 
 - The use of parameters defined in the component element by reference.
 
