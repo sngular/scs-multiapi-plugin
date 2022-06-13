@@ -10,6 +10,7 @@ import java.util.Map;
 import net.coru.multifileplugin.testwebclient.model.ApiTestInfoDTO;
 import net.coru.multifileplugin.testwebclient.model.ApiErrorDTO;
 import net.coru.multifileplugin.testwebclient.model.ApiTestDTO;
+import net.coru.multifileplugin.testwebclient.model.ApiErrorDTO;
 
 import net.coru.apigenerator.openapi.client.auth.Authentication;
 import net.coru.apigenerator.openapi.client.auth.HttpBasicAuth;

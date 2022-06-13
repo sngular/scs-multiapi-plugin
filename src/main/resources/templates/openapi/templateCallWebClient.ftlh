@@ -197,7 +197,7 @@ public class ${className?cap_first}Api {
                </#if> ${content.refNameObject.refName?uncap_first} <#if content?has_next>, </#if></#list>
               </#list></#if></#compress>) throws WebClientResponseException {
           <#if operation.responseObjects[0].contentObject[0]??>
-          ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.?cap_first}>() {};
+          ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>() {};
           <#else>
           ParameterizedTypeReference< Void> localVarReturnType = new ParameterizedTypeReference< Void>() {};
           </#if>

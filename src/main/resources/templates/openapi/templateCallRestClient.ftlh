@@ -22,7 +22,7 @@ import java.util.Map;
     <#list operation.responseObjects as response>
       <#list response.contentObject as content>
         <#if (!imports?seq_contains(content.refNameObject.refName))>
-          <#if content.refNameObject.checkImport)>
+          <#if content.refNameObject.checkImport>
             <#assign imports = imports+[content.refNameObject.refName]>
           </#if>
         </#if>

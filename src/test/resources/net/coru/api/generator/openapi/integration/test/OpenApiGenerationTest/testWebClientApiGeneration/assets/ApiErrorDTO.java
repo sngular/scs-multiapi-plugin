@@ -8,9 +8,39 @@ public class ApiErrorDTO {
 
    @JsonProperty(value ="message")
    private String message;
+
    @JsonProperty(value ="code")
    private Integer code;
 
+
+       private ApiErrorDTO(ApiErrorDTOBuilder builder) {
+         this.message = builder.message;
+         this.code = builder.code;
+       }
+
+       public static class ApiErrorDTOBuilder {
+
+          private String message;
+          private Integer code;
+
+
+          public ApiErrorDTO.ApiErrorDTOBuilder message(String message) {
+            this.message = message;
+            return this;
+          }
+
+
+          public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
+            this.code = code;
+            return this;
+          }
+
+
+          public ApiErrorDTO build() {
+            ApiErrorDTO apiErrorDTO =  new ApiErrorDTO(this);
+            return apiErrorDTO;
+          }
+       }
 
 
    /**
