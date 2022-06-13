@@ -57,13 +57,14 @@ public class TemplateFactory {
   }
 
   public void fillTemplateSchema(String filePathToSave, Boolean useLombock, SchemaObject schemaObject) throws IOException, TemplateException {
-    root.put("schema", schemaObject);
-    root.put("stringBracketOpen", "{");
-    root.put("stringBracketClose", "}");
     File fileToSave = new File(filePathToSave);
-
-    String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
-    writeTemplateToFile(null != useLombock && useLombock ? TEMPLATE_CONTENT_SCHEMA_LOMBOK : TEMPLATE_CONTENT_SCHEMA, root, pathToSaveMainClass);
+    if(Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()){
+      root.put("schema", schemaObject);
+      root.put("stringBracketOpen", "{");
+      root.put("stringBracketClose", "}");
+      String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
+      writeTemplateToFile(null != useLombock && useLombock ? TEMPLATE_CONTENT_SCHEMA_LOMBOK : TEMPLATE_CONTENT_SCHEMA, root, pathToSaveMainClass);
+    }
 
   }
 
