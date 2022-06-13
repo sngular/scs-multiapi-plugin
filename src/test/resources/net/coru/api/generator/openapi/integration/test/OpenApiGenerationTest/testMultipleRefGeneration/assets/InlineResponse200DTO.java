@@ -8,9 +8,39 @@ public class InlineResponse200DTO {
 
    @JsonProperty(value ="message")
    private MessageDTO message;
+
    @JsonProperty(value ="code")
    private Integer code;
 
+
+       private InlineResponse200DTO(InlineResponse200DTOBuilder builder) {
+         this.message = builder.message;
+         this.code = builder.code;
+       }
+
+       public static class InlineResponse200DTOBuilder {
+
+          private MessageDTO message;
+          private Integer code;
+
+
+          public InlineResponse200DTO.InlineResponse200DTOBuilder message(MessageDTO message) {
+            this.message = message;
+            return this;
+          }
+
+
+          public InlineResponse200DTO.InlineResponse200DTOBuilder code(Integer code) {
+            this.code = code;
+            return this;
+          }
+
+
+          public InlineResponse200DTO build() {
+            InlineResponse200DTO inlineResponse200DTO =  new InlineResponse200DTO(this);
+            return inlineResponse200DTO;
+          }
+       }
 
 
    /**

@@ -10,6 +10,27 @@ public class MessageDTO {
    private String description;
 
 
+       private MessageDTO(MessageDTOBuilder builder) {
+         this.description = builder.description;
+       }
+
+       public static class MessageDTOBuilder {
+
+          private String description;
+
+
+          public MessageDTO.MessageDTOBuilder description(String description) {
+            this.description = description;
+            return this;
+          }
+
+
+          public MessageDTO build() {
+            MessageDTO messageDTO =  new MessageDTO(this);
+            return messageDTO;
+          }
+       }
+
 
    /**
     * Get description
