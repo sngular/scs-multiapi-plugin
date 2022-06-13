@@ -59,6 +59,21 @@ public class OpenApiGenerationTest {
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testMultipleRefGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/InlineResponse200DTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/MessageDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiReactiveGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets" +
                                                "/TestApi.java"));

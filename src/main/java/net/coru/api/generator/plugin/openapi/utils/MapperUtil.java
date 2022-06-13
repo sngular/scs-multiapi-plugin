@@ -1,31 +1,48 @@
 package net.coru.api.generator.plugin.openapi.utils;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import java.util.Objects;
+
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
 
-  public static String getSimpleType(Schema schema) {
+  public static final String INTEGER = "integer";
+
+  public static final String DOUBLE = "double";
+
+  public static final String FLOAT = "float";
+
+  public static final String NUMBER = "number";
+
+  public static final String INT_64 = "int64";
+
+  public static final String LONG = "long";
+
+  public static String getSimpleType(Schema schema, FileSpec fileSpec) {
     String type = "";
-    if ("number".equalsIgnoreCase(schema.getType())) {
-      if ("float".equalsIgnoreCase(schema.getFormat())) {
-        type = "float";
-      } else if ("double".equalsIgnoreCase(schema.getFormat())) {
-        type = "double";
+    if (NUMBER.equalsIgnoreCase(schema.getType())) {
+      if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
+        type = FLOAT;
+      } else if (DOUBLE.equalsIgnoreCase(schema.getFormat())) {
+        type = DOUBLE;
       } else {
-        type = "integer";
+        type = INTEGER;
       }
-    } else if ("integer".equalsIgnoreCase(schema.getType())) {
-      if ("int64".equalsIgnoreCase(schema.getType())) {
-        type = "long";
+    } else if (INTEGER.equalsIgnoreCase(schema.getType())) {
+      if (INT_64.equalsIgnoreCase(schema.getType())) {
+        type = LONG;
       } else {
-        type = "integer";
+        type = INTEGER;
       }
+    } else if (Objects.nonNull(schema.get$ref())) {
+      String[] pathObjectRef = schema.get$ref().split("/");
+      type = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
     } else {
       type = schema.getType();
     }
