@@ -80,13 +80,13 @@ public interface ${className?cap_first}Api {
     value = "${path.pathName}",
     produces = { "application/json" }
   )
-  default Mono<ResponseEntity<#compress><<#if operation.responseObjects[0].contentObject[0]??><#if operation.responseObjects[0].contentObject[0].typeData?? && (operation.responseObjects[0].contentObject[0].typeData == "array" || operation.responseObjects[0].contentObject[0].typeData == "map")>
+  default Mono<ResponseEntity<@compress single_line=true><<#if operation.responseObjects[0].contentObject[0]??><#if operation.responseObjects[0].contentObject[0].typeData?? && (operation.responseObjects[0].contentObject[0].typeData == "array" || operation.responseObjects[0].contentObject[0].typeData == "map")>
     Flux<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>
-    <#else>${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}</#if><#else>Void</#if>>></#compress> ${operation.operationId}(<#compress>
+    <#else>${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}</#if><#else>Void</#if>>></@compress> ${operation.operationId}(<@compress single_line=true>
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if>
     <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObject[0].refName}", description = "${request.description! ""}", required = ${request.required?c} , schema = @Schema(description = "${request.contentObject[0].description! ""}")) @Valid @RequestBody
     <#if request.contentObject[0].typeData?? && (request.contentObject[0].typeData == "array" || request.contentObject[0].typeData == "map")> Flux<${request.contentObject[0].refName?cap_first}>
-    <#else> Mono<${request.contentObject[0].refNameObject.refName?cap_first}> </#if> ${request.contentObject[0].refNameObject.refName?uncap_first}<#if request?has_next>, </#if></#list></#if></#compress><#if operation.parameterObjects?has_content || operation.requestObjects?has_content>, </#if>@ApiIgnore final ServerWebExchange exchange) {
+    <#else> Mono<${request.contentObject[0].refNameObject.refName?cap_first}> </#if> ${request.contentObject[0].refNameObject.refName?uncap_first}<#if request?has_next>, </#if></#list></#if></@compress><#if operation.parameterObjects?has_content || operation.requestObjects?has_content>, </#if>@ApiIgnore final ServerWebExchange exchange) {
     Mono<Void> result = Mono.empty();
     exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
     for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
