@@ -23,8 +23,7 @@ also
   - Create a new branch before making any change in the repository. This branch
     should follow this format: #issue_ID_and_summary (for example,
     #23_add_new_provider).
-  - When writing the code, follow our [style sheet](https://github.
-    com/corunet/scs-multiapi-plugin/tree/main/styles/Corunet_Style.xml).
+  - When writing the code, follow our [style sheet](./Corunet_Style.xml).
   - Create commit messages that briefly describe the change applied, 
   preferably in
     English.
