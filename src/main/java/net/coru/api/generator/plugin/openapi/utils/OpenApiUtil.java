@@ -9,10 +9,10 @@ package net.coru.api.generator.plugin.openapi.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -22,6 +22,7 @@ import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class OpenApiUtil {
@@ -130,41 +131,37 @@ public class OpenApiUtil {
     return listObject;
   }
 
-  public static HashMap<String, Schema> processBasicSchemas(OpenAPI openApi) {
+  public static Map<String, Schema> processBasicSchemas(OpenAPI openApi) {
     var basicSchemaMap = new HashMap<String, Schema>();
 
     for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {
       if (Objects.nonNull(pathItem.getValue().getGet())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getGet());
+        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getGet());
       }
       if (Objects.nonNull(pathItem.getValue().getPost())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getPost());
+        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPost());
       }
       if (Objects.nonNull(pathItem.getValue().getPut())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getPut());
+        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPut());
       }
       if (Objects.nonNull(pathItem.getValue().getDelete())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getDelete());
+        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getDelete());
       }
       if (Objects.nonNull(pathItem.getValue().getPatch())) {
-        processContentSchema(basicSchemaMap, pathItem.getValue().getPatch());
+        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPatch());
       }
     }
 
     return basicSchemaMap;
   }
 
-  private static void processContentSchema(HashMap<String, Schema> basicSchemaMap, Operation operation) {
+  private static void processContentForBasicSchemas(HashMap<String, Schema> basicSchemaMap, Operation operation) {
 
     if (Objects.nonNull(operation.getRequestBody()) && Objects.nonNull(operation.getRequestBody().getContent())) {
-
-      String firstLetter = operation.getOperationId().substring(0, 1);
-      String remainingLetters = operation.getOperationId().substring(1);
-
-      String operationId = firstLetter.toUpperCase() + remainingLetters;
+      String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
       operation.getRequestBody().getContent().forEach((key, value) -> {
         if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
-          basicSchemaMap.put("InlineObject" + operationId,
+          basicSchemaMap.put("InlineObject" + operationIdWithCap,
                              value.getSchema());
         }
       });
@@ -173,7 +170,8 @@ public class OpenApiUtil {
       if (Objects.nonNull(response.getValue().getContent())) {
         response.getValue().getContent().forEach((key, value) -> {
           if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
-            basicSchemaMap.put("InlineResponse" + response.getKey(),
+            String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
+            basicSchemaMap.put("InlineResponse" + response.getKey() + operationIdWithCap,
                                value.getSchema());
           }
         });

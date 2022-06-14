@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testapi.model.InlineResponse200DTO;
+import net.coru.multifileplugin.testapi.model.InlineResponse200CreateGameDTO;
 
 
 public interface TestApi {
@@ -37,7 +37,7 @@ public interface TestApi {
             summary = "Start a Game",
             tags = { "games" },
             responses = {
-                 @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200DTO.class)) )
+                 @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200CreateGameDTO.class)) )
             }
          )
          @RequestMapping(
@@ -47,7 +47,7 @@ public interface TestApi {
          )
 
 
-         default ResponseEntity<InlineResponse200DTO> createGame () {
+         default ResponseEntity<InlineResponse200CreateGameDTO> createGame () {
                 return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
           }
 

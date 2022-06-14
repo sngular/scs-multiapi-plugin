@@ -141,7 +141,7 @@ public class MapperPathUtil {
                           .summary(operation.getSummary())
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
-                          .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
+                          .responseObjects(mapResponseObject(fileSpec, operation, globalObject))
                           .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject, fileSpec))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
@@ -200,15 +200,12 @@ public class MapperPathUtil {
 
   private static List<RequestObject> mapRequestObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject) {
     List<RequestObject> requestObjects = new ArrayList<>();
-    String firstLetter = operation.getOperationId().substring(0, 1);
-    String remainingLetters = operation.getOperationId().substring(1);
-
-    String operationId = firstLetter.toUpperCase() + remainingLetters;
+    String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
     if (Objects.nonNull(operation.getRequestBody())) {
       requestObjects.add(RequestObject.builder()
                                       .description(operation.getRequestBody().getDescription())
                                       .required(operation.getRequestBody().getRequired())
-                                      .contentObject(mapContentObject(fileSpec, operation.getRequestBody().getContent(), "InlineObject" + operationId, globalObject))
+                                      .contentObject(mapContentObject(fileSpec, operation.getRequestBody().getContent(), "InlineObject" + operationIdWithCap, globalObject))
                                       .build());
     }
     return requestObjects;
@@ -257,14 +254,16 @@ public class MapperPathUtil {
     return parameterObjects;
   }
 
-  private static List<ResponseObject> mapResponseObject(FileSpec fileSpec, ApiResponses responses, GlobalObject globalObject) {
+  private static List<ResponseObject> mapResponseObject(FileSpec fileSpec, Operation operation, GlobalObject globalObject) {
     List<ResponseObject> responseObjects = new ArrayList<>();
+    ApiResponses responses = operation.getResponses();
     if (Objects.nonNull(responses)) {
       for (Entry<String, ApiResponse> response : responses.entrySet()) {
+        String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
         responseObjects.add(ResponseObject.builder()
                                           .responseName(response.getKey())
                                           .description(response.getValue().getDescription())
-                                          .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey(), globalObject))
+                                          .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
                                           .build());
       }
     }
@@ -365,13 +364,10 @@ public class MapperPathUtil {
     if ("array".equalsIgnoreCase(schema.getType())) {
       ArraySchema arraySchema = (ArraySchema) schema;
       refSchema = arraySchema.getItems().get$ref();
-
     }
-
     if (Objects.nonNull(schema.get$ref())) {
       refSchema = schema.get$ref();
     }
-
     return StringUtils.isNotBlank(refSchema) ? getRefSchema(refSchema, componentsTypes) : "";
   }
 
@@ -383,7 +379,6 @@ public class MapperPathUtil {
       String[] wholeRefName = refName.split("-");
       refName = wholeRefName[wholeRefName.length - 1];
     }
-
     return refName;
   }
 
