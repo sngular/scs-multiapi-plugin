@@ -53,7 +53,7 @@ public class ${schema.className} {
       return this;
     }
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(HashMap<String,${field.dataType}> ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName}(Map<String,${field.dataType}> ${field.baseName}) {
       this.${field.baseName} = ${field.baseName};
       return this;
     }
@@ -90,14 +90,14 @@ public class ${schema.className} {
   public List<${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
-  public void set${field.baseName?cap_first}(ArrayList<${field.dataType}> ${field.baseName}) {
+  public void set${field.baseName?cap_first}(List<${field.dataType}> ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
-  public HashMap<String,${field.dataType}> get${field.baseName?cap_first}() {
+  public Map<String,${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
-  public void set${field.baseName?cap_first}(HashMap<String,${field.dataType}> ${field.baseName}) {
+  public void set${field.baseName?cap_first}(Map<String,${field.dataType}> ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
   <#elseif field.dataTypeSimple?has_content>
