@@ -11,7 +11,7 @@ project. We encourage you to follow them and help us create a better product!
   your interactions with the project.
 - When contributing to this repository, first create an issue to explain the
   change you want to make.
-  - The issues will be preferably written in English, although Spanish is 
+  - The issues will be preferably written in English, although Spanish is
   also acceptable.
   - The issue title should briefly summarize the proposal.
   - The issue body should include a description of the proposal with all the
