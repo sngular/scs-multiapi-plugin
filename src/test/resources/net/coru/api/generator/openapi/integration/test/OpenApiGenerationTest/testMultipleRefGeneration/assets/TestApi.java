@@ -11,46 +11,38 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.coru.multifileplugin.testapi.model.InlineResponse200DTO;
 
-
 public interface TestApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
+  default Optional<NativeWebRequest> getRequest() {
+    return Optional.empty();
+  }
 
-         /**
-         * POST /test : Start a Game
-         *
-         *
-         * @return  Test File for SCC MultiApi Plugin.; (status code 200)
-         */
+  /**
+  * POST /test : Start a Game
+  * @return  Test File for SCC MultiApi Plugin.; (status code 200)
+  */
 
-         @Operation(
-            operationId = "createGame",
-            summary = "Start a Game",
-            tags = { "games" },
-            responses = {
-                 @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200DTO.class)) )
-            }
-         )
-         @RequestMapping(
-           method = RequestMethod.POST,
-           value = "/test",
-           produces = { "application/json" }
-         )
+  @Operation(
+     operationId = "createGame",
+     summary = "Start a Game",
+     tags = { "games" },
+     responses = {
+          @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200DTO.class)) )
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.POST,
+    value = "/test",
+    produces = { "application/json" }
+  )
 
-
-         default ResponseEntity<InlineResponse200DTO> createGame () {
-                return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-          }
-
-
+  default ResponseEntity<InlineResponse200DTO> createGame() {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 
 }

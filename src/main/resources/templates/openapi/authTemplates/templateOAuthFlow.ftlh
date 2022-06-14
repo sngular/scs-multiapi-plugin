@@ -1,5 +1,5 @@
 package ${packageAuth};
 
 public enum OAuthFlow {
-    accessCode, implicit, password, application
+  accessCode, implicit, password, application
 }

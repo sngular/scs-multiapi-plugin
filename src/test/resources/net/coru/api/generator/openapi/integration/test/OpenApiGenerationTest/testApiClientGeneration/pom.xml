@@ -46,6 +46,7 @@
               <modelPackage>net.coru.multifileplugin.testapi.model</modelPackage>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>
+              <useLombokModelAnnotation>true</useLombokModelAnnotation>
             </fileSpec>
           </fileSpecs>
         </configuration>
