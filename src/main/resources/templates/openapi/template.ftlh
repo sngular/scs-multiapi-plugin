@@ -55,7 +55,7 @@ public interface ${className?cap_first}Api {
   *<#list operation.parameterObjects as parameter> @param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
-  *<#list operation.requestObjects as request><#list request.contentObject as content> @param ${content.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
+  *<#list operation.requestObjects as request><#list request.contentObject as content> @param ${content.refNameObject.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
   </#if>
   * @return<#list operation.responseObjects as response><#if response.responseName != "default">  ${response.description}; (status code ${response.responseName})</#if></#list></#if>
   */
@@ -80,9 +80,9 @@ public interface ${className?cap_first}Api {
     Map< String,${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>
     <#else>${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}</#if><#else>Void</#if>></@compress> ${operation.operationId}(<@compress single_line=true>
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if>
-    <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObject[0].refName}", description = "${request.description! ""}", required = ${request.required?c} , schema = @Schema(description = "${request.contentObject[0].description! ""}")) @Valid @RequestBody
+    <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObject[0].refNameObject.refName}", description = "${request.description! ""}", required = ${request.required?c} , schema = @Schema(description = "${request.contentObject[0].description! ""}")) @Valid @RequestBody
     <#if request.contentObject[0].typeData?? && (request.contentObject[0].typeData == "array")> List<${request.contentObject[0].refNameObject.refName?cap_first}>
-    <#elseif request.contentObject[0].typeData?? && (request.contentObject[0].typeData == "map")> Map< String,${request.contentObject[0].refName?cap_first}>
+    <#elseif request.contentObject[0].typeData?? && (request.contentObject[0].typeData == "map")> Map< String,${request.contentObject[0].refNameObject.refName?cap_first}>
     <#else> ${request.contentObject[0].refNameObject.refName?cap_first} </#if> ${request.contentObject[0].refNameObject.refName?uncap_first} <#if request?has_next> , </#if></#list></#if></@compress>) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
