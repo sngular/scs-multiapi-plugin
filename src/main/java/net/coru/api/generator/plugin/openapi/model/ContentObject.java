@@ -15,8 +15,6 @@ public class ContentObject {
 
   private String name;
 
-  private String description;
-
   private RefNameObject refNameObject;
 
   private String typeData;
