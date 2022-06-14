@@ -67,7 +67,7 @@ public class ApiTestInfoDTO {
   public List<String> getTesters() {
     return testers;
   }
-  public void setTesters(ArrayList<String> testers) {
+  public void setTesters(List<String> testers) {
     this.testers = testers;
   }
 
