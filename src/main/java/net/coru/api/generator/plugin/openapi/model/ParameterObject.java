@@ -19,6 +19,8 @@ public class ParameterObject {
 
   Boolean required;
 
+  String description;
+
   Boolean isCollection;
 
   String className;

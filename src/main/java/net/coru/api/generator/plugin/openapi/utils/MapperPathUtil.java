@@ -135,6 +135,7 @@ public class MapperPathUtil {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
+                          .summary(operation.getSummary())
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation.getResponses(), globalObject))
@@ -218,6 +219,7 @@ public class MapperPathUtil {
       globalObject.getParameterObjects().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                                                   .name(parameter.getName())
                                                                                                   .required(parameter.getRequired())
+                                                                                                  .description(parameter.getDescription())
                                                                                                   .in(parameter.getIn())
                                                                                                   .className(parameter.getClassName())
                                                                                                   .isCollection(parameter.getIsCollection())
@@ -226,6 +228,7 @@ public class MapperPathUtil {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                           .name(parameter.getName())
                                                                           .required(parameter.getRequired())
+                                                                          .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
                                                                           .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
@@ -240,6 +243,7 @@ public class MapperPathUtil {
       parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
                                                                           .name(parameter.getName())
                                                                           .required(parameter.getRequired())
+                                                                          .description(parameter.getDescription())
                                                                           .in(parameter.getIn())
                                                                           .className(getSimpleType(parameter.getSchema(), fileSpec))
                                                                           .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
@@ -255,6 +259,7 @@ public class MapperPathUtil {
       for (Entry<String, ApiResponse> response : responses.entrySet()) {
         responseObjects.add(ResponseObject.builder()
                                           .responseName(response.getKey())
+                                          .description(response.getValue().getDescription())
                                           .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey(), globalObject))
                                           .build());
       }
