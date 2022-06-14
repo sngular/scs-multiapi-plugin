@@ -20,8 +20,8 @@ project. We encourage you to follow them and help us create a better product!
       help to further understand and evaluate the proposal.
     - Create a new branch before making any change in the repository. This
       branch should follow this format: #issue_ID_and_summary (for example,
-      # 23_add_new_provider).
-    - When writing the code, follow our [style sheet](./Corunet_Style.xml).
+      #23_add_new_provider).
+    - When writing the code, follow our [style sheet](styles/Corunet_Style.xml).
     - Create commit messages that briefly describe the change applied,
       preferably in English.
 
