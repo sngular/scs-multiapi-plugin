@@ -21,39 +21,18 @@ public interface TestApi {
   default Optional<NativeWebRequest> getRequest() {
     return Optional.empty();
   }
-         /**
-         * POST /test : Start a Game
-         *
-         *
-         * @return  Test File for SCC MultiApi Plugin.; (status code 200)
-         */
 
-         @Operation(
-            operationId = "createGame",
-            summary = "Start a Game",
-            tags = { "games" },
-            responses = {
-                 @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200CreateGameDTO.class)) )
-            }
-         )
-         @RequestMapping(
-           method = RequestMethod.POST,
-           value = "/test",
-           produces = { "application/json" }
-         )
-
-
-         default ResponseEntity<InlineResponse200CreateGameDTO> createGame () {
-                return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-          }
-
+  /**
+  * POST /test : Start a Game
+  * @return  Test File for SCC MultiApi Plugin.; (status code 200)
+  */
 
   @Operation(
      operationId = "createGame",
      summary = "Start a Game",
      tags = { "games" },
      responses = {
-          @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200DTO.class)) )
+          @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin." , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = InlineResponse200CreateGameDTO.class)) )
      }
   )
   @RequestMapping(
@@ -62,5 +41,8 @@ public interface TestApi {
     produces = { "application/json" }
   )
 
+  default ResponseEntity<InlineResponse200CreateGameDTO> createGame() {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 
 }
