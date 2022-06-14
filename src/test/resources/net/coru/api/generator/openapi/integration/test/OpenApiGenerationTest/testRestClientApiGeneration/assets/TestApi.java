@@ -55,7 +55,6 @@ public class TestApi {
   public ResponseEntity<ApiTestInfoDTO> showTestByIdWithHttpInfo(Integer testId) throws RestClientException {
 
     Object postBody = null;
-    // create path and map variables
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
     uriVariables.put("testId",  testId);
@@ -87,7 +86,6 @@ public class TestApi {
   public ResponseEntity<ApiTestDTO> listTestWithHttpInfo() throws RestClientException {
 
     Object postBody = null;
-    // create path and map variables
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
     final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();

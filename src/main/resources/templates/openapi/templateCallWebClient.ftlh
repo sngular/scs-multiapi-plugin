@@ -103,7 +103,6 @@ public class ${className?cap_first}Api {
     throw new WebClientResponseException("Missing the required parameter ''${operation.requestObjects[0].contentObject[0].refNameObject.refName?uncap_first}'' when calling ${operation.operationId}", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
   }
     </#if>
-    // create path and map variables
     final Map<String, Object> pathParams = new HashMap<String, Object>();
 
     <#if operation.parameterObjects?has_content>

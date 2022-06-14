@@ -50,7 +50,6 @@ public class TestApi {
   */
   private ResponseSpec showTestByIdRequestCreation(Integer testId) throws WebClientResponseException {
     Object postBody = null;
-    // create path and map variables
     final Map<String, Object> pathParams = new HashMap<String, Object>();
 
     pathParams.put("testId",  testId);
@@ -94,7 +93,6 @@ public class TestApi {
   */
   private ResponseSpec listTestRequestCreation() throws WebClientResponseException {
     Object postBody = null;
-    // create path and map variables
     final Map<String, Object> pathParams = new HashMap<String, Object>();
 
     final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();

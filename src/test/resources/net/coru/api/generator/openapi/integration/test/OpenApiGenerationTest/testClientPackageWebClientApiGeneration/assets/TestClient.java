@@ -75,20 +75,20 @@ public class ApiRestClient {
   }
 
   private HttpHeaders defaultHeaders = new HttpHeaders();
-  private MultiValueMap< String, String> defaultCookies = new LinkedMultiValueMap< String, String>();
+  private MultiValueMap<String, String> defaultCookies = new LinkedMultiValueMap<String, String>();
   private RestTemplate restTemplate;
   private final DateFormat dateFormat;
-  private Map< String, Authentication> authentications;
+  private Map<String, Authentication> authentications;
 
   public ApiRestClient() {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
-      this.restTemplate = buildRestTemplate();
-      authentications = new HashMap< String, Authentication>();
-      authentications = Collections.unmodifiableMap(authentications);
+    this.restTemplate = buildRestTemplate();
+    authentications = new HashMap<String, Authentication>();
+    authentications = Collections.unmodifiableMap(authentications);
   }
 
-  public ApiRestClient(Map< String, Authentication> authentications) {
+  public ApiRestClient(Map<String, Authentication> authentications) {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = buildRestTemplate();
@@ -140,7 +140,6 @@ public class ApiRestClient {
         ObjectMapper mapper = createDefaultObjectMapper(this.dateFormat,(AbstractJackson2HttpMessageConverter) converter);
       }
     }
-    // This allows us to read the response more than once - Necessary for debugging.
     restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
     return restTemplate;
   }
@@ -187,19 +186,16 @@ public class ApiRestClient {
   }
 
   public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
-    // create the value based on the collection format
     if (CollectionFormat.MULTI.equals(collectionFormat)) {
-      // not valid for path params
       return parameterToString(values);
     }
-    // collectionFormat is assumed to be "csv" by default
     if(collectionFormat == null) {
       collectionFormat = CollectionFormat.CSV;
     }
     return collectionFormat.collectionToString(values);
   }
 
-  public MultiValueMap< String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
+  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 
     if (name == null || name.isEmpty() || value == null) {
@@ -251,7 +247,7 @@ public class ApiRestClient {
     return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
   }
 
-  public List< MediaType> selectHeaderAccept(String[] accepts) {
+  public List<MediaType> selectHeaderAccept(String[] accepts) {
     if (accepts.length == 0) {
       return null;
     }
@@ -278,7 +274,6 @@ public class ApiRestClient {
   }
 
   public String expandPath(String pathTemplate, Map<String, Object> variables) {
-    // disable default URL encoding
     DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
     uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
     final RestTemplate restTemplate = new RestTemplate();
@@ -334,9 +329,7 @@ public class ApiRestClient {
       String finalUri = path;
 
       if (queryParams != null && !queryParams.isEmpty()) {
-        //Include queryParams in uriParams taking into account the paramName
         String queryUri = generateQueryUri(queryParams, uriParams);
-        //Append to finalUri the templatized query string like "?param1={param1Value}&.......
         finalUri += "?" + queryUri;
       }
       String expandedPath = this.expandPath(finalUri, uriParams);
@@ -369,7 +362,6 @@ public class ApiRestClient {
       if (responseEntity.getStatusCode().is2xxSuccessful()) {
         return responseEntity;
       } else {
-        // The error handler built into the RestTemplate should handle 400 and 500 series errors.
         throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
       }
   }
@@ -402,7 +394,7 @@ public class ApiRestClient {
     return cookieValue.toString();
   }
 
-  private void updateParamsForAuth(String[] authNames, MultiValueMap< String, String> queryParams, HttpHeaders headerParams, MultiValueMap< String, String> cookieParams) {
+  private void updateParamsForAuth(String[] authNames, MultiValueMap<String, String> queryParams, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams) {
     for (String authName : authNames) {
       Authentication auth = authentications.get(authName);
       if (auth == null) {
@@ -445,10 +437,10 @@ public class ApiRestClient {
           for(String value : entry.getValue()) {
             builder.append(value).append(",");
           }
-          builder.setLength(builder.length() - 1); // Get rid of trailing comma
+          builder.setLength(builder.length() - 1);
           builder.append("],");
       }
-      builder.setLength(builder.length() - 1); // Get rid of trailing comma
+      builder.setLength(builder.length() - 1);
       return builder.toString();
     }
 

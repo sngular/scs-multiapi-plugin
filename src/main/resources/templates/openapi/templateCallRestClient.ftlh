@@ -13,7 +13,7 @@ import java.util.Map;
       <#list request.contentObject as content>
         <#if (!imports?seq_contains(content.refNameObject.refName))>
           <#if content.refNameObject.checkImport>
-        		<#assign imports = imports+[content.refName]>
+        		<#assign imports = imports+[content.refNameObject.refName]>
           </#if>
         </#if>
       </#list>
@@ -120,7 +120,6 @@ public class ${className?cap_first}Api {
       throw new RestClientException(HttpStatus.BAD_REQUEST + " Missing the required parameter ''${operation.requestObjects[0].contentObject[0].refNameObject.refName?uncap_first}'' when calling ${operation.operationId}");
     }
     </#if>
-    // create path and map variables
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
     <#if operation.parameterObjects?has_content>

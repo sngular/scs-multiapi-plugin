@@ -58,21 +58,21 @@ public class ApiWebClient {
   }
 
   private HttpHeaders defaultHeaders = new HttpHeaders();
-  private MultiValueMap< String, String> defaultCookies = new LinkedMultiValueMap< String, String>();
+  private MultiValueMap<String, String> defaultCookies = new LinkedMultiValueMap<String, String>();
   private final WebClient webClient;
   private final DateFormat dateFormat;
   private final ObjectMapper objectMapper;
-  private Map< String, Authentication> authentications;
+  private Map<String, Authentication> authentications;
 
   public ApiWebClient() {
     this.dateFormat = createDefaultDateFormat();
     this.objectMapper = createDefaultObjectMapper(this.dateFormat);
     this.webClient = buildWebClient(this.objectMapper);
-    authentications = new HashMap< String, Authentication>();
+    authentications = new HashMap<String, Authentication>();
     authentications = Collections.unmodifiableMap(authentications);
   }
 
-  public ApiWebClient(Map< String, Authentication> authentications) {
+  public ApiWebClient(Map<String, Authentication> authentications) {
     this.dateFormat = createDefaultDateFormat();
     this.objectMapper = createDefaultObjectMapper(this.dateFormat);
     this.webClient = buildWebClient(this.objectMapper);
@@ -168,8 +168,8 @@ public class ApiWebClient {
     return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
   }
 
-  public MultiValueMap< String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
-    final MultiValueMap< String, String> params = new LinkedMultiValueMap< String, String>();
+  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
+    final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 
     if (name == null || name.isEmpty() || value == null) {
       return params;
@@ -198,7 +198,7 @@ public class ApiWebClient {
         return params;
     }
 
-    List< String> values = new ArrayList< String>();
+    List<String> values = new ArrayList<String>();
     for(Object o : valueCollection) {
       values.add(parameterToString(o));
     }
@@ -211,7 +211,7 @@ public class ApiWebClient {
     return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
   }
 
-  public List< MediaType> selectHeaderAccept(String[] accepts) {
+  public List<MediaType> selectHeaderAccept(String[] accepts) {
     if (accepts.length == 0) {
       return null;
     }
@@ -237,9 +237,9 @@ public class ApiWebClient {
     return MediaType.parseMediaType(contentTypes[0]);
   }
 
-  protected BodyInserter<?, ? super ClientHttpRequest> selectBody(Object obj, MultiValueMap< String, Object> formParams, MediaType contentType) {
+  protected BodyInserter<?, ? super ClientHttpRequest> selectBody(Object obj, MultiValueMap<String, Object> formParams, MediaType contentType) {
     if(MediaType.APPLICATION_FORM_URLENCODED.equals(contentType)) {
-      MultiValueMap< String, String> map = new LinkedMultiValueMap<>();
+      MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
       formParams
         .toSingleValueMap()
@@ -254,14 +254,14 @@ public class ApiWebClient {
     }
   }
 
-  public < T> ResponseSpec invokeAPI(String basePath, String path, HttpMethod method, Map< String, Object> pathParams, MultiValueMap< String, String> queryParams, Object body,
-    HttpHeaders headerParams, MultiValueMap< String, String> cookieParams, MultiValueMap< String, Object> formParams, List< MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference< T> returnType) throws RestClientException {
+  public <T> ResponseSpec invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams, Object body,
+    HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
       final WebClient.RequestBodySpec requestBuilder = prepareRequest(basePath,path, method, pathParams, queryParams, body, headerParams, cookieParams, formParams, accept, contentType, authNames);
       return requestBuilder.retrieve();
   }
 
-  private WebClient.RequestBodySpec prepareRequest(String basePath,String path, HttpMethod method, Map< String, Object> pathParams, MultiValueMap< String, String> queryParams,
-    Object body, HttpHeaders headerParams, MultiValueMap< String, String> cookieParams, MultiValueMap< String, Object> formParams, List< MediaType> accept, MediaType contentType, String[] authNames) {
+  private WebClient.RequestBodySpec prepareRequest(String basePath,String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams,
+    Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames) {
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
 
       final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(path);
@@ -287,8 +287,8 @@ public class ApiWebClient {
   }
 
   protected void addHeadersToRequest(HttpHeaders headers, WebClient.RequestBodySpec requestBuilder) {
-    for (Entry< String, List< String>> entry : headers.entrySet()) {
-      List< String> values = entry.getValue();
+    for (Entry<String, List<String>> entry : headers.entrySet()) {
+      List<String> values = entry.getValue();
       for(String value : values) {
         if (value != null) {
           requestBuilder.header(entry.getKey(), value);
@@ -297,9 +297,9 @@ public class ApiWebClient {
     }
   }
 
-  protected void addCookiesToRequest(MultiValueMap< String, String> cookies, WebClient.RequestBodySpec requestBuilder) {
-    for (Entry< String, List< String>> entry : cookies.entrySet()) {
-      List< String> values = entry.getValue();
+  protected void addCookiesToRequest(MultiValueMap<String, String> cookies, WebClient.RequestBodySpec requestBuilder) {
+    for (Entry<String, List<String>> entry : cookies.entrySet()) {
+      List<String> values = entry.getValue();
       for(String value : values) {
         if (value != null) {
           requestBuilder.cookie(entry.getKey(), value);
@@ -308,7 +308,7 @@ public class ApiWebClient {
     }
   }
 
-  private void updateParamsForAuth(String[] authNames, MultiValueMap< String, String> queryParams, HttpHeaders headerParams, MultiValueMap< String, String> cookieParams) {
+  private void updateParamsForAuth(String[] authNames, MultiValueMap<String, String> queryParams, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams) {
     for (String authName : authNames) {
       Authentication auth = authentications.get(authName);
       if (auth == null) {
@@ -319,13 +319,10 @@ public class ApiWebClient {
   }
 
   public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
-    // create the value based on the collection format
     if (CollectionFormat.MULTI.equals(collectionFormat)) {
-      // not valid for path params
       return parameterToString(values);
     }
 
-    // collectionFormat is assumed to be "csv" by default
     if(collectionFormat == null) {
       collectionFormat = CollectionFormat.CSV;
     }
