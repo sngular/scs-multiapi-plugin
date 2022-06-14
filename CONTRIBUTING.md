@@ -7,26 +7,23 @@ project. We encourage you to follow them and help us create a better product!
 
 ## Best practices
 
-- We follow a [code of conduct](#code-of-conduct), review it and honor it 
-in all
+- We follow a [code of conduct](#code-of-conduct), review it and honor it in all
   your interactions with the project.
 
 - When contributing to this repository, first create an issue to explain the
   change you want to make.
-  - The issues will be preferably written in English, although Spanish is 
-also
+    - The issues will be preferably written in English, although Spanish is also
       acceptable.
-  - The issue title should briefly summarize the proposal.
-  -The issue body should include a description of the proposal with all the
-      details, conditions, dependencies affected, charts, screenshots, etc.,
-      that can help to further understand and evaluate the proposal.
-  - Create a new branch before making any change in the repository. This branch
-    should follow this format: #issue_ID_and_summary (for example,
-    #23_add_new_provider).
-  - When writing the code, follow our [style sheet](./Corunet_Style.xml).
-  - Create commit messages that briefly describe the change applied, 
-  preferably in
-    English.
+    - The issue title should briefly summarize the proposal. -The issue body
+      should include a description of the proposal with all the details,
+      conditions, dependencies affected, charts, screenshots, etc., that can
+      help to further understand and evaluate the proposal.
+    - Create a new branch before making any change in the repository. This
+      branch should follow this format: #issue_ID_and_summary (for example,
+      # 23_add_new_provider).
+    - When writing the code, follow our [style sheet](./Corunet_Style.xml).
+    - Create commit messages that briefly describe the change applied,
+      preferably in English.
 
 ## Pull request process
 
@@ -111,7 +108,8 @@ members of the project's leadership.
 ### Attribution
 
 This Code of conduct has been adapted from the [Contributor Covenant][homepage],
-version 1.4, available at [http://contributor-covenant.org/version/1/4][version].
+version 1.4, available at [http://contributor-covenant.org/version/1/4][version]
+.
 
 [homepage]: http://contributor-covenant.org
 
