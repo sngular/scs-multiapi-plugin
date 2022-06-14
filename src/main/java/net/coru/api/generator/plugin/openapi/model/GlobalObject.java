@@ -18,12 +18,6 @@ public class GlobalObject {
 
   private String url;
 
-  private String version;
-
-  private String title;
-
-  private String license;
-
   private List<String> serverUrl;
 
   private List<AuthSchemaObject> authSchemas;

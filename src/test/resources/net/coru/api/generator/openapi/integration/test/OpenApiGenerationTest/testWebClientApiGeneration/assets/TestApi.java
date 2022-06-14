@@ -2,7 +2,6 @@ package net.coru.multifileplugin.testwebclient;
 
 import net.coru.apigenerator.openapi.client.ApiWebClient;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,118 +28,104 @@ import reactor.core.publisher.Mono;
 
 public class TestApi {
 
-    private ApiWebClient apiWebClient;
+  private ApiWebClient apiWebClient;
 
-    private Map< String, Authentication> authenticationsApi;
+  private Map<String, Authentication> authenticationsApi;
 
-    public TestApi() {
-       this.init();
-    }
+  public TestApi() {
+    this.init();
+  }
 
-    protected void init() {
-      this.authenticationsApi = new HashMap< String, Authentication>();
-      this.authenticationsApi.put("BasicAuth", new HttpBasicAuth());
-      this.apiWebClient = new ApiWebClient(authenticationsApi);
-    }
+  protected void init() {
+    this.authenticationsApi = new HashMap<String, Authentication>();
+    this.authenticationsApi.put("BasicAuth", new HttpBasicAuth());
+    this.apiWebClient = new ApiWebClient(authenticationsApi);
+  }
 
-         /**
-         * GET /test/{testId} : Info for a specific test
-         * @param  testId The id of the test to retrieve true
-         * @return  Expected response to a valid request; (status code 200)
-         * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-         */
+  /**
+  * GET /test/{testId} : Info for a specific test
+  * @param testId The id of the test to retrieve true
+  * @return Expected response to a valid request; (status code 200)
+  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+  */
+  private ResponseSpec showTestByIdRequestCreation(Integer testId) throws WebClientResponseException {
+    Object postBody = null;
+    final Map<String, Object> pathParams = new HashMap<String, Object>();
 
-          private ResponseSpec showTestByIdRequestCreation(Integer testId) throws WebClientResponseException {
-              Object postBody = null;
-              // create path and map variables
-              final Map< String, Object> pathParams = new HashMap< String, Object>();
+    pathParams.put("testId",  testId);
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-              pathParams.put("testId",  testId);
-              final MultiValueMap< String, String> queryParams = new LinkedMultiValueMap< String, String>();
-              final HttpHeaders headerParams = new HttpHeaders();
-              final MultiValueMap< String, String> cookieParams = new LinkedMultiValueMap< String, String>();
-              final MultiValueMap< String, Object> formParams = new LinkedMultiValueMap< String, Object>();
+    final String[] localVarAccepts = {"application/json"};
+    final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {};
+    final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
 
+    String[] localVarAuthNames = new String[] {"BasicAuth"};
 
+    ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
+    return apiWebClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
-              final String[] localVarAccepts = {"application/json"};
-              final List< MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
-              final String[] localVarContentTypes = {};
-              final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
+  }
 
-              String[] localVarAuthNames = new String[] {"BasicAuth"};
+  /**
+  * GET /test/{testId} : Info for a specific test
+  * @param testId The id of the test to retrieve true
+  * @return Expected response to a valid request; (status code 200)
+  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+  */
+  public Mono<ApiTestInfoDTO> showTestById(Integer testId) throws WebClientResponseException {
+    ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
+    return showTestByIdRequestCreation(testId).bodyToMono(localVarReturnType);
+  }
 
-              ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
-              return apiWebClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+  public Mono<ResponseEntity<ApiTestInfoDTO>> showTestByIdWithHttpInfo(Integer testId) throws WebClientResponseException {
+    ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
+    return showTestByIdRequestCreation(testId).toEntity(localVarReturnType);
+  }
 
-          }
+  /**
+  * GET /test : List all available test
+  * @return A paged array of tests; (status code 200)
+  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+  */
+  private ResponseSpec listTestRequestCreation() throws WebClientResponseException {
+    Object postBody = null;
+    final Map<String, Object> pathParams = new HashMap<String, Object>();
 
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-       /**
-         * GET /test/{testId} : Info for a specific test
-         * @param  testId The id of the test to retrieve true
-         * @return  Expected response to a valid request; (status code 200)
-         * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-         */
-        public Mono<ApiTestInfoDTO> showTestById( Integer testId) throws WebClientResponseException {
-          ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
-          return showTestByIdRequestCreation(testId).bodyToMono(localVarReturnType);
-        }
+    final String[] localVarAccepts = {"application/json"};
+    final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {};
+    final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
 
-        public Mono<ResponseEntity<ApiTestInfoDTO>> showTestByIdWithHttpInfo( Integer testId) throws WebClientResponseException {
-            ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
-            return showTestByIdRequestCreation(testId).toEntity(localVarReturnType);
-        }
+    String[] localVarAuthNames = new String[] {"BasicAuth"};
 
+    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
+    return apiWebClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
-         /**
-         * GET /test : List all available test
-         * @return  A paged array of tests; (status code 200)
-         * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-         */
+  }
 
-          private ResponseSpec listTestRequestCreation() throws WebClientResponseException {
-              Object postBody = null;
-              // create path and map variables
-              final Map< String, Object> pathParams = new HashMap< String, Object>();
+  /**
+  * GET /test : List all available test
+  * @return A paged array of tests; (status code 200)
+  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+  */
+  public Mono<ApiTestDTO> listTest() throws WebClientResponseException {
+    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
+    return listTestRequestCreation().bodyToMono(localVarReturnType);
+  }
 
-              final MultiValueMap< String, String> queryParams = new LinkedMultiValueMap< String, String>();
-              final HttpHeaders headerParams = new HttpHeaders();
-              final MultiValueMap< String, String> cookieParams = new LinkedMultiValueMap< String, String>();
-              final MultiValueMap< String, Object> formParams = new LinkedMultiValueMap< String, Object>();
-
-
-
-              final String[] localVarAccepts = {"application/json"};
-              final List< MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
-              final String[] localVarContentTypes = {};
-              final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
-
-              String[] localVarAuthNames = new String[] {"BasicAuth"};
-
-              ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-              return apiWebClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
-
-          }
-
-
-       /**
-         * GET /test : List all available test
-         * @return  A paged array of tests; (status code 200)
-         * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-         */
-        public Mono<ApiTestDTO> listTest( ) throws WebClientResponseException {
-          ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-          return listTestRequestCreation().bodyToMono(localVarReturnType);
-        }
-
-        public Mono<ResponseEntity<ApiTestDTO>> listTestWithHttpInfo( ) throws WebClientResponseException {
-            ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-            return listTestRequestCreation().toEntity(localVarReturnType);
-        }
-
-
-
+  public Mono<ResponseEntity<ApiTestDTO>> listTestWithHttpInfo() throws WebClientResponseException {
+    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
+    return listTestRequestCreation().toEntity(localVarReturnType);
+  }
 
 
 }

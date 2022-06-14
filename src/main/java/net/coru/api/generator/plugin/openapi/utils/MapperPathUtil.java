@@ -55,9 +55,6 @@ public class MapperPathUtil {
 
     return GlobalObject.builder()
                        .url(openAPI.getServers().get(0).getUrl())
-                       .version(openAPI.getInfo().getVersion())
-                       .title(openAPI.getInfo().getTitle())
-                       .license(openAPI.getInfo().getLicense().getName())
                        .authSchemas(authSchemaList)
                        .authentications(authList)
                        .componentsTypeMap(getMapComponentsTypes(openAPI.getComponents(), fileSpec))
@@ -203,7 +200,6 @@ public class MapperPathUtil {
     String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
     if (Objects.nonNull(operation.getRequestBody())) {
       requestObjects.add(RequestObject.builder()
-                                      .description(operation.getRequestBody().getDescription())
                                       .required(operation.getRequestBody().getRequired())
                                       .contentObject(mapContentObject(fileSpec, operation.getRequestBody().getContent(), "InlineObject" + operationIdWithCap, globalObject))
                                       .build());
@@ -278,7 +274,6 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(getPojoName(inlineObject, fileSpec))
                                           .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec), true))
                                           .build());
@@ -287,14 +282,12 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .refNameObject(mapRefNameObject(defineTypeName(mediaTypeEntry.getValue().getSchema()), false))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .description(mediaTypeEntry.getValue().getSchema().getDescription())
                                           .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .refNameObject(mapRefNameObject(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()), true))
                                           .build());

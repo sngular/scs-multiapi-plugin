@@ -32,7 +32,6 @@ public class MapperContentUtil {
     var listSchema = getFields(schema, fileSpec);
 
     return SchemaObject.builder()
-                       .description(schema.getDescription())
                        .schemaName(schema.getName())
                        .className(getPojoName(nameSchema, fileSpec))
                        .importList(getImportList(listSchema, modelPackage))

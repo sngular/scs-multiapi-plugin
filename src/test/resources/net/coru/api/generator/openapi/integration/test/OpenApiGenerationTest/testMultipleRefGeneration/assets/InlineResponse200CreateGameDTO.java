@@ -6,12 +6,17 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class InlineResponse200CreateGameDTO {
 
-   @JsonProperty(value ="message")
-   private MessageDTO message;
+  @JsonProperty(value ="message")
+  private MessageDTO message;
+  @JsonProperty(value ="code")
+  private Integer code;
 
-   @JsonProperty(value ="code")
-   private Integer code;
+  private InlineResponse200DTO(InlineResponse200DTOBuilder builder) {
+    this.message = builder.message;
+    this.code = builder.code;
+  }
 
+  public static class InlineResponse200DTOBuilder {
 
        private InlineResponse200CreateGameDTO(InlineResponse200CreateGameDTOBuilder builder) {
          this.message = builder.message;
@@ -66,7 +71,10 @@ public class InlineResponse200CreateGameDTO {
          this.code = code;
     }
 
-
+    public InlineResponse200DTO.InlineResponse200DTOBuilder code(Integer code) {
+      this.code = code;
+      return this;
+    }
      @Override
      public boolean equals(Object o) {
         if (this == o) {
@@ -78,13 +86,18 @@ public class InlineResponse200CreateGameDTO {
         InlineResponse200CreateGameDTO inlineResponse200CreateGameDTO = (InlineResponse200CreateGameDTO) o;
         return Objects.equals(this.message,inlineResponse200CreateGameDTO.message) && Objects.equals(this.code,inlineResponse200CreateGameDTO.code) ;
 
-     }
 
-     @Override
-     public int hashCode() {
-       return Objects.hash(message,code);
-     }
-
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InlineResponse200DTO inlineResponse200DTO = (InlineResponse200DTO) o;
+    return Objects.equals(this.message,inlineResponse200DTO.message) && Objects.equals(this.code,inlineResponse200DTO.code) ;
+  }
 
      @Override
      public String toString() {
@@ -96,15 +109,16 @@ public class InlineResponse200CreateGameDTO {
         return sb.toString();
      }
 
-     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-     private String toIndentedString(Object o) {
-        if (o == null) {
-          return "null";
-        }
-        return o.toString().replace("\n", "\n  ");
-     }
+  /**
+  * Convert the given object to string with each line indented by 4 spaces
+  * (except the first line).
+  */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n ");
+  }
 
 }
+  }
