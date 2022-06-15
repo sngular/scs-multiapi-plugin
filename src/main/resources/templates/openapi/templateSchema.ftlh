@@ -3,6 +3,13 @@ package ${packageModel};
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+<#assign importAdded = false>
+<#list schema.fieldObjectList as field>
+  <#if field.dataType?has_content && field.dataTypeSimple == "array" && importAdded == false>
+import org.apache.commons.collections4.CollectionUtils;
+    <#assign importAdded = true>
+  </#if>
+</#list>
 <#list schema.importList as import>
 import ${import};
 </#list>
