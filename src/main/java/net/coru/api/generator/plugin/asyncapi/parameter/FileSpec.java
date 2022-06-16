@@ -16,19 +16,19 @@ public class FileSpec {
 
   private OperationParameterObject streamBridge;
 
-  public String getFilePath() {
+  public final String getFilePath() {
     return filePath;
   }
 
-  public OperationParameterObject getSupplier() {
+  public final OperationParameterObject getSupplier() {
     return supplier;
   }
 
-  public OperationParameterObject getConsumer() {
+  public final OperationParameterObject getConsumer() {
     return consumer;
   }
 
-  public OperationParameterObject getStreamBridge() {
+  public final OperationParameterObject getStreamBridge() {
     return streamBridge;
   }
 }

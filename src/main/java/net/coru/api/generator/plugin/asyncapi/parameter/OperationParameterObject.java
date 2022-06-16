@@ -22,53 +22,53 @@ public class OperationParameterObject {
 
   private List<String> operationIds;
 
-  protected String getIds() {
+  protected final String getIds() {
     return ids;
   }
 
-  public void setIds(String ids) {
+  public final void setIds(final String ids) {
     this.ids = ids;
 
     this.operationIds = List.of(ids.replace(" ", "").split(","));
   }
 
-  public String getModelPackage() {
+  public final String getModelPackage() {
     return modelPackage;
   }
 
-  protected void setModelPackage(final String modelPackage) {
+  protected final void setModelPackage(final String modelPackage) {
     this.modelPackage = modelPackage;
   }
 
-  public String getTargetPackage() {
+  public final String getTargetPackage() {
     return targetPackage;
   }
 
-  protected void setTargetPackage(final String targetPackage) {
+  protected final void setTargetPackage(final String targetPackage) {
     this.targetPackage = targetPackage;
   }
 
-  public List<String> getOperationIds() {
+  public final List<String> getOperationIds() {
     return operationIds;
   }
 
-  protected void setOperationIds(final List<String> operationIds) {
+  protected final void setOperationIds(final List<String> operationIds) {
     this.operationIds = operationIds;
   }
 
-  public String getEntitiesPostfix() {
+  public final String getEntitiesPostfix() {
     return entitiesPostfix;
   }
 
-  protected void setEntitiesPostfix(final String entitiesPostfix) {
+  protected final void setEntitiesPostfix(final String entitiesPostfix) {
     this.entitiesPostfix = entitiesPostfix;
   }
 
-  public String getClassNamePostfix() {
+  public final String getClassNamePostfix() {
     return classNamePostfix;
   }
 
-  protected void setClassNamePostfix(final String classNamePostfix) {
+  protected final void setClassNamePostfix(final String classNamePostfix) {
     this.classNamePostfix = classNamePostfix;
   }
 }

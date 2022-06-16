@@ -6,14 +6,10 @@
 
 package net.coru.api.generator.plugin.openapi.template;
 
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,58 +19,56 @@ import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 
-  private final static List<String> templateFiles = List.of(TEMPLATE_INTERFACE_API, TEMPLATE_CONTENT_SCHEMA, TEMPLATE_CONTENT_SCHEMA_LOMBOK, TEMPLATE_CALL_WEB_API,
-                                                            TEMPLATE_WEB_CLIENT, TEMPLATE_CALL_REST_API, TEMPLATE_REST_CLIENT, TEMPLATE_REACTIVE_API);
+  private static final List<String> TEMPLATE_FILES = List.of(TemplateIndexConstants.TEMPLATE_INTERFACE_API, TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA,
+                                                             TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK, TemplateIndexConstants.TEMPLATE_CALL_WEB_API,
+                                                             TemplateIndexConstants.TEMPLATE_WEB_CLIENT, TemplateIndexConstants.TEMPLATE_CALL_REST_API,
+                                                             TemplateIndexConstants.TEMPLATE_REST_CLIENT, TemplateIndexConstants.TEMPLATE_REACTIVE_API);
 
-  private final static List<String> templateAuthFiles = List.of(TEMPLATE_API_KEY, TEMPLATE_AUTHENTICATION, TEMPLATE_HTTP_BASIC, TEMPLATE_HTTP_BEARER, TEMPLATE_OAUTH,
-                                                                TEMPLATE_OAUTH_FLOW);
+  private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
+                                                                  TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
+                                                                  TemplateIndexConstants.TEMPLATE_OAUTH, TemplateIndexConstants.TEMPLATE_OAUTH_FLOW);
+
+  private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 
   private final Map<String, String> templatesMap = new HashMap<>();
 
-  private final static ClassLoader loader = ClasspathTemplateLoader.class.getClassLoader();
-
   public ClasspathTemplateLoader() {
-
-    try {
-      templatesMap.putAll(getResourceFolderFiles());
-    } catch (MalformedURLException | URISyntaxException e) {
-      e.printStackTrace();
-    }
+    templatesMap.putAll(getResourceFolderFiles());
   }
 
   @Override
-  public Object findTemplateSource(String templateName) throws IOException {
+  public final Object findTemplateSource(final String templateName) {
     return templatesMap.get(templateName);
   }
 
   @Override
-  public long getLastModified(Object o) {
+  public final long getLastModified(final Object o) {
     return 0;
   }
 
   @Override
-  public Reader getReader(Object template, String charSet) throws IOException {
+  public final Reader getReader(final Object template, final String charSet) {
     return new StringReader(template.toString());
   }
 
   @Override
-  public void closeTemplateSource(Object o) throws IOException {
+  public void closeTemplateSource(final Object o) {
     // Not required to implement
   }
 
-  private Map<String, String> getResourceFolderFiles() throws MalformedURLException, URISyntaxException {
-    Map<String, String> templates = new HashMap<>();
-    templateFiles.forEach(templateFile -> {
+  private Map<String, String> getResourceFolderFiles() {
+    final Map<String, String> templates = new HashMap<>();
+    TEMPLATE_FILES.forEach(templateFile -> {
       try {
-        templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(loader.getResource("templates/openapi/" + templateFile)).getContent()));
-      } catch (IOException e) {
+        templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/" + templateFile)).getContent()));
+      } catch (final IOException e) {
         e.printStackTrace();
       }
     });
-    templateAuthFiles.forEach(templateAuthFile -> {
+    TEMPLATE_AUTH_FILES.forEach(templateAuthFile -> {
       try {
-        templates.put(templateAuthFile, readFile((InputStream) Objects.requireNonNull(loader.getResource("templates/openapi/authTemplates/" + templateAuthFile)).getContent()));
-      } catch (IOException e) {
+        templates.put(templateAuthFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/authTemplates/" + templateAuthFile)).getContent()));
+      } catch (final IOException e) {
         e.printStackTrace();
       }
     });
@@ -82,7 +76,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
     return templates;
   }
 
-  private String readFile(InputStream file) throws IOException {
+  private String readFile(final InputStream file) throws IOException {
     return new String(file.readAllBytes());
   }
 }
