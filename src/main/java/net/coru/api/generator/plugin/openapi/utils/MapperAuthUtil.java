@@ -15,6 +15,8 @@ import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.OperationObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 
 public class MapperAuthUtil {
 
@@ -24,17 +26,16 @@ public class MapperAuthUtil {
 
   public static List<AuthSchemaObject> createAuthSchemaList(final OpenAPI openAPI) {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
-    if (null != openAPI.getComponents().getSecuritySchemes()
-        && !openAPI.getComponents().getSecuritySchemes().isEmpty()) {
-
+    if (MapUtils.isNotEmpty(openAPI.getComponents().getSecuritySchemes())) {
       openAPI.getComponents().getSecuritySchemes().forEach((key, value) -> {
+        var typeStr = value.getType().toString();
+        var schemeStr = value.getScheme();
+        var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(schemeStr);
         final var authSchema = AuthSchemaObject.builder()
-                                               .type(value.getType().toString().equalsIgnoreCase("http")
-                                                     && value.getScheme().equalsIgnoreCase("bearer") ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
-                                               .apiKeyParam(value.getType().toString().equalsIgnoreCase(API_KEY) ? value.getName() : "")
-                                               .apiKeyPlace(value.getType().toString().equalsIgnoreCase(API_KEY) ? value.getIn().toString() : "")
-                                               .bearerSchema(value.getType().toString().equalsIgnoreCase("http")
-                                                             && value.getScheme().equalsIgnoreCase("bearer") ? value.getScheme() : "").build();
+                                               .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
+                                               .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? value.getName() : "")
+                                               .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? value.getIn().toString() : "")
+                                               .bearerSchema(isHttpBearer ? value.getScheme() : "").build();
         authList.add(authSchema);
       });
     }
@@ -77,7 +78,7 @@ public class MapperAuthUtil {
     final var authList = new ArrayList<String>();
 
     operationList.forEach(operationObject -> {
-      if (null != operationObject.getSecurity() && !operationObject.getSecurity().isEmpty()) {
+      if (CollectionUtils.isNotEmpty(operationObject.getSecurity())) {
         operationObject.getSecurity().forEach(auth -> {
           if (!authList.contains(auth)) {
             authList.add(auth);
