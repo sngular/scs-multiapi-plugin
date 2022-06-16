@@ -92,19 +92,13 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processFileSpec(List<FileSpec> fileSpecsList) throws MojoExecutionException {
-    List<String> apiPackageList = new ArrayList<>();
 
     for (FileSpec fileSpec : fileSpecsList) {
       try {
-        if (!apiPackageList.contains(fileSpec.getApiPackage())) {
-          processPackage(fileSpec.getApiPackage());
-          String filePathToSave = processPath(fileSpec.getApiPackage(), false);
-          project.addCompileSourceRoot(filePathToSave);
-          processFile(fileSpec, filePathToSave);
-          apiPackageList.add(fileSpec.getApiPackage());
-        } else {
-          throw new SCSMultiApiMavenPluginException("The api package of the fileSpecs cannot be the same.");
-        }
+        processPackage(fileSpec.getApiPackage());
+        String filePathToSave = processPath(fileSpec.getApiPackage(), false);
+        project.addCompileSourceRoot(filePathToSave);
+        processFile(fileSpec, filePathToSave);
 
       } catch (Exception e) {
         getLog().error(e);
@@ -272,9 +266,9 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processModelsWhenOverWriteIsTrue(
-    final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
-    final List<String> listObjectsToCreate, final String modelPackage,
-    final Map<String, Schema> basicSchemaMap) {
+      final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
+      final List<String> listObjectsToCreate, final String modelPackage,
+      final Map<String, Schema> basicSchemaMap) {
 
     listObjectsToCreate.forEach(pojoName -> {
       try {
@@ -297,8 +291,8 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processWhenOverwriteModelIsFalse(
-    final FileSpec fileSpec, final OpenAPI openAPI,
-    final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema> basicSchemaMap) {
+      final FileSpec fileSpec, final OpenAPI openAPI,
+      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema> basicSchemaMap) {
 
     for (String objectToCreate : listObjectsToCreate) {
       String objectAndModelPackage = objectToCreate + modelPackage;

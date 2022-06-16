@@ -18,22 +18,25 @@ import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConsta
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
-import net.coru.api.generator.plugin.openapi.model.AuthObject;
-import net.coru.api.generator.plugin.openapi.model.PathObject;
-import net.coru.api.generator.plugin.openapi.model.SchemaObject;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.model.AuthObject;
+import net.coru.api.generator.plugin.openapi.model.PathObject;
+import net.coru.api.generator.plugin.openapi.model.SchemaObject;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 
 public class TemplateFactory {
 
@@ -58,7 +61,7 @@ public class TemplateFactory {
 
   public void fillTemplateSchema(String filePathToSave, Boolean useLombock, SchemaObject schemaObject) throws IOException, TemplateException {
     File fileToSave = new File(filePathToSave);
-    if(Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()){
+    if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
       root.put("stringBracketOpen", "{");
       root.put("stringBracketClose", "}");
@@ -120,9 +123,13 @@ public class TemplateFactory {
   private void writeTemplateToFile(String templateName, Map<String, Object> root, String path) throws IOException, TemplateException {
     Template template = cfg.getTemplate(templateName);
 
-    FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
+    if (!Files.exists(Path.of(path))) {
+      FileWriter writer = new FileWriter(path);
+      template.process(root, writer);
+      writer.close();
+    } else {
+      throw new SCSMultiApiMavenPluginException("Packages of the fileSpecs cannot be the same.");
+    }
   }
 
   public void setPackageName(String packageName) {
