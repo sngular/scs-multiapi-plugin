@@ -105,7 +105,7 @@ public class OpenApiUtil {
       openAPI = result.getOpenAPI();
 
     } catch (Exception e) {
-      throw new MojoExecutionException("Code generation failed when parser the .yaml file ");
+      throw new MojoExecutionException("Code generation failed when parser the .yaml file");
     }
 
     if (openAPI == null) {

@@ -11,18 +11,18 @@ import java.util.Map;
   <#list path.operationObject as operation>
     <#list operation.requestObjects as request>
       <#list request.contentObject as content>
-        <#if (!imports?seq_contains(content.refNameObject.refName))>
-          <#if content.refNameObject.checkImport>
-            <#assign imports = imports+[content.refNameObject.refName]>
+        <#if content.importName?? && (!imports?seq_contains(content.importName))>
+          <#if (!checkBasicTypes?seq_contains(content.importName))>
+            <#assign imports = imports+[content.importName]>
           </#if>
         </#if>
       </#list>
     </#list>
     <#list operation.responseObjects as response>
       <#list response.contentObject as content>
-        <#if (!imports?seq_contains(content.refNameObject.refName))>
-          <#if content.refNameObject.checkImport>
-            <#assign imports = imports+[content.refNameObject.refName]>
+        <#if content.importName?? && (!imports?seq_contains(content.importName))>
+          <#if (!checkBasicTypes?seq_contains(content.importName))>
+            <#assign imports = imports+[content.importName]>
           </#if>
         </#if>
       </#list>
@@ -88,7 +88,7 @@ public class ${className?cap_first}Api {
   * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
-  * <#list operation.requestObjects as request><#list request.contentObject as content>@param ${content.refNameObject.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
+  * <#list operation.requestObjects as request><#list request.contentObject as content>@param ${content.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
   </#if>
   * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
@@ -96,11 +96,11 @@ public class ${className?cap_first}Api {
   */
   private ResponseSpec ${operation.operationId}RequestCreation(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list>
-  </#if><#if operation.requestObjects?has_content><#if operation.parameterObjects?has_content>, </#if><#list operation.requestObjects as request><#list request.contentObject as content>${content.refNameObject.refName?cap_first} ${content.refNameObject.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
-    Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObject[0].refNameObject.refName?uncap_first}<#else>null</#if>;
+  </#if><#if operation.requestObjects?has_content><#if operation.parameterObjects?has_content>, </#if><#list operation.requestObjects as request><#list request.contentObject as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
+    Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObject[0].refName?uncap_first}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
-    if (${operation.requestObjects[0].contentObject[0].refNameObject.refName?uncap_first} == null) {
-    throw new WebClientResponseException("Missing the required parameter ''${operation.requestObjects[0].contentObject[0].refNameObject.refName?uncap_first}'' when calling ${operation.operationId}", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
+    if (${operation.requestObjects[0].contentObject[0].refName?uncap_first} == null) {
+    throw new WebClientResponseException("Missing the required parameter ''${operation.requestObjects[0].contentObject[0].refName?uncap_first}'' when calling ${operation.operationId}", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
   }
     </#if>
     final Map<String, Object> pathParams = new HashMap<String, Object>();
@@ -159,7 +159,7 @@ public class ${className?cap_first}Api {
     </#if></#compress>};
 
     <#if operation.responseObjects[0].contentObject[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
@@ -174,7 +174,7 @@ public class ${className?cap_first}Api {
   * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
-  * <#list operation.requestObjects as request>@param <#list request.contentObject as content>${content.refNameObject.refName?uncap_first} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if></#list>
+  * <#list operation.requestObjects as request>@param <#list request.contentObject as content>${content.refName?uncap_first} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if></#list>
   </#if>
   * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
@@ -182,56 +182,56 @@ public class ${className?cap_first}Api {
   */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObject[0]??>
   <#if operation.responseObjects[0].contentObject[0].typeData?? && (operation.responseObjects[0].contentObject[0].typeData == "array" || operation.responseObjects[0].contentObject[0].typeData == "map")>
-  Flux<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}><#else>Mono<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}></#if>
+  Flux<${operation.responseObjects[0].contentObject[0].refName?cap_first}><#else>Mono<${operation.responseObjects[0].contentObject[0].refName?cap_first}></#if>
   <#else>Mono<Void></#if></@compress> ${operation.operationId}(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObject as content>
-  <#if content.typeData?? && (content.typeData == "array")>List<${content.refNameObject.refName?cap_first}>
-  <#elseif content.typeData?? && (content.typeData == "map")>Map<String,${content.refNameObject.refName?cap_first}>
-  <#else>${content.refNameObject.refName?cap_first}
-  </#if>${content.refNameObject.refName?uncap_first} <#if content?has_next>, </#if></#list>
+  <#if content.typeData?? && (content.typeData == "array")>List<${content.refName?cap_first}>
+  <#elseif content.typeData?? && (content.typeData == "map")>Map<String,${content.refName?cap_first}>
+  <#else>${content.refName?cap_first}
+  </#if>${content.refName?uncap_first} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObject[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
       <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
       <#if operation.requestObjects?has_content>
-      <#list operation.requestObjects as request><#list request.contentObject as content> ${content.refNameObject.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>
+      <#list operation.requestObjects as request><#list request.contentObject as content> ${content.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>
       </@compress>).<#if operation.responseObjects[0].contentObject[0].typeData?? && (operation.responseObjects[0].contentObject[0].typeData == "array" || operation.responseObjects[0].contentObject[0].typeData == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObject[0]??> Mono<<#if operation.responseObjects[0].contentObject[0].typeData?? && operation.responseObjects[0].contentObject[0].typeData == "map">
-  ResponseEntity<Map<String,${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>>
+  ResponseEntity<Map<String,${operation.responseObjects[0].contentObject[0].refName?cap_first}>>
   <#elseif operation.responseObjects[0].contentObject[0].typeData?? && operation.responseObjects[0].contentObject[0].typeData == "array">
-  ResponseEntity<List<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>>
-  <#else>ResponseEntity<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>></#if>
+  ResponseEntity<List<${operation.responseObjects[0].contentObject[0].refName?cap_first}>>
+  <#else>ResponseEntity<${operation.responseObjects[0].contentObject[0].refName?cap_first}>></#if>
   <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObject as content>
   <#if content.typeData?? && (content.typeData == "array")>
-  List<${content.refNameObject.refName?cap_first}>
+  List<${content.refName?cap_first}>
   <#elseif content.typeData?? && (content.typeData == "map")>
-  Map<String,${content.refNameObject.refName?cap_first}>
+  Map<String,${content.refName?cap_first}>
   <#else>
-  ${content.refNameObject.refName?cap_first}
-  </#if> ${content.refNameObject.refName?uncap_first} <#if content?has_next>, </#if></#list>
+  ${content.refName?cap_first}
+  </#if> ${content.refName?uncap_first} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObject[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refNameObject.refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObject[0].refName?cap_first}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
     <#if operation.requestObjects?has_content>
-    <#list operation.requestObjects as request><#list request.contentObject as content>${content.refNameObject.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>
+    <#list operation.requestObjects as request><#list request.contentObject as content>${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>
     </@compress>).<#if operation.responseObjects[0].contentObject[0].typeData?? && (operation.responseObjects[0].contentObject[0].typeData == "array" || operation.responseObjects[0].contentObject[0].typeData == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);
   }
 
