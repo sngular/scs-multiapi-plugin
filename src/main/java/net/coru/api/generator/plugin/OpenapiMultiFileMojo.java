@@ -21,21 +21,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import freemarker.template.TemplateException;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
-import net.coru.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.template.TemplateFactory;
+import net.coru.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import net.coru.api.generator.plugin.openapi.utils.MapperContentUtil;
 import net.coru.api.generator.plugin.openapi.utils.MapperPathUtil;
 import net.coru.api.generator.plugin.openapi.utils.OpenApiUtil;
-import net.coru.api.generator.plugin.openapi.template.TemplateFactory;
-import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.PathItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -92,13 +92,19 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processFileSpec(List<FileSpec> fileSpecsList) throws MojoExecutionException {
+    List<String> apiPackageList = new ArrayList<>();
 
     for (FileSpec fileSpec : fileSpecsList) {
       try {
-        processPackage(fileSpec.getApiPackage());
-        String filePathToSave = processPath(fileSpec.getApiPackage(), false);
-        project.addCompileSourceRoot(filePathToSave);
-        processFile(fileSpec, filePathToSave);
+        if (!apiPackageList.contains(fileSpec.getApiPackage())) {
+          processPackage(fileSpec.getApiPackage());
+          String filePathToSave = processPath(fileSpec.getApiPackage(), false);
+          project.addCompileSourceRoot(filePathToSave);
+          processFile(fileSpec, filePathToSave);
+          apiPackageList.add(fileSpec.getApiPackage());
+        } else {
+          throw new SCSMultiApiMavenPluginException("The api package of the fileSpecs cannot be the same.");
+        }
 
       } catch (Exception e) {
         getLog().error(e);
