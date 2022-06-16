@@ -3,7 +3,6 @@ package net.coru.multifileplugin.testapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -24,19 +23,20 @@ public class ApiTestInfoDTO {
     private String testName;
     private List<String> testers = new ArrayList<String>();
 
+
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
       this.testName = testName;
       return this;
     }
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
-      if (CollectionUtils.isNotEmpty(testers)) {
+      if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
-      if (Objects.nonNull(tester)) {
+      if (tester != null) {
         this.testers.add(tester);
       }
       return this;

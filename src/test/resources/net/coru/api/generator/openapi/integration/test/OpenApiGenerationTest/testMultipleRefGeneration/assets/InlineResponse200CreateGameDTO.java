@@ -21,6 +21,7 @@ public class InlineResponse200CreateGameDTO {
     private MessageDTO message;
     private Integer code;
 
+
     public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message(MessageDTO message) {
       this.message = message;
       return this;
