@@ -49,7 +49,6 @@ public interface TestApi {
   }
   /**
   * GET /test : List all available test
-  * @param testId The id of the test to retrieve true
   * @return  A paged array of tests; (status code 200)
   */
 
@@ -67,7 +66,7 @@ public interface TestApi {
     produces = { "application/json" }
   )
 
-  default ResponseEntity<ApiTestDTO> listTest(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId) {
+  default ResponseEntity<ApiTestDTO> listTest() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

@@ -175,7 +175,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
       templateFactory.addPathItems(apisEntry.getValue());
-      ArrayList<PathObject> pathObject = MapperPathUtil.mapPathObjects(fileSpec, apisEntry, globalObject);
+      ArrayList<PathObject> pathObject = MapperPathUtil.mapPathObjects(openAPI, fileSpec, apisEntry, globalObject);
       AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObject);
 
       templateFactory.fillTemplate(filePathToSave, fileSpec, apisEntry.getKey().substring(0, 1).toUpperCase()

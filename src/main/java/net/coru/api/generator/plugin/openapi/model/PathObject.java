@@ -21,4 +21,6 @@ public class PathObject {
 
   private List<OperationObject> operationObject;
 
+  private List<ParameterObject> parameterObjects;
+
 }

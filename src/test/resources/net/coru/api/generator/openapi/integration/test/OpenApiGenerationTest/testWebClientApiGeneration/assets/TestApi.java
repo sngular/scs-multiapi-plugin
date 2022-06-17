@@ -57,7 +57,6 @@ public class TestApi {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
     final String[] localVarContentTypes = {};
@@ -99,7 +98,6 @@ public class TestApi {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
     final String[] localVarContentTypes = {};

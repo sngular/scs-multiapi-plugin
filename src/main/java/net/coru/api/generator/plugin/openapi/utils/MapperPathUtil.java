@@ -49,6 +49,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
 
+  public static final String ARRAY = "array";
+
   public static GlobalObject mapOpenApiObjectToOurModels(OpenAPI openAPI, FileSpec fileSpec, List<AuthSchemaObject> authSchemaList) {
 
     var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
@@ -91,47 +93,50 @@ public class MapperPathUtil {
     return dataType;
   }
 
-  public static ArrayList<PathObject> mapPathObjects(FileSpec fileSpec, Entry<String, HashMap<String, PathItem>> path, GlobalObject globalObject) {
+  public static ArrayList<PathObject> mapPathObjects(final OpenAPI openAPI, FileSpec fileSpec, Entry<String, HashMap<String, PathItem>> path, GlobalObject globalObject) {
     ArrayList<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
-      if (Objects.nonNull(pathItem.getValue().getParameters())) {
-        globalObject.setParameterObjects(mapGlobalParameterObjects(pathItem.getValue().getParameters(), fileSpec));
-      }
       PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
                                         .globalObjects(globalObject)
-                                        .operationObject(mapOperationObject(fileSpec, pathItem, globalObject))
+                                        .parameterObjects(mapParameterObjects(openAPI, pathItem.getValue().getParameters(), fileSpec))
+                                        .operationObject(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
                                         .build();
+
+      for ( OperationObject operationObject : pathObject.getOperationObject()){
+        if(!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()){
+          throw new SCSMultiApiMavenPluginException("Please don´t duplicate parameters in both Operation and Path");
+        }
+      }
       pathObjects.add(pathObject);
     }
 
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
+  private static List<OperationObject> mapOperationObject(final OpenAPI openAPI, FileSpec fileSpec, Entry<String, PathItem> path, GlobalObject globalObject) {
     List<OperationObject> operationObjects = new ArrayList<>();
     List<String> operationIdList = new ArrayList<>();
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
-      operationObjects.add(createOperation(path.getValue().getGet(), "GET", fileSpec, globalObject, operationIdList));
+      operationObjects.add(createOperation(openAPI, path.getValue().getGet(), "GET", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
-      operationObjects.add(createOperation(path.getValue().getPost(), "POST", fileSpec, globalObject, operationIdList));
+      operationObjects.add(createOperation(openAPI, path.getValue().getPost(), "POST", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
-      operationObjects.add(createOperation(path.getValue().getDelete(), "DELETE", fileSpec, globalObject, operationIdList));
+      operationObjects.add(createOperation(openAPI, path.getValue().getDelete(), "DELETE", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
-      operationObjects.add(createOperation(path.getValue().getPut(), "PUT", fileSpec, globalObject, operationIdList));
+      operationObjects.add(createOperation(openAPI, path.getValue().getPut(), "PUT", fileSpec, globalObject, operationIdList));
     }
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
-      operationObjects.add(createOperation(path.getValue().getPatch(), "PATCH", fileSpec, globalObject, operationIdList));
+      operationObjects.add(createOperation(openAPI, path.getValue().getPatch(), "PATCH", fileSpec, globalObject, operationIdList));
     }
 
     return operationObjects;
   }
 
-  private static OperationObject createOperation(
-    Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
+  private static OperationObject createOperation(final OpenAPI openAPI, Operation operation, String operationType, FileSpec fileSpec, GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
@@ -139,7 +144,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation, globalObject))
-                          .parameterObjects(mapParameterObjects(operation.getParameters(), globalObject, fileSpec))
+                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec))
                           .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -207,46 +212,34 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final List<Parameter> parameters, GlobalObject globalObject, FileSpec fileSpec) {
+  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, FileSpec fileSpec) {
     List<ParameterObject> parameterObjects = new ArrayList<>();
-    if (Objects.nonNull(globalObject.getParameterObjects())) {
-      if (Objects.nonNull(globalObject.getParameterObjects()) && Objects.nonNull(parameters)) {
-        throw new SCSMultiApiMavenPluginException("Defining parameters in both Path and Operations is not supported in this plugin");
-      }
-      globalObject.getParameterObjects().forEach(parameter -> parameterObjects.add(ParameterObject.builder()
-                                                                                                  .name(parameter.getName())
-                                                                                                  .required(parameter.getRequired())
-                                                                                                  .description(parameter.getDescription())
-                                                                                                  .in(parameter.getIn())
-                                                                                                  .className(parameter.getClassName())
-                                                                                                  .isCollection(parameter.getIsCollection())
-                                                                                                  .build()));
-    } else if (Objects.nonNull(parameters)) {
-      parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
-                                                                          .name(parameter.getName())
-                                                                          .required(parameter.getRequired())
-                                                                          .description(parameter.getDescription())
-                                                                          .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
-                                                                          .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
-                                                                          .build()));
+    if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
+      parameters.forEach(parameter -> {
+        if(Objects.nonNull(parameter.get$ref())){
+          String[] wholeRef = parameter.get$ref().split("/");
+          String ref = wholeRef[wholeRef.length-1];
+          Parameter refParameter = openAPI.getComponents().getParameters().get(ref);
+          parameterObjects.add(ParameterObject.builder()
+                                 .name(refParameter.getName())
+                                 .required(refParameter.getRequired())
+                                 .description(refParameter.getDescription())
+                                 .in(refParameter.getDescription())
+                                 .className(getSimpleType(refParameter.getSchema(), fileSpec))
+                                 .isCollection(refParameter.getSchema().getType().equalsIgnoreCase(ARRAY))
+                                 .build());
+        } else {
+          parameterObjects.add(ParameterObject.builder()
+                                              .name(parameter.getName())
+                                              .required(parameter.getRequired())
+                                              .description(parameter.getDescription())
+                                              .in(parameter.getIn())
+                                              .className(getSimpleType(parameter.getSchema(), fileSpec))
+                                              .isCollection(parameter.getSchema().getType().equalsIgnoreCase(ARRAY))
+                                              .build());
+        }
+      });
     }
-    return parameterObjects;
-  }
-
-  private static List<ParameterObject> mapGlobalParameterObjects(final List<Parameter> parameters, FileSpec fileSpec) {
-    List<ParameterObject> parameterObjects = new ArrayList<>();
-    if (Objects.nonNull(parameters)) {
-      parameters.forEach(parameter -> parameterObjects.add(ParameterObject.builder()
-                                                                          .name(parameter.getName())
-                                                                          .required(parameter.getRequired())
-                                                                          .description(parameter.getDescription())
-                                                                          .in(parameter.getIn())
-                                                                          .className(getSimpleType(parameter.getSchema(), fileSpec))
-                                                                          .isCollection(parameter.getSchema().getType().equalsIgnoreCase("array"))
-                                                                          .build()));
-    }
-
     return parameterObjects;
   }
 
@@ -259,7 +252,8 @@ public class MapperPathUtil {
         responseObjects.add(ResponseObject.builder()
                                           .responseName(response.getKey())
                                           .description(response.getValue().getDescription())
-                                          .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
+                                          .contentObject(
+                                            mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
                                           .build());
       }
     }
@@ -347,14 +341,14 @@ public class MapperPathUtil {
       String[] wholeRef = schema.get$ref().split("/");
       dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
     }
-    return dataType.startsWith("array") ? "array" : dataType.startsWith("map") ? "map" : dataType;
+    return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith("map") ? "map" : dataType;
   }
 
   private static String mapRefName(Schema schema, Map<String, String> componentsTypes) {
 
     var refSchema = "";
 
-    if ("array".equalsIgnoreCase(schema.getType())) {
+    if (ARRAY.equalsIgnoreCase(schema.getType())) {
       ArraySchema arraySchema = (ArraySchema) schema;
       refSchema = arraySchema.getItems().get$ref();
     }
