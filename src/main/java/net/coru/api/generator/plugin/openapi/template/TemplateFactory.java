@@ -18,12 +18,15 @@ import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConsta
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
@@ -120,9 +123,13 @@ public class TemplateFactory {
   private void writeTemplateToFile(String templateName, Map<String, Object> root, String path) throws IOException, TemplateException {
     Template template = cfg.getTemplate(templateName);
 
-    FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
+    if (!Files.exists(Path.of(path))) {
+      FileWriter writer = new FileWriter(path);
+      template.process(root, writer);
+      writer.close();
+    } else {
+      throw new SCSMultiApiMavenPluginException("The fileSpecs packets cannot be the same.");
+    }
   }
 
   public void setPackageName(String packageName) {

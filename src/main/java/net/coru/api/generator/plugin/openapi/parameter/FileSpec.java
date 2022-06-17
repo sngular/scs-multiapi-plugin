@@ -27,6 +27,9 @@ public class FileSpec {
   @Parameter(name = "modelNameSuffix", property = "modelNameSuffix")
   private String modelNameSuffix;
 
+  @Parameter(name = "clientPackage", property = "clientPackage")
+  private String clientPackage;
+
   @Parameter(name = "callMode", property = "callMode")
   private Boolean callMode = false;
 

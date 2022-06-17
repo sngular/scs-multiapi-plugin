@@ -63,9 +63,6 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(property = "fileSpecs")
   public List<FileSpec> fileSpecs;
 
-  @Parameter(name = "clientPackage", property = "clientPackage")
-  private String clientPackage;
-
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
 
@@ -84,7 +81,6 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     templateFactory = new TemplateFactory();
     if (null != fileSpecs && !fileSpecs.isEmpty()) {
       processFileSpec(fileSpecs);
-      createClients();
     } else {
       throw new MojoExecutionException("Code generation failed. Not exists FileSpec configuration to generate package and class");
     }
@@ -99,7 +95,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
         String filePathToSave = processPath(fileSpec.getApiPackage(), false);
         project.addCompileSourceRoot(filePathToSave);
         processFile(fileSpec, filePathToSave);
-
+        createClients(fileSpec);
       } catch (Exception e) {
         getLog().error(e);
         throw new MojoExecutionException("Code generation failed. See above for the full exception.");
@@ -112,12 +108,13 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     try {
 
       OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(fileSpec);
+      String clientPackage = fileSpec.getClientPackage();
 
       if (fileSpec.getCallMode()) {
         templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
         templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
         isWebClient = fileSpec.getIsReactive();
-        isRestClient = fileSpec.getIsReactive() ? false : true;
+        isRestClient = !fileSpec.getIsReactive();
       }
 
       createApiTemplate(fileSpec, filePathToSave, openAPI);
@@ -131,7 +128,8 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
 
   }
 
-  private void createClients() {
+  private void createClients(final FileSpec fileSpec) {
+    String clientPackage = fileSpec.getClientPackage();
 
     if (isWebClient || isRestClient) {
       String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE, false);
@@ -145,7 +143,7 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
           templateFactory.fillTemplateRestClient(clientPath);
         }
 
-        createAuthTemplates();
+        createAuthTemplates(fileSpec);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -153,7 +151,8 @@ public class OpenapiMultiFileMojo extends AbstractMojo {
     }
   }
 
-  private void createAuthTemplates() throws TemplateException, IOException {
+  private void createAuthTemplates(final FileSpec fileSpec) throws TemplateException, IOException {
+    String clientPackage = fileSpec.getClientPackage();
 
     var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
     String authFileToSave = processPath(authFileRoot, false);
