@@ -64,7 +64,7 @@ public interface ${className?cap_first}Api {
   * @param <#list path.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
    </#if>
     <#if operation.requestObjects?has_content>
-  *<#list operation.requestObjects as request> @param <#list request.contentObject as content>${content.refNameObject.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
+  *<#list operation.requestObjects as request> @param <#list request.contentObject as content>${content.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
    </#if>
   * @return<#list operation.responseObjects as response><#if response.responseName != "default">  ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
@@ -75,7 +75,7 @@ public interface ${className?cap_first}Api {
      summary = "${operation.summary}",
      tags = { <#list operation.tags as tags>"${tags}"</#list> }<#if operation.responseObjects?has_content>,
      responses = {
-       <#list operation.responseObjects as response> @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObject?has_content>, content = @Content(<#list response.contentObject as content>mediaType = "${content.name}"<#if content.refNameObject.refName?has_content>, schema = @Schema(implementation = ${content.refNameObject.refName}.class))</#if></#list></#if>)<#if !response?is_last>,</#if></#list>
+       <#list operation.responseObjects as response> @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObject?has_content>, content = @Content(<#list response.contentObject as content>mediaType = "${content.name}"<#if content.refName?has_content>, schema = @Schema(implementation = ${content.refName}.class))</#if></#list></#if>)<#if !response?is_last>,</#if></#list>
      }</#if>
   )
   @RequestMapping(

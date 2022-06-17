@@ -19,19 +19,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import io.swagger.v3.oas.models.parameters.Parameter;
-import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
-import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
-import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
-import net.coru.api.generator.plugin.openapi.model.ContentObject;
-import net.coru.api.generator.plugin.openapi.model.GlobalObject;
-import net.coru.api.generator.plugin.openapi.model.OperationObject;
-import net.coru.api.generator.plugin.openapi.model.ParameterObject;
-import net.coru.api.generator.plugin.openapi.model.PathObject;
-import net.coru.api.generator.plugin.openapi.model.RefNameObject;
-import net.coru.api.generator.plugin.openapi.model.RequestObject;
-import net.coru.api.generator.plugin.openapi.model.ResponseObject;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -41,10 +28,22 @@ import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
+import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
+import net.coru.api.generator.plugin.openapi.model.ContentObject;
+import net.coru.api.generator.plugin.openapi.model.GlobalObject;
+import net.coru.api.generator.plugin.openapi.model.OperationObject;
+import net.coru.api.generator.plugin.openapi.model.ParameterObject;
+import net.coru.api.generator.plugin.openapi.model.PathObject;
+import net.coru.api.generator.plugin.openapi.model.RequestObject;
+import net.coru.api.generator.plugin.openapi.model.ResponseObject;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
@@ -269,34 +268,26 @@ public class MapperPathUtil {
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .importName(getPojoName(inlineObject, fileSpec))
-                                          .refNameObject(mapRefNameObject(getPojoName(inlineObject, fileSpec), true))
+                                          .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
                    BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .refNameObject(mapRefNameObject(defineTypeName(mediaTypeEntry.getValue().getSchema()), false))
+                                          .refName((defineTypeName(mediaTypeEntry.getValue().getSchema())))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
                                           .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .refNameObject(mapRefNameObject(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()), true))
+                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .build());
         }
       }
     }
     return contentObjects;
-  }
-
-  private static RefNameObject mapRefNameObject(String refName, Boolean checkImport) {
-    return RefNameObject.builder()
-                        .refName(refName)
-                        .checkImport(checkImport)
-                        .build();
-
   }
 
   private static String defineTypeName(Schema schema) {
