@@ -36,4 +36,6 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_OAUTH_FLOW = "templateOAuthFlow.ftlh";
 
+  private TemplateIndexConstants() {}
+
 }
