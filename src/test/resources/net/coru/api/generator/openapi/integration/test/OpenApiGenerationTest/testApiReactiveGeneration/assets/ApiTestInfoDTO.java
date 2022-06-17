@@ -23,7 +23,6 @@ public class ApiTestInfoDTO {
     private String testName;
     private List<String> testers = new ArrayList<String>();
 
-
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
       this.testName = testName;
       return this;

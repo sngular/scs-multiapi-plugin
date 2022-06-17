@@ -21,7 +21,6 @@ public class ApiErrorDTO {
     private String message;
     private Integer code;
 
-
     public ApiErrorDTO.ApiErrorDTOBuilder message(String message) {
       this.message = message;
       return this;

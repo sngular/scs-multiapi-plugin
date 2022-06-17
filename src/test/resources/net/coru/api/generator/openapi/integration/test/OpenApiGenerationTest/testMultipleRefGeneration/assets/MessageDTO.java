@@ -17,7 +17,6 @@ public class MessageDTO {
 
     private String description;
 
-
     public MessageDTO.MessageDTOBuilder description(String description) {
       this.description = description;
       return this;

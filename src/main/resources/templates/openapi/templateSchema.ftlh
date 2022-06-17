@@ -37,7 +37,6 @@ public class ${schema.className} {
     private ${field.dataTypeSimple?cap_first} ${field.baseName};
   </#if>
 </#list>
-
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
     public ${schema.className}.${schema.className}Builder ${field.baseName}(List<${field.dataType}> ${field.baseName}) {
