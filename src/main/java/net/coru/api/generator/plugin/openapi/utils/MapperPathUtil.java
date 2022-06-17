@@ -258,8 +258,7 @@ public class MapperPathUtil {
         responseObjects.add(ResponseObject.builder()
                                           .responseName(response.getKey())
                                           .description(response.getValue().getDescription())
-                                          .contentObject(
-                                            mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
+                                          .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
                                           .build());
       }
     }
