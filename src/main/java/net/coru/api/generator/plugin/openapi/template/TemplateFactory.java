@@ -35,25 +35,24 @@ public class TemplateFactory {
 
   private final HashMap<String, Schema> itemSchema = new HashMap<>();
 
-  private final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
-
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
+    final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
     root.put("checkBasicTypes", basicDataTypes);
 
   }
 
-  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombock, final SchemaObject schemaObject) throws IOException, TemplateException {
+  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
       root.put("stringBracketOpen", "{");
       root.put("stringBracketClose", "}");
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
-      writeTemplateToFile(null != useLombock && useLombock ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
+      writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
     }
 
@@ -85,11 +84,11 @@ public class TemplateFactory {
 
   public final void fillTemplate(
     final String filePathToSave, final FileSpec fileSpec, final String className,
-    final List<PathObject> pathObject, final AuthObject authObject) throws IOException, TemplateException {
+    final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("itemHashMap", itemHashMap);
-    root.put("pathObject", pathObject);
+    root.put("pathObjects", pathObjects);
 
     if (Objects.nonNull(fileSpec.getApiPackage())) {
       root.put("packageApi", fileSpec.getApiPackage());
@@ -99,12 +98,12 @@ public class TemplateFactory {
     }
     final File fileToSave = new File(filePathToSave);
 
-    if (fileSpec.getCallMode()) {
+    if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
       root.put("authObject", authObject);
     }
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + ".java").toString();
-    writeTemplateToFile(fileSpec.getCallMode() ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
+    writeTemplateToFile(Boolean.TRUE.equals(fileSpec.getCallMode()) ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
 
   }
 

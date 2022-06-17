@@ -6,11 +6,15 @@
 
 package net.coru.api.generator.plugin.openapi.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SchemaFieldObject {
 
   private String baseName;
@@ -22,6 +26,5 @@ public class SchemaFieldObject {
   private String importClass;
 
   private String required;
-
 
 }

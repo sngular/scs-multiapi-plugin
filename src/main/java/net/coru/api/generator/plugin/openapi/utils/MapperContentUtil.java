@@ -43,8 +43,13 @@ public class MapperContentUtil {
     final var importList = new ArrayList<String>();
 
     fieldObjectList.forEach(fieldObject -> {
-      checkArrayImports(fieldObject, listHashMap);
-      checkMapImports(fieldObject, listHashMap);
+      if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
+        if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+          listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
+        } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
+          listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+        }
+      }
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
         listHashMap.put(fieldObject.getImportClass(), List.of(modelPackage + "." + fieldObject.getImportClass()));
       }
@@ -55,24 +60,6 @@ public class MapperContentUtil {
     }
 
     return importList;
-  }
-
-  private static void checkArrayImports(final SchemaFieldObject fieldObject, final HashMap<String, List<String>> listHashMap) {
-    final var arrayImport = new ArrayList<String>();
-    if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equals(ARRAY) && !listHashMap.containsKey(ARRAY)) {
-      arrayImport.add("java.util.List");
-      arrayImport.add("java.util.ArrayList");
-      listHashMap.put(ARRAY, arrayImport);
-    }
-  }
-
-  private static void checkMapImports(final SchemaFieldObject fieldObject, final HashMap<String, List<String>> listHashMap) {
-    final var arrayImport = new ArrayList<String>();
-    if (Objects.nonNull(fieldObject.getDataTypeSimple()) && Objects.equals(fieldObject.getDataTypeSimple(), MAP) && !listHashMap.containsKey(MAP)) {
-      arrayImport.add("java.util.Map");
-      arrayImport.add("java.util.HashMap");
-      listHashMap.put(MAP, arrayImport);
-    }
   }
 
   private static List<SchemaFieldObject> getFields(final Schema schema, final FileSpec fileSpec) {

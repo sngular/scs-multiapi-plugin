@@ -128,9 +128,15 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private boolean isValidOperation(
     final OperationParameterObject operation, final String operationId, final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
-    return operation != null && (
-      operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)
-      || operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists);
+    final boolean result;
+    if (operation != null) {
+      final List<String> operationIds = operation.getOperationIds();
+      result = operationIds.contains(operationId)
+               || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
+    } else {
+      result = false;
+    }
+    return result;
   }
 
   private JsonNode getChannelPayload(final JsonNode channel) {

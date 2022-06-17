@@ -55,7 +55,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
     try {
       for (var templateFile : TEMPLATE_FILES) {
         templates.put(templateFile,
-                      readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/functional/" + templateFile)).getContent()));
+                      readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/asyncapi/" + templateFile)).getContent()));
       }
     } catch (final IOException e) {
       e.printStackTrace();

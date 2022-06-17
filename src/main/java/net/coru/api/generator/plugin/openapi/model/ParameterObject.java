@@ -6,22 +6,26 @@
 
 package net.coru.api.generator.plugin.openapi.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ParameterObject {
 
-  String name;
+  private String name;
 
-  String in;
+  private String in;
 
-  Boolean required;
+  private Boolean required;
 
-  String description;
+  private String description;
 
-  Boolean isCollection;
+  private Boolean isCollection;
 
-  String className;
+  private String className;
 }

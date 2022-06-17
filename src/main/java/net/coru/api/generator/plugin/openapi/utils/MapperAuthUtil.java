@@ -28,9 +28,8 @@ public class MapperAuthUtil {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
     if (MapUtils.isNotEmpty(openAPI.getComponents().getSecuritySchemes())) {
       openAPI.getComponents().getSecuritySchemes().forEach((key, value) -> {
-        var typeStr = value.getType().toString();
-        var schemeStr = value.getScheme();
-        var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(schemeStr);
+        final var typeStr = value.getType().toString();
+        final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(value.getScheme());
         final var authSchema = AuthSchemaObject.builder()
                                                .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
                                                .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? value.getName() : "")
@@ -70,7 +69,7 @@ public class MapperAuthUtil {
 
   private static List<String> getApiAuthNames(final List<PathObject> pathObjects) {
     final var operationList = new ArrayList<OperationObject>();
-    pathObjects.forEach(pathObject -> operationList.addAll(pathObject.getOperationObject()));
+    pathObjects.forEach(pathObject -> operationList.addAll(pathObject.getOperationObjects()));
     return addApiAuthNames(operationList);
   }
 
@@ -78,8 +77,8 @@ public class MapperAuthUtil {
     final var authList = new ArrayList<String>();
 
     operationList.forEach(operationObject -> {
-      if (CollectionUtils.isNotEmpty(operationObject.getSecurity())) {
-        operationObject.getSecurity().forEach(auth -> {
+      if (CollectionUtils.isNotEmpty(operationObject.getSecurities())) {
+        operationObject.getSecurities().forEach(auth -> {
           if (!authList.contains(auth)) {
             authList.add(auth);
           }

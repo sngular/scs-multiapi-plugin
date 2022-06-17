@@ -6,23 +6,23 @@
 
 package net.coru.api.generator.plugin.asyncapi.parameter;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.apache.maven.plugins.annotations.Parameter;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileSpec {
 
-  @Parameter(name = "filePath", property = "filePath", required = true)
-  String filePath;
+  private String filePath;
 
-  @Parameter(name = "supplier", property = "supplier")
-  OperationParameterObject supplier;
+  private OperationParameterObject supplier;
 
-  @Parameter(name = "consumer", property = "consumer")
-  OperationParameterObject consumer;
+  private OperationParameterObject consumer;
 
-  @Parameter(name = "streamBridge", property = "streamBridge")
-  OperationParameterObject streamBridge;
+  private OperationParameterObject streamBridge;
 
 }
