@@ -3,13 +3,6 @@ package ${packageModel};
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-<#assign importAdded = false>
-<#list schema.fieldObjectList as field>
-  <#if field.dataType?has_content && field.dataTypeSimple == "array" && importAdded == false>
-import org.apache.commons.collections4.CollectionUtils;
-    <#assign importAdded = true>
-  </#if>
-</#list>
 <#list schema.importList as import>
 import ${import};
 </#list>
@@ -47,14 +40,14 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
     public ${schema.className}.${schema.className}Builder ${field.baseName}(List<${field.dataType}> ${field.baseName}) {
-      if (CollectionUtils.isNotEmpty(${field.baseName})) {
+      if (!${field.baseName}.isEmpty()) {
         this.${field.baseName}.addAll(${field.baseName});
       }
       return this;
     }
 
     public ${schema.className}.${schema.className}Builder ${field.baseName?substring(0, field.baseName?length - 1)}(${field.dataType} ${field.baseName?substring(0, field.baseName?length - 1)}) {
-      if (Objects.nonNull(${field.baseName?substring(0, field.baseName?length - 1)})) {
+      if (${field.baseName?substring(0, field.baseName?length - 1)} != null) {
         this.${field.baseName}.add(${field.baseName?substring(0, field.baseName?length - 1)});
       }
       return this;
