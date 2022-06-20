@@ -25,7 +25,6 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
@@ -271,12 +270,12 @@ public class MapperPathUtil {
                                           .importName(getPojoName(inlineObject, fileSpec))
                                           .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
-        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType()) &&
-                   BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
+        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
+                   && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .refName((defineTypeName(mediaTypeEntry.getValue().getSchema())))
+                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
@@ -291,7 +290,7 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
-  private static String defineTypeName(Schema schema) {
+  private static String defineTypeName(final Schema schema) {
     String typeName = "";
     switch (schema.getType()) {
       case "integer":
@@ -387,6 +386,12 @@ public class MapperPathUtil {
       authSecList = authentications;
     }
     return authSecList;
+  }
+
+  public static String getPojoName(final String namePojo, final FileSpec fileSpec) {
+    return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
+           + namePojo
+           + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");
   }
 
 }

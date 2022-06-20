@@ -19,7 +19,7 @@ import java.util.Map;
       </#list>
     </#list>
     <#list operation.responseObjects as response>
-      <#list response.contentObject as content>
+      <#list response.contentObjects as content>
         <#if content.importName?? && (!imports?seq_contains(content.importName))>
           <#if (!checkBasicTypes?seq_contains(content.importName))>
             <#assign imports = imports+[content.importName]>
