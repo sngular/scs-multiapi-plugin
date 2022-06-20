@@ -6,6 +6,15 @@
 
 package net.coru.api.generator.plugin.asyncapi.parameter;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileSpec {
 
   private String filePath;
@@ -16,19 +25,4 @@ public class FileSpec {
 
   private OperationParameterObject streamBridge;
 
-  public String getFilePath() {
-    return filePath;
-  }
-
-  public OperationParameterObject getSupplier() {
-    return supplier;
-  }
-
-  public OperationParameterObject getConsumer() {
-    return consumer;
-  }
-
-  public OperationParameterObject getStreamBridge() {
-    return streamBridge;
-  }
 }

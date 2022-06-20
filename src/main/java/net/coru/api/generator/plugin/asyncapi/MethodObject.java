@@ -18,55 +18,61 @@ public class MethodObject {
 
   private String channelName;
 
-  public MethodObject(String operationId, String classNamespace, String type) {
+  public MethodObject(final String operationId, final String classNamespace, final String type) {
     this.operationId = operationId;
     this.classNamespace = classNamespace;
-    var splitNamespace = classNamespace.split("\\.");
+    final var splitNamespace = classNamespace.split("\\.");
     this.className = splitNamespace[splitNamespace.length - 1];
     this.type = type;
     this.channelName = null;
   }
 
-  public MethodObject(String operationId, String classNamespace, String type, String channelName) {
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName) {
     this.operationId = operationId;
     this.classNamespace = classNamespace;
-    var splitNamespace = classNamespace.split("\\.");
+    final var splitNamespace = classNamespace.split("\\.");
     this.className = splitNamespace[splitNamespace.length - 1];
     this.type = type;
     this.channelName = channelName;
   }
 
-  protected void setOperationId(final String operationId) {
+  protected final void setOperationId(final String operationId) {
     this.operationId = operationId;
   }
 
-  protected void setClassNamespace(final String classNamespace) {
+  protected final void setClassNamespace(final String classNamespace) {
     this.classNamespace = classNamespace;
   }
 
-  protected void setClassName(final String className) {
+  protected final void setClassName(final String className) {
     this.className = className;
   }
 
-  protected void setType(final String type) {
+  protected final void setType(final String type) {
     this.type = type;
   }
 
-  protected void setChannelName(final String channelName) {
+  protected final void setChannelName(final String channelName) {
     this.channelName = channelName;
   }
 
-  public String getOperationId() {
+  public final String getOperationId() {
     return operationId;
   }
 
-  public String getClassNamespace() {
+  public final String getClassNamespace() {
     return classNamespace;
   }
 
-  public String getClassName() {return className;}
+  public final String getClassName() {
+    return className;
+  }
 
-  public String getType() {return type;}
+  public final String getType() {
+    return type;
+  }
 
-  public String getChannelName() {return channelName;}
+  public final String getChannelName() {
+    return channelName;
+  }
 }

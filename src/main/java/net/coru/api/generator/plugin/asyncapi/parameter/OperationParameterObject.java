@@ -8,7 +8,17 @@ package net.coru.api.generator.plugin.asyncapi.parameter;
 
 import java.util.List;
 
-public class OperationParameterObject {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public final class OperationParameterObject {
 
   private String ids;
 
@@ -22,53 +32,8 @@ public class OperationParameterObject {
 
   private List<String> operationIds;
 
-  protected String getIds() {
-    return ids;
-  }
-
-  public void setIds(String ids) {
-    this.ids = ids;
-
-    this.operationIds = List.of(ids.replace(" ", "").split(","));
-  }
-
-  public String getModelPackage() {
-    return modelPackage;
-  }
-
-  protected void setModelPackage(final String modelPackage) {
-    this.modelPackage = modelPackage;
-  }
-
-  public String getTargetPackage() {
-    return targetPackage;
-  }
-
-  protected void setTargetPackage(final String targetPackage) {
-    this.targetPackage = targetPackage;
-  }
-
   public List<String> getOperationIds() {
-    return operationIds;
+    return StringUtils.isEmpty(ids) ? List.of() : List.of(ids.replace(" ", "").split(","));
   }
 
-  protected void setOperationIds(final List<String> operationIds) {
-    this.operationIds = operationIds;
-  }
-
-  public String getEntitiesPostfix() {
-    return entitiesPostfix;
-  }
-
-  protected void setEntitiesPostfix(final String entitiesPostfix) {
-    this.entitiesPostfix = entitiesPostfix;
-  }
-
-  public String getClassNamePostfix() {
-    return classNamePostfix;
-  }
-
-  protected void setClassNamePostfix(final String classNamePostfix) {
-    this.classNamePostfix = classNamePostfix;
-  }
 }

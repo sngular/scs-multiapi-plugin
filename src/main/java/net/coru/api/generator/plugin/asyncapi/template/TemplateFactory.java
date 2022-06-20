@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.asyncapi.MethodObject;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import net.coru.api.generator.plugin.asyncapi.MethodObject;
 
 public class TemplateFactory {
 
@@ -67,7 +67,7 @@ public class TemplateFactory {
     cfg.setLogTemplateExceptions(true);
   }
 
-  public void fillTemplate() throws IOException, TemplateException {
+  public final void fillTemplate() throws IOException, TemplateException {
     root.put("publishMethods", publishMethods);
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
@@ -96,70 +96,70 @@ public class TemplateFactory {
     this.generateInterfaces();
   }
 
-  public void setSubscribePackageName(String packageName) {
+  public final void setSubscribePackageName(final String packageName) {
     root.put(SUBSCRIBE_PACKAGE, packageName);
   }
 
-  public void setSupplierPackageName(String packageName) {
+  public final void setSupplierPackageName(final String packageName) {
     root.put(SUPPLIER_PACKAGE, packageName);
   }
 
-  public void setStreamBridgePackageName(String packageName) {
+  public final void setStreamBridgePackageName(final String packageName) {
     root.put(STREAM_BRIDGE_PACKAGE, packageName);
   }
 
-  public void setSubscribeClassName(String className) {
+  public final void setSubscribeClassName(final String className) {
     root.put("subscribeClassName", className);
     this.subscribeClassName = className;
   }
 
-  public void setSupplierClassName(String className) {
+  public final void setSupplierClassName(final String className) {
     root.put("supplierClassName", className);
     this.supplierClassName = className;
   }
 
-  public void setStreamBridgeClassName(String className) {
+  public final void setStreamBridgeClassName(final String className) {
     root.put("streamBridgeClassName", className);
     this.streamBridgeClassName = className;
   }
 
-  public void setSubscribeFilePath(Path path) {
+  public final void setSubscribeFilePath(final Path path) {
     this.subscribeFilePath = path.toString();
   }
 
-  public void setSupplierFilePath(Path path) {
+  public final void setSupplierFilePath(final Path path) {
     this.supplierFilePath = path.toString();
   }
 
-  public void setStreamBridgeFilePath(Path path) {
+  public final void setStreamBridgeFilePath(final Path path) {
     this.streamBridgeFilePath = path.toString();
   }
 
-  public void addSupplierMethod(String operationId, String classNamespace) {
+  public final void addSupplierMethod(final String operationId, final String classNamespace) {
     publishMethods.add(new MethodObject(operationId, classNamespace, "publish"));
   }
 
-  public void addStreamBridgeMethod(String operationId, String classNamespace, String channelName) {
+  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName) {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
-  public void addSubscribeMethod(String operationId, String classNamespace) {
+  public final void addSubscribeMethod(final String operationId, final String classNamespace) {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
 
-  public void setSupplierEntitiesPostfix(String postfix) {
+  public final void setSupplierEntitiesPostfix(final String postfix) {
     root.put(SUPPLIER_ENTITIES_POSTFIX, postfix);
   }
 
-  public void setStreamBridgeEntitiesPostfix(String postfix) {
+  public final void setStreamBridgeEntitiesPostfix(final String postfix) {
     root.put(STREAM_BRIDGE_ENTITIES_POSTFIX, postfix);
   }
 
-  public void setSubscribeEntitiesPostfix(String postfix) {
+  public final void setSubscribeEntitiesPostfix(final String postfix) {
     root.put(SUBSCRIBE_ENTITIES_POSTFIX, postfix);
   }
 
-  public void clearData() {
+  public final void clearData() {
     root.clear();
     publishMethods.clear();
     subscribeMethods.clear();
@@ -172,10 +172,10 @@ public class TemplateFactory {
   }
 
   private void generateInterfaces() throws IOException, TemplateException {
-    ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
+    final ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
     allMethods.addAll(publishMethods);
 
-    Map<String, Object> interfaceRoot = new HashMap<>();
+    final Map<String, Object> interfaceRoot = new HashMap<>();
     interfaceRoot.put(SUBSCRIBE_PACKAGE, root.get(SUBSCRIBE_PACKAGE));
     interfaceRoot.put(SUPPLIER_PACKAGE, root.get(SUPPLIER_PACKAGE));
 
@@ -202,10 +202,10 @@ public class TemplateFactory {
     }
   }
 
-  private void writeTemplateToFile(String templateName, Map<String, Object> root, String path) throws IOException, TemplateException {
-    Template template = cfg.getTemplate(templateName);
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
+    final Template template = cfg.getTemplate(templateName);
 
-    FileWriter writer = new FileWriter(path);
+    final FileWriter writer = new FileWriter(path);
     template.process(root, writer);
     writer.close();
   }
