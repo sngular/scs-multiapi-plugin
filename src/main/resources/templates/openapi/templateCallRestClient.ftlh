@@ -10,7 +10,7 @@ import java.util.Map;
 <#list pathObjects as path>
   <#list path.operationObjects as operation>
     <#list operation.requestObjects as request>
-      <#list request.contentObject as content>
+      <#list request.contentObjects as content>
         <#if content.importName?? && (!imports?seq_contains(content.importName))>
           <#if (!checkBasicTypes?seq_contains(content.importName))>
         		<#assign imports = imports+[content.importName]>
