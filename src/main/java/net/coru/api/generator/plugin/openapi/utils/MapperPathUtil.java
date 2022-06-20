@@ -21,6 +21,7 @@ import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MapSchema;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
@@ -34,7 +35,6 @@ import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.OperationObject;
 import net.coru.api.generator.plugin.openapi.model.ParameterObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
-import net.coru.api.generator.plugin.openapi.model.RefNameObject;
 import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
@@ -252,8 +252,7 @@ public class MapperPathUtil {
         responseObjects.add(ResponseObject.builder()
                                           .responseName(key)
                                           .description(value.getDescription())
-                                          .contentObjects(
-                                            mapContentObject(fileSpec, value.getContent(), "InlineResponse" + key + operationIdWithCap, globalObject))
+                                          .contentObjects(mapContentObject(fileSpec, value.getContent(), "InlineResponse" + key + operationIdWithCap, globalObject))
                                           .build());
       });
     }
@@ -263,40 +262,32 @@ public class MapperPathUtil {
   private static List<ContentObject> mapContentObject(final FileSpec fileSpec, final Content content, final String inlineObject, final GlobalObject globalObject) {
     final List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
-      content.forEach((key, value) -> {
-        if (MapUtils.isNotEmpty(value.getSchema().getProperties())) {
+      for (Entry<String, MediaType> mediaTypeEntry : content.entrySet()) {
+        if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getProperties())) {
           contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(value.getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(key)
-                                          .importName(MapperUtil.getPojoName(inlineObject, fileSpec))
-                                          .refNameObject(mapRefNameObject(MapperUtil.getPojoName(inlineObject, fileSpec), true))
+                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .name(mediaTypeEntry.getKey())
+                                          .importName(getPojoName(inlineObject, fileSpec))
+                                          .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
-        } else if (StringUtils.isNotEmpty(value.getSchema().getType())
-                   && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(value.getSchema().getType())) {
+        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
+                   && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(value.getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(key)
-                                          .refNameObject(mapRefNameObject(defineTypeName(value.getSchema()), false))
+                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .name(mediaTypeEntry.getKey())
+                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(value.getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(key)
-                                          .importName(mapRefName(value.getSchema(), globalObject.getComponentsTypeMap()))
-                                          .refNameObject(mapRefNameObject(mapRefName(value.getSchema(), globalObject.getComponentsTypeMap()), true))
+                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .name(mediaTypeEntry.getKey())
+                                          .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .build());
         }
-      });
+      }
     }
     return contentObjects;
-  }
-
-  private static RefNameObject mapRefNameObject(final String refName, final Boolean checkImport) {
-    return RefNameObject.builder()
-                        .refName(refName)
-                        .checkImport(checkImport)
-                        .build();
-
   }
 
   private static String defineTypeName(final Schema schema) {
@@ -395,6 +386,12 @@ public class MapperPathUtil {
       authSecList = authentications;
     }
     return authSecList;
+  }
+
+  public static String getPojoName(final String namePojo, final FileSpec fileSpec) {
+    return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
+           + namePojo
+           + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");
   }
 
 }
