@@ -9,6 +9,8 @@ package net.coru.api.generator.plugin.openapi.template;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
@@ -110,9 +113,13 @@ public class TemplateFactory {
   private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
     final Template template = cfg.getTemplate(templateName);
 
-    final FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
+    if (!Files.exists(Path.of(path))) {
+      final FileWriter writer = new FileWriter(path);
+      template.process(root, writer);
+      writer.close();
+    } else {
+      throw new SCSMultiApiMavenPluginException("Packages of the fileSpecs cannot be the same.");
+    }
   }
 
   public final void setPackageName(final String packageName) {
