@@ -6,29 +6,6 @@
 
 package net.coru.api.generator.plugin;
 
-import static net.coru.api.generator.plugin.PluginConstants.DEFAULT_TARGET_PACKAGE;
-import static net.coru.api.generator.plugin.PluginConstants.GENERATED_SOURCES_PATH;
-
-import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
-import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
-import net.coru.api.generator.plugin.asyncapi.exception.KafkaTopicSeparatorException;
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
-import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
-import net.coru.api.generator.plugin.asyncapi.template.TemplateFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -40,10 +17,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Mojo(name = "asyncapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
-public class OpenAsyncMojo extends AbstractMojo {
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import freemarker.template.TemplateException;
+import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
+import net.coru.api.generator.plugin.asyncapi.exception.KafkaTopicSeparatorException;
+import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import net.coru.api.generator.plugin.asyncapi.template.TemplateFactory;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 
-  private static final String DEFAULT_ASYNCAPI_TARGET_PACKAGE = DEFAULT_TARGET_PACKAGE + ".asyncapi";
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@Mojo(name = "asyncapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+public final class OpenAsyncMojo extends AbstractMojo {
+
+  public static final String SUBSCRIBE = "subscribe";
+
+  public static final String PUBLISH = "publish";
+
+  public static final String OPERATION_ID = "operationId";
+
+  private static final String DEFAULT_ASYNCAPI_TARGET_PACKAGE = PluginConstants.DEFAULT_TARGET_PACKAGE + ".asyncapi";
 
   private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_TARGET_PACKAGE + ".model";
 
@@ -53,17 +58,11 @@ public class OpenAsyncMojo extends AbstractMojo {
 
   private static final String STREAM_BRIDGE_CLASS_NAME = "StreamBridgeProducer";
 
-  public static final String SUBSCRIBE = "subscribe";
-
-  public static final String PUBLISH = "publish";
-
-  public static final String OPERATION_ID = "operationId";
-
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
-  public MavenProject project;
+  private MavenProject project;
 
   @Parameter(property = "fileSpecs")
-  public List<FileSpec> fileSpecs;
+  private List<FileSpec> fileSpecs;
 
   private TemplateFactory templateFactory;
 
@@ -79,28 +78,28 @@ public class OpenAsyncMojo extends AbstractMojo {
   public void execute() {
     templateFactory = new TemplateFactory();
 
-    ObjectMapper om = new ObjectMapper(new YAMLFactory());
+    final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
     for (FileSpec fileParameter : fileSpecs) {
       setUpTemplate(fileParameter);
       processDuplicates(fileParameter);
 
-      Path ymlParentPath = Paths.get(fileParameter.getFilePath()).toAbsolutePath().getParent();
+      final Path ymlParentPath = Paths.get(fileParameter.getFilePath()).toAbsolutePath().getParent();
 
-      var file = new File(fileParameter.getFilePath());
+      final var file = new File(fileParameter.getFilePath());
       try {
-        var node = om.readTree(file);
-        var internalNode = node.get("channels");
+        final var node = om.readTree(file);
+        final var internalNode = node.get("channels");
 
-        Iterator<Map.Entry<String, JsonNode>> iter = internalNode.fields();
+        final Iterator<Map.Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
 
-          Map.Entry<String, JsonNode> entry = iter.next();
+          final Map.Entry<String, JsonNode> entry = iter.next();
 
-          JsonNode channel = entry.getValue();
+          final JsonNode channel = entry.getValue();
 
-          String operationId = getOperationId(channel);
-          JsonNode channelPayload = getChannelPayload(channel);
+          final String operationId = getOperationId(channel);
+          final JsonNode channelPayload = getChannelPayload(channel);
 
           if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
             processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
@@ -121,20 +120,26 @@ public class OpenAsyncMojo extends AbstractMojo {
         }
         templateFactory.fillTemplate();
         templateFactory.clearData();
-      } catch (Exception e) {
+      } catch (TemplateException | IOException e) {
         e.printStackTrace();
       }
     }
   }
 
-  private boolean isValidOperation(OperationParameterObject operation, String operationId, JsonNode channel, String channelType, boolean excludingOperationExists) {
-    return operation != null && (
-      (operation.getOperationIds() != null && operation.getOperationIds().contains(operationId)) ||
-      (operation.getOperationIds() == null && channel.has(channelType) && excludingOperationExists)
-    );
+  private boolean isValidOperation(
+    final OperationParameterObject operation, final String operationId, final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+    final boolean result;
+    if (operation != null) {
+      final List<String> operationIds = operation.getOperationIds();
+      result = operationIds.contains(operationId)
+               || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
+    } else {
+      result = false;
+    }
+    return result;
   }
 
-  private JsonNode getChannelPayload(JsonNode channel) {
+  private JsonNode getChannelPayload(final JsonNode channel) {
     JsonNode payload = null;
     if (channel.has(SUBSCRIBE)) {
       payload = channel.get(SUBSCRIBE);
@@ -144,8 +149,8 @@ public class OpenAsyncMojo extends AbstractMojo {
     return payload;
   }
 
-  private String getOperationId(JsonNode channel) {
-    String operationId;
+  private String getOperationId(final JsonNode channel) {
+    final String operationId;
     if (channel.has(SUBSCRIBE)) {
       operationId = channel.get(SUBSCRIBE).get(OPERATION_ID).asText();
     } else {
@@ -160,29 +165,29 @@ public class OpenAsyncMojo extends AbstractMojo {
     return operationId;
   }
 
-  private void setUpTemplate(FileSpec fileParameter) {
+  private void setUpTemplate(final FileSpec fileParameter) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassnames(fileParameter);
     processEntitiesPostfix(fileParameter);
   }
 
-  private void processFilePaths(FileSpec fileParameter) {
+  private void processFilePaths(final FileSpec fileParameter) {
     templateFactory.setSupplierFilePath(processPath(fileParameter.getSupplier()));
     templateFactory.setStreamBridgeFilePath(processPath(fileParameter.getStreamBridge()));
     templateFactory.setSubscribeFilePath(processPath(fileParameter.getConsumer()));
   }
 
-  private void processEntitiesPostfix(FileSpec fileParameter) {
-    templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null ?
-                                                 fileParameter.getSupplier().getEntitiesPostfix() : null);
-    templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null ?
-                                                     fileParameter.getStreamBridge().getEntitiesPostfix() : null);
-    templateFactory.setSubscribeEntitiesPostfix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getEntitiesPostfix() != null ?
-                                                  fileParameter.getConsumer().getEntitiesPostfix() : null);
+  private void processEntitiesPostfix(final FileSpec fileParameter) {
+    templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null
+                                                 ? fileParameter.getSupplier().getEntitiesPostfix() : null);
+    templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null
+                                                     ? fileParameter.getStreamBridge().getEntitiesPostfix() : null);
+    templateFactory.setSubscribeEntitiesPostfix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getEntitiesPostfix() != null
+                                                  ? fileParameter.getConsumer().getEntitiesPostfix() : null);
   }
 
-  private void processDuplicates(FileSpec fileParameter) {
+  private void processDuplicates(final FileSpec fileParameter) {
     OperationParameterObject operation;
     if (fileParameter.getConsumer() != null) {
       operation = fileParameter.getConsumer();
@@ -204,10 +209,10 @@ public class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private void checkClassPackageDuplicate(String className, String targetPackage, String defaultClassName) {
-    if (className != null && processedClassnames.contains(className) &&
-        targetPackage != null && processedTargetPackages.contains(targetPackage) &&
-        processedClassnames.lastIndexOf(className) == processedTargetPackages.lastIndexOf(targetPackage)) {
+  private void checkClassPackageDuplicate(final String className, final String targetPackage, final String defaultClassName) {
+    if (className != null && processedClassnames.contains(className)
+        && targetPackage != null && processedTargetPackages.contains(targetPackage)
+        && processedClassnames.lastIndexOf(className) == processedTargetPackages.lastIndexOf(targetPackage)) {
       throw new DuplicateClassException(className, targetPackage);
     } else {
       processedClassnames.add(className != null ? className : defaultClassName);
@@ -215,18 +220,18 @@ public class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private void processClassnames(FileSpec fileParameter) {
-    templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null ?
-                                           fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
-    templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null ?
-                                               fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
-    templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null ?
-                                            fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
+  private void processClassnames(final FileSpec fileParameter) {
+    templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null
+                                           ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
+    templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null
+                                               ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
+    templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null
+                                            ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
   }
 
-  private Path processPath(OperationParameterObject operationParameter) {
+  private Path processPath(final OperationParameterObject operationParameter) {
     Path path;
-    File[] pathList = Objects.requireNonNull(project.getBasedir().listFiles(targetFileFilter));
+    final File[] pathList = Objects.requireNonNull(project.getBasedir().listFiles(targetFileFilter));
     if (pathList.length > 0) {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(operationParameter));
     } else {
@@ -243,73 +248,75 @@ public class OpenAsyncMojo extends AbstractMojo {
     return path;
   }
 
-  private String convertPackageToTargetPath(OperationParameterObject operationParameter) {
-    String targetPackage = operationParameter != null ? operationParameter.getTargetPackage() : null;
-    String path;
+  private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
+    final String targetPackage = operationParameter != null ? operationParameter.getTargetPackage() : null;
+    final String path;
     if (targetPackage != null) {
-      path = GENERATED_SOURCES_PATH + targetPackage.replace(".", "/");
+      path = PluginConstants.GENERATED_SOURCES_PATH + targetPackage.replace(".", "/");
     } else if (project.getModel().getGroupId() != null) {
-      path = GENERATED_SOURCES_PATH + project.getModel().getGroupId().replace(".", "/");
+      path = PluginConstants.GENERATED_SOURCES_PATH + project.getModel().getGroupId().replace(".", "/");
     } else {
-      path = GENERATED_SOURCES_PATH + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
+      path = PluginConstants.GENERATED_SOURCES_PATH + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
     }
     return path;
   }
 
-  private void processPackage(FileSpec fileParameter) {
+  private void processPackage(final FileSpec fileParameter) {
     templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
     templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
     templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
   }
 
-  private String evaluatePackage(OperationParameterObject operation) {
+  private String evaluatePackage(final OperationParameterObject operation) {
+    final String evaluated;
     if (operation != null && operation.getTargetPackage() != null) {
-      return operation.getTargetPackage();
+      evaluated = operation.getTargetPackage();
     } else if (project.getModel().getGroupId() != null) {
-      return project.getModel().getGroupId();
+      evaluated = project.getModel().getGroupId();
     } else {
-      return DEFAULT_ASYNCAPI_TARGET_PACKAGE;
+      evaluated = DEFAULT_ASYNCAPI_TARGET_PACKAGE;
     }
+    return evaluated;
   }
 
-  private void processSupplierMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
+  private void processSupplierMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
-  private void processStreamBridgeMethod(JsonNode channel, String modelPackage, Path ymlParentPath, String channelName) {
-    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
-    String regex = "[a-zA-Z0-9\\.\\-]*";
+  private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName) {
+    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
+    final String regex = "[a-zA-Z0-9\\.\\-]*";
     if (!channelName.matches(regex)) {
       throw new KafkaTopicSeparatorException(channelName);
     }
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
   }
 
-  private void processSubscribeMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
+  private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 
-  private Pair<String, String> processMethod(JsonNode channel, String modelPackage, Path ymlParentPath) {
-    JsonNode message = channel.get("message");
-    String operationId = channel.get(OPERATION_ID).asText();
+  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+    final JsonNode message = channel.get("message");
+    final String operationId = channel.get(OPERATION_ID).asText();
     String namespace = "";
     if (message.get("$ref") != null && message.get("$ref").asText().startsWith("#")) {
-      String[] pathToObject = message.get("$ref").asText().split("/");
+      final String[] pathToObject = message.get("$ref").asText().split("/");
       namespace = processModelPackage(pathToObject[pathToObject.length - 1], modelPackage);
     } else if (message.get("$ref") != null) {
       String avroFilePath = message.get("$ref").asText();
       if (message.get("$ref").asText().startsWith("/")) {
         avroFilePath = avroFilePath.replaceFirst("/", "");
       }
-      File avroFile = ymlParentPath.resolve(avroFilePath).toFile();
-      ObjectMapper mapper = new ObjectMapper();
+      final File avroFile = ymlParentPath.resolve(avroFilePath).toFile();
+      final ObjectMapper mapper = new ObjectMapper();
       try {
-        JsonNode fileTree = mapper.readTree(avroFile);
-        String fullNamespace = fileTree.get("namespace").asText() + "." + fileTree.get("name").asText();
+        final JsonNode fileTree = mapper.readTree(avroFile);
+        final String fullNamespace = fileTree.get("namespace").asText() + "." + fileTree.get("name").asText();
         namespace = processModelPackage(fullNamespace, modelPackage);
-      } catch (IOException e) {
+      } catch (final IOException e) {
         e.printStackTrace();
       }
     } else {
@@ -318,12 +325,12 @@ public class OpenAsyncMojo extends AbstractMojo {
     return new MutablePair<>(operationId, namespace);
   }
 
-  private String processModelPackage(String extractedPackage, String modelPackage) {
-    String processedPackage;
+  private String processModelPackage(final String extractedPackage, final String modelPackage) {
+    final String processedPackage;
     if (modelPackage != null) {
       if (extractedPackage.contains(".")) {
-        var splittedPackage = extractedPackage.split("\\.");
-        var className = splittedPackage[splittedPackage.length - 1];
+        final var splittedPackage = extractedPackage.split("\\.");
+        final var className = splittedPackage[splittedPackage.length - 1];
 
         processedPackage = modelPackage + "." + className;
       } else {

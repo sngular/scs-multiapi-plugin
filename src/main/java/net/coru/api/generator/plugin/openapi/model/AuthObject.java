@@ -6,15 +6,34 @@
 
 package net.coru.api.generator.plugin.openapi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthObject {
 
-  private List<String> securityRequirements;
+  private List<String> securityRequirements = new ArrayList<>();
 
+  public static class AuthObjectBuilder {
+
+    private final List<String> securityRequirements = new ArrayList<>();
+
+    public AuthObjectBuilder securityRequirements(final List<String> securityRequirements) {
+      this.securityRequirements.addAll(securityRequirements);
+      return this;
+    }
+
+    public AuthObjectBuilder securityRequirement(final String securityRequirement) {
+      this.securityRequirements.add(securityRequirement);
+      return this;
+    }
+  }
 }

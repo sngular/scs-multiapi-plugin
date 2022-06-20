@@ -22,12 +22,17 @@ import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class OpenApiUtil {
 
-  public static HashMap<String, HashMap<String, PathItem>> mapApiGroups(OpenAPI openAPI, Boolean groupByTags) {
+  private OpenApiUtil() {}
+
+  public static Map<String, HashMap<String, PathItem>> mapApiGroups(final OpenAPI openAPI, final Boolean groupByTags) {
     var mapApis = new HashMap<String, HashMap<String, PathItem>>();
 
     if (!openAPI.getPaths().isEmpty()) {
@@ -37,16 +42,13 @@ public class OpenApiUtil {
     return mapApis;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByTags(OpenAPI openAPI) {
+  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByTags(final OpenAPI openAPI) {
 
-    var mapApis = new HashMap<String, HashMap<String, PathItem>>();
+    final var mapApis = new HashMap<String, HashMap<String, PathItem>>();
     for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
-      var mapPathItemsByTag = getMapPathItemsByTag(openAPIGetPathsEntry.getValue());
+      final var mapPathItemsByTag = getMapPathItemsByTag(openAPIGetPathsEntry.getValue());
       for (Entry<String, PathItem> mapPathItems : mapPathItemsByTag.entrySet()) {
-        if (!mapApis.containsKey(mapPathItems.getKey())) {
-          mapApis.put(mapPathItems.getKey(), new HashMap<>());
-        }
-        mapApis.get(mapPathItems.getKey()).put(openAPIGetPathsEntry.getKey(), mapPathItems.getValue());
+        mapApis.compute(mapPathItems.getKey(), (key, value) -> initOrInsert(openAPIGetPathsEntry, mapPathItems, value));
       }
     }
 
@@ -54,58 +56,63 @@ public class OpenApiUtil {
 
   }
 
-  private static HashMap<String, PathItem> getMapPathItemsByTag(PathItem pathItem) {
-    var mapByTag = new HashMap<String, PathItem>();
+  private static HashMap<String, PathItem> initOrInsert(
+    final Entry<String, PathItem> openAPIGetPathsEntry, final Entry<String, PathItem> mapPathItems, final HashMap<String, PathItem> value) {
+    var newValue = value;
+    if (Objects.isNull(newValue)) {
+      newValue = new HashMap<>();
+    }
+    newValue.put(openAPIGetPathsEntry.getKey(), mapPathItems.getValue());
+
+    return newValue;
+  }
+
+  private static HashMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
+    final var mapByTag = new HashMap<String, PathItem>();
 
     for (Entry<HttpMethod, Operation> operation : pathItem.readOperationsMap().entrySet()) {
-      if (null != operation.getValue().getTags() && !operation.getValue().getTags().isEmpty()) {
-        var pathItemClone = pathItemOperationsClear(pathItem);
-        if (!mapByTag.containsKey(operation.getValue().getTags().get(0))) {
-          mapByTag.put(operation.getValue().getTags().get(0), pathItemClone);
-        }
-        mapByTag.get(operation.getValue().getTags().get(0)).operation(operation.getKey(), operation.getValue());
+      if (CollectionUtils.isNotEmpty(operation.getValue().getTags())) {
+        final var pathItemClone = pathItemOperationsClear(pathItem);
+        final var tag = operation.getValue().getTags().get(0);
+        mapByTag.putIfAbsent(tag, pathItemClone);
+        mapByTag.get(tag).operation(operation.getKey(), operation.getValue());
       }
     }
     return mapByTag;
   }
 
-  private static PathItem pathItemOperationsClear(PathItem pathItem) {
-    var pathItemClone = new PathItem();
-    pathItemClone = pathItem;
-    pathItemClone.operation(HttpMethod.GET, null);
-    pathItemClone.operation(HttpMethod.POST, null);
-    pathItemClone.operation(HttpMethod.DELETE, null);
-    pathItemClone.operation(HttpMethod.PATCH, null);
-    pathItemClone.operation(HttpMethod.HEAD, null);
-    pathItemClone.operation(HttpMethod.OPTIONS, null);
-    pathItemClone.operation(HttpMethod.TRACE, null);
-    pathItemClone.operation(HttpMethod.PUT, null);
+  private static PathItem pathItemOperationsClear(final PathItem pathItem) {
+    pathItem.operation(HttpMethod.GET, null);
+    pathItem.operation(HttpMethod.POST, null);
+    pathItem.operation(HttpMethod.DELETE, null);
+    pathItem.operation(HttpMethod.PATCH, null);
+    pathItem.operation(HttpMethod.HEAD, null);
+    pathItem.operation(HttpMethod.OPTIONS, null);
+    pathItem.operation(HttpMethod.TRACE, null);
+    pathItem.operation(HttpMethod.PUT, null);
 
-    return pathItemClone;
+    return pathItem;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByUrl(OpenAPI openAPI) {
-    var mapByUrl = new HashMap<String, HashMap<String, PathItem>>();
+  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByUrl(final OpenAPI openAPI) {
+    final var mapByUrl = new HashMap<String, HashMap<String, PathItem>>();
 
     for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
-      String[] pathName = openAPIGetPathsEntry.getKey().split("/");
-      if (!mapByUrl.containsKey(pathName[1])) {
-        mapByUrl.put(pathName[1], new HashMap<>());
-      }
+      final String[] pathName = openAPIGetPathsEntry.getKey().split("/");
+      mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
       mapByUrl.get(pathName[1]).put(openAPIGetPathsEntry.getKey(), openAPIGetPathsEntry.getValue());
     }
 
     return mapByUrl;
   }
 
-  public static OpenAPI getPojoFromSwagger(FileSpec fileSpec) throws MojoExecutionException {
-    OpenAPI openAPI;
+  public static OpenAPI getPojoFromSwagger(final FileSpec fileSpec) throws MojoExecutionException {
+    final OpenAPI openAPI;
     try {
-      SwaggerParseResult result = new OpenAPIParser().readLocation(fileSpec.getInputSpec(), null, null);
+      final SwaggerParseResult result = new OpenAPIParser().readLocation(fileSpec.getInputSpec(), null, null);
       openAPI = result.getOpenAPI();
-
-    } catch (Exception e) {
-      throw new MojoExecutionException("Code generation failed when parser the .yaml file");
+    } catch (final ReadContentException e) {
+      throw new MojoExecutionException("Code generation failed when parser the .yaml file ");
     }
 
     if (openAPI == null) {
@@ -115,24 +122,22 @@ public class OpenApiUtil {
     return openAPI;
   }
 
-  public static List<String> getListComponentsObjects(OpenAPI openAPI) {
-    Components components = openAPI.getComponents();
-    var listObject = new ArrayList<String>();
+  public static List<String> getListComponentsObjects(final OpenAPI openAPI) {
+    final Components components = openAPI.getComponents();
+    final var listObject = new ArrayList<String>();
 
-    if (null == components.getSchemas() || components.getSchemas().isEmpty()) {
-      return listObject;
+    if (MapUtils.isNotEmpty(components.getSchemas())) {
+      components.getSchemas().forEach((key, value) -> {
+        if (value.getType().equals("object")) {
+          listObject.add(key);
+        }
+      });
     }
-    components.getSchemas().forEach((key, value) -> {
-      if (value.getType().equals("object")) {
-        listObject.add(key);
-      }
-    });
-
     return listObject;
   }
 
-  public static Map<String, Schema> processBasicSchemas(OpenAPI openApi) {
-    var basicSchemaMap = new HashMap<String, Schema>();
+  public static Map<String, Schema> processBasicSchemas(final OpenAPI openApi) {
+    final var basicSchemaMap = new HashMap<String, Schema>();
 
     for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {
       if (Objects.nonNull(pathItem.getValue().getGet())) {
@@ -155,22 +160,30 @@ public class OpenApiUtil {
     return basicSchemaMap;
   }
 
-  private static void processContentForBasicSchemas(HashMap<String, Schema> basicSchemaMap, Operation operation) {
+  private static void processContentForBasicSchemas(final HashMap<String, Schema> basicSchemaMap, final Operation operation) {
 
+    processOperationRequestBody(basicSchemaMap, operation);
+    processOperationResponses(basicSchemaMap, operation);
+  }
+
+  private static void processOperationRequestBody(final HashMap<String, Schema> basicSchemaMap, final Operation operation) {
     if (Objects.nonNull(operation.getRequestBody()) && Objects.nonNull(operation.getRequestBody().getContent())) {
-      String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
+      final String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
       operation.getRequestBody().getContent().forEach((key, value) -> {
-        if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
+        if (value.getSchema().get$ref() == null || Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null) {
           basicSchemaMap.put("InlineObject" + operationIdWithCap,
                              value.getSchema());
         }
       });
     }
+  }
+
+  private static void processOperationResponses(final HashMap<String, Schema> basicSchemaMap, final Operation operation) {
     for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
       if (Objects.nonNull(response.getValue().getContent())) {
         response.getValue().getContent().forEach((key, value) -> {
-          if (value.getSchema().get$ref() == null || (Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null)) {
-            String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
+          if (value.getSchema().get$ref() == null || Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null) {
+            final String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
             basicSchemaMap.put("InlineResponse" + response.getKey() + operationIdWithCap,
                                value.getSchema());
           }
