@@ -111,7 +111,6 @@ public class OpenApiUtil {
     try {
       final SwaggerParseResult result = new OpenAPIParser().readLocation(fileSpec.getInputSpec(), null, null);
       openAPI = result.getOpenAPI();
-
     } catch (final ReadContentException e) {
       throw new MojoExecutionException("Code generation failed when parser the .yaml file ");
     }

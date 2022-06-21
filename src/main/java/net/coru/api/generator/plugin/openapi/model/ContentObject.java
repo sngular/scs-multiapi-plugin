@@ -19,7 +19,7 @@ public class ContentObject {
 
   private String name;
 
-  private RefNameObject refNameObject;
+  private String refName;
 
   private String typeData;
 
