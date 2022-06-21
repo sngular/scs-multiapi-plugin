@@ -21,13 +21,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import freemarker.template.TemplateException;
-import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import net.coru.api.generator.plugin.asyncapi.exception.ChannelNameException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
-import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
-import net.coru.api.generator.plugin.asyncapi.exception.KafkaTopicSeparatorException;
 import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
 import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import net.coru.api.generator.plugin.asyncapi.template.TemplateFactory;
+import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import net.coru.api.generator.plugin.exception.OperationException;
+import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -237,12 +238,12 @@ public final class OpenAsyncMojo extends AbstractMojo {
     } else {
       path = project.getBasedir().toPath().resolve("target");
       if (!path.toFile().mkdirs()) {
-        throw new FileSystemException("File System error trying to create neccesary folder " + path.toFile());
+        throw new FileSystemException(path.toFile().getName());
       }
       path = path.resolve(convertPackageToTargetPath(operationParameter));
     }
     if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
-      throw new FileSystemException("File System error trying to create neccesary folder " + path.toFile());
+      throw new FileSystemException(path.toFile().getName());
     }
     project.addCompileSourceRoot(path.toString());
     return path;
@@ -288,7 +289,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     final String regex = "[a-zA-Z0-9\\.\\-]*";
     if (!channelName.matches(regex)) {
-      throw new KafkaTopicSeparatorException(channelName);
+      throw new ChannelNameException(channelName);
     }
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
   }

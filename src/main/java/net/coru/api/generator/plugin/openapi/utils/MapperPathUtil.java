@@ -27,7 +27,9 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.exception.DuplicateOpenApiParameters;
+import net.coru.api.generator.plugin.exception.OperationException;
+import net.coru.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
 import net.coru.api.generator.plugin.openapi.model.ContentObject;
@@ -114,7 +116,7 @@ public class MapperPathUtil {
 
       for (OperationObject operationObject : pathObject.getOperationObjects()) {
         if (!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()) {
-          throw new SCSMultiApiMavenPluginException("Please don´t duplicate parameters in both Operation and Path");
+          throw new DuplicateOpenApiParameters();
         }
       }
       pathObjects.add(pathObject);
@@ -164,7 +166,7 @@ public class MapperPathUtil {
 
   private static String mapOperationId(final String operationId, final List<String> operationIdList) {
     if (operationIdList.contains(operationId)) {
-      throw new SCSMultiApiMavenPluginException("Do not write the same operationId twice");
+      throw new DuplicatedOperationException(operationId);
     } else {
       operationIdList.add(operationId);
       return operationId;

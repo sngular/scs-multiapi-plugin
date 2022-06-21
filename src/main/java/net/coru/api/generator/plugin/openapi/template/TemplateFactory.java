@@ -22,7 +22,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
-import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
@@ -117,7 +117,7 @@ public class TemplateFactory {
       template.process(root, writer);
       writer.close();
     } else {
-      throw new SCSMultiApiMavenPluginException("Packages of the fileSpecs cannot be the same.");
+      throw new OverwritingApiFilesException();
     }
   }
 
