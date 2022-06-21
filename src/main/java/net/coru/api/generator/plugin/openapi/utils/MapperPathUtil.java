@@ -6,7 +6,6 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +59,18 @@ public class MapperPathUtil {
                        .build();
   }
 
+  private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
+    final List<String> authSecList;
+    if (null != securityRequirementList
+        && !securityRequirementList.isEmpty()) {
+      authSecList = new ArrayList<>();
+      securityRequirementList.forEach(securityRequirement -> securityRequirement.forEach((key, value) -> authSecList.add(key)));
+    } else {
+      authSecList = authentications;
+    }
+    return authSecList;
+  }
+
   private static HashMap<String, String> getMapComponentsTypes(final Components components, final FileSpec fileSpec) {
     final var mapComponents = new HashMap<String, String>();
 
@@ -89,16 +100,17 @@ public class MapperPathUtil {
     return dataType;
   }
 
-  public static List<PathObject> mapPathObjects(final OpenAPI openAPI, final FileSpec fileSpec, final Entry<String, HashMap<String, PathItem>> path,
+  public static List<PathObject> mapPathObjects(
+      final OpenAPI openAPI, final FileSpec fileSpec, final Entry<String, HashMap<String, PathItem>> path,
       final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()
-                                        .pathName(pathItem.getKey())
-                                        .globalObject(globalObject)
-                                        .parameterObjects(mapParameterObjects(openAPI, pathItem.getValue().getParameters(), fileSpec))
-                                        .operationObjects(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
-                                        .build();
+                                              .pathName(pathItem.getKey())
+                                              .globalObject(globalObject)
+                                              .parameterObjects(mapParameterObjects(openAPI, pathItem.getValue().getParameters(), fileSpec))
+                                              .operationObjects(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
+                                              .build();
 
       for (OperationObject operationObject : pathObject.getOperationObjects()) {
         if (!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()) {
@@ -133,7 +145,8 @@ public class MapperPathUtil {
     return operationObjects;
   }
 
-  private static OperationObject createOperation(final OpenAPI openAPI, final Operation operation, final String operationType,
+  private static OperationObject createOperation(
+      final OpenAPI openAPI, final Operation operation, final String operationType,
       final FileSpec fileSpec, final GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
@@ -367,18 +380,6 @@ public class MapperPathUtil {
 
   private static Boolean checkIfOperationIsNull(final Operation operation) {
     return Objects.nonNull(operation);
-  }
-
-  private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
-    final List<String> authSecList;
-    if (null != securityRequirementList
-        && !securityRequirementList.isEmpty()) {
-      authSecList = new ArrayList<>();
-      securityRequirementList.forEach(securityRequirement -> securityRequirement.forEach((key, value) -> authSecList.add(key)));
-    } else {
-      authSecList = authentications;
-    }
-    return authSecList;
   }
 
   public static String getPojoName(final String namePojo, final FileSpec fileSpec) {
