@@ -44,10 +44,10 @@
               <inputSpec>api-test.yml</inputSpec>
               <apiPackage>net.coru.multifileplugin.testclientpackage</apiPackage>
               <modelPackage>net.coru.multifileplugin.testclientpackage.model</modelPackage>
+              <clientPackage>net.coru.multifileplugin.testclientpackage.client</clientPackage>
               <callMode>true</callMode>
             </fileSpec>
           </fileSpecs>
-          <clientPackage>net.coru.multifileplugin.testclientpackage.client</clientPackage>
         </configuration>
       </plugin>
     </plugins>
