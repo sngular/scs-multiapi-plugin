@@ -26,6 +26,8 @@ public class PathObject {
 
   private List<OperationObject> operationObjects = new ArrayList<>();
 
+  private List<ParameterObject> parameterObjects = new ArrayList<>();
+
   public static class PathObjectBuilder {
 
     private List<OperationObject> operationObjects = new ArrayList<>();
@@ -40,8 +42,11 @@ public class PathObject {
       return this;
     }
 
-  }
+    public PathObjectBuilder parameterObject(final ParameterObject parameterObject) {
+      this.parameterObjects.add(parameterObject);
+      return this;
+    }
 
-  private List<ParameterObject> parameterObjects;
+  }
 
 }

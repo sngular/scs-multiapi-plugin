@@ -85,9 +85,8 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplate(
-    final String filePathToSave, final FileSpec fileSpec, final String className,
-    final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
+  public final void fillTemplate(final String filePathToSave, final FileSpec fileSpec, final String className,
+      final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("itemHashMap", itemHashMap);

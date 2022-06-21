@@ -163,7 +163,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
       templateFactory.addPathItems(apisEntry.getValue());
-      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(fileSpec, apisEntry, globalObject);
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, fileSpec, apisEntry, globalObject);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
@@ -258,9 +258,9 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processModelsWhenOverWriteIsTrue(
-    final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
-    final List<String> listObjectsToCreate, final String modelPackage,
-    final Map<String, Schema> basicSchemaMap) {
+      final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
+      final List<String> listObjectsToCreate, final String modelPackage,
+      final Map<String, Schema> basicSchemaMap) {
 
     for (String pojoName : listObjectsToCreate) {
       try {
@@ -282,8 +282,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void processWhenOverwriteModelIsFalse(
-    final FileSpec fileSpec, final OpenAPI openAPI,
-    final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema> basicSchemaMap) {
+      final FileSpec fileSpec, final OpenAPI openAPI,
+      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema> basicSchemaMap) {
 
     for (String objectToCreate : listObjectsToCreate) {
       final String objectAndModelPackage = objectToCreate + modelPackage;

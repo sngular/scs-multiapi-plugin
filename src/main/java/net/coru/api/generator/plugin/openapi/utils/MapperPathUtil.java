@@ -6,6 +6,7 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,6 @@ import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -74,7 +74,7 @@ public class MapperPathUtil {
     return mapComponents;
   }
 
-  private static String checkSchemaType(final Schema schema, final FileSpec fileSpec) {
+  private static String checkSchemaType(final Schema<?> schema, final FileSpec fileSpec) {
     var dataType = schema.getType();
 
     if (schema instanceof ArraySchema) {
@@ -89,18 +89,19 @@ public class MapperPathUtil {
     return dataType;
   }
 
-  public static ArrayList<PathObject> mapPathObjects(final OpenAPI openAPI, FileSpec fileSpec, Entry<String, HashMap<String, PathItem>> path, GlobalObject globalObject) {
-    ArrayList<PathObject> pathObjects = new ArrayList<>();
+  public static List<PathObject> mapPathObjects(final OpenAPI openAPI, final FileSpec fileSpec, final Entry<String, HashMap<String, PathItem>> path,
+      final GlobalObject globalObject) {
+    final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
-      PathObject pathObject = PathObject.builder()
+      final PathObject pathObject = PathObject.builder()
                                         .pathName(pathItem.getKey())
-                                        .globalObjects(globalObject)
+                                        .globalObject(globalObject)
                                         .parameterObjects(mapParameterObjects(openAPI, pathItem.getValue().getParameters(), fileSpec))
-                                        .operationObject(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
+                                        .operationObjects(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
                                         .build();
 
-      for ( OperationObject operationObject : pathObject.getOperationObject()){
-        if(!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()){
+      for (OperationObject operationObject : pathObject.getOperationObjects()) {
+        if (!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()) {
           throw new SCSMultiApiMavenPluginException("Please don´t duplicate parameters in both Operation and Path");
         }
       }
@@ -110,7 +111,7 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(final FileSpec fileSpec, final Entry<String, PathItem> path, final GlobalObject globalObject) {
+  private static List<OperationObject> mapOperationObject(final OpenAPI openAPI, final FileSpec fileSpec, final Entry<String, PathItem> path, final GlobalObject globalObject) {
     final List<OperationObject> operationObjects = new ArrayList<>();
     final List<String> operationIdList = new ArrayList<>();
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
@@ -132,7 +133,8 @@ public class MapperPathUtil {
     return operationObjects;
   }
 
-  private static OperationObject createOperation(final OpenAPI openAPI, final Operation operation, final String operationType, final FileSpec fileSpec, final GlobalObject globalObject, final List<String> operationIdList) {
+  private static OperationObject createOperation(final OpenAPI openAPI, final Operation operation, final String operationType,
+      final FileSpec fileSpec, final GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
@@ -141,7 +143,7 @@ public class MapperPathUtil {
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation, globalObject))
                           .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec))
-                          .security(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
+                          .securities(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
                           .build();
@@ -203,47 +205,47 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, FileSpec fileSpec) {
-    List<ParameterObject> parameterObjects = new ArrayList<>();
+  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, final FileSpec fileSpec) {
+    final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
-      parameters.forEach(parameter -> {
-        if(Objects.nonNull(parameter.get$ref())){
-          String[] wholeRef = parameter.get$ref().split("/");
-          String ref = wholeRef[wholeRef.length-1];
-          Parameter refParameter = openAPI.getComponents().getParameters().get(ref);
+      for (Parameter parameter : parameters) {
+        if (Objects.nonNull(parameter.get$ref())) {
+          final String[] wholeRef = parameter.get$ref().split("/");
+          final String ref = wholeRef[wholeRef.length - 1];
+          final Parameter refParameter = openAPI.getComponents().getParameters().get(ref);
           parameterObjects.add(ParameterObject.builder()
-                                 .name(refParameter.getName())
-                                 .required(refParameter.getRequired())
-                                 .description(refParameter.getDescription())
-                                 .in(refParameter.getDescription())
-                                 .className(getSimpleType(refParameter.getSchema(), fileSpec))
-                                 .isCollection(refParameter.getSchema().getType().equalsIgnoreCase(ARRAY))
-                                 .build());
+                                              .name(refParameter.getName())
+                                              .required(refParameter.getRequired())
+                                              .description(refParameter.getDescription())
+                                              .in(refParameter.getDescription())
+                                              .className(MapperUtil.getSimpleType(refParameter.getSchema(), fileSpec))
+                                              .isCollection(refParameter.getSchema().getType().equalsIgnoreCase(ARRAY))
+                                              .build());
         } else {
           parameterObjects.add(ParameterObject.builder()
                                               .name(parameter.getName())
                                               .required(parameter.getRequired())
                                               .description(parameter.getDescription())
                                               .in(parameter.getIn())
-                                              .className(getSimpleType(parameter.getSchema(), fileSpec))
+                                              .className(MapperUtil.getSimpleType(parameter.getSchema(), fileSpec))
                                               .isCollection(parameter.getSchema().getType().equalsIgnoreCase(ARRAY))
                                               .build());
         }
-      });
+      }
     }
     return parameterObjects;
   }
 
   private static List<ResponseObject> mapResponseObject(final FileSpec fileSpec, final Operation operation, final GlobalObject globalObject) {
-    List<ResponseObject> responseObjects = new ArrayList<>();
-    ApiResponses responses = operation.getResponses();
+    final List<ResponseObject> responseObjects = new ArrayList<>();
+    final ApiResponses responses = operation.getResponses();
     if (Objects.nonNull(responses)) {
       responses.forEach((key, value) -> {
         final String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
         responseObjects.add(ResponseObject.builder()
-                                          .responseName(response.getKey())
-                                          .description(response.getValue().getDescription())
-                                          .contentObject(mapContentObject(fileSpec, response.getValue().getContent(), "InlineResponse" + response.getKey() + operationIdWithCap, globalObject))
+                                          .responseName(key)
+                                          .description(value.getDescription())
+                                          .contentObjects(mapContentObject(fileSpec, value.getContent(), "InlineResponse" + key + operationIdWithCap, globalObject))
                                           .build());
       });
     }
@@ -266,7 +268,7 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .refName((defineTypeName(mediaTypeEntry.getValue().getSchema())))
+                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
@@ -281,8 +283,8 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
-  private static String defineTypeName(final Schema schema) {
-    String typeName = "";
+  private static String defineTypeName(final Schema<?> schema) {
+    final String typeName;
     switch (schema.getType()) {
       case "integer":
         typeName = getIntegerFormat(schema);
@@ -301,7 +303,7 @@ public class MapperPathUtil {
     return typeName;
   }
 
-  private static String getIntegerFormat(final Schema schema) {
+  private static String getIntegerFormat(final Schema<?> schema) {
     String typeName = "";
     if ("int32".equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
       typeName = "Integer";
@@ -311,7 +313,7 @@ public class MapperPathUtil {
     return typeName;
   }
 
-  private static String getNumberFormat(final Schema schema) {
+  private static String getNumberFormat(final Schema<?> schema) {
     String typeName = "";
     if ("float".equalsIgnoreCase(schema.getFormat())) {
       typeName = "Float";
@@ -323,12 +325,12 @@ public class MapperPathUtil {
     return typeName;
   }
 
-  private static String mapDataType(final Schema schema, final Map<String, String> componentsTypes) {
+  private static String mapDataType(final Schema<?> schema, final Map<String, String> componentsTypes) {
     final var type = getSchemaType(schema, componentsTypes);
     return StringUtils.isNotBlank(type) ? type : "";
   }
 
-  private static String getSchemaType(final Schema schema, final Map<String, String> componentsTypes) {
+  private static String getSchemaType(final Schema<?> schema, final Map<String, String> componentsTypes) {
     String dataType = schema.getType();
 
     if (!StringUtils.isNotBlank(dataType) && Objects.nonNull(schema.get$ref())) {
@@ -338,7 +340,7 @@ public class MapperPathUtil {
     return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith("map") ? "map" : dataType;
   }
 
-  private static String mapRefName(final Schema schema, final Map<String, String> componentsTypes) {
+  private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes) {
 
     var refSchema = "";
 
