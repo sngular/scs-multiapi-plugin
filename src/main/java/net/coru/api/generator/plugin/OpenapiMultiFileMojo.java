@@ -106,7 +106,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(fileSpec);
     final String clientPackage = fileSpec.getClientPackage();
 
-    if (fileSpec.getCallMode()) {
+    if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
       templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
       isWebClient = fileSpec.getIsReactive();
@@ -126,10 +126,10 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       final String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE, false);
       project.addCompileSourceRoot(clientPath);
       try {
-        if (isWebClient) {
+        if (Boolean.TRUE.equals(isWebClient)) {
           templateFactory.fillTemplateWebClient(clientPath);
         }
-        if (isRestClient) {
+        if (Boolean.TRUE.equals(isRestClient)) {
           templateFactory.fillTemplateRestClient(clientPath);
         }
         createAuthTemplates(fileSpec);
@@ -172,7 +172,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
         e.printStackTrace();
       }
 
-      if (fileSpec.getCallMode()) {
+      if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
         addAuthentications(authObject);
       }
     }
@@ -250,7 +250,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       path = PluginConstants.GENERATED_SOURCES_PATH + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
-      final String pathDefault = isModel ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_TARGET_PACKAGE;
+      final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_TARGET_PACKAGE;
       path = PluginConstants.GENERATED_SOURCES_PATH + pathDefault.replaceAll("\\.", "/");
     }
     return path;
@@ -259,12 +259,13 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void processModelsWhenOverWriteIsTrue(
       final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
       final List<String> listObjectsToCreate, final String modelPackage,
-      final Map<String, Schema> basicSchemaMap) {
+      final Map<String, Schema<?>> basicSchemaMap) {
 
     for (String pojoName : listObjectsToCreate) {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName), pojoName, fileSpec, modelPackage));
+            MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName),
+                                                         StringUtils.capitalize(pojoName), fileSpec, modelPackage));
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
@@ -282,7 +283,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void processWhenOverwriteModelIsFalse(
       final FileSpec fileSpec, final OpenAPI openAPI,
-      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema> basicSchemaMap) {
+      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) {
 
     for (String objectToCreate : listObjectsToCreate) {
       final String objectAndModelPackage = objectToCreate + modelPackage;
@@ -291,7 +292,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
         try {
           templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
                                              MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(objectToCreate),
-                                                                                          objectToCreate, fileSpec, modelPackage));
+                                                                                          StringUtils.capitalize(objectToCreate), fileSpec, modelPackage));
         } catch (IOException | TemplateException e) {
           e.printStackTrace();
         }
@@ -299,9 +300,9 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
         throw new SCSMultiApiMavenPluginException("OverWriteModel is set to false, please don´t duplicate Models. The model that has been duplicated is: " + objectToCreate);
       }
     }
-    for (Entry<String, Schema> entry : basicSchemaMap.entrySet()) {
+    for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
-      final Schema basicSchema = entry.getValue();
+      final Schema<?> basicSchema = entry.getValue();
       if (!overwriteModelList.add(schemaName + modelPackage)) {
         throw new SCSMultiApiMavenPluginException("OverWriteModel is set to false, please don´t duplicate Models. The model that has been duplicated is: " + schemaName);
       }

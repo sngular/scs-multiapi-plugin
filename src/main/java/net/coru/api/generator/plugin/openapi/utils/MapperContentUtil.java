@@ -42,7 +42,7 @@ public class MapperContentUtil {
     final var listHashMap = new HashMap<String, List<String>>();
     final var importList = new ArrayList<String>();
 
-    fieldObjectList.forEach(fieldObject -> {
+    for (SchemaFieldObject fieldObject : fieldObjectList) {
       if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
         if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
           listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
@@ -51,14 +51,13 @@ public class MapperContentUtil {
         }
       }
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
-        listHashMap.put(fieldObject.getImportClass(), List.of(modelPackage + "." + fieldObject.getImportClass()));
+        listHashMap.put(StringUtils.capitalize(fieldObject.getImportClass()), List.of(modelPackage + "." + StringUtils.capitalize(fieldObject.getImportClass())));
       }
-    });
+    }
 
     if (!listHashMap.isEmpty()) {
       listHashMap.forEach((key, value) -> importList.addAll(value));
     }
-
     return importList;
   }
 

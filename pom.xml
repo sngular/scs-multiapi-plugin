@@ -4,7 +4,7 @@
 
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.7.0</version>
+  <version>1.8.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -563,26 +563,6 @@
           <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
