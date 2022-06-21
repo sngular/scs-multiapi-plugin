@@ -8,7 +8,7 @@ package net.coru.api.generator.plugin.openapi.model;
 
 import java.util.Set;
 
-public class BasicTypeConstants {
+public final class BasicTypeConstants {
 
   public static final String NUMBER = "number";
 

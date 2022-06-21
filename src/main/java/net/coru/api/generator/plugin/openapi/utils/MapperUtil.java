@@ -24,7 +24,9 @@ public class MapperUtil {
 
   public static final String LONG = "long";
 
-  public static String getSimpleType(Schema schema, FileSpec fileSpec) {
+  private MapperUtil() {}
+
+  public static String getSimpleType(final Schema schema, final FileSpec fileSpec) {
     String type = "";
     if (NUMBER.equalsIgnoreCase(schema.getType())) {
       if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
@@ -41,7 +43,7 @@ public class MapperUtil {
         type = INTEGER;
       }
     } else if (Objects.nonNull(schema.get$ref())) {
-      String[] pathObjectRef = schema.get$ref().split("/");
+      final String[] pathObjectRef = schema.get$ref().split("/");
       type = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
     } else {
       type = schema.getType();
@@ -49,36 +51,36 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getTypeMap(MapSchema mapSchema, FileSpec fileSpec) {
+  public static String getTypeMap(final MapSchema mapSchema, final FileSpec fileSpec) {
     var typeMap = "";
     if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
       typeMap = "String";
     } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
       typeMap = "Integer";
     } else {
-      Schema schema = (Schema) mapSchema.getAdditionalProperties();
+      final Schema schema = (Schema) mapSchema.getAdditionalProperties();
       if (StringUtils.isNotBlank(schema.get$ref())) {
-        String[] pathObjectRef = schema.get$ref().split("/");
+        final String[] pathObjectRef = schema.get$ref().split("/");
         typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
       }
     }
     return typeMap;
   }
 
-  public static String getTypeArray(ArraySchema array, FileSpec fileSpec) {
+  public static String getTypeArray(final ArraySchema array, final FileSpec fileSpec) {
     var typeArray = "";
     if (array.getItems() instanceof StringSchema) {
       typeArray = "String";
     } else if (array.getItems() instanceof IntegerSchema) {
       typeArray = "Integer";
     } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
-      String[] pathObjectRef = array.getItems().get$ref().split("/");
+      final String[] pathObjectRef = array.getItems().get$ref().split("/");
       typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
     }
     return typeArray;
   }
 
-  public static String getPojoName(String namePojo, FileSpec fileSpec) {
+  public static String getPojoName(final String namePojo, final FileSpec fileSpec) {
     return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
            + namePojo
            + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");

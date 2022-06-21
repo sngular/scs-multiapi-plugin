@@ -6,68 +6,53 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
-import static net.coru.api.generator.plugin.openapi.utils.MapperUtil.getPojoName;
-import static net.coru.api.generator.plugin.openapi.utils.MapperUtil.getSimpleType;
-import static net.coru.api.generator.plugin.openapi.utils.MapperUtil.getTypeArray;
-import static net.coru.api.generator.plugin.openapi.utils.MapperUtil.getTypeMap;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.openapi.model.SchemaFieldObject;
-import net.coru.api.generator.plugin.openapi.model.SchemaObject;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.openapi.model.SchemaFieldObject;
+import net.coru.api.generator.plugin.openapi.model.SchemaObject;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
 
-  public static SchemaObject mapComponentToSchemaObject(
-    Schema schema, String nameSchema,
-    FileSpec fileSpec, String modelPackage) {
-    var listSchema = getFields(schema, fileSpec);
+  private static final String ARRAY = "array";
+
+  private static final String MAP = "map";
+
+  private MapperContentUtil() {}
+
+  public static SchemaObject mapComponentToSchemaObject(final Schema schema, final String nameSchema, final FileSpec fileSpec, final String modelPackage) {
+    final var listSchema = getFields(schema, fileSpec);
 
     return SchemaObject.builder()
                        .schemaName(schema.getName())
-                       .className(getPojoName(nameSchema, fileSpec))
+                       .className(MapperUtil.getPojoName(nameSchema, fileSpec))
                        .importList(getImportList(listSchema, modelPackage))
                        .fieldObjectList(listSchema)
                        .build();
   }
 
-  private static List<String> getImportList(
-    List<SchemaFieldObject> fieldObjectList,
-    String modelPackage) {
-    var listHashMap = new HashMap<String, List<String>>();
-    var importList = new ArrayList<String>();
+  private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList, final String modelPackage) {
+    final var listHashMap = new HashMap<String, List<String>>();
+    final var importList = new ArrayList<String>();
 
     fieldObjectList.forEach(fieldObject -> {
-      if (Objects.nonNull(fieldObject.getDataTypeSimple()) &&
-          fieldObject.getDataTypeSimple().equals("array") && !listHashMap.containsKey("array")) {
-        var arrayImport = new ArrayList<String>();
-        arrayImport.add("java.util.List");
-        arrayImport.add("java.util.ArrayList");
-        listHashMap.put("array", arrayImport);
+      if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
+        if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+          listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
+        } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
+          listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+        }
       }
-
-      if (Objects.nonNull(fieldObject.getDataTypeSimple()) && Objects.equals(fieldObject.getDataTypeSimple(), "map") && !listHashMap.containsKey("map")) {
-        var arrayImport = new ArrayList<String>();
-        arrayImport.add("java.util.Map");
-        arrayImport.add("java.util.HashMap");
-        listHashMap.put("map", arrayImport);
+      if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
+        listHashMap.put(fieldObject.getImportClass(), List.of(modelPackage + "." + fieldObject.getImportClass()));
       }
-
-      if (StringUtils.isNotBlank(fieldObject.getImportClass())
-          && !listHashMap.containsKey(fieldObject.getImportClass())) {
-        var arrayImport = new ArrayList<String>();
-        arrayImport.add(modelPackage + "." + fieldObject.getImportClass());
-        listHashMap.put(fieldObject.getImportClass(), arrayImport);
-      }
-
     });
 
     if (!listHashMap.isEmpty()) {
@@ -77,45 +62,44 @@ public class MapperContentUtil {
     return importList;
   }
 
-  private static List<SchemaFieldObject> getFields(Schema schema, FileSpec fileSpec) {
-    var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+  private static List<SchemaFieldObject> getFields(final Schema schema, final FileSpec fileSpec) {
+    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     if (Objects.nonNull(schema.getProperties())) {
-      var mapperProperties = new HashMap<String, Schema>(schema.getProperties());
+      final var mapperProperties = new HashMap<String, Schema>(schema.getProperties());
 
       mapperProperties.forEach((key, value) -> {
-        var field = SchemaFieldObject.builder()
-                                     .baseName(key)
-                                     .dataTypeSimple(getSimpleType(value, fileSpec))
-                                     .build();
-        if (value instanceof ArraySchema) {
-          var typeArray = getTypeArray((ArraySchema) value, fileSpec);
-          field.setDataType(typeArray);
-          field.setImportClass(getImportClass(typeArray));
-        } else if (value instanceof MapSchema) {
-          var typeMap = getTypeMap((MapSchema) value, fileSpec);
-          field.setDataTypeSimple("map");
-          field.setDataType(typeMap);
-          field.setImportClass(getImportClass(typeMap));
-        } else if (Objects.nonNull(value.getType()) && value.getType().equals("object")) {
-          var typeObject = "";
-          if (StringUtils.isNotBlank(value.get$ref())) {
-            String[] pathObjectRef = schema.get$ref().split("/");
-            typeObject = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-          }
-          field.setImportClass(getImportClass(typeObject));
-          field.setDataType(typeObject);
-        }
-
+        final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
+        setFieldType(field, value, schema, fileSpec);
         fieldObjectArrayList.add(field);
-
       });
     }
     return fieldObjectArrayList;
   }
 
-  private static String getImportClass(String type) {
-    return StringUtils.isNotBlank(type) && (!type.equals("String") && !type.equals("Integer")) ? type : "";
+  private static void setFieldType(final SchemaFieldObject field, final Schema value, final Schema schema, final FileSpec fileSpec) {
+    if (value instanceof ArraySchema) {
+      final var typeArray = MapperUtil.getTypeArray((ArraySchema) value, fileSpec);
+      field.setDataType(typeArray);
+      field.setImportClass(getImportClass(typeArray));
+    } else if (value instanceof MapSchema) {
+      final var typeMap = MapperUtil.getTypeMap((MapSchema) value, fileSpec);
+      field.setDataTypeSimple(MAP);
+      field.setDataType(typeMap);
+      field.setImportClass(getImportClass(typeMap));
+    } else if (Objects.nonNull(value.getType()) && value.getType().equals("object")) {
+      var typeObject = "";
+      if (StringUtils.isNotBlank(value.get$ref())) {
+        final String[] pathObjectRef = schema.get$ref().split("/");
+        typeObject = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
+      }
+      field.setImportClass(getImportClass(typeObject));
+      field.setDataType(typeObject);
+    }
+  }
+
+  private static String getImportClass(final String type) {
+    return StringUtils.isNotBlank(type) && !"String".equals(type) && !"Integer".equals(type) ? type : "";
   }
 
 }

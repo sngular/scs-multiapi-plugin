@@ -6,20 +6,41 @@
 
 package net.coru.api.generator.plugin.openapi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PathObject {
 
   private String pathName;
 
-  private GlobalObject globalObjects;
+  private GlobalObject globalObject;
 
-  private List<OperationObject> operationObject;
+  private List<OperationObject> operationObjects = new ArrayList<>();
+
+  public static class PathObjectBuilder {
+
+    private List<OperationObject> operationObjects = new ArrayList<>();
+
+    public PathObjectBuilder operationObjects(final List<OperationObject> operationObjects) {
+      this.operationObjects.addAll(operationObjects);
+      return this;
+    }
+
+    public PathObjectBuilder operationObject(final OperationObject operationObject) {
+      this.operationObjects.add(operationObject);
+      return this;
+    }
+
+  }
 
   private List<ParameterObject> parameterObjects;
 

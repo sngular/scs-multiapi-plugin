@@ -11,4 +11,6 @@ public class PluginConstants {
   public static final String DEFAULT_TARGET_PACKAGE = "net.coru.apigenerator";
 
   public static final String GENERATED_SOURCES_PATH = "generated-sources/corunet/apigenerator/";
+
+  private PluginConstants() {}
 }

@@ -6,34 +6,27 @@
 
 package net.coru.api.generator.plugin.openapi.template;
 
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_REST_API;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CALL_WEB_API;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_INTERFACE_API;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REACTIVE_API;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_REST_CLIENT;
-import static net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_WEB_CLIENT;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
-import net.coru.api.generator.plugin.openapi.model.AuthObject;
-import net.coru.api.generator.plugin.openapi.model.PathObject;
-import net.coru.api.generator.plugin.openapi.model.SchemaObject;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.model.AuthObject;
+import net.coru.api.generator.plugin.openapi.model.PathObject;
+import net.coru.api.generator.plugin.openapi.model.SchemaObject;
+import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 
 public class TemplateFactory {
 
@@ -45,60 +38,60 @@ public class TemplateFactory {
 
   private final HashMap<String, Schema> itemSchema = new HashMap<>();
 
-  private final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
-
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
+    final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
     root.put("checkBasicTypes", basicDataTypes);
 
   }
 
-  public void fillTemplateSchema(String filePathToSave, Boolean useLombock, SchemaObject schemaObject) throws IOException, TemplateException {
-    File fileToSave = new File(filePathToSave);
-    if(Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()){
+  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
       root.put("stringBracketOpen", "{");
       root.put("stringBracketClose", "}");
-      String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
-      writeTemplateToFile(null != useLombock && useLombock ? TEMPLATE_CONTENT_SCHEMA_LOMBOK : TEMPLATE_CONTENT_SCHEMA, root, pathToSaveMainClass);
+      final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
+      writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
+                          pathToSaveMainClass);
     }
 
   }
 
-  public void fillTemplateWebClient(String filePathToSave) throws IOException, TemplateException {
-    File fileToSave = new File(filePathToSave);
+  public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
 
-    String pathToSaveMainClass = fileToSave.toPath().resolve("ApiWebClient.java").toString();
-    writeTemplateToFile(TEMPLATE_WEB_CLIENT, root, pathToSaveMainClass);
-
-  }
-
-  public void fillTemplateRestClient(String filePathToSave) throws IOException, TemplateException {
-    File fileToSave = new File(filePathToSave);
-
-    String pathToSaveMainClass = fileToSave.toPath().resolve("ApiRestClient.java").toString();
-    writeTemplateToFile(TEMPLATE_REST_CLIENT, root, pathToSaveMainClass);
+    final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiWebClient.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, root, pathToSaveMainClass);
 
   }
 
-  public void fillTemplateAuth(String filePathToSave, String authName) throws IOException, TemplateException {
-    File fileToSave = new File(filePathToSave);
-    var nameAuthClass = authName + ".java";
-    String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
+  public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+
+    final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiRestClient.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, root, pathToSaveMainClass);
+
+  }
+
+  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final var nameAuthClass = authName + ".java";
+    final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
     writeTemplateToFile(createNameTemplate(authName), root, pathToSaveMainClass);
 
   }
 
-  public void fillTemplate(
-      String filePathToSave, FileSpec fileSpec, String className,
-      ArrayList<PathObject> pathObject, AuthObject authObject) throws IOException, TemplateException {
+  public final void fillTemplate(
+    final String filePathToSave, final FileSpec fileSpec, final String className,
+    final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("itemHashMap", itemHashMap);
-    root.put("pathObject", pathObject);
+    root.put("pathObjects", pathObjects);
 
     if (Objects.nonNull(fileSpec.getApiPackage())) {
       root.put("packageApi", fileSpec.getApiPackage());
@@ -106,61 +99,63 @@ public class TemplateFactory {
     if (Objects.nonNull(fileSpec.getModelPackage())) {
       root.put("packageModel", fileSpec.getModelPackage());
     }
-    File fileToSave = new File(filePathToSave);
+    final File fileToSave = new File(filePathToSave);
 
-    if (fileSpec.getCallMode()) {
+    if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
       root.put("authObject", authObject);
     }
 
-    String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + ".java").toString();
-    writeTemplateToFile(fileSpec.getCallMode() ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
+    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + ".java").toString();
+    writeTemplateToFile(Boolean.TRUE.equals(fileSpec.getCallMode()) ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
 
   }
 
-  private void writeTemplateToFile(String templateName, Map<String, Object> root, String path) throws IOException, TemplateException {
-    Template template = cfg.getTemplate(templateName);
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
+    final Template template = cfg.getTemplate(templateName);
 
-    FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
+    if (!Files.exists(Path.of(path))) {
+      final FileWriter writer = new FileWriter(path);
+      template.process(root, writer);
+      writer.close();
+    } else {
+      throw new SCSMultiApiMavenPluginException("Packages of the fileSpecs cannot be the same.");
+    }
   }
 
-  public void setPackageName(String packageName) {
+  public final void setPackageName(final String packageName) {
     root.put("package", packageName);
   }
 
-  public void setModelPackageName(String packageName) {
+  public final void setModelPackageName(final String packageName) {
     root.put("packageModel", packageName);
   }
 
-  public void setWebClientPackageName(String packageName) {
+  public final void setWebClientPackageName(final String packageName) {
     root.put("packageClient", packageName);
   }
 
-  public void setAuthPackageName(String packageName) {
+  public final void setAuthPackageName(final String packageName) {
     root.put("packageAuth", packageName);
   }
 
-  public void addPathItems(HashMap<String, PathItem> itemMap) {
+  public final void addPathItems(final HashMap<String, PathItem> itemMap) {
     itemHashMap.putAll(itemMap);
   }
 
-  public void addComponents(Map<String, Schema> itemMap) {
+  public final void addComponents(final Map<String, Schema> itemMap) {
     itemSchema.putAll(itemMap);
   }
 
-  private String createNameTemplate(String classNameAuth) {
-    var buffer = new StringBuffer(0);
-    buffer.append("template").append(classNameAuth).append(".ftlh");
-    return buffer.toString();
+  private String createNameTemplate(final String classNameAuth) {
+    return "template" + classNameAuth + ".ftlh";
   }
 
-  private String getTemplateClientApi(FileSpec fileSpec) {
-    return fileSpec.getIsReactive() ? TEMPLATE_CALL_WEB_API : TEMPLATE_CALL_REST_API;
+  private String getTemplateClientApi(final FileSpec fileSpec) {
+    return fileSpec.getIsReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
   }
 
-  private String getTemplateApi(FileSpec fileSpec) {
-    return fileSpec.getIsReactive() ? TEMPLATE_REACTIVE_API : TEMPLATE_INTERFACE_API;
+  private String getTemplateApi(final FileSpec fileSpec) {
+    return fileSpec.getIsReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
 }
