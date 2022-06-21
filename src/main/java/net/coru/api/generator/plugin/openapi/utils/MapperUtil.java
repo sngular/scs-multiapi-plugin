@@ -26,8 +26,8 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final Schema schema, final FileSpec fileSpec) {
-    String type = "";
+  public static String getSimpleType(final Schema<?> schema, final FileSpec fileSpec) {
+    final String type;
     if (NUMBER.equalsIgnoreCase(schema.getType())) {
       if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
         type = FLOAT;
@@ -58,7 +58,7 @@ public class MapperUtil {
     } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
       typeMap = "Integer";
     } else {
-      final Schema schema = (Schema) mapSchema.getAdditionalProperties();
+      final Schema<?> schema = (Schema<?>) mapSchema.getAdditionalProperties();
       if (StringUtils.isNotBlank(schema.get$ref())) {
         final String[] pathObjectRef = schema.get$ref().split("/");
         typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);

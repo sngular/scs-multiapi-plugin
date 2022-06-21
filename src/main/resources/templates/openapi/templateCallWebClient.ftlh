@@ -85,7 +85,10 @@ public class ${className?cap_first}Api {
   * ${operation.operationType} ${path.pathName} : ${operation.summary}
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
-  * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+  * <#list operation.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+  </#if>
+  <#if path.parameterObjects?has_content>
+  * <#list path.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
   * <#list operation.requestObjects as request><#list request.contentObjects as content>@param ${content.refName?uncap_first}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
@@ -95,8 +98,8 @@ public class ${className?cap_first}Api {
   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
   */
   private ResponseSpec ${operation.operationId}RequestCreation(<@compress single_line=true>
-  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list>
-  </#if><#if operation.requestObjects?has_content><#if operation.parameterObjects?has_content>, </#if><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
+  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if>
+  <#if operation.requestObjects?has_content><#if operation.parameterObjects?has_content>, </#if><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
     Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].refName?uncap_first}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
     if (${operation.requestObjects[0].contentObjects[0].refName?uncap_first} == null) {
@@ -107,6 +110,13 @@ public class ${className?cap_first}Api {
 
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
+        <#if parameter.in == "path">
+    pathParams.put("${parameter.name}", <#if parameter.isCollection == true> apiWebClient.collectionPathParameterToString(ApiWebClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.name})<#else> ${parameter.name}</#if>);
+        </#if>
+      </#list>
+    </#if>
+    <#if path.parameterObjects?has_content>
+      <#list path.parameterObjects as parameter>
         <#if parameter.in == "path">
     pathParams.put("${parameter.name}", <#if parameter.isCollection == true> apiWebClient.collectionPathParameterToString(ApiWebClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.name})<#else> ${parameter.name}</#if>);
         </#if>
@@ -125,8 +135,26 @@ public class ${className?cap_first}Api {
         </#if>
       </#list>
     </#if>
+    <#if path.parameterObjects?has_content>
+      <#list path.parameterObjects as parameter>
+        <#if parameter.in == "query">
+
+    queryParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+
+        </#if>
+      </#list>
+    </#if>
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
+        <#if parameter.in == "header">
+    if (${parameter.name} != null){
+      headerParams.add("${parameter.name}", apiWebClient.parameterToString(${parameter.name}));
+    }
+        </#if>
+      </#list>
+    </#if>
+    <#if path.parameterObjects?has_content>
+      <#list path.parameterObjects as parameter>
         <#if parameter.in == "header">
     if (${parameter.name} != null){
       headerParams.add("${parameter.name}", apiWebClient.parameterToString(${parameter.name}));
@@ -142,7 +170,14 @@ public class ${className?cap_first}Api {
         </#if>
       </#list>
     </#if>
+    <#if path.parameterObjects?has_content>
+      <#list path.parameterObjects as parameter>
+        <#if parameter.in == "cookie">
 
+    cookieParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+        </#if>
+      </#list>
+    </#if>
     final String[] localVarAccepts = {<#compress><#if operation.produces?has_content>
       <#list operation.produces as produce>"${produce}"<#if produce?has_next>, </#if></#list>
       </#if></#compress>};
@@ -173,6 +208,9 @@ public class ${className?cap_first}Api {
   <#if operation.parameterObjects?has_content>
   * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
+  <#if path.parameterObjects?has_content>
+  * <#list operation.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+  </#if>
   <#if operation.requestObjects?has_content>
   * <#list operation.requestObjects as request>@param <#list request.contentObjects as content>${content.refName?uncap_first} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if></#list>
   </#if>
@@ -184,7 +222,7 @@ public class ${className?cap_first}Api {
   <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array" || operation.responseObjects[0].contentObjects[0].typeData == "map")>
   Flux<${operation.responseObjects[0].contentObjects[0].refName?cap_first}><#else>Mono<${operation.responseObjects[0].contentObjects[0].refName?cap_first}></#if>
   <#else>Mono<Void></#if></@compress> ${operation.operationId}(<@compress single_line=true>
-  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
+  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObjects as content>
@@ -199,7 +237,7 @@ public class ${className?cap_first}Api {
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
-      <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
+      <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
       <#if operation.requestObjects?has_content>
       <#list operation.requestObjects as request><#list request.contentObjects as content> ${content.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>
       </@compress>).<#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array" || operation.responseObjects[0].contentObjects[0].typeData == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
@@ -211,7 +249,7 @@ public class ${className?cap_first}Api {
   ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
   <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>></#if>
   <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
-  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
+  <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObjects as content>
@@ -229,7 +267,8 @@ public class ${className?cap_first}Api {
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
-    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
+    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
+
     <#if operation.requestObjects?has_content>
     <#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>
     </@compress>).<#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array" || operation.responseObjects[0].contentObjects[0].typeData == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);

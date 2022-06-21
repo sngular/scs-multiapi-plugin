@@ -3,6 +3,7 @@ package net.coru.multifileplugin.testrestclient.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class ApiTestInfoDTO {
   public List<String> getTesters() {
     return testers;
   }
-  public void setTesters(ArrayList<String> testers) {
+  public void setTesters(List<String> testers) {
     this.testers = testers;
   }
 

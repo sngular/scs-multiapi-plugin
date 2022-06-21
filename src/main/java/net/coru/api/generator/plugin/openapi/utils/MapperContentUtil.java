@@ -27,7 +27,7 @@ public class MapperContentUtil {
 
   private MapperContentUtil() {}
 
-  public static SchemaObject mapComponentToSchemaObject(final Schema schema, final String nameSchema, final FileSpec fileSpec, final String modelPackage) {
+  public static SchemaObject mapComponentToSchemaObject(final Schema<?> schema, final String nameSchema, final FileSpec fileSpec, final String modelPackage) {
     final var listSchema = getFields(schema, fileSpec);
 
     return SchemaObject.builder()
@@ -62,11 +62,11 @@ public class MapperContentUtil {
     return importList;
   }
 
-  private static List<SchemaFieldObject> getFields(final Schema schema, final FileSpec fileSpec) {
+  private static List<SchemaFieldObject> getFields(final Schema<?> schema, final FileSpec fileSpec) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     if (Objects.nonNull(schema.getProperties())) {
-      final var mapperProperties = new HashMap<String, Schema>(schema.getProperties());
+      final var mapperProperties = new HashMap<>(schema.getProperties());
 
       mapperProperties.forEach((key, value) -> {
         final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
@@ -77,7 +77,7 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static void setFieldType(final SchemaFieldObject field, final Schema value, final Schema schema, final FileSpec fileSpec) {
+  private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final FileSpec fileSpec) {
     if (value instanceof ArraySchema) {
       final var typeArray = MapperUtil.getTypeArray((ArraySchema) value, fileSpec);
       field.setDataType(typeArray);
