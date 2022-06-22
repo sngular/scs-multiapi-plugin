@@ -58,7 +58,8 @@ public class OpenApiUtil {
 
   }
 
-  private static HashMap<String, PathItem> initOrInsert(final Entry<String, PathItem> openAPIGetPathsEntry, final Entry<String, PathItem> mapPathItems,
+  private static HashMap<String, PathItem> initOrInsert(
+      final Entry<String, PathItem> openAPIGetPathsEntry, final Entry<String, PathItem> mapPathItems,
       final HashMap<String, PathItem> value) {
     var newValue = value;
     if (Objects.isNull(newValue)) {

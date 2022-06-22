@@ -264,8 +264,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     for (String pojoName : listObjectsToCreate) {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-            MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName),
-                                                         StringUtils.capitalize(pojoName), fileSpec, modelPackage));
+                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas().get(pojoName),
+                                                                                        StringUtils.capitalize(pojoName), fileSpec, modelPackage));
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
