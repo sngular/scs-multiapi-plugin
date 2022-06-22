@@ -274,7 +274,7 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .importName(getPojoName(inlineObject, fileSpec))
+                                          .importName(StringUtils.capitalize(getPojoName(inlineObject, fileSpec)))
                                           .refName(getPojoName(inlineObject, fileSpec))
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
@@ -288,7 +288,7 @@ public class MapperPathUtil {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .importName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap())))
                                           .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .build());
         }

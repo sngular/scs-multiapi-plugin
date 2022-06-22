@@ -1,0 +1,29 @@
+---
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Corunet Test Api
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/v1
+paths:
+  /test:
+    summary: available test
+    get:
+      summary: List all available test
+      operationId: listTest
+      tags:
+      - test
+      responses:
+        '200':
+          description: A paged array of tests
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "test-config/components.yml#/components/schemas/Test"
