@@ -8,7 +8,9 @@ package net.coru.api.generator.plugin.asyncapi.exception;
 
 public class FileSystemException extends RuntimeException {
 
-  public FileSystemException(final String message) {
-    super(message);
+  private static final String ERROR_MESSAGE = "AsyncApi -> File System error trying to create necessary folder %s";
+
+  public FileSystemException(final String folderName) {
+    super(String.format(ERROR_MESSAGE, folderName));
   }
 }

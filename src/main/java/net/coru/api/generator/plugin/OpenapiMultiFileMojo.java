@@ -24,7 +24,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
-import net.coru.api.generator.plugin.exception.SCSMultiApiMavenPluginException;
+import net.coru.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
@@ -297,14 +297,14 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
           e.printStackTrace();
         }
       } else {
-        throw new SCSMultiApiMavenPluginException("OverWriteModel is set to false, please don´t duplicate Models. The model that has been duplicated is: " + objectToCreate);
+        throw new DuplicateModelClassException(objectToCreate, modelPackage);
       }
     }
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
       final Schema<?> basicSchema = entry.getValue();
       if (!overwriteModelList.add(schemaName + modelPackage)) {
-        throw new SCSMultiApiMavenPluginException("OverWriteModel is set to false, please don´t duplicate Models. The model that has been duplicated is: " + schemaName);
+        throw new DuplicateModelClassException(schemaName, modelPackage);
       }
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), MapperContentUtil.mapComponentToSchemaObject(basicSchema, schemaName,

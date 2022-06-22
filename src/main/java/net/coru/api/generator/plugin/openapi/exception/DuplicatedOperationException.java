@@ -4,13 +4,13 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package net.coru.api.generator.plugin.asyncapi.exception;
+package net.coru.api.generator.plugin.openapi.exception;
 
 import net.coru.api.generator.plugin.exception.OperationException;
 
 public class DuplicatedOperationException extends OperationException {
 
   public DuplicatedOperationException(final String message) {
-    super("AsyncApi", message);
+    super("OpenApi", message);
   }
 }

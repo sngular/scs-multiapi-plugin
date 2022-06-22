@@ -8,7 +8,7 @@ package net.coru.api.generator.plugin.asyncapi.exception;
 
 public class DuplicateClassException extends RuntimeException {
 
-  private static final String ERROR_MESSAGE = "There are at least two classes with the same name %s and package %s";
+  private static final String ERROR_MESSAGE = "AsyncApi -> There are at least two classes with the same name %s and package %s";
 
   public DuplicateClassException(final String className, final String packageName) {
     super(String.format(ERROR_MESSAGE, className, packageName));
