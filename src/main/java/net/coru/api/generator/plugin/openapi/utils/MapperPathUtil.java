@@ -28,7 +28,6 @@ import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import net.coru.api.generator.plugin.openapi.exception.DuplicateOpenApiParameters;
-import net.coru.api.generator.plugin.exception.OperationException;
 import net.coru.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
