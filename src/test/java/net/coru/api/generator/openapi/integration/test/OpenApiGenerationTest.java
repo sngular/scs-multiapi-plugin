@@ -201,4 +201,20 @@ public class OpenApiGenerationTest {
 
     validateFiles(expectedFileFirst, targetFirstFolder);
   }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testExternalRefsGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testExternalRefsGeneration" +
+                                                    "/assets/TestApi.java"));
+
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi");
+
+    File targetFirstFolder = pathToTargetFirst.toFile();
+    assertThat(targetFirstFolder).isNotEmptyDirectory();
+
+    validateFiles(expectedFileFirst, targetFirstFolder);
+  }
 }
