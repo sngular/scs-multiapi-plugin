@@ -41,13 +41,13 @@
         <configuration>
           <fileSpecs>
             <fileSpec>
-              <inputSpec>multi-test-first.yml</inputSpec>
+              <filePath>multi-test-first.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testmultifile.first</apiPackage>
               <modelPackage>net.coru.multifileplugin.testmultifile.first.model</modelPackage>
               <modelNameSuffix>FirstDTO</modelNameSuffix>
             </fileSpec>
             <fileSpec>
-              <inputSpec>multi-test-second.yml</inputSpec>
+              <filePath>multi-test-second.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testmultifile.second</apiPackage>
               <modelPackage>net.coru.multifileplugin.testmultifile.second.model</modelPackage>
               <modelNameSuffix>SecondDTO</modelNameSuffix>

@@ -26,7 +26,7 @@ public final class OperationParameterObject {
 
   private String modelPackage;
 
-  private String entitiesPostfix;
+  private String modelNameSuffix;
 
   private String classNamePostfix;
 

@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 <#list subscribeMethods as method>
-<#if subscribeEntitiesPostfix?has_content>
-import ${method.classNamespace}${subscribeEntitiesPostfix};
+<#if subscribeEntitiesSuffix?has_content>
+import ${method.classNamespace}${subscribeEntitiesSuffix};
 <#else>
 import ${method.classNamespace};
 </#if>
@@ -27,7 +27,7 @@ public class ${subscribeClassName?cap_first} {
 
     <#list subscribeMethods as method>
     @Bean
-    public Consumer<${method.className}<#if subscribeEntitiesPostfix?has_content>${subscribeEntitiesPostfix}</#if>> ${method.operationId?uncap_first}(){ return value -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}(value); }
+    public Consumer<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>> ${method.operationId?uncap_first}(){ return value -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}(value); }
 
     </#list>
 

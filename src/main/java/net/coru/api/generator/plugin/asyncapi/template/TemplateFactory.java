@@ -30,11 +30,11 @@ public class TemplateFactory {
 
   public static final String STREAM_BRIDGE_PACKAGE = "streamBridgePackage";
 
-  public static final String SUPPLIER_ENTITIES_POSTFIX = "supplierEntitiesPostfix";
+  public static final String SUPPLIER_ENTITIES_SUFFIX = "supplierEntitiesSuffix";
 
-  public static final String STREAM_BRIDGE_ENTITIES_POSTFIX = "streamBridgeEntitiesPostfix";
+  public static final String STREAM_BRIDGE_ENTITIES_SUFFIX = "streamBridgeEntitiesSuffix";
 
-  public static final String SUBSCRIBE_ENTITIES_POSTFIX = "subscribeEntitiesPostfix";
+  public static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
 
   public static final String FILE_TYPE_JAVA = ".java";
 
@@ -147,16 +147,16 @@ public class TemplateFactory {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
 
-  public final void setSupplierEntitiesPostfix(final String postfix) {
-    root.put(SUPPLIER_ENTITIES_POSTFIX, postfix);
+  public final void setSupplierEntitiesSuffix(final String suffix) {
+    root.put(SUPPLIER_ENTITIES_SUFFIX, suffix);
   }
 
-  public final void setStreamBridgeEntitiesPostfix(final String postfix) {
-    root.put(STREAM_BRIDGE_ENTITIES_POSTFIX, postfix);
+  public final void setStreamBridgeEntitiesSuffix(final String suffix) {
+    root.put(STREAM_BRIDGE_ENTITIES_SUFFIX, suffix);
   }
 
-  public final void setSubscribeEntitiesPostfix(final String postfix) {
-    root.put(SUBSCRIBE_ENTITIES_POSTFIX, postfix);
+  public final void setSubscribeEntitiesSuffix(final String suffix) {
+    root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
   public final void clearData() {
@@ -179,8 +179,8 @@ public class TemplateFactory {
     interfaceRoot.put(SUBSCRIBE_PACKAGE, root.get(SUBSCRIBE_PACKAGE));
     interfaceRoot.put(SUPPLIER_PACKAGE, root.get(SUPPLIER_PACKAGE));
 
-    interfaceRoot.put(SUPPLIER_ENTITIES_POSTFIX, root.get(SUPPLIER_ENTITIES_POSTFIX));
-    interfaceRoot.put(SUBSCRIBE_ENTITIES_POSTFIX, root.get(SUBSCRIBE_ENTITIES_POSTFIX));
+    interfaceRoot.put(SUPPLIER_ENTITIES_SUFFIX, root.get(SUPPLIER_ENTITIES_SUFFIX));
+    interfaceRoot.put(SUBSCRIBE_ENTITIES_SUFFIX, root.get(SUBSCRIBE_ENTITIES_SUFFIX));
 
     File fileToSave;
     String pathToSaveMainClass;

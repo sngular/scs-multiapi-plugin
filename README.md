@@ -55,7 +55,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.9.0</version>
+  <version>2.0.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -111,7 +111,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>1.9.0</version>
+<version>2.0.0</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -128,7 +128,7 @@ which the plugin is designed.
           <consumer>
             <ids>publishOperation</ids>
             <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-            <entitiesPostfix>DTO</entitiesPostfix>
+            <modelNameSuffix>DTO</modelNameSuffix>
             <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
             <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </consumer>
@@ -174,7 +174,7 @@ producers and streamBrige producers that you want to generate.
     <consumer>
         <ids>publishOperation</ids>
         <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-        <entitiesPostfix>DTO</entitiesPostfix>
+        <modelNameSuffix>DTO</modelNameSuffix>
         <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
         <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </consumer>
@@ -205,11 +205,11 @@ the same way and can receive the same parameters. These parameters are:
   operations defined in the YML file will be generated. If both `supplier` and
   `streamBridge` sections are defined, it`s needed to define which operations
   belongs to each category.
-  - **classNamePostfix**: This parameter receive the name of the class that
+  - **classNamePostfix**: This parameter receives the name of the class that
   it's going to be generated containing the Beans. This parameter is optional,
   and by default the classes will be called `Producer`, `StreamBridgeProducer`
   and `Subscriber`.
-  - **entitiesPostfix**: With this parameter you can set the postfix that is
+  - **modelNameSuffix**: With this parameter you can set the suffix that is
   going to be used in the entities of the generated classes. For example if
   you set this to `DTO`, and there is a class named `EntityClass`, it will
   result as `EntityClassDTO`. This parameter is optional.
@@ -464,7 +464,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>1.9.0</version>
+  <version>2.0.0</version>
   <executions>
     <execution>
         <goals>
@@ -473,7 +473,7 @@ file. Here is an example of a basic configuration:
         <configuration>
             <fileSpecs>
                 <fileSpec>
-                    <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
+                    <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
                     <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
                     <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
                     <modelNameSuffix>DTO</modelNameSuffix>
@@ -518,7 +518,7 @@ fileSpecs.
 <configuration>
     <fileSpecs>
         <fileSpec>
-            <inputSpec>${project.basedir}/src/main/resources/api/api.yml</inputSpec>
+            <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
             <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
             <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
             <modelNameSuffix>DTO</modelNameSuffix>
@@ -531,17 +531,17 @@ To customize these fileSpecs tags we are going to specify them inside the
 configuration tag, we must declare the fileSpecs tag that contains all files
 that will be used. Each fileSpec has their own configuration:
 
-| Name      | Description                                                                                                                                                                                         | Example                                          |
-| ---------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| inputSpec  | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi              |
-| modelPackage | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model       |
-| modelNamePrefix | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                              |
-| modelNameSuffix | Suffix that will be used ahead of every model´s name                                                                                                                                                | DTO                                              |
-| callMode   | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                            |
-| useTagsGroup | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                            |
+| Name                     | Description                                                                                                                                                                                         | Example                                          |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| filePath                 | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
+| apiPackage               | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi              |
+| modelPackage             | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model       |
+| modelNamePrefix          | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                              |
+| modelNameSuffix          | Suffix that will be used after every model´s name                                                                                                                                                   | DTO                                              |
+| callMode                 | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                            |
+| useTagsGroup             | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                            |
 | useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                            |
-| isReactive | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                            |
+| isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                            |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated

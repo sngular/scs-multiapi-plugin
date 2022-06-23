@@ -169,7 +169,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassnames(fileParameter);
-    processEntitiesPostfix(fileParameter);
+    processEntitiesSuffix(fileParameter);
   }
 
   private void processFilePaths(final FileSpec fileParameter) {
@@ -178,13 +178,13 @@ public final class OpenAsyncMojo extends AbstractMojo {
     templateFactory.setSubscribeFilePath(processPath(fileParameter.getConsumer()));
   }
 
-  private void processEntitiesPostfix(final FileSpec fileParameter) {
-    templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null
-                                                 ? fileParameter.getSupplier().getEntitiesPostfix() : null);
-    templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null
-                                                     ? fileParameter.getStreamBridge().getEntitiesPostfix() : null);
-    templateFactory.setSubscribeEntitiesPostfix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getEntitiesPostfix() != null
-                                                  ? fileParameter.getConsumer().getEntitiesPostfix() : null);
+  private void processEntitiesSuffix(final FileSpec fileParameter) {
+    templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
+                                                 ? fileParameter.getSupplier().getModelNameSuffix() : null);
+    templateFactory.setStreamBridgeEntitiesSuffix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getModelNameSuffix() != null
+                                                     ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
+    templateFactory.setSubscribeEntitiesSuffix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getModelNameSuffix() != null
+                                                  ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
 
   private void processDuplicates(final FileSpec fileParameter) {

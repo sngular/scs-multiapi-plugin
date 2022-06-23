@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 <#list publishMethods as method>
-<#if supplierEntitiesPostfix?has_content>
-import ${method.classNamespace}${supplierEntitiesPostfix};
+<#if supplierEntitiesSuffix?has_content>
+import ${method.classNamespace}${supplierEntitiesSuffix};
 <#else>
 import ${method.classNamespace};
 </#if>
@@ -27,7 +27,7 @@ public class ${supplierClassName?cap_first} {
 
     <#list publishMethods as method>
     @Bean
-    public Supplier<${method.className}<#if supplierEntitiesPostfix?has_content>${supplierEntitiesPostfix}</#if>> ${method.operationId?uncap_first}(){ return () -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}(); }
+    public Supplier<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>> ${method.operationId?uncap_first}(){ return () -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}(); }
 
     </#list>
 
