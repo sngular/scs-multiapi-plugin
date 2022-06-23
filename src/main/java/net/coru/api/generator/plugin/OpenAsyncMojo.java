@@ -126,7 +126,8 @@ public final class OpenAsyncMojo extends AbstractMojo {
     }
   }
 
-  private boolean isValidOperation(final OperationParameterObject operation, final String operationId,
+  private boolean isValidOperation(
+      final OperationParameterObject operation, final String operationId,
       final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
@@ -180,11 +181,11 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private void processEntitiesPostfix(final FileSpec fileParameter) {
     templateFactory.setSupplierEntitiesPostfix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getEntitiesPostfix() != null
-                                                 ? fileParameter.getSupplier().getEntitiesPostfix() : null);
+                                                   ? fileParameter.getSupplier().getEntitiesPostfix() : null);
     templateFactory.setStreamBridgeEntitiesPostfix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getEntitiesPostfix() != null
-                                                     ? fileParameter.getStreamBridge().getEntitiesPostfix() : null);
+                                                       ? fileParameter.getStreamBridge().getEntitiesPostfix() : null);
     templateFactory.setSubscribeEntitiesPostfix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getEntitiesPostfix() != null
-                                                  ? fileParameter.getConsumer().getEntitiesPostfix() : null);
+                                                    ? fileParameter.getConsumer().getEntitiesPostfix() : null);
   }
 
   private void processDuplicates(final FileSpec fileParameter) {
@@ -222,11 +223,11 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private void processClassnames(final FileSpec fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null
-                                           ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
+                                             ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null
-                                               ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
+                                                 ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null
-                                            ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
+                                              ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
   }
 
   private Path processPath(final OperationParameterObject operationParameter) {
