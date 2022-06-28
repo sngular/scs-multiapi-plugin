@@ -14,9 +14,11 @@ import java.util.Objects;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import net.coru.api.generator.plugin.openapi.model.SchemaFieldObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
@@ -24,6 +26,19 @@ public class MapperContentUtil {
   private static final String ARRAY = "array";
 
   private static final String MAP = "map";
+
+  private static final String BIG_DECIMAL = "bigDecimal";
+
+  private static final String INTEGER = "integer";
+
+  private static final String DOUBLE = "double";
+
+  private static final String FLOAT = "float";
+
+  private static final String LONG = "long";
+
+  private static final String STRING = "string";
+
 
   private MapperContentUtil() {}
 
@@ -48,6 +63,8 @@ public class MapperContentUtil {
           listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
         } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
           listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+        } else if (Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+          listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
         }
       }
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
@@ -68,9 +85,14 @@ public class MapperContentUtil {
       final var mapperProperties = new HashMap<>(schema.getProperties());
 
       mapperProperties.forEach((key, value) -> {
-        final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
-        setFieldType(field, value, schema, fileSpec);
-        fieldObjectArrayList.add(field);
+        final var enumValues = value.getEnum();
+        if (CollectionUtils.isNotEmpty(enumValues)) {
+          processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues);
+        } else {
+          final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
+          setFieldType(field, value, schema, fileSpec);
+          fieldObjectArrayList.add(field);
+        }
       });
     }
     return fieldObjectArrayList;
@@ -94,6 +116,49 @@ public class MapperContentUtil {
       }
       field.setImportClass(getImportClass(typeObject));
       field.setDataType(typeObject);
+    }
+  }
+
+  private static void processEnumField(final String key, final Schema<?> value, final FileSpec fileSpec,
+      final ArrayList<SchemaFieldObject> fieldObjectArrayList, final List<?> enumValues) {
+    final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
+    final var dataType = MapperUtil.getSimpleType(value, fileSpec);
+    field.setDataType(dataType);
+
+    final HashMap<String, String> enumValuesMap = new HashMap<>();
+
+    for (var enumValue : enumValues) {
+      String valueName = enumValue.toString();
+      valueName = valueName.replaceAll("\\.", "_DOT_");
+
+      switch (dataType) {
+        case INTEGER:
+          enumValuesMap.put("INTEGER_" + valueName, enumValue.toString());
+          break;
+        case LONG:
+          enumValuesMap.put("LONG_" + valueName, enumValue.toString() + "l");
+          break;
+        case DOUBLE:
+          enumValuesMap.put("DOUBLE_" + valueName, enumValue.toString());
+          break;
+        case FLOAT:
+          enumValuesMap.put("FLOAT_" + valueName, enumValue.toString() + "f");
+          break;
+        case BIG_DECIMAL:
+          enumValuesMap.put("BIG_DECIMAL_" + valueName, "new BigDecimal(\"" + enumValue.toString() + "\")");
+          break;
+        case STRING:
+        default:
+          enumValuesMap.put(StringUtils.upperCase(valueName), '"' + enumValue.toString() + '"');
+          break;
+      }
+    }
+
+    if (!enumValuesMap.isEmpty()) {
+      field.setEnumValues(enumValuesMap);
+      fieldObjectArrayList.add(field);
+    } else {
+      throw new BadDefinedEnumException(key);
     }
   }
 

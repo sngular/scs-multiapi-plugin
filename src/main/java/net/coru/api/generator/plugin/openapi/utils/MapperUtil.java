@@ -30,6 +30,8 @@ public class MapperUtil {
 
   public static final String LONG = "long";
 
+  public static final String BIG_DECIMAL = "bigDecimal";
+
   private MapperUtil() {}
 
   public static String getSimpleType(final Schema<?> schema, final FileSpec fileSpec) {
@@ -40,10 +42,10 @@ public class MapperUtil {
       } else if (DOUBLE.equalsIgnoreCase(schema.getFormat())) {
         type = DOUBLE;
       } else {
-        type = INTEGER;
+        type = BIG_DECIMAL;
       }
     } else if (INTEGER.equalsIgnoreCase(schema.getType())) {
-      if (INT_64.equalsIgnoreCase(schema.getType())) {
+      if (INT_64.equalsIgnoreCase(schema.getFormat())) {
         type = LONG;
       } else {
         type = INTEGER;

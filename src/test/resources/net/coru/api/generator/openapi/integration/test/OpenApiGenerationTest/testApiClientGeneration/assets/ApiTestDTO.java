@@ -10,6 +10,7 @@ public class ApiTestDTO {
 
   @JsonProperty(value ="name")
   private String name;
+
   @JsonProperty(value ="id")
   private Integer id;
 
