@@ -82,7 +82,7 @@ public class ${className?cap_first}Api {
   <#list pathObjects as path>
     <#list path.operationObjects as operation>
   /**
-  * ${operation.operationType} ${path.pathName} : ${operation.summary}
+  * ${operation.operationType} ${path.pathName} : <#if operation.summary?has_content>${operation.summary}<#else>""</#if>
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
   * <#list operation.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
@@ -99,7 +99,7 @@ public class ${className?cap_first}Api {
   */
   private ResponseSpec ${operation.operationId}RequestCreation(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if>
-  <#if operation.requestObjects?has_content><#if operation.parameterObjects?has_content>, </#if><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
+  <#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
     Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].refName?uncap_first}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
     if (${operation.requestObjects[0].contentObjects[0].refName?uncap_first} == null) {
@@ -203,7 +203,7 @@ public class ${className?cap_first}Api {
   }
 
   /**
-  * ${operation.operationType} ${path.pathName} : ${operation.summary}
+  * ${operation.operationType} ${path.pathName} : <#if operation.summary?has_content>${operation.summary}<#else>""</#if>
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
   * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
@@ -246,7 +246,7 @@ public class ${className?cap_first}Api {
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> Mono<<#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
   ResponseEntity<Map<String,${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
   <#elseif operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "array">
-  ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
+  ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>>
   <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>></#if>
   <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
