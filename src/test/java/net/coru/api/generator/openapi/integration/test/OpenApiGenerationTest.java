@@ -223,7 +223,7 @@ public class OpenApiGenerationTest {
   void testApiPathWithBarsGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/TestApi.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/TestschemaApi.java"));
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/TestSchemaApi.java"));
 
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiErrorDTO.java"),

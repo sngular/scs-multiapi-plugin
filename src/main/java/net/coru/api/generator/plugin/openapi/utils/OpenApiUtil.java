@@ -9,6 +9,7 @@ package net.coru.api.generator.plugin.openapi.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -27,6 +28,7 @@ import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -196,12 +198,29 @@ public class OpenApiUtil {
   }
 
   public static String processJavaFileName(final String apisEntry) {
-    final String javaFileName;
+    String javaFileName = "";
+    List<Integer> positionList = new ArrayList<>();
     if (apisEntry.contains("/")) {
       final String[] wholeApiEntry = apisEntry.split("/");
-      javaFileName = StringUtils.capitalize(wholeApiEntry[0].replaceAll("[^A-Za-z0-9]",""));
+      javaFileName = capLettersAfterSpecialCharacters(wholeApiEntry[0], positionList);
     } else {
-      javaFileName = StringUtils.capitalize(apisEntry.replaceAll("[^A-Za-z0-9]",""));
+      javaFileName = capLettersAfterSpecialCharacters(apisEntry, positionList);
+    }
+    javaFileName = StringUtils.capitalize(javaFileName.replaceAll("[^A-Za-z0-9]", ""));
+    return javaFileName;
+  }
+
+  private static String capLettersAfterSpecialCharacters(final String pathName, final List<Integer> positionList) {
+    String javaFileName;
+    char[] prueba = pathName.toCharArray();
+    for (int i = 0; i < prueba.length; i++) {
+      if (!Character.isLetterOrDigit(prueba[i])) {
+        positionList.add(i);
+      }
+    }
+    javaFileName = pathName;
+    for (Integer position : positionList) {
+      javaFileName = javaFileName.substring(0, position + 1) + javaFileName.substring(position + 1, position + 2).toUpperCase(Locale.ROOT) + javaFileName.substring(position + 2);
     }
     return javaFileName;
   }

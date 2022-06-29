@@ -8,9 +8,9 @@ package net.coru.api.generator.plugin.openapi.utils.fixtures;
 
 public class OpenApiUtilTestHelper {
 
-  public static final String TESTNAME = "Testname";
+  public static final String TESTNAME = "TestNamePrueba";
 
-  public static final String PROCESSSJAVAFILENAMEWITHBARS = "test_name/prueba/+´+";
+  public static final String PROCESSSJAVAFILENAMEWITHBARS = "test_name_prueba/prueba/+´+";
 
-  public static final String PROCESSJAVAFILENAME = "test_name";
+  public static final String PROCESSJAVAFILENAME = "test_name_prueba";
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 import net.coru.multifileplugin.testapi.model.ApiTestDTO;
 import net.coru.multifileplugin.testapi.model.ApiErrorDTO;
 
-public interface TestschemaApi {
+public interface TestSchemaApi {
 
   default Optional<NativeWebRequest> getRequest() {
     return Optional.empty();
