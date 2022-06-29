@@ -6,10 +6,10 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
-import static net.coru.api.generator.plugin.openapi.utils.fixtures.OpenApiUtilFixtures.TESTNAME;
+import static net.coru.api.generator.plugin.openapi.utils.fixtures.OpenApiUtilTestHelper.TESTNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import net.coru.api.generator.plugin.openapi.utils.fixtures.OpenApiUtilFixtures;
+import net.coru.api.generator.plugin.openapi.utils.fixtures.OpenApiUtilTestHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ class OpenApiUtilTest {
   @Test
   @DisplayName("Test the Java File Generation")
   void testProcessJavaFileName() {
-    String javaFileNameWithBars = OpenApiUtil.processJavaFileName(OpenApiUtilFixtures.PROCESSSJAVAFILENAMEWITHBARS);
-    String javaFileName = OpenApiUtil.processJavaFileName(OpenApiUtilFixtures.PROCESSJAVAFILENAME);
+    String javaFileNameWithBars = OpenApiUtil.processJavaFileName(OpenApiUtilTestHelper.PROCESSSJAVAFILENAMEWITHBARS);
+    String javaFileName = OpenApiUtil.processJavaFileName(OpenApiUtilTestHelper.PROCESSJAVAFILENAME);
     assertThat(javaFileNameWithBars).hasToString(TESTNAME);
     assertThat(javaFileName).hasToString(TESTNAME);
   }

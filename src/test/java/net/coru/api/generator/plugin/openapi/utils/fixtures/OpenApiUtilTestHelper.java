@@ -6,7 +6,7 @@
 
 package net.coru.api.generator.plugin.openapi.utils.fixtures;
 
-public class OpenApiUtilFixtures {
+public class OpenApiUtilTestHelper {
 
   public static final String TESTNAME = "Testname";
 
