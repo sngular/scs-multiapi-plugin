@@ -50,7 +50,7 @@ public interface ${className?cap_first}Api {
 <#list pathObjects as path>
 <#list path.operationObjects as operation>
   /**
-  * ${operation.operationType} ${path.pathName} : <#if operation.summary?has_content>${operation.summary}<#else>""</#if><#if operation.responseObjects?has_content>
+  * ${operation.operationType} ${path.pathName} <#if operation.summary?has_content>: ${operation.summary}</#if><#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
   *<#list operation.parameterObjects as parameter> @param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
   </#if>
