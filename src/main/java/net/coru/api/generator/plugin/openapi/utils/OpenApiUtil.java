@@ -194,6 +194,19 @@ public class OpenApiUtil {
       }
     }
   }
+
+  public static String processJavaFileName(final String apisEntry) {
+    final String javaFileName;
+    if (apisEntry.contains("/")) {
+      final String[] wholeApiEntry = apisEntry.split("/");
+      javaFileName = StringUtils.capitalize(wholeApiEntry[0].replaceAll("[^A-Za-z0-9]",""));
+    } else {
+      javaFileName = StringUtils.capitalize(apisEntry.replaceAll("[^A-Za-z0-9]",""));
+    }
+    return javaFileName;
+  }
+
+
 }
 
 
