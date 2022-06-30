@@ -44,12 +44,12 @@
               <filePath>event-api.yml</filePath>
               <consumer>
                 <classNamePostfix>TestClassName</classNamePostfix>
-                <entitiesPostfix>DTO</entitiesPostfix>
+                <modelNameSuffix>DTO</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </consumer>
               <streamBridge>
-                <entitiesPostfix>Mapper</entitiesPostfix>
+                <modelNameSuffix>Mapper</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </streamBridge>

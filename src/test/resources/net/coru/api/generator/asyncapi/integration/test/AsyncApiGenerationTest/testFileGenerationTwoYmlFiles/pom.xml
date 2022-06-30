@@ -47,7 +47,7 @@
               <filePath>event-api2.yml</filePath>
               <supplier>
                 <ids>publishOperation2</ids>
-                <entitiesPostfix>DTO</entitiesPostfix>
+                <modelNameSuffix>DTO</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.producer2</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </supplier>

@@ -41,7 +41,7 @@
         <configuration>
           <fileSpecs>
             <fileSpec>
-              <inputSpec>api-test.yml</inputSpec>
+              <filePath>api-test.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testclientpackage</apiPackage>
               <modelPackage>net.coru.multifileplugin.testclientpackage.model</modelPackage>
               <clientPackage>net.coru.multifileplugin.testclientpackage.client</clientPackage>

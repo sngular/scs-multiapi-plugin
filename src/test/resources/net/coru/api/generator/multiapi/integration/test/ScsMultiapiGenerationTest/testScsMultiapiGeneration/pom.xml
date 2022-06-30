@@ -44,13 +44,13 @@
                   <consumer>
                     <ids>publishOperation</ids>
                     <classNamePostfix>TestClassName</classNamePostfix>
-                    <entitiesPostfix>DTO</entitiesPostfix>
+                    <modelNameSuffix>DTO</modelNameSuffix>
                     <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
                     <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
                   </consumer>
                   <supplier>
                     <ids>subscribeOperation</ids>
-                    <entitiesPostfix>Mapper</entitiesPostfix>
+                    <modelNameSuffix>Mapper</modelNameSuffix>
                     <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
                     <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
                   </supplier>
@@ -67,7 +67,7 @@
             <configuration>
               <fileSpecs>
                 <fileSpec>
-                  <inputSpec>api-test.yml</inputSpec>
+                  <filePath>api-test.yml</filePath>
                   <apiPackage>net.coru.multifileplugin.testapi</apiPackage>
                   <modelPackage>net.coru.multifileplugin.testapi.model</modelPackage>
                   <modelNamePrefix>Api</modelNamePrefix>

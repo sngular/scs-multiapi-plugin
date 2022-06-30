@@ -45,7 +45,7 @@
               <consumer>
                 <ids>subscribeOperation</ids>
                 <classNamePostfix>TestClassName</classNamePostfix>
-                <entitiesPostfix>DTO</entitiesPostfix>
+                <modelNameSuffix>DTO</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </consumer>

@@ -41,7 +41,7 @@
         <configuration>
           <fileSpecs>
             <fileSpec>
-              <inputSpec>api-tags-test.yml</inputSpec>
+              <filePath>api-tags-test.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testtags</apiPackage>
               <modelPackage>net.coru.multifileplugin.testtags.model</modelPackage>
               <useTagsGroup>true</useTagsGroup>

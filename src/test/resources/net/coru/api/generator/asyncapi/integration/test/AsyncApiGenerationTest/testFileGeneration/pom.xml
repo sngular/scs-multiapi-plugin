@@ -45,13 +45,13 @@
               <consumer>
                 <ids>publishOperation</ids>
                 <classNamePostfix>TestClassName</classNamePostfix>
-                <entitiesPostfix>DTO</entitiesPostfix>
+                <modelNameSuffix>DTO</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </consumer>
               <supplier>
                 <ids>subscribeOperation</ids>
-                <entitiesPostfix>Mapper</entitiesPostfix>
+                <modelNameSuffix>Mapper</modelNameSuffix>
                 <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </supplier>
