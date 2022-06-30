@@ -21,11 +21,11 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
 
+  private static final String REQUIRED = "Required";
+
   private static final String ARRAY = "array";
 
   private static final String MAP = "map";
-
-  public static final String REQUIRED = "Required";
 
   private MapperContentUtil() {}
 
