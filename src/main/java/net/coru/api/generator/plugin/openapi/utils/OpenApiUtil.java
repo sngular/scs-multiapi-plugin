@@ -198,7 +198,7 @@ public class OpenApiUtil {
 
   public static String processJavaFileName(final String apisEntry) {
     String javaFileName = "";
-    List<Integer> positionList = new ArrayList<>();
+    final List<Integer> positionList = new ArrayList<>();
     if (apisEntry.contains("/")) {
       final String[] wholeApiEntry = apisEntry.split("/");
       javaFileName = capLettersAfterSpecialCharacters(wholeApiEntry[0], positionList);
