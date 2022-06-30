@@ -2,7 +2,7 @@ package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class InlineResponse200CreateGameDTO {
 
@@ -41,7 +41,7 @@ public class InlineResponse200CreateGameDTO {
   * Get message
   * @return message
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "message", required = false)
   public MessageDTO getMessage() {
     return message;
   }
@@ -53,7 +53,7 @@ public class InlineResponse200CreateGameDTO {
   * Get code
   * @return code
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "code", required = false)
   public Integer getCode() {
     return code;
   }

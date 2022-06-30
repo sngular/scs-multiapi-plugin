@@ -25,6 +25,8 @@ public class MapperContentUtil {
 
   private static final String MAP = "map";
 
+  public static final String REQUIRED = "Required";
+
   private MapperContentUtil() {}
 
   public static SchemaObject mapComponentToSchemaObject(final Schema<?> schema, final String nameSchema, final FileSpec fileSpec, final String modelPackage) {
@@ -53,6 +55,10 @@ public class MapperContentUtil {
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
         listHashMap.put(StringUtils.capitalize(fieldObject.getImportClass()), List.of(modelPackage + "." + StringUtils.capitalize(fieldObject.getImportClass())));
       }
+      if (Boolean.TRUE.equals(fieldObject.getRequired())) {
+        listHashMap.computeIfAbsent(REQUIRED, key -> List.of("javax.validation.constraints.NotNull"));
+
+      }
     }
 
     if (!listHashMap.isEmpty()) {
@@ -70,6 +76,9 @@ public class MapperContentUtil {
       mapperProperties.forEach((key, value) -> {
         final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
         setFieldType(field, value, schema, fileSpec);
+        if (Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key)) {
+          field.setRequired(true);
+        }
         fieldObjectArrayList.add(field);
       });
     }
