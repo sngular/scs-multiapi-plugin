@@ -6,6 +6,8 @@
 
 package net.coru.api.generator.plugin.openapi.model;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +27,8 @@ public class SchemaFieldObject {
 
   private String importClass;
 
-  private String required;
+  private Boolean required;
+
+  private Map<String, String> enumValues;
 
 }

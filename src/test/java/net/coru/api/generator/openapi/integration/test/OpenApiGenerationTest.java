@@ -44,6 +44,36 @@ public class OpenApiGenerationTest {
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testApiEnumsGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestInfoDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testApiEnumsLombokGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestInfoDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiPathParameterGeneration(MavenProjectResult result) throws IOException {
     List<File> expectedFile = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/TestApi.java"));
@@ -217,4 +247,21 @@ public class OpenApiGenerationTest {
 
     validateFiles(expectedFileFirst, targetFirstFolder);
   }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testApiPathWithBarsGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/TestApi.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/TestSchemaApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestInfoDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles);
+  }
+
 }

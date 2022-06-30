@@ -9,13 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Flux;
-import java.nio.charset.StandardCharsets;
-import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
@@ -25,16 +20,16 @@ import net.coru.multifileplugin.testapi.model.ApiTestDTO;
 
 public interface TestApi {
 
-  private static Mono<Void> getExampleResponse(ServerWebExchange exchange, String example) {
-    return exchange.getResponse().writeWith(Mono.just(new DefaultDataBufferFactory().wrap(example.getBytes(StandardCharsets.UTF_8))));
+  default Optional<NativeWebRequest> getRequest() {
+    return Optional.empty();
   }
 
   /**
   * GET /test/{testId} : Info for a specific test
-  * @param  testId The id of the test to retrieve true
+  * @param testId The id of the test to retrieve true
   * @return  Expected response to a valid request; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
   */
+
   @Operation(
      operationId = "showTestById",
      summary = "Info for a specific test",
@@ -48,24 +43,15 @@ public interface TestApi {
     value = "/test/{testId}",
     produces = { "application/json" }
   )
-  default Mono<ResponseEntity<ApiTestInfoDTO>> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId, @ApiIgnore final ServerWebExchange exchange) {
-    Mono<Void> result = Mono.empty();
-    exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-    for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-      if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-        String exampleString = "{\"error\":\"501 NOT IMPLEMENTED\"}";
-        result = getExampleResponse(exchange, exampleString);
-        break;
-      }
-    }
-    return result.then(Mono.empty());
-  }
 
+  default ResponseEntity<ApiTestInfoDTO> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
   /**
   * GET /test : List all available test
   * @return  A paged array of tests; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
   */
+
   @Operation(
      operationId = "listTest",
      summary = "List all available test",
@@ -79,17 +65,9 @@ public interface TestApi {
     value = "/test",
     produces = { "application/json" }
   )
-  default Mono<ResponseEntity<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
-    Mono<Void> result = Mono.empty();
-    exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-    for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-      if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-        String exampleString = "{\"error\":\"501 NOT IMPLEMENTED\"}";
-        result = getExampleResponse(exchange, exampleString);
-        break;
-      }
-    }
-    return result.then(Mono.empty());
+
+  default ResponseEntity<ApiTestDTO> listTest() {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
 }
