@@ -55,7 +55,7 @@ public interface ${className?cap_first}Api {
 <#list pathObjects as path>
 <#list path.operationObjects as operation>
   /**
-  * ${operation.operationType} ${path.pathName} : ${operation.summary}
+  * ${operation.operationType} ${path.pathName} <#if operation.summary?has_content>: ${operation.summary}</#if>
   <#if operation.responseObjects?has_content>
    <#if operation.parameterObjects?has_content>
   * @param <#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
@@ -71,11 +71,11 @@ public interface ${className?cap_first}Api {
   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
   */
   @Operation(
-     operationId = "${operation.operationId}",
-     summary = "${operation.summary}",
+     operationId = "${operation.operationId}",<#if operation.summary?has_content>
+     summary = "${operation.summary}",</#if>
      tags = { <#list operation.tags as tag>"${tag}"</#list> }<#if operation.responseObjects?has_content>,
      responses = {
-       <#list operation.responseObjects as response> @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}"<#if content.refName?has_content>, schema = @Schema(implementation = ${content.refName}.class))</#if></#list></#if>)<#if !response?is_last>,</#if></#list>
+         <#list operation.responseObjects as response> @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}" <#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}" <#if content.refName?has_content>,schema = @Schema(implementation = ${content.refName?cap_first}.class))</#if> </#list></#if>)<#if !response?is_last>,</#if></#list>
      }</#if>
   )
   @RequestMapping(

@@ -13,6 +13,9 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName}")
+  <#if field.required?has_content && field.required == true>
+  @NotNull
+  </#if>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
   private List<${field.dataType}> ${field.baseName} = new ArrayList<${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">

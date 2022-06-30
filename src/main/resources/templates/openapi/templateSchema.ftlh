@@ -2,7 +2,7 @@ package ${packageModel};
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 <#list schema.importList as import>
 import ${import};
 </#list>
@@ -113,10 +113,10 @@ public class ${schema.className} {
   * Get ${field.baseName?uncap_first}
   * @return ${field.baseName?uncap_first}
   */
-  @ApiModelProperty(<#if field.required?has_content> = ${field.required}, </#if> value = "description")
   <#if field.required?has_content && field.required == true>
   @NotNull
   </#if>
+  @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
   public List<${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName};

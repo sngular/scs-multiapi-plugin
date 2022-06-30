@@ -27,7 +27,7 @@ public class SchemaFieldObject {
 
   private String importClass;
 
-  private String required;
+  private Boolean required;
 
   private Map<String, String> enumValues;
 
