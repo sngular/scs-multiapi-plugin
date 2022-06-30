@@ -211,9 +211,9 @@ public class OpenApiUtil {
 
   private static String capLettersAfterSpecialCharacters(final String pathName, final List<Integer> positionList) {
     String javaFileName;
-    char[] prueba = pathName.toCharArray();
-    for (int i = 0; i < prueba.length; i++) {
-      if (!Character.isLetterOrDigit(prueba[i])) {
+    final char[] pathAsChars = pathName.toCharArray();
+    for (int i = 0; i < pathAsChars.length; i++) {
+      if (!Character.isLetterOrDigit(pathAsChars[i])) {
         positionList.add(i);
       }
     }
