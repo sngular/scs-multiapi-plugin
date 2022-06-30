@@ -2,8 +2,7 @@ package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ApiErrorDTO {
 
@@ -42,8 +41,7 @@ public class ApiErrorDTO {
   * Get message
   * @return message
   */
-  @NotNull
-  @Schema(name = "message", required = true)
+  @ApiModelProperty( value = "description")
   public String getMessage() {
     return message;
   }
@@ -55,8 +53,7 @@ public class ApiErrorDTO {
   * Get code
   * @return code
   */
-  @NotNull
-  @Schema(name = "code", required = true)
+  @ApiModelProperty( value = "description")
   public Integer getCode() {
     return code;
   }

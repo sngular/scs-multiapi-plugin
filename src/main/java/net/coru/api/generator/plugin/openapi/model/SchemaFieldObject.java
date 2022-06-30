@@ -25,6 +25,6 @@ public class SchemaFieldObject {
 
   private String importClass;
 
-  private String required;
+  private Boolean required;
 
 }

@@ -2,8 +2,7 @@ package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -52,8 +51,7 @@ public class ApiTestInfoDTO {
   * Get testName
   * @return testName
   */
-  @NotNull
-  @Schema(name = "testName", required = true)
+  @ApiModelProperty( value = "description")
   public String getTestName() {
     return testName;
   }
@@ -65,8 +63,7 @@ public class ApiTestInfoDTO {
   * Get testers
   * @return testers
   */
-  @NotNull
-  @Schema(name = "testers", required = true)
+  @ApiModelProperty( value = "description")
   public List<String> getTesters() {
     return testers;
   }

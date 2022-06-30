@@ -2,7 +2,7 @@ package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class MessageDTO {
 
@@ -32,7 +32,7 @@ public class MessageDTO {
   * Get description
   * @return description
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "description", required = false)
   public String getDescription() {
     return description;
   }
