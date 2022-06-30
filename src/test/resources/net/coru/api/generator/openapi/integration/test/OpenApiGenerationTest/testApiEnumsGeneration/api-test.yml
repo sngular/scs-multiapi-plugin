@@ -68,6 +68,7 @@ components:
       required:
       - id
       - name
+      - unionEnum
       properties:
         id:
           type: integer

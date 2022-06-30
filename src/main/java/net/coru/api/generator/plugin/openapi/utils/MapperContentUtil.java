@@ -60,28 +60,30 @@ public class MapperContentUtil {
     final var importList = new ArrayList<String>();
 
     for (SchemaFieldObject fieldObject : fieldObjectList) {
-      if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
-        if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
-          listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
-        } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
-          listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
-        } else if (Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
-          listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
-        }
-      }
+      getTypeImports(listHashMap, fieldObject);
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
         listHashMap.put(StringUtils.capitalize(fieldObject.getImportClass()), List.of(modelPackage + "." + StringUtils.capitalize(fieldObject.getImportClass())));
       }
-      if (Boolean.TRUE.equals(fieldObject.getRequired())) {
+      if (fieldObject.getRequired()) {
         listHashMap.computeIfAbsent(REQUIRED, key -> List.of("javax.validation.constraints.NotNull"));
-
       }
     }
-
     if (!listHashMap.isEmpty()) {
       listHashMap.forEach((key, value) -> importList.addAll(value));
     }
     return importList;
+  }
+
+  private static void getTypeImports(final HashMap<String, List<String>> listHashMap, final SchemaFieldObject fieldObject) {
+    if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
+      if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+        listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
+      } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
+        listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+      } else if (Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+        listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+      }
+    }
   }
 
   private static List<SchemaFieldObject> getFields(final Schema<?> schema, final FileSpec fileSpec) {
@@ -93,27 +95,19 @@ public class MapperContentUtil {
       mapperProperties.forEach((key, value) -> {
         final var enumValues = value.getEnum();
         if (CollectionUtils.isNotEmpty(enumValues)) {
-          processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues);
+          processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues, schema);
         } else {
           final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
-          setFieldType(field, value, schema, fileSpec);
-          if (Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key)) {
-            field.setRequired(true);
-          }
+          setFieldType(field, value, schema, fileSpec, key);
           fieldObjectArrayList.add(field);
         }
-      });
-
-      mapperProperties.forEach((key, value) -> {
-        final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
-        setFieldType(field, value, schema, fileSpec);
-        fieldObjectArrayList.add(field);
       });
     }
     return fieldObjectArrayList;
   }
 
-  private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final FileSpec fileSpec) {
+  private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final FileSpec fileSpec, final String key) {
+    field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
     if (value instanceof ArraySchema) {
       final var typeArray = MapperUtil.getTypeArray((ArraySchema) value, fileSpec);
       field.setDataType(typeArray);
@@ -135,8 +129,9 @@ public class MapperContentUtil {
   }
 
   private static void processEnumField(final String key, final Schema<?> value, final FileSpec fileSpec,
-      final ArrayList<SchemaFieldObject> fieldObjectArrayList, final List<?> enumValues) {
+      final ArrayList<SchemaFieldObject> fieldObjectArrayList, final List<?> enumValues, final Schema<?> schema) {
     final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
+    field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
     final var dataType = MapperUtil.getSimpleType(value, fileSpec);
     field.setDataType(dataType);
 

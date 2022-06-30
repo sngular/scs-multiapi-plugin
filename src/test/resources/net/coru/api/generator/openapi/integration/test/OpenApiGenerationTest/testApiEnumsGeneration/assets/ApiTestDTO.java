@@ -2,7 +2,8 @@ package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ApiTestDTO {
@@ -132,7 +133,8 @@ public class ApiTestDTO {
   * Get name
   * @return name
   */
-  @ApiModelProperty( value = "description")
+  @NotNull
+  @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
@@ -144,7 +146,7 @@ public class ApiTestDTO {
   * Get unionIntegerEnum
   * @return unionIntegerEnum
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "unionIntegerEnum", required = false)
   public UnionIntegerEnum getUnionIntegerEnum() {
     return unionIntegerEnum;
   }
@@ -156,7 +158,7 @@ public class ApiTestDTO {
   * Get unionNumberEnum
   * @return unionNumberEnum
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "unionNumberEnum", required = false)
   public UnionNumberEnum getUnionNumberEnum() {
     return unionNumberEnum;
   }
@@ -168,7 +170,8 @@ public class ApiTestDTO {
   * Get id
   * @return id
   */
-  @ApiModelProperty( value = "description")
+  @NotNull
+  @Schema(name = "id", required = true)
   public Integer getId() {
     return id;
   }
@@ -180,7 +183,8 @@ public class ApiTestDTO {
   * Get unionEnum
   * @return unionEnum
   */
-  @ApiModelProperty( value = "description")
+  @NotNull
+  @Schema(name = "unionEnum", required = true)
   public UnionEnum getUnionEnum() {
     return unionEnum;
   }
