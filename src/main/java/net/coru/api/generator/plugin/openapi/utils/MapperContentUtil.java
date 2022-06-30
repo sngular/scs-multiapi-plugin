@@ -14,9 +14,11 @@ import java.util.Objects;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import net.coru.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import net.coru.api.generator.plugin.openapi.model.SchemaFieldObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
@@ -26,6 +28,19 @@ public class MapperContentUtil {
   private static final String ARRAY = "array";
 
   private static final String MAP = "map";
+
+  private static final String BIG_DECIMAL = "bigDecimal";
+
+  private static final String INTEGER = "integer";
+
+  private static final String DOUBLE = "double";
+
+  private static final String FLOAT = "float";
+
+  private static final String LONG = "long";
+
+  private static final String STRING = "string";
+
 
   private MapperContentUtil() {}
 
@@ -45,26 +60,30 @@ public class MapperContentUtil {
     final var importList = new ArrayList<String>();
 
     for (SchemaFieldObject fieldObject : fieldObjectList) {
-      if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
-        if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
-          listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
-        } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
-          listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
-        }
-      }
+      getTypeImports(listHashMap, fieldObject);
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
         listHashMap.put(StringUtils.capitalize(fieldObject.getImportClass()), List.of(modelPackage + "." + StringUtils.capitalize(fieldObject.getImportClass())));
       }
-      if (Boolean.TRUE.equals(fieldObject.getRequired())) {
+      if (fieldObject.getRequired()) {
         listHashMap.computeIfAbsent(REQUIRED, key -> List.of("javax.validation.constraints.NotNull"));
-
       }
     }
-
     if (!listHashMap.isEmpty()) {
       listHashMap.forEach((key, value) -> importList.addAll(value));
     }
     return importList;
+  }
+
+  private static void getTypeImports(final HashMap<String, List<String>> listHashMap, final SchemaFieldObject fieldObject) {
+    if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
+      if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+        listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
+      } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
+        listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+      } else if (Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+        listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+      }
+    }
   }
 
   private static List<SchemaFieldObject> getFields(final Schema<?> schema, final FileSpec fileSpec) {
@@ -74,18 +93,21 @@ public class MapperContentUtil {
       final var mapperProperties = new HashMap<>(schema.getProperties());
 
       mapperProperties.forEach((key, value) -> {
-        final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
-        setFieldType(field, value, schema, fileSpec);
-        if (Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key)) {
-          field.setRequired(true);
+        final var enumValues = value.getEnum();
+        if (CollectionUtils.isNotEmpty(enumValues)) {
+          processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues, schema);
+        } else {
+          final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
+          setFieldType(field, value, schema, fileSpec, key);
+          fieldObjectArrayList.add(field);
         }
-        fieldObjectArrayList.add(field);
       });
     }
     return fieldObjectArrayList;
   }
 
-  private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final FileSpec fileSpec) {
+  private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final FileSpec fileSpec, final String key) {
+    field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
     if (value instanceof ArraySchema) {
       final var typeArray = MapperUtil.getTypeArray((ArraySchema) value, fileSpec);
       field.setDataType(typeArray);
@@ -103,6 +125,50 @@ public class MapperContentUtil {
       }
       field.setImportClass(getImportClass(typeObject));
       field.setDataType(typeObject);
+    }
+  }
+
+  private static void processEnumField(final String key, final Schema<?> value, final FileSpec fileSpec,
+      final ArrayList<SchemaFieldObject> fieldObjectArrayList, final List<?> enumValues, final Schema<?> schema) {
+    final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
+    field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
+    final var dataType = MapperUtil.getSimpleType(value, fileSpec);
+    field.setDataType(dataType);
+
+    final HashMap<String, String> enumValuesMap = new HashMap<>();
+
+    for (var enumValue : enumValues) {
+      String valueName = enumValue.toString();
+      valueName = valueName.replaceAll("\\.", "_DOT_");
+
+      switch (dataType) {
+        case INTEGER:
+          enumValuesMap.put("INTEGER_" + valueName, enumValue.toString());
+          break;
+        case LONG:
+          enumValuesMap.put("LONG_" + valueName, enumValue.toString() + "l");
+          break;
+        case DOUBLE:
+          enumValuesMap.put("DOUBLE_" + valueName, enumValue.toString());
+          break;
+        case FLOAT:
+          enumValuesMap.put("FLOAT_" + valueName, enumValue.toString() + "f");
+          break;
+        case BIG_DECIMAL:
+          enumValuesMap.put("BIG_DECIMAL_" + valueName, "new BigDecimal(\"" + enumValue.toString() + "\")");
+          break;
+        case STRING:
+        default:
+          enumValuesMap.put(StringUtils.upperCase(valueName), '"' + enumValue.toString() + '"');
+          break;
+      }
+    }
+
+    if (!enumValuesMap.isEmpty()) {
+      field.setEnumValues(enumValuesMap);
+      fieldObjectArrayList.add(field);
+    } else {
+      throw new BadDefinedEnumException(key);
     }
   }
 
