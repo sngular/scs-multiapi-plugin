@@ -7,6 +7,7 @@
 package net.coru.api.generator.plugin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,6 +25,7 @@ import freemarker.template.TemplateException;
 import net.coru.api.generator.plugin.asyncapi.exception.ChannelNameException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import net.coru.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
 import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
 import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
@@ -280,12 +282,12 @@ public final class OpenAsyncMojo extends AbstractMojo {
     return evaluated;
   }
 
-  private void processSupplierMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+  private void processSupplierMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) throws IOException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
-  private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName) {
+  private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName) throws IOException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     final String regex = "[a-zA-Z0-9\\.\\-]*";
     if (!channelName.matches(regex)) {
@@ -294,36 +296,72 @@ public final class OpenAsyncMojo extends AbstractMojo {
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
   }
 
-  private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+  private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) throws IOException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 
-  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) {
+  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) throws IOException {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
+    final String messageContent = message.get("$ref").asText();
     String namespace = "";
-    if (message.get("$ref") != null && message.get("$ref").asText().startsWith("#")) {
-      final String[] pathToObject = message.get("$ref").asText().split("/");
-      namespace = processModelPackage(pathToObject[pathToObject.length - 1], modelPackage);
-    } else if (message.get("$ref") != null) {
-      String avroFilePath = message.get("$ref").asText();
-      if (message.get("$ref").asText().startsWith("/")) {
-        avroFilePath = avroFilePath.replaceFirst("/", "");
-      }
-      final File avroFile = ymlParentPath.resolve(avroFilePath).toFile();
-      final ObjectMapper mapper = new ObjectMapper();
-      try {
-        final JsonNode fileTree = mapper.readTree(avroFile);
-        final String fullNamespace = fileTree.get("namespace").asText() + "." + fileTree.get("name").asText();
-        namespace = processModelPackage(fullNamespace, modelPackage);
-      } catch (final IOException e) {
-        e.printStackTrace();
+    if (message.get("$ref") != null) {
+      if (messageContent.startsWith("#")) {
+        final String[] pathToObject = messageContent.split("/");
+        namespace = processModelPackage(pathToObject[pathToObject.length - 1], modelPackage);
+      } else if (messageContent.contains("#")) {
+        namespace = processExternalRef(modelPackage, ymlParentPath, message);
+      } else {
+        namespace = processExternalAvro(modelPackage, ymlParentPath, messageContent);
       }
     } else {
       namespace = processModelPackage(message.fieldNames().next(), modelPackage);
     }
     return new MutablePair<>(operationId, namespace);
+  }
+
+  private String processExternalAvro(final String modelPackage, final Path ymlParentPath, final String messageContent) {
+    String avroFilePath = messageContent;
+    String namespace = "";
+    if (messageContent.startsWith("/")) {
+      avroFilePath = avroFilePath.replaceFirst("/", "");
+    }
+    final File avroFile = ymlParentPath.resolve(avroFilePath).toFile();
+    final ObjectMapper mapper = new ObjectMapper();
+    try {
+      final JsonNode fileTree = mapper.readTree(avroFile);
+      final String fullNamespace = fileTree.get("namespace").asText() + "." + fileTree.get("name").asText();
+      namespace = processModelPackage(fullNamespace, modelPackage);
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+    return namespace;
+  }
+
+  private String processExternalRef(final String modelPackage, final Path ymlParentPath, final JsonNode message) throws IOException {
+    final String[] pathToObject = message.get("$ref").asText().split("/");
+    final String component = pathToObject[pathToObject.length - 1];
+    final String[] pathToFile = message.get("$ref").asText().split("#");
+    final String filePath = pathToFile[0];
+
+    File file = new File(filePath);
+    if (filePath.startsWith(".")) {
+      file = ymlParentPath.resolve(file.toPath()).toFile();
+    }
+    final ObjectMapper om = new ObjectMapper(new YAMLFactory());
+    final var node = om.readTree(file);
+    final var internalNode = node.get("components").get("messages");
+
+    if (file.exists()) {
+      if (Objects.nonNull(internalNode.findValue(component))) {
+        return processModelPackage(component, modelPackage);
+      } else {
+        throw new ExternalRefComponentNotFoundException(component, filePath);
+      }
+    } else {
+      throw new FileNotFoundException("File " + filePath + " defined in the YML not found");
+    }
   }
 
   private String processModelPackage(final String extractedPackage, final String modelPackage) {

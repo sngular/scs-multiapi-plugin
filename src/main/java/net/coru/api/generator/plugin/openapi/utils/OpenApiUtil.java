@@ -9,6 +9,7 @@ package net.coru.api.generator.plugin.openapi.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -194,6 +195,36 @@ public class OpenApiUtil {
       }
     }
   }
+
+  public static String processJavaFileName(final String apisEntry) {
+    String javaFileName = "";
+    final List<Integer> positionList = new ArrayList<>();
+    if (apisEntry.contains("/")) {
+      final String[] wholeApiEntry = apisEntry.split("/");
+      javaFileName = capLettersAfterSpecialCharacters(wholeApiEntry[0], positionList);
+    } else {
+      javaFileName = capLettersAfterSpecialCharacters(apisEntry, positionList);
+    }
+    javaFileName = StringUtils.capitalize(javaFileName.replaceAll("[^A-Za-z0-9]", ""));
+    return javaFileName;
+  }
+
+  private static String capLettersAfterSpecialCharacters(final String pathName, final List<Integer> positionList) {
+    String javaFileName;
+    final char[] pathAsChars = pathName.toCharArray();
+    for (int i = 0; i < pathAsChars.length; i++) {
+      if (!Character.isLetterOrDigit(pathAsChars[i])) {
+        positionList.add(i);
+      }
+    }
+    javaFileName = pathName;
+    for (Integer position : positionList) {
+      javaFileName = javaFileName.substring(0, position + 1) + javaFileName.substring(position + 1, position + 2).toUpperCase(Locale.ROOT) + javaFileName.substring(position + 2);
+    }
+    return javaFileName;
+  }
+
+
 }
 
 
