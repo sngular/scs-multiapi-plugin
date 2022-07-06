@@ -65,11 +65,11 @@ public class ScsMultiapiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
 
-    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi");
-    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi/model");
+    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi");
+    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();

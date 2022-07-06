@@ -120,8 +120,8 @@ public class OpenApiGenerationTest {
   private void commonTest(final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles) throws IOException {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi");
-    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi/model");
+    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi");
+    Path pathToTargetModel = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model");
 
     File targetApiFolder = pathToTargetApi.toFile();
     assertThat(targetApiFolder).isNotEmptyDirectory();
@@ -143,7 +143,7 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    pathToTarget = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testtags");
+    pathToTarget = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testtags");
 
     File targetApiFolder = pathToTarget.toFile();
     assertThat(targetApiFolder).isNotEmptyDirectory();
@@ -161,8 +161,8 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testmultifile/first");
-    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testmultifile/second");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/first");
+    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/second");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -183,7 +183,7 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testwebclient");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testwebclient");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -203,8 +203,8 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testclientpackage/client");
-    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testclientpackage/client/auth");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client");
+    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client/auth");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -224,7 +224,7 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testrestclient");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testrestclient");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -240,7 +240,7 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/multifileplugin/testapi");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();

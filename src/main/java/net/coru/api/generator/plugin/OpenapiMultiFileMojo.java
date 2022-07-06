@@ -76,6 +76,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    addGeneratedSourcesToProject();
     templateFactory = new TemplateFactory();
     if (null != fileSpecs && !fileSpecs.isEmpty()) {
       processFileSpec(fileSpecs);
@@ -85,13 +86,17 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   }
 
+  private void addGeneratedSourcesToProject() {
+    final Path projectPath = project.getBasedir().toPath().resolve("target/" + PluginConstants.GENERATED_SOURCES_PATH);
+    project.addCompileSourceRoot(projectPath.toString());
+  }
+
   private void processFileSpec(final List<FileSpec> fileSpecsList) throws MojoExecutionException {
 
     for (FileSpec fileSpec : fileSpecsList) {
       try {
         processPackage(fileSpec.getApiPackage());
         final String filePathToSave = processPath(fileSpec.getApiPackage(), false);
-        project.addCompileSourceRoot(filePathToSave);
         processFile(fileSpec, filePathToSave);
         createClients(fileSpec);
       } catch (final MojoExecutionException e) {
@@ -124,7 +129,6 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
     if (isWebClient || isRestClient) {
       final String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE, false);
-      project.addCompileSourceRoot(clientPath);
       try {
         if (Boolean.TRUE.equals(isWebClient)) {
           templateFactory.fillTemplateWebClient(clientPath);

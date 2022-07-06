@@ -78,6 +78,8 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   @Override
   public void execute() {
+    addGeneratedSourcesToProject();
+
     templateFactory = new TemplateFactory();
 
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -126,6 +128,11 @@ public final class OpenAsyncMojo extends AbstractMojo {
         e.printStackTrace();
       }
     }
+  }
+
+  private void addGeneratedSourcesToProject() {
+    final Path projectPath = project.getBasedir().toPath().resolve("target/" + PluginConstants.GENERATED_SOURCES_PATH);
+    project.addCompileSourceRoot(projectPath.toString());
   }
 
   private boolean isValidOperation(
@@ -247,7 +254,6 @@ public final class OpenAsyncMojo extends AbstractMojo {
     if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
       throw new FileSystemException(path.toFile().getName());
     }
-    project.addCompileSourceRoot(path.toString());
     return path;
   }
 
