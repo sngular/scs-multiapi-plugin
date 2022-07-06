@@ -25,6 +25,7 @@ import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import net.coru.api.generator.plugin.openapi.exception.DuplicateModelClassException;
+import net.coru.api.generator.plugin.openapi.exception.OpenApiGeneratedSourceFolderException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
@@ -53,16 +54,22 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".client";
 
-  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
-
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
+
+  @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
+  private File targetFolder;
 
   @Parameter(property = "fileSpecs")
   private List<FileSpec> fileSpecs;
 
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
+
+  @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
+  private String generatedSourcesFolder;
+
+  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
 
   private final Set<String> overwriteModelList = new HashSet<>();
 
@@ -74,9 +81,13 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private final List<String> authentications = new ArrayList<>();
 
+  private String processedGeneratedSourcesFolder;
+
   @Override
   public void execute() throws MojoExecutionException {
+    processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
+
     templateFactory = new TemplateFactory();
     if (null != fileSpecs && !fileSpecs.isEmpty()) {
       processFileSpec(fileSpecs);
@@ -86,8 +97,16 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   }
 
+  private void processGeneratedSourcesFolderName() {
+    if (generatedSourcesFolder.matches("[a-zA-Z\\d\\-]+")) {
+      processedGeneratedSourcesFolder = generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
+    } else {
+      throw new OpenApiGeneratedSourceFolderException(generatedSourcesFolder);
+    }
+  }
+
   private void addGeneratedSourcesToProject() {
-    final Path projectPath = project.getBasedir().toPath().resolve("target/" + PluginConstants.GENERATED_SOURCES_PATH);
+    final Path projectPath = targetFolder.toPath().resolve(processedGeneratedSourcesFolder);
     project.addCompileSourceRoot(projectPath.toString());
   }
 
@@ -237,7 +256,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     if (pathList.length > 0) {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     } else {
-      path = project.getBasedir().toPath().resolve("target");
+      path = targetFolder.toPath();
       path.toFile().mkdir();
       path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     }
@@ -250,12 +269,12 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = PluginConstants.GENERATED_SOURCES_PATH + fileSpecPackage.trim().replaceAll("\\.", "/");
+      path = processedGeneratedSourcesFolder + fileSpecPackage.trim().replaceAll("\\.", "/");
     } else if (project.getModel().getGroupId() != null) {
-      path = PluginConstants.GENERATED_SOURCES_PATH + project.getModel().getGroupId().replaceAll("\\.", "/");
+      path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_TARGET_PACKAGE;
-      path = PluginConstants.GENERATED_SOURCES_PATH + pathDefault.replaceAll("\\.", "/");
+      path = processedGeneratedSourcesFolder + pathDefault.replaceAll("\\.", "/");
     }
     return path;
   }
