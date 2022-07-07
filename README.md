@@ -236,14 +236,14 @@ generated.
 
 #### Generated Sources Folder
 
-There is also an independent parameter that affects to all the *fileSpecs* 
+There is also an independent parameter that affects to all the *fileSpecs*
 generated, which is called **generatedSourcesFolder**. This parameter expects
 to receive a string, that could include letters, numbers and `-`, with the
 name of the folder where generated sources by the plugin will be located.
 
-By default, it's values is `generated-sources`, so the files will be in 
+By default, it's values is `generated-sources`, so the files will be in
 `.../target/generated-sources/apigenerator/...`. If you set another value in
-the pom.xml file, as in the example above, files will remain in 
+the pom.xml file, as in the example above, files will remain in
 `.../target/sources-generated/apigenerator/...`.
 
 ### How targetPackage is setted?
