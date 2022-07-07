@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import freemarker.template.TemplateException;
+import net.coru.api.generator.plugin.asyncapi.exception.AsyncApiGeneratedSourceFolderException;
 import net.coru.api.generator.plugin.asyncapi.exception.ChannelNameException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
@@ -63,8 +64,14 @@ public final class OpenAsyncMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
 
+  @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
+  private File targetFolder;
+
   @Parameter(property = "fileSpecs")
   private List<FileSpec> fileSpecs;
+
+  @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
+  private String generatedSourcesFolder;
 
   private TemplateFactory templateFactory;
 
@@ -74,10 +81,15 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private final List<String> processedTargetPackages = new ArrayList<>();
 
-  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains("target");
+  private String processedGeneratedSourcesFolder;
+
+  private final FilenameFilter targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
 
   @Override
   public void execute() {
+    processGeneratedSourcesFolderName();
+    addGeneratedSourcesToProject();
+
     templateFactory = new TemplateFactory();
 
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -126,6 +138,19 @@ public final class OpenAsyncMojo extends AbstractMojo {
         e.printStackTrace();
       }
     }
+  }
+
+  private void processGeneratedSourcesFolderName() {
+    if (generatedSourcesFolder.matches("[a-zA-Z\\d\\-]+")) {
+      processedGeneratedSourcesFolder = generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
+    } else {
+      throw new AsyncApiGeneratedSourceFolderException(generatedSourcesFolder);
+    }
+  }
+
+  private void addGeneratedSourcesToProject() {
+    final Path projectPath = targetFolder.toPath().resolve(processedGeneratedSourcesFolder);
+    project.addCompileSourceRoot(projectPath.toString());
   }
 
   private boolean isValidOperation(
@@ -238,7 +263,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     if (pathList.length > 0) {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(operationParameter));
     } else {
-      path = project.getBasedir().toPath().resolve("target");
+      path = targetFolder.toPath();
       if (!path.toFile().mkdirs()) {
         throw new FileSystemException(path.toFile().getName());
       }
@@ -247,7 +272,6 @@ public final class OpenAsyncMojo extends AbstractMojo {
     if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
       throw new FileSystemException(path.toFile().getName());
     }
-    project.addCompileSourceRoot(path.toString());
     return path;
   }
 
@@ -255,11 +279,11 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final String targetPackage = operationParameter != null ? operationParameter.getTargetPackage() : null;
     final String path;
     if (targetPackage != null) {
-      path = PluginConstants.GENERATED_SOURCES_PATH + targetPackage.replace(".", "/");
+      path = processedGeneratedSourcesFolder + targetPackage.replace(".", "/");
     } else if (project.getModel().getGroupId() != null) {
-      path = PluginConstants.GENERATED_SOURCES_PATH + project.getModel().getGroupId().replace(".", "/");
+      path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replace(".", "/");
     } else {
-      path = PluginConstants.GENERATED_SOURCES_PATH + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
+      path = processedGeneratedSourcesFolder + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
     }
     return path;
   }

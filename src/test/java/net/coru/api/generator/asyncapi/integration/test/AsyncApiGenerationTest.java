@@ -46,8 +46,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();
@@ -79,8 +79,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru");
-    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/producer2");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru");
+    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
     File targetSecondYmlDirectory = pathToTargetSecondYml.toFile();
@@ -114,8 +114,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();
@@ -164,8 +164,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/corunet/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();

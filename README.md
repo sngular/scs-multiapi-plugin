@@ -13,6 +13,7 @@ code classes from YML files based on AsyncApi and OpenAPI.
   - [How to configure the POM file](#how-to-configure-the-pom-file)
 - [AsyncApi Generator](#asyncapi-generator)
   - [Configuration](#configuration)
+    - [Generated Sources Folder](#generated-sources-folder)
   - [How targetPackage is setted?](#how-targetpackage-is-setted)
   - [How modelPackage is setted?](#how-modelpackage-is-setted)
   - [Class Generation](#class-generation)
@@ -139,6 +140,7 @@ which the plugin is designed.
           </supplier>
         </fileSpec>
       </fileSpecs>
+      <generatedSourcesFolder>sources-generated</generatedSourcesFolder>
     </configuration>
   </execution>
 </executions>
@@ -231,6 +233,18 @@ the same way and can receive the same parameters. These parameters are:
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
 generated.
+
+#### Generated Sources Folder
+
+There is also an independent parameter that affects to all the *fileSpecs*
+generated, which is called **generatedSourcesFolder**. This parameter expects
+to receive a string, that could include letters, numbers and `-`, with the
+name of the folder where generated sources by the plugin will be located.
+
+By default, it's values is `generated-sources`, so the files will be in
+`.../target/generated-sources/apigenerator/...`. If you set another value in
+the pom.xml file, as in the example above, files will remain in
+`.../target/sources-generated/apigenerator/...`.
 
 ### How targetPackage is setted?
 
@@ -531,30 +545,32 @@ To customize these fileSpecs tags we are going to specify them inside the
 configuration tag, we must declare the fileSpecs tag that contains all files
 that will be used. Each fileSpec has their own configuration:
 
-| Name                     | Description                                                                                                                                                                                         | Example                                          |
-|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| Name                     | Description                                                                                                                                                                                         | Example                                           |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | filePath                 | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage               | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi              |
-| modelPackage             | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model       |
-| modelNamePrefix          | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                              |
-| modelNameSuffix          | Suffix that will be used after every model´s name                                                                                                                                                   | DTO                                              |
-| callMode                 | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                            |
-| useTagsGroup             | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                            |
-| useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                            |
-| isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                            |
+| apiPackage               | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi                     |
+| modelPackage             | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model               |
+| modelNamePrefix          | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                               |
+| modelNameSuffix          | Suffix that will be used after every model´s name                                                                                                                                                   | DTO                                               |
+| callMode                 | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                             |
+| useTagsGroup             | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                             |
+| useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
+| isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
 prefixes and suffixes and the instances and imports will be made to that model
 within the corresponding Api.
 
-Only one property is configured outside the fileSpecs, the path where the
+There are two properties configured outside the fileSpecs, the path where the
 RestClient and the WebClient will be located, if this option is set in any
-of the fileSpecs.
+of the fileSpecs, and the name of the folder where the generated sources will
+be saved in the target of the project.
 
-| Name      | Description                                            | Example                                 |
-| ---------- |--------------------------------------------------------|-----------------------------------------|
-| clientPackage  | Path where the RestClient and/or WebClient are located | net.coru.apigenerator.openapi.client |
+| Name                   | Description                                                                                              | Example                              |
+|------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------|
+| clientPackage          | Path where the RestClient and/or WebClient are located                                                   | net.coru.apigenerator.openapi.client |
+| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources` | generated-sources                    |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
