@@ -2,6 +2,12 @@ package ${packageModel};
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+<#list schema.fieldObjectList as field>
+  <#if field.dataType?has_content && field.dataTypeSimple == "enum">
+import com.fasterxml.jackson.annotation.JsonValue;
+    <#break>
+  </#if>
+</#list>
 import io.swagger.v3.oas.annotations.media.Schema;
 <#list schema.importList as import>
 import ${import};
