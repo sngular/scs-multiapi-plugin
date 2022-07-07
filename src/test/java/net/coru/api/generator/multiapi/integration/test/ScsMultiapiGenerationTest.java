@@ -86,4 +86,63 @@ public class ScsMultiapiGenerationTest {
     validateFiles(expectedFiles, targetApiDirectory);
     validateFiles(expectedModelFiles, targetModelDirectory);
   }
+
+  @MavenTest
+  @SystemProperty(value = "groupId", content = "${project.groupId}")
+  @SystemProperty(value = "artifactId", content = "${project.artifactId}")
+  @SystemProperty(value = "version", content = "${project.version}")
+  void testMultiapiGeneratedSourcesFolder(MavenProjectResult result) throws IOException {
+
+    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
+
+    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
+
+    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
+                                                        "/testMultiapiGeneratedSourcesFolder/assets/IPublishOperation.java"),
+                                               new File(
+                                                   "src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder" +
+                                                   "/assets/TestClassName.java"));
+
+    List<File> expectedProducerFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets/ISubscribeOperation.java"),
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets/Producer.java"));
+
+    List<String> expectedFileNames = List.of("TestApi.java");
+
+    List<File> expectedFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets" +
+                 "/TestApi.java"));
+
+    List<String> expectedModelFileNames = List.of("ApiErrorDTO.java", "ApiTestDTO.java", "ApiTestInfoDTO.java");
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/testMultiapiGeneratedSourcesFolder/assets/ApiTestInfoDTO.java")
+    );
+
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+
+    Path pathToTargetConsumer = pathToTarget.resolve("target/sources-generated/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/sources-generated/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+
+    Path pathToTargetApi = pathToTarget.resolve("target/sources-generated/apigenerator/net/coru/multifileplugin/testapi");
+    Path pathToTargetModel = pathToTarget.resolve("target/sources-generated/apigenerator/net/coru/multifileplugin/testapi/model");
+
+    File targetConsumerDirectory = pathToTargetConsumer.toFile();
+    File targetProducerDirectory = pathToTargetProducer.toFile();
+    File targetApiDirectory = pathToTargetApi.toFile();
+    File targetModelDirectory = pathToTargetModel.toFile();
+
+    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
+    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
+    checkTargetFiles(expectedFileNames, targetApiDirectory);
+    checkTargetFiles(expectedModelFileNames, targetModelDirectory);
+
+    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
+    validateFiles(expectedProducerFiles, targetProducerDirectory);
+    validateFiles(expectedFiles, targetApiDirectory);
+    validateFiles(expectedModelFiles, targetModelDirectory);
+  }
 }
