@@ -1,6 +1,12 @@
 package ${packageModel};
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+<#list schema.fieldObjectList as field>
+  <#if field.dataType?has_content && field.dataTypeSimple == "enum">
+import com.fasterxml.jackson.annotation.JsonValue;
+    <#break>
+  </#if>
+</#list>
 <#list schema.importList as import>
 import ${import};
 </#list>

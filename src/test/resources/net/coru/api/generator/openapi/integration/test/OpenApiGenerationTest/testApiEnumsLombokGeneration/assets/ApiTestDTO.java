@@ -1,6 +1,7 @@
 package net.coru.multifileplugin.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.Builder;
