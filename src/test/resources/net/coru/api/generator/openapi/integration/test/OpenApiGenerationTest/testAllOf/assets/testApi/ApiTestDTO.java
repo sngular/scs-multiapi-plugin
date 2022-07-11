@@ -6,44 +6,44 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ApiTestInfoDTO {
+public class ApiTestDTO {
 
   @JsonProperty(value ="testName")
   private final String testName;
   @JsonProperty(value ="testers")
   private final List<String> testers;
 
-  private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
+  private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
   }
 
-  public static class ApiTestInfoDTOBuilder {
+  public static class ApiTestDTOBuilder {
 
     private String testName;
     private List<String> testers = new ArrayList<String>();
 
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
+    public ApiTestDTO.ApiTestDTOBuilder testName(String testName) {
       this.testName = testName;
       return this;
     }
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
+    public ApiTestDTO.ApiTestDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
+    public ApiTestDTO.ApiTestDTOBuilder tester(String tester) {
       if (tester != null) {
         this.testers.add(tester);
       }
       return this;
     }
 
-    public ApiTestInfoDTO build() {
-      ApiTestInfoDTO apiTestInfoDTO =  new ApiTestInfoDTO(this);
-      return apiTestInfoDTO;
+    public ApiTestDTO build() {
+      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
+      return apiTestDTO;
     }
   }
 
@@ -73,8 +73,8 @@ public class ApiTestInfoDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestInfoDTO apiTestInfoDTO = (ApiTestInfoDTO) o;
-    return Objects.equals(this.testName,apiTestInfoDTO.testName) && Objects.equals(this.testers,apiTestInfoDTO.testers) ;
+    ApiTestDTO apiTestDTO = (ApiTestDTO) o;
+    return Objects.equals(this.testName,apiTestDTO.testName) && Objects.equals(this.testers,apiTestDTO.testers) ;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class ApiTestInfoDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestInfoDTO {\n");
+    sb.append("class ApiTestDTO {\n");
     sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
     sb.append("}");

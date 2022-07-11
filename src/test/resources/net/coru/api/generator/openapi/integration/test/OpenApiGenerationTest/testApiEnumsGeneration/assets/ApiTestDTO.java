@@ -4,16 +4,14 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
-  private String name;
+  private final String name;
   @JsonProperty(value ="unionIntegerEnum")
   private UnionIntegerEnum unionIntegerEnum;
-
   public enum UnionIntegerEnum {
     LONG_1(1l),
     LONG_2(2l),
@@ -37,7 +35,6 @@ public class ApiTestDTO {
   }
   @JsonProperty(value ="unionNumberEnum")
   private UnionNumberEnum unionNumberEnum;
-
   public enum UnionNumberEnum {
     BIG_DECIMAL_3_DOT_3(new BigDecimal("3.3")),
     BIG_DECIMAL_1_DOT_1(new BigDecimal("1.1")),
@@ -60,10 +57,9 @@ public class ApiTestDTO {
     }
   }
   @JsonProperty(value ="id")
-  private Integer id;
+  private final Integer id;
   @JsonProperty(value ="unionEnum")
-  private UnionEnum unionEnum;
-
+  private final UnionEnum unionEnum;
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
@@ -134,13 +130,9 @@ public class ApiTestDTO {
   * Get name
   * @return name
   */
-  @NotNull
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
-  }
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
@@ -171,26 +163,18 @@ public class ApiTestDTO {
   * Get id
   * @return id
   */
-  @NotNull
   @Schema(name = "id", required = true)
   public Integer getId() {
     return id;
-  }
-  public void setId(Integer id) {
-    this.id = id;
   }
 
   /**
   * Get unionEnum
   * @return unionEnum
   */
-  @NotNull
   @Schema(name = "unionEnum", required = true)
   public UnionEnum getUnionEnum() {
     return unionEnum;
-  }
-  public void setUnionEnum(UnionEnum unionEnum) {
-    this.unionEnum = unionEnum;
   }
 
   @Override

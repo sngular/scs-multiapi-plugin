@@ -18,12 +18,23 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName}")
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
+    <#if field.required>
+  private final List<${field.dataType}> ${field.baseName};
+    <#else>
   private List<${field.dataType}> ${field.baseName} = new ArrayList<${field.dataType}>();
+    </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
+    <#if field.required>
+  private final Map<String,${field.dataType}> ${field.baseName};
+    <#else>
   private Map<String,${field.dataType}> ${field.baseName} = new HashMap<String,${field.dataType}>();
+    </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
+    <#if field.required>
+  private final ${field.baseName?cap_first} ${field.baseName};
+    <#else>
   private ${field.baseName?cap_first} ${field.baseName};
-
+    </#if>
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
     ${key}(${value?no_esc})<#sep>,
@@ -46,8 +57,12 @@ public class ${schema.className} {
     }
   }
   <#elseif field.dataTypeSimple?has_content>
+    <#if field.required>
+  private final ${field.dataTypeSimple?cap_first} ${field.baseName};
+    <#else>
   private ${field.dataTypeSimple?cap_first} ${field.baseName};
-   </#if>
+    </#if>
+  </#if>
 </#list>
 
   private ${schema.className}(${schema.className}Builder builder) {
@@ -119,38 +134,43 @@ public class ${schema.className} {
   * Get ${field.baseName?uncap_first}
   * @return ${field.baseName?uncap_first}
   */
-  <#if field.required?has_content && field.required == true>
-  @NotNull
-  </#if>
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
   public List<${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
+  <#if field.required == false>
   public void set${field.baseName?cap_first}(List<${field.dataType}> ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
+  </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
   public Map<String,${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
+  <#if field.required == false>
   public void set${field.baseName?cap_first}(Map<String,${field.dataType}> ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
+  </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
   public ${field.baseName?cap_first} get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
+  <#if field.required == false>
   public void set${field.baseName?cap_first}(${field.baseName?cap_first} ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
+  </#if>
   <#elseif field.dataTypeSimple?has_content>
   public ${field.dataTypeSimple?cap_first} get${field.baseName?cap_first}() {
     return ${field.baseName};
   }
+  <#if field.required == false>
   public void set${field.baseName?cap_first}(${field.dataTypeSimple?cap_first} ${field.baseName}) {
     this.${field.baseName} = ${field.baseName};
   }
+  </#if>
   </#if>
 
 </#list>

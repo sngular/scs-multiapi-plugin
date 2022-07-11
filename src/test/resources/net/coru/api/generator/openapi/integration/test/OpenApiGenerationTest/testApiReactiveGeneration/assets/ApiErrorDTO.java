@@ -3,14 +3,13 @@ package net.coru.multifileplugin.testapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
 
 public class ApiErrorDTO {
 
   @JsonProperty(value ="message")
-  private String message;
+  private final String message;
   @JsonProperty(value ="code")
-  private Integer code;
+  private final Integer code;
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.message = builder.message;
@@ -42,26 +41,18 @@ public class ApiErrorDTO {
   * Get message
   * @return message
   */
-  @NotNull
   @Schema(name = "message", required = true)
   public String getMessage() {
     return message;
-  }
-  public void setMessage(String message) {
-    this.message = message;
   }
 
   /**
   * Get code
   * @return code
   */
-  @NotNull
   @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
-  }
-  public void setCode(Integer code) {
-    this.code = code;
   }
 
   @Override

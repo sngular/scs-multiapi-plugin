@@ -9,6 +9,7 @@ package net.coru.api.generator.plugin.openapi.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -22,8 +23,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
-
-  private static final String REQUIRED = "Required";
 
   private static final String ARRAY = "array";
 
@@ -41,11 +40,12 @@ public class MapperContentUtil {
 
   private static final String STRING = "string";
 
-
   private MapperContentUtil() {}
 
-  public static SchemaObject mapComponentToSchemaObject(final Schema<?> schema, final String nameSchema, final FileSpec fileSpec, final String modelPackage) {
-    final var listSchema = getFields(schema, fileSpec);
+  public static SchemaObject mapComponentToSchemaObject(
+      final Map<String, Schema> totalSchemas, final Schema<?> schema, final String nameSchema, final FileSpec fileSpec,
+      final String modelPackage) {
+    final var listSchema = getFields(totalSchemas, schema, fileSpec);
 
     return SchemaObject.builder()
                        .schemaName(schema.getName())
@@ -63,9 +63,6 @@ public class MapperContentUtil {
       getTypeImports(listHashMap, fieldObject);
       if (StringUtils.isNotBlank(fieldObject.getImportClass()) && !listHashMap.containsKey(fieldObject.getImportClass())) {
         listHashMap.put(StringUtils.capitalize(fieldObject.getImportClass()), List.of(modelPackage + "." + StringUtils.capitalize(fieldObject.getImportClass())));
-      }
-      if (fieldObject.getRequired()) {
-        listHashMap.computeIfAbsent(REQUIRED, key -> List.of("javax.validation.constraints.NotNull"));
       }
     }
     if (!listHashMap.isEmpty()) {
@@ -86,23 +83,49 @@ public class MapperContentUtil {
     }
   }
 
-  private static List<SchemaFieldObject> getFields(final Schema<?> schema, final FileSpec fileSpec) {
+  private static List<SchemaFieldObject> getFields(final Map<String, Schema> totalSchemas, final Schema<?> schema, final FileSpec fileSpec) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     if (Objects.nonNull(schema.getProperties())) {
-      final var mapperProperties = new HashMap<>(schema.getProperties());
-
-      mapperProperties.forEach((key, value) -> {
-        final var enumValues = value.getEnum();
-        if (CollectionUtils.isNotEmpty(enumValues)) {
-          processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues, schema);
-        } else {
-          final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
-          setFieldType(field, value, schema, fileSpec, key);
-          fieldObjectArrayList.add(field);
-        }
-      });
+      fieldObjectArrayList.addAll(processFieldObjectList(schema, fileSpec));
+    } else if (Objects.nonNull(schema.getAllOf())) {
+      fieldObjectArrayList.addAll(processAllOf(totalSchemas, schema.getAllOf(), fileSpec));
     }
+    return fieldObjectArrayList;
+  }
+
+  private static List<SchemaFieldObject> processAllOf(final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final FileSpec fileSpec) {
+    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+
+    for (Schema<?> ref : schemaList) {
+      if (Objects.nonNull(ref.get$ref())) {
+        final String[] pathObjectRef = ref.get$ref().split("/");
+        final String schemaName = pathObjectRef[pathObjectRef.length - 1];
+        final var schemaToProcess = totalSchemas.get(schemaName);
+        fieldObjectArrayList.addAll(processFieldObjectList(schemaToProcess, fileSpec));
+        for (var fieldObject : fieldObjectArrayList) {
+          fieldObject.setRequired(true);
+          fieldObject.setSchemaCombinator("allOf");
+        }
+      }
+    }
+    return fieldObjectArrayList;
+  }
+
+  private static List<SchemaFieldObject> processFieldObjectList(final Schema<?> schema, final FileSpec fileSpec) {
+    final var mapperProperties = new HashMap<>(schema.getProperties());
+    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+
+    mapperProperties.forEach((key, value) -> {
+      final var enumValues = value.getEnum();
+      if (CollectionUtils.isNotEmpty(enumValues)) {
+        processEnumField(key, value, fileSpec, fieldObjectArrayList, enumValues, schema);
+      } else {
+        final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, fileSpec)).build();
+        setFieldType(field, value, schema, fileSpec, key);
+        fieldObjectArrayList.add(field);
+      }
+    });
     return fieldObjectArrayList;
   }
 
@@ -128,7 +151,8 @@ public class MapperContentUtil {
     }
   }
 
-  private static void processEnumField(final String key, final Schema<?> value, final FileSpec fileSpec,
+  private static void processEnumField(
+      final String key, final Schema<?> value, final FileSpec fileSpec,
       final ArrayList<SchemaFieldObject> fieldObjectArrayList, final List<?> enumValues, final Schema<?> schema) {
     final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
     field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
