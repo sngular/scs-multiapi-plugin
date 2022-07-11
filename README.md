@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -112,7 +112,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>2.0.0</version>
+<version>2.1.0</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <executions>
     <execution>
         <goals>
