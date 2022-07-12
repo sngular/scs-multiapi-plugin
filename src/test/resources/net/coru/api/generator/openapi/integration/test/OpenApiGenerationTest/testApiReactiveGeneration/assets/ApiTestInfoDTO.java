@@ -3,16 +3,15 @@ package net.coru.multifileplugin.testapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.ArrayList;
 
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testName")
-  private String testName;
+  private final String testName;
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private final List<String> testers;
 
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
     this.testName = builder.testName;
@@ -52,26 +51,18 @@ public class ApiTestInfoDTO {
   * Get testName
   * @return testName
   */
-  @NotNull
   @Schema(name = "testName", required = true)
   public String getTestName() {
     return testName;
-  }
-  public void setTestName(String testName) {
-    this.testName = testName;
   }
 
   /**
   * Get testers
   * @return testers
   */
-  @NotNull
   @Schema(name = "testers", required = true)
   public List<String> getTesters() {
     return testers;
-  }
-  public void setTesters(List<String> testers) {
-    this.testers = testers;
   }
 
   @Override

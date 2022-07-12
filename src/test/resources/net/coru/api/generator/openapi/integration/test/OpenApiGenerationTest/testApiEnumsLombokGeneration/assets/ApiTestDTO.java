@@ -2,17 +2,17 @@ package net.coru.multifileplugin.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
-  @NotNull
+  @NonNull
   private String name;
 
   @JsonProperty(value ="unionIntegerEnum")
@@ -66,7 +66,7 @@ public class ApiTestDTO {
   }
 
   @JsonProperty(value ="id")
-  @NotNull
+  @NonNull
   private Integer id;
 
   @JsonProperty(value ="unionEnum")

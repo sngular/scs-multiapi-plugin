@@ -1,20 +1,20 @@
 package net.coru.multifileplugin.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder
 public class ApiErrorDTO {
 
   @JsonProperty(value ="message")
-  @NotNull
+  @NonNull
   private String message;
 
   @JsonProperty(value ="code")
-  @NotNull
+  @NonNull
   private Integer code;
 
 }

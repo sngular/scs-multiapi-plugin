@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi.model;
+package net.coru.multifileplugin.lombok.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

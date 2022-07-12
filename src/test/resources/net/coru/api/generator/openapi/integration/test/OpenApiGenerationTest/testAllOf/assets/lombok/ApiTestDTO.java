@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi.model;
+package net.coru.multifileplugin.lombok.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 @Data
 @Builder
-public class ApiTestInfoDTO {
+public class ApiTestDTO {
 
   @JsonProperty(value ="testName")
   @NonNull

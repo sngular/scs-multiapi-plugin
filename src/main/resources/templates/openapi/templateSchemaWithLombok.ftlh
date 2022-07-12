@@ -12,6 +12,12 @@ import ${import};
 </#list>
 import lombok.Builder;
 import lombok.Data;
+<#list schema.fieldObjectList as field>
+  <#if field.required>
+import lombok.NonNull;
+    <#break>
+  </#if>
+</#list>
 
 @Data
 @Builder
@@ -20,7 +26,7 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName}")
   <#if field.required?has_content && field.required == true>
-  @NotNull
+  @NonNull
   </#if>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
   private List<${field.dataType}> ${field.baseName} = new ArrayList<${field.dataType}>();

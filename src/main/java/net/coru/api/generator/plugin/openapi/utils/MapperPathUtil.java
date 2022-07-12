@@ -40,11 +40,16 @@ import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
 
   public static final String ARRAY = "array";
+
+  public static final String MAP = "map";
+
+  public static final String OBJECT = "object";
 
   private MapperPathUtil() {}
 
@@ -79,7 +84,7 @@ public class MapperPathUtil {
       components.getSchemas().forEach((key, value) -> {
         if (!mapComponents.containsKey(key)) {
           final var type = checkSchemaType(value, fileSpec);
-          mapComponents.put(key, type.equalsIgnoreCase("object") ? MapperUtil.getPojoName(key, fileSpec) : type);
+          mapComponents.put(key, OBJECT.equalsIgnoreCase(type) ? MapperUtil.getPojoName(key, fileSpec) : type);
         }
       });
     }
@@ -87,18 +92,26 @@ public class MapperPathUtil {
   }
 
   private static String checkSchemaType(final Schema<?> schema, final FileSpec fileSpec) {
-    var dataType = schema.getType();
+    var dataType = "";
 
     if (schema instanceof ArraySchema) {
       dataType = "array-" + MapperUtil.getTypeArray((ArraySchema) schema, fileSpec);
     } else if (schema instanceof MapSchema) {
       dataType = "map-" + MapperUtil.getTypeMap((MapSchema) schema, fileSpec);
-    } else if (schema.getType().equals("object") && StringUtils.isNotBlank(schema.get$ref())) {
+    } else if (OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
+    } else if (!Objects.nonNull(schema.getType()) && checkSchemaCombinator(schema)) {
+      dataType = OBJECT;
+    } else {
+      dataType = schema.getType();
     }
 
     return dataType;
+  }
+
+  public static Boolean checkSchemaCombinator(final Schema<?> schema) {
+    return ObjectUtils.anyNotNull(schema.getAnyOf(), schema.getAllOf(), schema.getOneOf());
   }
 
   public static List<PathObject> mapPathObjects(
@@ -233,7 +246,7 @@ public class MapperPathUtil {
                                               .description(refParameter.getDescription())
                                               .in(refParameter.getDescription())
                                               .className(MapperUtil.getSimpleType(refParameter.getSchema(), fileSpec))
-                                              .isCollection(refParameter.getSchema().getType().equalsIgnoreCase(ARRAY))
+                                              .isCollection(ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
                                               .build());
         } else {
           parameterObjects.add(ParameterObject.builder()
@@ -242,7 +255,7 @@ public class MapperPathUtil {
                                               .description(parameter.getDescription())
                                               .in(parameter.getIn())
                                               .className(MapperUtil.getSimpleType(parameter.getSchema(), fileSpec))
-                                              .isCollection(parameter.getSchema().getType().equalsIgnoreCase(ARRAY))
+                                              .isCollection(ARRAY.equalsIgnoreCase(parameter.getSchema().getType()))
                                               .build());
         }
       }
@@ -351,7 +364,7 @@ public class MapperPathUtil {
       final String[] wholeRef = schema.get$ref().split("/");
       dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
     }
-    return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith("map") ? "map" : dataType;
+    return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith(MAP) ? MAP : dataType;
   }
 
   private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes) {
