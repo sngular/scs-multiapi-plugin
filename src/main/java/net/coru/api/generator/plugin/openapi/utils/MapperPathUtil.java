@@ -101,7 +101,7 @@ public class MapperPathUtil {
     } else if (OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-    } else if (!Objects.nonNull(schema.getType()) && checkRef(schema)) {
+    } else if (!Objects.nonNull(schema.getType()) && checkSchemaCombinator(schema)) {
       dataType = OBJECT;
     } else {
       dataType = schema.getType();
@@ -110,7 +110,7 @@ public class MapperPathUtil {
     return dataType;
   }
 
-  public static Boolean checkRef(final Schema<?> schema) {
+  public static Boolean checkSchemaCombinator(final Schema<?> schema) {
     return ObjectUtils.anyNotNull(schema.getAnyOf(), schema.getAllOf(), schema.getOneOf());
   }
 

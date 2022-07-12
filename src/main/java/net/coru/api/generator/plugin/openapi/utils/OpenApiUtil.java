@@ -6,7 +6,7 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
-import static net.coru.api.generator.plugin.openapi.utils.MapperPathUtil.checkRef;
+import static net.coru.api.generator.plugin.openapi.utils.MapperPathUtil.checkSchemaCombinator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,7 +136,7 @@ public class OpenApiUtil {
 
     if (MapUtils.isNotEmpty(components.getSchemas())) {
       components.getSchemas().forEach((key, value) -> {
-        if ("object".equals(value.getType()) || checkRef(value)) {
+        if ("object".equals(value.getType()) || checkSchemaCombinator(value)) {
           listObject.add(key);
         }
       });
