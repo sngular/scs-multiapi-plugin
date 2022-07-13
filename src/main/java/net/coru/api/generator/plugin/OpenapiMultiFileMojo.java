@@ -292,16 +292,17 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
-      basicSchemaMap.forEach((schemaName, basicSchema) -> {
-        try {
-          templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                                                                                   fileSpec,
-                                                                                                                                                   modelPackage));
-        } catch (IOException | TemplateException e) {
-          e.printStackTrace();
-        }
-      });
     }
+    basicSchemaMap.forEach((schemaName, basicSchema) -> {
+      try {
+        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
+                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
+                                                                                        fileSpec,
+                                                                                        modelPackage));
+      } catch (IOException | TemplateException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   private void processWhenOverwriteModelIsFalse(
@@ -333,7 +334,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
                                            MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                                                                                 fileSpec, modelPackage));
+                                                                                        fileSpec, modelPackage));
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
