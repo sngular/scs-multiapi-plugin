@@ -299,10 +299,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       }
     }
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                 fileSpec,
-                                                                                 modelPackage);
-
+      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
@@ -317,7 +314,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   }
 
-  private void checkRequiredOrCombinatorExists(SchemaObject schema) {
+  private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
     } else if (Objects.nonNull(schema.getFieldObjectList())) {
