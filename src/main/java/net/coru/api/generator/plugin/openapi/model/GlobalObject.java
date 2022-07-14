@@ -28,8 +28,6 @@ public class GlobalObject {
 
   private List<AuthSchemaObject> authSchemas = new ArrayList<>();
 
-  private List<ParameterObject> parameterObjects = new ArrayList<>();
-
   private List<String> authentications = new ArrayList<>();
 
   private Map<String, String> componentsTypeMap = new HashMap<>();
@@ -63,16 +61,6 @@ public class GlobalObject {
 
     public GlobalObjectBuilder authSchema(final AuthSchemaObject authSchema) {
       this.authSchemas.add(authSchema);
-      return this;
-    }
-
-    public GlobalObjectBuilder parameterObjects(final List<ParameterObject> parameterObjects) {
-      this.parameterObjects.addAll(parameterObjects);
-      return this;
-    }
-
-    public GlobalObjectBuilder parameterObject(final ParameterObject parameterObject) {
-      this.parameterObjects.add(parameterObject);
       return this;
     }
 

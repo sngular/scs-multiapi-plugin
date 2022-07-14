@@ -194,11 +194,11 @@ public class ${schema.className} {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ${schema.className} ${stringBracketOpen}\n");
+    sb.append("class ${schema.className} {\n");
     <#list schema.fieldObjectList as field>
     sb.append(" ${field.baseName?uncap_first}: ").append(toIndentedString(${field.baseName?uncap_first})).append("\n");
     </#list>
-    sb.append("${stringBracketClose}");
+    sb.append("}");
     return sb.toString();
   }
 
