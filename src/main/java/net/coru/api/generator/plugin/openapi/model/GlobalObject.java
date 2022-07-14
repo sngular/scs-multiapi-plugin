@@ -38,8 +38,6 @@ public class GlobalObject {
 
     private List<AuthSchemaObject> authSchemas = new ArrayList<>();
 
-    private List<ParameterObject> parameterObjects = new ArrayList<>();
-
     private List<String> authentications = new ArrayList<>();
 
     private Map<String, String> componentsTypeMap = new HashMap<>();
