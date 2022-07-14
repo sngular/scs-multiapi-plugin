@@ -1,12 +1,13 @@
 package net.coru.multifileplugin.testapi.model;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+
 @Data
-@Builder
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
@@ -16,5 +17,13 @@ public class ApiTestDTO {
   @JsonProperty(value ="id")
   @NonNull
   private Integer id;
+
+
+  @Builder
+  private ApiTestDTO(@NonNull String name, @NonNull Integer id){
+    this.name = name;
+    this.id = id;
+
+  }
 
 }

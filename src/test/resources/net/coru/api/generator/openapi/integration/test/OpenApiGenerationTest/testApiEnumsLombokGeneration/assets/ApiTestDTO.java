@@ -1,5 +1,6 @@
 package net.coru.multifileplugin.testapi.model;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
@@ -7,8 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+
 @Data
-@Builder
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
@@ -92,6 +93,17 @@ public class ApiTestDTO {
     public String toString() {
       return String.valueOf(value);
     }
+  }
+
+
+  @Builder
+  private ApiTestDTO(@NonNull String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, @NonNull Integer id, UnionEnum unionEnum){
+    this.name = name;
+    this.unionIntegerEnum = unionIntegerEnum;
+    this.unionNumberEnum = unionNumberEnum;
+    this.id = id;
+    this.unionEnum = unionEnum;
+
   }
 
 }

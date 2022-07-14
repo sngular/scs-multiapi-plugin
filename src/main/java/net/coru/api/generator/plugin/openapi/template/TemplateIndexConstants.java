@@ -36,6 +36,8 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_OAUTH_FLOW = "templateOAuthFlow.ftlh";
 
+  public static final String TEMPLATE_MODEL_EXCEPTION = "templateModelClassException.ftlh";
+
   private TemplateIndexConstants() {}
 
 }

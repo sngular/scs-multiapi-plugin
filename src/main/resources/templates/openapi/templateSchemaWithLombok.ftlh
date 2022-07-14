@@ -1,5 +1,6 @@
 package ${packageModel};
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "enum">
@@ -18,9 +19,12 @@ import lombok.NonNull;
     <#break>
   </#if>
 </#list>
+<#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+import ${packageModel}.exception.ModelClassException;
+</#if>
+
 
 @Data
-@Builder
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
@@ -61,4 +65,36 @@ public class ${schema.className} {
   </#if>
 
 </#list>
+
+  @Builder
+  private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
+    <#if field.required>@NonNull </#if><#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName}<#else>${field.dataTypeSimple?cap_first} ${field.baseName}</#if><#sep>, </#list>){</@compress>
+    <#list schema.fieldObjectList as field>
+    this.${field.baseName} = ${field.baseName};
+    </#list>
+
+    <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+    validatePartialCombinations();
+    </#if>
+  }
+
+  <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+  private void validatePartialCombinations() {
+    boolean satisfiedCondition = false;
+
+  <#list schema.fieldObjectList as field>
+    <#if field == schema.fieldObjectList?first>
+    if (Objects.nonNull(this.${field.baseName})) {
+    <#else>
+    else if (Objects.nonNull(this.${field.baseName})) {
+    </#if>
+      satisfiedCondition = true;
+    }
+  </#list>
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("${schema.className}");
+    }
+  }
+  </#if>
 }

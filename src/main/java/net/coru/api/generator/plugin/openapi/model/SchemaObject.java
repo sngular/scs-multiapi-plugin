@@ -28,6 +28,8 @@ public class SchemaObject {
 
   private List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
 
+  private String schemaCombinator;
+
   public static class SchemaObjectBuilder {
 
     private List<String> importList = new ArrayList<>();
