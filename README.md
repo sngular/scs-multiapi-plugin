@@ -582,13 +582,13 @@ each API.
 ### Usage considerations
 
 This plugin has been implemented trying to behave like OpenApi Generator Tool
-but we decided to change the approach concerning the support of AllOfs, OneOfs 
+but we decided to change the approach concerning the support of AllOfs, OneOfs
 and AnyOfs.
 
-Every property that has been indicated in any of these types will be generated 
+Every property that has been indicated in any of these types will be generated
 in the model entity.
 
-The way the model will behave changes depending on whether it is an AllOf, or 
+The way the model will behave changes depending on whether it is an AllOf, or
 an AnyOf/OneOf:
 
 If it is an AllOf, every property referenced will be treated as required
