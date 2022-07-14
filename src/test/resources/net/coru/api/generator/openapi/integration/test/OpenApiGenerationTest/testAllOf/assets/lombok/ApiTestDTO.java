@@ -22,7 +22,7 @@ public class ApiTestDTO {
 
 
   @Builder
-  private ApiTestDTO(@NonNull String testName, @NonNull Array testers){
+  private ApiTestDTO(@NonNull String testName, @NonNull List<String> testers){
     this.testName = testName;
     this.testers = testers;
 

@@ -15,7 +15,7 @@ public class ApiTestInfoDTO {
   @JsonProperty(value ="testers")
   private final List<String> testers;
 
-  private ApiTestInfoDTO(String testName, Array testers){
+  private ApiTestInfoDTO(String testName, List<String> testers){
     this.testName = testName;
     this.testers = testers;
 

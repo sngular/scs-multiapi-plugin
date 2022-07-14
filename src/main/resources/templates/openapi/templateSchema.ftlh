@@ -73,7 +73,7 @@ public class ${schema.className} {
 </#list>
 
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName}<#else>${field.dataTypeSimple?cap_first} ${field.baseName}</#if><#sep>, </#list>){</@compress>
+    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String,${field.dataType}> ${field.baseName}<#else>${field.dataTypeSimple?cap_first} ${field.baseName}</#if><#sep>, </#list>){</@compress>
     <#list schema.fieldObjectList as field>
     this.${field.baseName} = ${field.baseName};
     </#list>
