@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.4</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -112,7 +112,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>2.1.1</version>
+<version>2.1.4</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.4</version>
   <executions>
     <execution>
         <goals>
@@ -579,3 +579,28 @@ options. If several of the APIs to be generated are defined under the same call
 option, a single RestClient/Webclient will be generated for all of them, which
 is initialized with the specific options needed within the class that defines
 each API.
+
+### Usage considerations
+
+This plugin has been implemented trying to behave like OpenApi Generator Tool
+but we decided to change the approach concerning the support of AllOfs, OneOfs
+and AnyOfs.
+
+Every property that has been indicated in any of these types will be generated
+in the model entity.
+
+The way the model will behave changes depending on whether it is an AllOf, or
+an AnyOf/OneOf:
+
+If it is an AllOf, every property referenced will be treated as required
+regardless of which ones are defined in the "required" field of the allOf
+structure.
+
+If it is an AnyOf or an OneOf, the plugin will only mark as required the
+properties that have been defined as such in the "required" field of these
+structures. After that, the constructor will check that at least one of the
+properties will have a value, nothing else, so it is up to the user to fulfill
+the restrictions he needs for the entity.
+
+**IMPORTANT NOTE**: As previously stated, OneOf and AnyOf will behave the same,
+this means that OneOf will work the same way as an AnyOf.

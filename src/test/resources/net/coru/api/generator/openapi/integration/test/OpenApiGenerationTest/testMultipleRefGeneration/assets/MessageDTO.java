@@ -4,13 +4,20 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 public class MessageDTO {
 
   @JsonProperty(value ="description")
   private String description;
 
+  private MessageDTO(String description){
+    this.description = description;
+
+  }
+
   private MessageDTO(MessageDTOBuilder builder) {
     this.description = builder.description;
+
   }
 
   public static class MessageDTOBuilder {
@@ -76,5 +83,7 @@ public class MessageDTO {
     }
     return o.toString().replace("\n", "\n ");
   }
+
+
 
 }

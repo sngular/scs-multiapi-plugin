@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+
 public class ApiTestAllOfDTO {
 
   @JsonProperty(value ="testName")
@@ -13,9 +14,16 @@ public class ApiTestAllOfDTO {
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
 
+  private ApiTestAllOfDTO(String testName, List<String> testers){
+    this.testName = testName;
+    this.testers = testers;
+
+  }
+
   private ApiTestAllOfDTO(ApiTestAllOfDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
+
   }
 
   public static class ApiTestAllOfDTOBuilder {
@@ -108,5 +116,7 @@ public class ApiTestAllOfDTO {
     }
     return o.toString().replace("\n", "\n ");
   }
+
+
 
 }

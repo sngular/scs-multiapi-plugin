@@ -12,6 +12,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 <#list schema.importList as import>
 import ${import};
 </#list>
+<#list schema.fieldObjectList as field>
+    <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+import ${packageModel}.exception.ModelClassException;
+    <#break>
+    </#if>
+</#list>
+
 
 public class ${schema.className} {
 
@@ -65,10 +72,37 @@ public class ${schema.className} {
   </#if>
 </#list>
 
+  private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
+    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String,${field.dataType}> ${field.baseName}<#else>${field.dataTypeSimple?cap_first} ${field.baseName}</#if><#sep>, </#list>){</@compress>
+    <#list schema.fieldObjectList as field>
+    this.${field.baseName} = ${field.baseName};
+    </#list>
+
+    <#list schema.fieldObjectList as field>
+      <#if field.required>
+    validateRequiredAttributes();
+      <#break>
+      </#if>
+    </#list>
+    <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+    validatePartialCombinations();
+    </#if>
+  }
+
   private ${schema.className}(${schema.className}Builder builder) {
   <#list schema.fieldObjectList as field>
     this.${field.baseName} = builder.${field.baseName};
   </#list>
+
+  <#list schema.fieldObjectList as field>
+    <#if field.required>
+    validateRequiredAttributes();
+    <#break>
+    </#if>
+  </#list>
+  <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+    validatePartialCombinations();
+  </#if>
   }
 
   public static class ${schema.className}Builder {
@@ -194,11 +228,11 @@ public class ${schema.className} {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ${schema.className} ${stringBracketOpen}\n");
+    sb.append("class ${schema.className} {\n");
     <#list schema.fieldObjectList as field>
     sb.append(" ${field.baseName?uncap_first}: ").append(toIndentedString(${field.baseName?uncap_first})).append("\n");
     </#list>
-    sb.append("${stringBracketClose}");
+    sb.append("}");
     return sb.toString();
   }
 
@@ -212,5 +246,48 @@ public class ${schema.className} {
     }
     return o.toString().replace("\n", "\n ");
   }
+
+  <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
+  private void validatePartialCombinations() {
+    boolean satisfiedCondition = false;
+
+  <#list schema.fieldObjectList as field>
+    <#if field == schema.fieldObjectList?first>
+    if (Objects.nonNull(this.${field.baseName})) {
+    <#else>
+    else if (Objects.nonNull(this.${field.baseName})) {
+    </#if>
+      satisfiedCondition = true;
+    }
+  </#list>
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("${schema.className}");
+    }
+  }
+  </#if>
+
+  <#list schema.fieldObjectList as field>
+    <#if field.required>
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+  <#list schema.fieldObjectList?filter(f -> f.required) as field>
+    <#if field?index == 0>
+    if (!Objects.nonNull(this.${field.baseName})) {
+    <#else>
+    else if (!Objects.nonNull(this.${field.baseName})) {
+    </#if>
+      satisfiedCondition = false;
+    }
+  </#list>
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("${schema.className}");
+    }
+  }
+    <#break>
+    </#if>
+  </#list>
 
 }

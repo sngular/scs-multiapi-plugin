@@ -40,6 +40,8 @@ public class MapperContentUtil {
 
   private static final String STRING = "string";
 
+  private static String schemaCombinatorType;
+
   private MapperContentUtil() {}
 
   public static SchemaObject mapComponentToSchemaObject(
@@ -51,6 +53,7 @@ public class MapperContentUtil {
                        .schemaName(schema.getName())
                        .className(MapperUtil.getPojoName(nameSchema, fileSpec))
                        .importList(getImportList(listSchema, modelPackage))
+                       .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
                        .fieldObjectList(listSchema)
                        .build();
   }
@@ -90,6 +93,13 @@ public class MapperContentUtil {
       fieldObjectArrayList.addAll(processFieldObjectList(schema, fileSpec));
     } else if (Objects.nonNull(schema.getAllOf())) {
       fieldObjectArrayList.addAll(processAllOf(totalSchemas, schema.getAllOf(), fileSpec));
+      schemaCombinatorType = "allOf";
+    } else if (Objects.nonNull(schema.getAnyOf())) {
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getAnyOf(), fileSpec));
+      schemaCombinatorType = "anyOf";
+    } else if (Objects.nonNull(schema.getOneOf())) {
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getOneOf(), fileSpec));
+      schemaCombinatorType = "oneOf";
     }
     return fieldObjectArrayList;
   }
@@ -105,7 +115,26 @@ public class MapperContentUtil {
         fieldObjectArrayList.addAll(processFieldObjectList(schemaToProcess, fileSpec));
         for (var fieldObject : fieldObjectArrayList) {
           fieldObject.setRequired(true);
-          fieldObject.setSchemaCombinator("allOf");
+        }
+      }
+    }
+    return fieldObjectArrayList;
+  }
+
+  private static List<SchemaFieldObject> processAnyOfOneOf(final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final FileSpec fileSpec) {
+    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+
+    for (Schema<?> internalSchema : schemaList) {
+      if (Objects.nonNull(internalSchema.get$ref())) {
+        final String[] pathObjectRef = internalSchema.get$ref().split("/");
+        final String schemaName = pathObjectRef[pathObjectRef.length - 1];
+        final var schemaToProcess = totalSchemas.get(schemaName);
+        fieldObjectArrayList.addAll(processFieldObjectList(schemaToProcess, fileSpec));
+      } else {
+        for (var fieldObject : fieldObjectArrayList) {
+          if (internalSchema.getRequired().contains(fieldObject.getBaseName())) {
+            fieldObject.setRequired(true);
+          }
         }
       }
     }

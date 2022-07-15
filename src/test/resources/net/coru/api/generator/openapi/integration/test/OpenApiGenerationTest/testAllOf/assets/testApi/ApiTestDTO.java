@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
+import net.coru.multifileplugin.testapi.model.exception.ModelClassException;
+
 
 public class ApiTestDTO {
 
@@ -13,9 +15,18 @@ public class ApiTestDTO {
   @JsonProperty(value ="testers")
   private final List<String> testers;
 
+  private ApiTestDTO(String testName, List<String> testers){
+    this.testName = testName;
+    this.testers = testers;
+
+    validateRequiredAttributes();
+  }
+
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiTestDTOBuilder {
@@ -101,6 +112,22 @@ public class ApiTestDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.testName)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.testers)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestDTO");
+    }
   }
 
 }
