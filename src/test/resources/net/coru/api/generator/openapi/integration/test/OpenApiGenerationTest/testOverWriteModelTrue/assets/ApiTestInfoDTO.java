@@ -6,52 +6,44 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
-
-public class ApiTestAllOfDTO {
+public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testName")
-  private String testName;
+  private final String testName;
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private final List<String> testers;
 
-  private ApiTestAllOfDTO(String testName, List<String> testers){
-    this.testName = testName;
-    this.testers = testers;
-
-  }
-
-  private ApiTestAllOfDTO(ApiTestAllOfDTOBuilder builder) {
+  private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
-
   }
 
-  public static class ApiTestAllOfDTOBuilder {
+  public static class ApiTestInfoDTOBuilder {
 
     private String testName;
     private List<String> testers = new ArrayList<String>();
 
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testName(String testName) {
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
       this.testName = testName;
       return this;
     }
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testers(List<String> testers) {
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder tester(String tester) {
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
       if (tester != null) {
         this.testers.add(tester);
       }
       return this;
     }
 
-    public ApiTestAllOfDTO build() {
-      ApiTestAllOfDTO apiTestAllOfDTO =  new ApiTestAllOfDTO(this);
-      return apiTestAllOfDTO;
+    public ApiTestInfoDTO build() {
+      ApiTestInfoDTO apiTestInfoDTO =  new ApiTestInfoDTO(this);
+      return apiTestInfoDTO;
     }
   }
 
@@ -59,24 +51,18 @@ public class ApiTestAllOfDTO {
   * Get testName
   * @return testName
   */
-  @Schema(name = "testName", required = false)
+  @Schema(name = "testName", required = true)
   public String getTestName() {
     return testName;
-  }
-  public void setTestName(String testName) {
-    this.testName = testName;
   }
 
   /**
   * Get testers
   * @return testers
   */
-  @Schema(name = "testers", required = false)
+  @Schema(name = "testers", required = true)
   public List<String> getTesters() {
     return testers;
-  }
-  public void setTesters(List<String> testers) {
-    this.testers = testers;
   }
 
   @Override
@@ -87,8 +73,8 @@ public class ApiTestAllOfDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestAllOfDTO apiTestAllOfDTO = (ApiTestAllOfDTO) o;
-    return Objects.equals(this.testName,apiTestAllOfDTO.testName) && Objects.equals(this.testers,apiTestAllOfDTO.testers) ;
+    ApiTestInfoDTO apiTestInfoDTO = (ApiTestInfoDTO) o;
+    return Objects.equals(this.testName,apiTestInfoDTO.testName) && Objects.equals(this.testers,apiTestInfoDTO.testers) ;
   }
 
   @Override
@@ -99,7 +85,7 @@ public class ApiTestAllOfDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestAllOfDTO {\n");
+    sb.append("class ApiTestInfoDTO {\n");
     sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
     sb.append("}");
@@ -116,7 +102,5 @@ public class ApiTestAllOfDTO {
     }
     return o.toString().replace("\n", "\n ");
   }
-
-
 
 }
