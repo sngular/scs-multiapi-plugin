@@ -308,12 +308,11 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       }
     });
 
-    if (generateExceptionTemplate) {
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       templateFactory.fillTemplateModelClassException(fileModelToSave);
     }
-
   }
-
+  
   private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
