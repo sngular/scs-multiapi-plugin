@@ -182,12 +182,10 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void createApiTemplate(final FileSpec fileSpec, final String filePathToSave, final OpenAPI openAPI) {
     final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.getUseTagsGroup());
-    templateFactory.addComponents(openAPI.getComponents().getSchemas());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec, authSchemaList);
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
-      templateFactory.addPathItems(apisEntry.getValue());
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
       final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, fileSpec, apisEntry, globalObject);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
