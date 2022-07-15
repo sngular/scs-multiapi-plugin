@@ -61,6 +61,15 @@ public class TemplateFactory {
 
   }
 
+  public final void fillTemplateModelClassException(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
+    pathToExceptionPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
+
+  }
+
   public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
 

@@ -4,6 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 public class InlineResponse200CreateGameDTO {
 
   @JsonProperty(value ="message")
@@ -11,9 +12,16 @@ public class InlineResponse200CreateGameDTO {
   @JsonProperty(value ="code")
   private Integer code;
 
+  private InlineResponse200CreateGameDTO(MessageDTO message, Integer code){
+    this.message = message;
+    this.code = code;
+
+  }
+
   private InlineResponse200CreateGameDTO(InlineResponse200CreateGameDTOBuilder builder) {
     this.message = builder.message;
     this.code = builder.code;
+
   }
 
   public static class InlineResponse200CreateGameDTOBuilder {
@@ -98,5 +106,7 @@ public class InlineResponse200CreateGameDTO {
     }
     return o.toString().replace("\n", "\n ");
   }
+
+
 
 }

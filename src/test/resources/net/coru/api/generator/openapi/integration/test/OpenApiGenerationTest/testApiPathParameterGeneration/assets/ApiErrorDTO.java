@@ -3,6 +3,8 @@ package net.coru.multifileplugin.testapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.coru.multifileplugin.testapi.model.exception.ModelClassException;
+
 
 public class ApiErrorDTO {
 
@@ -11,9 +13,18 @@ public class ApiErrorDTO {
   @JsonProperty(value ="code")
   private final Integer code;
 
+  private ApiErrorDTO(String message, Integer code){
+    this.message = message;
+    this.code = code;
+
+    validateRequiredAttributes();
+  }
+
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.message = builder.message;
     this.code = builder.code;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiErrorDTOBuilder {
@@ -91,6 +102,22 @@ public class ApiErrorDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.message)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.code)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiErrorDTO");
+    }
   }
 
 }
