@@ -308,7 +308,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       }
     });
 
-    if (generateExceptionTemplate) {
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       templateFactory.fillTemplateModelClassException(fileModelToSave);
     }
   }
@@ -323,16 +323,6 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
         }
       }
     }
-    basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                        fileSpec,
-                                                                                        modelPackage));
-      } catch (IOException | TemplateException e) {
-        e.printStackTrace();
-      }
-    });
   }
 
   private void processWhenOverwriteModelIsFalse(
