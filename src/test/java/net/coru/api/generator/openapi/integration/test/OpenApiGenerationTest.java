@@ -105,7 +105,6 @@ public class OpenApiGenerationTest {
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
   }
 
-
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiReactiveGeneration(MavenProjectResult result) throws IOException {
@@ -121,7 +120,8 @@ public class OpenApiGenerationTest {
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
   }
 
-  private void commonTest(final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles, final String targetApi, final String targetModel) throws IOException {
+  private void commonTest(final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles, final String targetApi, final String targetModel)
+      throws IOException {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetApi = pathToTarget.resolve(targetApi);
@@ -198,12 +198,14 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testClientPackageWebClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                                                    "/TestClient.java"));
-    List<File> expectedFileSecond = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                                                     "/TestAuth.java"),
-                                            new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                                                     "/TestHttpBasicAuth.java"));
+    List<File> expectedFileFirst = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                 "/TestClient.java"));
+    List<File> expectedFileSecond = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                 "/TestAuth.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
+                 "/TestHttpBasicAuth.java"));
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
@@ -263,6 +265,25 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestInfoDTO.java")
+    );
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+  }
+
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testApiParametersWithContentGeneration(MavenProjectResult result) throws IOException {
+    List<File> expectedFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/TestApi.java"));
+
+    List<File> expectedModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets" +
+                 "/ApiInlineParameterShowTestByIdTestIdDTO" +
+                 ".java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestInfoDTO.java")
+
     );
 
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
