@@ -26,13 +26,10 @@ public class PathObject {
 
   private List<OperationObject> operationObjects = new ArrayList<>();
 
-  private List<ParameterObject> parameterObjects = new ArrayList<>();
-
   public static class PathObjectBuilder {
 
     private List<OperationObject> operationObjects = new ArrayList<>();
 
-    private List<ParameterObject> parameterObjects = new ArrayList<>();
 
     public PathObjectBuilder operationObjects(final List<OperationObject> operationObjects) {
       this.operationObjects.addAll(operationObjects);
@@ -44,15 +41,6 @@ public class PathObject {
       return this;
     }
 
-    public PathObjectBuilder parameterObject(final ParameterObject parameterObject) {
-      this.parameterObjects.add(parameterObject);
-      return this;
-    }
-
-    public PathObjectBuilder parameterObjects(final List<ParameterObject> parameterObject) {
-      this.parameterObjects.addAll(parameterObject);
-      return this;
-    }
 
   }
 

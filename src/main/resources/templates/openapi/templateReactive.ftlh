@@ -40,6 +40,13 @@ import java.util.Map;
         </#if>
       </#list>
     </#list>
+    <#list operation.parameterObjects as parameter>
+        <#if parameter.importName?? && (!imports?seq_contains(parameter.importName))>
+          <#if (!checkBasicTypes?seq_contains(parameter.importName))>
+            <#assign imports = imports+[parameter.importName]>
+          </#if>
+        </#if>
+    </#list>
   </#list>
 </#list>
 <#list imports as import>
