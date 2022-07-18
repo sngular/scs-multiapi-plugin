@@ -260,8 +260,9 @@ public class MapperPathUtil {
   }
 
   private static void addInlineParametersToList(final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final FileSpec fileSpec) {
-    parameter.getContent().forEach((name, schema) -> {
-      if (OBJECT.equalsIgnoreCase(schema.getSchema().getType())) {
+    final Content content = parameter.getContent();
+    for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
+      if (OBJECT.equalsIgnoreCase(contentEntrySet.getValue().getSchema().getType())) {
         parameterObjects.add(ParameterObject.builder()
                                             .name(parameter.getName())
                                             .required(parameter.getRequired())
@@ -278,11 +279,10 @@ public class MapperPathUtil {
                                             .required(parameter.getRequired())
                                             .description(parameter.getDescription())
                                             .in(parameter.getIn())
-                                            .className(defineTypeName(schema.getSchema()))
+                                            .className(defineTypeName(contentEntrySet.getValue().getSchema()))
                                             .build());
       }
-
-    });
+    }
   }
 
   private static List<ResponseObject> mapResponseObject(final FileSpec fileSpec, final Operation operation, final GlobalObject globalObject) {
