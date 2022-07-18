@@ -34,10 +34,6 @@ public class TemplateFactory {
 
   private final Map<String, Object> root = new HashMap<>();
 
-  private final HashMap<String, PathItem> itemHashMap = new HashMap<>();
-
-  private final HashMap<String, Schema> itemSchema = new HashMap<>();
-
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
@@ -52,12 +48,19 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
-      root.put("stringBracketOpen", "{");
-      root.put("stringBracketClose", "}");
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
     }
+
+  }
+
+  public final void fillTemplateModelClassException(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
+    pathToExceptionPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
 
   }
 
@@ -90,7 +93,6 @@ public class TemplateFactory {
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
-    root.put("itemHashMap", itemHashMap);
     root.put("pathObjects", pathObjects);
 
     if (Objects.nonNull(fileSpec.getApiPackage())) {
@@ -136,14 +138,6 @@ public class TemplateFactory {
 
   public final void setAuthPackageName(final String packageName) {
     root.put("packageAuth", packageName);
-  }
-
-  public final void addPathItems(final HashMap<String, PathItem> itemMap) {
-    itemHashMap.putAll(itemMap);
-  }
-
-  public final void addComponents(final Map<String, Schema> itemMap) {
-    itemSchema.putAll(itemMap);
   }
 
   private String createNameTemplate(final String classNameAuth) {

@@ -567,10 +567,11 @@ RestClient and the WebClient will be located, if this option is set in any
 of the fileSpecs, and the name of the folder where the generated sources will
 be saved in the target of the project.
 
-| Name                   | Description                                                                                              | Example                              |
-|------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------|
-| clientPackage          | Path where the RestClient and/or WebClient are located                                                   | net.coru.apigenerator.openapi.client |
-| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources` | generated-sources                    |
+| Name                                                | Description                                                                                                                                                                                                                                                                    | Example                              |
+|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                         | net.coru.apigenerator.openapi.client |
+| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                       | generated-sources                    |
+| overWriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name.It is initialized to false by default | true                                 |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
@@ -578,3 +579,28 @@ options. If several of the APIs to be generated are defined under the same call
 option, a single RestClient/Webclient will be generated for all of them, which
 is initialized with the specific options needed within the class that defines
 each API.
+
+### Usage considerations
+
+This plugin has been implemented trying to behave like OpenApi Generator Tool
+but we decided to change the approach concerning the support of AllOfs, OneOfs
+and AnyOfs.
+
+Every property that has been indicated in any of these types will be generated
+in the model entity.
+
+The way the model will behave changes depending on whether it is an AllOf, or
+an AnyOf/OneOf:
+
+If it is an AllOf, every property referenced will be treated as required
+regardless of which ones are defined in the "required" field of the allOf
+structure.
+
+If it is an AnyOf or an OneOf, the plugin will only mark as required the
+properties that have been defined as such in the "required" field of these
+structures. After that, the constructor will check that at least one of the
+properties will have a value, nothing else, so it is up to the user to fulfill
+the restrictions he needs for the entity.
+
+**IMPORTANT NOTE**: As previously stated, OneOf and AnyOf will behave the same,
+this means that OneOf will work the same way as an AnyOf.

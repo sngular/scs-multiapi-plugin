@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import net.coru.multifileplugin.testapi.model.exception.ModelClassException;
+
 
 public class ApiTestDTO {
 
@@ -82,12 +84,24 @@ public class ApiTestDTO {
     }
   }
 
+  private ApiTestDTO(String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, Integer id, UnionEnum unionEnum){
+    this.name = name;
+    this.unionIntegerEnum = unionIntegerEnum;
+    this.unionNumberEnum = unionNumberEnum;
+    this.id = id;
+    this.unionEnum = unionEnum;
+
+    validateRequiredAttributes();
+  }
+
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.name = builder.name;
     this.unionIntegerEnum = builder.unionIntegerEnum;
     this.unionNumberEnum = builder.unionNumberEnum;
     this.id = builder.id;
     this.unionEnum = builder.unionEnum;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiTestDTOBuilder {
@@ -216,6 +230,25 @@ public class ApiTestDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.name)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.id)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.unionEnum)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestDTO");
+    }
   }
 
 }
