@@ -28,4 +28,6 @@ public class ParameterObject {
   private Boolean isCollection;
 
   private String className;
+
+  private String importName;
 }

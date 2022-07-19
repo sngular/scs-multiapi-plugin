@@ -27,7 +27,6 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import net.coru.api.generator.plugin.openapi.exception.DuplicateOpenApiParameters;
 import net.coru.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import net.coru.api.generator.plugin.openapi.model.AuthSchemaObject;
 import net.coru.api.generator.plugin.openapi.model.BasicTypeConstants;
@@ -50,6 +49,8 @@ public class MapperPathUtil {
   public static final String MAP = "map";
 
   public static final String OBJECT = "object";
+
+  public static final String INLINE_PARAMETER = "InlineParameter";
 
   private MapperPathUtil() {}
 
@@ -101,7 +102,7 @@ public class MapperPathUtil {
     } else if (OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
-    } else if (!Objects.nonNull(schema.getType()) && checkSchemaCombinator(schema)) {
+    } else if (!Objects.nonNull(schema.getType()) && Boolean.TRUE.equals(checkSchemaCombinator(schema))) {
       dataType = OBJECT;
     } else {
       dataType = schema.getType();
@@ -122,15 +123,8 @@ public class MapperPathUtil {
       final PathObject pathObject = PathObject.builder()
                                               .pathName(pathItem.getKey())
                                               .globalObject(globalObject)
-                                              .parameterObjects(mapParameterObjects(openAPI, pathItem.getValue().getParameters(), fileSpec))
                                               .operationObjects(mapOperationObject(openAPI, fileSpec, pathItem, globalObject))
                                               .build();
-
-      for (OperationObject operationObject : pathObject.getOperationObjects()) {
-        if (!operationObject.getParameterObjects().isEmpty() && !pathObject.getParameterObjects().isEmpty()) {
-          throw new DuplicateOpenApiParameters();
-        }
-      }
       pathObjects.add(pathObject);
     }
 
@@ -169,7 +163,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation, globalObject))
-                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec))
+                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec, operation.getOperationId()))
                           .securities(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -232,7 +226,7 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, final FileSpec fileSpec) {
+  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, final FileSpec fileSpec, final String contentClassName) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (Parameter parameter : parameters) {
@@ -248,6 +242,8 @@ public class MapperPathUtil {
                                               .className(MapperUtil.getSimpleType(refParameter.getSchema(), fileSpec))
                                               .isCollection(ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
                                               .build());
+        } else if (Objects.nonNull(parameter.getContent())) {
+          addInlineParametersToList(contentClassName, parameterObjects, parameter, fileSpec);
         } else {
           parameterObjects.add(ParameterObject.builder()
                                               .name(parameter.getName())
@@ -261,6 +257,32 @@ public class MapperPathUtil {
       }
     }
     return parameterObjects;
+  }
+
+  private static void addInlineParametersToList(final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final FileSpec fileSpec) {
+    final Content content = parameter.getContent();
+    for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
+      if (OBJECT.equalsIgnoreCase(contentEntrySet.getValue().getSchema().getType())) {
+        parameterObjects.add(ParameterObject.builder()
+                                            .name(parameter.getName())
+                                            .required(parameter.getRequired())
+                                            .description(parameter.getDescription())
+                                            .in(parameter.getIn())
+                                            .className(getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
+                                                                   + StringUtils.capitalize(parameter.getName()), fileSpec))
+                                            .importName(getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
+                                                                    + StringUtils.capitalize(parameter.getName()), fileSpec))
+                                            .build());
+      } else {
+        parameterObjects.add(ParameterObject.builder()
+                                            .name(parameter.getName())
+                                            .required(parameter.getRequired())
+                                            .description(parameter.getDescription())
+                                            .in(parameter.getIn())
+                                            .className(defineTypeName(contentEntrySet.getValue().getSchema()))
+                                            .build());
+      }
+    }
   }
 
   private static List<ResponseObject> mapResponseObject(final FileSpec fileSpec, final Operation operation, final GlobalObject globalObject) {
