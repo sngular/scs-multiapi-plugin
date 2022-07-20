@@ -49,11 +49,11 @@ import org.apache.maven.project.MavenProject;
 @Slf4j
 public final class OpenapiMultiFileMojo extends AbstractMojo {
 
-  private static final String DEFAULT_OPENAPI_TARGET_PACKAGE = PluginConstants.DEFAULT_TARGET_PACKAGE + ".openapi";
+  private static final String DEFAULT_OPENAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".openapi";
 
-  private static final String DEFAULT_OPENAPI_MODEL_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".model";
+  private static final String DEFAULT_OPENAPI_MODEL_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".model";
 
-  private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_TARGET_PACKAGE + ".client";
+  private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".client";
 
   private Boolean generateExceptionTemplate = false;
 
@@ -235,7 +235,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       templateFactory.setPackageName(project.getModel().getGroupId());
     } else {
-      templateFactory.setPackageName(DEFAULT_OPENAPI_TARGET_PACKAGE);
+      templateFactory.setPackageName(DEFAULT_OPENAPI_API_PACKAGE);
     }
   }
 
@@ -274,7 +274,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     } else if (project.getModel().getGroupId() != null) {
       path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
-      final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_TARGET_PACKAGE;
+      final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
       path = processedGeneratedSourcesFolder + pathDefault.replaceAll("\\.", "/");
     }
     return path;
