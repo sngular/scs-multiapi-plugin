@@ -8,6 +8,7 @@ package net.coru.api.generator.plugin.openapi.utils;
 
 import static net.coru.api.generator.plugin.openapi.utils.MapperPathUtil.checkSchemaCombinator;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,10 @@ import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.MultiMap;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.map.MultiValueMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -37,8 +42,8 @@ public class OpenApiUtil {
 
   private OpenApiUtil() {}
 
-  public static Map<String, HashMap<String, PathItem>> mapApiGroups(final OpenAPI openAPI, final Boolean groupByTags) {
-    var mapApis = new HashMap<String, HashMap<String, PathItem>>();
+  public static HashMap<String, List<HashMap<String, PathItem>>> mapApiGroups(final OpenAPI openAPI, final Boolean groupByTags) {
+    var mapApis = new HashMap<String, List<HashMap<String, PathItem>>>();
 
     if (!openAPI.getPaths().isEmpty()) {
       mapApis = null != groupByTags && groupByTags ? mapApiGroupsByTags(openAPI) : mapApiGroupsByUrl(openAPI);
@@ -47,13 +52,25 @@ public class OpenApiUtil {
     return mapApis;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByTags(final OpenAPI openAPI) {
+  private static HashMap<String, List<HashMap<String, PathItem>>> mapApiGroupsByTags(final OpenAPI openAPI) {
 
-    final var mapApis = new HashMap<String, HashMap<String, PathItem>>();
+    final var mapApis = new HashMap<String, List<HashMap<String, PathItem>>>();
     for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
       final var mapPathItemsByTag = getMapPathItemsByTag(openAPIGetPathsEntry.getValue());
-      for (Entry<String, PathItem> mapPathItems : mapPathItemsByTag.entrySet()) {
-        mapApis.compute(mapPathItems.getKey(), (key, value) -> initOrInsert(openAPIGetPathsEntry, mapPathItems, value));
+      for (Entry<String, HashMap<String, PathItem>> mapByTagItems : mapPathItemsByTag.entrySet()) {
+        final var listOfMaps = new ArrayList<HashMap<String, PathItem>>();
+        for (Entry<String, PathItem> mapByTagOperations : mapByTagItems.getValue().entrySet()) {
+          final var mapByPath = new HashMap<String, PathItem>();
+          mapByPath.put(openAPIGetPathsEntry.getKey(), mapByTagOperations.getValue());
+          listOfMaps.add(mapByPath);
+        }
+        if(mapApis.containsKey(mapByTagItems.getKey())){
+          List<HashMap<String, PathItem>> newList = mapApis.get(mapByTagItems.getKey());
+          newList.addAll(listOfMaps);
+          mapApis.put(mapByTagItems.getKey(), newList);
+        }else{
+          mapApis.put(mapByTagItems.getKey(), listOfMaps);
+        }
       }
     }
 
@@ -61,27 +78,18 @@ public class OpenApiUtil {
 
   }
 
-  private static HashMap<String, PathItem> initOrInsert(
-      final Entry<String, PathItem> openAPIGetPathsEntry, final Entry<String, PathItem> mapPathItems,
-      final HashMap<String, PathItem> value) {
-    var newValue = value;
-    if (Objects.isNull(newValue)) {
-      newValue = new HashMap<>();
-    }
-    newValue.put(openAPIGetPathsEntry.getKey(), mapPathItems.getValue());
-
-    return newValue;
-  }
-
-  private static HashMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
-    final var mapByTag = new HashMap<String, PathItem>();
+  private static HashMap<String, HashMap<String, PathItem>> getMapPathItemsByTag(final PathItem pathItem) {
+    final var mapByTag = new HashMap<String, HashMap<String, PathItem>>();
+    final var mapByOperation = new HashMap<String, PathItem>();
 
     for (Entry<HttpMethod, Operation> operation : pathItem.readOperationsMap().entrySet()) {
       if (CollectionUtils.isNotEmpty(operation.getValue().getTags())) {
         final var pathItemClone = pathItemOperationsClear(pathItem);
         final var tag = operation.getValue().getTags().get(0);
-        mapByTag.putIfAbsent(tag, pathItemClone);
-        mapByTag.get(tag).operation(operation.getKey(), operation.getValue());
+        final var operationId = operation.getValue().getOperationId();
+        mapByOperation.put(operationId, pathItemClone);
+        mapByOperation.get(operationId).operation(operation.getKey(), operation.getValue());
+        mapByTag.put(tag, mapByOperation);
       }
     }
     return mapByTag;
@@ -100,13 +108,16 @@ public class OpenApiUtil {
     return pathItem;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByUrl(final OpenAPI openAPI) {
-    final var mapByUrl = new HashMap<String, HashMap<String, PathItem>>();
+  private static HashMap<String, List<HashMap<String, PathItem>>> mapApiGroupsByUrl(final OpenAPI openAPI) {
+    final var mapByUrl = new HashMap<String, List<HashMap<String, PathItem>>>();
 
     for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
       final String[] pathName = openAPIGetPathsEntry.getKey().split("/");
-      mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
-      mapByUrl.get(pathName[1]).put(openAPIGetPathsEntry.getKey(), openAPIGetPathsEntry.getValue());
+      final var listOfMaps = new ArrayList<HashMap<String, PathItem>>();
+      final var mapByUrlGroup = new HashMap<String, PathItem>();
+      mapByUrlGroup.put(openAPIGetPathsEntry.getKey(), openAPIGetPathsEntry.getValue());
+      listOfMaps.add(mapByUrlGroup);
+      mapByUrl.putIfAbsent(pathName[1], listOfMaps);
     }
 
     return mapByUrl;

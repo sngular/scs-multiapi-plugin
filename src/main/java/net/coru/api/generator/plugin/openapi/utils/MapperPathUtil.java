@@ -115,10 +115,10 @@ public class MapperPathUtil {
   }
 
   public static List<PathObject> mapPathObjects(
-      final OpenAPI openAPI, final FileSpec fileSpec, final Entry<String, HashMap<String, PathItem>> path,
+      final OpenAPI openAPI, final FileSpec fileSpec, final HashMap<String, PathItem> path,
       final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
-    for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
+    for (Entry<String, PathItem> pathItem : path.entrySet()) {
       final PathObject pathObject = PathObject.builder()
                                               .pathName(pathItem.getKey())
                                               .globalObject(globalObject)
