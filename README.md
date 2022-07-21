@@ -14,7 +14,7 @@ code classes from YML files based on AsyncApi and OpenAPI.
 - [AsyncApi Generator](#asyncapi-generator)
   - [Configuration](#configuration)
     - [Generated Sources Folder](#generated-sources-folder)
-  - [How targetPackage is setted?](#how-targetpackage-is-setted)
+  - [How apiPackage is setted?](#how-apiPackage-is-setted)
   - [How modelPackage is setted?](#how-modelpackage-is-setted)
   - [Class Generation](#class-generation)
     - [Consumer and Supplier classes](#consumer-and-supplier-classes)
@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.1.0</version>
+  <version>2.3.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -112,7 +112,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>2.1.0</version>
+<version>2.3.0</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -130,12 +130,12 @@ which the plugin is designed.
             <ids>publishOperation</ids>
             <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
             <modelNameSuffix>DTO</modelNameSuffix>
-            <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
+            <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
             <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </consumer>
           <supplier>
             <ids>subscribeOperation</ids>
-            <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+            <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
             <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </supplier>
         </fileSpec>
@@ -155,9 +155,9 @@ YML files as you want.
 
 1. The first one is to configure only the YML file. This is made using the
 **filePath** parameter, that expects to receive the path to the file. Using
-the plugin in this way, you can't configure the model package or the target
+the plugin in this way, you can't configure the model package or the api
 package in the pom file, neither other options, so they will be configured as
-its explained in [targetPackage](#how-targetPackage-is-setted) and
+its explained in [apiPackage](#how-apiPackage-is-setted) and
 [modelPackage](#how-modelPackage-is-setted) sections.  
 This way it's limited to the usage of Consumer and Supplier methods.
 
@@ -177,17 +177,17 @@ producers and streamBrige producers that you want to generate.
         <ids>publishOperation</ids>
         <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
         <modelNameSuffix>DTO</modelNameSuffix>
-        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</targetPackage>
+        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
         <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </consumer>
     <supplier>
         <ids>subscribeOperation</ids>
-        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
         <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </supplier>
     <streamBridge>
         <ids>streamBridgeOperation</ids>
-        <targetPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</targetPackage>
+        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
         <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </streamBridge>
 </fileSpec>
@@ -215,9 +215,9 @@ the same way and can receive the same parameters. These parameters are:
   going to be used in the entities of the generated classes. For example if
   you set this to `DTO`, and there is a class named `EntityClass`, it will
   result as `EntityClassDTO`. This parameter is optional.
-  - **targetPackage**: This parameter receive a package name, where the
+  - **apiPackage**: This parameter receive a package name, where the
   generated classes will be generated. This parameter is optional.
-  Check [how the targetPackage is setted](#how-targetPackage-is-setted) for
+  Check [how the apiPackage is setted](#how-apiPackage-is-setted) for
   more information about how this parameter works, and the values it
   could have.
   - **modelPackage**: This parameter receive a package name, where the entities
@@ -246,9 +246,9 @@ By default, it's values is `generated-sources`, so the files will be in
 the pom.xml file, as in the example above, files will remain in
 `.../target/sources-generated/apigenerator/...`.
 
-### How targetPackage is setted?
+### How apiPackage is setted?
 
-The target package could be set in three different ways.
+The api package could be set in three different ways.
 
 - **User definition**: The user provides a package name using the parameter in
 the pom.xml file.
@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.1.0</version>
+  <version>2.3.0</version>
   <executions>
     <execution>
         <goals>
@@ -565,12 +565,13 @@ within the corresponding Api.
 There are two properties configured outside the fileSpecs, the path where the
 RestClient and the WebClient will be located, if this option is set in any
 of the fileSpecs, and the name of the folder where the generated sources will
-be saved in the target of the project.
+be saved in the api of the project.
 
-| Name                   | Description                                                                                              | Example                              |
-|------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------|
-| clientPackage          | Path where the RestClient and/or WebClient are located                                                   | net.coru.apigenerator.openapi.client |
-| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources` | generated-sources                    |
+| Name                                                | Description                                                                                                                                                                                                                                                                    | Example                              |
+|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                         | net.coru.apigenerator.openapi.client |
+| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                       | generated-sources                    |
+| overWriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name.It is initialized to false by default | true                                 |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
@@ -578,3 +579,28 @@ options. If several of the APIs to be generated are defined under the same call
 option, a single RestClient/Webclient will be generated for all of them, which
 is initialized with the specific options needed within the class that defines
 each API.
+
+### Usage considerations
+
+This plugin has been implemented trying to behave like OpenApi Generator Tool
+but we decided to change the approach concerning the support of AllOfs, OneOfs
+and AnyOfs.
+
+Every property that has been indicated in any of these types will be generated
+in the model entity.
+
+The way the model will behave changes depending on whether it is an AllOf, or
+an AnyOf/OneOf:
+
+If it is an AllOf, every property referenced will be treated as required
+regardless of which ones are defined in the "required" field of the allOf
+structure.
+
+If it is an AnyOf or an OneOf, the plugin will only mark as required the
+properties that have been defined as such in the "required" field of these
+structures. After that, the constructor will check that at least one of the
+properties will have a value, nothing else, so it is up to the user to fulfill
+the restrictions he needs for the entity.
+
+**IMPORTANT NOTE**: As previously stated, OneOf and AnyOf will behave the same,
+this means that OneOf will work the same way as an AnyOf.

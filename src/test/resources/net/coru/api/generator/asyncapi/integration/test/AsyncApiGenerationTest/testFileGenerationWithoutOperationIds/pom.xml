@@ -45,12 +45,12 @@
               <consumer>
                 <classNamePostfix>TestClassName</classNamePostfix>
                 <modelNameSuffix>DTO</modelNameSuffix>
-                <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
+                <apiPackage>net.coru.scsplugin.business_model.model.event.consumer</apiPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </consumer>
               <streamBridge>
                 <modelNameSuffix>Mapper</modelNameSuffix>
-                <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
+                <apiPackage>net.coru.scsplugin.business_model.model.event.producer</apiPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </streamBridge>
             </fileSpec>

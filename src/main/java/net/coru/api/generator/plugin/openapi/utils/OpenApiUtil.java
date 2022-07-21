@@ -6,8 +6,6 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
-import static net.coru.api.generator.plugin.openapi.utils.MapperPathUtil.checkSchemaCombinator;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +21,7 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
@@ -123,7 +122,7 @@ public class OpenApiUtil {
 
     if (MapUtils.isNotEmpty(components.getSchemas())) {
       components.getSchemas().forEach((key, value) -> {
-        if ("object".equals(value.getType()) || checkSchemaCombinator(value)) {
+        if ("object".equals(value.getType()) || MapperPathUtil.checkSchemaCombinator(value)) {
           listObject.add(key);
         }
       });
@@ -135,20 +134,21 @@ public class OpenApiUtil {
     final var basicSchemaMap = new HashMap<String, Schema<?>>();
 
     for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {
-      if (Objects.nonNull(pathItem.getValue().getGet())) {
-        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getGet());
+      final PathItem path = pathItem.getValue();
+      if (Objects.nonNull(path.getGet())) {
+        processContentForBasicSchemas(basicSchemaMap, path.getGet());
       }
-      if (Objects.nonNull(pathItem.getValue().getPost())) {
-        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPost());
+      if (Objects.nonNull(path.getPost())) {
+        processContentForBasicSchemas(basicSchemaMap, path.getPost());
       }
-      if (Objects.nonNull(pathItem.getValue().getPut())) {
-        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPut());
+      if (Objects.nonNull(path.getPut())) {
+        processContentForBasicSchemas(basicSchemaMap, path.getPut());
       }
-      if (Objects.nonNull(pathItem.getValue().getDelete())) {
-        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getDelete());
+      if (Objects.nonNull(path.getDelete())) {
+        processContentForBasicSchemas(basicSchemaMap, path.getDelete());
       }
-      if (Objects.nonNull(pathItem.getValue().getPatch())) {
-        processContentForBasicSchemas(basicSchemaMap, pathItem.getValue().getPatch());
+      if (Objects.nonNull(path.getPatch())) {
+        processContentForBasicSchemas(basicSchemaMap, path.getPatch());
       }
     }
 
@@ -181,6 +181,16 @@ public class OpenApiUtil {
                                value.getSchema());
           }
         });
+      }
+      if (Objects.nonNull(operation.getParameters())) {
+        for (Parameter parameter : operation.getParameters()) {
+          if (Objects.nonNull(parameter.getContent())) {
+            parameter.getContent()
+                     .forEach((name, mediaType) -> basicSchemaMap.putIfAbsent(
+                         "InlineParameter" + StringUtils.capitalize(operation.getOperationId()) + StringUtils.capitalize(parameter.getName()),
+                         mediaType.getSchema()));
+          }
+        }
       }
     }
   }
