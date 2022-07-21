@@ -48,7 +48,7 @@
               <supplier>
                 <ids>publishOperation2</ids>
                 <modelNameSuffix>DTO</modelNameSuffix>
-                <targetPackage>net.coru.scsplugin.business_model.model.event.producer2</targetPackage>
+                <apiPackage>net.coru.scsplugin.business_model.model.event.producer2</apiPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </supplier>
             </fileSpec>
