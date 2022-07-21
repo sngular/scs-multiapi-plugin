@@ -178,30 +178,25 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   }
 
   private void createApiTemplate(final FileSpec fileSpec, final String filePathToSave, final OpenAPI openAPI) {
-    final Map<String, List<HashMap<String, PathItem>>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.getUseTagsGroup());
-
-
+    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.getUseTagsGroup());
     templateFactory.addComponents(openAPI.getComponents().getSchemas());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec, authSchemaList);
 
+    for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
+      templateFactory.addPathItems(apisEntry.getValue());
+      final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, fileSpec, apisEntry, globalObject);
+      final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
-    for (Map.Entry<String, List<HashMap<String, PathItem>>> apisEntry : apis.entrySet()) {
-      for(HashMap<String, PathItem> listElement: apisEntry.getValue()) {
-        templateFactory.addPathItems(listElement);
-        final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
-        final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, fileSpec, listElement, globalObject);
+      try {
+        templateFactory.fillTemplate(filePathToSave, fileSpec, javaFileName, pathObjects, authObject);
+      } catch (IOException | TemplateException e) {
+        e.printStackTrace();
+      }
 
-        final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
-        try {
-          templateFactory.fillTemplate(filePathToSave, fileSpec, javaFileName, pathObjects, authObject);
-        } catch (IOException | TemplateException e) {
-          e.printStackTrace();
-        }
-
-        if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
-          addAuthentications(authObject);
-        }
+      if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
+        addAuthentications(authObject);
       }
     }
   }
@@ -338,7 +333,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
                                            MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                                                                                 fileSpec, modelPackage));
+                                                                                        fileSpec, modelPackage));
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
