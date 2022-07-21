@@ -30,6 +30,8 @@ import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -52,7 +54,7 @@ public class OpenApiUtil {
     final var mapApis = new HashMap<String, HashMap<String, PathItem>>();
     for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
       final var mapPathItemsByTag = getMapPathItemsByTag(openAPIGetPathsEntry.getValue());
-      for (Entry<String, PathItem> mapPathItems : mapPathItemsByTag.entrySet()) {
+      for (Entry<String, PathItem> mapPathItems : mapPathItemsByTag.entries()) {
         mapApis.compute(mapPathItems.getKey(), (key, value) -> initOrInsert(openAPIGetPathsEntry, mapPathItems, value));
       }
     }
@@ -73,31 +75,16 @@ public class OpenApiUtil {
     return newValue;
   }
 
-  private static HashMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
-    final var mapByTag = new HashMap<String, PathItem>();
+  private static MultiValuedMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
+    MultiValuedMap<String, PathItem> mapByTag = new ArrayListValuedHashMap<>();
 
     for (Entry<HttpMethod, Operation> operation : pathItem.readOperationsMap().entrySet()) {
       if (CollectionUtils.isNotEmpty(operation.getValue().getTags())) {
-        final var pathItemClone = pathItemOperationsClear(pathItem);
         final var tag = operation.getValue().getTags().get(0);
-        mapByTag.putIfAbsent(tag, pathItemClone);
-        mapByTag.get(tag).operation(operation.getKey(), operation.getValue());
+        mapByTag.put(tag, pathItem);
       }
     }
     return mapByTag;
-  }
-
-  private static PathItem pathItemOperationsClear(final PathItem pathItem) {
-    pathItem.operation(HttpMethod.GET, null);
-    pathItem.operation(HttpMethod.POST, null);
-    pathItem.operation(HttpMethod.DELETE, null);
-    pathItem.operation(HttpMethod.PATCH, null);
-    pathItem.operation(HttpMethod.HEAD, null);
-    pathItem.operation(HttpMethod.OPTIONS, null);
-    pathItem.operation(HttpMethod.TRACE, null);
-    pathItem.operation(HttpMethod.PUT, null);
-
-    return pathItem;
   }
 
   private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByUrl(final OpenAPI openAPI) {
