@@ -44,12 +44,12 @@
               <filePath>event-api.yml</filePath>
               <consumer>
                 <ids>subscribeOperation</ids>
-                <targetPackage>net.coru.scsplugin.business_model.model.event.consumer</targetPackage>
+                <apiPackage>net.coru.scsplugin.business_model.model.event.consumer</apiPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </consumer>
               <supplier>
                 <ids>publishOperation</ids>
-                <targetPackage>net.coru.scsplugin.business_model.model.event.producer</targetPackage>
+                <apiPackage>net.coru.scsplugin.business_model.model.event.producer</apiPackage>
                 <modelPackage>net.coru.scsplugin.business_model.model.event</modelPackage>
               </supplier>
             </fileSpec>

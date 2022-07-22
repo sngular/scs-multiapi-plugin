@@ -8,7 +8,7 @@ package net.coru.api.generator.plugin.openapi.exception;
 
 public class OverwritingApiFilesException extends RuntimeException {
 
-  private static final String ERROR_MESSAGE = "OpenApi -> At least two fileSpecs are configured with the same target package, and it will remain in overwrited files. Please "
+  private static final String ERROR_MESSAGE = "OpenApi -> At least two fileSpecs are configured with the same api package, and it will remain in overwrited files. Please "
                                               + "change one of them.";
 
   public OverwritingApiFilesException() {

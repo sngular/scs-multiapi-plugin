@@ -51,9 +51,9 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   public static final String OPERATION_ID = "operationId";
 
-  private static final String DEFAULT_ASYNCAPI_TARGET_PACKAGE = PluginConstants.DEFAULT_TARGET_PACKAGE + ".asyncapi";
+  private static final String DEFAULT_ASYNCAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".asyncapi";
 
-  private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_TARGET_PACKAGE + ".model";
+  private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_API_PACKAGE + ".model";
 
   private static final String CONSUMER_CLASS_NAME = "Subscriber";
 
@@ -79,7 +79,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private final List<String> processedClassnames = new ArrayList<>();
 
-  private final List<String> processedTargetPackages = new ArrayList<>();
+  private final List<String> processedApiPackages = new ArrayList<>();
 
   private String processedGeneratedSourcesFolder;
 
@@ -219,32 +219,32 @@ public final class OpenAsyncMojo extends AbstractMojo {
     OperationParameterObject operation;
     if (fileParameter.getConsumer() != null) {
       operation = fileParameter.getConsumer();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), CONSUMER_CLASS_NAME);
+      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), CONSUMER_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, CONSUMER_CLASS_NAME);
+      checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
     }
     if (fileParameter.getSupplier() != null) {
       operation = fileParameter.getSupplier();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), SUPPLIER_CLASS_NAME);
+      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, SUPPLIER_CLASS_NAME);
+      checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
     }
     if (fileParameter.getStreamBridge() != null) {
       operation = fileParameter.getStreamBridge();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getTargetPackage(), STREAM_BRIDGE_CLASS_NAME);
+      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     } else {
-      checkClassPackageDuplicate(STREAM_BRIDGE_CLASS_NAME, DEFAULT_ASYNCAPI_TARGET_PACKAGE, STREAM_BRIDGE_CLASS_NAME);
+      checkClassPackageDuplicate(STREAM_BRIDGE_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
-  private void checkClassPackageDuplicate(final String className, final String targetPackage, final String defaultClassName) {
+  private void checkClassPackageDuplicate(final String className, final String apiPackage, final String defaultClassName) {
     if (className != null && processedClassnames.contains(className)
-        && targetPackage != null && processedTargetPackages.contains(targetPackage)
-        && processedClassnames.lastIndexOf(className) == processedTargetPackages.lastIndexOf(targetPackage)) {
-      throw new DuplicateClassException(className, targetPackage);
+        && apiPackage != null && processedApiPackages.contains(apiPackage)
+        && processedClassnames.lastIndexOf(className) == processedApiPackages.lastIndexOf(apiPackage)) {
+      throw new DuplicateClassException(className, apiPackage);
     } else {
       processedClassnames.add(className != null ? className : defaultClassName);
-      processedTargetPackages.add(targetPackage != null ? targetPackage : DEFAULT_ASYNCAPI_TARGET_PACKAGE);
+      processedApiPackages.add(apiPackage != null ? apiPackage : DEFAULT_ASYNCAPI_API_PACKAGE);
     }
   }
 
@@ -276,14 +276,14 @@ public final class OpenAsyncMojo extends AbstractMojo {
   }
 
   private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
-    final String targetPackage = operationParameter != null ? operationParameter.getTargetPackage() : null;
+    final String apiPackage = operationParameter != null ? operationParameter.getApiPackage() : null;
     final String path;
-    if (targetPackage != null) {
-      path = processedGeneratedSourcesFolder + targetPackage.replace(".", "/");
+    if (apiPackage != null) {
+      path = processedGeneratedSourcesFolder + apiPackage.replace(".", "/");
     } else if (project.getModel().getGroupId() != null) {
       path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replace(".", "/");
     } else {
-      path = processedGeneratedSourcesFolder + DEFAULT_ASYNCAPI_TARGET_PACKAGE.replace(".", "/");
+      path = processedGeneratedSourcesFolder + DEFAULT_ASYNCAPI_API_PACKAGE.replace(".", "/");
     }
     return path;
   }
@@ -296,12 +296,12 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   private String evaluatePackage(final OperationParameterObject operation) {
     final String evaluated;
-    if (operation != null && operation.getTargetPackage() != null) {
-      evaluated = operation.getTargetPackage();
+    if (operation != null && operation.getApiPackage() != null) {
+      evaluated = operation.getApiPackage();
     } else if (project.getModel().getGroupId() != null) {
       evaluated = project.getModel().getGroupId();
     } else {
-      evaluated = DEFAULT_ASYNCAPI_TARGET_PACKAGE;
+      evaluated = DEFAULT_ASYNCAPI_API_PACKAGE;
     }
     return evaluated;
   }

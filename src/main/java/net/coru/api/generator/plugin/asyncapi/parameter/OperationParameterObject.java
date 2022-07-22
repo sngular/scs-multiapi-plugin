@@ -22,7 +22,7 @@ public final class OperationParameterObject {
 
   private String ids;
 
-  private String targetPackage;
+  private String apiPackage;
 
   private String modelPackage;
 
