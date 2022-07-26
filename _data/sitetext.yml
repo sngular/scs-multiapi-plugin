@@ -27,7 +27,7 @@ why:
     - icon: "assets/images/ico-why-1.svg"
       text: "**Create a project** that uses both messaging and REST arquitectures with only one plugin."
     - icon: "assets/images/ico-why-2.svg"
-      text: "SCS-Maven-Plugin supports the **official specifications from AsyncApi and OpenApi**, so there is no need to change your files"
+      text: "SCS-Maven-Plugin supports the **official specifications from AsyncApi and OpenApi**, so there is no need to change your files."
     - icon: "assets/images/ico-why-3.svg"
       text: "Under one execution, **process multiple files** from both AsyncApi and OpenApi."
 
