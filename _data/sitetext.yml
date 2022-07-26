@@ -14,7 +14,7 @@ mainfeatures:
     Maven plugin code generator, SCS-Maven-Plugin supports:
     
     - Both AsyncApi and OpenApi specifications
-    - Process multiple files under one excution
+    - Process multiple files under one execution
     - Generate Clients and Servers from OpenApi
     - Generate controller and operation interfaces from AsyncApi
     - Supported operations: Supplier, Stream Bridge and Consumer
