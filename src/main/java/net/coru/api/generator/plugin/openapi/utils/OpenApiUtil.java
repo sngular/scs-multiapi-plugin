@@ -28,7 +28,6 @@ import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -133,7 +132,7 @@ public class OpenApiUtil {
     final Components components = openAPI.getComponents();
     final var listObject = new ArrayList<String>();
 
-    if (MapUtils.isNotEmpty(components.getSchemas())) {
+    if (Objects.nonNull(components)) {
       components.getSchemas().forEach((key, value) -> {
         if ("object".equals(value.getType()) || MapperPathUtil.checkSchemaCombinator(value)) {
           listObject.add(key);
@@ -177,9 +176,12 @@ public class OpenApiUtil {
   private static void processOperationRequestBody(final HashMap<String, Schema<?>> basicSchemaMap, final Operation operation) {
     if (Objects.nonNull(operation.getRequestBody()) && Objects.nonNull(operation.getRequestBody().getContent())) {
       operation.getRequestBody().getContent().forEach((key, value) -> {
-        if (value.getSchema().get$ref() == null || Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null) {
+        if (value.getSchema().get$ref() == null) {
           basicSchemaMap.put("InlineObject" + StringUtils.capitalize(operation.getOperationId()),
                              value.getSchema());
+        } else if (Objects.nonNull(value.getSchema().getItems())) {
+          basicSchemaMap.put("InlineObject" + StringUtils.capitalize(operation.getOperationId()),
+                             value.getSchema().getItems());
         }
       });
     }
@@ -189,9 +191,12 @@ public class OpenApiUtil {
     for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
       if (Objects.nonNull(response.getValue().getContent())) {
         response.getValue().getContent().forEach((key, value) -> {
-          if (value.getSchema().get$ref() == null || Objects.nonNull(value.getSchema().getItems()) && value.getSchema().getItems().get$ref() == null) {
+          if (value.getSchema().get$ref() == null) {
             basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()),
                                value.getSchema());
+          } else if (Objects.nonNull(value.getSchema().getItems())) {
+            basicSchemaMap.put("InlineResponse" + StringUtils.capitalize(operation.getOperationId()),
+                               value.getSchema().getItems());
           }
         });
       }

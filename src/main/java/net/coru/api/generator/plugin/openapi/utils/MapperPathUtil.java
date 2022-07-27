@@ -38,7 +38,6 @@ import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.RequestObject;
 import net.coru.api.generator.plugin.openapi.model.ResponseObject;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,6 +50,8 @@ public class MapperPathUtil {
   public static final String OBJECT = "object";
 
   public static final String INLINE_PARAMETER = "InlineParameter";
+
+  public static final String INTEGER = "integer";
 
   private MapperPathUtil() {}
 
@@ -81,7 +82,7 @@ public class MapperPathUtil {
   private static HashMap<String, String> getMapComponentsTypes(final Components components, final FileSpec fileSpec) {
     final var mapComponents = new HashMap<String, String>();
 
-    if (MapUtils.isNotEmpty(components.getSchemas())) {
+    if (Objects.nonNull(components) && Objects.nonNull(components.getSchemas())) {
       components.getSchemas().forEach((key, value) -> {
         if (!mapComponents.containsKey(key)) {
           final var type = checkSchemaType(value, fileSpec);
@@ -163,7 +164,7 @@ public class MapperPathUtil {
                           .tags(operation.getTags())
                           .requestObjects(mapRequestObject(fileSpec, operation, globalObject))
                           .responseObjects(mapResponseObject(fileSpec, operation, globalObject))
-                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec, operation.getOperationId()))
+                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), fileSpec, operation.getOperationId(), globalObject))
                           .securities(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
                           .consumes(getConsumesList(operation.getRequestBody()))
                           .produces(getProducesList(operation.getResponses()))
@@ -226,7 +227,9 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(final OpenAPI openAPI, final List<Parameter> parameters, final FileSpec fileSpec, final String contentClassName) {
+  private static List<ParameterObject> mapParameterObjects(
+      final OpenAPI openAPI, final List<Parameter> parameters, final FileSpec fileSpec, final String contentClassName,
+      final GlobalObject globalObject) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (Parameter parameter : parameters) {
@@ -243,7 +246,7 @@ public class MapperPathUtil {
                                               .isCollection(ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
                                               .build());
         } else if (Objects.nonNull(parameter.getContent())) {
-          addInlineParametersToList(contentClassName, parameterObjects, parameter, fileSpec);
+          addInlineParametersToList(contentClassName, parameterObjects, parameter, fileSpec, globalObject);
         } else {
           parameterObjects.add(ParameterObject.builder()
                                               .name(parameter.getName())
@@ -259,19 +262,21 @@ public class MapperPathUtil {
     return parameterObjects;
   }
 
-  private static void addInlineParametersToList(final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final FileSpec fileSpec) {
+  private static void addInlineParametersToList(
+      final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final FileSpec fileSpec,
+      final GlobalObject globalObject) {
     final Content content = parameter.getContent();
     for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
+      final String inlineParameter = getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
+                                                 + StringUtils.capitalize(parameter.getName()), fileSpec);
       if (OBJECT.equalsIgnoreCase(contentEntrySet.getValue().getSchema().getType())) {
         parameterObjects.add(ParameterObject.builder()
                                             .name(parameter.getName())
                                             .required(parameter.getRequired())
                                             .description(parameter.getDescription())
                                             .in(parameter.getIn())
-                                            .className(getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
-                                                                   + StringUtils.capitalize(parameter.getName()), fileSpec))
-                                            .importName(getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
-                                                                    + StringUtils.capitalize(parameter.getName()), fileSpec))
+                                            .className(inlineParameter)
+                                            .importName(inlineParameter)
                                             .build());
       } else {
         parameterObjects.add(ParameterObject.builder()
@@ -279,7 +284,7 @@ public class MapperPathUtil {
                                             .required(parameter.getRequired())
                                             .description(parameter.getDescription())
                                             .in(parameter.getIn())
-                                            .className(defineTypeName(contentEntrySet.getValue().getSchema()))
+                                            .className(defineTypeName(contentEntrySet.getValue().getSchema(), globalObject, inlineParameter))
                                             .build());
       }
     }
@@ -303,34 +308,30 @@ public class MapperPathUtil {
 
   private static List<ContentObject> mapContentObject(final FileSpec fileSpec, final Content content, final String inlineObject, final GlobalObject globalObject) {
     final List<ContentObject> contentObjects = new ArrayList<>();
+    final String pojoName = getPojoName(inlineObject, fileSpec);
     if (Objects.nonNull(content)) {
       for (Entry<String, MediaType> mediaTypeEntry : content.entrySet()) {
         if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getProperties())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(getPojoName(inlineObject, fileSpec)))
-                                          .refName(getPojoName(inlineObject, fileSpec))
+                                          .importName(StringUtils.capitalize(pojoName))
+                                          .refName(pojoName)
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
                    && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
-                                          .build());
-        } else if (ARRAY.equalsIgnoreCase(mediaTypeEntry.getValue().getSchema().getType()) && mediaTypeEntry.getValue().getSchema().getItems().get$ref() == null) {
-          contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(mediaTypeEntry.getKey())
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema()))
+                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName)))
+                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema(), globalObject, pojoName))
                                           .build());
         } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap())))
-                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
+                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName)))
+                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName))
                                           .build());
         }
       }
@@ -338,23 +339,30 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
-  private static String defineTypeName(final Schema<?> schema) {
+  private static String defineTypeName(final Schema<?> schema, final GlobalObject globalObject, final String pojoName) {
     final String typeName;
     switch (schema.getType()) {
-      case "integer":
+      case BasicTypeConstants.INTEGER:
         typeName = getIntegerFormat(schema);
         break;
-      case "number":
+      case BasicTypeConstants.NUMBER:
         typeName = getNumberFormat(schema);
         break;
-      case "boolean":
+      case BasicTypeConstants.BOOLEAN:
         typeName = "Boolean";
         break;
       case ARRAY:
         final ArraySchema arraySchema = (ArraySchema) schema;
-        typeName = "List<" + defineTypeName(arraySchema.getItems()) + ">";
+        if (Objects.nonNull(arraySchema.getItems().get$ref())) {
+          typeName = "List<" + getRefSchema(arraySchema.getItems().get$ref(), globalObject.getComponentsTypeMap()) + ">";
+        } else {
+          typeName = "List<" + defineTypeName(arraySchema.getItems(), globalObject, pojoName) + ">";
+        }
         break;
-      case "string":
+      case OBJECT:
+        typeName = pojoName;
+        break;
+      case BasicTypeConstants.STRING:
       default:
         typeName = "String";
         break;
@@ -399,18 +407,21 @@ public class MapperPathUtil {
     return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith(MAP) ? MAP : dataType;
   }
 
-  private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes) {
+  private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes, final String pojoName) {
 
     var refSchema = "";
 
     if (ARRAY.equalsIgnoreCase(schema.getType())) {
       final ArraySchema arraySchema = (ArraySchema) schema;
-      refSchema = arraySchema.getItems().get$ref();
+      if (OBJECT.equalsIgnoreCase(schema.getItems().getType())) {
+        refSchema = pojoName;
+      } else {
+        refSchema = StringUtils.isNotBlank(arraySchema.getItems().get$ref()) ? getRefSchema(arraySchema.getItems().get$ref(), componentsTypes) : null;
+      }
+    } else if (Objects.nonNull(schema.get$ref())) {
+      refSchema = StringUtils.isNotBlank(schema.get$ref()) ? getRefSchema(schema.get$ref(), componentsTypes) : null;
     }
-    if (Objects.nonNull(schema.get$ref())) {
-      refSchema = schema.get$ref();
-    }
-    return StringUtils.isNotBlank(refSchema) ? getRefSchema(refSchema, componentsTypes) : "";
+    return refSchema;
   }
 
   private static String getRefSchema(final String refSchema, final Map<String, String> componentsTypes) {
