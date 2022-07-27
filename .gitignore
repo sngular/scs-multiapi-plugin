@@ -30,3 +30,4 @@ target/
 
 # Pom bak file
 pom.xml.bak
+/gradle-plugin/.gradle/
