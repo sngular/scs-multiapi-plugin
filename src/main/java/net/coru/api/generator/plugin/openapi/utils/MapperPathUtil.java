@@ -416,7 +416,7 @@ public class MapperPathUtil {
       if (OBJECT.equalsIgnoreCase(schema.getItems().getType())) {
         refSchema = pojoName;
       } else if (ARRAY.equalsIgnoreCase(schema.getItems().getType())) {
-        mapRefName(schema.getItems(), componentsTypes, pojoName);
+        refSchema = mapRefName(schema.getItems(), componentsTypes, pojoName);
       } else {
         refSchema = StringUtils.isNotBlank(arraySchema.getItems().get$ref()) ? getRefSchema(arraySchema.getItems().get$ref(), componentsTypes) : null;
       }
