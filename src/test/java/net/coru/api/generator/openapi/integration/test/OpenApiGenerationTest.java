@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
@@ -31,6 +32,8 @@ public class OpenApiGenerationTest {
 
   private final String DEFAULT_MODEL_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model";
 
+  private final String DEFAULT_EXCEPTION_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model/exception";
+
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiClientGeneration(MavenProjectResult result) throws IOException {
@@ -43,7 +46,7 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
   }
 
   @MavenTest
@@ -58,7 +61,10 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   @MavenTest
@@ -73,7 +79,7 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
   }
 
   @MavenTest
@@ -88,7 +94,10 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   @MavenTest
@@ -102,7 +111,7 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testMultipleRefGeneration/assets/MessageDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
   }
 
   @MavenTest
@@ -117,11 +126,15 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  private void commonTest(final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles, final String targetApi, final String targetModel)
-      throws IOException {
+  private void commonTest(
+      final MavenProjectResult result, final List<File> expectedFile, final List<File> expectedModelFiles, final String targetApi, final String targetModel,
+      final List<File> expectedExceptionFiles, final String targetException) throws IOException {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetApi = pathToTarget.resolve(targetApi);
@@ -135,6 +148,13 @@ public class OpenApiGenerationTest {
 
     validateFiles(expectedFile, targetApiFolder);
     validateFiles(expectedModelFiles, targetModelFolder);
+
+    if (Objects.nonNull(expectedExceptionFiles)) {
+      Path pathToTargetException = pathToTarget.resolve(targetException);
+      File targetModelException = pathToTargetException.toFile();
+      assertThat(targetModelException).isNotEmptyDirectory();
+      validateFiles(expectedExceptionFiles, targetModelException);
+    }
   }
 
   @MavenTest
@@ -145,14 +165,22 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagFirstApi.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiTagsGeneration/assets/TestTagSecondApi.java"));
 
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiTagsGeneration/assets/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    pathToTarget = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testtags");
+    Path pathToTargetApi = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testtags");
+    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testtags/model/exception");
 
-    File targetApiFolder = pathToTarget.toFile();
+    File targetApiFolder = pathToTargetApi.toFile();
     assertThat(targetApiFolder).isNotEmptyDirectory();
 
+    File targetExceptionFolder = pathToException.toFile();
+    assertThat(targetExceptionFolder).isNotEmptyDirectory();
+
     validateFiles(expectedModelFiles, targetApiFolder);
+    validateFiles(expectedExceptionFiles, targetExceptionFolder);
   }
 
   @MavenTest
@@ -163,10 +191,18 @@ public class OpenApiGenerationTest {
     List<File> expectedFileSecond = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                      "/TestSecondApi.java"));
 
+    List<File> expectedExceptionFilesFirst = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java"));
+
+    List<File> expectedExceptionFilesSecond = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/first");
     Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/second");
+    Path pathToExceptionFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/first/model/exception");
+    Path pathToExceptionSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/second/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -174,8 +210,16 @@ public class OpenApiGenerationTest {
     File targetSecondFolder = pathToTargetSecond.toFile();
     assertThat(targetSecondFolder).isNotEmptyDirectory();
 
+    File targetExceptionFirstFolder = pathToExceptionFirst.toFile();
+    assertThat(targetExceptionFirstFolder).isNotEmptyDirectory();
+
+    File targetExceptionSecondFolder = pathToExceptionSecond.toFile();
+    assertThat(targetExceptionSecondFolder).isNotEmptyDirectory();
+
     validateFiles(expectedFileFirst, targetFirstFolder);
     validateFiles(expectedFileSecond, targetSecondFolder);
+    validateFiles(expectedExceptionFilesFirst, targetExceptionFirstFolder);
+    validateFiles(expectedExceptionFilesSecond, targetExceptionSecondFolder);
   }
 
   @MavenTest
@@ -185,14 +229,22 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
                  "/TestApi.java"));
 
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testwebclient");
+    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testwebclient/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
 
+    File targetException = pathToException.toFile();
+    assertThat(targetException).isNotEmptyDirectory();
+
     validateFiles(expectedFileFirst, targetFirstFolder);
+    validateFiles(expectedExceptionFiles, targetException);
   }
 
   @MavenTest
@@ -207,10 +259,15 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
                  "/TestHttpBasicAuth.java"));
 
+    List<File> expectedExceptionFiles = List.of(
+        new File(
+            "src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client");
     Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client/auth");
+    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
@@ -218,8 +275,12 @@ public class OpenApiGenerationTest {
     File targetSecondFolder = pathToTargetSecond.toFile();
     assertThat(targetSecondFolder).isNotEmptyDirectory();
 
+    File targetException = pathToException.toFile();
+    assertThat(targetException).isNotEmptyDirectory();
+
     validateFiles(expectedFileFirst, targetFirstFolder);
     validateFiles(expectedFileSecond, targetSecondFolder);
+    validateFiles(expectedExceptionFiles, targetException);
   }
 
   @MavenTest
@@ -228,14 +289,22 @@ public class OpenApiGenerationTest {
     List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testRestClientApiGeneration" +
                                                     "/assets/TestApi.java"));
 
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testRestClientApiGeneration/assets/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testrestclient");
+    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testrestclient/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
 
+    File targetException = pathToException.toFile();
+    assertThat(targetException).isNotEmptyDirectory();
+
     validateFiles(expectedFileFirst, targetFirstFolder);
+    validateFiles(expectedExceptionFiles, targetException);
   }
 
   @MavenTest
@@ -244,14 +313,22 @@ public class OpenApiGenerationTest {
     List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testExternalRefsGeneration" +
                                                     "/assets/TestApi.java"));
 
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testExternalRefsGeneration/assets/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi");
+    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();
 
+    File targetException = pathToException.toFile();
+    assertThat(targetException).isNotEmptyDirectory();
+
     validateFiles(expectedFileFirst, targetFirstFolder);
+    validateFiles(expectedExceptionFiles, targetException);
   }
 
   @MavenTest
@@ -267,7 +344,10 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   @MavenTest
@@ -286,7 +366,11 @@ public class OpenApiGenerationTest {
 
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File(
+            "src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   @MavenTest
@@ -301,7 +385,10 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testOverWriteModelTrue/assets/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testOverWriteModelTrue/assets/ModelClassException.java"));
+
+    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   @MavenTest
@@ -329,9 +416,12 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestInfoDTO.java")
     );
 
-    commonTest(result, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API);
+    List<File> expectedExceptionFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/ModelClassException.java"));
+
+    commonTest(result, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
     commonTest(result, expectedLombokFile, expectedLombokModelFiles, "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi",
-               "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi/model");
+               "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi/model", null, null);
   }
 
 }
