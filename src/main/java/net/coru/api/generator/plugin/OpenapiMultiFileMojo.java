@@ -236,7 +236,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void processPackage(final String apiPackage) {
     if (StringUtils.isNotBlank(apiPackage)) {
       templateFactory.setPackageName(apiPackage.trim());
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       templateFactory.setPackageName(project.getModel().getGroupId());
     } else {
       templateFactory.setPackageName(DEFAULT_OPENAPI_API_PACKAGE);
@@ -247,7 +247,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     var modelReturnPackage = "";
     if (StringUtils.isNotBlank(modelPackage)) {
       modelReturnPackage = modelPackage.trim();
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       modelReturnPackage = project.getModel().getGroupId() + ".model";
     } else {
       modelReturnPackage = DEFAULT_OPENAPI_MODEL_PACKAGE;
@@ -275,7 +275,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
       path = processedGeneratedSourcesFolder + fileSpecPackage.trim().replaceAll("\\.", "/");
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
