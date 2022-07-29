@@ -217,15 +217,14 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void createModelTemplate(final FileSpec fileSpec, final OpenAPI openAPI) throws TemplateException, IOException {
 
     final String fileModelToSave = processPath(fileSpec.getModelPackage(), true);
-    final List<String> listObjectsToCreate = OpenApiUtil.getListComponentsObjects(openAPI);
     final var modelPackage = processModelPackage(fileSpec.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
     templateFactory.setModelPackageName(modelPackage);
 
     if (Boolean.TRUE.equals(overwriteModel)) {
-      processModelsWhenOverWriteIsTrue(fileSpec, openAPI, fileModelToSave, listObjectsToCreate, modelPackage, basicSchemaMap);
+      processModelsWhenOverWriteIsTrue(fileSpec, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
     } else {
-      processWhenOverwriteModelIsFalse(fileSpec, openAPI, fileModelToSave, listObjectsToCreate, modelPackage, basicSchemaMap);
+      processWhenOverwriteModelIsFalse(fileSpec, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
     }
   }
 
@@ -282,20 +281,9 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void processModelsWhenOverWriteIsTrue(
       final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
-      final List<String> listObjectsToCreate, final String modelPackage,
+      final String modelPackage,
       final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
-    for (String pojoName : listObjectsToCreate) {
-      final var schemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), openAPI.getComponents().getSchemas().get(pojoName),
-                                                                            StringUtils.capitalize(pojoName), fileSpec, modelPackage);
-      checkRequiredOrCombinatorExists(schemaObject);
-
-      try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), schemaObject);
-      } catch (IOException | TemplateException e) {
-        e.printStackTrace();
-      }
-    }
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
@@ -310,7 +298,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       templateFactory.fillTemplateModelClassException(fileModelToSave);
     }
   }
-  
+
   private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
@@ -325,24 +313,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void processWhenOverwriteModelIsFalse(
       final FileSpec fileSpec, final OpenAPI openAPI,
-      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) {
+      final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) {
 
-    for (String objectToCreate : listObjectsToCreate) {
-      final String objectAndModelPackage = objectToCreate + modelPackage;
-      if (overwriteModelList.add(objectAndModelPackage)) {
-        overwriteModelList.add(objectAndModelPackage);
-        try {
-          templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                             MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(),
-                                                                                          openAPI.getComponents().getSchemas().get(objectToCreate),
-                                                                                          StringUtils.capitalize(objectToCreate), fileSpec, modelPackage));
-        } catch (IOException | TemplateException e) {
-          e.printStackTrace();
-        }
-      } else {
-        throw new DuplicateModelClassException(objectToCreate, modelPackage);
-      }
-    }
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
       final Schema<?> basicSchema = entry.getValue();
