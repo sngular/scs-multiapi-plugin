@@ -35,11 +35,11 @@ public class OpenApiUtil {
 
   private OpenApiUtil() {}
 
-  public static Map<String, HashMap<String, PathItem>> mapApiGroups(final OpenAPI openAPI, final Boolean groupByTags) {
+  public static Map<String, HashMap<String, PathItem>> mapApiGroups(final OpenAPI openAPI, final boolean groupByTags) {
     var mapApis = new HashMap<String, HashMap<String, PathItem>>();
 
     if (!openAPI.getPaths().isEmpty()) {
-      mapApis = null != groupByTags && groupByTags ? mapApiGroupsByTags(openAPI) : mapApiGroupsByUrl(openAPI);
+      mapApis = groupByTags ? mapApiGroupsByTags(openAPI) : mapApiGroupsByUrl(openAPI);
     }
 
     return mapApis;
