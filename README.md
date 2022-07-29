@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.3.0</version>
+  <version>3.0.1</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -112,7 +112,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>2.3.0</version>
+<version>3.0.1</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>2.3.0</version>
+  <version>3.0.1</version>
   <executions>
     <execution>
         <goals>
@@ -567,11 +567,11 @@ RestClient and the WebClient will be located, if this option is set in any
 of the fileSpecs, and the name of the folder where the generated sources will
 be saved in the api of the project.
 
-| Name                                                | Description                                                                                                                                                                                                                                                                    | Example                              |
-|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                         | net.coru.apigenerator.openapi.client |
-| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                       | generated-sources                    |
-| overWriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name.It is initialized to false by default | true                                 |
+| Name                                                | Description                                                                                                                                                                                                                                                                     | Example                              |
+|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | net.coru.apigenerator.openapi.client |
+| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                    |
+| overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
