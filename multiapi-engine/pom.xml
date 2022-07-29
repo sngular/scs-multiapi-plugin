@@ -17,7 +17,6 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <jackson.version>2.13.3</jackson.version>
     <freemarker.version>2.3.31</freemarker.version>
-    <lombok.version>1.18.24</lombok.version>
     <assertj-core.version>3.22.0</assertj-core.version>
     <junit-jupiter-engine.version>5.8.2</junit-jupiter-engine.version>
     <swagger-core.version>2.2.0</swagger-core.version>
@@ -59,7 +58,6 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
     </dependency>
 
     <dependency>
