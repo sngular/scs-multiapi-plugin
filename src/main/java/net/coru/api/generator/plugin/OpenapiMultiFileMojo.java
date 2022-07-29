@@ -336,13 +336,13 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
     final Map<String, Schema> componentSchemas = Objects.nonNull(openAPI.getComponents()) ? openAPI.getComponents().getSchemas() : null;
 
-    for (String objectToCreate : listObjectsToCreate) {
-      final String objectAndModelPackage = objectToCreate + modelPackage;
+
+    for (String pojoName : listObjectsToCreate) {
+      final String objectAndModelPackage = pojoName + modelPackage;
       if (overwriteModelList.add(objectAndModelPackage)) {
         overwriteModelList.add(objectAndModelPackage);
-        final var schemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(),
-                                                                              openAPI.getComponents().getSchemas().get(objectToCreate),
-                                                                              StringUtils.capitalize(objectToCreate), fileSpec, modelPackage);
+        final var schemaObject = MapperContentUtil.mapComponentToSchemaObject(componentSchemas, openAPI.getComponents().getSchemas().get(pojoName),
+                                                                              StringUtils.capitalize(pojoName), fileSpec, modelPackage);
         checkRequiredOrCombinatorExists(schemaObject);
         try {
           templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), schemaObject);
@@ -350,7 +350,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
           e.printStackTrace();
         }
       } else {
-        throw new DuplicateModelClassException(objectToCreate, modelPackage);
+        throw new DuplicateModelClassException(pojoName, modelPackage);
       }
     }
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
