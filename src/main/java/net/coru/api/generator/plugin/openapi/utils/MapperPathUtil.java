@@ -183,7 +183,7 @@ public class MapperPathUtil {
 
   private static List<String> getConsumesList(final RequestBody requestBody) {
     final var consumesList = new ArrayList<String>();
-    if (requestBody != null && requestBody.getContent() != null
+    if (Objects.nonNull(requestBody)  && Objects.nonNull(requestBody.getContent())
         && !requestBody.getContent().isEmpty()) {
 
       final Set<String> consumes = requestBody.getContent().keySet();
@@ -202,7 +202,7 @@ public class MapperPathUtil {
 
     if (Objects.nonNull(responses) && !responses.isEmpty()) {
       responses.forEach((key1, value) -> {
-        if (value != null && value.getContent() != null && !value.getContent().isEmpty()) {
+        if (Objects.nonNull(value) && Objects.nonNull(value.getContent()) && !value.getContent().isEmpty()) {
           final Set<String> produces = value.getContent().keySet();
           produces.forEach(key -> {
             if (!key.equalsIgnoreCase("*/*") && !producesList.contains(key)) {
@@ -353,11 +353,7 @@ public class MapperPathUtil {
         break;
       case ARRAY:
         final ArraySchema arraySchema = (ArraySchema) schema;
-        if (Objects.nonNull(arraySchema.getItems().get$ref())) {
-          typeName = "List<" + getRefSchema(arraySchema.getItems().get$ref(), globalObject.getComponentsTypeMap()) + ">";
-        } else {
-          typeName = "List<" + defineTypeName(arraySchema.getItems(), globalObject, pojoName) + ">";
-        }
+        typeName = getListName(globalObject, pojoName, arraySchema);
         break;
       case OBJECT:
         typeName = pojoName;
@@ -366,6 +362,16 @@ public class MapperPathUtil {
       default:
         typeName = "String";
         break;
+    }
+    return typeName;
+  }
+
+  private static String getListName(final GlobalObject globalObject, final String pojoName, final ArraySchema arraySchema) {
+    final String typeName;
+    if (Objects.nonNull(arraySchema.getItems().get$ref())) {
+      typeName = "List<" + getRefSchema(arraySchema.getItems().get$ref(), globalObject.getComponentsTypeMap()) + ">";
+    } else {
+      typeName = "List<" + defineTypeName(arraySchema.getItems(), globalObject, pojoName) + ">";
     }
     return typeName;
   }

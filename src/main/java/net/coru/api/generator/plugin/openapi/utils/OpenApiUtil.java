@@ -121,7 +121,7 @@ public class OpenApiUtil {
       throw new MojoExecutionException("Code generation failed when parser the .yaml file ");
     }
 
-    if (openAPI == null) {
+    if (Objects.isNull(openAPI)) {
       throw new MojoExecutionException("Code generation failed why .yaml is empty");
     }
 
@@ -176,7 +176,7 @@ public class OpenApiUtil {
   private static void processOperationRequestBody(final HashMap<String, Schema<?>> basicSchemaMap, final Operation operation) {
     if (Objects.nonNull(operation.getRequestBody()) && Objects.nonNull(operation.getRequestBody().getContent())) {
       operation.getRequestBody().getContent().forEach((key, value) -> {
-        if (value.getSchema().get$ref() == null) {
+        if (Objects.isNull(value.getSchema().get$ref())) {
           basicSchemaMap.put("InlineObject" + StringUtils.capitalize(operation.getOperationId()),
                              value.getSchema());
         } else if (Objects.nonNull(value.getSchema().getItems())) {
@@ -191,7 +191,7 @@ public class OpenApiUtil {
     for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
       if (Objects.nonNull(response.getValue().getContent())) {
         response.getValue().getContent().forEach((key, value) -> {
-          if (value.getSchema().get$ref() == null) {
+          if (Objects.isNull(value.getSchema().get$ref())) {
             basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()),
                                value.getSchema());
           } else if (Objects.nonNull(value.getSchema().getItems())) {
