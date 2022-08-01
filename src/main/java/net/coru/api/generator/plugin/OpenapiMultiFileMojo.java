@@ -289,7 +289,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(componentSchemas, basicSchema, schemaName, fileSpec, modelPackage);
+      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
@@ -317,7 +317,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   private void processWhenOverwriteModelIsFalse(
       final FileSpec fileSpec, final OpenAPI openAPI,
-      final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) {
+      final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
