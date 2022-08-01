@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.0.3</version>
+  <version>3.0.2</version>
   <executions>
     <execution>
       <id>asyncapi</id>
