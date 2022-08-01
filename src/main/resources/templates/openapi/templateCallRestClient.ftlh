@@ -105,24 +105,20 @@ public class ${className?cap_first}Api {
   * @throws RestClientException if an error occurs while attempting to invoke the API
   */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
-    <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array")>
-    List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>
-    <#elseif operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "map")>
-    Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first}>
+    <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "map")>
+    Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>
     <#else>
-    ${operation.responseObjects[0].contentObjects[0].refName?cap_first}
+    ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}
     </#if>
-    <#else>Void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "array")>List<${content.refName?cap_first}> <#elseif content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first}> <#else>${content.refName?cap_first} </#if>${content.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    <#else>Void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first?no_esc}> <#else>${content.refName?cap_first?no_esc} </#if>${content.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
     return ${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     <#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-    ResponseEntity<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
-    <#elseif operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "array">
-    ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
-    <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first}></#if>
-    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "array")>List<${content.refName?cap_first}> <#elseif content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first}> <#else>${content.refName?cap_first} </#if> ${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    ResponseEntity<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>
+    <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}></#if>
+    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first?no_esc}> <#else>${content.refName?cap_first?no_esc} </#if> ${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
 
     Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].refName?uncap_first}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
@@ -219,10 +215,8 @@ public class ${className?cap_first}Api {
       </#if></#compress>};
 
     ParameterizedTypeReference<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??><#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-    <Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first}>> localVarReturnType = new ParameterizedTypeReference<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>() {};
-    <#elseif  operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "array">
-    <List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>> localVarReturnType = new ParameterizedTypeReference<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>() {};
-    <#else><${operation.responseObjects[0].contentObjects[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>() {};
+    <Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>> localVarReturnType = new ParameterizedTypeReference<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>() {};
+    <#else><${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>() {};
     </#if>
     <#else>
     <Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
