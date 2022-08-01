@@ -18,7 +18,9 @@ public final class BasicTypeConstants {
 
   public static final String INTEGER = "integer";
 
-  public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER);
+  public static final String ARRAY = "array";
+
+  public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
 
   private BasicTypeConstants() {
 

@@ -66,7 +66,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(property = "fileSpecs")
   private List<FileSpec> fileSpecs;
 
-  @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
+  @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "false")
   private Boolean overwriteModel;
 
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
@@ -85,6 +85,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private final List<String> authentications = new ArrayList<>();
 
   private String processedGeneratedSourcesFolder;
+
+  private boolean useLombok;
 
   @Override
   public void execute() throws MojoExecutionException {
@@ -116,6 +118,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void processFileSpec(final List<FileSpec> fileSpecsList) throws MojoExecutionException {
 
     for (FileSpec fileSpec : fileSpecsList) {
+      generateExceptionTemplate = false;
+      useLombok = fileSpec.getUseLombokModelAnnotation();
       try {
         processPackage(fileSpec.getApiPackage());
         final String filePathToSave = processPath(fileSpec.getApiPackage(), false);
@@ -231,7 +235,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void processPackage(final String apiPackage) {
     if (StringUtils.isNotBlank(apiPackage)) {
       templateFactory.setPackageName(apiPackage.trim());
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       templateFactory.setPackageName(project.getModel().getGroupId());
     } else {
       templateFactory.setPackageName(DEFAULT_OPENAPI_API_PACKAGE);
@@ -242,7 +246,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     var modelReturnPackage = "";
     if (StringUtils.isNotBlank(modelPackage)) {
       modelReturnPackage = modelPackage.trim();
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       modelReturnPackage = project.getModel().getGroupId() + ".model";
     } else {
       modelReturnPackage = DEFAULT_OPENAPI_MODEL_PACKAGE;
@@ -270,7 +274,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
       path = processedGeneratedSourcesFolder + fileSpecPackage.trim().replaceAll("\\.", "/");
-    } else if (project.getModel().getGroupId() != null) {
+    } else if (Objects.nonNull(project.getModel().getGroupId())) {
       path = processedGeneratedSourcesFolder + project.getModel().getGroupId().replaceAll("\\.", "/");
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
@@ -285,7 +289,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
+      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(componentSchemas, basicSchema, schemaName, fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
@@ -302,7 +306,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
-    } else if (Objects.nonNull(schema.getFieldObjectList())) {
+    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
       for (var field : schema.getFieldObjectList()) {
         if (field.getRequired()) {
           generateExceptionTemplate = true;
@@ -321,13 +325,17 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
       if (!overwriteModelList.add(schemaName + modelPackage)) {
         throw new DuplicateModelClassException(schemaName, modelPackage);
       }
+      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
+                                                                                 fileSpec, modelPackage);
+      checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                           MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                        fileSpec, modelPackage));
+        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
+    }
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
+      templateFactory.fillTemplateModelClassException(fileModelToSave);
     }
   }
 

@@ -8,6 +8,7 @@ package net.coru.api.generator.plugin.openapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -26,7 +27,7 @@ public class MapperAuthUtil {
 
   public static List<AuthSchemaObject> createAuthSchemaList(final OpenAPI openAPI) {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
-    if (MapUtils.isNotEmpty(openAPI.getComponents().getSecuritySchemes())) {
+    if (Objects.nonNull(openAPI.getComponents()) && MapUtils.isNotEmpty(openAPI.getComponents().getSecuritySchemes())) {
       openAPI.getComponents().getSecuritySchemes().forEach((key, value) -> {
         final var typeStr = value.getType().toString();
         final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(value.getScheme());

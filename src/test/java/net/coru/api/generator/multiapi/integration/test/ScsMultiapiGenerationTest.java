@@ -77,6 +77,11 @@ public class ScsMultiapiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestInfoDTO.java")
     );
 
+    List<String> expectedExceptionFilenames = List.of("ModelClassException.java");
+
+    List<File> expectedExceptionFiles = List.of(new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets" +
+                                                         "/ModelClassException.java"));
+
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
@@ -85,20 +90,24 @@ public class ScsMultiapiGenerationTest {
 
     Path pathToTargetApi = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi");
     Path pathToTargetModel = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi/model");
+    Path pathToTargetException = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi/model/exception");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();
     File targetApiDirectory = pathToTargetApi.toFile();
     File targetModelDirectory = pathToTargetModel.toFile();
+    File targetExceptionDirectory = pathToTargetException.toFile();
 
     checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
     checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
     checkTargetFiles(expectedFileNames, targetApiDirectory);
     checkTargetFiles(expectedModelFileNames, targetModelDirectory);
+    checkTargetFiles(expectedExceptionFilenames, targetExceptionDirectory);
 
     validateFiles(expectedConsumerFiles, targetConsumerDirectory);
     validateFiles(expectedProducerFiles, targetProducerDirectory);
     validateFiles(expectedFiles, targetApiDirectory);
     validateFiles(expectedModelFiles, targetModelDirectory);
+    validateFiles(expectedExceptionFiles, targetExceptionDirectory);
   }
 }

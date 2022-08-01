@@ -37,7 +37,7 @@ import java.util.Map;
   </#list>
 </#list>
 <#list imports as import>
-import <#if packageModel??>${packageModel}<#elseif package??>${package}</#if>.${import};
+import <#if packageModel??>${packageModel}<#elseif package??>${package}List<</#if>.${import};
 </#list>
 
 import ${packageAuth}.Authentication;
@@ -106,7 +106,7 @@ public class ${className?cap_first}Api {
   */
   private ResponseSpec ${operation.operationId}RequestCreation(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if>
-  <#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
+  <#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?cap_first?no_esc} ${content.refName?uncap_first}</#list></#list></#if></@compress>) throws WebClientResponseException {
     Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].refName?uncap_first}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
     if (${operation.requestObjects[0].contentObjects[0].refName?uncap_first} == null) {
@@ -201,7 +201,7 @@ public class ${className?cap_first}Api {
     </#if></#compress>};
 
     <#if operation.responseObjects[0].contentObjects[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
@@ -227,19 +227,18 @@ public class ${className?cap_first}Api {
   */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
   <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array" || operation.responseObjects[0].contentObjects[0].typeData == "map")>
-  Flux<${operation.responseObjects[0].contentObjects[0].refName?cap_first}><#else>Mono<${operation.responseObjects[0].contentObjects[0].refName?cap_first}></#if>
+  Flux<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}><#else>Mono<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}></#if>
   <#else>Mono<Void></#if></@compress> ${operation.operationId}(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObjects as content>
-  <#if content.typeData?? && (content.typeData == "array")>List<${content.refName?cap_first}>
-  <#elseif content.typeData?? && (content.typeData == "map")>Map<String,${content.refName?cap_first}>
-  <#else>${content.refName?cap_first}
+  <#if content.typeData?? && (content.typeData == "map")>Map<String,${content.refName?cap_first?no_esc}>
+  <#else>${content.refName?cap_first?no_esc}
   </#if>${content.refName?uncap_first} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObjects[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
@@ -251,25 +250,23 @@ public class ${className?cap_first}Api {
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> Mono<<#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-  ResponseEntity<Map<String,${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>
+  ResponseEntity<Map<String,${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>
   <#elseif operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "array">
-  ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>>>
-  <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>></#if>
+  ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>>
+  <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>></#if>
   <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
   <#list request.contentObjects as content>
-  <#if content.typeData?? && (content.typeData == "array")>
-  List<${content.refName?cap_first}>
-  <#elseif content.typeData?? && (content.typeData == "map")>
-  Map<String,${content.refName?cap_first}>
+  <#if content.typeData?? && (content.typeData == "map")>
+  Map<String,${content.refName?cap_first?no_esc}>
   <#else>
-  ${content.refName?cap_first}
+  ${content.refName?cap_first?no_esc}
   </#if> ${content.refName?uncap_first} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObjects[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first}>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
