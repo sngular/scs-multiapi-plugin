@@ -424,4 +424,22 @@ public class OpenApiGenerationTest {
                "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi/model", null, null);
   }
 
+  @MavenTest
+  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
+  void testInlineSchemaCreation(MavenProjectResult result) throws IOException {
+
+    List<File> expectedTestApiFile = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/RuleApi.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/RulesApi.java"));
+
+    List<File> expectedTestApiModelFiles = List.of(
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/ApiErrorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/ApiTestDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/ApiTestProcessorDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testInlineSchemaCreation/assets/ApiTestTypeDTO.java")
+
+    );
+
+    commonTest(result, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, DEFAULT_EXCEPTION_API);
+  }
 }
