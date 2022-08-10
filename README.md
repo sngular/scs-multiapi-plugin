@@ -46,7 +46,7 @@ Here is the documentation for these technologies:
 
 ### How to configure the POM file
 
-To mantain the generation of the diferent types of classes independent, they
+To maintain the generation of the different types of classes independent, they
 are configured as two different goals on the plugin, `asyncapi-generation` and
 `openapi-generation`.
 As commented above, they both could be used at the same time, setting a double
@@ -56,7 +56,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.0.3</version>
+  <version>3.1.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -112,7 +112,7 @@ which the plugin is designed.
 <plugin>
 <groupId>net.coru</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>3.0.3</version>
+<version>3.1.0</version>
 <executions>
   <execution>
     <phase>generate-sources</phase>
@@ -206,7 +206,7 @@ the same way and can receive the same parameters. These parameters are:
   defined, and this parameter is not defined inside it, all the publish
   operations defined in the YML file will be generated. If both `supplier` and
   `streamBridge` sections are defined, it`s needed to define which operations
-  belongs to each category.
+  belong to each category.
   - **classNamePostfix**: This parameter receives the name of the class that
   it's going to be generated containing the Beans. This parameter is optional,
   and by default the classes will be called `Producer`, `StreamBridgeProducer`
@@ -220,7 +220,7 @@ the same way and can receive the same parameters. These parameters are:
   Check [how the apiPackage is setted](#how-apiPackage-is-setted) for
   more information about how this parameter works, and the values it
   could have.
-  - **modelPackage**: This parameter receive a package name, where the entities
+  - **modelPackage**: This parameter receives a package name, where the entities
   used for the generated classes are defined. As it's explained in the
   [Mapper Section](#mapper), those entities are usually auto-generated, so the
   plugin expects the modelPackage to be the package where them are included.
@@ -335,9 +335,9 @@ previous classes, so there is only one operation defined in each interface.
 This layer is the only one that needs work by the end user, so it needs to
 implement these interfaces.
 
-This interfaces are named following the "I*OperationId*" pattern, where
+These interfaces are named following the "I*OperationId*" pattern, where
 'OperationId' comes from the YML file definition of the channels section.
-Also the method is named as 'OperationId' as well as on the classes in the
+The method is named as 'OperationId' as well as on the classes in the
 above section.
 
 ```java
@@ -354,10 +354,10 @@ this interfaces, are auto-generated entities, based on the same YML file.
 Because of that, they need to be mapped to a user defined entity using a mapper
 utility class.
 
-This mapper must be defined by the user on it's own way to improve the
-personalitation capabilities of the plugin.
+This mapper must be defined by the user on its own way to improve the
+personalization capabilities of the plugin.
 
-Down here you have an example of the mapper utility class as well as an simple
+Down here you have an example of the mapper utility class as well as a simple
 class implementing the interface defined above.
 
 ```java
@@ -438,7 +438,7 @@ spring:
 
 Because the plugin cannot access the application properties, the name of the
 corresponding *binding* must be used as the **channel identifier** in the YML
-file that's setted on the plugin configuration, as you can see on the next
+file that's set on the plugin configuration, as you can see on the next
 extract:
 
 ```yaml
@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.0.3</version>
+  <version>3.1.0</version>
   <executions>
     <execution>
         <goals>

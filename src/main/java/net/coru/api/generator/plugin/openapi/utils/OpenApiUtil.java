@@ -131,6 +131,8 @@ public class OpenApiUtil {
 
   public static Map<String, Schema<?>> processBasicSchemas(final OpenAPI openApi) {
     final var basicSchemaMap = new HashMap<String, Schema<?>>();
+    final Map<String, Schema> componentsSchemasMap = openApi.getComponents().getSchemas();
+    componentsSchemasMap.forEach(basicSchemaMap::put);
 
     for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {
       final PathItem path = pathItem.getValue();
