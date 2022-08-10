@@ -478,7 +478,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.0.2</version>
+  <version>3.0.3</version>
   <executions>
     <execution>
         <goals>

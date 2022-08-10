@@ -178,12 +178,9 @@ public class OpenApiUtil {
     for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
       if (Objects.nonNull(response.getValue().getContent())) {
         response.getValue().getContent().forEach((key, value) -> {
-          if (Objects.isNull(value.getSchema().get$ref())) {
+          if (Objects.isNull(value.getSchema().get$ref()) && "object".equalsIgnoreCase(value.getSchema().getType())) {
             basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()),
                                value.getSchema());
-          } else if (Objects.nonNull(value.getSchema().getItems())) {
-            basicSchemaMap.put("InlineResponse" + StringUtils.capitalize(operation.getOperationId()),
-                               value.getSchema().getItems());
           }
         });
       }
