@@ -429,7 +429,7 @@ public class MapperPathUtil {
     } else if (Objects.nonNull(schema.get$ref())) {
       refSchema = StringUtils.isNotBlank(schema.get$ref()) ? getRefSchema(schema.get$ref(), componentsTypes) : null;
     }
-    return refSchema;
+    return StringUtils.isNotBlank(refSchema) ? refSchema : null;
   }
 
   private static String getRefSchema(final String refSchema, final Map<String, String> componentsTypes) {
