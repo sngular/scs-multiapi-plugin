@@ -74,7 +74,7 @@ public class OpenApiUtil {
   }
 
   private static MultiValuedMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
-    MultiValuedMap<String, PathItem> mapByTag = new ArrayListValuedHashMap<>();
+    final MultiValuedMap<String, PathItem> mapByTag = new ArrayListValuedHashMap<>();
 
     for (Entry<HttpMethod, Operation> operation : pathItem.readOperationsMap().entrySet()) {
       if (CollectionUtils.isNotEmpty(operation.getValue().getTags())) {

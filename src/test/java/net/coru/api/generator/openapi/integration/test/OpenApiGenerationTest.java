@@ -43,7 +43,8 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestsDTO.java")
     );
 
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
@@ -58,7 +59,8 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsGeneration/assets/ApiTestsDTO.java")
     );
 
     List<File> expectedExceptionFiles = List.of(
@@ -76,7 +78,9 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestsDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiEnumsLombokGeneration/assets/ApiTestsDTO.java")
     );
 
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
@@ -91,7 +95,9 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestsDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestsDTO.java")
     );
 
     List<File> expectedExceptionFiles = List.of(
@@ -123,7 +129,9 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiReactiveGeneration/assets/ApiTestsDTO.java")
+
     );
 
     List<File> expectedExceptionFiles = List.of(
@@ -341,7 +349,9 @@ public class OpenApiGenerationTest {
     List<File> expectedModelFiles = List.of(
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathWithBarsGeneration/assets/ApiTestsDTO.java")
+
     );
 
     List<File> expectedExceptionFiles = List.of(
@@ -362,9 +372,10 @@ public class OpenApiGenerationTest {
                  "/ApiInlineParameterShowTestByIdTestIdDTO" +
                  ".java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiParametersWithContentGeneration/assets/ApiTestsDTO.java")
 
-    );
+        );
 
     List<File> expectedExceptionFiles = List.of(
         new File(
@@ -402,7 +413,8 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestAllOfDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestsDTO.java")
 
     );
 
@@ -413,7 +425,8 @@ public class OpenApiGenerationTest {
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiErrorDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestAllOfDTO.java"),
         new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestInfoDTO.java")
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestInfoDTO.java"),
+        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestsDTO.java")
     );
 
     List<File> expectedExceptionFiles = List.of(
