@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.coru</groupId>
-  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <artifactId>scs-multiapi-plugin</artifactId>
   <version>4.0.0</version>
   <packaging>pom</packaging>
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>

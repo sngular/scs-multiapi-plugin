@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +48,8 @@ public class AsyncApiGenerator {
   public static final String PUBLISH = "publish";
 
   public static final String OPERATION_ID = "operationId";
+
+  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
 
   private final List<String> processedOperationIds = new ArrayList<>();
 
@@ -147,7 +150,7 @@ public class AsyncApiGenerator {
   }
 
   private JsonNode getChannelPayload(final JsonNode channel) {
-    JsonNode payload = null;
+    JsonNode payload;
     if (channel.has(SUBSCRIBE)) {
       payload = channel.get(SUBSCRIBE);
     } else {
@@ -257,14 +260,18 @@ public class AsyncApiGenerator {
   private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
     final String apiPackage = operationParameter != null ? operationParameter.getApiPackage() : null;
     final String path;
-    if (apiPackage != null) {
-      path = processedGeneratedSourcesFolder + apiPackage.replace(".", "/");
-    } else if (groupId != null) {
-      path = processedGeneratedSourcesFolder + groupId.replace(".", "/");
+    if (Objects.nonNull(apiPackage )) {
+      path = getPath(apiPackage);
+    } else if (Objects.nonNull(groupId )) {
+      path = getPath(groupId);
     } else {
-      path = processedGeneratedSourcesFolder + DEFAULT_ASYNCAPI_API_PACKAGE.replace(".", "/");
+      path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
     }
     return path;
+  }
+
+  private String getPath(final String apiPackage) {
+    return processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(apiPackage).replaceAll(File.separator);
   }
 
   private void processPackage(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
@@ -289,7 +296,7 @@ public class AsyncApiGenerator {
 
   private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName) throws IOException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
-    final String regex = "[a-zA-Z0-9\\.\\-]*";
+    final String regex = "[a-zA-Z0-9.\\-]*";
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
@@ -305,7 +312,7 @@ public class AsyncApiGenerator {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
     final String messageContent = message.get("$ref").asText();
-    String namespace = "";
+    String namespace;
     if (message.get("$ref") != null) {
       if (messageContent.startsWith("#")) {
         final String[] pathToObject = messageContent.split("/");
@@ -331,7 +338,7 @@ public class AsyncApiGenerator {
     final ObjectMapper mapper = new ObjectMapper();
     try {
       final JsonNode fileTree = mapper.readTree(avroFile);
-      final String fullNamespace = fileTree.get("namespace").asText() + "." + fileTree.get("name").asText();
+      final String fullNamespace = fileTree.get("namespace").asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();
       namespace = processModelPackage(fullNamespace, modelPackage);
     } catch (final IOException e) {
       e.printStackTrace();
@@ -346,7 +353,7 @@ public class AsyncApiGenerator {
     final String filePath = pathToFile[0];
 
     File file = new File(filePath);
-    if (filePath.startsWith(".")) {
+    if (0 == PACKAGE_SEPARATOR.matcher(filePath).start()) {
       file = ymlParentPath.resolve(file.toPath()).toFile();
     }
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -367,18 +374,17 @@ public class AsyncApiGenerator {
   private String processModelPackage(final String extractedPackage, final String modelPackage) {
     final String processedPackage;
     if (modelPackage != null) {
-      if (extractedPackage.contains(".")) {
-        final var splittedPackage = extractedPackage.split("\\.");
-        final var className = splittedPackage[splittedPackage.length - 1];
-
-        processedPackage = modelPackage + "." + className;
+      if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
+        final var matcher = PACKAGE_SEPARATOR.matcher(extractedPackage);
+        final var className = matcher.group(matcher.groupCount());
+        processedPackage = modelPackage + PACKAGE_SEPARATOR + className;
       } else {
-        processedPackage = modelPackage + "." + extractedPackage;
+        processedPackage = modelPackage + PACKAGE_SEPARATOR + extractedPackage;
       }
-    } else if (extractedPackage.contains(".")) {
+    } else if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
       processedPackage = extractedPackage;
     } else {
-      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + "." + extractedPackage;
+      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR + extractedPackage;
     }
 
     return processedPackage;

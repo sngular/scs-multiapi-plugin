@@ -48,7 +48,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
     OpenApiGenerator openApiGenerator = new OpenApiGenerator(overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
-                                                             targetFolder, project.getBasedir());
+                                                                                           targetFolder, project.getBasedir());
     if (null != fileSpecs && !fileSpecs.isEmpty()) {
       openApiGenerator.processFileSpec(fileSpecs);
     } else {

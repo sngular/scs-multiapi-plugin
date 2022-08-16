@@ -3,13 +3,15 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>scs-multiapi-maven-plugin</artifactId>
+    <artifactId>scs-multiapi-plugin</artifactId>
     <groupId>net.coru</groupId>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>maven-plugin</artifactId>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
@@ -25,13 +27,15 @@
     <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
     <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>
     <itf.version>0.11.0</itf.version>
+    <assertj-core.version>3.22.0</assertj-core.version>
+    <junit-jupiter-engine.version>5.8.2</junit-jupiter-engine.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>net.coru</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>3.0.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -153,6 +157,25 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.assertj</groupId>
+          <artifactId>assertj-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit-jupiter-engine.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -176,6 +199,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>${maven-plugin-plugin.version}</version>
+        <configuration>
+          <goalPrefix>plugin</goalPrefix>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

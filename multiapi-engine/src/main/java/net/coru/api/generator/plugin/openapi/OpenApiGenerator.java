@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package net.coru.api.generator.plugin;
+package net.coru.api.generator.plugin.openapi;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -47,18 +48,20 @@ public class OpenApiGenerator {
 
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".client";
 
+  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
+
   private final Boolean overwriteModel;
 
-  private Boolean generateExceptionTemplate = false;
+  private boolean generateExceptionTemplate;
 
   private final FilenameFilter targetFileFilter;
 
   private final Set<String> overwriteModelList = new HashSet<>();
 
   private final TemplateFactory templateFactory;
-  
+
   private final String processedGeneratedSourcesFolder;
-  
+
   private final String groupId;
 
   private final File targetFolder;
@@ -70,9 +73,9 @@ public class OpenApiGenerator {
   private Boolean isRestClient = false;
 
   private final List<String> authentications = new ArrayList<>();
-  
+
   private boolean useLombok;
-  
+
   public OpenApiGenerator(final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
     final File targetFolder, final File basedir) {
     templateFactory = new TemplateFactory();
@@ -95,7 +98,7 @@ public class OpenApiGenerator {
         processFile(fileSpec, filePathToSave);
         createClients(fileSpec);
       } catch (final TemplateException | IOException e) {
-        throw new CodeGenerationException("Code generation failed. See above for the full exception.", (Throwable) e);
+        throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
       }
     }
   }
@@ -226,11 +229,14 @@ public class OpenApiGenerator {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     } else {
       path = targetFolder.toPath();
-      path.toFile().mkdir();
-      path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
+      if (path.toFile().mkdirs()) {
+        path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
+      } else {
+        throw new OpenApiGeneratedSourceFolderException(path.toString());
+      }
     }
-    if (!path.toFile().isDirectory()) {
-      path.toFile().mkdirs();
+    if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
+        throw new OpenApiGeneratedSourceFolderException(path.toString());
     }
     return path.toString();
   }
@@ -238,12 +244,12 @@ public class OpenApiGenerator {
   private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = processedGeneratedSourcesFolder + fileSpecPackage.trim().replace("\\.", "/");
+      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll(File.separator);
     } else if (groupId != null) {
-      path = processedGeneratedSourcesFolder + groupId.replace("\\.", "/");
+      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(groupId).replaceAll( File.separator);
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
-      path = processedGeneratedSourcesFolder + pathDefault.replace("\\.", "/");
+      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll( File.separator);
     }
     return path;
   }
@@ -282,7 +288,7 @@ public class OpenApiGenerator {
   private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
-    } else if (Objects.nonNull(schema.getFieldObjectList())) {
+    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
       var fieldListIt = schema.getFieldObjectList().listIterator();
       if (fieldListIt.hasNext()) {
         do {
