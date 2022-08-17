@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi;
+package net.coru.multifileplugin.reactivegeneration;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,15 +19,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testapi.model.ApiErrorDTO;
-import net.coru.multifileplugin.testapi.model.ApiTestDTO;
+import net.coru.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
+import net.coru.multifileplugin.reactivegeneration.model.ApiErrorDTO;
+import net.coru.multifileplugin.reactivegeneration.model.ApiTestDTO;
 
 public interface TestApi {
-
-  private static Mono<Void> getExampleResponse(ServerWebExchange exchange, String example) {
-    return exchange.getResponse().writeWith(Mono.just(new DefaultDataBufferFactory().wrap(example.getBytes(StandardCharsets.UTF_8))));
-  }
 
   /**
   * GET /test/{testId} : Info for a specific test
@@ -49,16 +45,7 @@ public interface TestApi {
     produces = { "application/json" }
   )
   default ResponseEntity<Mono<ApiTestInfoDTO>> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId, @ApiIgnore final ServerWebExchange exchange) {
-    Mono<Void> result = Mono.empty();
-    exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-    for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-      if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-        String exampleString = "{\"error\":\"501 NOT IMPLEMENTED\"}";
-        result = getExampleResponse(exchange, exampleString);
-        break;
-      }
-    }
-    return result.then(Mono.empty());
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
   /**
@@ -79,17 +66,8 @@ public interface TestApi {
     value = "/test",
     produces = { "application/json" }
   )
-  default Mono<ResponseEntity<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
-    Mono<Void> result = Mono.empty();
-    exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-    for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-      if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-        String exampleString = "{\"error\":\"501 NOT IMPLEMENTED\"}";
-        result = getExampleResponse(exchange, exampleString);
-        break;
-      }
-    }
-    return result.then(Mono.empty());
+  default ResponseEntity<Mono< Flux<ApiTestDTO> >> listTest(@ApiIgnore final ServerWebExchange exchange) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
 }

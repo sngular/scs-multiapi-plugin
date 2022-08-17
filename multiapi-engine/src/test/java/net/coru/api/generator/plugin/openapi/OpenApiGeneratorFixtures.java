@@ -102,6 +102,19 @@ public final class OpenApiGeneratorFixtures {
       .build()
   );
 
+  static final List<FileSpec> TEST_API_REACTIVE_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiReactiveGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.reactivegeneration")
+      .modelPackage("net.coru.multifileplugin.reactivegeneration.model")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .isReactive(true)
+      .build()
+  );
+
   static Function<Path, Boolean> VALIDATE_ALL_OF() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
@@ -252,6 +265,28 @@ public final class OpenApiGeneratorFixtures {
       "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestDTO.java",
       "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestInfoDTO.java",
       "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestsDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+
+  }
+
+
+  static Function<Path, Boolean> VALIDATE_API_REACTIVE_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/reactivegeneration";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/reactivegeneration/model";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiReactiveGeneration/assets/TestApi.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiReactiveGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testApiReactiveGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testApiReactiveGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testApiReactiveGeneration/assets/ApiTestsDTO.java"
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);

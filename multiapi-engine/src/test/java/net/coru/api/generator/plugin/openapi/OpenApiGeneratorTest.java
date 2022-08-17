@@ -37,7 +37,9 @@ class OpenApiGeneratorTest {
       Arguments.of("testApiParametersWithContentGeneration", OpenApiGeneratorFixtures.TEST_PARAMETER_WITH_CONTENT_GENERATION,
                    OpenApiGeneratorFixtures.VALIDATE_PARAMETERS_WITH_SCHEMA_GENERATION()),
       Arguments.of("testApiPathWithSlashGeneration", OpenApiGeneratorFixtures.TEST_PATH_WITH_SLASH_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION())
+                   OpenApiGeneratorFixtures.VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION()),
+      Arguments.of("testApiReactiveGeneration",OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_API_REACTIVE_GENERATION())
     );
   }
 
