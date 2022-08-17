@@ -1,10 +1,10 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationExternalAvro.assets;
+package net.coru.scsplugin.business_model.model.event.producer;
 
 import java.util.function.Supplier;
-
-import net.coru.scsplugin.business_model.model.event.Order;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.coru.scsplugin.business_model.model.event.Order;
 
 @Configuration
 public class Producer {

@@ -6,6 +6,7 @@
 
 package net.coru.api.generator.plugin.openapi.utils;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +30,8 @@ import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.exception.FileParseException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -103,7 +104,7 @@ public class OpenApiUtil {
     final ParseOptions options = new ParseOptions();
     options.setResolve(true);
     try {
-      final SwaggerParseResult result = new OpenAPIParser().readLocation(fileSpec.getFilePath(), null, options);
+      final SwaggerParseResult result = new OpenAPIParser().readLocation(readFile(fileSpec.getFilePath()), null, options);
       openAPI = result.getOpenAPI();
     } catch (final ReadContentException e) {
       throw new FileParseException("when parser the .yaml file ");
@@ -114,6 +115,15 @@ public class OpenApiUtil {
     }
 
     return openAPI;
+  }
+
+  private static String readFile(String filePath) {
+    var result = filePath;
+    URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
+    if (Objects.nonNull(fileURL)) {
+      result = fileURL.getPath();
+    }
+    return result;
   }
 
   public static List<String> getListComponentsObjects(final OpenAPI openAPI) {

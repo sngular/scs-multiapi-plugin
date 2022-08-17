@@ -1,4 +1,4 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets.producer2;
+package net.coru.scsplugin.business_model.model.event.producer2;
 
 import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
 

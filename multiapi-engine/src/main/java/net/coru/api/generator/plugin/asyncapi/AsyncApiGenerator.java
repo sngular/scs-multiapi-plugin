@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import net.coru.api.generator.plugin.PluginConstants;
 import net.coru.api.generator.plugin.asyncapi.exception.ChannelNameException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
@@ -31,6 +32,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+@Slf4j
 public class AsyncApiGenerator {
 
   private static final String DEFAULT_ASYNCAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".asyncapi";
@@ -49,7 +51,9 @@ public class AsyncApiGenerator {
 
   public static final String OPERATION_ID = "operationId";
 
-  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
+  public static final String PACKAGE_SEPARATOR_STR = ".";
+
+  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
   private final List<String> processedOperationIds = new ArrayList<>();
 
@@ -377,14 +381,17 @@ public class AsyncApiGenerator {
       if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
         final var matcher = PACKAGE_SEPARATOR.matcher(extractedPackage);
         final var className = matcher.group(matcher.groupCount());
-        processedPackage = modelPackage + PACKAGE_SEPARATOR + className;
+        log.info("+++++ {}", className);
+        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + className;
+        log.info("----- ", processedPackage);
+
       } else {
-        processedPackage = modelPackage + PACKAGE_SEPARATOR + extractedPackage;
+        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + extractedPackage;
       }
     } else if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
       processedPackage = extractedPackage;
     } else {
-      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR + extractedPackage;
+      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR_STR + extractedPackage;
     }
 
     return processedPackage;

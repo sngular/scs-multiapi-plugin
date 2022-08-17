@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import net.coru.api.generator.plugin.asyncapi.AsyncApiGenerator;
-import net.coru.api.generator.plugin.asyncapi.exception.AsyncApiGeneratedSourceFolderException;
 import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.exception.GeneratedSourceFolderException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -52,7 +52,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     if (generatedSourcesFolder.matches("[a-zA-Z\\d\\-]+")) {
       return generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
     } else {
-      throw new AsyncApiGeneratedSourceFolderException(generatedSourcesFolder);
+      throw new GeneratedSourceFolderException("Asyncapi", generatedSourcesFolder);
     }
   }
 

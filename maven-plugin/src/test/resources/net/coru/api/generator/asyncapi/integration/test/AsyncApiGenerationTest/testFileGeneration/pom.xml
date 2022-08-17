@@ -6,7 +6,7 @@
 
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.0.0</version>
+  <version>1</version>
 
   <name>scs-multiapi-maven-plugin</name>
   <url>http://www.example.com</url>

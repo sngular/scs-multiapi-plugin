@@ -1,10 +1,10 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
+package net.coru;
 
 import java.util.function.Supplier;
-
-import net.coru.apigenerator.asyncapi.model.OrderCreated;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.coru.apigenerator.asyncapi.model.OrderCreated;
 
 @Configuration
 public class Producer {

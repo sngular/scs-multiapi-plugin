@@ -1,4 +1,4 @@
-package net.coru.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
+package net.coru.scsplugin.business_model.model.event.producer;
 
 import net.coru.scsplugin.business_model.model.event.CreateOrderMapper;
 

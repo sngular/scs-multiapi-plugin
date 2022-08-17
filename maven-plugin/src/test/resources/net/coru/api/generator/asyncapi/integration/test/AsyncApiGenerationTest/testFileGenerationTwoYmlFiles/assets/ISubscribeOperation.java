@@ -1,4 +1,4 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
+package net.coru;
 
 import net.coru.apigenerator.asyncapi.model.CreateOrder;
 

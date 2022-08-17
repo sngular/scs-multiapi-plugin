@@ -1,16 +1,22 @@
-package net.coru.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
-
-import java.util.Optional;
-
+package net.coru.multifileplugin.testapi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.List;
+import java.util.Map;
+
+import net.coru.multifileplugin.testapi.model.ApiTestInfoDTO;
+import net.coru.multifileplugin.testapi.model.ApiErrorDTO;
+import net.coru.multifileplugin.testapi.model.ApiTestDTO;
 
 public interface TestApi {
 

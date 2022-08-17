@@ -1,10 +1,10 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
+package net.coru;
 
 import java.util.function.Consumer;
-
-import net.coru.apigenerator.asyncapi.model.CreateOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.coru.apigenerator.asyncapi.model.CreateOrder;
 
 @Configuration
 public class Subscriber {

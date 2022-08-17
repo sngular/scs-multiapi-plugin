@@ -101,12 +101,12 @@ public class TemplateFactory {
     }
     final File fileToSave = new File(filePathToSave);
 
-    if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
+    if (fileSpec.isCallMode()) {
       root.put("authObject", authObject);
     }
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + ".java").toString();
-    writeTemplateToFile(Boolean.TRUE.equals(fileSpec.getCallMode()) ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
+    writeTemplateToFile(fileSpec.isCallMode() ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
 
   }
 
@@ -148,11 +148,11 @@ public class TemplateFactory {
   }
 
   private String getTemplateClientApi(final FileSpec fileSpec) {
-    return fileSpec.getIsReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+    return fileSpec.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
   }
 
   private String getTemplateApi(final FileSpec fileSpec) {
-    return fileSpec.getIsReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
+    return fileSpec.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
 }

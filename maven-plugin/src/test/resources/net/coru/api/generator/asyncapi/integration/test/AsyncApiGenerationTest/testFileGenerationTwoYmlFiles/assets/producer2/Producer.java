@@ -1,10 +1,10 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets.producer2;
+package net.coru.scsplugin.business_model.model.event.producer2;
 
 import java.util.function.Supplier;
-
-import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
 
 @Configuration
 public class Producer {

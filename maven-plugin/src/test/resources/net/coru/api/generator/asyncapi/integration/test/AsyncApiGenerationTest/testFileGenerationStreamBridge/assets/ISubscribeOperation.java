@@ -1,4 +1,4 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationStreamBridge.assets;
+package net.coru.scsplugin.business_model.model.event.consumer;
 
 import net.coru.scsplugin.business_model.model.event.CreateOrderDTO;
 

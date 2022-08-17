@@ -1,10 +1,10 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationExternalAvro.assets;
+package net.coru.scsplugin.business_model.model.event.consumer;
 
 import java.util.function.Consumer;
-
-import net.coru.scsplugin.business_model.model.event.CreateOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.coru.scsplugin.business_model.model.event.CreateOrder;
 
 @Configuration
 public class Subscriber {

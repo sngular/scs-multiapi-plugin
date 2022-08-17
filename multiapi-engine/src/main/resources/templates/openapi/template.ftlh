@@ -50,10 +50,6 @@ import <#if packageModel??>${packageModel}<#elseif package??>${package}</#if>.${
 
 public interface ${className?cap_first}Api {
 
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
-
 <#list pathObjects as path>
 <#list path.operationObjects as operation>
   /**

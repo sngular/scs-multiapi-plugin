@@ -7,37 +7,40 @@
 package net.coru.api.generator.test.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.io.IOUtils;
-
 public class TestUtils {
 
-  public static void validateFiles(final List<File> expectedFiles, final File targetDirectory) throws IOException {
-    FileInputStream reader1;
-    FileInputStream reader2;
+  public static void validateFiles(final List<String> expectedFiles, final File targetDirectory) throws IOException {
+    InputStream reader1;
+    InputStream reader2;
 
     List<File> outputFiles = new ArrayList<>(List.of(Objects.requireNonNull(targetDirectory.listFiles())));
     outputFiles.removeIf(File::isDirectory);
     outputFiles.sort(Comparator.comparing(File::getPath));
-
+    assertThat(outputFiles).hasSize(expectedFiles.size());
     for (int i = 0; i < outputFiles.size(); i++) {
       reader1 = new FileInputStream(outputFiles.get(i));
-      reader2 = new FileInputStream(expectedFiles.get(i));
-      assertTrue(IOUtils.contentEquals(reader1, reader2));
+      final String sourceName = expectedFiles.get(i);
+      reader2 = TestUtils.resourceAsFile(sourceName);
+      assertThat(reader1).as(() -> "Unexpected content for file " + sourceName).hasSameContentAs(reader2);
     }
   }
 
   public static void checkTargetFiles(final List<String> expectedFileNames, final File targetDirectory) {
     assertThat(targetDirectory).isNotEmptyDirectory();
     assertThat(targetDirectory.list()).containsAll(expectedFileNames);
+  }
+
+  public static InputStream resourceAsFile(String resourceName) {
+    return TestUtils.class.getClassLoader().getResourceAsStream(resourceName);
   }
 }

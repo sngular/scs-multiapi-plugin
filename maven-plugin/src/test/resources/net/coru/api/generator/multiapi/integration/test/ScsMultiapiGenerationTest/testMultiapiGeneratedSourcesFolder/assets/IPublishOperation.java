@@ -1,4 +1,4 @@
-package net.coru.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testMultiapiGeneratedSourcesFolder.assets;
+package net.coru.scsplugin.business_model.model.event.consumer;
 
 import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
 

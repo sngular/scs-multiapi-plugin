@@ -1,7 +1,6 @@
-package net.coru.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
+package net.coru.multifileplugin.testapi.model;
 
 import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import net.coru.multifileplugin.testapi.model.exception.ModelClassException;

@@ -27,7 +27,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import net.coru.api.generator.plugin.PluginConstants;
 import net.coru.api.generator.plugin.openapi.exception.CodeGenerationException;
 import net.coru.api.generator.plugin.openapi.exception.DuplicateModelClassException;
-import net.coru.api.generator.plugin.openapi.exception.OpenApiGeneratedSourceFolderException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
@@ -38,6 +37,7 @@ import net.coru.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import net.coru.api.generator.plugin.openapi.utils.MapperContentUtil;
 import net.coru.api.generator.plugin.openapi.utils.MapperPathUtil;
 import net.coru.api.generator.plugin.openapi.utils.OpenApiUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class OpenApiGenerator {
@@ -91,7 +91,7 @@ public class OpenApiGenerator {
 
     for (FileSpec fileSpec : fileSpecsList) {
       generateExceptionTemplate = false;
-      useLombok = fileSpec.getUseLombokModelAnnotation();
+      useLombok = Boolean.TRUE.equals(fileSpec.isUseLombokModelAnnotation());
       try {
         processPackage(fileSpec.getApiPackage());
         final String filePathToSave = processPath(fileSpec.getApiPackage(), false);
@@ -108,11 +108,11 @@ public class OpenApiGenerator {
     final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(fileSpec);
     final String clientPackage = fileSpec.getClientPackage();
 
-    if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
+    if (fileSpec.isCallMode()) {
       templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
-      isWebClient = fileSpec.getIsReactive();
-      isRestClient = !fileSpec.getIsReactive();
+      isWebClient = fileSpec.isReactive();
+      isRestClient = !fileSpec.isReactive();
     }
 
     createApiTemplate(fileSpec, filePathToSave, openAPI);
@@ -156,7 +156,7 @@ public class OpenApiGenerator {
   }
 
   private void createApiTemplate(final FileSpec fileSpec, final String filePathToSave, final OpenAPI openAPI) {
-    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.getUseTagsGroup());
+    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec, authSchemaList);
 
@@ -171,7 +171,7 @@ public class OpenApiGenerator {
         e.printStackTrace();
       }
 
-      if (Boolean.TRUE.equals(fileSpec.getCallMode())) {
+      if (Boolean.TRUE.equals(fileSpec.isCallMode())) {
         addAuthentications(authObject);
       }
     }
@@ -229,14 +229,11 @@ public class OpenApiGenerator {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     } else {
       path = targetFolder.toPath();
-      if (path.toFile().mkdirs()) {
-        path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
-      } else {
-        throw new OpenApiGeneratedSourceFolderException(path.toString());
-      }
+      path.toFile().mkdirs();
+      path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     }
-    if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
-        throw new OpenApiGeneratedSourceFolderException(path.toString());
+    if (!path.toFile().isDirectory()) {
+      path.toFile().mkdirs();
     }
     return path.toString();
   }
@@ -244,37 +241,26 @@ public class OpenApiGenerator {
   private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll(File.separator);
+      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll(File.separator));
     } else if (groupId != null) {
-      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(groupId).replaceAll( File.separator);
+      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(groupId).replaceAll(File.separator));
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
-      path = processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll( File.separator);
+      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll( File.separator));
     }
     return path;
   }
 
   private void processModelsWhenOverWriteIsTrue(
     final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
-    final List<String> listObjectsToCreate, final String modelPackage,
+    final String modelPackage,
     final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
-    for (String pojoName : listObjectsToCreate) {
-      final var schemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), openAPI.getComponents().getSchemas().get(pojoName),
-                                                                            StringUtils.capitalize(pojoName), fileSpec, modelPackage);
-      checkRequiredOrCombinatorExists(schemaObject);
-
-      try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), schemaObject);
-      } catch (IOException | TemplateException e) {
-        e.printStackTrace();
-      }
-    }
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.isUseLombokModelAnnotation(), basicSchemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
@@ -303,24 +289,8 @@ public class OpenApiGenerator {
 
   private void processWhenOverwriteModelIsFalse(
       final FileSpec fileSpec, final OpenAPI openAPI,
-      final String fileModelToSave, final List<String> listObjectsToCreate, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) {
+      final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
-    for (String objectToCreate : listObjectsToCreate) {
-      final String objectAndModelPackage = objectToCreate + modelPackage;
-      if (overwriteModelList.add(objectAndModelPackage)) {
-        overwriteModelList.add(objectAndModelPackage);
-        try {
-          templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(),
-                                             MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(),
-                                                                                          openAPI.getComponents().getSchemas().get(objectToCreate),
-                                                                                          StringUtils.capitalize(objectToCreate), fileSpec, modelPackage));
-        } catch (IOException | TemplateException e) {
-          e.printStackTrace();
-        }
-      } else {
-        throw new DuplicateModelClassException(objectToCreate, modelPackage);
-      }
-    }
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
       final Schema<?> basicSchema = entry.getValue();
@@ -331,7 +301,7 @@ public class OpenApiGenerator {
                                                                                  fileSpec, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.getUseLombokModelAnnotation(), basicSchemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.isUseLombokModelAnnotation(), basicSchemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }

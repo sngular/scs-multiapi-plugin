@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import net.coru.api.generator.plugin.exception.GeneratedSourceFolderException;
 import net.coru.api.generator.plugin.openapi.OpenApiGenerator;
-import net.coru.api.generator.plugin.openapi.exception.OpenApiGeneratedSourceFolderException;
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -61,7 +61,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     if (generatedSourcesFolder.matches("[a-zA-Z\\d\\-]+")) {
       processedGeneratedSourcesFolder = generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
     } else {
-      throw new OpenApiGeneratedSourceFolderException(generatedSourcesFolder);
+      throw new GeneratedSourceFolderException("OpenApi", generatedSourcesFolder);
     }
   }
 

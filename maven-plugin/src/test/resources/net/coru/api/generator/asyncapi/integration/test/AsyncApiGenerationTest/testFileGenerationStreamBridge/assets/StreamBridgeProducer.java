@@ -1,8 +1,9 @@
-package net.coru.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationStreamBridge.assets;
+package net.coru.scsplugin.business_model.model.event.producer;
+
+import org.springframework.stereotype.Component;
+import org.springframework.cloud.stream.function.StreamBridge;
 
 import net.coru.scsplugin.business_model.model.event.OrderCreated;
-import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.stereotype.Component;
 
 @Component
 public class StreamBridgeProducer {

@@ -29,11 +29,11 @@ public class FileSpec {
 
   private String clientPackage;
 
-  private Boolean callMode = false;
+  private boolean callMode;
 
-  private Boolean useTagsGroup = false;
+  private boolean useTagsGroup;
 
-  private Boolean useLombokModelAnnotation = false;
+  private boolean useLombokModelAnnotation;
 
-  private Boolean isReactive = false;
+  private boolean isReactive;
 }
