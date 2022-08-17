@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testtags;
+package net.coru.multifileplugin.tagsgeneration;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,8 +14,8 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testtags.model.TestInfoDTO;
-import net.coru.multifileplugin.testtags.model.ErrorDTO;
+import net.coru.multifileplugin.tagsgeneration.model.TestInfoDTO;
+import net.coru.multifileplugin.tagsgeneration.model.ErrorDTO;
 
 public interface TestTagSecondApi {
 
