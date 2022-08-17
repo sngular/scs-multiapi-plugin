@@ -175,6 +175,7 @@ public final class OpenApiGeneratorFixtures {
       .callMode(true)
       .build()
   );
+
   static final List<FileSpec> TEST_REST_CLIENT_GENERATION = List.of(
     FileSpec
       .builder()
@@ -186,6 +187,18 @@ public final class OpenApiGeneratorFixtures {
       .modelNameSuffix("DTO")
       .useLombokModelAnnotation(false)
       .callMode(true)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_ENUMS_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiEnumsGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.enumgeneration")
+      .modelPackage("net.coru.multifileplugin.enumgeneration.model")
+      .clientPackage("net.coru.multifileplugin.enumgeneration.client")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
       .build()
   );
 
@@ -497,6 +510,32 @@ public final class OpenApiGeneratorFixtures {
     return (path) ->
       commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
       commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
+  }
+
+
+  static Function<Path, Boolean> VALIDATE_ENUMS_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumgeneration";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/enumgeneration/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/enumgeneration/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiEnumsGeneration/assets/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiEnumsGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testApiEnumsGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testApiEnumsGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testApiEnumsGeneration/assets/ApiTestsDTO.java"
+
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+      "openapigenerator/testApiEnumsGeneration/assets/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   private static Boolean commonTest(

@@ -51,7 +51,9 @@ class OpenApiGeneratorTest {
       Arguments.of("testClientPackageWebClientApiGeneration",OpenApiGeneratorFixtures.TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION,
                    OpenApiGeneratorFixtures.VALIDATE_CLIENT_PACKAGE_WEB_CLIENT_GENERATION()),
       Arguments.of("testRestClientApiGeneration",OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_REST_CLIENT_GENERATION())
+                   OpenApiGeneratorFixtures.VALIDATE_REST_CLIENT_GENERATION()),
+      Arguments.of("testApiEnumsGeneration",OpenApiGeneratorFixtures.TEST_ENUMS_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_ENUMS_GENERATION())
     );
   }
 

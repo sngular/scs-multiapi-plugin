@@ -1,11 +1,11 @@
-package net.coru.multifileplugin.testapi.model;
+package net.coru.multifileplugin.enumgeneration.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
-import net.coru.multifileplugin.testapi.model.exception.ModelClassException;
+import net.coru.multifileplugin.enumgeneration.model.exception.ModelClassException;
 
 
 public class ApiTestDTO {
