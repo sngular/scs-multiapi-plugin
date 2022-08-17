@@ -13,38 +13,38 @@ public class TestDTO {
   @JsonProperty(value ="id")
   private final Integer id;
 
-  private ApiTestDTO(String name, Integer id){
+  private TestDTO(String name, Integer id){
     this.name = name;
     this.id = id;
 
     validateRequiredAttributes();
   }
 
-  private ApiTestDTO(ApiTestDTOBuilder builder) {
+  private TestDTO(TestDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;
 
     validateRequiredAttributes();
   }
 
-  public static class ApiTestDTOBuilder {
+  public static class TestDTOBuilder {
 
     private String name;
     private Integer id;
 
-    public ApiTestDTO.ApiTestDTOBuilder name(String name) {
+    public TestDTO.TestDTOBuilder name(String name) {
       this.name = name;
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
+    public TestDTO.TestDTOBuilder id(Integer id) {
       this.id = id;
       return this;
     }
 
-    public ApiTestDTO build() {
-      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
-      return apiTestDTO;
+    public TestDTO build() {
+      TestDTO testDTO =  new TestDTO(this);
+      return testDTO;
     }
   }
 
@@ -74,8 +74,8 @@ public class TestDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.name,apiTestDTO.name) && Objects.equals(this.id,apiTestDTO.id) ;
+    TestDTO testDTO = (TestDTO) o;
+    return Objects.equals(this.name,testDTO.name) && Objects.equals(this.id,testDTO.id) ;
   }
 
   @Override
@@ -86,7 +86,7 @@ public class TestDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestDTO {\n");
+    sb.append("class TestDTO {\n");
     sb.append(" name: ").append(toIndentedString(name)).append("\n");
     sb.append(" id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
@@ -116,7 +116,7 @@ public class TestDTO {
     }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("ApiTestDTO");
+      throw new ModelClassException("TestDTO");
     }
   }
 

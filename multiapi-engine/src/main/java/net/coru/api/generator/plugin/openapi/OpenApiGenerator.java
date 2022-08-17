@@ -241,7 +241,7 @@ public class OpenApiGenerator {
   private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
     final String path;
     if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll(File.separator));
+      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll("/"));
     } else if (groupId != null) {
       path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(groupId).replaceAll(File.separator));
     } else {

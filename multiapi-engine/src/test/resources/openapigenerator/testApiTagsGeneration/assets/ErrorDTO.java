@@ -13,38 +13,38 @@ public class ErrorDTO {
   @JsonProperty(value ="code")
   private final Integer code;
 
-  private ApiErrorDTO(String message, Integer code){
+  private ErrorDTO(String message, Integer code){
     this.message = message;
     this.code = code;
 
     validateRequiredAttributes();
   }
 
-  private ApiErrorDTO(ApiErrorDTOBuilder builder) {
+  private ErrorDTO(ErrorDTOBuilder builder) {
     this.message = builder.message;
     this.code = builder.code;
 
     validateRequiredAttributes();
   }
 
-  public static class ApiErrorDTOBuilder {
+  public static class ErrorDTOBuilder {
 
     private String message;
     private Integer code;
 
-    public ApiErrorDTO.ApiErrorDTOBuilder message(String message) {
+    public ErrorDTO.ErrorDTOBuilder message(String message) {
       this.message = message;
       return this;
     }
 
-    public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
+    public ErrorDTO.ErrorDTOBuilder code(Integer code) {
       this.code = code;
       return this;
     }
 
-    public ApiErrorDTO build() {
-      ApiErrorDTO apiErrorDTO =  new ApiErrorDTO(this);
-      return apiErrorDTO;
+    public ErrorDTO build() {
+      ErrorDTO errorDTO =  new ErrorDTO(this);
+      return errorDTO;
     }
   }
 
@@ -74,8 +74,8 @@ public class ErrorDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiErrorDTO apiErrorDTO = (ApiErrorDTO) o;
-    return Objects.equals(this.message,apiErrorDTO.message) && Objects.equals(this.code,apiErrorDTO.code) ;
+    ErrorDTO errorDTO = (ErrorDTO) o;
+    return Objects.equals(this.message,errorDTO.message) && Objects.equals(this.code,errorDTO.code) ;
   }
 
   @Override
@@ -86,7 +86,7 @@ public class ErrorDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiErrorDTO {\n");
+    sb.append("class ErrorDTO {\n");
     sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append(" code: ").append(toIndentedString(code)).append("\n");
     sb.append("}");
@@ -116,7 +116,7 @@ public class ErrorDTO {
     }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("ApiErrorDTO");
+      throw new ModelClassException("ErrorDTO");
     }
   }
 

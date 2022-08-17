@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testclientpackage.model.exception;
+package net.coru.multifileplugin.clpkgwebclientapi.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

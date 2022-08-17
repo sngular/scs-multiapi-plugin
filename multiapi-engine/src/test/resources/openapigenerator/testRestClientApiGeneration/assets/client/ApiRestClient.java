@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.clpkgwebclientapi.client;
+package net.coru.multifileplugin.restclient.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +57,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 
-import net.coru.multifileplugin.clpkgwebclientapi.client.auth.Authentication;
+import net.coru.multifileplugin.restclient.client.auth.Authentication;
 
 @Component
 public class ApiRestClient {

@@ -1,19 +1,30 @@
-package net.coru.multifileplugin.testwebclient.model;
+package net.coru.multifileplugin.webclientapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import net.coru.multifileplugin.webclientapi.model.exception.ModelClassException;
+
 
 public class ApiErrorDTO {
 
   @JsonProperty(value ="message")
-  private String message;
+  private final String message;
   @JsonProperty(value ="code")
-  private Integer code;
+  private final Integer code;
+
+  private ApiErrorDTO(String message, Integer code){
+    this.message = message;
+    this.code = code;
+
+    validateRequiredAttributes();
+  }
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.message = builder.message;
     this.code = builder.code;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiErrorDTOBuilder {
@@ -41,24 +52,18 @@ public class ApiErrorDTO {
   * Get message
   * @return message
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "message", required = true)
   public String getMessage() {
     return message;
-  }
-  public void setMessage(String message) {
-    this.message = message;
   }
 
   /**
   * Get code
   * @return code
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
-  }
-  public void setCode(Integer code) {
-    this.code = code;
   }
 
   @Override
@@ -97,6 +102,22 @@ public class ApiErrorDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.message)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.code)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiErrorDTO");
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testwebclient;
+package net.coru.multifileplugin.webclientapi;
 
 import net.coru.apigenerator.openapi.client.ApiWebClient;
 
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testwebclient.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testwebclient.model.ApiErrorDTO;
-import net.coru.multifileplugin.testwebclient.model.ApiTestDTO;
+import net.coru.multifileplugin.webclientapi.model.ApiTestInfoDTO;
+import net.coru.multifileplugin.webclientapi.model.ApiErrorDTO;
+import net.coru.multifileplugin.webclientapi.model.ApiTestDTO;
 
 import net.coru.apigenerator.openapi.client.auth.Authentication;
 import net.coru.apigenerator.openapi.client.auth.HttpBasicAuth;

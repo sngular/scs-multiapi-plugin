@@ -19,10 +19,6 @@ import net.coru.multifileplugin.tagsgeneration.model.ErrorDTO;
 
 public interface TestTagSecondApi {
 
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
-
   /**
   * GET /test/{testId} : Info for a specific test
   * @param testId The id of the test to retrieve true

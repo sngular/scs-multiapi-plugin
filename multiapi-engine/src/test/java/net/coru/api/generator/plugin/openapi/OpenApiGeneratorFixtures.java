@@ -122,6 +122,7 @@ public final class OpenApiGeneratorFixtures {
       .apiPackage("net.coru.multifileplugin.tagsgeneration")
       .modelPackage("net.coru.multifileplugin.tagsgeneration.model")
       .modelNameSuffix("DTO")
+      .useTagsGroup(true)
       .useLombokModelAnnotation(false)
       .build()
   );
@@ -145,6 +146,46 @@ public final class OpenApiGeneratorFixtures {
       .modelPackage("net.coru.multifileplugin.pathparameter.model")
       .modelNameSuffix("DTO")
       .useLombokModelAnnotation(false)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_WEB_CLIENT_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testWebClientApiGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.webclientapi")
+      .modelPackage("net.coru.multifileplugin.webclientapi.model")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .callMode(true)
+      .isReactive(true)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.clpkgwebclientapi")
+      .modelPackage("net.coru.multifileplugin.clpkgwebclientapi.model")
+      .clientPackage("net.coru.multifileplugin.clpkgwebclientapi.client")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .callMode(true)
+      .build()
+  );
+  static final List<FileSpec> TEST_REST_CLIENT_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.restclient")
+      .modelPackage("net.coru.multifileplugin.restclient.model")
+      .clientPackage("net.coru.multifileplugin.restclient.client")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .callMode(true)
       .build()
   );
 
@@ -387,6 +428,77 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
+  static Function<Path, Boolean> VALIDATE_WEB_CLIENT_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/webclientapi";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/webclientapi/model";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testWebClientApiGeneration/assets/TestApi.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testWebClientApiGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testWebClientApiGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testWebClientApiGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testWebClientApiGeneration/assets/ApiTestsDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+
+  }
+
+  static Function<Path, Boolean> VALIDATE_CLIENT_PACKAGE_WEB_CLIENT_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/client";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/client/auth";
+
+    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/model/exception";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testClientPackageWebClientApiGeneration/assets/TestClient.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testClientPackageWebClientApiGeneration/assets/TestAuth.java",
+      "openapigenerator/testClientPackageWebClientApiGeneration/assets/TestHttpBasicAuth.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+      "openapigenerator/testClientPackageWebClientApiGeneration/assets/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+
+  }
+
+  static Function<Path, Boolean> VALIDATE_REST_CLIENT_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/restclient";
+
+    final String CLIENT_TARGET_API = "generated/net/coru/multifileplugin/restclient/client";
+
+    final String CLIENT_MODEL_API = "generated/net/coru/multifileplugin/restclient/client/auth";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testRestClientApiGeneration/assets/TestApi.java"
+    );
+
+    List<String> expectedTestClientApiFile = List.of(
+      "openapigenerator/testRestClientApiGeneration/assets/client/ApiRestClient.java"
+    );
+
+    List<String> expectedTestClientAuthModelFiles = List.of(
+      "openapigenerator/testRestClientApiGeneration/assets/client/auth/Authentication.java",
+      "openapigenerator/testRestClientApiGeneration/assets/client/auth/HttpBasicAuth.java"
+    );
+
+    return (path) ->
+      commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
+      commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
+  }
+
   private static Boolean commonTest(
     final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,
     final List<String> expectedExceptionFiles, final String targetException) {
@@ -394,16 +506,15 @@ public final class OpenApiGeneratorFixtures {
     try {
       Path pathToTarget = Path.of(resultPath.toUri().getPath(), "target");
       Path pathToTargetApi = pathToTarget.resolve(targetApi);
-      Path pathToTargetModel = pathToTarget.resolve(targetModel);
 
       File targetApiFolder = pathToTargetApi.toFile();
       assertThat(targetApiFolder).isNotEmptyDirectory();
-
-      File targetModelFolder = pathToTargetModel.toFile();
-      assertThat(targetModelFolder).isNotEmptyDirectory();
-
       validateFiles(expectedFile, targetApiFolder);
+
       if (!expectedModelFiles.isEmpty()) {
+        Path pathToTargetModel = pathToTarget.resolve(targetModel);
+        File targetModelFolder = pathToTargetModel.toFile();
+        assertThat(targetModelFolder).isNotEmptyDirectory();
         validateFiles(expectedModelFiles, targetModelFolder);
       }
 

@@ -45,7 +45,13 @@ class OpenApiGeneratorTest {
       Arguments.of("testMultipleRefGeneration",OpenApiGeneratorFixtures.TEST_MULTIPLE_REF_GENERATION,
                    OpenApiGeneratorFixtures.VALIDATE_MULTIPLE_REF_GENERATION()),
       Arguments.of("testApiPathParameterGeneration",OpenApiGeneratorFixtures.TEST_PATH_PARAMETER_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_PATH_PARAMETER_GENERATION())
+                   OpenApiGeneratorFixtures.VALIDATE_PATH_PARAMETER_GENERATION()),
+      Arguments.of("testWebClientApiGeneration",OpenApiGeneratorFixtures.TEST_WEB_CLIENT_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_WEB_CLIENT_GENERATION()),
+      Arguments.of("testClientPackageWebClientApiGeneration",OpenApiGeneratorFixtures.TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_CLIENT_PACKAGE_WEB_CLIENT_GENERATION()),
+      Arguments.of("testRestClientApiGeneration",OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_REST_CLIENT_GENERATION())
     );
   }
 

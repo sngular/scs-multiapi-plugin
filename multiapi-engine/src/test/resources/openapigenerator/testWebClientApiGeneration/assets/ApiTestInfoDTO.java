@@ -1,22 +1,32 @@
-package net.coru.multifileplugin.testwebclient.model;
+package net.coru.multifileplugin.webclientapi.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.collections4.CollectionUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
+import net.coru.multifileplugin.webclientapi.model.exception.ModelClassException;
+
 
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testName")
-  private String testName;
+  private final String testName;
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private final List<String> testers;
+
+  private ApiTestInfoDTO(String testName, List<String> testers){
+    this.testName = testName;
+    this.testers = testers;
+
+    validateRequiredAttributes();
+  }
 
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiTestInfoDTOBuilder {
@@ -29,14 +39,14 @@ public class ApiTestInfoDTO {
       return this;
     }
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
-      if (CollectionUtils.isNotEmpty(testers)) {
+      if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
-      if (Objects.nonNull(tester)) {
+      if (tester != null) {
         this.testers.add(tester);
       }
       return this;
@@ -52,24 +62,18 @@ public class ApiTestInfoDTO {
   * Get testName
   * @return testName
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "testName", required = true)
   public String getTestName() {
     return testName;
-  }
-  public void setTestName(String testName) {
-    this.testName = testName;
   }
 
   /**
   * Get testers
   * @return testers
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "testers", required = true)
   public List<String> getTesters() {
     return testers;
-  }
-  public void setTesters(ArrayList<String> testers) {
-    this.testers = testers;
   }
 
   @Override
@@ -108,6 +112,22 @@ public class ApiTestInfoDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.testName)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.testers)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestInfoDTO");
+    }
   }
 
 }

@@ -7,44 +7,44 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class TestsDTO {
 
-  @JsonProperty(value ="ApiTestDTO")
-  private ApiTestDTO ApiTestDTO;
+  @JsonProperty(value ="TestDTO")
+  private TestDTO TestDTO;
 
-  private ApiTestsDTO(ApiTestDTO ApiTestDTO){
-    this.ApiTestDTO = ApiTestDTO;
-
-  }
-
-  private ApiTestsDTO(ApiTestsDTOBuilder builder) {
-    this.ApiTestDTO = builder.ApiTestDTO;
+  private TestsDTO(TestDTO TestDTO){
+    this.TestDTO = TestDTO;
 
   }
 
-  public static class ApiTestsDTOBuilder {
+  private TestsDTO(TestsDTOBuilder builder) {
+    this.TestDTO = builder.TestDTO;
 
-    private ApiTestDTO ApiTestDTO;
+  }
 
-    public ApiTestsDTO.ApiTestsDTOBuilder ApiTestDTO(ApiTestDTO ApiTestDTO) {
-      this.ApiTestDTO = ApiTestDTO;
+  public static class TestsDTOBuilder {
+
+    private TestDTO TestDTO;
+
+    public TestsDTO.TestsDTOBuilder TestDTO(TestDTO TestDTO) {
+      this.TestDTO = TestDTO;
       return this;
     }
 
-    public ApiTestsDTO build() {
-      ApiTestsDTO apiTestsDTO =  new ApiTestsDTO(this);
-      return apiTestsDTO;
+    public TestsDTO build() {
+      TestsDTO testsDTO =  new TestsDTO(this);
+      return testsDTO;
     }
   }
 
   /**
-  * Get apiTestDTO
-  * @return apiTestDTO
+  * Get testDTO
+  * @return testDTO
   */
-  @Schema(name = "apiTestDTO", required = false)
-  public ApiTestDTO getApiTestDTO() {
-    return ApiTestDTO;
+  @Schema(name = "testDTO", required = false)
+  public TestDTO getTestDTO() {
+    return TestDTO;
   }
-  public void setApiTestDTO(ApiTestDTO ApiTestDTO) {
-    this.ApiTestDTO = ApiTestDTO;
+  public void setTestDTO(TestDTO TestDTO) {
+    this.TestDTO = TestDTO;
   }
 
   @Override
@@ -55,20 +55,20 @@ public class TestsDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestsDTO apiTestsDTO = (ApiTestsDTO) o;
-    return Objects.equals(this.apiTestDTO,apiTestsDTO.apiTestDTO) ;
+    TestsDTO testsDTO = (TestsDTO) o;
+    return Objects.equals(this.testDTO,testsDTO.testDTO) ;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(apiTestDTO);
+    return Objects.hash(testDTO);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestsDTO {\n");
-    sb.append(" apiTestDTO: ").append(toIndentedString(apiTestDTO)).append("\n");
+    sb.append("class TestsDTO {\n");
+    sb.append(" testDTO: ").append(toIndentedString(testDTO)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,17 +1,17 @@
-package net.coru.multifileplugin.testrestclient;
+package net.coru.multifileplugin.restclient;
 
-import net.coru.apigenerator.openapi.client.ApiRestClient;
+import net.coru.multifileplugin.restclient.client.ApiRestClient;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testrestclient.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testrestclient.model.ApiErrorDTO;
-import net.coru.multifileplugin.testrestclient.model.ApiTestDTO;
+import net.coru.multifileplugin.restclient.model.ApiTestInfoDTO;
+import net.coru.multifileplugin.restclient.model.ApiErrorDTO;
+import net.coru.multifileplugin.restclient.model.ApiTestDTO;
 
-import net.coru.apigenerator.openapi.client.auth.Authentication;
-import net.coru.apigenerator.openapi.client.auth.HttpBasicAuth;
+import net.coru.multifileplugin.restclient.client.auth.Authentication;
+import net.coru.multifileplugin.restclient.client.auth.HttpBasicAuth;
 
 import org.springframework.stereotype.Component;
 import org.springframework.core.ParameterizedTypeReference;

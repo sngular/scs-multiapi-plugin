@@ -15,46 +15,46 @@ public class TestInfoDTO {
   @JsonProperty(value ="testers")
   private final List<String> testers;
 
-  private ApiTestInfoDTO(String testName, List<String> testers){
+  private TestInfoDTO(String testName, List<String> testers){
     this.testName = testName;
     this.testers = testers;
 
     validateRequiredAttributes();
   }
 
-  private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
+  private TestInfoDTO(TestInfoDTOBuilder builder) {
     this.testName = builder.testName;
     this.testers = builder.testers;
 
     validateRequiredAttributes();
   }
 
-  public static class ApiTestInfoDTOBuilder {
+  public static class TestInfoDTOBuilder {
 
     private String testName;
     private List<String> testers = new ArrayList<String>();
 
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
+    public TestInfoDTO.TestInfoDTOBuilder testName(String testName) {
       this.testName = testName;
       return this;
     }
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
+    public TestInfoDTO.TestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
+    public TestInfoDTO.TestInfoDTOBuilder tester(String tester) {
       if (tester != null) {
         this.testers.add(tester);
       }
       return this;
     }
 
-    public ApiTestInfoDTO build() {
-      ApiTestInfoDTO apiTestInfoDTO =  new ApiTestInfoDTO(this);
-      return apiTestInfoDTO;
+    public TestInfoDTO build() {
+      TestInfoDTO testInfoDTO =  new TestInfoDTO(this);
+      return testInfoDTO;
     }
   }
 
@@ -84,8 +84,8 @@ public class TestInfoDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestInfoDTO apiTestInfoDTO = (ApiTestInfoDTO) o;
-    return Objects.equals(this.testName,apiTestInfoDTO.testName) && Objects.equals(this.testers,apiTestInfoDTO.testers) ;
+    TestInfoDTO testInfoDTO = (TestInfoDTO) o;
+    return Objects.equals(this.testName,testInfoDTO.testName) && Objects.equals(this.testers,testInfoDTO.testers) ;
   }
 
   @Override
@@ -96,7 +96,7 @@ public class TestInfoDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestInfoDTO {\n");
+    sb.append("class TestInfoDTO {\n");
     sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
     sb.append("}");
@@ -126,7 +126,7 @@ public class TestInfoDTO {
     }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("ApiTestInfoDTO");
+      throw new ModelClassException("TestInfoDTO");
     }
   }
 
