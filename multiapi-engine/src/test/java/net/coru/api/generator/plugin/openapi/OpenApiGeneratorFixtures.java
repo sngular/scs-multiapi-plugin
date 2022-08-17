@@ -126,6 +126,28 @@ public final class OpenApiGeneratorFixtures {
       .build()
   );
 
+  static final List<FileSpec> TEST_MULTIPLE_REF_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testMultipleRefGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.multipleref")
+      .modelPackage("net.coru.multifileplugin.multipleref.model")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_PATH_PARAMETER_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiPathParameterGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.pathparameter")
+      .modelPackage("net.coru.multifileplugin.pathparameter.model")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .build()
+  );
+
   static Function<Path, Boolean> VALIDATE_ALL_OF() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
@@ -319,6 +341,46 @@ public final class OpenApiGeneratorFixtures {
       "openapigenerator/testApiTagsGeneration/assets/TestDTO.java",
       "openapigenerator/testApiTagsGeneration/assets/TestInfoDTO.java",
       "openapigenerator/testApiTagsGeneration/assets/TestsDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+
+  }
+
+  static Function<Path, Boolean> VALIDATE_MULTIPLE_REF_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/multipleref";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/multipleref/model";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testMultipleRefGeneration/assets/TestApi.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testMultipleRefGeneration/assets/InlineResponse200CreateGameDTO.java",
+      "openapigenerator/testMultipleRefGeneration/assets/MessageDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+
+  }
+
+  static Function<Path, Boolean> VALIDATE_PATH_PARAMETER_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathparameter";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/pathparameter/model";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiPathParameterGeneration/assets/TestApi.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiPathParameterGeneration/assets/ErrorDTO.java",
+      "openapigenerator/testApiPathParameterGeneration/assets/TestDTO.java",
+      "openapigenerator/testApiPathParameterGeneration/assets/TestInfoDTO.java",
+      "openapigenerator/testApiPathParameterGeneration/assets/TestsDTO.java"
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);

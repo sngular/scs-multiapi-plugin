@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi;
+package net.coru.multifileplugin.multipleref;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,13 +14,9 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testapi.model.InlineResponse200CreateGameDTO;
+import net.coru.multifileplugin.multipleref.model.InlineResponse200CreateGameDTO;
 
 public interface TestApi {
-
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
 
   /**
   * POST /test : Start a Game
