@@ -70,13 +70,38 @@ public final class OpenApiGeneratorFixtures {
     FileSpec
       .builder()
       .filePath("openapigenerator/testInlineSchemaCreation/api-test.yml")
-      .apiPackage("net.coru.inlineschema.testapiclient")
-      .modelPackage("net.coru.inlineschema.testapiclient.model")
+      .apiPackage("net.coru.multifileplugin.inlineschemacreation")
+      .modelPackage("net.coru.multifileplugin.inlineschemacreation.model")
       .modelNamePrefix("Api")
       .modelNameSuffix("DTO")
       .useLombokModelAnnotation(false)
       .build()
   );
+
+  static final List<FileSpec> TEST_PARAMETER_WITH_CONTENT_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiParametersWithContentGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.parameterwithcontent")
+      .modelPackage("net.coru.multifileplugin.parameterwithcontent.model")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_PATH_WITH_SLASH_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiPathWithSpecialCharGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.pathwithspecialchar")
+      .modelPackage("net.coru.multifileplugin.pathwithspecialchar.model")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .build()
+  );
+
   static Function<Path, Boolean> VALIDATE_ALL_OF() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
@@ -171,23 +196,66 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> VALIDATE_INLINE_SCHEMA_CREATION() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/inlineschemacreation";
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/inlineschemacreation";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/inlineschemacreation/model";
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/inlineschemacreation/model";
 
     final List<String> expectedTestApiFile = List.of(
-      "openapigenerator/testInlineSchemaCreation/assets/TestApi.java");
+      "openapigenerator/testInlineSchemaCreation/assets/RuleApi.java",
+      "openapigenerator/testInlineSchemaCreation/assets/RulesApi.java"
+    );
 
     final List<String> expectedTestApiModelFiles = List.of(
       "openapigenerator/testInlineSchemaCreation/assets/ApiErrorDTO.java",
-      "openapigenerator/testInlineSchemaCreation/assets/ApiTestAllOfDTO.java",
       "openapigenerator/testInlineSchemaCreation/assets/ApiTestDTO.java",
-      "openapigenerator/testInlineSchemaCreation/assets/ApiTestInfoDTO.java",
-      "openapigenerator/testInlineSchemaCreation/assets/ApiTestsDTO.java"
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestProcessorDTO.java",
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestTypeDTO.java"
 
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
+  static Function<Path, Boolean> VALIDATE_PARAMETERS_WITH_SCHEMA_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/parameterwithcontent";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/parameterwithcontent/model";
+
+    final List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiParametersWithContentGeneration/assets/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiParametersWithContentGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testApiParametersWithContentGeneration/assets/ApiInlineParameterShowTestByIdTestIdDTO.java",
+      "openapigenerator/testApiParametersWithContentGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testApiParametersWithContentGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testApiParametersWithContentGeneration/assets/ApiTestsDTO.java"
+      );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
+  static Function<Path, Boolean> VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathwithspecialchar";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/pathwithspecialchar/model";
+
+    List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/TestApi.java",
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/TestSchemaApi.java"
+    );
+
+    List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testApiPathWithSpecialCharGeneration/assets/ApiTestsDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+
   }
 
   private static Boolean commonTest(

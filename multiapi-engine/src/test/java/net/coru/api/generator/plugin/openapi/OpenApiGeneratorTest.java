@@ -33,7 +33,11 @@ class OpenApiGeneratorTest {
       Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK, OpenApiGeneratorFixtures.VALIDATE_ALL_OF_LOMBOK()),
       Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE, OpenApiGeneratorFixtures.VALIDATE_OVERWRITE_MODE_TRUE()),
       Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION()),
-      Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION())
+      Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION, OpenApiGeneratorFixtures.VALIDATE_INLINE_SCHEMA_CREATION()),
+      Arguments.of("testApiParametersWithContentGeneration", OpenApiGeneratorFixtures.TEST_PARAMETER_WITH_CONTENT_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_PARAMETERS_WITH_SCHEMA_GENERATION()),
+      Arguments.of("testApiPathWithSlashGeneration", OpenApiGeneratorFixtures.TEST_PATH_WITH_SLASH_GENERATION,
+                   OpenApiGeneratorFixtures.VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION())
     );
   }
 

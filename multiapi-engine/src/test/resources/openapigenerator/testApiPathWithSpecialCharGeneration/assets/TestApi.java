@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi;
+package net.coru.multifileplugin.pathwithspecialchar;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,14 +14,10 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testapi.model.ApiErrorDTO;
+import net.coru.multifileplugin.pathwithspecialchar.model.ApiTestInfoDTO;
+import net.coru.multifileplugin.pathwithspecialchar.model.ApiErrorDTO;
 
 public interface TestApi {
-
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
 
   /**
   * GET /test/{testId} : Info for a specific test
