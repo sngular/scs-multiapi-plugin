@@ -15,16 +15,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.soebes.itf.jupiter.extension.MavenGoal;
-import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
-import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
-@MavenRepository
-@MavenJupiterExtension
-@Execution(ExecutionMode.SAME_THREAD)
 public class OpenApiGenerationTest {
 
   private final String DEFAULT_TARGET_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi";
@@ -69,25 +62,7 @@ public class OpenApiGenerationTest {
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
   }
 
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testApiPathParameterGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFile = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/TestApi.java"));
-
-    List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiErrorDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestInfoDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ApiTestsDTO.java")
-    );
-
-    List<File> expectedExceptionFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiPathParameterGeneration/assets/ModelClassException.java"));
-
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
-  }
-
+/*
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
@@ -126,91 +101,8 @@ public class OpenApiGenerationTest {
     validateFiles(expectedExceptionFilesFirst, targetExceptionFirstFolder);
     validateFiles(expectedExceptionFilesSecond, targetExceptionSecondFolder);
   }
+*/
 
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testWebClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets" +
-                 "/TestApi.java"));
-
-    List<File> expectedExceptionFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testWebClientApiGeneration/assets/ModelClassException.java"));
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testwebclient");
-    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testwebclient/model/exception");
-
-    File targetFirstFolder = pathToTargetFirst.toFile();
-    assertThat(targetFirstFolder).isNotEmptyDirectory();
-
-    File targetException = pathToException.toFile();
-    assertThat(targetException).isNotEmptyDirectory();
-
-    validateFiles(expectedFileFirst, targetFirstFolder);
-    validateFiles(expectedExceptionFiles, targetException);
-  }
-
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testClientPackageWebClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                 "/TestClient.java"));
-    List<File> expectedFileSecond = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                 "/TestAuth.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets" +
-                 "/TestHttpBasicAuth.java"));
-
-    List<File> expectedExceptionFiles = List.of(
-        new File(
-            "src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testClientPackageWebClientApiGeneration/assets/ModelClassException.java"));
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client");
-    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/client/auth");
-    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testclientpackage/model/exception");
-
-    File targetFirstFolder = pathToTargetFirst.toFile();
-    assertThat(targetFirstFolder).isNotEmptyDirectory();
-
-    File targetSecondFolder = pathToTargetSecond.toFile();
-    assertThat(targetSecondFolder).isNotEmptyDirectory();
-
-    File targetException = pathToException.toFile();
-    assertThat(targetException).isNotEmptyDirectory();
-
-    validateFiles(expectedFileFirst, targetFirstFolder);
-    validateFiles(expectedFileSecond, targetSecondFolder);
-    validateFiles(expectedExceptionFiles, targetException);
-  }
-
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testRestClientApiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testRestClientApiGeneration" +
-                                                    "/assets/TestApi.java"));
-
-    List<File> expectedExceptionFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testRestClientApiGeneration/assets/ModelClassException.java"));
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testrestclient");
-    Path pathToException = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testrestclient/model/exception");
-
-    File targetFirstFolder = pathToTargetFirst.toFile();
-    assertThat(targetFirstFolder).isNotEmptyDirectory();
-
-    File targetException = pathToException.toFile();
-    assertThat(targetException).isNotEmptyDirectory();
-
-    validateFiles(expectedFileFirst, targetFirstFolder);
-    validateFiles(expectedExceptionFiles, targetException);
-  }
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")

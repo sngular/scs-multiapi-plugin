@@ -121,7 +121,7 @@ public class OpenApiUtil {
     var result = filePath;
     URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
     if (Objects.nonNull(fileURL)) {
-      result = fileURL.getPath();
+      result = fileURL.toString();
     }
     return result;
   }

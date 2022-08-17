@@ -504,7 +504,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles, final String targetException) {
     Boolean result = Boolean.TRUE;
     try {
-      Path pathToTarget = Path.of(resultPath.toUri().getPath(), "target");
+      Path pathToTarget = Path.of(resultPath.toString(), "target");
       Path pathToTargetApi = pathToTarget.resolve(targetApi);
 
       File targetApiFolder = pathToTargetApi.toFile();
