@@ -32,7 +32,8 @@ class OpenApiGeneratorTest {
       Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF, OpenApiGeneratorFixtures.VALIDATE_ALL_OF()),
       Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK, OpenApiGeneratorFixtures.VALIDATE_ALL_OF_LOMBOK()),
       Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE, OpenApiGeneratorFixtures.VALIDATE_OVERWRITE_MODE_TRUE()),
-      Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION())
+      Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION()),
+      Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION())
     );
   }
 

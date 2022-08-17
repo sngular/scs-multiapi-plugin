@@ -22,7 +22,6 @@
     <maven-project.version>2.2.1</maven-project.version>
     <maven-core.version>3.8.5</maven-core.version>
     <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
     <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>

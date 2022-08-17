@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import org.apache.commons.collections4.CollectionUtils;
 
 public final class OpenApiGeneratorFixtures {
 
@@ -41,6 +41,7 @@ public final class OpenApiGeneratorFixtures {
       .useLombokModelAnnotation(true)
       .build()
   );
+
   final static List<FileSpec> TEST_OVER_WRITE_MODEL_TRUE =  List.of(
     FileSpec
       .builder()
@@ -51,7 +52,7 @@ public final class OpenApiGeneratorFixtures {
       .modelNameSuffix("DTO")
       .useLombokModelAnnotation(false)
       .build()
-  );;
+  );
 
   static final List<FileSpec> TEST_API_CLIENT_GENERATION = List.of(
     FileSpec
@@ -63,7 +64,19 @@ public final class OpenApiGeneratorFixtures {
       .modelNameSuffix("DTO")
       .useLombokModelAnnotation(true)
       .build()
-  );;
+  );
+
+  static final List<FileSpec> TEST_INLINE_SCHEMA_CREATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testInlineSchemaCreation/api-test.yml")
+      .apiPackage("net.coru.inlineschema.testapiclient")
+      .modelPackage("net.coru.inlineschema.testapiclient.model")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(false)
+      .build()
+  );
   static Function<Path, Boolean> VALIDATE_ALL_OF() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
@@ -130,11 +143,12 @@ public final class OpenApiGeneratorFixtures {
     );
 
     final List<String> expectedExceptionFiles = List.of(
-      "openapigenerator/testOverWriteModelTrue/assets/ModelClassException.java");
+      "openapigenerator/testOverWriteModelTrue/assets/exception/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
 
   }
+
   static Function<Path, Boolean> VALIDATE_API_CLIENT_GENERATION() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapiclient";
@@ -153,6 +167,27 @@ public final class OpenApiGeneratorFixtures {
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
+  }
+
+  static Function<Path, Boolean> VALIDATE_INLINE_SCHEMA_CREATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/inlineschemacreation";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/inlineschemacreation/model";
+
+    final List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testInlineSchemaCreation/assets/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testInlineSchemaCreation/assets/ApiErrorDTO.java",
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestAllOfDTO.java",
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestDTO.java",
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testInlineSchemaCreation/assets/ApiTestsDTO.java"
+
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   private static Boolean commonTest(
@@ -175,7 +210,7 @@ public final class OpenApiGeneratorFixtures {
         validateFiles(expectedModelFiles, targetModelFolder);
       }
 
-      if (Objects.nonNull(expectedExceptionFiles)) {
+      if (CollectionUtils.isNotEmpty(expectedExceptionFiles)) {
         Path pathToTargetException = pathToTarget.resolve(targetException);
         File targetModelException = pathToTargetException.toFile();
         assertThat(targetModelException).isNotEmptyDirectory();

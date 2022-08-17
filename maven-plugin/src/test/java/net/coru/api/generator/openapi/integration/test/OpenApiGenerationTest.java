@@ -34,21 +34,6 @@ public class OpenApiGenerationTest {
 
   private final String DEFAULT_EXCEPTION_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model/exception";
 
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testApiClientGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFile = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/TestApi.java"));
-
-    List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiErrorDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestInfoDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiClientGeneration/assets/ApiTestsDTO.java")
-    );
-
-    commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, null, null);
-  }
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
@@ -399,41 +384,6 @@ public class OpenApiGenerationTest {
 
     commonTest(result, expectedFile, expectedModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
-
- /* @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
-  void testAllOf(MavenProjectResult result) throws IOException {
-
-    List<File> expectedTestApiFile = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/TestApi.java"));
-
-    List<File> expectedTestApiModelFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiErrorDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestAllOfDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestInfoDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/testApi/ApiTestsDTO.java")
-
-    );
-
-    List<File> expectedLombokFile = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/TestApi.java"));
-
-    List<File> expectedLombokModelFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiErrorDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestAllOfDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestInfoDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/lombok/ApiTestsDTO.java")
-    );
-
-    List<File> expectedExceptionFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testAllOf/assets/ModelClassException.java"));
-
-    commonTest(result, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
-    commonTest(result, expectedLombokFile, expectedLombokModelFiles, "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi",
-               "target/generated-sources/apigenerator/net/coru/multifileplugin/lombok/testapi/model", null, null);
-  }*/
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
