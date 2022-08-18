@@ -1,19 +1,30 @@
-package net.coru.multifileplugin.testapi.model;
+package net.coru.multifileplugin.externalref.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import net.coru.multifileplugin.externalref.model.exception.ModelClassException;
+
 
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
-  private String name;
+  private final String name;
   @JsonProperty(value ="id")
-  private Integer id;
+  private final Integer id;
+
+  private ApiTestDTO(String name, Integer id){
+    this.name = name;
+    this.id = id;
+
+    validateRequiredAttributes();
+  }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiTestDTOBuilder {
@@ -41,24 +52,18 @@ public class ApiTestDTO {
   * Get name
   * @return name
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "name", required = true)
   public String getName() {
     return name;
-  }
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
   * Get id
   * @return id
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "id", required = true)
   public Integer getId() {
     return id;
-  }
-  public void setId(Integer id) {
-    this.id = id;
   }
 
   @Override
@@ -97,6 +102,22 @@ public class ApiTestDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.name)) {
+      satisfiedCondition = false;
+    }
+    else if (!Objects.nonNull(this.id)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestDTO");
+    }
   }
 
 }

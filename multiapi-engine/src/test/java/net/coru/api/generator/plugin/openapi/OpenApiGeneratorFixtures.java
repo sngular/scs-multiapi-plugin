@@ -202,6 +202,31 @@ public final class OpenApiGeneratorFixtures {
       .build()
   );
 
+  static final List<FileSpec> TEST_ENUMS_LOMBOK_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.enumlombokgeneration")
+      .modelPackage("net.coru.multifileplugin.enumlombokgeneration.model")
+      .clientPackage("net.coru.multifileplugin.enumlombokgeneration.client")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .useLombokModelAnnotation(true)
+      .build()
+  );
+
+  static final List<FileSpec> TEST_EXTERNAL_REF_GENERATION = List.of(
+    FileSpec
+      .builder()
+      .filePath("openapigenerator/testExternalRefsGeneration/api-test.yml")
+      .apiPackage("net.coru.multifileplugin.externalref")
+      .modelPackage("net.coru.multifileplugin.externalref.model")
+      .clientPackage("net.coru.multifileplugin.externalref.client")
+      .modelNamePrefix("Api")
+      .modelNameSuffix("DTO")
+      .build()
+  );
+
   static Function<Path, Boolean> VALIDATE_ALL_OF() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
@@ -512,7 +537,6 @@ public final class OpenApiGeneratorFixtures {
       commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
 
-
   static Function<Path, Boolean> VALIDATE_ENUMS_GENERATION() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumgeneration";
@@ -534,6 +558,47 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedExceptionFiles = List.of(
       "openapigenerator/testApiEnumsGeneration/assets/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> VALIDATE_ENUMS_LOMBOK_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumlombokgeneration";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/enumlombokgeneration/model";
+
+    final List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testApiEnumsLombokGeneration/assets/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testApiEnumsLombokGeneration/assets/ApiErrorDTO.java",
+      "openapigenerator/testApiEnumsLombokGeneration/assets/ApiTestDTO.java",
+      "openapigenerator/testApiEnumsLombokGeneration/assets/ApiTestInfoDTO.java",
+      "openapigenerator/testApiEnumsLombokGeneration/assets/ApiTestsDTO.java"
+
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
+  static Function<Path, Boolean> VALIDATE_EXTERNAL_REF_GENERATION() {
+
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/externalref";
+
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/externalref/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/externalref/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+      "openapigenerator/testExternalRefsGeneration/assets/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testExternalRefsGeneration/assets/ApiTestDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+      "openapigenerator/testExternalRefsGeneration/assets/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
