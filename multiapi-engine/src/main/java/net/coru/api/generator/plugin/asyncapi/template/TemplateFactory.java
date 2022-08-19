@@ -163,6 +163,7 @@ public class TemplateFactory {
     root.clear();
     publishMethods.clear();
     subscribeMethods.clear();
+    streamBridgeMethods.clear();
     subscribeFilePath = null;
     supplierFilePath = null;
     streamBridgeFilePath = null;

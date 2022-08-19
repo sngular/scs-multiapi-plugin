@@ -252,9 +252,9 @@ public class OpenApiGenerator {
   }
 
   private void processModelsWhenOverWriteIsTrue(
-    final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
-    final String modelPackage,
-    final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
+      final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
+      final String modelPackage,
+      final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);

@@ -117,9 +117,9 @@ public class OpenApiUtil {
     return openAPI;
   }
 
-  private static String readFile(String filePath) {
+  private static String readFile(final String filePath) {
     var result = filePath;
-    URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
+    final URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
     if (Objects.nonNull(fileURL)) {
       result = fileURL.toString();
     }

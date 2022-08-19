@@ -30,36 +30,6 @@ public class AsyncApiGenerationTest {
 
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
-  void testFileGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
-
-    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
-
-    List<File> expectedConsumerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/IPublishOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/TestClassName.java"));
-
-    List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGeneration/assets/Producer.java"));
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
-
-    File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    File targetProducerDirectory = pathToTargetProducer.toFile();
-
-    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
-    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
-    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
-    validateFiles(expectedProducerFiles, targetProducerDirectory);
-  }
-
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
@@ -92,87 +62,5 @@ public class AsyncApiGenerationTest {
 
   }
 
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
-  void testFileGenerationExternalAvro(MavenProjectResult result) throws IOException {
-    List<String> expectedFileProducerNames = List.of("IPublishOperation.java", "Producer.java");
 
-    List<String> expectedFileConsumerNames = List.of("ISubscribeOperation.java", "Subscriber.java");
-
-    List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/IPublishOperation" +
-                 ".java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/Producer" +
-                 ".java"));
-
-    List<File> expectedConsumerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/ISubscribeOperation" +
-                 ".java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationExternalAvro/assets/Subscriber" +
-                 ".java"));
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
-
-    File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    File targetProducerDirectory = pathToTargetProducer.toFile();
-
-    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
-    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
-    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
-    validateFiles(expectedProducerFiles, targetProducerDirectory);
-  }
-
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
-  void testFileGenerationStreamBridge(MavenProjectResult result) throws IOException {
-    List<File> expectedConsumerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/TestClassName.java"));
-
-    List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationStreamBridge/assets/StreamBridgeProducer" +
-                 ".java"));
-
-    commonTest(result, expectedConsumerFiles, expectedProducerFiles);
-  }
-
-  @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
-  void testFileGenerationWithoutOperationIds(MavenProjectResult result) throws IOException {
-    List<File> expectedConsumerFiles = List.of(new File(
-                                                   "src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest" +
-                                                   "/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java"),
-                                               new File(
-                                                   "src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest" +
-                                                   "/testFileGenerationWithoutOperationIds/assets/TestClassName.java"));
-
-    List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationWithoutOperationIds/assets" +
-                 "/StreamBridgeProducer.java"));
-    commonTest(result, expectedConsumerFiles, expectedProducerFiles);
-  }
-
-  private void commonTest(final MavenProjectResult result, final List<File> expectedConsumerFiles, final List<File> expectedProducerFiles) throws IOException {
-    List<String> expectedFileConsumerNames = List.of("TestClassName.java", "ISubscribeOperation.java");
-
-    List<String> expectedFileProducerNames = List.of("StreamBridgeProducer.java");
-
-    assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
-
-    Path pathToTargetConsumer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
-
-    File targetConsumerDirectory = pathToTargetConsumer.toFile();
-    File targetProducerDirectory = pathToTargetProducer.toFile();
-
-    checkTargetFiles(expectedFileConsumerNames, targetConsumerDirectory);
-    checkTargetFiles(expectedFileProducerNames, targetProducerDirectory);
-    validateFiles(expectedConsumerFiles, targetConsumerDirectory);
-    validateFiles(expectedProducerFiles, targetProducerDirectory);
-  }
 }

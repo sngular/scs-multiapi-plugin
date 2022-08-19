@@ -44,7 +44,7 @@ public class AsyncApiGenerator {
   private static final String SUPPLIER_CLASS_NAME = "Producer";
 
   private static final String STREAM_BRIDGE_CLASS_NAME = "StreamBridgeProducer";
-  
+
   public static final String SUBSCRIBE = "subscribe";
 
   public static final String PUBLISH = "publish";
@@ -64,17 +64,17 @@ public class AsyncApiGenerator {
   private final File targetFolder;
 
   private final File baseDir;
-  
+
   private final FilenameFilter targetFileFilter;
-  
+
   private final TemplateFactory templateFactory;
-  
+
   private final String processedGeneratedSourcesFolder;
 
   private final String groupId;
-  
+
   public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
-    
+
     this.groupId = groupId;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
@@ -108,7 +108,7 @@ public class AsyncApiGenerator {
           final String operationId = getOperationId(channel);
           final JsonNode channelPayload = getChannelPayload(channel);
 
-          processOperaton(fileParameter, ymlParentPath, entry, channel, operationId, channelPayload);
+          processOperation(fileParameter, ymlParentPath, entry, channel, operationId, channelPayload);
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
             if (channel.has(SUBSCRIBE)) {
@@ -127,9 +127,9 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processOperaton(
-    final FileSpec fileParameter, final Path ymlParentPath, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload)
-    throws IOException {
+  private void processOperation(
+      final FileSpec fileParameter, final Path ymlParentPath, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload)
+      throws IOException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
@@ -140,8 +140,8 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-    final OperationParameterObject operation, final String operationId,
-    final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+      final OperationParameterObject operation, final String operationId,
+      final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
       final List<String> operationIds = operation.getOperationIds();
@@ -182,7 +182,7 @@ public class AsyncApiGenerator {
   private void setUpTemplate(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
-    processClassnames(fileParameter);
+    processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
   }
 
@@ -194,11 +194,11 @@ public class AsyncApiGenerator {
 
   private void processEntitiesSuffix(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
-                                                ? fileParameter.getSupplier().getModelNameSuffix() : null);
+                                                  ? fileParameter.getSupplier().getModelNameSuffix() : null);
     templateFactory.setStreamBridgeEntitiesSuffix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getModelNameSuffix() != null
-                                                    ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
+                                                      ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
     templateFactory.setSubscribeEntitiesSuffix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getModelNameSuffix() != null
-                                                 ? fileParameter.getConsumer().getModelNameSuffix() : null);
+                                                   ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
 
   private void processDuplicates(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
@@ -212,14 +212,10 @@ public class AsyncApiGenerator {
     if (fileParameter.getSupplier() != null) {
       operation = fileParameter.getSupplier();
       checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), SUPPLIER_CLASS_NAME);
-    } else {
-      checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
     }
     if (fileParameter.getStreamBridge() != null) {
       operation = fileParameter.getStreamBridge();
       checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
-    } else {
-      checkClassPackageDuplicate(STREAM_BRIDGE_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
@@ -234,13 +230,13 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processClassnames(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void processClassNames(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null
-                                           ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
+                                             ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null
-                                               ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
+                                                 ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null
-                                            ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
+                                              ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
   }
 
   private Path processPath(final OperationParameterObject operationParameter) {
@@ -264,18 +260,17 @@ public class AsyncApiGenerator {
   private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
     final String apiPackage = operationParameter != null ? operationParameter.getApiPackage() : null;
     final String path;
-    if (Objects.nonNull(apiPackage )) {
+    if (Objects.nonNull(apiPackage)) {
       path = getPath(apiPackage);
-    } else if (Objects.nonNull(groupId )) {
+    } else if (Objects.nonNull(groupId)) {
       path = getPath(groupId);
     } else {
       path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
     }
     return path;
   }
-
-  private String getPath(final String apiPackage) {
-    return processedGeneratedSourcesFolder + PACKAGE_SEPARATOR.matcher(apiPackage).replaceAll(File.separator);
+  private String getPath(final String pathName) {
+    return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, "/");
   }
 
   private void processPackage(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
@@ -288,8 +283,9 @@ public class AsyncApiGenerator {
     final String evaluated;
     if (operation != null && operation.getApiPackage() != null) {
       evaluated = operation.getApiPackage();
-    } else
+    } else {
       evaluated = Objects.requireNonNullElse(groupId, DEFAULT_ASYNCAPI_API_PACKAGE);
+    }
     return evaluated;
   }
 
@@ -357,7 +353,7 @@ public class AsyncApiGenerator {
     final String filePath = pathToFile[0];
 
     File file = new File(filePath);
-    if (0 == PACKAGE_SEPARATOR.matcher(filePath).start()) {
+    if (filePath.startsWith(PACKAGE_SEPARATOR_STR)) {
       file = ymlParentPath.resolve(file.toPath()).toFile();
     }
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -378,17 +374,15 @@ public class AsyncApiGenerator {
   private String processModelPackage(final String extractedPackage, final String modelPackage) {
     final String processedPackage;
     if (modelPackage != null) {
-      if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
-        final var matcher = PACKAGE_SEPARATOR.matcher(extractedPackage);
-        final var className = matcher.group(matcher.groupCount());
-        log.info("+++++ {}", className);
-        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + className;
-        log.info("----- ", processedPackage);
+      if (extractedPackage.contains(PACKAGE_SEPARATOR_STR)) {
+        final var splittedPackage = extractedPackage.split("\\.");
+        final var className = splittedPackage[splittedPackage.length - 1];
 
+        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + className;
       } else {
         processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + extractedPackage;
       }
-    } else if (PACKAGE_SEPARATOR.matcher(extractedPackage).matches()) {
+    } else if (extractedPackage.contains(PACKAGE_SEPARATOR_STR)) {
       processedPackage = extractedPackage;
     } else {
       processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR_STR + extractedPackage;

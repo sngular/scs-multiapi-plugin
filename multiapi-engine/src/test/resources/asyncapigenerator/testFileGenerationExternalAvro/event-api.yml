@@ -22,12 +22,12 @@ servers:
 channels:
   order/created:
     publish:
-      operationId: "publishOperation"
+      operationId: "publishOperationExternalAvro"
       message:
         $ref: '/avro/Order.avsc'
   order/createCommand:
     subscribe:
-      operationId: "subscribeOperation"
+      operationId: "subscribeOperationExternalAvro"
       message:
         $ref: '#/components/messages/CreateOrder'
 components:

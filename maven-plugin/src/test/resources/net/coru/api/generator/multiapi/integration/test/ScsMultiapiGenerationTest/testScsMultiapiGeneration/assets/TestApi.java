@@ -20,10 +20,6 @@ import net.coru.multifileplugin.testapi.model.ApiTestDTO;
 
 public interface TestApi {
 
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
-
   /**
   * GET /test/{testId} : Info for a specific test
   * @param testId The id of the test to retrieve true

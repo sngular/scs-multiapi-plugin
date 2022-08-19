@@ -1,9 +1,9 @@
-package net.coru.scsplugin.business_model.model.event.producer;
+package net.coru.scsplugin.withOutIds.model.event.producer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
 
-import net.coru.scsplugin.business_model.model.event.OrderCreatedMapper;
+import net.coru.scsplugin.withOutIds.model.event.OrderCreatedMapper;
 
 @Component
 public class StreamBridgeProducer {
