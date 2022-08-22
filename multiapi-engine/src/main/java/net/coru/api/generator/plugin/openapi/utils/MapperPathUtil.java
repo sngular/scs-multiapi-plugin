@@ -19,6 +19,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
@@ -183,7 +184,7 @@ public class MapperPathUtil {
 
   private static List<String> getConsumesList(final RequestBody requestBody) {
     final var consumesList = new ArrayList<String>();
-    if (Objects.nonNull(requestBody)  && Objects.nonNull(requestBody.getContent())
+    if (Objects.nonNull(requestBody) && Objects.nonNull(requestBody.getContent())
         && !requestBody.getContent().isEmpty()) {
 
       final Set<String> consumes = requestBody.getContent().keySet();
@@ -326,6 +327,15 @@ public class MapperPathUtil {
                                           .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName)))
                                           .refName(defineTypeName(mediaTypeEntry.getValue().getSchema(), globalObject, pojoName))
                                           .build());
+        } else if (Boolean.TRUE.equals(checkSchemaCombinator(mediaTypeEntry.getValue().getSchema()))) {
+          final var composedSchemaPojoName = preparePojoNameForComposedSchema(inlineObject, mediaTypeEntry.getValue().getSchema(), fileSpec);
+          contentObjects.add(ContentObject.builder()
+                                          .typeData(OBJECT)
+                                          .name(mediaTypeEntry.getKey())
+                                          .importName(StringUtils.capitalize(
+                                              mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), composedSchemaPojoName)))
+                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema(), globalObject, composedSchemaPojoName))
+                                          .build());
         } else {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
@@ -339,29 +349,45 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
+  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema schema, FileSpec fileSpec) {
+    String composedSchemaPojoName = "";
+    if(Objects.nonNull(schema.getAllOf())){
+      composedSchemaPojoName = getPojoName(inlineObject + "AllOf", fileSpec);
+    } else if (Objects.nonNull(schema.getAnyOf())) {
+      composedSchemaPojoName = getPojoName(inlineObject + "AnyOf", fileSpec);
+    } else if (Objects.nonNull(schema.getOneOf())) {
+      composedSchemaPojoName = getPojoName(inlineObject + "OneOf", fileSpec);
+    }
+    return StringUtils.isNotBlank(composedSchemaPojoName) ? composedSchemaPojoName : "";
+  }
+
   private static String defineTypeName(final Schema<?> schema, final GlobalObject globalObject, final String pojoName) {
     final String typeName;
-    switch (schema.getType()) {
-      case BasicTypeConstants.INTEGER:
-        typeName = getIntegerFormat(schema);
-        break;
-      case BasicTypeConstants.NUMBER:
-        typeName = getNumberFormat(schema);
-        break;
-      case BasicTypeConstants.BOOLEAN:
-        typeName = "Boolean";
-        break;
-      case ARRAY:
-        final ArraySchema arraySchema = (ArraySchema) schema;
-        typeName = getListName(globalObject, pojoName, arraySchema);
-        break;
-      case OBJECT:
-        typeName = pojoName;
-        break;
-      case BasicTypeConstants.STRING:
-      default:
-        typeName = "String";
-        break;
+    if (Objects.nonNull(schema.getType())) {
+      switch (schema.getType()) {
+        case BasicTypeConstants.INTEGER:
+          typeName = getIntegerFormat(schema);
+          break;
+        case BasicTypeConstants.NUMBER:
+          typeName = getNumberFormat(schema);
+          break;
+        case BasicTypeConstants.BOOLEAN:
+          typeName = "Boolean";
+          break;
+        case ARRAY:
+          final ArraySchema arraySchema = (ArraySchema) schema;
+          typeName = getListName(globalObject, pojoName, arraySchema);
+          break;
+        case OBJECT:
+          typeName = pojoName;
+          break;
+        case BasicTypeConstants.STRING:
+        default:
+          typeName = "String";
+          break;
+      }
+    } else {
+      typeName = pojoName;
     }
     return typeName;
   }
@@ -405,7 +431,6 @@ public class MapperPathUtil {
 
   private static String getSchemaType(final Schema<?> schema, final Map<String, String> componentsTypes) {
     String dataType = schema.getType();
-
     if (!StringUtils.isNotBlank(dataType) && Objects.nonNull(schema.get$ref())) {
       final String[] wholeRef = schema.get$ref().split("/");
       dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
@@ -428,6 +453,8 @@ public class MapperPathUtil {
       }
     } else if (Objects.nonNull(schema.get$ref())) {
       refSchema = StringUtils.isNotBlank(schema.get$ref()) ? getRefSchema(schema.get$ref(), componentsTypes) : null;
+    } else if (Boolean.TRUE.equals(checkSchemaCombinator(schema))) {
+      refSchema = pojoName;
     }
     return StringUtils.isNotBlank(refSchema) ? refSchema : null;
   }

@@ -21,6 +21,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
@@ -194,6 +195,9 @@ public class OpenApiUtil {
           if (Objects.isNull(value.getSchema().get$ref()) && "object".equalsIgnoreCase(value.getSchema().getType())) {
             basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()),
                                value.getSchema());
+          } else if (value.getSchema() instanceof ComposedSchema) {
+            basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()) + getComposedSchemaName(value.getSchema()),
+                               value.getSchema());
           }
         });
       }
@@ -208,6 +212,18 @@ public class OpenApiUtil {
         }
       }
     }
+  }
+
+  private static String getComposedSchemaName(final Schema schema) {
+    String composedSchemaName = "";
+    if (Objects.nonNull(schema.getAllOf())) {
+      composedSchemaName = "AllOf";
+    } else if (Objects.nonNull(schema.getAnyOf())) {
+      composedSchemaName = "AnyOf";
+    } else if (Objects.nonNull(schema.getOneOf())) {
+      composedSchemaName = "OneOf";
+    }
+    return composedSchemaName;
   }
 
   public static String processJavaFileName(final String apisEntry) {

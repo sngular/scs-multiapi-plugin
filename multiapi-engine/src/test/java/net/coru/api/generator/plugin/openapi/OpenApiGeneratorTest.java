@@ -57,7 +57,11 @@ class OpenApiGeneratorTest {
       Arguments.of("testApiEnumsLombokGeneration",OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,
                    OpenApiGeneratorFixtures.VALIDATE_ENUMS_LOMBOK_GENERATION()),
       Arguments.of("testExternalRefsGeneration",OpenApiGeneratorFixtures.TEST_EXTERNAL_REF_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_EXTERNAL_REF_GENERATION())
+                   OpenApiGeneratorFixtures.VALIDATE_EXTERNAL_REF_GENERATION()),
+      Arguments.of("testAnyOfInResponse",OpenApiGeneratorFixtures.TEST_ANY_OF_IN_RESPONSE,
+                   OpenApiGeneratorFixtures.VALIDATE_ANY_OF_IN_RESPONSE()),
+      Arguments.of("testOneOfInResponse",OpenApiGeneratorFixtures.TEST_ONE_OF_IN_RESPONSE,
+                   OpenApiGeneratorFixtures.VALIDATE_ONE_OF_IN_RESPONSE())
     );
   }
 
