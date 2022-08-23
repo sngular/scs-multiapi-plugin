@@ -1,0 +1,61 @@
+plugins {
+  id 'groovy'
+  id 'java-gradle-plugin'
+  id 'maven-publish'
+}
+
+repositories {
+  mavenLocal()
+}
+
+def addDependency(configurationName, dependency) {
+  def coordinates = [
+    'group': dependency.groupId.text(),
+    'name': dependency.artifactId.text(),
+    'version': dependency.version.text()
+  ]
+  dependencies {
+    add configurationName, coordinates
+  }
+}
+
+def effectivePomFile = file('target/effective-pom.xml')
+if (effectivePomFile.file) {
+  def pom = new XmlSlurper().parseText(file('target/effective-pom.xml').text)
+  pom.dependencies.dependency.each { dependency ->
+    def scope = dependency.scope.text()
+    if (scope == 'compile') {
+      addDependency 'implementation', dependency
+    }
+    else if (scope == 'test') {
+      addDependency 'testCompile', dependency
+    }
+  }
+}
+
+dependencies {
+  implementation localGroovy()
+  implementation gradleApi()
+}
+
+jar {
+  manifest {
+    attributes 'Implementation-Version': (version ? version : 'unknown')
+  }
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+  classifier = "javadoc"
+  from javadoc
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+

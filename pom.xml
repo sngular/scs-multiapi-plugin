@@ -20,8 +20,8 @@
 
   <modules>
     <module>multiapi-engine</module>
-    <module>maven-plugin</module>
-    <module>gradle-plugin</module>
+    <module>scs-multiapi-maven-plugin</module>
+    <module>scs-multiapi-gradle-plugin</module>
   </modules>
 
   <developers>
