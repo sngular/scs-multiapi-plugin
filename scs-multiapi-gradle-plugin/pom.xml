@@ -81,7 +81,7 @@
               <arguments>
                 <argument>clean</argument>
                 <argument>build</argument>
-                <argument>-Pversion=${project.version}</argument>
+                <argument>-Pversion=${project.version} --debug</argument>
               </arguments>
             </configuration>
             <goals>

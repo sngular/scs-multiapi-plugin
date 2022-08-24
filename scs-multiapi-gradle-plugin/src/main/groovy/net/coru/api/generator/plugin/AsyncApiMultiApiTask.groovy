@@ -8,14 +8,12 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.TaskAction
 
 abstract class AsyncApiMultiApiTask extends DefaultTask {
 
   @Input
-  @SkipWhenEmpty
-  abstract Property<AsyncApiModel> asyncApiConfiguration
+  abstract Property<AsyncApiModel> getAsyncApiConfiguration()
 
   @OutputFile
   abstract RegularFileProperty getTargetFolder()
@@ -23,11 +21,11 @@ abstract class AsyncApiMultiApiTask extends DefaultTask {
   @TaskAction
   def processApiFile(Project project) {
     def targetFolder = getTargetFolder().get().asFile
-    if (asyncApiConfiguration.isPresent()) {
+    if (getAsyncApiConfiguration().isPresent()) {
       project.getBuildDir().absolutePath
       def generatedSourcesFolder = project.getBuildDir().absolutePath + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER
       def asyncApiGen = new AsyncApiGenerator(targetFolder, generatedSourcesFolder, project.getGroup() as String, project.getProjectDir())
-      asyncApiGen.processFileSpec(asyncApiConfiguration.get().fileSpecs)
+      asyncApiGen.processFileSpec(getAsyncApiConfiguration().get().fileSpecs)
     }
   }
 }

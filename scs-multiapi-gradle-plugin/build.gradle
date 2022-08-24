@@ -6,6 +6,7 @@ plugins {
 
 repositories {
   mavenLocal()
+  mavenCentral()
 }
 
 def addDependency(configurationName, dependency) {
@@ -35,7 +36,7 @@ if (effectivePomFile.file) {
 
 dependencies {
   implementation localGroovy()
-  implementation gradleApi()
+  api gradleApi()
 }
 
 jar {
