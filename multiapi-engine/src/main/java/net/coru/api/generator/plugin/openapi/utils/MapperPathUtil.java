@@ -19,7 +19,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
@@ -349,9 +348,9 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
-  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema schema, FileSpec fileSpec) {
+  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema schema, final FileSpec fileSpec) {
     String composedSchemaPojoName = "";
-    if(Objects.nonNull(schema.getAllOf())){
+    if (Objects.nonNull(schema.getAllOf())) {
       composedSchemaPojoName = getPojoName(inlineObject + "AllOf", fileSpec);
     } else if (Objects.nonNull(schema.getAnyOf())) {
       composedSchemaPojoName = getPojoName(inlineObject + "AnyOf", fileSpec);

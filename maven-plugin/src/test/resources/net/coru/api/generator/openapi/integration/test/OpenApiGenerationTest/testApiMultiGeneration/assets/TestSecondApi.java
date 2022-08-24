@@ -20,10 +20,6 @@ import net.coru.multifileplugin.testmultifile.second.model.TestInfoSecondDTO;
 
 public interface TestSecondApi {
 
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
-
   /**
   * GET /testSecond : List all available test
   * @return  A paged array of tests; (status code 200)

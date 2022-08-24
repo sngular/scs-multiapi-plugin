@@ -20,10 +20,6 @@ import net.coru.multifileplugin.testmultifile.first.model.TestInfoFirstDTO;
 
 public interface TestFirstApi {
 
-  default Optional<NativeWebRequest> getRequest() {
-    return Optional.empty();
-  }
-
   /**
   * GET /testFirst : List all available test
   * @return  A paged array of tests; (status code 200)

@@ -88,7 +88,7 @@ public class MapperContentUtil {
 
   private static List<SchemaFieldObject> getFields(final Map<String, Schema> totalSchemas, final Schema<?> schema, final FileSpec fileSpec) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
-
+    schemaCombinatorType = null;
     if (Objects.nonNull(schema.getProperties())) {
       fieldObjectArrayList.addAll(processFieldObjectList(schema, fileSpec));
     } else if (ARRAY.equalsIgnoreCase(schema.getType())) {
