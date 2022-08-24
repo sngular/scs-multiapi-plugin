@@ -47,7 +47,7 @@ public class AsyncApiGenerator {
 
   public static final String SUBSCRIBE = "subscribe";
 
-  public static final String PUBLISH = "publish";
+  public static final  String PUBLISH = "publish";
 
   public static final String OPERATION_ID = "operationId";
 
@@ -89,8 +89,6 @@ public class AsyncApiGenerator {
 
     for (FileSpec fileParameter : fileSpecsList) {
       setUpTemplate(fileParameter);
-      processDuplicates(fileParameter);
-
       final Path ymlParentPath = Paths.get(fileParameter.getFilePath()).toAbsolutePath().getParent();
 
       final var file = new File(fileParameter.getFilePath());
@@ -112,9 +110,13 @@ public class AsyncApiGenerator {
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
             if (channel.has(SUBSCRIBE)) {
+              checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
               processSubscribeMethod(channelPayload, null, ymlParentPath);
+              addProcessedClassesAndPackagesToGlobalVariables(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
             } else {
+              checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
               processSupplierMethod(channelPayload, null, ymlParentPath);
+              addProcessedClassesAndPackagesToGlobalVariables(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
             }
           }
 
@@ -131,11 +133,17 @@ public class AsyncApiGenerator {
       final FileSpec fileParameter, final Path ymlParentPath, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload)
       throws IOException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
+      checkClassPackageDuplicate(fileParameter.getConsumer().getClassNamePostfix(), fileParameter.getConsumer().getApiPackage(), CONSUMER_CLASS_NAME);
       processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
+      addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getConsumer().getClassNamePostfix(), fileParameter.getConsumer().getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
+      checkClassPackageDuplicate(fileParameter.getSupplier().getClassNamePostfix(), fileParameter.getSupplier().getApiPackage(), SUPPLIER_CLASS_NAME);
       processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
+      addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getSupplier().getClassNamePostfix(), fileParameter.getSupplier().getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
+      checkClassPackageDuplicate(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
       processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
+      addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
@@ -201,33 +209,17 @@ public class AsyncApiGenerator {
                                                    ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
 
-  private void processDuplicates(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
-    OperationParameterObject operation;
-    if (fileParameter.getConsumer() != null) {
-      operation = fileParameter.getConsumer();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), CONSUMER_CLASS_NAME);
-    } else {
-      checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
-    }
-    if (fileParameter.getSupplier() != null) {
-      operation = fileParameter.getSupplier();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), SUPPLIER_CLASS_NAME);
-    }
-    if (fileParameter.getStreamBridge() != null) {
-      operation = fileParameter.getStreamBridge();
-      checkClassPackageDuplicate(operation.getClassNamePostfix(), operation.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
-    }
-  }
-
   private void checkClassPackageDuplicate(final String className, final String apiPackage, final String defaultClassName) {
     if (className != null && processedClassnames.contains(className)
         && apiPackage != null && processedApiPackages.contains(apiPackage)
         && processedClassnames.lastIndexOf(className) == processedApiPackages.lastIndexOf(apiPackage)) {
       throw new DuplicateClassException(className, apiPackage);
-    } else {
-      processedClassnames.add(className != null ? className : defaultClassName);
-      processedApiPackages.add(apiPackage != null ? apiPackage : DEFAULT_ASYNCAPI_API_PACKAGE);
     }
+  }
+
+  private void addProcessedClassesAndPackagesToGlobalVariables(final String className, final String apiPackage, final String defaultClassName) {
+    processedClassnames.add(className != null ? className : defaultClassName);
+    processedApiPackages.add(apiPackage != null ? apiPackage : DEFAULT_ASYNCAPI_API_PACKAGE);
   }
 
   private void processClassNames(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
@@ -269,6 +261,7 @@ public class AsyncApiGenerator {
     }
     return path;
   }
+
   private String getPath(final String pathName) {
     return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, "/");
   }
@@ -305,6 +298,7 @@ public class AsyncApiGenerator {
 
   private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath) throws IOException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath);
+
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 

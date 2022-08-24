@@ -77,7 +77,7 @@ public class OpenApiGenerator {
   private boolean useLombok;
 
   public OpenApiGenerator(final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
-    final File targetFolder, final File basedir) {
+      final File targetFolder, final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
@@ -206,8 +206,9 @@ public class OpenApiGenerator {
   private void processPackage(final String apiPackage) {
     if (StringUtils.isNotBlank(apiPackage)) {
       templateFactory.setPackageName(apiPackage.trim());
-    } else
+    } else {
       templateFactory.setPackageName(Objects.requireNonNullElse(groupId, DEFAULT_OPENAPI_API_PACKAGE));
+    }
   }
 
   private String processModelPackage(final String modelPackage) {
@@ -246,7 +247,7 @@ public class OpenApiGenerator {
       path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(groupId).replaceAll(File.separator));
     } else {
       final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll( File.separator));
+      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll(File.separator));
     }
     return path;
   }
@@ -275,10 +276,10 @@ public class OpenApiGenerator {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
     } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
-      var fieldListIt = schema.getFieldObjectList().listIterator();
+      final var fieldListIt = schema.getFieldObjectList().listIterator();
       if (fieldListIt.hasNext()) {
         do {
-          var field = fieldListIt.next();
+          final var field = fieldListIt.next();
           if (field.isRequired()) {
             generateExceptionTemplate = true;
           }
