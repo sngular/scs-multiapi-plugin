@@ -66,7 +66,7 @@ public interface TestApi {
     value = "/test",
     produces = { "application/json" }
   )
-  default ResponseEntity<Mono< Flux<ApiTestDTO> >> listTest(@ApiIgnore final ServerWebExchange exchange) {
+  default ResponseEntity<Flux<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
