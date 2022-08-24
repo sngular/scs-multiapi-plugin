@@ -2,7 +2,10 @@ package net.coru.api.generator.plugin.model
 
 import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec
 
-class AsyncApiModel {
+class AsyncApiModelExtension {
 
-  List<FileSpec> fileSpecs
+  List<FileSpec> fileSpecs = []
+
+  boolean overWriteModel = false
+
 }

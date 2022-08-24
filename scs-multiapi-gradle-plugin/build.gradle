@@ -1,13 +1,24 @@
 plugins {
-  id 'groovy'
-  id 'java-gradle-plugin'
+  id 'java-library'
   id 'maven-publish'
+  id 'groovy'
+  id 'signing'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 repositories {
   mavenLocal()
   mavenCentral()
 }
+
+def SCSMultiApiPluginGroupId = 'net.coru'
+def SCSMultiApiPluginVersion = '4.0.0'
+def SCSMultiApiPluginArtifact = 'scs-multiapi-gradle-plugin'
+def SCSMultiApiPluginDevelopers = []
 
 def addDependency(configurationName, dependency) {
   def coordinates = [
@@ -22,7 +33,10 @@ def addDependency(configurationName, dependency) {
 
 def effectivePomFile = file('target/effective-pom.xml')
 if (effectivePomFile.file) {
-  def pom = new XmlSlurper().parseText(file('target/effective-pom.xml').text)
+  def pom = new XmlParser().parseText(file('target/effective-pom.xml').text)
+  SCSMultiApiPluginGroupId = pom.groupId.text()
+  SCSMultiApiPluginVersion = pom.version.text()
+  SCSMultiApiPluginArtifact = pom.artifactId.text()
   pom.dependencies.dependency.each { dependency ->
     def scope = dependency.scope.text()
     if (scope == 'compile') {
@@ -58,5 +72,46 @@ task javadocJar(type: Jar) {
 artifacts {
   archives sourcesJar
   archives javadocJar
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      pom {
+        groupId = SCSMultiApiPluginGroupId
+        artifactId = SCSMultiApiPluginArtifact
+        version = SCSMultiApiPluginVersion
+        name = 'SCS MultiApi Plugin'
+        description = 'Grable Plugin for the SCS MultiApi Generator'
+        url = 'https://corunet.github.io/scs-multiapi-plugin/'
+
+        licenses {
+          license {
+            name = 'Mozilla Public License, Version 2.0'
+            url = 'https://www.mozilla.org/en-US/MPL/2.0/'
+          }
+        }
+
+        scm {
+          connection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+          developerConnection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+          url = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+        }
+
+      }
+    }
+  }
+
+  repositories {
+    maven {
+      name = "OSSRH"
+      url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      credentials {
+        username = System.getenv("JIRAID")
+        password = System.getenv("JIRAPASS")
+      }
+    }
+  }
 }
 

@@ -14,7 +14,7 @@
 
   <properties>
     <main.basedir>${basedir}/../..</main.basedir>
-    <gradle.executable>./gradlew</gradle.executable>
+    <gradlew.executable>./gradlew</gradlew.executable>
   </properties>
 
   <dependencies>
@@ -30,7 +30,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>scs-multiapi-plugin-gradle</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-help-plugin</artifactId>
@@ -77,11 +76,24 @@
             <id>gradle</id>
             <phase>prepare-package</phase>
             <configuration>
-              <executable>${gradle.executable}</executable>
+              <executable>${gradlew.executable}</executable>
               <arguments>
                 <argument>clean</argument>
                 <argument>build</argument>
-                <argument>-Pversion=${project.version} --debug</argument>
+                <argument>-Pversion=${project.version}</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>gradle.publish</id>
+            <phase>install</phase>
+            <configuration>
+              <executable>${gradlew.executable}</executable>
+              <arguments>
+                <argument>publishToMavenLocal</argument>
               </arguments>
             </configuration>
             <goals>
