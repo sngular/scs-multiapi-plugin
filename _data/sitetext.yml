@@ -11,7 +11,7 @@ whatfor:
 mainfeatures:
   title: "Main features"
   description:  |
-    Maven plugin code generator, SCS-Maven-Plugin supports:
+    Maven plugin code generator, SCS-MultiApi-Plugin supports:
     
     - Both AsyncApi and OpenApi specifications
     - Process multiple files under one execution
@@ -21,7 +21,7 @@ mainfeatures:
     - Multiple configuration options: Lombock, Reactive...
 
 why:
-  title: "Why SCS-Maven-Plugin?"
+  title: "Why SCS-MultiApi-Plugin?"
   description: "You'll be able to easily:"
   whys:
     - icon: "assets/images/ico-why-1.svg"
