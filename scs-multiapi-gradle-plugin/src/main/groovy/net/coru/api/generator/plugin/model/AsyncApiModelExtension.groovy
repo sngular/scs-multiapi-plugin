@@ -1,11 +1,31 @@
 package net.coru.api.generator.plugin.model
 
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec
+import org.gradle.api.Action
+import org.gradle.util.internal.ConfigureUtil
 
 class AsyncApiModelExtension {
 
-  List<FileSpec> fileSpecs = []
+  List<AsyncApiSpecFile> asyncApiSpecFiles = new ArrayList<>()
 
-  boolean overWriteModel = false
+  Boolean overWriteModel = Boolean.FALSE
 
+  List<AsyncApiSpecFile> getAsyncApiSpecFiles() {
+    return asyncApiSpecFiles
+  }
+
+  Boolean getOverWriteModel() {
+    return overWriteModel
+  }
+
+  void asyncApiSpecFile(Closure configuration) {
+    AsyncApiSpecFile apiSpecFile = new AsyncApiSpecFile()
+    ConfigureUtil.configure(configuration, apiSpecFile)
+    asyncApiSpecFiles.add(apiSpecFile)
+  }
+
+  void asyncApiSpecFile(Action<? super AsyncApiSpecFile> configuration) {
+    AsyncApiSpecFile apiSpecFile = new AsyncApiSpecFile()
+    configuration.execute(apiSpecFile)
+    asyncApiSpecFiles.add(apiSpecFile)
+  }
 }

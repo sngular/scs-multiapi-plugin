@@ -238,8 +238,10 @@ public class AsyncApiGenerator {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(operationParameter));
     } else {
       path = targetFolder.toPath();
-      if (!path.toFile().mkdirs()) {
-        throw new FileSystemException(path.toFile().getName());
+      if (!path.toFile().exists()) {
+        if (!path.toFile().mkdirs()) {
+          throw new FileSystemException(path.toFile().getName());
+        }
       }
       path = path.resolve(convertPackageToTargetPath(operationParameter));
     }

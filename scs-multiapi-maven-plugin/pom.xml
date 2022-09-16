@@ -8,6 +8,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+
   <description>Code generation plugin based on yml files under AsyncApi and OpenApi specifications.</description>
   <url>https://github.com/corunet/scs-multiapi-plugin</url>
   <licenses>
@@ -18,10 +21,7 @@
     </license>
   </licenses>
 
-  <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
-
-  <distributionManagement>
+  <!--  <distributionManagement>
     <repository>
       <id>ossrh</id>
       <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
@@ -30,7 +30,7 @@
       <id>ossrh</id>
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-  </distributionManagement>
+  </distributionManagement>-->
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
@@ -288,7 +288,7 @@
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
-      <plugin>
+      <!--   <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <version>3.0.1</version>
@@ -301,13 +301,13 @@
             <phase>verify</phase>
             <configuration>
               <gpgArguments>
-                <arg>--pinentry-mode</arg>
+                <arg>&#45;&#45;pinentry-mode</arg>
                 <arg>loopback</arg>
               </gpgArguments>
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
     </plugins>
   </build>
 

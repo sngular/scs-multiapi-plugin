@@ -9,9 +9,9 @@ class ScsMultiApi implements Plugin<Project> {
 
   @Override
   void apply(final Project project) {
-    project.extensions.add("openapimodel", OpenApiModelExtension)
-    project.extensions.add("asyncapimodel", AsyncApiModelExtension)
-    project.task("OpenApiTask", type: OpenApiMultiApiTask.class)
-    project.task("AsyncApiTask", type: AsyncApiMultiApiTask.class)
+    project.extensions.create("openapimodel", OpenApiModelExtension)
+    project.extensions.create("asyncapimodel", AsyncApiModelExtension)
+    project.task("openApiTask", type: OpenApiMultiApiTask.class)
+    project.task("asyncApiTask", type: AsyncApiMultiApiTask.class)
   }
 }
