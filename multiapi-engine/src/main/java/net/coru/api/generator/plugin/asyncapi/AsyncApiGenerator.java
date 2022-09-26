@@ -89,7 +89,13 @@ public class AsyncApiGenerator {
 
     for (FileSpec fileParameter : fileSpecsList) {
       setUpTemplate(fileParameter);
-      final Path ymlParentPath = Paths.get(fileParameter.getFilePath()).toAbsolutePath().getParent();
+      String avroFilePath = fileParameter.getFilePath();
+      if (avroFilePath.startsWith("/")) {
+        avroFilePath = avroFilePath.replaceFirst("/", "");
+      } else if (avroFilePath.startsWith(".")) {
+        avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
+      }
+      final Path ymlParentPath = Paths.get(avroFilePath).toAbsolutePath().getParent();
 
       final var file = new File(fileParameter.getFilePath());
       try {
@@ -329,6 +335,8 @@ public class AsyncApiGenerator {
     String namespace = "";
     if (messageContent.startsWith("/")) {
       avroFilePath = avroFilePath.replaceFirst("/", "");
+    } else if (messageContent.startsWith(".")) {
+      avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
     }
     final File avroFile = ymlParentPath.resolve(avroFilePath).toFile();
     final ObjectMapper mapper = new ObjectMapper();

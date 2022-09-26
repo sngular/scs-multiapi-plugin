@@ -8,21 +8,23 @@ import net.coru.api.generator.plugin.model.AsyncApiSpecFile
 import net.coru.api.generator.plugin.model.OperationParameter
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 abstract class AsyncApiMultiApiTask extends DefaultTask {
 
+  @Optional
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
 
   @TaskAction
   def processAsyncApiFile() {
-    def targetFolder = getOutputDir().getAsFile().get()
+    def targetFolder = getOrCreateTargetFolder(getOutputDir())
+    def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
     if (null != asyncApiModelExtension && !asyncApiModelExtension.getAsyncApiSpecFiles().isEmpty()) {
-      def generatedSourcesFolder = targetFolder.absolutePath + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER
-      def asyncApiGen = new AsyncApiGenerator(targetFolder, generatedSourcesFolder, project.getGroup() as String, project.getProjectDir())
+      def asyncApiGen = new AsyncApiGenerator(targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<FileSpec> asyncApiSpecFiles = []
       asyncApiModelExtension.getAsyncApiSpecFiles().forEach(apiSpec -> {
         asyncApiSpecFiles.add(toFileSpec(apiSpec))
@@ -30,6 +32,26 @@ abstract class AsyncApiMultiApiTask extends DefaultTask {
 
       asyncApiGen.processFileSpec(asyncApiSpecFiles)
     }
+  }
+
+  static File getOrCreateTargetFolder(DirectoryProperty outputDir) {
+    def generated = new File("build/generated/")
+    if (outputDir.isPresent()) {
+      generated = outputDir.getAsFile().get()
+    } else {
+      generated.mkdirs()
+    }
+    return generated
+  }
+
+  static def getOrCreateGenerated(DirectoryProperty outputDir) {
+    def generated = new File("generated/sources/annotationProcessor/main")
+    if (outputDir.isPresent()) {
+      generated = outputDir.getAsFile().get()
+    } else {
+      generated.mkdirs()
+    }
+    return generated.absolutePath + "/"
   }
 
   static def toFileSpec(AsyncApiSpecFile apiSpecFile) {
@@ -52,24 +74,21 @@ abstract class AsyncApiMultiApiTask extends DefaultTask {
 
   static OperationParameterObject toOperationParameterObject(OperationParameter parameterObject) {
     def builder = OperationParameterObject.builder()
-    if (!parameterObject.getApiPackage()) {
+    if (parameterObject.getApiPackage()) {
       builder.apiPackage(parameterObject.apiPackage)
     }
 
-    if (!parameterObject.getClassNamePostfix()) {
+    if (parameterObject.getClassNamePostfix()) {
       builder.classNamePostfix(parameterObject.classNamePostfix)
     }
-    if (!parameterObject.getIds()) {
+    if (parameterObject.getIds()) {
       builder.ids(parameterObject.ids)
     }
-    if (!parameterObject.getModelNameSuffix()) {
+    if (parameterObject.getModelNameSuffix()) {
       builder.modelNameSuffix(parameterObject.modelNameSuffix)
     }
-    if (!parameterObject.getModelPackage()) {
+    if (parameterObject.getModelPackage()) {
       builder.modelPackage(parameterObject.modelPackage)
-    }
-    if (!parameterObject.getOperationIds()) {
-      builder.operationIds(parameterObject.operationIds)
     }
 
     return builder.build()

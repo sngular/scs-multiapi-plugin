@@ -6,22 +6,23 @@ import net.coru.api.generator.plugin.openapi.OpenApiGenerator
 import net.coru.api.generator.plugin.openapi.parameter.FileSpec
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 abstract class OpenApiMultiApiTask extends DefaultTask {
 
+  @Optional
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
 
   @TaskAction
   def processOpenApApiFile() {
-    def targetFolder = getOutputDir().getAsFile().get()
+    def targetFolder = getOrCreateTargetFolder(getOutputDir())
+    def generatedDir = getOrCreateGenerated(getOutputDir())
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
     if (null != openApiExtension && !openApiExtension.getOpenApiSpecFiles().isEmpty()) {
-      def generatedSourcesFolder = targetFolder.absolutePath + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER
-      def overWriteFlag = openApiExtension.getOverWriteModel().orElse(false).get()
-      def openApiGen = new OpenApiGenerator(overWriteFlag, generatedSourcesFolder, project.getGroup() as String, targetFolder, project.getProjectDir())
+      def openApiGen = new OpenApiGenerator(openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
       List<FileSpec> openApiSpecFiles = []
       openApiExtension.getOpenApiSpecFiles().forEach(apiSpec -> {
         openApiSpecFiles.add(toFileSpec(apiSpec))
@@ -30,37 +31,57 @@ abstract class OpenApiMultiApiTask extends DefaultTask {
     }
   }
 
+  static File getOrCreateTargetFolder(DirectoryProperty outputDir) {
+    def generated = new File("build/generated/")
+    if (outputDir.isPresent()) {
+      generated = outputDir.getAsFile().get()
+    } else {
+      generated.mkdirs()
+    }
+    return generated
+  }
+
+  static def getOrCreateGenerated(DirectoryProperty outputDir) {
+    def generated = new File("generated/sources/annotationProcessor/main")
+    if (outputDir.isPresent()) {
+      generated = outputDir.getAsFile().get()
+    } else {
+      generated.mkdirs()
+    }
+    return generated.absolutePath
+  }
+
   static def toFileSpec(OpenApiSpecFile openApiSpecFile) {
     def builder = FileSpec.builder()
-    if (openApiSpecFile.filePath.isPresent()) {
-      builder.filePath(openApiSpecFile.filePath.get())
+    if (openApiSpecFile.filePath) {
+      builder.filePath(openApiSpecFile.filePath)
     }
-    if (openApiSpecFile.apiPackage.isPresent()) {
-      builder.apiPackage(openApiSpecFile.apiPackage.get())
+    if (openApiSpecFile.apiPackage) {
+      builder.apiPackage(openApiSpecFile.apiPackage)
     }
-    if (openApiSpecFile.modelPackage.isPresent()) {
-      builder.modelPackage(openApiSpecFile.modelPackage.get())
+    if (openApiSpecFile.modelPackage) {
+      builder.modelPackage(openApiSpecFile.modelPackage)
     }
-    if (openApiSpecFile.modelNamePrefix.isPresent()) {
-      builder.modelNamePrefix(openApiSpecFile.modelNamePrefix.get())
+    if (openApiSpecFile.modelNamePrefix) {
+      builder.modelNamePrefix(openApiSpecFile.modelNamePrefix)
     }
-    if (openApiSpecFile.modelNameSuffix.isPresent()) {
-      builder.modelNameSuffix(openApiSpecFile.modelNameSuffix.get())
+    if (openApiSpecFile.modelNameSuffix) {
+      builder.modelNameSuffix(openApiSpecFile.modelNameSuffix)
     }
-    if (openApiSpecFile.clientPackage.isPresent()) {
-      builder.clientPackage(openApiSpecFile.clientPackage.get())
+    if (openApiSpecFile.clientPackage) {
+      builder.clientPackage(openApiSpecFile.clientPackage)
     }
-    if (openApiSpecFile.callMode.isPresent()) {
-      builder.callMode(openApiSpecFile.callMode.get())
+    if (openApiSpecFile.callMode) {
+      builder.callMode(openApiSpecFile.callMode)
     }
-    if (openApiSpecFile.useTagsGroup.isPresent()) {
-      builder.useTagsGroup(openApiSpecFile.useTagsGroup.get())
+    if (openApiSpecFile.useTagsGroup) {
+      builder.useTagsGroup(openApiSpecFile.useTagsGroup)
     }
-    if (openApiSpecFile.useLombokModelAnnotation.isPresent()) {
-      builder.useLombokModelAnnotation(openApiSpecFile.useLombokModelAnnotation.get())
+    if (openApiSpecFile.useLombokModelAnnotation) {
+      builder.useLombokModelAnnotation(openApiSpecFile.useLombokModelAnnotation)
     }
-    if (openApiSpecFile.isReactive.isPresent()) {
-      builder.isReactive(openApiSpecFile.isReactive.get())
+    if (openApiSpecFile.isReactive) {
+      builder.isReactive(openApiSpecFile.isReactive)
     }
 
     return builder.build()

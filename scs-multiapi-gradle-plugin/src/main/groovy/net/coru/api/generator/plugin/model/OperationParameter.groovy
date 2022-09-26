@@ -12,8 +12,6 @@ class OperationParameter {
 
   String classNamePostfix
 
-  List<String> operationIds
-
   String getIds() {
     return ids
   }
@@ -54,11 +52,4 @@ class OperationParameter {
     this.classNamePostfix = classNamePostfix
   }
 
-  List<String> getOperationIds() {
-    return operationIds
-  }
-
-  void setOperationIds(final List<String> operationIds) {
-    this.operationIds = operationIds
-  }
 }
