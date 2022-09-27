@@ -51,8 +51,6 @@ public class MapperPathUtil {
 
   public static final String INLINE_PARAMETER = "InlineParameter";
 
-  public static final String INTEGER = "integer";
-
   private MapperPathUtil() {}
 
   public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final SpecFile specFile, final List<AuthSchemaObject> authSchemaList) {

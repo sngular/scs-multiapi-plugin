@@ -3,6 +3,7 @@ plugins {
   id 'com.gradle.plugin-publish' version '1.0.0'
   id 'maven-publish'
   id 'groovy'
+  id 'jvm-test-suite'
 }
 
 java {
@@ -13,6 +14,7 @@ java {
 repositories {
   mavenLocal()
   mavenCentral()
+  maven { url 'https://jitpack.io' }
 }
 
 group = 'net.coru'
@@ -53,6 +55,7 @@ if (effectivePomFile.file) {
 
 dependencies {
   implementation localGroovy()
+  implementation 'org.assertj:assertj-core:3.23.1'
 }
 
 jar {
@@ -69,6 +72,10 @@ task sourcesJar(type: Jar) {
 task javadocJar(type: Jar) {
   classifier = "javadoc"
   from javadoc
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
 }
 
 artifacts {
@@ -91,6 +98,33 @@ gradlePlugin {
       implementationClass = 'net.coru.api.generator.plugin.ScsMultiApi'
     }
   }
+}
+
+testing {
+  suites {
+    test {
+      useJUnitJupiter()
+    }
+
+    integrationTest(JvmTestSuite) {
+      dependencies {
+        implementation 'net.coru:scs-multiapi-gradle-plugin:4.0.0'
+        implementation 'org.assertj:assertj-core:3.23.1'
+      }
+
+      targets {
+        all {
+          testTask.configure {
+            shouldRunAfter(test)
+          }
+        }
+      }
+    }
+  }
+}
+
+tasks.named('check') {
+  dependsOn(testing.suites.integrationTest)
 }
 
 publishing {

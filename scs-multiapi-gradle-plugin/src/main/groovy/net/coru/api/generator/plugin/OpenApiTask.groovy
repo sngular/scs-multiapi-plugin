@@ -1,4 +1,9 @@
-  package net.coru.api.generator.plugin
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+package net.coru.api.generator.plugin
 
 import net.coru.api.generator.plugin.model.OpenApiModelExtension
 import net.coru.api.generator.plugin.model.OpenApiSpecFile
@@ -10,7 +15,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
-abstract class OpenApiMultiApiTask extends DefaultTask {
+abstract class OpenApiTask extends DefaultTask {
 
   @Optional
   @OutputDirectory
