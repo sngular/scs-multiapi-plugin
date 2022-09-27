@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
@@ -67,8 +67,8 @@ class OpenApiGeneratorTest {
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpec(final String type, final List<FileSpec> fileSpecList, final Function<Path, Boolean> validation) {
-    openApiGenerator.processFileSpec(fileSpecList);
+  void processFileSpec(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {
+    openApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }
 }

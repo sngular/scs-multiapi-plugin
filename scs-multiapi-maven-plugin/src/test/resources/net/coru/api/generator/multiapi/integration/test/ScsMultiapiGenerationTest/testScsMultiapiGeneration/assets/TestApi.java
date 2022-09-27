@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi;
+package net.coru.generator.multiapi.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +14,9 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testapi.model.ApiErrorDTO;
-import net.coru.multifileplugin.testapi.model.ApiTestDTO;
+import net.coru.generator.multiapi.rest.model.ApiTestInfoDTO;
+import net.coru.generator.multiapi.rest.model.ApiErrorDTO;
+import net.coru.generator.multiapi.rest.model.ApiTestDTO;
 
 public interface TestApi {
 

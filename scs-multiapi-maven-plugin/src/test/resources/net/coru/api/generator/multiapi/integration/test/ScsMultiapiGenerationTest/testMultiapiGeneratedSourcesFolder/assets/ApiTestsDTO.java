@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi.model;
+package net.coru.generator.multiapi.rest.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

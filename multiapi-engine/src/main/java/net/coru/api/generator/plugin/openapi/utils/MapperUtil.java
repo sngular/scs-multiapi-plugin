@@ -13,7 +13,7 @@ import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
@@ -34,7 +34,7 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final Schema<?> schema, final FileSpec fileSpec) {
+  public static String getSimpleType(final Schema<?> schema, final SpecFile specFile) {
     final String type;
     if (NUMBER.equalsIgnoreCase(schema.getType())) {
       if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
@@ -52,14 +52,14 @@ public class MapperUtil {
       }
     } else if (Objects.nonNull(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
-      type = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
+      type = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
     } else {
       type = schema.getType();
     }
     return type;
   }
 
-  public static String getTypeMap(final MapSchema mapSchema, final FileSpec fileSpec) {
+  public static String getTypeMap(final MapSchema mapSchema, final SpecFile specFile) {
     var typeMap = "";
     if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
       typeMap = "String";
@@ -69,13 +69,13 @@ public class MapperUtil {
       final Schema<?> schema = (Schema<?>) mapSchema.getAdditionalProperties();
       if (StringUtils.isNotBlank(schema.get$ref())) {
         final String[] pathObjectRef = schema.get$ref().split("/");
-        typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
+        typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
       }
     }
     return typeMap;
   }
 
-  public static String getTypeArray(final ArraySchema array, final FileSpec fileSpec) {
+  public static String getTypeArray(final ArraySchema array, final SpecFile specFile) {
     var typeArray = "";
     if (array.getItems() instanceof StringSchema) {
       typeArray = "String";
@@ -83,15 +83,15 @@ public class MapperUtil {
       typeArray = "Integer";
     } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
       final String[] pathObjectRef = array.getItems().get$ref().split("/");
-      typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], fileSpec);
+      typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
     }
     return typeArray;
   }
 
-  public static String getPojoName(final String namePojo, final FileSpec fileSpec) {
-    return (StringUtils.isNotBlank(fileSpec.getModelNamePrefix()) ? fileSpec.getModelNamePrefix() : "")
+  public static String getPojoName(final String namePojo, final SpecFile specFile) {
+    return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
            + namePojo
-           + (StringUtils.isNotBlank(fileSpec.getModelNameSuffix()) ? fileSpec.getModelNameSuffix() : "");
+           + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
   }
 
 }

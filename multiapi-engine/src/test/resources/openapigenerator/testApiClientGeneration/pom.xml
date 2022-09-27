@@ -40,14 +40,14 @@
         </executions>
         <configuration>
           <fileSpecs>
-            <fileSpec>
+            <specFile>
               <filePath>api-test.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testapi</apiPackage>
               <modelPackage>net.coru.multifileplugin.testapi.model</modelPackage>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>
               <useLombokModelAnnotation>true</useLombokModelAnnotation>
-            </fileSpec>
+            </specFile>
           </fileSpecs>
         </configuration>
       </plugin>

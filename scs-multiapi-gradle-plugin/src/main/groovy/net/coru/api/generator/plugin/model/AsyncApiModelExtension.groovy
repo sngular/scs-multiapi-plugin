@@ -5,27 +5,27 @@ import org.gradle.util.internal.ConfigureUtil
 
 class AsyncApiModelExtension {
 
-  List<AsyncApiSpecFile> asyncApiSpecFiles = new ArrayList<>()
+  List<AsyncApiSpecFile> specFile = new ArrayList<>()
 
   Boolean overWriteModel = Boolean.FALSE
 
-  List<AsyncApiSpecFile> getAsyncApiSpecFiles() {
-    return asyncApiSpecFiles
+  List<AsyncApiSpecFile> getSpecFile() {
+    return specFile
   }
 
   Boolean getOverWriteModel() {
     return overWriteModel
   }
 
-  void asyncApiSpecFile(Closure configuration) {
+  void specFile(Closure configuration) {
     AsyncApiSpecFile apiSpecFile = new AsyncApiSpecFile()
     ConfigureUtil.configure(configuration, apiSpecFile)
-    asyncApiSpecFiles.add(apiSpecFile)
+    specFile.add(apiSpecFile)
   }
 
-  void asyncApiSpecFile(Action<? super AsyncApiSpecFile> configuration) {
+  void specFile(Action<? super AsyncApiSpecFile> configuration) {
     AsyncApiSpecFile apiSpecFile = new AsyncApiSpecFile()
     configuration.execute(apiSpecFile)
-    asyncApiSpecFiles.add(apiSpecFile)
+    specFile.add(apiSpecFile)
   }
 }

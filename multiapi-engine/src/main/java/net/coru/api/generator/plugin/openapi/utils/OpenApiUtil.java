@@ -29,7 +29,7 @@ import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.exception.FileParseException;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -100,12 +100,12 @@ public class OpenApiUtil {
     return mapByUrl;
   }
 
-  public static OpenAPI getPojoFromSwagger(final FileSpec fileSpec) {
+  public static OpenAPI getPojoFromSwagger(final SpecFile specFile) {
     final OpenAPI openAPI;
     final ParseOptions options = new ParseOptions();
     options.setResolve(true);
     try {
-      final SwaggerParseResult result = new OpenAPIParser().readLocation(readFile(fileSpec.getFilePath()), null, options);
+      final SwaggerParseResult result = new OpenAPIParser().readLocation(readFile(specFile.getFilePath()), null, options);
       openAPI = result.getOpenAPI();
     } catch (final ReadContentException e) {
       throw new FileParseException("when parser the .yaml file ");

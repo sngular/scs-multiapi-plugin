@@ -40,14 +40,14 @@
         </executions>
         <configuration>
           <fileSpecs>
-            <fileSpec>
+            <specFile>
               <filePath>api-test.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testrestclient</apiPackage>
               <modelPackage>net.coru.multifileplugin.testrestclient.model</modelPackage>
               <callMode>true</callMode>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>
-            </fileSpec>
+            </specFile>
           </fileSpecs>
         </configuration>
       </plugin>

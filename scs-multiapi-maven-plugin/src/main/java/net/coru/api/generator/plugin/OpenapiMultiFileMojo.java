@@ -13,7 +13,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.coru.api.generator.plugin.exception.GeneratedSourceFolderException;
 import net.coru.api.generator.plugin.openapi.OpenApiGenerator;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -32,8 +32,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
   private File targetFolder;
 
-  @Parameter(property = "fileSpecs")
-  private List<FileSpec> fileSpecs;
+  @Parameter(property = "specFiles")
+  private List<SpecFile> specFiles;
 
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
@@ -49,8 +49,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     addGeneratedSourcesToProject();
     OpenApiGenerator openApiGenerator = new OpenApiGenerator(overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
                                                                                            targetFolder, project.getBasedir());
-    if (null != fileSpecs && !fileSpecs.isEmpty()) {
-      openApiGenerator.processFileSpec(fileSpecs);
+    if (null != specFiles && !specFiles.isEmpty()) {
+      openApiGenerator.processFileSpec(specFiles);
     } else {
       throw new MojoExecutionException("Code generation failed. Not exists FileSpec configuration to generate package and class");
     }

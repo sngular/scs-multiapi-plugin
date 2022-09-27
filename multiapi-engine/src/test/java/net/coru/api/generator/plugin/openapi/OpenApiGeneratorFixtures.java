@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.CollectionUtils;
 
 public final class OpenApiGeneratorFixtures {
@@ -19,8 +19,8 @@ public final class OpenApiGeneratorFixtures {
 
   final static String TARGET = "target";
 
-  final static List<FileSpec> TEST_ALL_OF = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_ALL_OF = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
           .apiPackage("net.coru.multifileplugin.testapi")
@@ -30,8 +30,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<FileSpec> TEST_ALL_OF_LOMBOK = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_ALL_OF_LOMBOK = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
           .apiPackage("net.coru.multifileplugin.lombok.testapi")
@@ -42,8 +42,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<FileSpec> TEST_OVER_WRITE_MODEL_TRUE = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_OVER_WRITE_MODEL_TRUE = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testOverWriteModelTrue/api-test.yml")
           .apiPackage("net.coru.multifileplugin.testoverwriteapi")
@@ -54,8 +54,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_API_CLIENT_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_API_CLIENT_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiClientGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.testapiclient")
@@ -66,8 +66,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_INLINE_SCHEMA_CREATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_INLINE_SCHEMA_CREATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testInlineSchemaCreation/api-test.yml")
           .apiPackage("net.coru.multifileplugin.inlineschemacreation")
@@ -78,8 +78,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_PARAMETER_WITH_CONTENT_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_PARAMETER_WITH_CONTENT_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiParametersWithContentGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.parameterwithcontent")
@@ -90,8 +90,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_PATH_WITH_SLASH_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_PATH_WITH_SLASH_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathWithSpecialCharGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.pathwithspecialchar")
@@ -102,8 +102,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_API_REACTIVE_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_API_REACTIVE_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiReactiveGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.reactivegeneration")
@@ -115,8 +115,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_API_TAGS_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_API_TAGS_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiTagsGeneration/api-tags-test.yml")
           .apiPackage("net.coru.multifileplugin.tagsgeneration")
@@ -127,8 +127,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_MULTIPLE_REF_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_MULTIPLE_REF_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testMultipleRefGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.multipleref")
@@ -138,8 +138,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_PATH_PARAMETER_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_PATH_PARAMETER_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathParameterGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.pathparameter")
@@ -149,8 +149,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_WEB_CLIENT_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_WEB_CLIENT_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testWebClientApiGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.webclientapi")
@@ -163,8 +163,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.clpkgwebclientapi")
@@ -176,8 +176,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_REST_CLIENT_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_REST_CLIENT_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.restclient")
@@ -190,8 +190,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_ENUMS_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_ENUMS_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.enumgeneration")
@@ -202,8 +202,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_ENUMS_LOMBOK_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_ENUMS_LOMBOK_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.enumlombokgeneration")
@@ -215,8 +215,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_EXTERNAL_REF_GENERATION = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_EXTERNAL_REF_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testExternalRefsGeneration/api-test.yml")
           .apiPackage("net.coru.multifileplugin.externalref")
@@ -227,8 +227,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_ANY_OF_IN_RESPONSE = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_ANY_OF_IN_RESPONSE = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testAnyOfInResponse/api-test.yml")
           .apiPackage("net.coru.multifileplugin.testAnyOfInResponse")
@@ -239,8 +239,8 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<FileSpec> TEST_ONE_OF_IN_RESPONSE = List.of(
-      FileSpec
+  static final List<SpecFile> TEST_ONE_OF_IN_RESPONSE = List.of(
+    SpecFile
           .builder()
           .filePath("openapigenerator/testOneOfInResponse/api-test.yml")
           .apiPackage("net.coru.multifileplugin.testOneOfInResponse")

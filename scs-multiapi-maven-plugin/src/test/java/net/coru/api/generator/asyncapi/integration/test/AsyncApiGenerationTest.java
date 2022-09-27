@@ -35,22 +35,21 @@ public class AsyncApiGenerationTest {
 
     List<String> expectedSecondYmlFileNames = List.of("Producer.java", "IPublishOperation2.java");
 
-    List<File> expectedFirstYmlFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Producer.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java"));
+    List<String> expectedFirstYmlFiles = List.of(
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java",
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java",
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Producer.java",
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java");
 
-    List<File> expectedSecondYmlFiles = List.of(
-        new File(
-            "src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java"),
-        new File("src/test/resources/net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java"));
+    List<String> expectedSecondYmlFiles = List.of(
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java",
+        "net/coru/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
     Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru");
-    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/scsplugin/business_model/model/event/producer2");
+    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/generator/multiapi/model/event/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
     File targetSecondYmlDirectory = pathToTargetSecondYml.toFile();

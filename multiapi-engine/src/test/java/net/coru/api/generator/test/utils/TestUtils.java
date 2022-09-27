@@ -35,11 +35,6 @@ public class TestUtils {
     }
   }
 
-  public static void checkTargetFiles(final List<String> expectedFileNames, final File targetDirectory) {
-    assertThat(targetDirectory).isNotEmptyDirectory();
-    assertThat(targetDirectory.list()).containsAll(expectedFileNames);
-  }
-
   public static InputStream resourceAsFile(String resourceName) {
     return TestUtils.class.getClassLoader().getResourceAsStream(resourceName);
   }

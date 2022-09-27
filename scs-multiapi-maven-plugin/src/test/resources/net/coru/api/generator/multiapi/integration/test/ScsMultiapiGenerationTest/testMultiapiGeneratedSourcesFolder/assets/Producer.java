@@ -1,10 +1,10 @@
-package net.coru.scsplugin.business_model.model.event.producer;
+package net.coru.generator.multiapi.model.event.producer;
 
 import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.coru.scsplugin.business_model.model.event.CreateOrderMapper;
+import net.coru.generator.multiapi.model.event.CreateOrderMapper;
 
 @Configuration
 public class Producer {

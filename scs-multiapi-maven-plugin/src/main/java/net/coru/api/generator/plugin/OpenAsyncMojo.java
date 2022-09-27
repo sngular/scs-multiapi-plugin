@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import net.coru.api.generator.plugin.asyncapi.AsyncApiGenerator;
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.asyncapi.parameter.SpecFile;
 import net.coru.api.generator.plugin.exception.GeneratedSourceFolderException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -30,8 +30,8 @@ public final class OpenAsyncMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
   private File targetFolder;
 
-  @Parameter(property = "fileSpecs")
-  private List<FileSpec> fileSpecs;
+  @Parameter(property = "specFiles")
+  private List<SpecFile> specFiles;
 
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
@@ -43,7 +43,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
     var asyncApiGenerator = new AsyncApiGenerator(targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
 
-    asyncApiGenerator.processFileSpec(fileSpecs);
+    asyncApiGenerator.processFileSpec(specFiles);
 
   }
 

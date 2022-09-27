@@ -1,16 +1,18 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/corunet/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=corunet/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
 [![Maven Central](https://img.shields.io/maven-central/v/net.coru/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.coru%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
-# SCS MultiApi Maven Plugin
+# SCS MultiApi Plugin
 
-This is a Maven plugin designed to help developers automatizing the creation of
-code classes from YML files based on AsyncApi and OpenAPI.
+This is a plugin designed to help developers automatizing the creation of
+code classes from YML files based on AsyncApi and OpenAPI. It is presented in 2 flavours
+Maven and Gradle
 
 ## Index
 
-- [SCS MultiApi Maven Plugin](#scs-multiapi-maven-plugin)
+- [SCS MultiApi Plugin](#scs-multiapi-plugin)
 - [Index](#index)
 - [Main Configuration](#main-configuration)
   - [How to configure the POM file](#how-to-configure-the-pom-file)
+  - [How to configure the build.gradle file](#how-to-configure-the-build.gradle-file)
 - [AsyncApi Generator](#asyncapi-generator)
   - [Configuration](#configuration)
     - [Generated Sources Folder](#generated-sources-folder)
@@ -65,9 +67,9 @@ As commented above, they both could be used at the same time, setting a double
         <goal>asyncapi-generation</goal>
       </goals>
       <configuration>
-        <fileSpecs>
+        <specFiles>
           ...
-        </fileSpecs>
+        </specFiles>
       </configuration>
     </execution>
 
@@ -78,11 +80,11 @@ As commented above, they both could be used at the same time, setting a double
         <goal>openapi-generation</goal>
       </goals>
       <configuration>
-        <fileSpecs>
-          <fileSpec>
+        <specFiles>
+          <specFile>
             ...
-          </fileSpec>
-        </fileSpecs>
+          </specFile>
+        </specFiles>
       </configuration>
     </execution>
   </executions>
@@ -100,10 +102,44 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
+### How to configure the build.gradle file
+
+To maintain the generation of the different types of classes independent, they
+are configured as two different task on the plugin, `openApiTask` and
+`asyncApiTask`.
+Apply the plugin in the `build.gradle` file and invoke the task.
+
+```groovy
+plugins {
+  id 'java'
+  id 'net.coru.scs-multiapi-gradle-plugin' version '4.0.0'
+
+  openapimodel {
+
+  }
+
+  asyncapimodel {
+
+  }
+}
+```
+
+In the example above, you can see a partial configuration for the plugin with
+the extension configuration. Just create the (openapi|asyncapi)model objets to
+configure the tasks.
+
+In the case that you only want to run one of the goals of the plugin, you only
+need to remove the *execution* section that you don't need.
+
+In the [AsyncApi Generator](#asyncapi-generator) and the
+[OpenApi Generator](#openapi-generator) sections, you can find more information
+about how they work, and the parameters and configuration options they offer.
+
 ## AsyncApi Generator
 
 ### Configuration
 
+#### Maven
 The plugin defined `phase` and `goal` parameters are expected to be
 *generate-sources* and *asyncapi-generation*, as they are the only values for
 which the plugin is designed.
@@ -120,11 +156,11 @@ which the plugin is designed.
       <goal>asyncapi-generation</goal>
     </goals>
     <configuration>
-      <fileSpecs>
-        <fileSpec>
+      <specFiles>
+        <specFile>
           <filePath>PATH_TO_YML</filePath>
-        </fileSpec>
-        <fileSpec>
+        </specFile>
+        <specFile>
           <filePath>PATH_TO_YML</filePath>
           <consumer>
             <ids>publishOperation</ids>
@@ -138,8 +174,8 @@ which the plugin is designed.
             <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
             <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </supplier>
-        </fileSpec>
-      </fileSpecs>
+        </specFile>
+      </specFiles>
       <generatedSourcesFolder>sources-generated</generatedSourcesFolder>
     </configuration>
   </execution>
@@ -147,11 +183,29 @@ which the plugin is designed.
 </plugin>
 ```
 
-As you can see in the example above, there is a main parameter **fileSpecs**
-that receives a list of **fileSpec** attributes groups, so you can set as many
+#### Gradle
+
+In this case we have an extension model to fulfill. Similar to the Maven one.
+
+```groovy
+openapimodel {
+	specFile {
+		{
+			filePath = './src/main/resources/api/rest/api-rest.yml'
+			apiPackage = 'net.coru.world_domination.api'
+			modelPackage = 'net.coru.world_domination.model'
+			useTagsGroup = true
+		}
+		overWriteModel = true
+	}
+}
+```
+
+As you can see in the example above, there is a main parameter **specFiles**
+that receives a list of **specFile** attributes groups, so you can set as many
 YML files as you want.
 
-**fileSpecs** could be configured in two different ways:
+**specFiles** could be configured in two different ways:
 
 1. The first one is to configure only the YML file. This is made using the
 **filePath** parameter, that expects to receive the path to the file. Using
@@ -162,16 +216,16 @@ its explained in [apiPackage](#how-apiPackage-is-setted) and
 This way it's limited to the usage of Consumer and Supplier methods.
 
   ```xml
-  <fileSpec>
+  <specFile>
       <filePath>PATH_TO_YML</filePath>
-  </fileSpec>
+  </specFile>
   ```
 
 2. The second one is to configure the YML file with the consumers, supplier
 producers and streamBrige producers that you want to generate.
 
-``````xml
-<fileSpec>
+```xml
+<specFile>
     <filePath>PATH_TO_YML</filePath>
     <consumer>
         <ids>publishOperation</ids>
@@ -190,8 +244,32 @@ producers and streamBrige producers that you want to generate.
         <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
         <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
     </streamBridge>
-</fileSpec>
-``````
+</specFile>
+```
+
+```groovy
+	specFile {
+		{
+			filePath = './src/main/resources/api/event/event-api.yml'
+			consumer {
+				ids = 'publishOperation'
+				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.consumer'
+				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+			}
+            supplier {
+				ids = 'subscribeOperation'
+				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
+				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+			}
+			streamBridge {
+				ids = 'streamBridgeOperation'
+				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
+				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+			}
+		}
+		overWriteModel = true
+	}
+```
 
 As you can see in the example above, there are three blocks of parameters that
 can be configured in the plugin.
@@ -236,7 +314,7 @@ generated.
 
 #### Generated Sources Folder
 
-There is also an independent parameter that affects to all the *fileSpecs*
+There is also an independent parameter that affects to all the *specFiles*
 generated, which is called **generatedSourcesFolder**. This parameter expects
 to receive a string, that could include letters, numbers and `-`, with the
 name of the folder where generated sources by the plugin will be located.
@@ -320,9 +398,9 @@ public class StreamTopicListenerConsumer {
 }
 ```
 
-This sample class, is related to the previosly used YML file, and in it you
+This sample class, is related to the previously used YML file, and in it, you
 could see that it came fully implemented, based on the related Interface that
-lets the personalitation and implementation to the user. Also, in this example
+lets the personalization and implementation to the user. Also, in this example
 is possible to see how the YML attribute 'operationId' is used to name the
 methods as `Consumer'OperationId'` or `Publisher'OperationId'`.
 
@@ -471,34 +549,47 @@ dependencies will be necessary, for example:
 responses in Mono/Flux Reactor types or use them for external calls through
 Spring WebClient.
 
-After you have these installed, you need to add this plugin in your pom.xml
+After you have these installed, you need to add this plugin in your pom.xml or build.gradle
 file. Here is an example of a basic configuration:
 
 ```xml
 <plugin>
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.2.0</version>
+  <version>4.0.0</version>
   <executions>
     <execution>
         <goals>
             <goal>openapi-generation</goal>
         </goals>
         <configuration>
-            <fileSpecs>
-                <fileSpec>
+            <specFiles>
+                <specFile>
                     <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
                     <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
                     <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
                     <modelNameSuffix>DTO</modelNameSuffix>
-                </fileSpec>
-            </fileSpecs>
+                </specFile>
+            </specFiles>
         </configuration>
     </execution>
   </executions>
 </plugin>
 ```
 
+```groovy
+openapimodel {
+    specFile {
+      {
+        filePath = './src/main/resources/api/api.yml'
+        apiPackage = 'net.coru.apigenerator.openapi.api'
+        modelPackage = 'net.coru.apigenerator.openapi.api.model'
+        useTagsGroup = true
+      }
+    overWriteModel = true
+    }
+}
+```
 ### Initial Considerations
 
 Before using this plugin we have to warn that not all the complexity and
@@ -519,27 +610,39 @@ operational and general level.
 ### Usage
 
 This plugin allows us to create multiple apis with just one maven clean
-install execution, in this way the user can configure several fileSpecs tags
+install execution, in this way the user can configure several specFiles tags
 with different uses, thus generating Apis in the two possible modes: send or
 receive calls, depending on the options of configuration selected in said
-fileSpecs.
+specFiles.
 
 ```xml
 <configuration>
-    <fileSpecs>
-        <fileSpec>
+    <specFiles>
+        <specFile>
             <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
             <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
             <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
             <modelNameSuffix>DTO</modelNameSuffix>
-        </fileSpec>
-    </fileSpecs>
+        </specFile>
+    </specFiles>
 </configuration>
 ```
-
-To customize these fileSpecs tags we are going to specify them inside the
-configuration tag, we must declare the fileSpecs tag that contains all files
-that will be used. Each fileSpec has their own configuration:
+```groovy
+openapimodel {
+  specFile {
+    {
+      filePath = './src/main/resources/api/api.yml'
+      apiPackage = 'net.coru.apigenerator.openapi.api'
+      modelPackage = 'net.coru.apigenerator.openapi.api.model'
+      useTagsGroup = true
+    }
+    overWriteModel = true
+  }
+}
+```
+To customize these specFiles tags we are going to specify them inside the
+configuration tag, we must declare the specFiles tag that contains all files
+that will be used. Each specFile has their own configuration:
 
 | Name                     | Description                                                                                                                                                                                         | Example                                           |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
@@ -558,9 +661,9 @@ created within the specified path.This model will be created with the indicated
 prefixes and suffixes and the instances and imports will be made to that model
 within the corresponding Api.
 
-There are two properties configured outside the fileSpecs, the path where the
+There are two properties configured outside the specFiles, the path where the
 RestClient and the WebClient will be located, if this option is set in any
-of the fileSpecs, and the name of the folder where the generated sources will
+of the specFiles, and the name of the folder where the generated sources will
 be saved in the api of the project.
 
 | Name                                                | Description                                                                                                                                                                                                                                                                     | Example                              |

@@ -1,8 +1,8 @@
 package net.coru.api.generator.plugin
 
 import net.coru.api.generator.plugin.asyncapi.AsyncApiGenerator
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec
 import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject
+import net.coru.api.generator.plugin.asyncapi.parameter.SpecFile
 import net.coru.api.generator.plugin.model.AsyncApiModelExtension
 import net.coru.api.generator.plugin.model.AsyncApiSpecFile
 import net.coru.api.generator.plugin.model.OperationParameter
@@ -23,10 +23,10 @@ abstract class AsyncApiMultiApiTask extends DefaultTask {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
     def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
-    if (null != asyncApiModelExtension && !asyncApiModelExtension.getAsyncApiSpecFiles().isEmpty()) {
+    if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFile().isEmpty()) {
       def asyncApiGen = new AsyncApiGenerator(targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
-      List<FileSpec> asyncApiSpecFiles = []
-      asyncApiModelExtension.getAsyncApiSpecFiles().forEach(apiSpec -> {
+      List<SpecFile> asyncApiSpecFiles = []
+      asyncApiModelExtension.getSpecFile().forEach(apiSpec -> {
         asyncApiSpecFiles.add(toFileSpec(apiSpec))
       })
 
@@ -55,7 +55,7 @@ abstract class AsyncApiMultiApiTask extends DefaultTask {
   }
 
   static def toFileSpec(AsyncApiSpecFile apiSpecFile) {
-    def builder = FileSpec.builder()
+    def builder = SpecFile.builder()
     if (!apiSpecFile.filePath.isEmpty()) {
       builder.filePath(apiSpecFile.getFilePath())
     }

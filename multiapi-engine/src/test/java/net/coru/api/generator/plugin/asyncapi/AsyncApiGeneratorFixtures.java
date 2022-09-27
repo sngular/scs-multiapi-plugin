@@ -9,13 +9,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
 import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import net.coru.api.generator.plugin.asyncapi.parameter.SpecFile;
 
 public class AsyncApiGeneratorFixtures {
 
-  final static List<FileSpec> TEST_FILE_GENERATION = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_FILE_GENERATION = List.of(
+    SpecFile
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGeneration/event-api.yml")
           .consumer(OperationParameterObject.builder()
@@ -34,8 +34,8 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
-  final static List<FileSpec> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
+    SpecFile
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
           .consumer(OperationParameterObject.builder()
@@ -51,8 +51,8 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
-  final static List<FileSpec> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
+    SpecFile
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationStreamBridge/event-api.yml")
           .consumer(OperationParameterObject.builder()
@@ -70,8 +70,8 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
-  final static List<FileSpec> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
-      FileSpec
+  final static List<SpecFile> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
+    SpecFile
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithOutOperationIds/event-api.yml")
           .consumer(OperationParameterObject.builder()

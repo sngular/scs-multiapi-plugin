@@ -25,8 +25,8 @@ import net.coru.api.generator.plugin.asyncapi.exception.DuplicateClassException;
 import net.coru.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import net.coru.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
-import net.coru.api.generator.plugin.asyncapi.parameter.FileSpec;
 import net.coru.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import net.coru.api.generator.plugin.asyncapi.parameter.SpecFile;
 import net.coru.api.generator.plugin.asyncapi.template.TemplateFactory;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -83,11 +83,11 @@ public class AsyncApiGenerator {
     targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
   }
 
-  public void processFileSpec(final List<FileSpec> fileSpecsList) {
+  public void processFileSpec(final List<SpecFile> specsListFile) {
 
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
-    for (FileSpec fileParameter : fileSpecsList) {
+    for (SpecFile fileParameter : specsListFile) {
       setUpTemplate(fileParameter);
       String avroFilePath = fileParameter.getFilePath();
       if (avroFilePath.startsWith("/")) {
@@ -116,11 +116,11 @@ public class AsyncApiGenerator {
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
             if (channel.has(SUBSCRIBE)) {
-              checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
+              checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
               processSubscribeMethod(channelPayload, null, ymlParentPath);
               addProcessedClassesAndPackagesToGlobalVariables(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, CONSUMER_CLASS_NAME);
             } else {
-              checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
+              checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
               processSupplierMethod(channelPayload, null, ymlParentPath);
               addProcessedClassesAndPackagesToGlobalVariables(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
             }
@@ -136,18 +136,18 @@ public class AsyncApiGenerator {
   }
 
   private void processOperation(
-      final FileSpec fileParameter, final Path ymlParentPath, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload)
+      final SpecFile fileParameter, final Path ymlParentPath, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload)
       throws IOException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
-      checkClassPackageDuplicate(fileParameter.getConsumer().getClassNamePostfix(), fileParameter.getConsumer().getApiPackage(), CONSUMER_CLASS_NAME);
+      checkClassPackageDuplicate(fileParameter.getConsumer().getClassNamePostfix(), fileParameter.getConsumer().getApiPackage());
       processSubscribeMethod(channelPayload, fileParameter.getConsumer().getModelPackage(), ymlParentPath);
       addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getConsumer().getClassNamePostfix(), fileParameter.getConsumer().getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
-      checkClassPackageDuplicate(fileParameter.getSupplier().getClassNamePostfix(), fileParameter.getSupplier().getApiPackage(), SUPPLIER_CLASS_NAME);
+      checkClassPackageDuplicate(fileParameter.getSupplier().getClassNamePostfix(), fileParameter.getSupplier().getApiPackage());
       processSupplierMethod(channelPayload, fileParameter.getSupplier().getModelPackage(), ymlParentPath);
       addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getSupplier().getClassNamePostfix(), fileParameter.getSupplier().getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
-      checkClassPackageDuplicate(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
+      checkClassPackageDuplicate(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage());
       processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
       addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
@@ -193,20 +193,20 @@ public class AsyncApiGenerator {
     return operationId;
   }
 
-  private void setUpTemplate(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void setUpTemplate(final SpecFile fileParameter) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
   }
 
-  private void processFilePaths(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void processFilePaths(final SpecFile fileParameter) {
     templateFactory.setSupplierFilePath(processPath(fileParameter.getSupplier()));
     templateFactory.setStreamBridgeFilePath(processPath(fileParameter.getStreamBridge()));
     templateFactory.setSubscribeFilePath(processPath(fileParameter.getConsumer()));
   }
 
-  private void processEntitiesSuffix(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void processEntitiesSuffix(final SpecFile fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
                                                   ? fileParameter.getSupplier().getModelNameSuffix() : null);
     templateFactory.setStreamBridgeEntitiesSuffix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getModelNameSuffix() != null
@@ -215,7 +215,7 @@ public class AsyncApiGenerator {
                                                    ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
 
-  private void checkClassPackageDuplicate(final String className, final String apiPackage, final String defaultClassName) {
+  private void checkClassPackageDuplicate(final String className, final String apiPackage) {
     if (className != null && processedClassnames.contains(className)
         && apiPackage != null && processedApiPackages.contains(apiPackage)
         && processedClassnames.lastIndexOf(className) == processedApiPackages.lastIndexOf(apiPackage)) {
@@ -228,7 +228,7 @@ public class AsyncApiGenerator {
     processedApiPackages.add(apiPackage != null ? apiPackage : DEFAULT_ASYNCAPI_API_PACKAGE);
   }
 
-  private void processClassNames(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void processClassNames(final SpecFile fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null
                                              ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null
@@ -274,7 +274,7 @@ public class AsyncApiGenerator {
     return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, "/");
   }
 
-  private void processPackage(final net.coru.api.generator.plugin.asyncapi.parameter.FileSpec fileParameter) {
+  private void processPackage(final SpecFile fileParameter) {
     templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
     templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
     templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));

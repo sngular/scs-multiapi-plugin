@@ -39,20 +39,20 @@
           </execution>
         </executions>
         <configuration>
-          <fileSpecs>
-            <fileSpec>
+          <specFiles>
+            <specFile>
               <filePath>multi-test-first.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testmultifile.first</apiPackage>
               <modelPackage>net.coru.multifileplugin.testmultifile.first.model</modelPackage>
               <modelNameSuffix>FirstDTO</modelNameSuffix>
-            </fileSpec>
-            <fileSpec>
+            </specFile>
+            <specFile>
               <filePath>multi-test-second.yml</filePath>
               <apiPackage>net.coru.multifileplugin.testmultifile.second</apiPackage>
               <modelPackage>net.coru.multifileplugin.testmultifile.second.model</modelPackage>
               <modelNameSuffix>SecondDTO</modelNameSuffix>
-            </fileSpec>
-          </fileSpecs>
+            </specFile>
+          </specFiles>
         </configuration>
       </plugin>
     </plugins>

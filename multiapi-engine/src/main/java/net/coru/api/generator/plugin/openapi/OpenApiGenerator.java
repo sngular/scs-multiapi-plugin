@@ -31,7 +31,7 @@ import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.GlobalObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import net.coru.api.generator.plugin.openapi.template.TemplateFactory;
 import net.coru.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import net.coru.api.generator.plugin.openapi.utils.MapperContentUtil;
@@ -87,42 +87,42 @@ public class OpenApiGenerator {
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
   }
 
-  public void processFileSpec(final List<FileSpec> fileSpecsList) {
+  public void processFileSpec(final List<SpecFile> specsListFile) {
 
-    for (FileSpec fileSpec : fileSpecsList) {
+    for (SpecFile specFile : specsListFile) {
       generateExceptionTemplate = false;
-      useLombok = Boolean.TRUE.equals(fileSpec.isUseLombokModelAnnotation());
+      useLombok = Boolean.TRUE.equals(specFile.isUseLombokModelAnnotation());
       try {
-        processPackage(fileSpec.getApiPackage());
-        final String filePathToSave = processPath(fileSpec.getApiPackage(), false);
-        processFile(fileSpec, filePathToSave);
-        createClients(fileSpec);
+        processPackage(specFile.getApiPackage());
+        final String filePathToSave = processPath(specFile.getApiPackage(), false);
+        processFile(specFile, filePathToSave);
+        createClients(specFile);
       } catch (final TemplateException | IOException e) {
         throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
       }
     }
   }
 
-  private void processFile(final FileSpec fileSpec, final String filePathToSave) throws TemplateException, IOException {
+  private void processFile(final SpecFile specFile, final String filePathToSave) throws TemplateException, IOException {
 
-    final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(fileSpec);
-    final String clientPackage = fileSpec.getClientPackage();
+    final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
+    final String clientPackage = specFile.getClientPackage();
 
-    if (fileSpec.isCallMode()) {
+    if (specFile.isCallMode()) {
       templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
-      isWebClient = fileSpec.isReactive();
-      isRestClient = !fileSpec.isReactive();
+      isWebClient = specFile.isReactive();
+      isRestClient = !specFile.isReactive();
     }
 
-    createApiTemplate(fileSpec, filePathToSave, openAPI);
+    createApiTemplate(specFile, filePathToSave, openAPI);
 
-    createModelTemplate(fileSpec, openAPI);
+    createModelTemplate(specFile, openAPI);
 
   }
 
-  private void createClients(final FileSpec fileSpec) {
-    final String clientPackage = fileSpec.getClientPackage();
+  private void createClients(final SpecFile specFile) {
+    final String clientPackage = specFile.getClientPackage();
 
     if (isWebClient || isRestClient) {
       final String clientPath = processPath(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE, false);
@@ -133,15 +133,15 @@ public class OpenApiGenerator {
         if (Boolean.TRUE.equals(isRestClient)) {
           templateFactory.fillTemplateRestClient(clientPath);
         }
-        createAuthTemplates(fileSpec);
+        createAuthTemplates(specFile);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
     }
   }
 
-  private void createAuthTemplates(final FileSpec fileSpec) throws TemplateException, IOException {
-    final String clientPackage = fileSpec.getClientPackage();
+  private void createAuthTemplates(final SpecFile specFile) throws TemplateException, IOException {
+    final String clientPackage = specFile.getClientPackage();
     final var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
     final String authFileToSave = processPath(authFileRoot, false);
 
@@ -155,23 +155,23 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createApiTemplate(final FileSpec fileSpec, final String filePathToSave, final OpenAPI openAPI) {
-    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, fileSpec.isUseTagsGroup());
+  private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final OpenAPI openAPI) {
+    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
-    final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, fileSpec, authSchemaList);
+    final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, specFile, authSchemaList);
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
-      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, fileSpec, apisEntry, globalObject);
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
-        templateFactory.fillTemplate(filePathToSave, fileSpec, javaFileName, pathObjects, authObject);
+        templateFactory.fillTemplate(filePathToSave, specFile, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
 
-      if (Boolean.TRUE.equals(fileSpec.isCallMode())) {
+      if (Boolean.TRUE.equals(specFile.isCallMode())) {
         addAuthentications(authObject);
       }
     }
@@ -189,17 +189,17 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createModelTemplate(final FileSpec fileSpec, final OpenAPI openAPI) throws TemplateException, IOException {
+  private void createModelTemplate(final SpecFile specFile, final OpenAPI openAPI) throws TemplateException, IOException {
 
-    final String fileModelToSave = processPath(fileSpec.getModelPackage(), true);
-    final var modelPackage = processModelPackage(fileSpec.getModelPackage());
+    final String fileModelToSave = processPath(specFile.getModelPackage(), true);
+    final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
     templateFactory.setModelPackageName(modelPackage);
 
     if (Boolean.TRUE.equals(overwriteModel)) {
-      processModelsWhenOverWriteIsTrue(fileSpec, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
+      processModelsWhenOverWriteIsTrue(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
     } else {
-      processWhenOverwriteModelIsFalse(fileSpec, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
+      processWhenOverwriteModelIsFalse(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
     }
   }
 
@@ -253,15 +253,15 @@ public class OpenApiGenerator {
   }
 
   private void processModelsWhenOverWriteIsTrue(
-      final FileSpec fileSpec, final OpenAPI openAPI, final String fileModelToSave,
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
       final String modelPackage,
       final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, fileSpec, modelPackage);
+      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.isUseLombokModelAnnotation(), basicSchemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), basicSchemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
@@ -289,7 +289,7 @@ public class OpenApiGenerator {
   }
 
   private void processWhenOverwriteModelIsFalse(
-      final FileSpec fileSpec, final OpenAPI openAPI,
+      final SpecFile specFile, final OpenAPI openAPI,
       final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
@@ -299,10 +299,10 @@ public class OpenApiGenerator {
         throw new DuplicateModelClassException(schemaName, modelPackage);
       }
       final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                 fileSpec, modelPackage);
+                                                                                 specFile, modelPackage);
       checkRequiredOrCombinatorExists(basicSchemaObject);
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, fileSpec.isUseLombokModelAnnotation(), basicSchemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), basicSchemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }

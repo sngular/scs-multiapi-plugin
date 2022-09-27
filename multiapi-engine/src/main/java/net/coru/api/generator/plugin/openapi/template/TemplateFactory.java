@@ -24,9 +24,11 @@ import net.coru.api.generator.plugin.openapi.exception.OverwritingApiFilesExcept
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
 import net.coru.api.generator.plugin.openapi.model.PathObject;
 import net.coru.api.generator.plugin.openapi.model.SchemaObject;
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec;
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 
 public class TemplateFactory {
+
+  public static final String JAVA_EXTENSION = ".java";
 
   private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_27);
 
@@ -46,7 +48,7 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
-      final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + ".java").toString();
+      final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
     }
@@ -80,33 +82,33 @@ public class TemplateFactory {
 
   public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
-    final var nameAuthClass = authName + ".java";
+    final var nameAuthClass = authName + JAVA_EXTENSION;
     final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
     writeTemplateToFile(createNameTemplate(authName), root, pathToSaveMainClass);
 
   }
 
   public final void fillTemplate(
-      final String filePathToSave, final FileSpec fileSpec, final String className,
+      final String filePathToSave, final SpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("pathObjects", pathObjects);
 
-    if (Objects.nonNull(fileSpec.getApiPackage())) {
-      root.put("packageApi", fileSpec.getApiPackage());
+    if (Objects.nonNull(specFile.getApiPackage())) {
+      root.put("packageApi", specFile.getApiPackage());
     }
-    if (Objects.nonNull(fileSpec.getModelPackage())) {
-      root.put("packageModel", fileSpec.getModelPackage());
+    if (Objects.nonNull(specFile.getModelPackage())) {
+      root.put("packageModel", specFile.getModelPackage());
     }
     final File fileToSave = new File(filePathToSave);
 
-    if (fileSpec.isCallMode()) {
+    if (specFile.isCallMode()) {
       root.put("authObject", authObject);
     }
 
-    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + ".java").toString();
-    writeTemplateToFile(fileSpec.isCallMode() ? getTemplateClientApi(fileSpec) : getTemplateApi(fileSpec), root, pathToSaveMainClass);
+    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + JAVA_EXTENSION).toString();
+    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), root, pathToSaveMainClass);
 
   }
 
@@ -147,12 +149,12 @@ public class TemplateFactory {
     return "template" + classNameAuth + ".ftlh";
   }
 
-  private String getTemplateClientApi(final FileSpec fileSpec) {
-    return fileSpec.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+  private String getTemplateClientApi(final SpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
   }
 
-  private String getTemplateApi(final FileSpec fileSpec) {
-    return fileSpec.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
+  private String getTemplateApi(final SpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
 }

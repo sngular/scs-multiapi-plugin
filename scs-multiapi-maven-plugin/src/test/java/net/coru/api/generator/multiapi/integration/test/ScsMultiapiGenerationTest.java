@@ -53,45 +53,44 @@ public class ScsMultiapiGenerationTest {
 
     List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
-    List<File> expectedConsumerFiles = List.of(new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
-                                                        "/" + testName + "/assets/IPublishOperation.java"),
-                                               new File(
-                                                   "src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "" +
-                                                   "/assets/TestClassName.java"));
+    List<String> expectedConsumerFiles = List.of("net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
+                                                        "/" + testName + "/assets/IPublishOperation.java",
+                                               
+                                                   "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "" +
+                                                   "/assets/TestClassName.java");
 
-    List<File> expectedProducerFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ISubscribeOperation.java"),
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/Producer.java"));
+    List<String> expectedProducerFiles = List.of(
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ISubscribeOperation.java",
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/Producer.java");
 
     List<String> expectedFileNames = List.of("TestApi.java");
 
-    List<File> expectedFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets" +
-                 "/TestApi.java"));
+    List<String> expectedFiles = List.of(
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/TestApi.java");
 
     List<String> expectedModelFileNames = List.of("ApiErrorDTO.java", "ApiTestDTO.java", "ApiTestInfoDTO.java");
 
-    List<File> expectedModelFiles = List.of(
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiErrorDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestInfoDTO.java"),
-        new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestsDTO.java")
+    List<String> expectedModelFiles = List.of(
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiErrorDTO.java",
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestDTO.java",
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestInfoDTO.java",
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestsDTO.java"
     );
 
     List<String> expectedExceptionFilenames = List.of("ModelClassException.java");
 
-    List<File> expectedExceptionFiles = List.of(new File("src/test/resources/net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets" +
-                                                         "/ModelClassException.java"));
+    List<String> expectedExceptionFiles = List.of("net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets" +
+                                                         "/ModelClassException.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetConsumer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/scsplugin/business_model/model/event/consumer");
-    Path pathToTargetProducer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/scsplugin/business_model/model/event/producer");
+    Path pathToTargetConsumer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/generator/multiapi/model/event/consumer");
+    Path pathToTargetProducer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/generator/multiapi/model/event/producer");
 
-    Path pathToTargetApi = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi");
-    Path pathToTargetModel = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi/model");
-    Path pathToTargetException = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/multifileplugin/testapi/model/exception");
+    Path pathToTargetApi = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/generator/multiapi/rest");
+    Path pathToTargetModel = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/generator/multiapi/rest/model");
+    Path pathToTargetException = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/net/coru/generator/multiapi/rest/model/exception");
 
     File targetConsumerDirectory = pathToTargetConsumer.toFile();
     File targetProducerDirectory = pathToTargetProducer.toFile();

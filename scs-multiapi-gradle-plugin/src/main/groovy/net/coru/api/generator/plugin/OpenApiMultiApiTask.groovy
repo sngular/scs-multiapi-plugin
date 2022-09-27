@@ -1,9 +1,9 @@
-package net.coru.api.generator.plugin
+  package net.coru.api.generator.plugin
 
 import net.coru.api.generator.plugin.model.OpenApiModelExtension
 import net.coru.api.generator.plugin.model.OpenApiSpecFile
 import net.coru.api.generator.plugin.openapi.OpenApiGenerator
-import net.coru.api.generator.plugin.openapi.parameter.FileSpec
+import net.coru.api.generator.plugin.openapi.parameter.SpecFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Optional
@@ -21,10 +21,10 @@ abstract class OpenApiMultiApiTask extends DefaultTask {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
     def generatedDir = getOrCreateGenerated(getOutputDir())
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
-    if (null != openApiExtension && !openApiExtension.getOpenApiSpecFiles().isEmpty()) {
+    if (null != openApiExtension && !openApiExtension.getSpecFile().isEmpty()) {
       def openApiGen = new OpenApiGenerator(openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
-      List<FileSpec> openApiSpecFiles = []
-      openApiExtension.getOpenApiSpecFiles().forEach(apiSpec -> {
+      List<SpecFile> openApiSpecFiles = []
+      openApiExtension.getSpecFile().forEach(apiSpec -> {
         openApiSpecFiles.add(toFileSpec(apiSpec))
       })
       openApiGen.processFileSpec(openApiSpecFiles)
@@ -52,7 +52,7 @@ abstract class OpenApiMultiApiTask extends DefaultTask {
   }
 
   static def toFileSpec(OpenApiSpecFile openApiSpecFile) {
-    def builder = FileSpec.builder()
+    def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
     }

@@ -1,6 +1,6 @@
-package net.coru.scsplugin.business_model.model.event.producer;
+package net.coru.generator.multiapi.model.event.producer;
 
-import net.coru.scsplugin.business_model.model.event.CreateOrderMapper;
+import net.coru.generator.multiapi.model.event.CreateOrderMapper;
 
 public interface ISubscribeOperation {
 

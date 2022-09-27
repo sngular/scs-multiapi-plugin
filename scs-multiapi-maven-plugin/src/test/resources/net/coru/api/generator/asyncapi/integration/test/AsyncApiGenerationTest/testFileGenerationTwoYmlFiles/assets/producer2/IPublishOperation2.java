@@ -1,6 +1,6 @@
-package net.coru.scsplugin.business_model.model.event.producer2;
+package net.coru.generator.multiapi.model.event.producer2;
 
-import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
+import net.coru.generator.multiapi.model.event.OrderCreatedDTO;
 
 public interface IPublishOperation2 {
 

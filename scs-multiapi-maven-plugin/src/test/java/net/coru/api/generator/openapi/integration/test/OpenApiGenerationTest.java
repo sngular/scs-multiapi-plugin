@@ -12,6 +12,7 @@ import static net.coru.api.generator.test.utils.TestUtils.validateFiles;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import com.soebes.itf.jupiter.extension.MavenGoal;
@@ -27,25 +28,17 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 @Execution(ExecutionMode.SAME_THREAD)
 public class OpenApiGenerationTest {
 
-  private final String DEFAULT_TARGET_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi";
-
-  private final String DEFAULT_MODEL_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model";
-
-  private final String DEFAULT_EXCEPTION_API = "target/generated-sources/apigenerator/net/coru/multifileplugin/testapi/model/exception";
-
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<File> expectedFileFirst = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                    "/TestFirstApi.java"));
-    List<File> expectedFileSecond = List.of(new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                     "/TestSecondApi.java"));
+    List<String> expectedFileFirst = Collections.singletonList( "net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+                                                                 "/TestFirstApi.java");
+    List<String> expectedFileSecond = Collections.singletonList("net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+                                                     "/TestSecondApi.java");
 
-    List<File> expectedExceptionFilesFirst = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java"));
+    List<String> expectedExceptionFilesFirst = Collections.singletonList("net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");
 
-    List<File> expectedExceptionFilesSecond = List.of(
-        new File("src/test/resources/net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java"));
+    List<String> expectedExceptionFilesSecond = Collections.singletonList("net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
