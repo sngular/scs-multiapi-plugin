@@ -72,7 +72,7 @@ public class ApiWebClient {
     authentications = Collections.unmodifiableMap(authentications);
   }
 
-  public ApiWebClient(Map<String, Authentication> authentications) {
+  public ApiWebClient(final Map<String, Authentication> authentications) {
     this.dateFormat = createDefaultDateFormat();
     this.objectMapper = createDefaultObjectMapper(this.dateFormat);
     this.webClient = buildWebClient(this.objectMapper);
@@ -86,7 +86,7 @@ public class ApiWebClient {
         .withColonInTimeZone(true);
 
       @Override
-      public Date parse(String source) {
+      public Date parse(final String source) {
         return parse(source, new ParsePosition(0));
       }
 
@@ -105,7 +105,7 @@ public class ApiWebClient {
     return dateFormat;
   }
 
-  private static ObjectMapper createDefaultObjectMapper(DateFormat dateFormat) {
+  private static ObjectMapper createDefaultObjectMapper(final DateFormat dateFormat) {
     if (null == dateFormat) {
      dateFormat = createDefaultDateFormat();
     }
@@ -116,7 +116,7 @@ public class ApiWebClient {
     return mapper;
   }
 
-  private static WebClient buildWebClient(ObjectMapper mapper) {
+  private static WebClient buildWebClient(final ObjectMapper mapper) {
     ExchangeStrategies strategies = ExchangeStrategies
       .builder()
       .codecs(clientDefaultCodecsConfigurer -> {
@@ -127,7 +127,7 @@ public class ApiWebClient {
     return webClientBuilder.build();
   }
 
-  public ApiWebClient addDefaultHeader(String name, String value) {
+  public ApiWebClient addDefaultHeader(final String name, final String value) {
     if (defaultHeaders.containsKey(name)) {
       defaultHeaders.remove(name);
     }
@@ -135,7 +135,7 @@ public class ApiWebClient {
     return this;
   }
 
-  public ApiWebClient addDefaultCookie(String name, String value) {
+  public ApiWebClient addDefaultCookie(final String name, final String value) {
     if (defaultCookies.containsKey(name)) {
       defaultCookies.remove(name);
     }
@@ -143,7 +143,7 @@ public class ApiWebClient {
     return this;
   }
 
-  public String parameterToString(Object param) {
+  public String parameterToString(final Object param) {
     if (param == null) {
       return "";
     } else if (param instanceof Date) {
@@ -164,11 +164,11 @@ public class ApiWebClient {
     }
   }
 
-  private String formatOffsetDateTime(OffsetDateTime offsetDateTime) {
+  private String formatOffsetDateTime(final OffsetDateTime offsetDateTime) {
     return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
   }
 
-  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
+  public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 
     if (name == null || name.isEmpty() || value == null) {
@@ -207,11 +207,11 @@ public class ApiWebClient {
     return params;
   }
 
-  private boolean isJsonMime(MediaType mediaType) {
+  private boolean isJsonMime(final MediaType mediaType) {
     return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
   }
 
-  public List<MediaType> selectHeaderAccept(String[] accepts) {
+  public List<MediaType> selectHeaderAccept(final String[] accepts) {
     if (accepts.length == 0) {
       return null;
     }
@@ -224,7 +224,7 @@ public class ApiWebClient {
     return MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(accepts));
   }
 
-  public MediaType selectHeaderContentType(String[] contentTypes) {
+  public MediaType selectHeaderContentType(final String[] contentTypes) {
     if (contentTypes.length == 0) {
       return null;
     }
@@ -234,10 +234,10 @@ public class ApiWebClient {
         return mediaType;
       }
     }
-    return MediaType.parseMediaType(contentTypes[0]);
+    return MediaType.parseMediaType(final contentTypes[0]);
   }
 
-  protected BodyInserter<?, ? super ClientHttpRequest> selectBody(Object obj, MultiValueMap<String, Object> formParams, MediaType contentType) {
+  protected BodyInserter<?, ? super ClientHttpRequest> selectBody(final Object obj, final MultiValueMap<String, Object> formParams, final MediaType contentType) {
     if(MediaType.APPLICATION_FORM_URLENCODED.equals(contentType)) {
       MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
@@ -254,14 +254,14 @@ public class ApiWebClient {
     }
   }
 
-  public <T> ResponseSpec invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams, Object body,
-    HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
+  public <T> ResponseSpec invokeAPI(final String basePath, final String path, final HttpMethod method, final Map<String, Object> pathParams, final MultiValueMap<String, String> queryParams, final Object body,
+    final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams, final MultiValueMap<String, Object> formParams, final List<MediaType> accept, final MediaType contentType, final String[] authNames, final ParameterizedTypeReference<T> returnType) throws RestClientException {
       final WebClient.RequestBodySpec requestBuilder = prepareRequest(basePath,path, method, pathParams, queryParams, body, headerParams, cookieParams, formParams, accept, contentType, authNames);
       return requestBuilder.retrieve();
   }
 
-  private WebClient.RequestBodySpec prepareRequest(String basePath,String path, HttpMethod method, Map<String, Object> pathParams, MultiValueMap<String, String> queryParams,
-    Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames) {
+  private WebClient.RequestBodySpec prepareRequest(final String basePath, final String path, final HttpMethod method, final Map<String, Object> pathParams, final MultiValueMap<String, String> queryParams,
+    final Object body, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams, final MultiValueMap<String, Object> formParams, final List<MediaType> accept, final MediaType contentType, final String[] authNames) {
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
 
       final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(path);
@@ -286,7 +286,7 @@ public class ApiWebClient {
       return requestBuilder;
   }
 
-  protected void addHeadersToRequest(HttpHeaders headers, WebClient.RequestBodySpec requestBuilder) {
+  protected void addHeadersToRequest(final HttpHeaders headers, final WebClient.RequestBodySpec requestBuilder) {
     for (Entry<String, List<String>> entry : headers.entrySet()) {
       List<String> values = entry.getValue();
       for(String value : values) {
@@ -297,7 +297,7 @@ public class ApiWebClient {
     }
   }
 
-  protected void addCookiesToRequest(MultiValueMap<String, String> cookies, WebClient.RequestBodySpec requestBuilder) {
+  protected void addCookiesToRequest(final MultiValueMap<String, String> cookies, final WebClient.RequestBodySpec requestBuilder) {
     for (Entry<String, List<String>> entry : cookies.entrySet()) {
       List<String> values = entry.getValue();
       for(String value : values) {
@@ -308,7 +308,7 @@ public class ApiWebClient {
     }
   }
 
-  private void updateParamsForAuth(String[] authNames, MultiValueMap<String, String> queryParams, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams) {
+  private void updateParamsForAuth(final String[] authNames, final MultiValueMap<String, String> queryParams, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams) {
     for (String authName : authNames) {
       Authentication auth = authentications.get(authName);
       if (auth == null) {
@@ -318,7 +318,7 @@ public class ApiWebClient {
     }
   }
 
-  public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
+  public String collectionPathParameterToString(final CollectionFormat collectionFormat, final Collection<?> values) {
     if (CollectionFormat.MULTI.equals(collectionFormat)) {
       return parameterToString(values);
     }

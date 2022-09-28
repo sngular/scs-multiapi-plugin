@@ -95,7 +95,7 @@ public class ApiRestClient {
   }
 
   public static DateFormat createDefaultDateFormat() {
-    DateFormat dateFormat = new DateFormat() {
+    final DateFormat dateFormat = new DateFormat() {
       private final StdDateFormat fmt = new StdDateFormat()
         .withTimeZone(TimeZone.getTimeZone("UTC"))
         .withColonInTimeZone(true);
@@ -121,18 +121,18 @@ public class ApiRestClient {
   }
 
   private static void createDefaultObjectMapper(final DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
-     final DateFormat dateFormat = defaultDateFormat
-     if (Objects.isNull(defaultDateFormat)) {
-       dateFormat = createDefaultDateFormat();
-     }
-     final ObjectMapper mapper = converter.getObjectMapper();
-     mapper.setDateFormat(dateFormat);
-     mapper.registerModule(new JavaTimeModule());
-     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    final DateFormat dateFormat = defaultDateFormat;
+    if (Objects.isNull(defaultDateFormat)) {
+      dateFormat = createDefaultDateFormat();
+    }
+    final ObjectMapper mapper = converter.getObjectMapper();
+    mapper.setDateFormat(dateFormat);
+    mapper.registerModule(new JavaTimeModule());
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   protected RestTemplate buildRestTemplate() {
-    RestTemplate restTemplate = new RestTemplate();
+    final RestTemplate restTemplate = new RestTemplate();
     for(HttpMessageConverter converter:restTemplate.getMessageConverters()) {
       if(converter instanceof AbstractJackson2HttpMessageConverter) {
         createDefaultObjectMapper(this.dateFormat, (AbstractJackson2HttpMessageConverter) converter);
@@ -167,7 +167,7 @@ public class ApiRestClient {
       return formatOffsetDateTime((OffsetDateTime) param);
     } else if (param instanceof Collection) {
       StringBuilder b = new StringBuilder();
-      for(Object o : (Collection<?>) param) {
+      for (Object o : (Collection<?>) param) {
         if(b.length() > 0) {
           b.append(",");
         }
@@ -275,7 +275,7 @@ public class ApiRestClient {
   }
 
   public String expandPath(final String pathTemplate, final Map<String, Object> variables) {
-    DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
+    final DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
     uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
     final RestTemplate restTemplate = new RestTemplate();
     restTemplate.setUriTemplateHandler(uriBuilderFactory);
@@ -288,7 +288,7 @@ public class ApiRestClient {
   }
 
   public String generateQueryUri(final MultiValueMap<String, String> queryParams, final Map<String, Object> uriParams) {
-    StringBuilder queryBuilder = new StringBuilder();
+    final StringBuilder queryBuilder = new StringBuilder();
     queryParams.forEach((name, values) -> {
       try {
         final String encodedName = URLEncoder.encode(name.toString(), "UTF-8");
@@ -320,8 +320,8 @@ public class ApiRestClient {
   }
 
   public <T> ResponseEntity<T> invokeAPI(final String basePath, final String path, final HttpMethod method, final Map<String, Object> pathParams,
-    MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams,
-    List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
+    final MultiValueMap<String, String> queryParams, final Object body, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams, final MultiValueMap<String, Object> formParams,
+    final List<MediaType> accept, final MediaType contentType, final String[] authNames, final ParameterizedTypeReference<T> returnType) throws RestClientException {
 
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
       Map<String, Object> uriParams = new HashMap<>();
@@ -405,7 +405,6 @@ public class ApiRestClient {
     }
   }
 
-
   private class ApiClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
     private final Log log = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
 
@@ -417,7 +416,7 @@ public class ApiRestClient {
       return response;
     }
 
-    private void logRequest(final HttpRequest request, byte[] body) throws UnsupportedEncodingException {
+    private void logRequest(final HttpRequest request, final byte[] body) throws UnsupportedEncodingException {
       log.info("URI: " + request.getURI());
       log.info("HTTP Method: " + request.getMethod());
       log.info("HTTP Headers: " + headersToString(request.getHeaders()));
@@ -432,7 +431,7 @@ public class ApiRestClient {
     }
 
     private String headersToString(final HttpHeaders headers) {
-      StringBuilder builder = new StringBuilder();
+      final StringBuilder builder = new StringBuilder();
       for(Entry<String, List<String>> entry : headers.entrySet()) {
         builder.append(entry.getKey()).append("=[");
           for(String value : entry.getValue()) {
@@ -446,8 +445,8 @@ public class ApiRestClient {
     }
 
     private String bodyToString(final InputStream body) throws IOException {
-      StringBuilder builder = new StringBuilder();
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
+      final StringBuilder builder = new StringBuilder();
+      final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
       String line = bufferedReader.readLine();
       while (line != null) {
         builder.append(line).append(System.lineSeparator());
