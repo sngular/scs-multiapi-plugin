@@ -9,7 +9,7 @@ servers:
 - url: http://localhost:8080/v1
 paths:
   /games:
-    summary: Hola
+    summary: Games List
     get:
       summary: List all available games
       description: Test File for SCC MultiApi Plugin.

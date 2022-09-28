@@ -19,7 +19,7 @@ class ScsMultiApi implements Plugin<Project> {
     project.extensions.create("openapimodel", OpenApiModelExtension)
     project.extensions.create("asyncapimodel", AsyncApiModelExtension)
     def openApiTask = project.task("openApiTask", type: OpenApiTask)
-    def outputDirDefault = new File(project.getBuildDir().absolutePath + '/generated-source')
+    def outputDirDefault = new File(project.buildDir.absolutePath + '/generated-source')
     outputDirDefault.mkdirs()
     openApiTask.configure {
       it.outputDir = outputDirDefault
