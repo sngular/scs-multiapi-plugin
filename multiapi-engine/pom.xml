@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>multiapi-engine</artifactId>
+  <packaging>jar</packaging>
 
   <properties>
     <swagger-parser.version>2.0.32</swagger-parser.version>
