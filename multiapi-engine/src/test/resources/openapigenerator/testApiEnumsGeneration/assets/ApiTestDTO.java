@@ -84,7 +84,7 @@ public class ApiTestDTO {
     }
   }
 
-  private ApiTestDTO(String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, Integer id, UnionEnum unionEnum){
+  private ApiTestDTO(String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, Integer id, UnionEnum unionEnum) {
     this.name = name;
     this.unionIntegerEnum = unionIntegerEnum;
     this.unionNumberEnum = unionNumberEnum;
@@ -135,7 +135,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO build() {
-      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
+      ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
   }
@@ -200,12 +200,12 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.name,apiTestDTO.name) && Objects.equals(this.unionIntegerEnum,apiTestDTO.unionIntegerEnum) && Objects.equals(this.unionNumberEnum,apiTestDTO.unionNumberEnum) && Objects.equals(this.id,apiTestDTO.id) && Objects.equals(this.unionEnum,apiTestDTO.unionEnum) ;
+    return Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.unionIntegerEnum, apiTestDTO.unionIntegerEnum) && Objects.equals(this.unionNumberEnum, apiTestDTO.unionNumberEnum) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.unionEnum, apiTestDTO.unionEnum);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name,unionIntegerEnum,unionNumberEnum,id,unionEnum);
+    return Objects.hash(name, unionIntegerEnum, unionNumberEnum, id, unionEnum);
   }
 
   @Override

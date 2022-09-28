@@ -12,7 +12,7 @@ public class InlineResponse200CreateGameDTO {
   @JsonProperty(value ="code")
   private Integer code;
 
-  private InlineResponse200CreateGameDTO(MessageDTO message, Integer code){
+  private InlineResponse200CreateGameDTO(MessageDTO message, Integer code) {
     this.message = message;
     this.code = code;
 
@@ -40,7 +40,7 @@ public class InlineResponse200CreateGameDTO {
     }
 
     public InlineResponse200CreateGameDTO build() {
-      InlineResponse200CreateGameDTO inlineResponse200CreateGameDTO =  new InlineResponse200CreateGameDTO(this);
+      InlineResponse200CreateGameDTO inlineResponse200CreateGameDTO = new InlineResponse200CreateGameDTO(this);
       return inlineResponse200CreateGameDTO;
     }
   }
@@ -78,12 +78,12 @@ public class InlineResponse200CreateGameDTO {
       return false;
     }
     InlineResponse200CreateGameDTO inlineResponse200CreateGameDTO = (InlineResponse200CreateGameDTO) o;
-    return Objects.equals(this.message,inlineResponse200CreateGameDTO.message) && Objects.equals(this.code,inlineResponse200CreateGameDTO.code) ;
+    return Objects.equals(this.message, inlineResponse200CreateGameDTO.message) && Objects.equals(this.code, inlineResponse200CreateGameDTO.code);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message,code);
+    return Objects.hash(message, code);
   }
 
   @Override

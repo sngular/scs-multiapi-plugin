@@ -7,30 +7,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ApiTestsDTO {
 
-  @JsonProperty(value ="ApiTestDTO")
-  private ApiTestDTO ApiTestDTO;
+  @JsonProperty(value ="apiTestDTO")
+  private ApiTestDTO apiTestDTO;
 
-  private ApiTestsDTO(ApiTestDTO ApiTestDTO){
-    this.ApiTestDTO = ApiTestDTO;
+  private ApiTestsDTO(ApiTestDTO apiTestDTO) {
+    this.apiTestDTO = apiTestDTO;
 
   }
 
   private ApiTestsDTO(ApiTestsDTOBuilder builder) {
-    this.ApiTestDTO = builder.ApiTestDTO;
+    this.apiTestDTO = builder.apiTestDTO;
 
   }
 
   public static class ApiTestsDTOBuilder {
 
-    private ApiTestDTO ApiTestDTO;
+    private ApiTestDTO apiTestDTO;
 
-    public ApiTestsDTO.ApiTestsDTOBuilder ApiTestDTO(ApiTestDTO ApiTestDTO) {
-      this.ApiTestDTO = ApiTestDTO;
+    public ApiTestsDTO.ApiTestsDTOBuilder apiTestDTO(ApiTestDTO apiTestDTO) {
+      this.apiTestDTO = apiTestDTO;
       return this;
     }
 
     public ApiTestsDTO build() {
-      ApiTestsDTO apiTestsDTO =  new ApiTestsDTO(this);
+      ApiTestsDTO apiTestsDTO = new ApiTestsDTO(this);
       return apiTestsDTO;
     }
   }
@@ -41,10 +41,10 @@ public class ApiTestsDTO {
   */
   @Schema(name = "apiTestDTO", required = false)
   public ApiTestDTO getApiTestDTO() {
-    return ApiTestDTO;
+    return apiTestDTO;
   }
-  public void setApiTestDTO(ApiTestDTO ApiTestDTO) {
-    this.ApiTestDTO = ApiTestDTO;
+  public void setApiTestDTO(ApiTestDTO apiTestDTO) {
+    this.apiTestDTO = apiTestDTO;
   }
 
   @Override
@@ -56,7 +56,7 @@ public class ApiTestsDTO {
       return false;
     }
     ApiTestsDTO apiTestsDTO = (ApiTestsDTO) o;
-    return Objects.equals(this.apiTestDTO,apiTestsDTO.apiTestDTO) ;
+    return Objects.equals(this.apiTestDTO, apiTestsDTO.apiTestDTO);
   }
 
   @Override

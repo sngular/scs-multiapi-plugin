@@ -97,7 +97,7 @@ public class ApiTestDTO {
 
 
   @Builder
-  private ApiTestDTO(@NonNull String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, @NonNull Integer id, UnionEnum unionEnum){
+  private ApiTestDTO(@NonNull String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, @NonNull Integer id, UnionEnum unionEnum) {
     this.name = name;
     this.unionIntegerEnum = unionIntegerEnum;
     this.unionNumberEnum = unionNumberEnum;

@@ -4,5 +4,5 @@ import net.coru.scsplugin.externalavro.model.event.Order;
 
 public interface IPublishOperationExternalAvro {
 
-    Order publishOperationExternalAvro();
+  Order publishOperationExternalAvro();
 }

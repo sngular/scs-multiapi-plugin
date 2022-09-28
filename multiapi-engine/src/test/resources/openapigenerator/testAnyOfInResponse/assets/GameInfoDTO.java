@@ -26,7 +26,7 @@ public class GameInfoDTO {
 
 
   @Builder
-  private GameInfoDTO(@NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players){
+  private GameInfoDTO(@NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players) {
     this.rooms = rooms;
     this.gameName = gameName;
     this.players = players;

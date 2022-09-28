@@ -4,5 +4,5 @@ import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
 
 public interface IPublishOperationFileGeneration {
 
-    void publishOperationFileGeneration(OrderCreatedDTO value);
+  void publishOperationFileGeneration(OrderCreatedDTO value);
 }

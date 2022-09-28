@@ -249,9 +249,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testOneOfInResponse/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testoneofInresponse")
-          .modelPackage("net.coru.multifileplugin.testoneofInresponse.model")
-          .clientPackage("net.coru.multifileplugin.testoneofInresponse.client")
+          .apiPackage("net.coru.multifileplugin.testoneofinresponse")
+          .modelPackage("net.coru.multifileplugin.testoneofinresponse.model")
+          .clientPackage("net.coru.multifileplugin.testoneofinresponse.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -259,11 +259,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testOneOfInResponse";
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testoneofinresponse";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testOneOfInResponse/model";
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testoneofinresponse/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testOneOfInResponse/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testoneofinresponse/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testOneOfInResponse/assets/GamesApi.java");
@@ -658,11 +658,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateAnyOfInResponse() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testAnyOfInResponse";
+    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testanyofinresponse";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testAnyOfInResponse/model";
+    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testanyofinresponse/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testAnyOfInResponse/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testanyofinresponse/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testAnyOfInResponse/assets/GamesApi.java");

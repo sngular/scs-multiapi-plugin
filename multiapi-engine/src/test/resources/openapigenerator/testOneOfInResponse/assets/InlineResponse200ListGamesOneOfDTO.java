@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoneofInresponse.model;
+package net.coru.multifileplugin.testoneofinresponse.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import net.coru.multifileplugin.testoneofInresponse.model.exception.ModelClassException;
+import net.coru.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
 
 
 @Data
@@ -35,7 +35,7 @@ public class InlineResponse200ListGamesOneOfDTO {
 
 
   @Builder
-  private InlineResponse200ListGamesOneOfDTO(@NonNull String name, @NonNull Integer id, @NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players){
+  private InlineResponse200ListGamesOneOfDTO(@NonNull String name, @NonNull Integer id, @NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players) {
     this.name = name;
     this.id = id;
     this.rooms = rooms;

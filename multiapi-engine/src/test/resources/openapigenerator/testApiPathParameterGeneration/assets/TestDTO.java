@@ -13,7 +13,7 @@ public class TestDTO {
   @JsonProperty(value ="id")
   private final Integer id;
 
-  private TestDTO(String name, Integer id){
+  private TestDTO(String name, Integer id) {
     this.name = name;
     this.id = id;
 
@@ -43,7 +43,7 @@ public class TestDTO {
     }
 
     public TestDTO build() {
-      TestDTO testDTO =  new TestDTO(this);
+      TestDTO testDTO = new TestDTO(this);
       return testDTO;
     }
   }
@@ -75,12 +75,12 @@ public class TestDTO {
       return false;
     }
     TestDTO testDTO = (TestDTO) o;
-    return Objects.equals(this.name,testDTO.name) && Objects.equals(this.id,testDTO.id) ;
+    return Objects.equals(this.name, testDTO.name) && Objects.equals(this.id, testDTO.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name,id);
+    return Objects.hash(name, id);
   }
 
   @Override

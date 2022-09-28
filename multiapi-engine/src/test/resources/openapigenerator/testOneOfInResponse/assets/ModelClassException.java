@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoneofInresponse.model.exception;
+package net.coru.multifileplugin.testoneofinresponse.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

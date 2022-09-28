@@ -7,30 +7,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class TestsDTO {
 
-  @JsonProperty(value ="TestDTO")
-  private TestDTO TestDTO;
+  @JsonProperty(value ="testDTO")
+  private TestDTO testDTO;
 
-  private TestsDTO(TestDTO TestDTO){
-    this.TestDTO = TestDTO;
+  private TestsDTO(TestDTO testDTO) {
+    this.testDTO = testDTO;
 
   }
 
   private TestsDTO(TestsDTOBuilder builder) {
-    this.TestDTO = builder.TestDTO;
+    this.testDTO = builder.testDTO;
 
   }
 
   public static class TestsDTOBuilder {
 
-    private TestDTO TestDTO;
+    private TestDTO testDTO;
 
-    public TestsDTO.TestsDTOBuilder TestDTO(TestDTO TestDTO) {
-      this.TestDTO = TestDTO;
+    public TestsDTO.TestsDTOBuilder testDTO(TestDTO testDTO) {
+      this.testDTO = testDTO;
       return this;
     }
 
     public TestsDTO build() {
-      TestsDTO testsDTO =  new TestsDTO(this);
+      TestsDTO testsDTO = new TestsDTO(this);
       return testsDTO;
     }
   }
@@ -41,10 +41,10 @@ public class TestsDTO {
   */
   @Schema(name = "testDTO", required = false)
   public TestDTO getTestDTO() {
-    return TestDTO;
+    return testDTO;
   }
-  public void setTestDTO(TestDTO TestDTO) {
-    this.TestDTO = TestDTO;
+  public void setTestDTO(TestDTO testDTO) {
+    this.testDTO = testDTO;
   }
 
   @Override
@@ -56,7 +56,7 @@ public class TestsDTO {
       return false;
     }
     TestsDTO testsDTO = (TestsDTO) o;
-    return Objects.equals(this.testDTO,testsDTO.testDTO) ;
+    return Objects.equals(this.testDTO, testsDTO.testDTO);
   }
 
   @Override

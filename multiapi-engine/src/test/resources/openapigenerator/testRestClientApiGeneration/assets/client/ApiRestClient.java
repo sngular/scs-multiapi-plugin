@@ -135,8 +135,8 @@ public class ApiRestClient {
 
   protected RestTemplate buildRestTemplate() {
     RestTemplate restTemplate = new RestTemplate();
-    for(HttpMessageConverter converter:restTemplate.getMessageConverters()){
-      if(converter instanceof AbstractJackson2HttpMessageConverter){
+    for(HttpMessageConverter converter:restTemplate.getMessageConverters()) {
+      if(converter instanceof AbstractJackson2HttpMessageConverter) {
         ObjectMapper mapper = createDefaultObjectMapper(this.dateFormat,(AbstractJackson2HttpMessageConverter) converter);
       }
     }
@@ -323,7 +323,7 @@ public class ApiRestClient {
     List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
 
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
-      Map<String,Object> uriParams = new HashMap<>();
+      Map<String, Object> uriParams = new HashMap<>();
       uriParams.putAll(pathParams);
 
       String finalUri = path;

@@ -14,7 +14,7 @@ public class ApiTestAllOfDTO {
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
 
-  private ApiTestAllOfDTO(String testName, List<String> testers){
+  private ApiTestAllOfDTO(String testName, List<String> testers) {
     this.testName = testName;
     this.testers = testers;
 
@@ -50,7 +50,7 @@ public class ApiTestAllOfDTO {
     }
 
     public ApiTestAllOfDTO build() {
-      ApiTestAllOfDTO apiTestAllOfDTO =  new ApiTestAllOfDTO(this);
+      ApiTestAllOfDTO apiTestAllOfDTO = new ApiTestAllOfDTO(this);
       return apiTestAllOfDTO;
     }
   }
@@ -88,12 +88,12 @@ public class ApiTestAllOfDTO {
       return false;
     }
     ApiTestAllOfDTO apiTestAllOfDTO = (ApiTestAllOfDTO) o;
-    return Objects.equals(this.testName,apiTestAllOfDTO.testName) && Objects.equals(this.testers,apiTestAllOfDTO.testers) ;
+    return Objects.equals(this.testName, apiTestAllOfDTO.testName) && Objects.equals(this.testers, apiTestAllOfDTO.testers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName,testers);
+    return Objects.hash(testName, testers);
   }
 
   @Override

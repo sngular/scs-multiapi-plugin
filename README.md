@@ -599,7 +599,8 @@ Before using this plugin we have to warn that not all the complexity and
 support offered by the use of swagger.io yml files is supported.
 
 Since 1.1.0 version, we support the definition of parameters in both Path
-and Operation object. ❗❗❗ Please bear in mind that we use the Option resolver from OpenApi which will override the Operation parameters
+and Operation object. ❗❗❗ Please bear in mind that we use the Option
+resolver from OpenApi which will override the Operation parameters
 if you have a parameter defined in the Path.
 
 We establish here some of these options that are not yet supported and that

@@ -10,7 +10,7 @@ public class ApiInlineParameterShowTestByIdTestIdDTO {
   @JsonProperty(value ="email")
   private String email;
 
-  private ApiInlineParameterShowTestByIdTestIdDTO(String email){
+  private ApiInlineParameterShowTestByIdTestIdDTO(String email) {
     this.email = email;
 
   }
@@ -30,7 +30,7 @@ public class ApiInlineParameterShowTestByIdTestIdDTO {
     }
 
     public ApiInlineParameterShowTestByIdTestIdDTO build() {
-      ApiInlineParameterShowTestByIdTestIdDTO apiInlineParameterShowTestByIdTestIdDTO =  new ApiInlineParameterShowTestByIdTestIdDTO(this);
+      ApiInlineParameterShowTestByIdTestIdDTO apiInlineParameterShowTestByIdTestIdDTO = new ApiInlineParameterShowTestByIdTestIdDTO(this);
       return apiInlineParameterShowTestByIdTestIdDTO;
     }
   }
@@ -56,7 +56,7 @@ public class ApiInlineParameterShowTestByIdTestIdDTO {
       return false;
     }
     ApiInlineParameterShowTestByIdTestIdDTO apiInlineParameterShowTestByIdTestIdDTO = (ApiInlineParameterShowTestByIdTestIdDTO) o;
-    return Objects.equals(this.email,apiInlineParameterShowTestByIdTestIdDTO.email) ;
+    return Objects.equals(this.email, apiInlineParameterShowTestByIdTestIdDTO.email);
   }
 
   @Override

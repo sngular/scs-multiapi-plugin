@@ -35,7 +35,7 @@ public class InlineResponse200ListGamesAnyOfDTO {
 
 
   @Builder
-  private InlineResponse200ListGamesAnyOfDTO(@NonNull String name, @NonNull Integer id, @NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players){
+  private InlineResponse200ListGamesAnyOfDTO(@NonNull String name, @NonNull Integer id, @NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players) {
     this.name = name;
     this.id = id;
     this.rooms = rooms;

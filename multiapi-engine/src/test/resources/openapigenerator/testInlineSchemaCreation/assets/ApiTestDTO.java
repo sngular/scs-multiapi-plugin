@@ -25,7 +25,7 @@ public class ApiTestDTO {
   @JsonProperty(value ="tags")
   private List<String> tags = new ArrayList<String>();
 
-  private ApiTestDTO(String name, String description, List<ApiTestTypeDTO> testTypeList, ApiTestProcessorDTO testProcessor, Integer id, Integer priority, List<String> tags){
+  private ApiTestDTO(String name, String description, List<ApiTestTypeDTO> testTypeList, ApiTestProcessorDTO testProcessor, Integer id, Integer priority, List<String> tags) {
     this.name = name;
     this.description = description;
     this.testTypeList = testTypeList;
@@ -109,7 +109,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO build() {
-      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
+      ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
   }
@@ -207,12 +207,12 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.name,apiTestDTO.name) && Objects.equals(this.description,apiTestDTO.description) && Objects.equals(this.testTypeList,apiTestDTO.testTypeList) && Objects.equals(this.testProcessor,apiTestDTO.testProcessor) && Objects.equals(this.id,apiTestDTO.id) && Objects.equals(this.priority,apiTestDTO.priority) && Objects.equals(this.tags,apiTestDTO.tags) ;
+    return Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.description, apiTestDTO.description) && Objects.equals(this.testTypeList, apiTestDTO.testTypeList) && Objects.equals(this.testProcessor, apiTestDTO.testProcessor) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.priority, apiTestDTO.priority) && Objects.equals(this.tags, apiTestDTO.tags);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name,description,testTypeList,testProcessor,id,priority,tags);
+    return Objects.hash(name, description, testTypeList, testProcessor, id, priority, tags);
   }
 
   @Override

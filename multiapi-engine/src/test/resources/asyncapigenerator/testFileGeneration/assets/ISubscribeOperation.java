@@ -4,5 +4,5 @@ import net.coru.scsplugin.business_model.model.event.CreateOrderMapper;
 
 public interface ISubscribeOperationFileGeneration {
 
-    CreateOrderMapper subscribeOperationFileGeneration();
+  CreateOrderMapper subscribeOperationFileGeneration();
 }

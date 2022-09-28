@@ -166,7 +166,7 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null){
+    if (${parameter.name} != null) {
       headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.name}));
     }
         </#if>
@@ -184,7 +184,7 @@ public class ${className?cap_first}Api {
     <#if path.parameterObjects?has_content>
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null){
+    if (${parameter.name} != null) {
       headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.name}));
     }
         </#if>

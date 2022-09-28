@@ -15,7 +15,7 @@ public class ApiTestDTO {
   @JsonProperty(value ="testers")
   private final List<String> testers;
 
-  private ApiTestDTO(String testName, List<String> testers){
+  private ApiTestDTO(String testName, List<String> testers) {
     this.testName = testName;
     this.testers = testers;
 
@@ -53,7 +53,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO build() {
-      ApiTestDTO apiTestDTO =  new ApiTestDTO(this);
+      ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
   }
@@ -85,12 +85,12 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.testName,apiTestDTO.testName) && Objects.equals(this.testers,apiTestDTO.testers) ;
+    return Objects.equals(this.testName, apiTestDTO.testName) && Objects.equals(this.testers, apiTestDTO.testers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName,testers);
+    return Objects.hash(testName, testers);
   }
 
   @Override

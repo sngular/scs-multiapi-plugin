@@ -13,7 +13,7 @@ public class ErrorDTO {
   @JsonProperty(value ="code")
   private final Integer code;
 
-  private ErrorDTO(String message, Integer code){
+  private ErrorDTO(String message, Integer code) {
     this.message = message;
     this.code = code;
 
@@ -43,7 +43,7 @@ public class ErrorDTO {
     }
 
     public ErrorDTO build() {
-      ErrorDTO errorDTO =  new ErrorDTO(this);
+      ErrorDTO errorDTO = new ErrorDTO(this);
       return errorDTO;
     }
   }
@@ -75,12 +75,12 @@ public class ErrorDTO {
       return false;
     }
     ErrorDTO errorDTO = (ErrorDTO) o;
-    return Objects.equals(this.message,errorDTO.message) && Objects.equals(this.code,errorDTO.code) ;
+    return Objects.equals(this.message, errorDTO.message) && Objects.equals(this.code, errorDTO.code);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message,code);
+    return Objects.hash(message, code);
   }
 
   @Override

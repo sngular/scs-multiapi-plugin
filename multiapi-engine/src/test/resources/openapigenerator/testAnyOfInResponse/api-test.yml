@@ -1,6 +1,9 @@
 ---
 openapi: "3.0.0"
 info:
+  contact:
+    name: Os3 Team
+    email: os3-info@sngular.com
   version: 1.0.0
   title: Testing example file
   license:
@@ -9,10 +12,11 @@ info:
 servers:
 - url: http://localhost:8080/v1
 tags:
-- games
+- name: games
+  description: Games service
 paths:
   /games:
-    summary: Hola
+    summary: List all available games
     get:
       summary: List all available games
       description: Test File for SCC MultiApi Plugin.

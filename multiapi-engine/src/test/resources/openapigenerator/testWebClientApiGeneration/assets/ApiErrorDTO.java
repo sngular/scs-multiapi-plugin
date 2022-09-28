@@ -13,7 +13,7 @@ public class ApiErrorDTO {
   @JsonProperty(value ="code")
   private final Integer code;
 
-  private ApiErrorDTO(String message, Integer code){
+  private ApiErrorDTO(String message, Integer code) {
     this.message = message;
     this.code = code;
 
@@ -43,7 +43,7 @@ public class ApiErrorDTO {
     }
 
     public ApiErrorDTO build() {
-      ApiErrorDTO apiErrorDTO =  new ApiErrorDTO(this);
+      ApiErrorDTO apiErrorDTO = new ApiErrorDTO(this);
       return apiErrorDTO;
     }
   }
@@ -75,12 +75,12 @@ public class ApiErrorDTO {
       return false;
     }
     ApiErrorDTO apiErrorDTO = (ApiErrorDTO) o;
-    return Objects.equals(this.message,apiErrorDTO.message) && Objects.equals(this.code,apiErrorDTO.code) ;
+    return Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.code, apiErrorDTO.code);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message,code);
+    return Objects.hash(message, code);
   }
 
   @Override

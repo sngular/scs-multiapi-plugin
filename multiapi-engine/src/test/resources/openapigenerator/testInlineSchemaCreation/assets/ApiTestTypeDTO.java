@@ -12,7 +12,7 @@ public class ApiTestTypeDTO {
   @JsonProperty(value ="id")
   private String id;
 
-  private ApiTestTypeDTO(String name, String id){
+  private ApiTestTypeDTO(String name, String id) {
     this.name = name;
     this.id = id;
 
@@ -40,7 +40,7 @@ public class ApiTestTypeDTO {
     }
 
     public ApiTestTypeDTO build() {
-      ApiTestTypeDTO apiTestTypeDTO =  new ApiTestTypeDTO(this);
+      ApiTestTypeDTO apiTestTypeDTO = new ApiTestTypeDTO(this);
       return apiTestTypeDTO;
     }
   }
@@ -78,12 +78,12 @@ public class ApiTestTypeDTO {
       return false;
     }
     ApiTestTypeDTO apiTestTypeDTO = (ApiTestTypeDTO) o;
-    return Objects.equals(this.name,apiTestTypeDTO.name) && Objects.equals(this.id,apiTestTypeDTO.id) ;
+    return Objects.equals(this.name, apiTestTypeDTO.name) && Objects.equals(this.id, apiTestTypeDTO.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name,id);
+    return Objects.hash(name, id);
   }
 
   @Override

@@ -20,7 +20,7 @@ public class ApiErrorDTO {
 
 
   @Builder
-  private ApiErrorDTO(@NonNull String message, @NonNull Integer code){
+  private ApiErrorDTO(@NonNull String message, @NonNull Integer code) {
     this.message = message;
     this.code = code;
 

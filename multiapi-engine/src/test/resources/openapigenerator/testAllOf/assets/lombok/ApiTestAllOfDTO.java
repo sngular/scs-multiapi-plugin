@@ -19,7 +19,7 @@ public class ApiTestAllOfDTO {
 
 
   @Builder
-  private ApiTestAllOfDTO(String testName, List<String> testers){
+  private ApiTestAllOfDTO(String testName, List<String> testers) {
     this.testName = testName;
     this.testers = testers;
 

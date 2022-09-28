@@ -12,7 +12,7 @@ public class ApiTestProcessorDTO {
   @JsonProperty(value ="id")
   private String id;
 
-  private ApiTestProcessorDTO(String name, String id){
+  private ApiTestProcessorDTO(String name, String id) {
     this.name = name;
     this.id = id;
 
@@ -40,7 +40,7 @@ public class ApiTestProcessorDTO {
     }
 
     public ApiTestProcessorDTO build() {
-      ApiTestProcessorDTO apiTestProcessorDTO =  new ApiTestProcessorDTO(this);
+      ApiTestProcessorDTO apiTestProcessorDTO = new ApiTestProcessorDTO(this);
       return apiTestProcessorDTO;
     }
   }
@@ -78,12 +78,12 @@ public class ApiTestProcessorDTO {
       return false;
     }
     ApiTestProcessorDTO apiTestProcessorDTO = (ApiTestProcessorDTO) o;
-    return Objects.equals(this.name,apiTestProcessorDTO.name) && Objects.equals(this.id,apiTestProcessorDTO.id) ;
+    return Objects.equals(this.name, apiTestProcessorDTO.name) && Objects.equals(this.id, apiTestProcessorDTO.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name,id);
+    return Objects.hash(name, id);
   }
 
   @Override

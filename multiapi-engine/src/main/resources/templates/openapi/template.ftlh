@@ -82,7 +82,7 @@ public interface ${className?cap_first}Api {
 
   default ResponseEntity<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "map")>
-    <Map<String,${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}><#else>
+    <Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}><#else>
     <${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}</#if><#else>Void</#if>></@compress> ${operation.operationId}(<@compress single_line=true>
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if>
     <#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if>

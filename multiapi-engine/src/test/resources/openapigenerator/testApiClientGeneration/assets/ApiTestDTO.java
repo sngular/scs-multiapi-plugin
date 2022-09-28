@@ -20,7 +20,7 @@ public class ApiTestDTO {
 
 
   @Builder
-  private ApiTestDTO(@NonNull String name, @NonNull Integer id){
+  private ApiTestDTO(@NonNull String name, @NonNull Integer id) {
     this.name = name;
     this.id = id;
 

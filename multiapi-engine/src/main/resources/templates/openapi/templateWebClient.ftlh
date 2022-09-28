@@ -187,7 +187,7 @@ public class ApiWebClient {
       return params;
     }
 
-    if (valueCollection.isEmpty()){
+    if (valueCollection.isEmpty()) {
       return params;
     }
 

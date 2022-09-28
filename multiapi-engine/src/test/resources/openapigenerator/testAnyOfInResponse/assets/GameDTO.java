@@ -20,7 +20,7 @@ public class GameDTO {
 
 
   @Builder
-  private GameDTO(@NonNull String name, @NonNull Integer id){
+  private GameDTO(@NonNull String name, @NonNull Integer id) {
     this.name = name;
     this.id = id;
 

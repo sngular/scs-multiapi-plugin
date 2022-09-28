@@ -154,7 +154,7 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null){
+    if (${parameter.name} != null) {
       headerParams.add("${parameter.name}", apiWebClient.parameterToString(${parameter.name}));
     }
         </#if>
@@ -163,7 +163,7 @@ public class ${className?cap_first}Api {
     <#if path.parameterObjects?has_content>
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null){
+    if (${parameter.name} != null) {
       headerParams.add("${parameter.name}", apiWebClient.parameterToString(${parameter.name}));
     }
         </#if>
@@ -250,7 +250,7 @@ public class ${className?cap_first}Api {
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> Mono<<#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-  ResponseEntity<Map<String,${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>
+  ResponseEntity<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>
   <#elseif operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "array">
   ResponseEntity<List<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>>
   <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>></#if>

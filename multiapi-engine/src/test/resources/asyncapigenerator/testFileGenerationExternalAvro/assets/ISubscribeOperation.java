@@ -4,5 +4,5 @@ import net.coru.scsplugin.externalavro.model.event.CreateOrder;
 
 public interface ISubscribeOperationExternalAvro {
 
-    void subscribeOperationExternalAvro(CreateOrder value);
+  void subscribeOperationExternalAvro(CreateOrder value);
 }

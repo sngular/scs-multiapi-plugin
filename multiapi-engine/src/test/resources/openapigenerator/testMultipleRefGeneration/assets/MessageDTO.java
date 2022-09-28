@@ -10,7 +10,7 @@ public class MessageDTO {
   @JsonProperty(value ="description")
   private String description;
 
-  private MessageDTO(String description){
+  private MessageDTO(String description) {
     this.description = description;
 
   }
@@ -30,7 +30,7 @@ public class MessageDTO {
     }
 
     public MessageDTO build() {
-      MessageDTO messageDTO =  new MessageDTO(this);
+      MessageDTO messageDTO = new MessageDTO(this);
       return messageDTO;
     }
   }
@@ -56,7 +56,7 @@ public class MessageDTO {
       return false;
     }
     MessageDTO messageDTO = (MessageDTO) o;
-    return Objects.equals(this.description,messageDTO.description) ;
+    return Objects.equals(this.description, messageDTO.description);
   }
 
   @Override

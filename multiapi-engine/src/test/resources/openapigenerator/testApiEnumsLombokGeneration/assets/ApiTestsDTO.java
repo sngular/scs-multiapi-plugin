@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 public class ApiTestsDTO {
 
-  @JsonProperty(value ="ApiTestDTO")
-  private ApiTestDTO ApiTestDTO;
+  @JsonProperty(value ="apiTestDTO")
+  private ApiTestDTO apiTestDTO;
 
 
   @Builder
-  private ApiTestsDTO(ApiTestDTO ApiTestDTO){
-    this.ApiTestDTO = ApiTestDTO;
+  private ApiTestsDTO(ApiTestDTO apiTestDTO) {
+    this.apiTestDTO = apiTestDTO;
 
   }
 
