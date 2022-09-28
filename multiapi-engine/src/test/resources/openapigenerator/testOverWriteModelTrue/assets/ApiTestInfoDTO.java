@@ -1,12 +1,12 @@
 package net.coru.multifileplugin.testoverwriteapi.model;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import net.coru.multifileplugin.testoverwriteapi.model.exception.ModelClassException;
-
 
 public class ApiTestInfoDTO {
 

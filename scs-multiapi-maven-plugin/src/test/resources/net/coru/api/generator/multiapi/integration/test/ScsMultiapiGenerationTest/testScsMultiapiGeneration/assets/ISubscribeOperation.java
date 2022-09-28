@@ -4,5 +4,5 @@ import net.coru.generator.multiapi.model.event.CreateOrderMapper;
 
 public interface ISubscribeOperation {
 
-    CreateOrderMapper subscribeOperation();
+  CreateOrderMapper subscribeOperation();
 }

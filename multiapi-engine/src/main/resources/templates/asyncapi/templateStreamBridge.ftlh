@@ -15,12 +15,12 @@ public class ${streamBridgeClassName?cap_first} {
 
   private StreamBridge streamBridge;
 
-  public ${streamBridgeClassName?cap_first}(StreamBridge streamBridge) {
+  public ${streamBridgeClassName?cap_first}(final StreamBridge streamBridge) {
     this.streamBridge = streamBridge;
   }
 
   <#list streamBridgeMethods as method>
-  public void ${method.operationId?uncap_first}(${method.className}<#if streamBridgeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> ${method.className?uncap_first}) {
+  public void ${method.operationId?uncap_first}(final ${method.className}<#if streamBridgeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> ${method.className?uncap_first}) {
     streamBridge.send("${method.channelName}", ${method.className?uncap_first});
   }
 

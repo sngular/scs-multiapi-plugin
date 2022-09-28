@@ -4,5 +4,5 @@ import ${method.classNamespace}<#if subscribeEntitiesSuffix?has_content>${subscr
 
 public interface I${method.operationId?cap_first} {
 
-  void ${method.operationId?uncap_first}(${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> value);
+  void ${method.operationId?uncap_first}(final ${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> value);
 }

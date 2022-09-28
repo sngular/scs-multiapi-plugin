@@ -1,6 +1,7 @@
 package ${packageModel};
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "enum">
@@ -22,7 +23,6 @@ import lombok.NonNull;
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
 </#if>
-
 
 @Data
 public class ${schema.className} {

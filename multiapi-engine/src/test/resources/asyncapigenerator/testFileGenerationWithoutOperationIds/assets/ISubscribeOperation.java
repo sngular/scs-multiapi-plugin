@@ -4,5 +4,5 @@ import net.coru.scsplugin.withoutids.model.event.CreateOrderDTO;
 
 public interface ISubscribeOperation {
 
-  void subscribeOperation(CreateOrderDTO value);
+  void subscribeOperation(final CreateOrderDTO value);
 }

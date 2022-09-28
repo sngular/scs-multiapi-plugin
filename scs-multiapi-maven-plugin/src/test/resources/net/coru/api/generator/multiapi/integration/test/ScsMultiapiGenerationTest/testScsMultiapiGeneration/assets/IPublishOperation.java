@@ -4,5 +4,5 @@ import net.coru.generator.multiapi.model.event.OrderCreatedDTO;
 
 public interface IPublishOperation {
 
-    void publishOperation(OrderCreatedDTO value);
+  void publishOperation(final OrderCreatedDTO value);
 }

@@ -1,10 +1,10 @@
 package net.coru.multifileplugin.restclient;
 
-import net.coru.multifileplugin.restclient.client.ApiRestClient;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.coru.multifileplugin.restclient.client.ApiRestClient;
 
 import net.coru.multifileplugin.restclient.model.ApiTestInfoDTO;
 import net.coru.multifileplugin.restclient.model.ApiErrorDTO;

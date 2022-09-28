@@ -1,10 +1,10 @@
 package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 
-import ${packageClient}.ApiRestClient;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ${packageClient}.ApiRestClient;
 
 <#assign imports=[]>
 <#list pathObjects as path>

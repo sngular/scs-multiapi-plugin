@@ -1,4 +1,10 @@
 package net.coru.multifileplugin.testmultifile.first;
+
+import java.util.Optional;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.List;
-import java.util.Map;
 
 import net.coru.multifileplugin.testmultifile.first.model.TestFirstDTO;
 import net.coru.multifileplugin.testmultifile.first.model.ErrorFirstDTO;
@@ -28,15 +30,16 @@ public interface TestFirstApi {
   @Operation(
      operationId = "listTest",
      summary = "List all available test",
-     tags = { "testFirst" },
+     tags = {"testFirst"},
      responses = {
-          @ApiResponse(responseCode = "200", description = "A paged array of tests" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = TestFirstDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ErrorFirstDTO.class)) )
+       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestFirstDTO.class))),
+       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorFirstDTO.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
     value = "/testFirst",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
 
   default ResponseEntity<TestFirstDTO> listTest() {
@@ -51,15 +54,16 @@ public interface TestFirstApi {
   @Operation(
      operationId = "showTestById",
      summary = "Info for a specific test",
-     tags = { "testFirst" },
+     tags = {"testFirst"},
      responses = {
-          @ApiResponse(responseCode = "200", description = "Expected response to a valid request" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = TestInfoFirstDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ErrorFirstDTO.class)) )
+       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoFirstDTO.class))),
+       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorFirstDTO.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
     value = "/testFirst/{testId}",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
 
   default ResponseEntity<TestInfoFirstDTO> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId) {

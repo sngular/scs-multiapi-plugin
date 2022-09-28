@@ -1,4 +1,10 @@
 package net.coru.multifileplugin.testanyofinresponse;
+
+import java.util.Optional;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.List;
-import java.util.Map;
 
 import net.coru.multifileplugin.testanyofinresponse.model.InlineResponse200ListGamesAnyOfDTO;
 
@@ -26,15 +28,15 @@ public interface GamesApi {
   @Operation(
      operationId = "listGames",
      summary = "List all available games",
-     tags = { "games" },
+     tags = {"games"},
      responses = {
-          @ApiResponse(responseCode = "200", description = "A paged array of games" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = List.class)) )
+       @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
     value = "/games",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
 
   default ResponseEntity<InlineResponse200ListGamesAnyOfDTO> listGames() {

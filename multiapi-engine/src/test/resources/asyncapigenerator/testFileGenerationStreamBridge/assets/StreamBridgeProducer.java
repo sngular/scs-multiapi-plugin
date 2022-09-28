@@ -9,11 +9,11 @@ public class StreamBridgeProducer {
 
   private StreamBridge streamBridge;
 
-  public StreamBridgeProducer(StreamBridge streamBridge) {
+  public StreamBridgeProducer(final StreamBridge streamBridge) {
     this.streamBridge = streamBridge;
   }
 
-  public void publishOperationStreamBridge(OrderCreated orderCreated) {
+  public void publishOperationStreamBridge(final OrderCreated orderCreated) {
     streamBridge.send("order.created", orderCreated);
   }
 

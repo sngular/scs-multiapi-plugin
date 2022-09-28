@@ -1,11 +1,11 @@
 package net.coru.multifileplugin.testoneofinresponse.model;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-
 
 @Data
 public class GameDTO {

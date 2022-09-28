@@ -1,4 +1,10 @@
 package net.coru.multifileplugin.reactivegeneration;
+
+import java.util.List;
+import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import javax.validation.Valid;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,11 +19,7 @@ import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
-import java.nio.charset.StandardCharsets;
 import springfox.documentation.annotations.ApiIgnore;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 import net.coru.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
 import net.coru.multifileplugin.reactivegeneration.model.ApiErrorDTO;
@@ -34,15 +36,16 @@ public interface TestApi {
   @Operation(
      operationId = "showTestById",
      summary = "Info for a specific test",
-     tags = { "test" },
+     tags = {"test"},
      responses = {
-          @ApiResponse(responseCode = "200", description = "Expected response to a valid request" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ApiTestInfoDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ApiErrorDTO.class)) )
+       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestInfoDTO.class))),
+       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
     value = "/test/{testId}",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
   default ResponseEntity<Mono<ApiTestInfoDTO>> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId, @ApiIgnore final ServerWebExchange exchange) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
@@ -56,15 +59,16 @@ public interface TestApi {
   @Operation(
      operationId = "listTest",
      summary = "List all available test",
-     tags = { "test" },
+     tags = {"test"},
      responses = {
-          @ApiResponse(responseCode = "200", description = "A paged array of tests" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ApiTestDTO.class)) ), @ApiResponse(responseCode = "default", description = "unexpected error" , content = @Content(mediaType = "application/json" ,schema = @Schema(implementation = ApiErrorDTO.class)) )
+       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
+       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
     value = "/test",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
   default ResponseEntity<Flux<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

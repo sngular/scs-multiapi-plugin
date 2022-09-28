@@ -1,6 +1,7 @@
 package ${packageModel};
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "enum">
@@ -18,7 +19,6 @@ import ${packageModel}.exception.ModelClassException;
     <#break>
     </#if>
 </#list>
-
 
 public class ${schema.className} {
 

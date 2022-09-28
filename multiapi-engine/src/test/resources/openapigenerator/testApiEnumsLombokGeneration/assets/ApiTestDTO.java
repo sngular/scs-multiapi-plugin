@@ -1,13 +1,13 @@
 package net.coru.multifileplugin.enumlombokgeneration.model;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-
 
 @Data
 public class ApiTestDTO {

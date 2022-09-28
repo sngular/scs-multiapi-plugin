@@ -1,10 +1,10 @@
 package net.coru.multifileplugin.webclientapi;
 
-import net.coru.apigenerator.openapi.client.ApiWebClient;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.coru.apigenerator.openapi.client.ApiWebClient;
 
 import net.coru.multifileplugin.webclientapi.model.ApiTestInfoDTO;
 import net.coru.multifileplugin.webclientapi.model.ApiErrorDTO;

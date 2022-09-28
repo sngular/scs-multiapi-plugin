@@ -1,6 +1,7 @@
 package net.coru.multifileplugin.testoneofinresponse.model;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import net.coru.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
-
 
 @Data
 public class InlineResponse200ListGamesOneOfDTO {

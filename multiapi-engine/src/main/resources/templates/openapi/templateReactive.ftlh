@@ -1,4 +1,10 @@
 package <#if packageApi??>${packageApi}<#elseif package??>${package}</#if>;
+
+import java.util.List;
+import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import javax.validation.Valid;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,11 +19,7 @@ import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
-import java.nio.charset.StandardCharsets;
 import springfox.documentation.annotations.ApiIgnore;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 <#assign imports=[]>
 <#list pathObjects as path>
@@ -76,19 +78,20 @@ public interface ${className?cap_first}Api {
   @Operation(
      operationId = "${operation.operationId}",<#if operation.summary?has_content>
      summary = "${operation.summary}",</#if>
-     tags = { <#list operation.tags as tag>"${tag}"</#list> }<#if operation.responseObjects?has_content>,
+     tags = {<#list operation.tags as tag>"${tag}"</#list>}<#if operation.responseObjects?has_content>,
      responses = {
-         <#list operation.responseObjects as response> @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}" <#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}" <#if content.refName?has_content>,schema = @Schema(implementation = <#if content.refName?contains("List")>List.class)<#else>${content.refName?cap_first?no_esc}.class)</#if>)</#if> </#list></#if>)<#if !response?is_last>,</#if></#list>
+<#list operation.responseObjects as response>       @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}"<#if content.refName?has_content>, schema = @Schema(implementation = <#if content.refName?contains("List")>List.class)<#else>${content.refName?cap_first?no_esc}.class)</#if>)</#if></#list></#if>)<#if !response?is_last>,</#if>
+</#list>
      }</#if>
   )
   @RequestMapping(
     method = RequestMethod.${operation.operationType},
     value = "${path.pathName}",
-    produces = { "application/json" }
+    produces = {"application/json"}
   )
   default ResponseEntity<@compress single_line=true><<#if operation.responseObjects[0].contentObjects[0]??><#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "array" || operation.responseObjects[0].contentObjects[0].typeData == "map")>Flux<${operation.responseObjects[0].contentObjects[0].refName?remove_beginning("List<")?remove_ending(">")?no_esc}><#else>Mono<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}></#if><#else>Void</#if>></@compress> ${operation.operationId}(<@compress single_line=true>
-    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content> , </#if></#list></#if>
-    <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObjects[0].refName}", description = "${request.description! ""}", required = ${request.required?c} , schema = @Schema(description = "${request.contentObjects[0].description! ""}")) @Valid @RequestBody
+    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
+    <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObjects[0].refName}", description = "${request.description! ""}", required = ${request.required?c}, schema = @Schema(description = "${request.contentObjects[0].description! ""}")) @Valid @RequestBody
     <#if request.contentObjects[0].typeData?? && (request.contentObjects[0].typeData == "array" || request.contentObjects[0].typeData == "map")> Flux<${request.contentObjects[0].refName?cap_first?no_esc}>
     <#else> Mono<${request.contentObjects[0].refName?cap_first?no_esc}> </#if> ${request.contentObjects[0].refName?uncap_first}<#if request?has_next>, </#if></#list></#if></@compress><#if operation.parameterObjects?has_content || operation.requestObjects?has_content>, </#if><#if path.parameterObjects?has_content || path.requestObjects?has_content>, </#if>@ApiIgnore final ServerWebExchange exchange) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

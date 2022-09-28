@@ -4,5 +4,5 @@ import net.coru.scsplugin.streambridge.model.event.CreateOrderDTO;
 
 public interface ISubscribeOperationStreamBridge {
 
-  void subscribeOperationStreamBridge(CreateOrderDTO value);
+  void subscribeOperationStreamBridge(final CreateOrderDTO value);
 }
