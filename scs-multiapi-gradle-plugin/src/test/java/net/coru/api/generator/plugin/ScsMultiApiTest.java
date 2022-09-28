@@ -22,11 +22,11 @@ class ScsMultiApiTest {
   }
 
   @Test
-  void greeterPluginAddsGreetingTaskToProject() {
+  void greeterPluginAddsAsyncApiTaskTaskToProject() {
     Project project = ProjectBuilder.builder().build();
     project.getPluginManager().apply("net.coru.scs-multiapi-gradle-plugin");
 
-    assertTrue(project.getTasks().getByName("asyncApiTask") instanceof OpenApiTask);
+    assertTrue(project.getTasks().getByName("asyncApiTask") instanceof AsyncApiTask);
   }
 
 }
