@@ -36,13 +36,13 @@ class AsyncApiGeneratorTest {
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-        Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.VALIDATE_TEST_FILE_GENERATION()),
+        Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
         Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
-                     AsyncApiGeneratorFixtures.VALIDATE_TEST_FILE_GENERATION_EXTERNAL_AVRO()),
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationExternalAvro()),
         Arguments.of("TestFileGenerationStreamBridge", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_STREAM_BRIDGE,
-                     AsyncApiGeneratorFixtures.VALIDATE_TEST_FILE_GENERATION_STREAM_BRIDGE()),
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationStreamBridge()),
         Arguments.of("TestFileGenerationWithoutIds", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITHOUT_IDS,
-                     AsyncApiGeneratorFixtures.VALIDATE_TEST_FILE_GENERATION_WITHOUT_IDS())
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds())
     );
   }
 

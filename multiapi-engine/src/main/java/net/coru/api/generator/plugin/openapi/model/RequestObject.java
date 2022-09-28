@@ -24,9 +24,9 @@ public class RequestObject {
 
   private List<ContentObject> contentObjects = new ArrayList<>();
 
-  public static class RequestObjectBuilder {
+  public static final class RequestObjectBuilder {
 
-    private List<ContentObject> contentObjects = new ArrayList<>();
+    private final List<ContentObject> contentObjects = new ArrayList<>();
 
     public RequestObjectBuilder contentObjects(final List<ContentObject> contentObjects) {
       this.contentObjects.addAll(contentObjects);

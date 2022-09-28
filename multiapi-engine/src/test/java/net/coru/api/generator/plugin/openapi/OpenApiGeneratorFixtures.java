@@ -1,3 +1,9 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package net.coru.api.generator.plugin.openapi;
 
 import static net.coru.api.generator.test.utils.TestUtils.validateFiles;
@@ -231,9 +237,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testAnyOfInResponse/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testAnyOfInResponse")
-          .modelPackage("net.coru.multifileplugin.testAnyOfInResponse.model")
-          .clientPackage("net.coru.multifileplugin.testAnyOfInResponse.client")
+          .apiPackage("net.coru.multifileplugin.testanyofinresponse")
+          .modelPackage("net.coru.multifileplugin.testanyofinresponse.model")
+          .clientPackage("net.coru.multifileplugin.testanyofinresponse.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -243,15 +249,15 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testOneOfInResponse/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testOneOfInResponse")
-          .modelPackage("net.coru.multifileplugin.testOneOfInResponse.model")
-          .clientPackage("net.coru.multifileplugin.testOneOfInResponse.client")
+          .apiPackage("net.coru.multifileplugin.testoneofInresponse")
+          .modelPackage("net.coru.multifileplugin.testoneofInresponse.model")
+          .clientPackage("net.coru.multifileplugin.testoneofInresponse.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
   );
 
-  static Function<Path, Boolean> VALIDATE_ONE_OF_IN_RESPONSE() {
+  static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testOneOfInResponse";
 
@@ -275,7 +281,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> VALIDATE_ALL_OF() {
+  static Function<Path, Boolean> validateAllOf() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
 
@@ -301,7 +307,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> VALIDATE_ALL_OF_LOMBOK() {
+  static Function<Path, Boolean> validateAllOfLombok() {
 
     final String DEFAULT_LOMBOK_TARGET_API = "generated/net/coru/multifileplugin/lombok/testapi";
 
@@ -322,7 +328,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
   }
 
-  static Function<Path, Boolean> VALIDATE_OVERWRITE_MODE_TRUE() {
+  static Function<Path, Boolean> validateOverwriteModeTrue() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testoverwriteapi";
 
@@ -346,7 +352,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_API_CLIENT_GENERATION() {
+  static Function<Path, Boolean> validateApiClientGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapiclient";
 
@@ -366,7 +372,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_INLINE_SCHEMA_CREATION() {
+  static Function<Path, Boolean> validateInlineSchemaCreation() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/inlineschemacreation";
 
@@ -388,7 +394,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
-  static Function<Path, Boolean> VALIDATE_PARAMETERS_WITH_SCHEMA_GENERATION() {
+  static Function<Path, Boolean> validateParametersWithSchemaGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/parameterwithcontent";
 
@@ -408,7 +414,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
-  static Function<Path, Boolean> VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION() {
+  static Function<Path, Boolean> validatePathWithSpecialCharGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathwithspecialchar";
 
@@ -430,7 +436,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_API_REACTIVE_GENERATION() {
+  static Function<Path, Boolean> validateApiReactiveGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/reactivegeneration";
 
@@ -451,7 +457,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_TAGS_GENERATION() {
+  static Function<Path, Boolean> validateTagsGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/tagsgeneration";
 
@@ -473,7 +479,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_MULTIPLE_REF_GENERATION() {
+  static Function<Path, Boolean> validateMultipleRefGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/multipleref";
 
@@ -492,7 +498,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_PATH_PARAMETER_GENERATION() {
+  static Function<Path, Boolean> validatePathParameterGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathparameter";
 
@@ -513,7 +519,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_WEB_CLIENT_GENERATION() {
+  static Function<Path, Boolean> validateWebClientGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/webclientapi";
 
@@ -534,7 +540,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_CLIENT_PACKAGE_WEB_CLIENT_GENERATION() {
+  static Function<Path, Boolean> validateClientPackageWebClientGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/client";
 
@@ -558,7 +564,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> VALIDATE_REST_CLIENT_GENERATION() {
+  static Function<Path, Boolean> validateRestClientGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/restclient";
 
@@ -584,7 +590,7 @@ public final class OpenApiGeneratorFixtures {
                commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
 
-  static Function<Path, Boolean> VALIDATE_ENUMS_GENERATION() {
+  static Function<Path, Boolean> validateEnumsGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumgeneration";
 
@@ -609,7 +615,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> VALIDATE_ENUMS_LOMBOK_GENERATION() {
+  static Function<Path, Boolean> validateEnumsLombokGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumlombokgeneration";
 
@@ -629,7 +635,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
-  static Function<Path, Boolean> VALIDATE_EXTERNAL_REF_GENERATION() {
+  static Function<Path, Boolean> validateExternalRefGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/externalref";
 
@@ -650,7 +656,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> VALIDATE_ANY_OF_IN_RESPONSE() {
+  static Function<Path, Boolean> validateAnyOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testAnyOfInResponse";
 

@@ -1,3 +1,9 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package net.coru.api.generator.plugin.asyncapi;
 
 import java.io.File;
@@ -45,13 +51,13 @@ public class AsyncApiGenerator {
 
   private static final String STREAM_BRIDGE_CLASS_NAME = "StreamBridgeProducer";
 
-  public static final String SUBSCRIBE = "subscribe";
+  private static final String SUBSCRIBE = "subscribe";
 
-  public static final  String PUBLISH = "publish";
+  private static final String PUBLISH = "publish";
 
-  public static final String OPERATION_ID = "operationId";
+  private static final String OPERATION_ID = "operationId";
 
-  public static final String PACKAGE_SEPARATOR_STR = ".";
+  private static final String PACKAGE_SEPARATOR_STR = ".";
 
   public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
@@ -83,7 +89,7 @@ public class AsyncApiGenerator {
     targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
   }
 
-  public void processFileSpec(final List<SpecFile> specsListFile) {
+  public final void processFileSpec(final List<SpecFile> specsListFile) {
 
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
@@ -149,7 +155,8 @@ public class AsyncApiGenerator {
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       checkClassPackageDuplicate(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage());
       processStreamBridgeMethod(channelPayload, fileParameter.getStreamBridge().getModelPackage(), ymlParentPath, entry.getKey());
-      addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
+      addProcessedClassesAndPackagesToGlobalVariables(fileParameter.getStreamBridge().getClassNamePostfix(), fileParameter.getStreamBridge().getApiPackage(),
+                                                      STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
@@ -168,7 +175,7 @@ public class AsyncApiGenerator {
   }
 
   private JsonNode getChannelPayload(final JsonNode channel) {
-    JsonNode payload;
+    final JsonNode payload;
     if (channel.has(SUBSCRIBE)) {
       payload = channel.get(SUBSCRIBE);
     } else {
@@ -244,10 +251,8 @@ public class AsyncApiGenerator {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(operationParameter));
     } else {
       path = targetFolder.toPath();
-      if (!path.toFile().exists()) {
-        if (!path.toFile().mkdirs()) {
-          throw new FileSystemException(path.toFile().getName());
-        }
+      if (!path.toFile().exists() && !path.toFile().mkdirs()) {
+        throw new FileSystemException(path.toFile().getName());
       }
       path = path.resolve(convertPackageToTargetPath(operationParameter));
     }
@@ -314,7 +319,7 @@ public class AsyncApiGenerator {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
     final String messageContent = message.get("$ref").asText();
-    String namespace;
+    final String namespace;
     if (message.get("$ref") != null) {
       if (messageContent.startsWith("#")) {
         final String[] pathToObject = messageContent.split("/");

@@ -1,3 +1,9 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package net.coru.api.generator.plugin.openapi;
 
 import java.io.File;
@@ -29,39 +35,39 @@ class OpenApiGeneratorTest {
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-      Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF, OpenApiGeneratorFixtures.VALIDATE_ALL_OF()),
-      Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK, OpenApiGeneratorFixtures.VALIDATE_ALL_OF_LOMBOK()),
-      Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE, OpenApiGeneratorFixtures.VALIDATE_OVERWRITE_MODE_TRUE()),
-      Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.VALIDATE_API_CLIENT_GENERATION()),
-      Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION, OpenApiGeneratorFixtures.VALIDATE_INLINE_SCHEMA_CREATION()),
+      Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF, OpenApiGeneratorFixtures.validateAllOf()),
+      Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK, OpenApiGeneratorFixtures.validateAllOfLombok()),
+      Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE, OpenApiGeneratorFixtures.validateOverwriteModeTrue()),
+      Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.validateApiClientGeneration()),
+      Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION, OpenApiGeneratorFixtures.validateInlineSchemaCreation()),
       Arguments.of("testApiParametersWithContentGeneration", OpenApiGeneratorFixtures.TEST_PARAMETER_WITH_CONTENT_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_PARAMETERS_WITH_SCHEMA_GENERATION()),
+                   OpenApiGeneratorFixtures.validateParametersWithSchemaGeneration()),
       Arguments.of("testApiPathWithSpecialCharGeneration", OpenApiGeneratorFixtures.TEST_PATH_WITH_SLASH_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_PATH_WITH_SPECIAL_CHAR_GENERATION()),
+                   OpenApiGeneratorFixtures.validatePathWithSpecialCharGeneration()),
       Arguments.of("testApiReactiveGeneration",OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_API_REACTIVE_GENERATION()),
+                   OpenApiGeneratorFixtures.validateApiReactiveGeneration()),
       Arguments.of("testApiTagsGeneration",OpenApiGeneratorFixtures.TEST_API_TAGS_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_TAGS_GENERATION()),
+                   OpenApiGeneratorFixtures.validateTagsGeneration()),
       Arguments.of("testMultipleRefGeneration",OpenApiGeneratorFixtures.TEST_MULTIPLE_REF_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_MULTIPLE_REF_GENERATION()),
+                   OpenApiGeneratorFixtures.validateMultipleRefGeneration()),
       Arguments.of("testApiPathParameterGeneration",OpenApiGeneratorFixtures.TEST_PATH_PARAMETER_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_PATH_PARAMETER_GENERATION()),
+                   OpenApiGeneratorFixtures.validatePathParameterGeneration()),
       Arguments.of("testWebClientApiGeneration",OpenApiGeneratorFixtures.TEST_WEB_CLIENT_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_WEB_CLIENT_GENERATION()),
+                   OpenApiGeneratorFixtures.validateWebClientGeneration()),
       Arguments.of("testClientPackageWebClientApiGeneration",OpenApiGeneratorFixtures.TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_CLIENT_PACKAGE_WEB_CLIENT_GENERATION()),
+                   OpenApiGeneratorFixtures.validateClientPackageWebClientGeneration()),
       Arguments.of("testRestClientApiGeneration",OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_REST_CLIENT_GENERATION()),
+                   OpenApiGeneratorFixtures.validateRestClientGeneration()),
       Arguments.of("testApiEnumsGeneration",OpenApiGeneratorFixtures.TEST_ENUMS_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_ENUMS_GENERATION()),
+                   OpenApiGeneratorFixtures.validateEnumsGeneration()),
       Arguments.of("testApiEnumsLombokGeneration",OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_ENUMS_LOMBOK_GENERATION()),
+                   OpenApiGeneratorFixtures.validateEnumsLombokGeneration()),
       Arguments.of("testExternalRefsGeneration",OpenApiGeneratorFixtures.TEST_EXTERNAL_REF_GENERATION,
-                   OpenApiGeneratorFixtures.VALIDATE_EXTERNAL_REF_GENERATION()),
+                   OpenApiGeneratorFixtures.validateExternalRefGeneration()),
       Arguments.of("testAnyOfInResponse",OpenApiGeneratorFixtures.TEST_ANY_OF_IN_RESPONSE,
-                   OpenApiGeneratorFixtures.VALIDATE_ANY_OF_IN_RESPONSE()),
+                   OpenApiGeneratorFixtures.validateAnyOfInResponse()),
       Arguments.of("testOneOfInResponse",OpenApiGeneratorFixtures.TEST_ONE_OF_IN_RESPONSE,
-                   OpenApiGeneratorFixtures.VALIDATE_ONE_OF_IN_RESPONSE())
+                   OpenApiGeneratorFixtures.validateOneOfInResponse())
     );
   }
 

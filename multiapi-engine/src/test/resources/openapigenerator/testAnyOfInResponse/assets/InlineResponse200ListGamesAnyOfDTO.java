@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testAnyOfInResponse.model;
+package net.coru.multifileplugin.testanyofinresponse.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import net.coru.multifileplugin.testAnyOfInResponse.model.exception.ModelClassException;
+import net.coru.multifileplugin.testanyofinresponse.model.exception.ModelClassException;
 
 
 @Data

@@ -26,9 +26,9 @@ public class PathObject {
 
   private List<OperationObject> operationObjects = new ArrayList<>();
 
-  public static class PathObjectBuilder {
+  public static final class PathObjectBuilder {
 
-    private List<OperationObject> operationObjects = new ArrayList<>();
+    private final List<OperationObject> operationObjects = new ArrayList<>();
 
 
     public PathObjectBuilder operationObjects(final List<OperationObject> operationObjects) {

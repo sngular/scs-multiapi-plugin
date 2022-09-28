@@ -26,12 +26,12 @@ public class AuthObject {
 
     private final List<String> securityRequirements = new ArrayList<>();
 
-    public AuthObjectBuilder securityRequirements(final List<String> securityRequirements) {
+    public final AuthObjectBuilder securityRequirements(final List<String> securityRequirements) {
       this.securityRequirements.addAll(securityRequirements);
       return this;
     }
 
-    public AuthObjectBuilder securityRequirement(final String securityRequirement) {
+    public final AuthObjectBuilder securityRequirement(final String securityRequirement) {
       this.securityRequirements.add(securityRequirement);
       return this;
     }

@@ -1,6 +1,7 @@
+# SCS MultiApi Plugin
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/corunet/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=corunet/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
 [![Maven Central](https://img.shields.io/maven-central/v/net.coru/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.coru%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
-# SCS MultiApi Plugin
 
 This is a plugin designed to help developers automatizing the creation of
 code classes from YML files based on AsyncApi and OpenAPI. It is presented in 2 flavours
@@ -12,11 +13,11 @@ Maven and Gradle
 - [Index](#index)
 - [Main Configuration](#main-configuration)
   - [How to configure the POM file](#how-to-configure-the-pom-file)
-  - [How to configure the build.gradle file](#how-to-configure-the-build.gradle-file)
+  - [How to configure the build.gradle file](#how-to-configure-the-build-file)
 - [AsyncApi Generator](#asyncapi-generator)
   - [Configuration](#configuration)
     - [Generated Sources Folder](#generated-sources-folder)
-  - [How apiPackage is setted?](#how-apiPackage-is-setted)
+  - [How apiPackage is setted?](#how-apipackage-is-setted)
   - [How modelPackage is setted?](#how-modelpackage-is-setted)
   - [Class Generation](#class-generation)
     - [Consumer and Supplier classes](#consumer-and-supplier-classes)
@@ -102,7 +103,7 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
-### How to configure the build.gradle file
+### How to configure the build file
 
 To maintain the generation of the different types of classes independent, they
 are configured as two different task on the plugin, `openApiTask` and
@@ -140,6 +141,7 @@ about how they work, and the parameters and configuration options they offer.
 ### Configuration
 
 #### Maven
+
 The plugin defined `phase` and `goal` parameters are expected to be
 *generate-sources* and *asyncapi-generation*, as they are the only values for
 which the plugin is designed.
@@ -189,15 +191,15 @@ In this case we have an extension model to fulfill. Similar to the Maven one.
 
 ```groovy
 openapimodel {
-	specFile {
-		{
-			filePath = './src/main/resources/api/rest/api-rest.yml'
-			apiPackage = 'net.coru.world_domination.api'
-			modelPackage = 'net.coru.world_domination.model'
-			useTagsGroup = true
-		}
-		overWriteModel = true
-	}
+  specFile {
+    {
+        filePath = './src/main/resources/api/rest/api-rest.yml'
+        apiPackage = 'net.coru.world_domination.api'
+        modelPackage = 'net.coru.world_domination.model'
+        useTagsGroup = true
+    }
+    overWriteModel = true
+  }
 }
 ```
 
@@ -208,68 +210,68 @@ YML files as you want.
 **specFiles** could be configured in two different ways:
 
 1. The first one is to configure only the YML file. This is made using the
-**filePath** parameter, that expects to receive the path to the file. Using
-the plugin in this way, you can't configure the model package or the api
-package in the pom file, neither other options, so they will be configured as
-its explained in [apiPackage](#how-apiPackage-is-setted) and
-[modelPackage](#how-modelPackage-is-setted) sections.  
-This way it's limited to the usage of Consumer and Supplier methods.
+  **filePath** parameter, that expects to receive the path to the file. Using
+  the plugin in this way, you can't configure the model package or the api
+  package in the pom file, neither other options, so they will be configured as
+  its explained in [apiPackage](#how-apipackage-is-setted) and
+  [modelPackage](#how-modelpackage-is-setted) sections.  
+  This way it's limited to the usage of Consumer and Supplier methods.
+
+    ```xml
+    <specFile>
+        <filePath>PATH_TO_YML</filePath>
+    </specFile>
+    ```
+
+2. The second one is to configure the YML file with the consumers, supplier
+  producers and streamBrige producers that you want to generate.
 
   ```xml
   <specFile>
       <filePath>PATH_TO_YML</filePath>
+      <consumer>
+          <ids>publishOperation</ids>
+          <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
+          <modelNameSuffix>DTO</modelNameSuffix>
+          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
+          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+      </consumer>
+      <supplier>
+          <ids>subscribeOperation</ids>
+          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+      </supplier>
+      <streamBridge>
+          <ids>streamBridgeOperation</ids>
+          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+      </streamBridge>
   </specFile>
   ```
 
-2. The second one is to configure the YML file with the consumers, supplier
-producers and streamBrige producers that you want to generate.
-
-```xml
-<specFile>
-    <filePath>PATH_TO_YML</filePath>
-    <consumer>
-        <ids>publishOperation</ids>
-        <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-        <modelNameSuffix>DTO</modelNameSuffix>
-        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
-        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
-    </consumer>
-    <supplier>
-        <ids>subscribeOperation</ids>
-        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
-    </supplier>
-    <streamBridge>
-        <ids>streamBridgeOperation</ids>
-        <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-        <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
-    </streamBridge>
-</specFile>
-```
-
-```groovy
-	specFile {
-		{
-			filePath = './src/main/resources/api/event/event-api.yml'
-			consumer {
-				ids = 'publishOperation'
-				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.consumer'
-				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
-			}
-            supplier {
-				ids = 'subscribeOperation'
-				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
-				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
-			}
-			streamBridge {
-				ids = 'streamBridgeOperation'
-				apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
-				modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
-			}
-		}
-		overWriteModel = true
-	}
-```
+  ```groovy
+  specFile {
+    {
+      filePath = './src/main/resources/api/event/event-api.yml'
+      consumer {
+          ids = 'publishOperation'
+          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.consumer'
+          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+      }
+      supplier {
+          ids = 'subscribeOperation'
+          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
+          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+      }
+      streamBridge {
+          ids = 'streamBridgeOperation'
+          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
+          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+      }
+    }
+    overWriteModel = true
+  }
+  ```
 
 As you can see in the example above, there are three blocks of parameters that
 can be configured in the plugin.
@@ -295,7 +297,7 @@ the same way and can receive the same parameters. These parameters are:
   result as `EntityClassDTO`. This parameter is optional.
   - **apiPackage**: This parameter receive a package name, where the
   generated classes will be generated. This parameter is optional.
-  Check [how the apiPackage is setted](#how-apiPackage-is-setted) for
+  Check [how the apiPackage is setted](#how-apipackage-is-setted) for
   more information about how this parameter works, and the values it
   could have.
   - **modelPackage**: This parameter receives a package name, where the entities
@@ -305,7 +307,7 @@ the same way and can receive the same parameters. These parameters are:
     **Note that the plugin doesn't create the entities neither checks their
   existence**, it takes their names from the YML file and assume that they are
   created by the user. As the previous parameter, this is also optional.
-  Check [how the modelPackage is setted](#how-modelPackage-is-setted) for more
+  Check [how the modelPackage is setted](#how-modelpackage-is-setted) for more
   information about how his parameter works, and the values it could have.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
@@ -379,7 +381,7 @@ Those are a pair of classes, separated by the directionality of the messages.
 They came from the plugin fully implemented by making reference to the
 interfaces of the next section. Their names could be modified using the
 `classNamePostfix` parameter specified on the
-[Usage section](#using-in-other-projects), being by default **Producer** and
+[Usage section](#usage), being by default **Producer** and
 **Subscriber**.
 
 ```java
@@ -466,7 +468,7 @@ public class subscribeOperation implements ISubscribeOperation {
 
 In this case, there is only one class where all the selected operations will be
 included. It's name could be modified using the `classNamePostfix` parameter
-specified on the [Usage section](#using-in-other-projects), being by default
+specified on the [Usage section](#usage), being by default
 **StreamBridgeProducer**.
 
 ```java
@@ -590,13 +592,14 @@ openapimodel {
     }
 }
 ```
+
 ### Initial Considerations
 
 Before using this plugin we have to warn that not all the complexity and
 support offered by the use of swagger.io yml files is supported.
 
 Since 1.1.0 version, we support the definition of parameters in both Path
-and Operation object. ❗❗❗ Please bear in mind that we use the Option resolver from OpenApi which will override the Operation parameters 
+and Operation object. ❗❗❗ Please bear in mind that we use the Option resolver from OpenApi which will override the Operation parameters
 if you have a parameter defined in the Path.
 
 We establish here some of these options that are not yet supported and that
@@ -627,6 +630,7 @@ specFiles.
     </specFiles>
 </configuration>
 ```
+
 ```groovy
 openapimodel {
   specFile {
@@ -640,6 +644,7 @@ openapimodel {
   }
 }
 ```
+
 To customize these specFiles tags we are going to specify them inside the
 configuration tag, we must declare the specFiles tag that contains all files
 that will be used. Each specFile has their own configuration:

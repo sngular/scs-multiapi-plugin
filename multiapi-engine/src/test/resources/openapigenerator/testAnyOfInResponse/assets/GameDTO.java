@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testAnyOfInResponse.model;
+package net.coru.multifileplugin.testanyofinresponse.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -30,11 +30,11 @@ public class SchemaObject {
 
   private String schemaCombinator;
 
-  public static class SchemaObjectBuilder {
+  public static final class SchemaObjectBuilder {
 
-    private List<String> importList = new ArrayList<>();
+    private final List<String> importList = new ArrayList<>();
 
-    private List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
+    private final List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
 
     public SchemaObjectBuilder importList(final List<String> importList) {
       this.importList.addAll(importList);

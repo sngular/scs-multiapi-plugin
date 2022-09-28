@@ -26,9 +26,9 @@ public class ResponseObject {
 
   private List<ContentObject> contentObjects = new ArrayList<>();
 
-  public static class ResponseObjectBuilder {
+  public static final class ResponseObjectBuilder {
 
-    private List<ContentObject> contentObjects = new ArrayList<>();
+    private final List<ContentObject> contentObjects = new ArrayList<>();
 
     public ResponseObjectBuilder contentObjects(final List<ContentObject> contentObjects) {
       this.contentObjects.addAll(contentObjects);

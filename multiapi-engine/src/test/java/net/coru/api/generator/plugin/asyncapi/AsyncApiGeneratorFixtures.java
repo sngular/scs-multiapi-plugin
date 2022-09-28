@@ -1,3 +1,9 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package net.coru.api.generator.plugin.asyncapi;
 
 import static net.coru.api.generator.test.utils.TestUtils.validateFiles;
@@ -40,13 +46,13 @@ public class AsyncApiGeneratorFixtures {
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
           .consumer(OperationParameterObject.builder()
                                             .ids("subscribeOperationExternalAvro")
-                                            .apiPackage("net.coru.scsplugin.externalAvro.model.event.consumer")
-                                            .modelPackage("net.coru.scsplugin.externalAvro.model.event")
+                                            .apiPackage("net.coru.scsplugin.externalavro.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.externalavro.model.event")
                                             .build())
           .supplier(OperationParameterObject.builder()
                                             .ids("publishOperationExternalAvro")
-                                            .apiPackage("net.coru.scsplugin.externalAvro.model.event.producer")
-                                            .modelPackage("net.coru.scsplugin.externalAvro.model.event")
+                                            .apiPackage("net.coru.scsplugin.externalavro.model.event.producer")
+                                            .modelPackage("net.coru.scsplugin.externalavro.model.event")
                                             .build())
           .build()
   );
@@ -77,12 +83,12 @@ public class AsyncApiGeneratorFixtures {
           .consumer(OperationParameterObject.builder()
                                             .classNamePostfix("TestClassName")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("net.coru.scsplugin.withOutIds.model.event.consumer")
-                                            .modelPackage("net.coru.scsplugin.withOutIds.model.event")
+                                            .apiPackage("net.coru.scsplugin.withoutids.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.withoutids.model.event")
                                             .build())
           .streamBridge(OperationParameterObject.builder()
-                                                .apiPackage("net.coru.scsplugin.withOutIds.model.event.producer")
-                                                .modelPackage("net.coru.scsplugin.withOutIds.model.event")
+                                                .apiPackage("net.coru.scsplugin.withoutids.model.event.producer")
+                                                .modelPackage("net.coru.scsplugin.withoutids.model.event")
                                                 .modelNameSuffix("Mapper")
                                                 .build())
           .build()
@@ -92,7 +98,7 @@ public class AsyncApiGeneratorFixtures {
 
   final static String GENERATED = "generated/";
 
-  static Function<Path, Boolean> VALIDATE_TEST_FILE_GENERATION() {
+  static Function<Path, Boolean> validateTestFileGeneration() {
     String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/consumer";
 
     String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/producer";
@@ -108,7 +114,7 @@ public class AsyncApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER);
   }
 
-  static Function<Path, Boolean> VALIDATE_TEST_FILE_GENERATION_EXTERNAL_AVRO() {
+  static Function<Path, Boolean> validateTestFileGenerationExternalAvro() {
     String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/externalAvro/model/event/consumer";
 
     String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/externalAvro/model/event/producer";
@@ -124,7 +130,7 @@ public class AsyncApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER);
   }
 
-  static Function<Path, Boolean> VALIDATE_TEST_FILE_GENERATION_STREAM_BRIDGE() {
+  static Function<Path, Boolean> validateTestFileGenerationStreamBridge() {
     String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/streambridge/model/event/consumer";
 
     String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/streambridge/model/event/producer";
@@ -138,7 +144,7 @@ public class AsyncApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER);
   }
 
-  static Function<Path, Boolean> VALIDATE_TEST_FILE_GENERATION_WITHOUT_IDS() {
+  static Function<Path, Boolean> validateTestFileGenerationWithoutIds() {
     String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/withOutIds/model/event/consumer";
 
     String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/withOutIds/model/event/producer";

@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testAnyOfInResponse;
+package net.coru.multifileplugin.testanyofinresponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.multifileplugin.testAnyOfInResponse.model.InlineResponse200ListGamesAnyOfDTO;
+import net.coru.multifileplugin.testanyofinresponse.model.InlineResponse200ListGamesAnyOfDTO;
 
 public interface GamesApi {
 

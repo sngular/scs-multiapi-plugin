@@ -1,6 +1,6 @@
-package net.coru.scsplugin.externalAvro.model.event.consumer;
+package net.coru.scsplugin.externalavro.model.event.consumer;
 
-import net.coru.scsplugin.externalAvro.model.event.CreateOrder;
+import net.coru.scsplugin.externalavro.model.event.CreateOrder;
 
 public interface ISubscribeOperationExternalAvro {
 

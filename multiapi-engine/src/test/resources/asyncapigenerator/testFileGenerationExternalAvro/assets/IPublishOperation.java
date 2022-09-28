@@ -1,6 +1,6 @@
-package net.coru.scsplugin.externalAvro.model.event.producer;
+package net.coru.scsplugin.externalavro.model.event.producer;
 
-import net.coru.scsplugin.externalAvro.model.event.Order;
+import net.coru.scsplugin.externalavro.model.event.Order;
 
 public interface IPublishOperationExternalAvro {
 

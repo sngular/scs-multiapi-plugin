@@ -1,6 +1,6 @@
-package net.coru.scsplugin.withOutIds.model.event.consumer;
+package net.coru.scsplugin.withoutids.model.event.consumer;
 
-import net.coru.scsplugin.withOutIds.model.event.CreateOrderDTO;
+import net.coru.scsplugin.withoutids.model.event.CreateOrderDTO;
 
 public interface ISubscribeOperation {
 

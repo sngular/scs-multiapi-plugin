@@ -38,10 +38,10 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   @Override
   public void execute() {
-    var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
+    final var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
-    var asyncApiGenerator = new AsyncApiGenerator(targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
+    final var asyncApiGenerator = new AsyncApiGenerator(targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
 
     asyncApiGenerator.processFileSpec(specFiles);
 

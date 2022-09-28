@@ -34,50 +34,50 @@ public class GlobalObject {
 
   public static class GlobalObjectBuilder {
 
-    private List<String> serverUrl = new ArrayList<>();
+    private final List<String> serverUrl = new ArrayList<>();
 
-    private List<AuthSchemaObject> authSchemas = new ArrayList<>();
+    private final List<AuthSchemaObject> authSchemas = new ArrayList<>();
 
-    private List<String> authentications = new ArrayList<>();
+    private final List<String> authentications = new ArrayList<>();
 
-    private Map<String, String> componentsTypeMap = new HashMap<>();
+    private final Map<String, String> componentsTypeMap = new HashMap<>();
 
-    public GlobalObjectBuilder serverUrl(final List<String> serverUrl) {
+    public final GlobalObjectBuilder serverUrl(final List<String> serverUrl) {
       this.serverUrl.addAll(serverUrl);
       return this;
     }
 
-    public GlobalObjectBuilder serverUrl(final String serverUrl) {
+    public final GlobalObjectBuilder serverUrl(final String serverUrl) {
       this.serverUrl.add(serverUrl);
       return this;
     }
 
-    public GlobalObjectBuilder authSchemas(final List<AuthSchemaObject> authSchemas) {
+    public final GlobalObjectBuilder authSchemas(final List<AuthSchemaObject> authSchemas) {
       this.authSchemas.addAll(authSchemas);
       return this;
     }
 
-    public GlobalObjectBuilder authSchema(final AuthSchemaObject authSchema) {
+    public final GlobalObjectBuilder authSchema(final AuthSchemaObject authSchema) {
       this.authSchemas.add(authSchema);
       return this;
     }
 
-    public GlobalObjectBuilder authentications(final List<String> authentications) {
+    public final GlobalObjectBuilder authentications(final List<String> authentications) {
       this.authentications.addAll(authentications);
       return this;
     }
 
-    public GlobalObjectBuilder authentication(final String authentication) {
+    public final GlobalObjectBuilder authentication(final String authentication) {
       this.authentications.add(authentication);
       return this;
     }
 
-    public GlobalObjectBuilder componentsTypeMap(final Map<String, String> componentsTypeMap) {
+    public final GlobalObjectBuilder componentsTypeMap(final Map<String, String> componentsTypeMap) {
       this.componentsTypeMap.putAll(componentsTypeMap);
       return this;
     }
 
-    public GlobalObjectBuilder componentTypeMap(final String key, final String componentsTypeMap) {
+    public final GlobalObjectBuilder componentTypeMap(final String key, final String componentsTypeMap) {
       this.componentsTypeMap.put(key, componentsTypeMap);
       return this;
     }

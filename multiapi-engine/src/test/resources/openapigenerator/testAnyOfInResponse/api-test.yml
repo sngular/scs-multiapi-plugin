@@ -2,11 +2,14 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Corunet Challenge Game Server
+  title: Testing example file
   license:
     name: MIT
+  description: Testing example file
 servers:
 - url: http://localhost:8080/v1
+tags:
+- games
 paths:
   /games:
     summary: Hola

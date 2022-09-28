@@ -1,10 +1,10 @@
-package net.coru.scsplugin.externalAvro.model.event.consumer;
+package net.coru.scsplugin.externalavro.model.event.consumer;
 
 import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.coru.scsplugin.externalAvro.model.event.CreateOrder;
+import net.coru.scsplugin.externalavro.model.event.CreateOrder;
 
 @Configuration
 public class Subscriber {

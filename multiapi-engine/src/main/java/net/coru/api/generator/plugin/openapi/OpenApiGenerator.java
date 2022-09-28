@@ -48,7 +48,7 @@ public class OpenApiGenerator {
 
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".client";
 
-  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
+  private static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
 
   private final Boolean overwriteModel;
 
@@ -87,7 +87,7 @@ public class OpenApiGenerator {
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
   }
 
-  public void processFileSpec(final List<SpecFile> specsListFile) {
+  public final void processFileSpec(final List<SpecFile> specsListFile) {
 
     for (SpecFile specFile : specsListFile) {
       generateExceptionTemplate = false;
