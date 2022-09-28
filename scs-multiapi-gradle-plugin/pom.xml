@@ -90,6 +90,16 @@
         <version>3.0.0</version>
         <executions>
           <execution>
+            <id>gradlew</id>
+            <phase>initialize</phase>
+            <configuration>
+              <executable>gradle wrapper</executable>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>gradle</id>
             <phase>prepare-package</phase>
             <configuration>
