@@ -11,12 +11,12 @@ import org.gradle.util.internal.ConfigureUtil
 
 class OpenApiModelExtension {
 
-  List<OpenApiSpecFile> specFile = new ArrayList<>()
+  List<OpenApiSpecFile> specFiles = []
 
   Boolean overWriteModel = Boolean.FALSE
 
   List<OpenApiSpecFile> getSpecFile() {
-    return specFile
+    return specFiles
   }
 
   Boolean getOverWriteModel() {
@@ -26,12 +26,12 @@ class OpenApiModelExtension {
   void specFile(Closure configuration) {
     OpenApiSpecFile apiSpecFile = new OpenApiSpecFile()
     ConfigureUtil.configure(configuration, apiSpecFile)
-    specFile.add(apiSpecFile)
+    specFiles.add(apiSpecFile)
   }
 
   void specFile(Action<? super OpenApiSpecFile> configuration) {
     OpenApiSpecFile apiSpecFile = new OpenApiSpecFile()
     configuration.execute(apiSpecFile)
-    specFile.add(apiSpecFile)
+    specFiles.add(apiSpecFile)
   }
 }

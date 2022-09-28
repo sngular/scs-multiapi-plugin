@@ -79,7 +79,7 @@ public class AsyncApiGeneratorFixtures {
   final static List<SpecFile> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
     SpecFile
           .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithOutOperationIds/event-api.yml")
+          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithoutOperationIds/event-api.yml")
           .consumer(OperationParameterObject.builder()
                                             .classNamePostfix("TestClassName")
                                             .modelNameSuffix("DTO")
@@ -115,9 +115,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestFileGenerationExternalAvro() {
-    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/externalAvro/model/event/consumer";
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/externalavro/model/event/consumer";
 
-    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/externalAvro/model/event/producer";
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/externalavro/model/event/producer";
 
     List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGenerationExternalAvro/assets/ISubscribeOperation.java",
@@ -145,9 +145,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestFileGenerationWithoutIds() {
-    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/withOutIds/model/event/consumer";
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/withoutids/model/event/consumer";
 
-    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/withOutIds/model/event/producer";
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/withoutids/model/event/producer";
 
     List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGenerationWithoutOperationIds/assets/ISubscribeOperation.java",

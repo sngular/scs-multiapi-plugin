@@ -65,30 +65,29 @@ public class ApiRestClient {
     CSV(","), TSV("\t"), SSV(" "), PIPES("|"), MULTI(null);
 
     private final String separator;
-    private CollectionFormat(String separator) {
+    private CollectionFormat(final String separator) {
       this.separator = separator;
     }
 
-    private String collectionToString(Collection<?> collection) {
+    private String collectionToString(final Collection<?> collection) {
       return StringUtils.collectionToDelimitedString(collection, separator);
     }
   }
 
-  private HttpHeaders defaultHeaders = new HttpHeaders();
-  private MultiValueMap<String, String> defaultCookies = new LinkedMultiValueMap<String, String>();
-  private RestTemplate restTemplate;
+  private final HttpHeaders defaultHeaders = new HttpHeaders();
+  private final MultiValueMap<String, String> defaultCookies = new LinkedMultiValueMap<String, String>();
+  private final RestTemplate restTemplate;
   private final DateFormat dateFormat;
-  private Map<String, Authentication> authentications;
+  private final Map<String, Authentication> authentications;
 
   public ApiRestClient() {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = buildRestTemplate();
-    authentications = new HashMap<String, Authentication>();
-    authentications = Collections.unmodifiableMap(authentications);
+    authentications = Collections.unmodifiableMap(new HashMap<String, Authentication>());
   }
 
-  public ApiRestClient(Map<String, Authentication> authentications) {
+  public ApiRestClient(final Map<String, Authentication> authentications) {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = buildRestTemplate();
@@ -102,7 +101,7 @@ public class ApiRestClient {
         .withColonInTimeZone(true);
 
       @Override
-      public Date parse(String source) {
+      public Date parse(final String source) {
         return parse(source, new ParsePosition(0));
       }
 
@@ -121,30 +120,29 @@ public class ApiRestClient {
     return dateFormat;
   }
 
-  private static ObjectMapper createDefaultObjectMapper(DateFormat dateFormat,
-   AbstractJackson2HttpMessageConverter converter) {
-     if (null == dateFormat) {
+  private static void createDefaultObjectMapper(final DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
+     final DateFormat dateFormat = defaultDateFormat
+     if (Objects.isNull(defaultDateFormat)) {
        dateFormat = createDefaultDateFormat();
      }
-     ObjectMapper mapper = converter.getObjectMapper();
+     final ObjectMapper mapper = converter.getObjectMapper();
      mapper.setDateFormat(dateFormat);
      mapper.registerModule(new JavaTimeModule());
      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-     return mapper;
   }
 
   protected RestTemplate buildRestTemplate() {
     RestTemplate restTemplate = new RestTemplate();
     for(HttpMessageConverter converter:restTemplate.getMessageConverters()) {
       if(converter instanceof AbstractJackson2HttpMessageConverter) {
-        ObjectMapper mapper = createDefaultObjectMapper(this.dateFormat,(AbstractJackson2HttpMessageConverter) converter);
+        createDefaultObjectMapper(this.dateFormat, (AbstractJackson2HttpMessageConverter) converter);
       }
     }
     restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
     return restTemplate;
   }
 
-  public ApiRestClient addDefaultHeader(String name, String value) {
+  public ApiRestClient addDefaultHeader(final String name, final String value) {
     if (defaultHeaders.containsKey(name)) {
       defaultHeaders.remove(name);
     }
@@ -152,7 +150,7 @@ public class ApiRestClient {
     return this;
   }
 
-  public ApiRestClient addDefaultCookie(String name, String value) {
+  public ApiRestClient addDefaultCookie(final String name, final String value) {
     if (defaultCookies.containsKey(name)) {
       defaultCookies.remove(name);
     }
@@ -160,7 +158,7 @@ public class ApiRestClient {
     return this;
   }
 
-  public String parameterToString(Object param) {
+  public String parameterToString(final Object param) {
     if (param == null) {
       return "";
     } else if (param instanceof Date) {
@@ -181,21 +179,24 @@ public class ApiRestClient {
     }
   }
 
-  private String formatOffsetDateTime(OffsetDateTime offsetDateTime) {
-    return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
+  private String formatOffsetDateTime(final OffsetDateTime offsetDateTime) {
+    return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
   }
 
-  public String collectionPathParameterToString(CollectionFormat collectionFormat, Collection<?> values) {
+  public String collectionPathParameterToString(final CollectionFormat collectionFormat, final Collection<?> values) {
+    String result;
     if (CollectionFormat.MULTI.equals(collectionFormat)) {
-      return parameterToString(values);
+      result = parameterToString(values);
     }
     if(collectionFormat == null) {
-      collectionFormat = CollectionFormat.CSV;
+      result = CollectionFormat.CSV.collectionToString(values);
+    } else {
+      result = collectionFormat.collectionToString(values)
     }
-    return collectionFormat.collectionToString(values);
+    return result;
   }
 
-  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, String name, Object value) {
+  public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 
     if (name == null || name.isEmpty() || value == null) {
@@ -243,11 +244,11 @@ public class ApiRestClient {
     return params;
   }
 
-  private boolean isJsonMime(MediaType mediaType) {
+  private boolean isJsonMime(final MediaType mediaType) {
     return mediaType != null && (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) || mediaType.getSubtype().matches("^.*\\+json[;]?\\s*$"));
   }
 
-  public List<MediaType> selectHeaderAccept(String[] accepts) {
+  public List<MediaType> selectHeaderAccept(final String[] accepts) {
     if (accepts.length == 0) {
       return null;
     }
@@ -260,7 +261,7 @@ public class ApiRestClient {
     return MediaType.parseMediaTypes(StringUtils.arrayToCommaDelimitedString(accepts));
   }
 
-  public MediaType selectHeaderContentType(String[] contentTypes) {
+  public MediaType selectHeaderContentType(final String[] contentTypes) {
     if (contentTypes.length == 0) {
       return MediaType.APPLICATION_JSON;
     }
@@ -273,7 +274,7 @@ public class ApiRestClient {
     return MediaType.parseMediaType(contentTypes[0]);
   }
 
-  public String expandPath(String pathTemplate, Map<String, Object> variables) {
+  public String expandPath(final String pathTemplate, final Map<String, Object> variables) {
     DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
     uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
     final RestTemplate restTemplate = new RestTemplate();
@@ -281,12 +282,12 @@ public class ApiRestClient {
     return restTemplate.getUriTemplateHandler().expand(pathTemplate, variables).toString();
   }
 
-  protected Object selectBody(Object obj, MultiValueMap<String, Object> formParams, MediaType contentType) {
+  protected Object selectBody(final Object obj, final MultiValueMap<String, Object> formParams, final MediaType contentType) {
     boolean isForm = MediaType.MULTIPART_FORM_DATA.isCompatibleWith(contentType) || MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(contentType);
     return isForm ? formParams : obj;
   }
 
-  public String generateQueryUri(MultiValueMap<String, String> queryParams, Map<String, Object> uriParams) {
+  public String generateQueryUri(final MultiValueMap<String, String> queryParams, final Map<String, Object> uriParams) {
     StringBuilder queryBuilder = new StringBuilder();
     queryParams.forEach((name, values) -> {
       try {
@@ -318,7 +319,7 @@ public class ApiRestClient {
     return queryBuilder.toString();
   }
 
-  public <T> ResponseEntity<T> invokeAPI(String basePath, String path, HttpMethod method, Map<String, Object> pathParams,
+  public <T> ResponseEntity<T> invokeAPI(final String basePath, final String path, final HttpMethod method, final Map<String, Object> pathParams,
     MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams, MultiValueMap<String, Object> formParams,
     List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
 
@@ -366,7 +367,7 @@ public class ApiRestClient {
       }
   }
 
-  protected void addHeadersToRequest(HttpHeaders headers, BodyBuilder requestBuilder) {
+  protected void addHeadersToRequest(final HttpHeaders headers, final BodyBuilder requestBuilder) {
     for (Entry<String, List<String>> entry : headers.entrySet()) {
       List<String> values = entry.getValue();
       for(String value : values) {
@@ -377,13 +378,13 @@ public class ApiRestClient {
     }
   }
 
-  protected void addCookiesToRequest(MultiValueMap<String, String> cookies, BodyBuilder requestBuilder) {
+  protected void addCookiesToRequest(final MultiValueMap<String, String> cookies, final BodyBuilder requestBuilder) {
     if (!cookies.isEmpty()) {
       requestBuilder.header("Cookie", buildCookieHeader(cookies));
     }
   }
 
-  private String buildCookieHeader(MultiValueMap<String, String> cookies) {
+  private String buildCookieHeader(final MultiValueMap<String, String> cookies) {
     final StringBuilder cookieValue = new StringBuilder();
     String delimiter = "";
     for (final Map.Entry<String, List<String>> entry : cookies.entrySet()) {
@@ -394,7 +395,7 @@ public class ApiRestClient {
     return cookieValue.toString();
   }
 
-  private void updateParamsForAuth(String[] authNames, MultiValueMap<String, String> queryParams, HttpHeaders headerParams, MultiValueMap<String, String> cookieParams) {
+  private void updateParamsForAuth(final String[] authNames, final MultiValueMap<String, String> queryParams, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams) {
     for (String authName : authNames) {
       Authentication auth = authentications.get(authName);
       if (auth == null) {
@@ -409,28 +410,28 @@ public class ApiRestClient {
     private final Log log = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body, final ClientHttpRequestExecution execution) throws IOException {
       logRequest(request, body);
       ClientHttpResponse response = execution.execute(request, body);
       logResponse(response);
       return response;
     }
 
-    private void logRequest(HttpRequest request, byte[] body) throws UnsupportedEncodingException {
+    private void logRequest(final HttpRequest request, byte[] body) throws UnsupportedEncodingException {
       log.info("URI: " + request.getURI());
       log.info("HTTP Method: " + request.getMethod());
       log.info("HTTP Headers: " + headersToString(request.getHeaders()));
       log.info("Request Body: " + new String(body, StandardCharsets.UTF_8));
     }
 
-    private void logResponse(ClientHttpResponse response) throws IOException {
+    private void logResponse(final ClientHttpResponse response) throws IOException {
       log.info("HTTP Status Code: " + response.getRawStatusCode());
       log.info("Status Text: " + response.getStatusText());
       log.info("HTTP Headers: " + headersToString(response.getHeaders()));
       log.info("Response Body: " + bodyToString(response.getBody()));
     }
 
-    private String headersToString(HttpHeaders headers) {
+    private String headersToString(final HttpHeaders headers) {
       StringBuilder builder = new StringBuilder();
       for(Entry<String, List<String>> entry : headers.entrySet()) {
         builder.append(entry.getKey()).append("=[");
@@ -444,7 +445,7 @@ public class ApiRestClient {
       return builder.toString();
     }
 
-    private String bodyToString(InputStream body) throws IOException {
+    private String bodyToString(final InputStream body) throws IOException {
       StringBuilder builder = new StringBuilder();
       BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
       String line = bufferedReader.readLine();

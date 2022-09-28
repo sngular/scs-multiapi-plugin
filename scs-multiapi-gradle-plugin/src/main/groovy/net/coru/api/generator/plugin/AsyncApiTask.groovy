@@ -29,10 +29,10 @@ abstract class AsyncApiTask extends DefaultTask {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
     def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
-    if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFile().isEmpty()) {
+    if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFiles().isEmpty()) {
       def asyncApiGen = new AsyncApiGenerator(targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<SpecFile> asyncApiSpecFiles = []
-      asyncApiModelExtension.getSpecFile().forEach(apiSpec -> {
+      asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {
         asyncApiSpecFiles.add(toFileSpec(apiSpec))
       })
 
