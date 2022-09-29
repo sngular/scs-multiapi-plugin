@@ -44,12 +44,8 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build Engine with Maven
-      run: |
-        cd multiapi-engine
-        mvn -B install
-        cd ../scs-multiapi-maven-plugin
-        mvn -B package -s ../.m2/settings.xml
-        cd ../scs-multiapi-gradle-plugin
-        mvn -B package -s ../.m2/settings.xml
+    - name: Build Maven Plugin
+      run: mvn -B package -pl scs-multiapi-maven-plugin -am
+    - name: Build Gradle Plugin
+      run:  mvn -B package -pl scs-multiapi-gradle-plugin -am
         
