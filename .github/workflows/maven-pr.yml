@@ -49,7 +49,7 @@ jobs:
         cd multiapi-engine
         mvn -B install
         cd ../scs-multiapi-maven-plugin
-        mvn -B package -nsu
+        mvn -B package -s ../.m2/settings.xml
         cd ../scs-multiapi-gradle-plugin
-        mvn -B package -nsu
+        mvn -B package -s ../.m2/settings.xml
         
