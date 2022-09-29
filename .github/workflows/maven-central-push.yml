@@ -25,8 +25,20 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Publish to Maven Central Packages
-        run: mvn deploy
+      - name: Publish Maven Plugin to Maven Central Packages
+        run: |
+          cd scs-multiapi-maven-plugin
+          mvn deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.JIRAID }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish Gradle plugin to Gradle Repo
+        run: |
+          cd scs-multiapi-gradle-plugin
+          gradle wrapper
+          ./gradlew publish
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}

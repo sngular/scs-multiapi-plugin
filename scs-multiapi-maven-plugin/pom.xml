@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>net.coru</groupId>
-    <artifactId>scs-multiapi-plugin</artifactId>
-    <version>4.0.0</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
 
+  <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <version>4.0.0</version>
   <packaging>maven-plugin</packaging>
 
   <description>Code generation plugin based on yml files under AsyncApi and OpenApi specifications.</description>
@@ -20,6 +16,93 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <id>jegarcia</id>
+      <name>Jose Enrique Garcia Maciñeiras</name>
+      <email>joseenrique.garcia@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Principal Engineer</role>
+        <role>Team Leader</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>fcampostato</id>
+      <name>Fernando Campos Tato</name>
+      <email>fernando.campos@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>jmejutovazquez</id>
+      <name>Javier Mejuto Vázquez</name>
+      <email>javier.mejuto@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Junior Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>cmunozgomez</id>
+      <name>Cesar Munoz Gomez</name>
+      <email>cesar.munoz@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>Rivarsal</id>
+      <name>Pablo José López Rivadulla</name>
+      <email>pablo.lopezr@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>mcabezasp</id>
+      <name>Miguel Cabezas Puerto</name>
+      <email>miguel.cabezas@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Junior Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>irodigl</id>
+      <name>Isabel Rodríguez Iglesias</name>
+      <email>isabel.rodriguez@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</developerConnection>
+    <url>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</url>
+  </scm>
 
   <distributionManagement>
     <repository>
@@ -52,13 +135,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.coru</groupId>
-      <artifactId>multiapi-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+    </dependency>
+    <dependency>
+      <groupId>net.coru</groupId>
+      <artifactId>multiapi-engine</artifactId>
+      <version>4.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -198,6 +282,33 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.1.2</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+            <linkXRef>false</linkXRef>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>10.2</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>com.github.ekryd.sortpom</groupId>
+          <artifactId>sortpom-maven-plugin</artifactId>
+          <version>${sortpom-maven-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>com.soebes.itf.jupiter.extension</groupId>
@@ -310,5 +421,18 @@
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>../checkstyle.xml</configLocation>
+          <suppressionsFileExpression>styles/checkstyle/OSS_checkstyle_suppressions.xml</suppressionsFileExpression>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>

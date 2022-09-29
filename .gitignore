@@ -33,3 +33,6 @@ target/
 pom.xml.bak
 **/.gradle/
 **/build/
+
+# Visual Code
+.DS_Store
