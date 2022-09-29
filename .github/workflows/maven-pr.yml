@@ -38,13 +38,18 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-        cache: 'maven'
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
     - name: Build Engine with Maven
       run: |
         cd multiapi-engine
         mvn -B install
         cd ../scs-multiapi-maven-plugin
-        mvn -B package
+        mvn -B package -nsu
         cd ../scs-multiapi-gradle-plugin
-        mvn -B package
+        mvn -B package -nsu
         
