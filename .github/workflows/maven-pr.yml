@@ -38,12 +38,13 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+        cache: 'maven'
     - name: Build Engine with Maven
       run: |
         cd multiapi-engine
-        mvn -B install --file pom.xml
+        mvn -B install
         cd ../scs-multiapi-maven-plugin
-        mvn -B package --file pom.xml
+        mvn -B package
         cd ../scs-multiapi-gradle-plugin
-        mvn -B package --file pom.xml
+        mvn -B package
         
