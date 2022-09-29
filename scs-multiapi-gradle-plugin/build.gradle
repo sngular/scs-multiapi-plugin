@@ -43,16 +43,12 @@ if (effectivePomFile.file) {
   SCSMultiApiPluginVersion = pom.version.text()
   SCSMultiApiPluginArtifact = pom.artifactId.text()
   pom.dependencies.dependency.each { dependency ->
-    def name = dependency.artifactId.text();
-    if (name == 'multiapi-engine') {
-      addDependency 'api', dependency
-    } else {
-      def scope = dependency.scope.text()
-      if (scope == 'compile') {
-        addDependency 'implementation', dependency
-      } else if (scope == 'test') {
-        addDependency 'testCompile', dependency
-      }
+    def scope = dependency.scope.text()
+    if (scope == 'compile') {
+      addDependency 'implementation', dependency
+    }
+    else if (scope == 'test') {
+      addDependency 'testCompile', dependency
     }
   }
 }
