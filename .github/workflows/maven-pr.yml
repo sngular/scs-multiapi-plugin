@@ -42,12 +42,8 @@ jobs:
       run: |
         cd multiapi-engine
         mvn -B install --file pom.xml
-    - name: Build Maven Plugin
-      run: |
-        cd scs-multiapi-maven-plugin
+        cd ../scs-multiapi-maven-plugin
         mvn -B package --file pom.xml
-    - name: Build Gradle plugin
-      run: |
-        cd scs-multiapi-gradle-plugin
+        cd ../scs-multiapi-gradle-plugin
         mvn -B package --file pom.xml
         
