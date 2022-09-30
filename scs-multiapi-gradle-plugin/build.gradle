@@ -4,6 +4,7 @@ plugins {
   id 'maven-publish'
   id 'groovy'
   id 'jvm-test-suite'
+  id 'checkstyle'
 }
 
 java {

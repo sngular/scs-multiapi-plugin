@@ -389,4 +389,8 @@
       <property name="message" value="Don't use System.out/err, use SLF4J instead."/>
     </module>
   </module>
+  <module name="SuppressionFilter">
+    <property name="file" value="styles/checkstyle/checkstyle_suppressions.xml"/>
+    <property name="optional" value="false"/>
+  </module>
 </module>

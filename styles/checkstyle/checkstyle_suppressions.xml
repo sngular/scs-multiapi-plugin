@@ -7,4 +7,5 @@
 <suppressions>
   <suppress checks="VisibilityModifier" files="[/\\].*model.*\.java"/>
   <suppress checks="DesignForExtension" files="[/\\].*model.*\.java"/>
+  <suppress checks="[a-zA-Z0-9]*" files="[\\/]test[\\/]"/>
 </suppressions>
