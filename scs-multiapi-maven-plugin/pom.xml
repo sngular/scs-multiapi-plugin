@@ -429,7 +429,6 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>../checkstyle.xml</configLocation>
-          <suppressionsFileExpression>styles/checkstyle/OSS_checkstyle_suppressions.xml</suppressionsFileExpression>
         </configuration>
       </plugin>
     </plugins>

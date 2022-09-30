@@ -389,8 +389,16 @@
       <property name="message" value="Don't use System.out/err, use SLF4J instead."/>
     </module>
   </module>
-  <module name="SuppressionFilter">
-    <property name="file" value="styles/checkstyle/checkstyle_suppressions.xml"/>
-    <property name="optional" value="false"/>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*model.*\.java"/>
+    <property name="checks" value="VisibilityModifier"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*model.*\.java"/>
+    <property name="checks" value="DesignForExtension"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[\\/]test[\\/]"/>
+    <property name="checks" value="[a-zA-Z0-9]*"/>
   </module>
 </module>

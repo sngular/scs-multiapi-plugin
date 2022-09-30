@@ -21,7 +21,7 @@ jobs:
       id: maven_plugin_version_check
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        file-to-check: maven_plugin/pom.xml
+        file-to-check: scs-multiapi-maven-plugin/pom.xml
       continue-on-error: true
     - name: Versioning specifications
       if: steps.engine_version_check.outcome != 'success' && steps.maven_plugin_version_check.outcome != 'success'
