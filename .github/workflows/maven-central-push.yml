@@ -38,6 +38,7 @@ jobs:
         run: |
           cd scs-multiapi-gradle-plugin
           gradle wrapper
+          chmod +x gradlew
           ./gradlew publish
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
