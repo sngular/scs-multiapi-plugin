@@ -96,9 +96,7 @@ public class AsyncApiGenerator {
     for (SpecFile fileParameter : specsListFile) {
       setUpTemplate(fileParameter);
       String avroFilePath = fileParameter.getFilePath();
-      if (avroFilePath.startsWith("/")) {
-        avroFilePath = avroFilePath.replaceFirst("/", "");
-      } else if (avroFilePath.startsWith(".")) {
+      if (avroFilePath.startsWith(".")) {
         avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
       }
       final Path ymlParentPath = Paths.get(avroFilePath).toAbsolutePath().getParent();
