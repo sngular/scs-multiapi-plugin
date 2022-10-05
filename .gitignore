@@ -24,9 +24,15 @@ hs_err_pid*
 
 # IntelliJ Files
 .idea
+*.iml
 
 # Target Folder
 target/
 
 # Pom bak file
 pom.xml.bak
+**/.gradle/
+**/build/
+
+# Visual Code
+.DS_Store

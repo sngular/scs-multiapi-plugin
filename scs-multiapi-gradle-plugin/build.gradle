@@ -1,0 +1,160 @@
+plugins {
+  id 'java-gradle-plugin'
+  id 'com.gradle.plugin-publish' version '1.0.0'
+  id 'maven-publish'
+  id 'groovy'
+  id 'jvm-test-suite'
+  id 'checkstyle'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url 'https://jitpack.io' }
+}
+
+group = 'net.coru'
+version = '4.0.0'
+
+def SCSMultiApiPluginGroupId = group
+def SCSMultiApiPluginVersion = version
+def SCSMultiApiPluginArtifact = name
+
+dependencies {
+  implementation localGroovy()
+  implementation 'org.assertj:assertj-core:3.23.1'
+  implementation 'net.coru:multiapi-engine:4.0.0'
+  implementation("com.puppycrawl.tools:checkstyle:10.3.1")
+}
+
+jar {
+  manifest {
+    attributes 'Implementation-Version': (version ? version : 'unknown')
+  }
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+  classifier = "javadoc"
+  from javadoc
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
+pluginBundle {
+  website = 'https://corunet.github.io/scs-multiapi-plugin/'
+  vcsUrl = 'https://github.com/corunet/scs-multiapi-plugin'
+  tags = ['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool']
+}
+
+gradlePlugin {
+  plugins {
+    scsMultiApiPlugin {
+      id = 'net.coru.scs-multiapi-gradle-plugin'
+      displayName = 'SCS MultiApi Plugin'
+      description = 'OpenApi/Asyncapi Generator tool for Spring Boot applications'
+      implementationClass = 'net.coru.api.generator.plugin.ScsMultiApi'
+    }
+  }
+}
+
+checkstyle {
+    toolVersion "10.3.1"
+    configFile = file("../checkstyle.xml")
+}
+
+testing {
+  suites {
+    test {
+      useJUnitJupiter()
+    }
+
+    integrationTest(JvmTestSuite) {
+      dependencies {
+        implementation 'net.coru:scs-multiapi-gradle-plugin:4.0.0'
+        implementation 'org.assertj:assertj-core:3.23.1'
+      }
+
+      targets {
+        all {
+          testTask.configure {
+            shouldRunAfter(test)
+          }
+        }
+      }
+    }
+  }
+}
+
+tasks.named('check') {
+  dependsOn(testing.suites.integrationTest)
+}
+
+publishing {
+  publications {
+    publishMavenJavaToMavenLocal(MavenPublication) {
+      from components.java
+      pom {
+        groupId = SCSMultiApiPluginGroupId
+        artifactId = SCSMultiApiPluginArtifact
+        version = SCSMultiApiPluginVersion
+        name = 'SCS MultiApi Plugin'
+        description = 'Grable Plugin for the SCS MultiApi Generator'
+        url = 'https://corunet.github.io/scs-multiapi-plugin/'
+      }
+    }
+    mavenJava(MavenPublication) {
+      from components.java
+      pom {
+        groupId = SCSMultiApiPluginGroupId
+        artifactId = SCSMultiApiPluginArtifact
+        version = SCSMultiApiPluginVersion
+        name = 'SCS MultiApi Plugin'
+        description = 'Grable Plugin for the SCS MultiApi Generator'
+        url = 'https://corunet.github.io/scs-multiapi-plugin/'
+
+        licenses {
+          license {
+            name = 'Mozilla Public License, Version 2.0'
+            url = 'https://www.mozilla.org/en-US/MPL/2.0/'
+          }
+        }
+
+        scm {
+          connection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+          developerConnection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+          url = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+        }
+
+      }
+    }
+  }
+
+  repositories {
+    maven {
+      name = "OSSRH"
+      url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      credentials {
+        username = System.getenv("JIRAID")
+        password = System.getenv("JIRAPASS")
+      }
+    }
+  }
+}
+
