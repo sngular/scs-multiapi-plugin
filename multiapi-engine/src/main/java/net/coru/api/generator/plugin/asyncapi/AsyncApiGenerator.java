@@ -132,11 +132,10 @@ public class AsyncApiGenerator {
               addProcessedClassesAndPackagesToGlobalVariables(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE, SUPPLIER_CLASS_NAME);
             }
           }
-
         }
-        templateFactory.fillTemplate();
+        templateFactory.fillTemplates();
         templateFactory.clearData();
-      } catch (TemplateException | IOException e) {
+      } catch (final TemplateException | IOException e) {
         e.printStackTrace();
       }
     }
@@ -168,17 +167,20 @@ public class AsyncApiGenerator {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSubscribeMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, totalSchemas, operationObject.getModelNameSuffix(), operationObject.getClassNamePostfix());
+      processSubscribeMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, totalSchemas, operationObject.getModelNameSuffix(),
+                             operationObject.getClassNamePostfix());
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
       final var operationObject = fileParameter.getSupplier();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSupplierMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, totalSchemas, operationObject.getModelNameSuffix(), operationObject.getClassNamePostfix());
+      processSupplierMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, totalSchemas, operationObject.getModelNameSuffix(),
+                            operationObject.getClassNamePostfix());
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       final var operationObject = fileParameter.getStreamBridge();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processStreamBridgeMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, entry.getKey(), totalSchemas, operationObject.getModelNameSuffix(), operationObject.getClassNamePostfix());
+      processStreamBridgeMethod(channelPayload, operationObject.getModelPackage(), ymlParentPath, entry.getKey(), totalSchemas, operationObject.getModelNameSuffix(),
+                                operationObject.getClassNamePostfix());
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
   }
@@ -228,6 +230,7 @@ public class AsyncApiGenerator {
     processFilePaths(fileParameter);
     processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
+    processLombokUsage(fileParameter);
   }
 
   private void processFilePaths(final SpecFile fileParameter) {
@@ -243,6 +246,12 @@ public class AsyncApiGenerator {
                                                       ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
     templateFactory.setSubscribeEntitiesSuffix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getModelNameSuffix() != null
                                                    ? fileParameter.getConsumer().getModelNameSuffix() : null);
+  }
+
+  private void processLombokUsage(final SpecFile fileParameter) {
+    templateFactory.setSupplierUseLombok(fileParameter.getSupplier() != null && fileParameter.getSupplier().isUseLombokModelAnnotation());
+    templateFactory.setStreamBridgeUseLombok(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().isUseLombokModelAnnotation());
+    templateFactory.setSubscribeUseLombok(fileParameter.getConsumer() != null && fileParameter.getConsumer().isUseLombokModelAnnotation());
   }
 
   private void checkClassPackageDuplicate(final String className, final String apiPackage) {
@@ -352,7 +361,7 @@ public class AsyncApiGenerator {
         final String[] pathToObject = messageContent.split("/");
         namespace = processModelPackage(pathToObject[pathToObject.length - 1], modelPackage);
       } else if (messageContent.contains("#")) {
-            namespace = processExternalRef(modelPackage, ymlParentPath, message, totalSchemas, prefix, suffix);
+        namespace = processExternalRef(modelPackage, ymlParentPath, message, totalSchemas, prefix, suffix);
       } else {
         namespace = processExternalAvro(modelPackage, ymlParentPath, messageContent);
       }

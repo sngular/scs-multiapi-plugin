@@ -6,6 +6,8 @@
 
 package net.coru.api.generator.plugin.asyncapi;
 
+import net.coru.api.generator.plugin.asyncapi.model.SchemaObject;
+
 public class MethodObject {
 
   private String operationId;
@@ -18,22 +20,24 @@ public class MethodObject {
 
   private String channelName;
 
+  private SchemaObject schemaObject;
+
   public MethodObject(final String operationId, final String classNamespace, final String type) {
-    this.operationId = operationId;
-    this.classNamespace = classNamespace;
-    final var splitNamespace = classNamespace.split("\\.");
-    this.className = splitNamespace[splitNamespace.length - 1];
-    this.type = type;
-    this.channelName = null;
+    this(operationId, classNamespace, type, null);
   }
 
   public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName) {
+    this(operationId, classNamespace, type, channelName, null);
+  }
+
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject) {
     this.operationId = operationId;
     this.classNamespace = classNamespace;
     final var splitNamespace = classNamespace.split("\\.");
     this.className = splitNamespace[splitNamespace.length - 1];
     this.type = type;
     this.channelName = channelName;
+    this.schemaObject = schemaObject;
   }
 
   protected final void setOperationId(final String operationId) {
@@ -56,6 +60,10 @@ public class MethodObject {
     this.channelName = channelName;
   }
 
+  protected final void setSchemaObject(final SchemaObject schemaObject) {
+    this.schemaObject = schemaObject;
+  }
+
   public final String getOperationId() {
     return operationId;
   }
@@ -74,5 +82,9 @@ public class MethodObject {
 
   public final String getChannelName() {
     return channelName;
+  }
+
+  public final SchemaObject getSchemaObject() {
+    return schemaObject;
   }
 }
