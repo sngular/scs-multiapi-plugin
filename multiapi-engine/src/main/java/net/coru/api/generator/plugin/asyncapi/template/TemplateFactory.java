@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +22,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import net.coru.api.generator.plugin.asyncapi.MethodObject;
+import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
 import net.coru.api.generator.plugin.asyncapi.model.SchemaObject;
 
 public class TemplateFactory {
@@ -49,6 +51,8 @@ public class TemplateFactory {
 
   private final List<MethodObject> streamBridgeMethods = new ArrayList<>();
 
+  private final List<ClassTemplate> schemaObjectMap = new LinkedList<>();
+
   private String subscribeFilePath = null;
 
   private String supplierFilePath = null;
@@ -61,12 +65,6 @@ public class TemplateFactory {
 
   private String subscribeClassName = null;
 
-  private Boolean supplierUseLombok = null;
-
-  private Boolean subscribeUseLombok = null;
-
-  private Boolean streamBridgeUseLombok = null;
-
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
@@ -75,8 +73,9 @@ public class TemplateFactory {
   }
 
   private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
-    File fileToSave = new File(filePathToSave);
-    String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
+    final File fileToSave = new File(filePathToSave.replace(".","/"));
+    fileToSave.mkdirs();
+    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
     fillTemplate(pathToSaveMainClass, templateName, root);
   }
 
@@ -91,38 +90,51 @@ public class TemplateFactory {
 
     if (!publishMethods.isEmpty()) {
       fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
-      fillModelTemplates(supplierUseLombok, publishMethods);
+//      fillModelTemplates(supplierUseLombok, publishMethods);
     }
 
     if (!subscribeMethods.isEmpty()) {
       fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
-      fillModelTemplates(subscribeUseLombok, subscribeMethods);
+//      fillModelTemplates(subscribeUseLombok, subscribeMethods);
     }
 
     if (!streamBridgeMethods.isEmpty()) {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
-      fillModelTemplates(streamBridgeUseLombok, streamBridgeMethods);
+//      fillModelTemplates(streamBridgeUseLombok, streamBridgeMethods);
     }
+
+    schemaObjectMap.forEach(classTemplate -> {
+      try {
+        fillTemplateSchema(classTemplate, false);
+      } catch (final IOException | TemplateException exception) {
+        throw new FileSystemException(exception);
+      }
+    });
 
     this.generateInterfaces();
   }
 
-  private void fillModelTemplates(final boolean useLombokModelAnnotation, final List<MethodObject> methodList) {
+ /* private void fillModelTemplates(final boolean useLombokModelAnnotation, final List<MethodObject> methodList) {
     methodList.forEach(methodObject -> {
       try {
         fillTemplateSchema(methodObject.getClassNamespace(), useLombokModelAnnotation, methodObject.getSchemaObject());
-      } catch (final IOException | TemplateException e) {
-        throw new RuntimeException(e);
+      } catch (final IOException | TemplateException exception) {
+        throw new FileSystemException(exception);
       }
     });
-  }
+  }*/
 
-  private void fillTemplateSchema(final String filePath, final Boolean useLombok, final SchemaObject schemaObject) throws IOException, TemplateException {
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok) throws IOException, TemplateException {
+    final var schemaObject = classTemplate.getClassSchema();
+    final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       final Map<String, Object> rootSchema = new HashMap<>();
       rootSchema.put("schema", schemaObject);
       final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
-      fillTemplate(filePath, schemaObject.getClassName(), templateName, rootSchema);
+      if (Objects.nonNull(classTemplate.getModelPackage())) {
+        rootSchema.put("packageModel", classTemplate.getModelPackage());
+      }
+      fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
     }
   }
 
@@ -173,6 +185,10 @@ public class TemplateFactory {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
+  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final boolean usingLombok, final Path filePath) {
+    schemaObjectMap.add(ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject).build());
+  }
+
   public final void addSubscribeMethod(final String operationId, final String classNamespace) {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
@@ -189,22 +205,11 @@ public class TemplateFactory {
     root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
-  public final void setSupplierUseLombok(final Boolean supplierUseLombok) {
-    this.supplierUseLombok = supplierUseLombok;
-  }
-
-  public final void setSubscribeUseLombok(final Boolean subscribeUseLombok) {
-    this.subscribeUseLombok = subscribeUseLombok;
-  }
-
-  public final void setStreamBridgeUseLombok(final Boolean streamBridgeUseLombok) {
-    this.streamBridgeUseLombok = streamBridgeUseLombok;
-  }
-
   public final void clearData() {
     root.clear();
     publishMethods.clear();
     subscribeMethods.clear();
+    schemaObjectMap.clear();
     streamBridgeMethods.clear();
     subscribeFilePath = null;
     supplierFilePath = null;
@@ -212,9 +217,6 @@ public class TemplateFactory {
     supplierClassName = null;
     subscribeClassName = null;
     streamBridgeClassName = null;
-    supplierUseLombok = null;
-    subscribeUseLombok = null;
-    streamBridgeUseLombok = null;
   }
 
   private void generateInterfaces() throws IOException, TemplateException {

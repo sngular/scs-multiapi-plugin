@@ -20,7 +20,8 @@ import freemarker.cache.TemplateLoader;
 public class ClasspathTemplateLoader implements TemplateLoader {
 
   private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
-                                                             "interfaceSupplier.ftlh", "templateStreamBridge.ftlh");
+                                                             "interfaceSupplier.ftlh", "templateStreamBridge.ftlh", "templateSchema.ftlh",
+                                                             "templateSchemaWithLombok.ftlh");
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 
