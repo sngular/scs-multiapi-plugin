@@ -28,7 +28,7 @@ def SCSMultiApiPluginArtifact = name
 dependencies {
   implementation localGroovy()
   implementation 'org.assertj:assertj-core:3.23.1'
-  implementation 'net.coru:multiapi-engine:4.0.0'
+  implementation 'net.coru:multiapi-engine:4.1.0'
   implementation("com.puppycrawl.tools:checkstyle:10.3.1")
 }
 
