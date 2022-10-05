@@ -51,8 +51,8 @@ public class MapperContentUtil {
     if (model.has("payload")) {
 
       schemasList.add(SchemaObject.builder()
-                                  .schemaName(component)
-                                  .className(component)
+                                  .schemaName(component + StringUtils.defaultIfBlank(suffix, ""))
+                                  .className(component + StringUtils.defaultIfBlank(suffix, ""))
                                   .importList(List.of(modelPackage + "." + component + "Payload"))
                                   .schemaCombinator("")
                                   .fieldObjectList(List.of(
@@ -60,7 +60,7 @@ public class MapperContentUtil {
                                       .builder()
                                       .baseName("payload")
                                       .dataType(component + "Payload")
-                                      .dataTypeSimple("")
+                                      .dataTypeSimple(component + "Payload")
                                       .importClass(component + "Payload")
                                       .required(true)
                                       .build()))
