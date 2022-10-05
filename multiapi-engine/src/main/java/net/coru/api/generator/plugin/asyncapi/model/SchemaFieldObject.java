@@ -10,7 +10,6 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,8 +21,7 @@ public class SchemaFieldObject {
 
   private String baseName;
 
-  @Default
-  private String dataTypeSimple = "";
+  private String dataTypeSimple;
 
   private String dataType;
 

@@ -361,6 +361,7 @@ public class AsyncApiGenerator {
     }
     return path;
   }
+
   private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
     final String apiPackage = operationParameter != null ? operationParameter.getApiPackage() : null;
     final String path;

@@ -178,6 +178,7 @@ public class MapperContentUtil {
           SchemaFieldObject.builder()
                            .baseName(fieldName)
                            .dataType(fieldType)
+                           .dataTypeSimple(fieldType)
                            .importClass(fieldType)
                            .required(false)
                            .build());
