@@ -103,6 +103,8 @@ public class AsyncApiGeneratorFixtures {
 
     String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/producer";
 
+    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/business_model/model/event";
+
     List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGeneration/assets/IPublishOperation.java",
         "asyncapigenerator/testFileGeneration/assets/TestClassName.java");
@@ -111,7 +113,15 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testFileGeneration/assets/ISubscribeOperation.java",
         "asyncapigenerator/testFileGeneration/assets/Producer.java");
 
-    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER);
+    List<String> expectedModelFiles = List.of(
+      "asyncapigenerator/testFileGeneration/assets/CreateOrderMapper.java",
+      "asyncapigenerator/testFileGeneration/assets/CreateOrderPayload.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderCreatedDTO.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderCreatedPayload.java"
+    );
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+      modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestFileGenerationExternalAvro() {
@@ -171,6 +181,23 @@ public class AsyncApiGeneratorFixtures {
 
       if (!expectedModelFiles.isEmpty()) {
         Path pathToTargetProducer = pathToTarget.resolve(targetProducer);
+        File targetProducerFolder = pathToTargetProducer.toFile();
+        assertThat(targetProducerFolder).isNotEmptyDirectory();
+        validateFiles(expectedModelFiles, targetProducerFolder);
+      }
+    } catch (IOException e) {
+      result = Boolean.FALSE;
+    }
+    return result;
+  }
+
+  private static boolean modelTest(final Path resultPath, final List<String> expectedModelFiles, final String default_model_folder) {
+    Boolean result = Boolean.TRUE;
+    try {
+      Path pathToTarget = Path.of(resultPath.toString(), "target");
+
+      if (!expectedModelFiles.isEmpty()) {
+        Path pathToTargetProducer = pathToTarget.resolve(default_model_folder);
         File targetProducerFolder = pathToTargetProducer.toFile();
         assertThat(targetProducerFolder).isNotEmptyDirectory();
         validateFiles(expectedModelFiles, targetProducerFolder);
