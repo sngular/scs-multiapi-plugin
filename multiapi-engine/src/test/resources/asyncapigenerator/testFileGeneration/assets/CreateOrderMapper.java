@@ -4,15 +4,15 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.CreateOrderPayload;
+import net.coru.scsplugin.business_model.model.event.CreateOrderPayloadMapper;
 import net.coru.scsplugin.business_model.model.event.exception.ModelClassException;
 
 public class CreateOrderMapper {
 
   @JsonProperty(value ="payload")
-  private final CreateOrderPayload payload;
+  private final CreateOrderPayloadMapper payload;
 
-  private CreateOrderMapper(CreateOrderPayload payload) {
+  private CreateOrderMapper(CreateOrderPayloadMapper payload) {
     this.payload = payload;
 
     validateRequiredAttributes();
@@ -24,11 +24,15 @@ public class CreateOrderMapper {
     validateRequiredAttributes();
   }
 
+  public static CreateOrderMapper.CreateOrderMapperBuilder builder() {
+    return new CreateOrderMapper.CreateOrderMapperBuilder();
+  }
+
   public static class CreateOrderMapperBuilder {
 
-    private CreateOrderPayload payload;
+    private CreateOrderPayloadMapper payload;
 
-    public CreateOrderMapper.CreateOrderMapperBuilder payload(CreateOrderPayload payload) {
+    public CreateOrderMapper.CreateOrderMapperBuilder payload(CreateOrderPayloadMapper payload) {
       this.payload = payload;
       return this;
     }
@@ -44,7 +48,7 @@ public class CreateOrderMapper {
   * @return payload
   */
   @Schema(name = "payload", required = true)
-  public CreateOrderPayload getPayload() {
+  public CreateOrderPayloadMapper getPayload() {
     return payload;
   }
 

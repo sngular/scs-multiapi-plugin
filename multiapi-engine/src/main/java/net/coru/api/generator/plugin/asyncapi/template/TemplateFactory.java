@@ -73,7 +73,7 @@ public class TemplateFactory {
   }
 
   private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
-    final File fileToSave = new File(filePathToSave.replace(".","/"));
+    final File fileToSave = new File(filePathToSave.replace(".", "/"));
     fileToSave.mkdirs();
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
     fillTemplate(pathToSaveMainClass, templateName, root);
@@ -90,17 +90,14 @@ public class TemplateFactory {
 
     if (!publishMethods.isEmpty()) {
       fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
-//      fillModelTemplates(supplierUseLombok, publishMethods);
     }
 
     if (!subscribeMethods.isEmpty()) {
       fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
-//      fillModelTemplates(subscribeUseLombok, subscribeMethods);
     }
 
     if (!streamBridgeMethods.isEmpty()) {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
-//      fillModelTemplates(streamBridgeUseLombok, streamBridgeMethods);
     }
 
     schemaObjectMap.forEach(classTemplate -> {
@@ -114,15 +111,14 @@ public class TemplateFactory {
     this.generateInterfaces();
   }
 
- /* private void fillModelTemplates(final boolean useLombokModelAnnotation, final List<MethodObject> methodList) {
-    methodList.forEach(methodObject -> {
-      try {
-        fillTemplateSchema(methodObject.getClassNamespace(), useLombokModelAnnotation, methodObject.getSchemaObject());
-      } catch (final IOException | TemplateException exception) {
-        throw new FileSystemException(exception);
-      }
-    });
-  }*/
+  public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
+    final Path pathToExceptionPackage = filePathToSave.resolve("exception");
+    pathToExceptionPackage.toFile().mkdirs();
+    root.put("packageModel", modelPackage);
+    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
+    writeTemplateToFile(net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
+
+  }
 
   private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok) throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();

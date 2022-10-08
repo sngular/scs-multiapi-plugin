@@ -7,6 +7,7 @@
 package net.coru.api.generator.plugin.asyncapi.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.coru.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
@@ -31,16 +34,6 @@ public class MapperContentUtil {
 
   private static final String BIG_DECIMAL = "bigDecimal";
 
-  private static final String INTEGER = "integer";
-
-  private static final String DOUBLE = "double";
-
-  private static final String FLOAT = "float";
-
-  private static final String LONG = "long";
-
-  private static final String STRING = "string";
-
   private static String schemaCombinatorType;
 
   private MapperContentUtil() {}
@@ -48,47 +41,45 @@ public class MapperContentUtil {
   public static List<SchemaObject> mapComponentToSchemaObject(final Map<String, JsonNode> totalSchemas, final String modelPackage, final String component, final JsonNode model,
       final String prefix, final String suffix) {
     final List<SchemaObject> schemasList = new ArrayList<>();
-    if (model.has("payload")) {
+    final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
 
-      schemasList.add(SchemaObject.builder()
-                                  .schemaName(component + StringUtils.defaultIfBlank(suffix, ""))
-                                  .className(component + StringUtils.defaultIfBlank(suffix, ""))
-                                  .importList(List.of(modelPackage + "." + component + "Payload"))
-                                  .schemaCombinator("")
-                                  .fieldObjectList(List.of(
-                                    SchemaFieldObject
-                                      .builder()
-                                      .baseName("payload")
-                                      .dataType(component + "Payload")
-                                      .dataTypeSimple(component + "Payload")
-                                      .importClass(component + "Payload")
-                                      .required(true)
-                                      .build()))
-                                  .build());
+    schemasList.add(SchemaObject.builder()
+                                .schemaName(component + StringUtils.defaultIfBlank(suffix, ""))
+                                .className(component + StringUtils.defaultIfBlank(suffix, ""))
+                                .importList(List.of(modelPackage + "." + component + "Payload" + StringUtils.defaultIfBlank(suffix, "")))
+                                .schemaCombinator("")
+                                .fieldObjectList(List.of(
+                                  SchemaFieldObject
+                                    .builder()
+                                    .baseName("payload")
+                                    .dataType(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
+                                    .dataTypeSimple(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
+                                    .importClass(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
+                                    .required(true)
+                                    .build()))
+                                .build());
 
-      final var listSchema = getFields(totalSchemas, modelPackage, model, true, prefix, suffix);
+    schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component + "Payload", model, prefix, suffix, modelToBuildList));
 
-      schemasList.add(SchemaObject.builder()
-                                  .schemaName(component + "Payload")
-                                  .className(component + "Payload")
-                                  .importList(getImportList(listSchema, modelPackage))
-                                  .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
-                                  .fieldObjectList(listSchema)
-                                  .build());
-    } else {
-
-      final var listSchema = getFields(totalSchemas, modelPackage, model, true, prefix, suffix);
-
-      schemasList.add(SchemaObject.builder()
-                                  .schemaName(component)
-                                  .className(component)
-                                  .importList(getImportList(listSchema, modelPackage))
-                                  .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
-                                  .fieldObjectList(listSchema)
-                                  .build());
+    while (!modelToBuildList.isEmpty()) {
+      final var modelToBuild = modelToBuildList.remove();
+      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild), prefix, suffix, modelToBuildList));
     }
-
     return schemasList;
+  }
+
+  private static SchemaObject buildSchemaObject(final Map<String, JsonNode> totalSchemas, final String modelPackage, final String component, final JsonNode model,
+      final String prefix, final String suffix, final Collection<String> modelToBuildList) {
+
+    final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList);
+
+    return SchemaObject.builder()
+                                .schemaName(component)
+                                .className(MapperUtil.getPojoName(component, prefix, suffix))
+                                .importList(getImportList(listSchema, modelPackage))
+                                .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                                .fieldObjectList(listSchema)
+                                .build();
   }
 
   private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList, final String modelPackage) {
@@ -120,71 +111,72 @@ public class MapperContentUtil {
     }
   }
 
-  private static List<SchemaFieldObject> getFields(final Map<String, JsonNode> totalSchemas, final String modelPackage, final JsonNode model, final boolean required, final String prefix,
-      final String suffix) {
+  private static List<SchemaFieldObject> getFields(final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
+      final String suffix, final Collection<String> modelToBuildList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (model.has("type")) {
       if ("object".equalsIgnoreCase(model.get("type").textValue())) {
-        final Set<String> requiredSet = new HashSet<>();
-        if (model.has("required")) {
-          model.get("required").fieldNames().forEachRemaining(requiredSet::add);
-        }
-        final var properties = model.get("properties");
-        if (!(properties.has("anyOf") || properties.has("allOf") || properties.has("oneOf"))) {
-          final var propertiesIt = model.get("properties").fieldNames();
-          while (propertiesIt.hasNext()) {
-            final var property = propertiesIt.next();
-            final var type = properties.get(property).get("type").asText();
-            fieldObjectArrayList.add(
-                  SchemaFieldObject.builder()
-                               .baseName(property)
-                               .dataType(type)
-                               .dataTypeSimple("")
-                               .required(requiredSet.contains(property))
-                               .build());
-
-          }
-        } else if (properties.has("allOf")) {
-          fieldObjectArrayList.addAll(processAllOf(totalSchemas, properties.get("allOf"), prefix, suffix));
-          schemaCombinatorType = "allOf";
-        } else if (properties.has("anyOf")) {
-          fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, properties.get("anyOf"), prefix, suffix));
-          schemaCombinatorType = "anyOf";
-        } else if (properties.has("oneOf")) {
-          fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, properties.get("oneOf"), prefix, suffix));
-          schemaCombinatorType = "oneOf";
-        }
+        processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList);
       } else if ("array".equalsIgnoreCase(model.get("type").textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(model, required, prefix, suffix));
+        fieldObjectArrayList.add(processFieldObjectList("", model, required, prefix, suffix, modelToBuildList));
       } else if ("enum".equalsIgnoreCase(model.get("type").textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(model, required, prefix, suffix));
+        fieldObjectArrayList.add(processFieldObjectList("", model, required, prefix, suffix, modelToBuildList));
       }
     } else if (model.elements().hasNext()) {
       final var fieldsIt = model.fields();
-      extractFieldsComplexPayload(fieldObjectArrayList, fieldsIt);
+      extractFieldsComplexPayload(fieldObjectArrayList, fieldsIt, modelToBuildList, prefix, suffix);
     }
     return fieldObjectArrayList;
   }
 
-  private static void extractFieldsComplexPayload(final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt) {
+  private static void processFieldObject(
+      final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
+      final ArrayList<SchemaFieldObject> fieldObjectArrayList) {
+    final Set<String> requiredSet = new HashSet<>();
+    if (model.has("required")) {
+      model.get("required").fieldNames().forEachRemaining(requiredSet::add);
+    }
+    final var properties = model.get("properties");
+    if (!(properties.has("anyOf") || properties.has("allOf") || properties.has("oneOf"))) {
+      final var propertiesIt = model.get("properties").fieldNames();
+      while (propertiesIt.hasNext()) {
+        final var property = propertiesIt.next();
+        fieldObjectArrayList.add(
+            processFieldObjectList(property, model.get("properties").path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList));
+      }
+    } else if (properties.has("allOf")) {
+      fieldObjectArrayList.addAll(processAllOf(totalSchemas, properties.get("allOf"), prefix, suffix, modelToBuildList));
+      schemaCombinatorType = "allOf";
+    } else if (properties.has("anyOf")) {
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, properties.get("anyOf"), prefix, suffix, modelToBuildList));
+      schemaCombinatorType = "anyOf";
+    } else if (properties.has("oneOf")) {
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, properties.get("oneOf"), prefix, suffix, modelToBuildList));
+      schemaCombinatorType = "oneOf";
+    }
+  }
+
+  private static void extractFieldsComplexPayload(final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
+      final Collection<String> modelToBuildList, final String prefix, final String suffix) {
     while (fieldsIt.hasNext()) {
       final var field = fieldsIt.next();
       final var fieldName = field.getKey();
       final var fieldBody = field.getValue();
       if (fieldBody.has("$ref")) {
         final String fieldType = extractTypeFromBody(fieldBody);
+        modelToBuildList.add(fieldType);
         fieldObjectArrayList.add(
-          SchemaFieldObject.builder()
+            SchemaFieldObject.builder()
                            .baseName(fieldName)
-                           .dataType(fieldType)
-                           .dataTypeSimple(fieldType)
-                           .importClass(fieldType)
+                           .dataType(MapperUtil.getPojoName(fieldType, prefix, suffix))
+                           .dataTypeSimple(MapperUtil.getPojoName(fieldType, prefix, suffix))
+                           .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
                            .required(false)
                            .build());
       } else if (fieldBody.elements().hasNext()) {
         final var fieldObjectsIt = fieldBody.fields();
-        extractFieldsComplexPayload(fieldObjectArrayList, fieldObjectsIt);
+        extractFieldsComplexPayload(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
       }
     }
   }
@@ -198,61 +190,61 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> processAllOf(final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final String prefix,
-      final String suffix) {
+      final String suffix, final Collection<String> modelToBuildList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
-    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, true, prefix, suffix, element)));
+    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, true, prefix, suffix, element, modelToBuildList)));
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processAnyOfOneOf(final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final String prefix, final String suffix) {
+  private static List<SchemaFieldObject> processAnyOfOneOf(final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final String prefix, final String suffix,
+      final Collection<String> modelToBuildList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
 
-    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, false, prefix, suffix, element)));
+    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, false, prefix, suffix, element, modelToBuildList)));
     return fieldObjectArrayList;
   }
 
   private static SchemaFieldObject solveElement(final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
-    final JsonNode element) {
-    SchemaFieldObject result;
+      final JsonNode element, final Collection<String> modelToBuildList) {
+    final SchemaFieldObject result;
     if (element.has("$ref")) {
-      final String[] pathObjectRef = element.get("$ref").textValue().split("/");
-      final String schemaName = pathObjectRef[pathObjectRef.length - 1];
+      final String schemaName = MapperUtil.getRefClass(element);
       final var schemaToProcess = totalSchemas.get(schemaName);
-      result = processFieldObjectList(schemaToProcess, required, prefix, suffix);
-        result.setRequired(false);
+      result = processFieldObjectList(schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList);
+      result.setRequired(false);
     } else {
-      result = processFieldObjectList(element, required, prefix, suffix);
+      result = processFieldObjectList("", element, required, prefix, suffix, modelToBuildList);
     }
     return result;
   }
 
-  private static SchemaFieldObject processFieldObjectList(final JsonNode schema, final boolean required, final String prefix, final String suffix) {
+  private static SchemaFieldObject processFieldObjectList(final String propertyName, final JsonNode schema, final boolean required, final String prefix, final String suffix,
+      final Collection<String> modelToBuildList) {
     final SchemaFieldObject fieldObject;
-    final var name = schema.has("name") ? schema.get("name").textValue() : "";
+    final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     final var type = schema.get("type").textValue();
     if (ARRAY.equalsIgnoreCase(type)) {
       if (schema.has("items")) {
-        var items = schema.get("items");
+        final var items = schema.get("items");
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
-        String baseName = name;
         if (items.has("$ref")) {
-          baseName = getRef(items, prefix, suffix);
+          modelToBuildList.add(MapperUtil.getRefClass(items));
         }
         fieldObject =
           SchemaFieldObject
             .builder()
-            .baseName(baseName)
-            .dataType(MapperUtil.getTypeArray(schema, prefix, suffix))
-            .dataTypeSimple(arrayType)
+            .baseName(name)
+            .dataType(arrayType)
+            .dataTypeSimple(type)
             .importClass(getImportClass(arrayType))
             .build();
       } else {
         throw new NonSupportedSchemaException(schema.toPrettyString());
       }
     } else if (schema.has("$ref")) {
-      final String refSchemaName = getRef(schema, prefix, suffix);
+      final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
       fieldObject =
         SchemaFieldObject
           .builder()
@@ -266,7 +258,8 @@ public class MapperContentUtil {
       fieldObject = SchemaFieldObject.builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
-      throw new NonSupportedSchemaException(schema.toPrettyString());
+      fieldObject = SchemaFieldObject
+        .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
     }
     return fieldObject;
   }
@@ -274,7 +267,7 @@ public class MapperContentUtil {
   private static void setFieldType(final SchemaFieldObject field, final JsonNode value, final boolean required, final String prefix, final String suffix) {
     field.setRequired(required);
     if (value.has("type")) {
-      if (value.get("type").textValue().equalsIgnoreCase("array")) {
+      if (ARRAY.equalsIgnoreCase(value.get("type").textValue())) {
         final var typeArray = MapperUtil.getTypeArray(value, prefix, suffix);
         field.setDataType(typeArray);
         field.setImportClass(getImportClass(typeArray));
@@ -287,7 +280,7 @@ public class MapperContentUtil {
         } else {
           var typeObject = "";
           if (value.has("$ref")) {
-            typeObject = getRef(value, prefix, suffix);
+            typeObject = MapperUtil.getRef(value, prefix, suffix);
           }
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
@@ -298,13 +291,8 @@ public class MapperContentUtil {
     }
   }
 
-  private static String getRef(final JsonNode schema, final String prefix, final String suffix) {
-    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
-    return MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], prefix, suffix);
-  }
-
   private static SchemaFieldObject processEnumField(final String name, final boolean required, final JsonNode value, final String prefix, final String suffix) {
-    List<String> enumValues = new ArrayList<>();
+    final List<String> enumValues = new ArrayList<>();
     value.elements().forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));
 
     if (enumValues.isEmpty()) {
@@ -321,7 +309,7 @@ public class MapperContentUtil {
       .build();
   }
 
- private static String getImportClass(final String type) {
+  private static String getImportClass(final String type) {
     return StringUtils.isNotBlank(type) && !"String".equals(type) && !"Integer".equals(type) ? type : "";
   }
 

@@ -40,12 +40,6 @@ components:
     OrderCreated:
       payload:
         $ref: '#/components/schemas/Order'
-    CreateOrder:
-      payload:
-        order:
-          $ref: '#/components/schemas/Order'
-        waiter:
-          $ref: '#/components/schemas/Waiter'
   schemas:
     Waiter:
       type: object

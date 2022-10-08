@@ -4,15 +4,15 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.OrderCreatedPayload;
+import net.coru.scsplugin.business_model.model.event.OrderCreatedPayloadDTO;
 import net.coru.scsplugin.business_model.model.event.exception.ModelClassException;
 
 public class OrderCreatedDTO {
 
   @JsonProperty(value ="payload")
-  private final OrderCreatedPayload payload;
+  private final OrderCreatedPayloadDTO payload;
 
-  private OrderCreatedDTO(OrderCreatedPayload payload) {
+  private OrderCreatedDTO(OrderCreatedPayloadDTO payload) {
     this.payload = payload;
 
     validateRequiredAttributes();
@@ -24,11 +24,15 @@ public class OrderCreatedDTO {
     validateRequiredAttributes();
   }
 
+  public static OrderCreatedDTO.OrderCreatedDTOBuilder builder() {
+    return new OrderCreatedDTO.OrderCreatedDTOBuilder();
+  }
+
   public static class OrderCreatedDTOBuilder {
 
-    private OrderCreatedPayload payload;
+    private OrderCreatedPayloadDTO payload;
 
-    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(OrderCreatedPayload payload) {
+    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(OrderCreatedPayloadDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -44,7 +48,7 @@ public class OrderCreatedDTO {
   * @return payload
   */
   @Schema(name = "payload", required = true)
-  public OrderCreatedPayload getPayload() {
+  public OrderCreatedPayloadDTO getPayload() {
     return payload;
   }
 

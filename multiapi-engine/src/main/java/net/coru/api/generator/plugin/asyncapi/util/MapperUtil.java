@@ -30,36 +30,41 @@ public class MapperUtil {
   private MapperUtil() {}
 
   public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix) {
-    final String type;
-    String nodeType = null;
+    String type = schema.textValue();
     if (schema.has("type")) {
-      nodeType = schema.get("type").textValue();
-    }
-    String format = null;
-    if (schema.has("format")) {
-      format = schema.get("format").textValue();
-    }
-    if (NUMBER.equalsIgnoreCase(nodeType)) {
-      if (FLOAT.equalsIgnoreCase(format)) {
-        type = FLOAT;
-      } else if (DOUBLE.equalsIgnoreCase(format)) {
-        type = DOUBLE;
-      } else {
-        type = BIG_DECIMAL;
+      type = schema.get("type").textValue();
+      String format = null;
+      if (schema.has("format")) {
+        format = schema.get("format").textValue();
       }
-    } else if (INTEGER.equalsIgnoreCase(nodeType)) {
-      if (INT_64.equalsIgnoreCase(format)) {
-        type = LONG;
-      } else {
-        type = INTEGER;
+      if (NUMBER.equalsIgnoreCase(type)) {
+        if (FLOAT.equalsIgnoreCase(format)) {
+          type = FLOAT;
+        } else if (DOUBLE.equalsIgnoreCase(format)) {
+          type = DOUBLE;
+        } else {
+          type = BIG_DECIMAL;
+        }
+      } else if (INTEGER.equalsIgnoreCase(type)) {
+        if (INT_64.equalsIgnoreCase(format)) {
+          type = LONG;
+        } else {
+          type = INTEGER;
+        }
       }
-    } else if (Objects.nonNull(schema.findPath("$ref"))) {
-      final String[] pathObjectRef = schema.findValue("$ref").textValue().split("/");
-      type = getPojoName(pathObjectRef[pathObjectRef.length - 1], prefix, suffix);
-    } else {
-      type = nodeType;
+    } else if (schema.has("$ref")) {
+      type = getRef(schema, prefix, suffix);
     }
     return type;
+  }
+
+  public static String getRef(final JsonNode schema, final String prefix, final String suffix) {
+    return getPojoName(getRefClass(schema), prefix, suffix);
+  }
+
+  public static String getRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
   }
 
   public static String getTypeMap(final JsonNode mapSchema, final String prefix, final String suffix) {
@@ -73,14 +78,19 @@ public class MapperUtil {
   public static String getTypeArray(final JsonNode array, final String prefix, final String suffix) {
     var typeArray = "";
     final var arrayNode = array.get("items");
-    final var mapValueType = arrayNode.findPath("type");
+    final JsonNode mapValueType;
+    if (arrayNode.has("type")) {
+      mapValueType = arrayNode.get("type");
+    } else {
+      mapValueType = arrayNode.get("$ref");
+    }
     typeArray = getCollectionType(arrayNode, mapValueType, prefix, suffix);
     return typeArray;
   }
 
   private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, final String suffix) {
-    var typeMap = "";
-    if (Objects.nonNull(mapValueType)) {
+    var typeMap = mapValueType.textValue();
+    if (!typeMap.contains("#")) {
       if ("string".equalsIgnoreCase(mapValueType.textValue())) {
         typeMap = "String";
       } else if ("integer".equalsIgnoreCase(mapValueType.textValue())) {
@@ -91,8 +101,7 @@ public class MapperUtil {
     } else {
       final var valueSchema = mapNode.findPath("$ref");
       if (Objects.nonNull(valueSchema)) {
-        final String[] pathObjectRef = valueSchema.textValue().split("/");
-        typeMap = getPojoName(pathObjectRef[pathObjectRef.length - 1], prefix, suffix);
+        getRef(valueSchema, prefix, suffix);
       }
     }
     return typeMap;

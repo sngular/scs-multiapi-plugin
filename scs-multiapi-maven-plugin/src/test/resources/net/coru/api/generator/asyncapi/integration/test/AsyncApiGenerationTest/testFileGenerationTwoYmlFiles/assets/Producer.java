@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.apigenerator.asyncapi.model.OrderCreated;
+import net.coru.apigenerator.asyncapi.OrderCreated;
 
 @Configuration
 public class Producer {

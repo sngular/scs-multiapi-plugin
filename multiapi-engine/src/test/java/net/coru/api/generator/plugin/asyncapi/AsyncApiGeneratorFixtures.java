@@ -115,9 +115,16 @@ public class AsyncApiGeneratorFixtures {
 
     List<String> expectedModelFiles = List.of(
       "asyncapigenerator/testFileGeneration/assets/CreateOrderMapper.java",
-      "asyncapigenerator/testFileGeneration/assets/CreateOrderPayload.java",
+      "asyncapigenerator/testFileGeneration/assets/CreateOrderPayloadMapper.java",
       "asyncapigenerator/testFileGeneration/assets/OrderCreatedDTO.java",
-      "asyncapigenerator/testFileGeneration/assets/OrderCreatedPayload.java"
+      "asyncapigenerator/testFileGeneration/assets/OrderCreatedPayloadDTO.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderDTO.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderLineDTO.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderLineMapper.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderMapper.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderProductDTO.java",
+      "asyncapigenerator/testFileGeneration/assets/OrderProductMapper.java",
+      "asyncapigenerator/testFileGeneration/assets/WaiterMapper.java"
     );
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&

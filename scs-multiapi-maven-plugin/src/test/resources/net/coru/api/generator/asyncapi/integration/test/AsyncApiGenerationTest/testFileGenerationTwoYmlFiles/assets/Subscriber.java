@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.apigenerator.asyncapi.model.CreateOrder;
+import net.coru.apigenerator.asyncapi.CreateOrder;
 
 @Configuration
 public class Subscriber {

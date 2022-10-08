@@ -34,7 +34,7 @@ public class ${schema.className} {
     <#if field.required>
   private final Map<String, ${field.dataType}> ${field.baseName?uncap_first};
     <#else>
-  private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String,${field.dataType}>();
+  private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String, ${field.dataType}>();
     </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
     <#if field.required>
@@ -103,6 +103,10 @@ public class ${schema.className} {
   <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
     validatePartialCombinations();
   </#if>
+  }
+
+  public static ${schema.className}.${schema.className}Builder builder() {
+    return new ${schema.className}.${schema.className}Builder();
   }
 
   public static class ${schema.className}Builder {

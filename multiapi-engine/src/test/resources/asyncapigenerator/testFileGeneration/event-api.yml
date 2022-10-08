@@ -20,13 +20,14 @@ servers:
     protocol: kafka
     protocolVersion: 0.9.1
 channels:
-  order/created:
+  order.created:
     publish:
       operationId: "publishOperationFileGeneration"
       message:
         $ref: './assets/path.yml#/components/messages/OrderCreated'
-  order/createCommand:
+  order.createCommand:
     subscribe:
       operationId: "subscribeOperationFileGeneration"
       message:
-        $ref: './assets/path.yml#/components/messages/CreateOrder'
+        payload:
+          $ref: './assets/path.yml#/components/messages/CreateOrder'

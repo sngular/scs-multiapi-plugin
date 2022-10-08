@@ -4,35 +4,39 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.Order;
+import net.coru.scsplugin.business_model.model.event.OrderDTO;
 
-public class OrderCreatedPayload {
+public class OrderCreatedPayloadDTO {
 
   @JsonProperty(value ="payload")
-  private Order payload;
+  private OrderDTO payload;
 
-  private OrderCreatedPayload(Order payload) {
+  private OrderCreatedPayloadDTO(OrderDTO payload) {
     this.payload = payload;
 
   }
 
-  private OrderCreatedPayload(OrderCreatedPayloadBuilder builder) {
+  private OrderCreatedPayloadDTO(OrderCreatedPayloadDTOBuilder builder) {
     this.payload = builder.payload;
 
   }
 
-  public static class OrderCreatedPayloadBuilder {
+  public static OrderCreatedPayloadDTO.OrderCreatedPayloadDTOBuilder builder() {
+    return new OrderCreatedPayloadDTO.OrderCreatedPayloadDTOBuilder();
+  }
 
-    private Order payload;
+  public static class OrderCreatedPayloadDTOBuilder {
 
-    public OrderCreatedPayload.OrderCreatedPayloadBuilder payload(Order payload) {
+    private OrderDTO payload;
+
+    public OrderCreatedPayloadDTO.OrderCreatedPayloadDTOBuilder payload(OrderDTO payload) {
       this.payload = payload;
       return this;
     }
 
-    public OrderCreatedPayload build() {
-      OrderCreatedPayload orderCreatedPayload = new OrderCreatedPayload(this);
-      return orderCreatedPayload;
+    public OrderCreatedPayloadDTO build() {
+      OrderCreatedPayloadDTO orderCreatedPayloadDTO = new OrderCreatedPayloadDTO(this);
+      return orderCreatedPayloadDTO;
     }
   }
 
@@ -41,10 +45,10 @@ public class OrderCreatedPayload {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public Order getPayload() {
+  public OrderDTO getPayload() {
     return payload;
   }
-  public void setPayload(Order payload) {
+  public void setPayload(OrderDTO payload) {
     this.payload = payload;
   }
 
@@ -56,8 +60,8 @@ public class OrderCreatedPayload {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderCreatedPayload orderCreatedPayload = (OrderCreatedPayload) o;
-    return Objects.equals(this.payload, orderCreatedPayload.payload);
+    OrderCreatedPayloadDTO orderCreatedPayloadDTO = (OrderCreatedPayloadDTO) o;
+    return Objects.equals(this.payload, orderCreatedPayloadDTO.payload);
   }
 
   @Override
@@ -68,7 +72,7 @@ public class OrderCreatedPayload {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderCreatedPayload {\n");
+    sb.append("class OrderCreatedPayloadDTO {\n");
     sb.append(" payload: ").append(toIndentedString(payload)).append("\n");
     sb.append("}");
     return sb.toString();
