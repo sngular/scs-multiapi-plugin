@@ -16,4 +16,6 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
 
+  protected TemplateIndexConstants() {
+  }
 }
