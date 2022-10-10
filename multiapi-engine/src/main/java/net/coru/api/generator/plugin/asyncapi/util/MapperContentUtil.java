@@ -43,23 +43,7 @@ public class MapperContentUtil {
     final List<SchemaObject> schemasList = new ArrayList<>();
     final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
 
-    schemasList.add(SchemaObject.builder()
-                                .schemaName(component + StringUtils.defaultIfBlank(suffix, ""))
-                                .className(component + StringUtils.defaultIfBlank(suffix, ""))
-                                .importList(List.of(modelPackage + "." + component + "Payload" + StringUtils.defaultIfBlank(suffix, "")))
-                                .schemaCombinator("")
-                                .fieldObjectList(List.of(
-                                  SchemaFieldObject
-                                    .builder()
-                                    .baseName("payload")
-                                    .dataType(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
-                                    .dataTypeSimple(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
-                                    .importClass(component + "Payload" + StringUtils.defaultIfBlank(suffix, ""))
-                                    .required(true)
-                                    .build()))
-                                .build());
-
-    schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component + "Payload", model, prefix, suffix, modelToBuildList));
+    schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList));
 
     while (!modelToBuildList.isEmpty()) {
       final var modelToBuild = modelToBuildList.remove();
@@ -118,7 +102,7 @@ public class MapperContentUtil {
     if (model.has("type")) {
       if ("object".equalsIgnoreCase(model.get("type").textValue())) {
         processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList);
-      } else if ("array".equalsIgnoreCase(model.get("type").textValue())) {
+      } else if (ARRAY.equalsIgnoreCase(model.get("type").textValue())) {
         fieldObjectArrayList.add(processFieldObjectList("", model, required, prefix, suffix, modelToBuildList));
       } else if ("enum".equalsIgnoreCase(model.get("type").textValue())) {
         fieldObjectArrayList.add(processFieldObjectList("", model, required, prefix, suffix, modelToBuildList));

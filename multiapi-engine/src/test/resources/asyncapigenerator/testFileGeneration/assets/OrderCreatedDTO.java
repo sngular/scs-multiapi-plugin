@@ -4,24 +4,21 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.OrderCreatedPayloadDTO;
-import net.coru.scsplugin.business_model.model.event.exception.ModelClassException;
+import net.coru.scsplugin.business_model.model.event.OrderDTO;
 
 public class OrderCreatedDTO {
 
   @JsonProperty(value ="payload")
-  private final OrderCreatedPayloadDTO payload;
+  private OrderDTO payload;
 
-  private OrderCreatedDTO(OrderCreatedPayloadDTO payload) {
+  private OrderCreatedDTO(OrderDTO payload) {
     this.payload = payload;
 
-    validateRequiredAttributes();
   }
 
   private OrderCreatedDTO(OrderCreatedDTOBuilder builder) {
     this.payload = builder.payload;
 
-    validateRequiredAttributes();
   }
 
   public static OrderCreatedDTO.OrderCreatedDTOBuilder builder() {
@@ -30,9 +27,9 @@ public class OrderCreatedDTO {
 
   public static class OrderCreatedDTOBuilder {
 
-    private OrderCreatedPayloadDTO payload;
+    private OrderDTO payload;
 
-    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(OrderCreatedPayloadDTO payload) {
+    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(OrderDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -47,9 +44,12 @@ public class OrderCreatedDTO {
   * Get payload
   * @return payload
   */
-  @Schema(name = "payload", required = true)
-  public OrderCreatedPayloadDTO getPayload() {
+  @Schema(name = "payload", required = false)
+  public OrderDTO getPayload() {
     return payload;
+  }
+  public void setPayload(OrderDTO payload) {
+    this.payload = payload;
   }
 
   @Override
@@ -90,16 +90,5 @@ public class OrderCreatedDTO {
   }
 
 
-  private void validateRequiredAttributes() {
-    boolean satisfiedCondition = true;
-
-    if (!Objects.nonNull(this.payload)) {
-      satisfiedCondition = false;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("OrderCreatedDTO");
-    }
-  }
 
 }

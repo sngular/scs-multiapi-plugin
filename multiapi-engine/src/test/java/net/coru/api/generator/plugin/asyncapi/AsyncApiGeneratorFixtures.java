@@ -115,9 +115,7 @@ public class AsyncApiGeneratorFixtures {
 
     List<String> expectedModelFiles = List.of(
       "asyncapigenerator/testFileGeneration/assets/CreateOrderMapper.java",
-      "asyncapigenerator/testFileGeneration/assets/CreateOrderPayloadMapper.java",
       "asyncapigenerator/testFileGeneration/assets/OrderCreatedDTO.java",
-      "asyncapigenerator/testFileGeneration/assets/OrderCreatedPayloadDTO.java",
       "asyncapigenerator/testFileGeneration/assets/OrderDTO.java",
       "asyncapigenerator/testFileGeneration/assets/OrderLineDTO.java",
       "asyncapigenerator/testFileGeneration/assets/OrderLineMapper.java",

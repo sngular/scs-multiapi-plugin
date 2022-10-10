@@ -4,24 +4,26 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.CreateOrderPayloadMapper;
-import net.coru.scsplugin.business_model.model.event.exception.ModelClassException;
+import net.coru.scsplugin.business_model.model.event.WaiterMapper;
+import net.coru.scsplugin.business_model.model.event.OrderMapper;
 
 public class CreateOrderMapper {
 
-  @JsonProperty(value ="payload")
-  private final CreateOrderPayloadMapper payload;
+  @JsonProperty(value ="order")
+  private OrderMapper order;
+  @JsonProperty(value ="waiter")
+  private WaiterMapper waiter;
 
-  private CreateOrderMapper(CreateOrderPayloadMapper payload) {
-    this.payload = payload;
+  private CreateOrderMapper(OrderMapper order, WaiterMapper waiter) {
+    this.order = order;
+    this.waiter = waiter;
 
-    validateRequiredAttributes();
   }
 
   private CreateOrderMapper(CreateOrderMapperBuilder builder) {
-    this.payload = builder.payload;
+    this.order = builder.order;
+    this.waiter = builder.waiter;
 
-    validateRequiredAttributes();
   }
 
   public static CreateOrderMapper.CreateOrderMapperBuilder builder() {
@@ -30,10 +32,16 @@ public class CreateOrderMapper {
 
   public static class CreateOrderMapperBuilder {
 
-    private CreateOrderPayloadMapper payload;
+    private OrderMapper order;
+    private WaiterMapper waiter;
 
-    public CreateOrderMapper.CreateOrderMapperBuilder payload(CreateOrderPayloadMapper payload) {
-      this.payload = payload;
+    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
+      this.order = order;
+      return this;
+    }
+
+    public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
+      this.waiter = waiter;
       return this;
     }
 
@@ -44,12 +52,27 @@ public class CreateOrderMapper {
   }
 
   /**
-  * Get payload
-  * @return payload
+  * Get order
+  * @return order
   */
-  @Schema(name = "payload", required = true)
-  public CreateOrderPayloadMapper getPayload() {
-    return payload;
+  @Schema(name = "order", required = false)
+  public OrderMapper getOrder() {
+    return order;
+  }
+  public void setOrder(OrderMapper order) {
+    this.order = order;
+  }
+
+  /**
+  * Get waiter
+  * @return waiter
+  */
+  @Schema(name = "waiter", required = false)
+  public WaiterMapper getWaiter() {
+    return waiter;
+  }
+  public void setWaiter(WaiterMapper waiter) {
+    this.waiter = waiter;
   }
 
   @Override
@@ -61,19 +84,20 @@ public class CreateOrderMapper {
       return false;
     }
     CreateOrderMapper createOrderMapper = (CreateOrderMapper) o;
-    return Objects.equals(this.payload, createOrderMapper.payload);
+    return Objects.equals(this.order, createOrderMapper.order) && Objects.equals(this.waiter, createOrderMapper.waiter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(payload);
+    return Objects.hash(order, waiter);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateOrderMapper {\n");
-    sb.append(" payload: ").append(toIndentedString(payload)).append("\n");
+    sb.append(" order: ").append(toIndentedString(order)).append("\n");
+    sb.append(" waiter: ").append(toIndentedString(waiter)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -90,16 +114,5 @@ public class CreateOrderMapper {
   }
 
 
-  private void validateRequiredAttributes() {
-    boolean satisfiedCondition = true;
-
-    if (!Objects.nonNull(this.payload)) {
-      satisfiedCondition = false;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("CreateOrderMapper");
-    }
-  }
 
 }
