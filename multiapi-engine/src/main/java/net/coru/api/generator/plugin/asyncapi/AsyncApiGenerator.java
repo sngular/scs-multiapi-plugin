@@ -454,7 +454,8 @@ public class AsyncApiGenerator {
     }
   }
 
-  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String prefix, final String suffix) throws IOException {
+  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String prefix, final String suffix)
+      throws IOException {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
     String namespace = null;

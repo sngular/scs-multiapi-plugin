@@ -348,7 +348,7 @@
     <module name="EqualsAvoidNull"/>
     <module name="DesignForExtension"/>
     <module name="VisibilityModifier">
-      <property name="ignoreAnnotationCanonicalNames" value="Value"/>
+      <property name="ignoreAnnotationCanonicalNames" value="net.coru.api.generator.plugin.asyncapi.template.ClassTemplate"/>
     </module>
     <module name="ThrowsCount"/>
     <module name="InterfaceIsType"/>
