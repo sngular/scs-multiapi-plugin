@@ -347,9 +347,7 @@
     <module name="InnerAssignment"/>
     <module name="EqualsAvoidNull"/>
     <module name="DesignForExtension"/>
-    <module name="VisibilityModifier">
-      <property name="ignoreAnnotationCanonicalNames" value="net.coru.api.generator.plugin.asyncapi.template.ClassTemplate"/>
-    </module>
+    <module name="VisibilityModifier" />
     <module name="ThrowsCount"/>
     <module name="InterfaceIsType"/>
     <module name="InnerTypeLast"/>
@@ -393,6 +391,10 @@
   </module>
   <module name="SuppressionSingleFilter">
     <property name="files" value="[/\\].*model.*\.java"/>
+    <property name="checks" value="VisibilityModifier"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*template.*\.java"/>
     <property name="checks" value="VisibilityModifier"/>
   </module>
   <module name="SuppressionSingleFilter">
