@@ -40,6 +40,26 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
+  final static List<SpecFile> TEST_FILE_GENERATION_ISSUE = List.of(
+    SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testFileGenerationIssue/event-api.yml")
+          .consumer(OperationParameterObject.builder()
+                                            .ids("onCustomerEvent")
+                                            .classNamePostfix("TestClassName")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("net.coru.scsplugin.business_model.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .build())
+          .supplier(OperationParameterObject.builder()
+                                            .ids("onCustomerOrderEvent")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("net.coru.scsplugin.business_model.model.event.producer")
+                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .build())
+          .build()
+  );
+
   final static List<SpecFile> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
     SpecFile
           .builder()
@@ -127,6 +147,38 @@ public class AsyncApiGeneratorFixtures {
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
       modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestFileGenerationIssue() {
+
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/consumer";
+
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/producer";
+
+    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/business_model/model/event";
+
+    List<String> expectedConsumerFiles = List.of(
+      "asyncapigenerator/testFileGenerationIssue/assets/IOnCustomerEvent.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/TestClassName.java");
+
+    List<String> expectedProducerFiles = List.of(
+      "asyncapigenerator/testFileGenerationIssue/assets/IOnCustomerOrderEvent.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/Producer.java");
+
+    List<String> expectedModelFiles = List.of(
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerEventMessageDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerEventPayloadDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerOrderDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerOrderEventMessageDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/CustomerOrderEventPayloadDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/OrderedItemDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/PaymentDetailsDTO.java",
+      "asyncapigenerator/testFileGenerationIssue/assets/ShippingDetailsDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestFileGenerationExternalAvro() {
