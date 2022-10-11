@@ -7,6 +7,7 @@
   <version>4.1.0</version>
   <packaging>maven-plugin</packaging>
 
+  <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
   <description>Code generation plugin based on yml files under AsyncApi and OpenApi specifications.</description>
   <url>https://github.com/corunet/scs-multiapi-plugin</url>
   <licenses>
