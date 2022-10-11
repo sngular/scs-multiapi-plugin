@@ -20,79 +20,14 @@ servers:
     protocol: kafka
     protocolVersion: 0.9.1
 channels:
-  order/created:
+  order.created:
     publish:
       operationId: "publishOperationFileGeneration"
       message:
         $ref: './assets/path.yml#/components/messages/OrderCreated'
-  order/createCommand:
+  order.createCommand:
     subscribe:
       operationId: "subscribeOperationFileGeneration"
       message:
-        $ref: './assets/path.yml#/components/messages/CreateOrder'
-components:
-  messages:
-    OrderCreated:
-      payload:
-        $ref: '#/components/schemas/Order'
-    CreateOrder:
-      payload:
-        order:
-          $ref: '#/components/schemas/Order'
-        waiter:
-          $ref: '#/components/schemas/Waiter'
-  schemas:
-    Waiter:
-      type: object
-      properties:
-        ref:
-          type: string
-        timestamp:
-          type: string
-          format: 'dd/mm/yyyy hh:MM:sss'
-        table:
-          type: string
-    Order:
-      type: object
-      properties:
-        ref:
-          type: string
-        clientRef:
-          type: string
-        amount:
-          type: string
-          format: decimal
-        lines:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderLine'
-    OrderLine:
-      type: object
-      required:
-      - ref
-      - products
-      properties:
-        ref:
-          type: string
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderProduct'
-    OrderProduct:
-      type: object
-      required:
-      - ref
-      - productRef
-      - price
-      - quantity
-      properties:
-        ref:
-          type: string
-        productRef:
-          type: string
-        price:
-          type: string
-          format: decimal
-        quantity:
-          type: string
-          format: decimal
+        payload:
+          $ref: './assets/path.yml#/components/messages/CreateOrder'

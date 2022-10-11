@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +22,8 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import net.coru.api.generator.plugin.asyncapi.MethodObject;
+import net.coru.api.generator.plugin.asyncapi.exception.FileSystemException;
+import net.coru.api.generator.plugin.asyncapi.model.SchemaObject;
 
 public class TemplateFactory {
 
@@ -48,6 +51,8 @@ public class TemplateFactory {
 
   private final List<MethodObject> streamBridgeMethods = new ArrayList<>();
 
+  private final List<ClassTemplate> schemaObjectMap = new LinkedList<>();
+
   private String subscribeFilePath = null;
 
   private String supplierFilePath = null;
@@ -67,33 +72,66 @@ public class TemplateFactory {
     cfg.setLogTemplateExceptions(true);
   }
 
-  public final void fillTemplate() throws IOException, TemplateException {
+  private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave.replace(".", "/"));
+    fileToSave.mkdirs();
+    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
+    fillTemplate(pathToSaveMainClass, templateName, root);
+  }
+
+  private void fillTemplate(final String pathToSaveMainClass, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
+    writeTemplateToFile(templateName, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplates() throws IOException, TemplateException {
     root.put("publishMethods", publishMethods);
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
 
-    File fileToSave;
-    String pathToSaveMainClass;
-
     if (!publishMethods.isEmpty()) {
-      fileToSave = new File(supplierFilePath);
-      pathToSaveMainClass = fileToSave.toPath().resolve(supplierClassName + FILE_TYPE_JAVA).toString();
-      writeTemplateToFile("templateSuppliers.ftlh", root, pathToSaveMainClass);
+      fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
     }
 
     if (!subscribeMethods.isEmpty()) {
-      fileToSave = new File(subscribeFilePath);
-      pathToSaveMainClass = fileToSave.toPath().resolve(subscribeClassName + FILE_TYPE_JAVA).toString();
-      writeTemplateToFile("templateConsumers.ftlh", root, pathToSaveMainClass);
+      fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
     }
 
     if (!streamBridgeMethods.isEmpty()) {
-      fileToSave = new File(streamBridgeFilePath);
-      pathToSaveMainClass = fileToSave.toPath().resolve(streamBridgeClassName + FILE_TYPE_JAVA).toString();
-      writeTemplateToFile("templateStreamBridge.ftlh", root, pathToSaveMainClass);
+      fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
     }
 
+    schemaObjectMap.forEach(classTemplate -> {
+      try {
+        fillTemplateSchema(classTemplate, false);
+      } catch (final IOException | TemplateException exception) {
+        throw new FileSystemException(exception);
+      }
+    });
+
     this.generateInterfaces();
+  }
+
+  public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
+    final Path pathToExceptionPackage = filePathToSave.resolve("exception");
+    pathToExceptionPackage.toFile().mkdirs();
+    root.put("packageModel", modelPackage);
+    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
+    writeTemplateToFile(net.coru.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
+
+  }
+
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok) throws IOException, TemplateException {
+    final var schemaObject = classTemplate.getClassSchema();
+    final var filePath = classTemplate.getFilePath();
+    if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
+      final Map<String, Object> rootSchema = new HashMap<>();
+      rootSchema.put("schema", schemaObject);
+      final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+      if (Objects.nonNull(classTemplate.getModelPackage())) {
+        rootSchema.put("packageModel", classTemplate.getModelPackage());
+      }
+      fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
+    }
   }
 
   public final void setSubscribePackageName(final String packageName) {
@@ -143,6 +181,10 @@ public class TemplateFactory {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
+  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final boolean usingLombok, final Path filePath) {
+    schemaObjectMap.add(ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject).build());
+  }
+
   public final void addSubscribeMethod(final String operationId, final String classNamespace) {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
@@ -163,6 +205,7 @@ public class TemplateFactory {
     root.clear();
     publishMethods.clear();
     subscribeMethods.clear();
+    schemaObjectMap.clear();
     streamBridgeMethods.clear();
     subscribeFilePath = null;
     supplierFilePath = null;
@@ -183,22 +226,15 @@ public class TemplateFactory {
     interfaceRoot.put(SUPPLIER_ENTITIES_SUFFIX, root.get(SUPPLIER_ENTITIES_SUFFIX));
     interfaceRoot.put(SUBSCRIBE_ENTITIES_SUFFIX, root.get(SUBSCRIBE_ENTITIES_SUFFIX));
 
-    File fileToSave;
-    String pathToSaveMainClass;
-
     for (MethodObject method : allMethods) {
       interfaceRoot.put("method", method);
 
       if (Objects.equals(method.getType(), "publish")) {
-        fileToSave = new File(supplierFilePath);
-        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA)
-                                        .toString();
-        writeTemplateToFile("interfaceSupplier.ftlh", interfaceRoot, pathToSaveMainClass);
+        fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
+                     TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS, interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
-        fileToSave = new File(subscribeFilePath);
-        pathToSaveMainClass = fileToSave.toPath().resolve("I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1) + FILE_TYPE_JAVA)
-                                        .toString();
-        writeTemplateToFile("interfaceConsumer.ftlh", interfaceRoot, pathToSaveMainClass);
+        fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
+                     TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS, interfaceRoot);
       }
     }
   }

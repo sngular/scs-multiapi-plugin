@@ -3,13 +3,12 @@ components:
     OrderCreated:
       payload:
         $ref: '#/components/schemas/Order'
-    CreateOrder:
-      payload:
-        order:
-          $ref: '#/components/schemas/Order'
-        waiter:
-          $ref: '#/components/schemas/Waiter'
   schemas:
+    CreateOrder:
+      order:
+        $ref: '#/components/schemas/Order'
+      waiter:
+        $ref: '#/components/schemas/Waiter'
     Waiter:
       type: object
       properties:
@@ -28,7 +27,7 @@ components:
         clientRef:
           type: string
         amount:
-          type: string
+          type: number
           format: decimal
         lines:
           type: array

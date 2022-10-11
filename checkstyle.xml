@@ -347,7 +347,7 @@
     <module name="InnerAssignment"/>
     <module name="EqualsAvoidNull"/>
     <module name="DesignForExtension"/>
-    <module name="VisibilityModifier"/>
+    <module name="VisibilityModifier" />
     <module name="ThrowsCount"/>
     <module name="InterfaceIsType"/>
     <module name="InnerTypeLast"/>
@@ -394,8 +394,16 @@
     <property name="checks" value="VisibilityModifier"/>
   </module>
   <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*template.*\.java"/>
+    <property name="checks" value="VisibilityModifier"/>
+  </module>
+  <module name="SuppressionSingleFilter">
     <property name="files" value="[/\\].*model.*\.java"/>
     <property name="checks" value="DesignForExtension"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*AsyncApiGenerator.java"/>
+    <property name="checks" value="ParameterNumber"/>
   </module>
   <module name="SuppressionSingleFilter">
     <property name="files" value="[\\/]test[\\/]"/>

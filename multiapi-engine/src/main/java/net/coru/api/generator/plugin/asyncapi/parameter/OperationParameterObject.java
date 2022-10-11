@@ -36,6 +36,8 @@ public final class OperationParameterObject {
 
   private String classNamePostfix;
 
+  private boolean useLombokModelAnnotation;
+
   private List<String> operationIds;
 
   public List<String> getOperationIds() {

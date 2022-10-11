@@ -1,6 +1,6 @@
 package net.coru;
 
-import net.coru.apigenerator.asyncapi.model.CreateOrder;
+import net.coru.apigenerator.asyncapi.CreateOrder;
 
 public interface ISubscribeOperation {
 
