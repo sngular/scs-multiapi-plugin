@@ -128,6 +128,9 @@ public class MapperContentUtil {
         final var property = propertiesIt.next();
         fieldObjectArrayList.add(
             processFieldObjectList(property, model.get("properties").path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList));
+        if (model.get("properties").path(property).has("$ref")) {
+          modelToBuildList.add(MapperUtil.getRefClass(model.get("properties").path(property)));
+        }
       }
     } else if (properties.has("allOf")) {
       fieldObjectArrayList.addAll(processAllOf(totalSchemas, properties.get("allOf"), prefix, suffix, modelToBuildList));
@@ -208,9 +211,12 @@ public class MapperContentUtil {
       final Collection<String> modelToBuildList) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
-    final var type = schema.get("type").textValue();
-    if (ARRAY.equalsIgnoreCase(type)) {
-      if (schema.has("items")) {
+    if (schema.has("type")) {
+      final var type = schema.get("type").textValue();
+      if ("object".equalsIgnoreCase(type)) {
+        fieldObject = SchemaFieldObject.builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
+        setFieldType(fieldObject, schema, required, prefix, suffix);
+      } else if (schema.has("items")) {
         final var items = schema.get("items");
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
         if (items.has("$ref")) {
@@ -224,8 +230,11 @@ public class MapperContentUtil {
             .dataTypeSimple(type)
             .importClass(getImportClass(arrayType))
             .build();
+      } else if (schema.has("enum")) {
+        fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
-        throw new NonSupportedSchemaException(schema.toPrettyString());
+        fieldObject = SchemaFieldObject
+          .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
       }
     } else if (schema.has("$ref")) {
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
@@ -235,11 +244,6 @@ public class MapperContentUtil {
           .baseName(refSchemaName)
           .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
           .build();
-      setFieldType(fieldObject, schema, required, prefix, suffix);
-    } else if (schema.has("items")) {
-      fieldObject = processEnumField(name, required, schema, prefix, suffix);
-    } else if ("object".equalsIgnoreCase(type)) {
-      fieldObject = SchemaFieldObject.builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
       fieldObject = SchemaFieldObject
@@ -277,7 +281,7 @@ public class MapperContentUtil {
 
   private static SchemaFieldObject processEnumField(final String name, final boolean required, final JsonNode value, final String prefix, final String suffix) {
     final List<String> enumValues = new ArrayList<>();
-    value.elements().forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));
+    value.get("enum").elements().forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));
 
     if (enumValues.isEmpty()) {
       throw new BadDefinedEnumException(name);

@@ -43,8 +43,8 @@ public class ${schema.className} {
   private ${field.baseName?cap_first} ${field.baseName?uncap_first};
     </#if>
   public enum ${field.baseName?cap_first} {
-<#list field.enumValues as key, value>
-    ${key}(${value?no_esc})<#sep>,
+<#list field.enumValues as value>
+    ${value?upper_case}("${value?no_esc}")<#sep>,
 </#list>;
 
     private ${field.dataType?cap_first} value;
