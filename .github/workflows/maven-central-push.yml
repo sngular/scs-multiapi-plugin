@@ -35,14 +35,14 @@ jobs:
           cd multiapi-engine
           mvn -B install
 
-#      - name: Publish Maven Plugin to Maven Central Packages
-#        run: |
-#          cd scs-multiapi-maven-plugin
-#          mvn deploy
-#        env:
-#          MAVEN_USERNAME: ${{ secrets.JIRAID }}
-#          MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Publish Maven Plugin to Maven Central Packages
+        run: |
+          cd scs-multiapi-maven-plugin
+          mvn deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.JIRAID }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish Gradle plugin to Gradle Repo
         run: |
@@ -54,6 +54,8 @@ jobs:
       - name: Maven version
         uses: JActions/maven-version@v1.0.0
         id: get-version
+        with:
+          pom: ./scs-multiapi-maven-plugin/pom.xml
 
       - name: Create a Release
         uses: marvinpinto/action-automatic-releases@latest
