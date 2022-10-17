@@ -49,11 +49,7 @@ jobs:
           cd scs-multiapi-gradle-plugin
           gradle wrapper
           chmod +x gradlew
-          ./gradlew publish
-        env:
-          MAVEN_USERNAME: ${{ secrets.JIRAID }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          ./gradlew publishPlugins -Dgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Dgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
 
       - name: Maven version
         uses: JActions/maven-version@v1.0.0
