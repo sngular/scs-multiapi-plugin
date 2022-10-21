@@ -1,45 +1,54 @@
-package net.coru.multifileplugin.testrestclient.model;
+package net.coru.multifileplugin.restclient.model;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.collections4.CollectionUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
+import net.coru.multifileplugin.restclient.model.exception.ModelClassException;
 
 public class ApiTestInfoDTO {
 
-  @JsonProperty(value ="testName")
-  private String testName;
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
+  @JsonProperty(value ="testName")
+  private final String testName;
+
+  private ApiTestInfoDTO(List<String> testers, String testName) {
+    this.testers = testers;
+    this.testName = testName;
+
+    validateRequiredAttributes();
+  }
 
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
-    this.testName = builder.testName;
     this.testers = builder.testers;
+    this.testName = builder.testName;
+
+    validateRequiredAttributes();
   }
 
   public static class ApiTestInfoDTOBuilder {
 
-    private String testName;
     private List<String> testers = new ArrayList<String>();
-
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
-      this.testName = testName;
-      return this;
-    }
+    private String testName;
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
-      if (CollectionUtils.isNotEmpty(testers)) {
+      if (!testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;
     }
 
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
-      if (Objects.nonNull(tester)) {
+      if (tester != null) {
         this.testers.add(tester);
       }
+      return this;
+    }
+
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
+      this.testName = testName;
       return this;
     }
 
@@ -50,27 +59,24 @@ public class ApiTestInfoDTO {
   }
 
   /**
-  * Get testName
-  * @return testName
-  */
-  @ApiModelProperty( value = "description")
-  public String getTestName() {
-    return testName;
-  }
-  public void setTestName(String testName) {
-    this.testName = testName;
-  }
-
-  /**
   * Get testers
   * @return testers
   */
-  @ApiModelProperty( value = "description")
+  @Schema(name = "testers", required = false)
   public List<String> getTesters() {
     return testers;
   }
   public void setTesters(List<String> testers) {
     this.testers = testers;
+  }
+
+  /**
+  * Get testName
+  * @return testName
+  */
+  @Schema(name = "testName", required = true)
+  public String getTestName() {
+    return testName;
   }
 
   @Override
@@ -82,20 +88,20 @@ public class ApiTestInfoDTO {
       return false;
     }
     ApiTestInfoDTO apiTestInfoDTO = (ApiTestInfoDTO) o;
-    return Objects.equals(this.testName, apiTestInfoDTO.testName) && Objects.equals(this.testers, apiTestInfoDTO.testers);
+    return Objects.equals(this.testers, apiTestInfoDTO.testers) && Objects.equals(this.testName, apiTestInfoDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName, testers);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestInfoDTO {\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
+    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -109,6 +115,19 @@ public class ApiTestInfoDTO {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
+  }
+
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.testName)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestInfoDTO");
+    }
   }
 
 }

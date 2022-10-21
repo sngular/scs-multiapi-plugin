@@ -47,7 +47,7 @@ public class MapperContentUtil {
 
     while (!modelToBuildList.isEmpty()) {
       final var modelToBuild = modelToBuildList.remove();
-      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild), prefix, suffix, modelToBuildList));
+      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild.toUpperCase()), prefix, suffix, modelToBuildList));
     }
     return schemasList;
   }
@@ -58,7 +58,7 @@ public class MapperContentUtil {
     final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList);
 
     return SchemaObject.builder()
-                                .schemaName(component)
+                                .schemaName(StringUtils.capitalize(component))
                                 .className(MapperUtil.getPojoName(component, prefix, suffix))
                                 .importList(getImportList(listSchema, modelPackage))
                                 .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
@@ -109,7 +109,7 @@ public class MapperContentUtil {
       }
     } else if (model.elements().hasNext()) {
       final var fieldsIt = model.fields();
-      extractFieldsComplexPayload(fieldObjectArrayList, fieldsIt, modelToBuildList, prefix, suffix);
+      extractFieldsComplexObject(fieldObjectArrayList, fieldsIt, modelToBuildList, prefix, suffix);
     }
     return fieldObjectArrayList;
   }
@@ -144,7 +144,7 @@ public class MapperContentUtil {
     }
   }
 
-  private static void extractFieldsComplexPayload(final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
+  private static void extractFieldsComplexObject(final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
       final Collection<String> modelToBuildList, final String prefix, final String suffix) {
     while (fieldsIt.hasNext()) {
       final var field = fieldsIt.next();
@@ -163,7 +163,7 @@ public class MapperContentUtil {
                            .build());
       } else if (fieldBody.elements().hasNext()) {
         final var fieldObjectsIt = fieldBody.fields();
-        extractFieldsComplexPayload(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
+        extractFieldsComplexObject(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
       }
     }
   }
@@ -198,7 +198,7 @@ public class MapperContentUtil {
     final SchemaFieldObject result;
     if (element.has("$ref")) {
       final String schemaName = MapperUtil.getRefClass(element);
-      final var schemaToProcess = totalSchemas.get(schemaName);
+      final var schemaToProcess = totalSchemas.get(schemaName.toUpperCase());
       result = processFieldObjectList(schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList);
       result.setRequired(false);
     } else {

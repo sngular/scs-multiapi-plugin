@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,7 @@ import net.coru.api.generator.plugin.asyncapi.template.TemplateFactory;
 import net.coru.api.generator.plugin.asyncapi.util.MapperContentUtil;
 import net.coru.api.generator.plugin.asyncapi.util.MapperUtil;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -170,15 +172,15 @@ public class AsyncApiGenerator {
     );
     final List<JsonNode> messagesList = node.findValues("messages");
     final List<JsonNode> schemasList = node.findValues("schemas");
-    schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent(fieldSchema.getKey(), fieldSchema.getValue())));
+    schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent(fieldSchema.getKey().toUpperCase(), fieldSchema.getValue())));
     messagesList.forEach(message ->
                            message.fields().forEachRemaining(fieldSchema -> {
                              if (fieldSchema.getValue().has("payload")) {
                                final var payload = fieldSchema.getValue().get("payload");
                                if (!payload.has("$ref")) {
-                                 totalSchemas.put(fieldSchema.getKey(), payload);
+                                 totalSchemas.put(fieldSchema.getKey().toUpperCase(), payload);
                                } else {
-                                 totalSchemas.putIfAbsent(fieldSchema.getKey(), payload.get("$ref"));
+                                 totalSchemas.putIfAbsent(fieldSchema.getKey().toUpperCase(), payload.get("$ref"));
                                }
                              }
                            })
@@ -225,7 +227,7 @@ public class AsyncApiGenerator {
       throw new FileSystemException(e);
     }
     if (Objects.nonNull(component)) {
-      totalSchemas.put(componentName, component);
+      totalSchemas.put(componentName.toUpperCase(), component);
     }
   }
 
@@ -443,7 +445,7 @@ public class AsyncApiGenerator {
       throws TemplateException, IOException {
     final var modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final var className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
-    final var schemaToBuild = totalSchemas.get(className);
+    final var schemaToBuild = totalSchemas.get(className.toUpperCase());
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, modelPackage, className, schemaToBuild, null, classSuffix);
     schemaObjectList.forEach(schemaObject -> {
       templateFactory.addSchemaObject(modelPackage, className, schemaObject, usingLombok, filePath);
@@ -541,14 +543,17 @@ public class AsyncApiGenerator {
       if (extractedPackage.contains(PACKAGE_SEPARATOR_STR)) {
         final var splitPackage = extractedPackage.split("\\.");
         final var className = splitPackage[splitPackage.length - 1];
-        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + className;
+        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
       } else {
-        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + extractedPackage;
+        processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(extractedPackage);
       }
     } else if (extractedPackage.contains(PACKAGE_SEPARATOR_STR)) {
-      processedPackage = extractedPackage;
+      final var splitPackage = extractedPackage.split("\\.");
+      final var className = splitPackage[splitPackage.length - 1];
+      processedPackage =
+        StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
     } else {
-      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR_STR + extractedPackage;
+      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(extractedPackage);
     }
 
     return processedPackage;

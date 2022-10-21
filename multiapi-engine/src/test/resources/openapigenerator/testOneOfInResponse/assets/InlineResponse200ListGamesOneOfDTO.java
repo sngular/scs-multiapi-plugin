@@ -13,6 +13,10 @@ import net.coru.multifileplugin.testoneofinresponse.model.exception.ModelClassEx
 @Data
 public class InlineResponse200ListGamesOneOfDTO {
 
+  @JsonProperty(value ="gameName")
+  @NonNull
+  private String gameName;
+
   @JsonProperty(value ="name")
   @NonNull
   private String name;
@@ -25,21 +29,16 @@ public class InlineResponse200ListGamesOneOfDTO {
   @NonNull
   private Integer rooms;
 
-  @JsonProperty(value ="gameName")
-  @NonNull
-  private String gameName;
-
   @JsonProperty(value ="players")
-  @NonNull
   private List<String> players = new ArrayList<String>();
 
 
   @Builder
-  private InlineResponse200ListGamesOneOfDTO(@NonNull String name, @NonNull Integer id, @NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players) {
+  private InlineResponse200ListGamesOneOfDTO(@NonNull String gameName, @NonNull String name, @NonNull Integer id, @NonNull Integer rooms, List<String> players) {
+    this.gameName = gameName;
     this.name = name;
     this.id = id;
     this.rooms = rooms;
-    this.gameName = gameName;
     this.players = players;
 
     validatePartialCombinations();
@@ -48,16 +47,16 @@ public class InlineResponse200ListGamesOneOfDTO {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-    if (Objects.nonNull(this.name)) {
+    if (Objects.nonNull(this.gameName)) {
+      satisfiedCondition = true;
+    }
+    else if (Objects.nonNull(this.name)) {
       satisfiedCondition = true;
     }
     else if (Objects.nonNull(this.id)) {
       satisfiedCondition = true;
     }
     else if (Objects.nonNull(this.rooms)) {
-      satisfiedCondition = true;
-    }
-    else if (Objects.nonNull(this.gameName)) {
       satisfiedCondition = true;
     }
     else if (Objects.nonNull(this.players)) {

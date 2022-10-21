@@ -12,9 +12,38 @@ import lombok.NonNull;
 @Data
 public class ApiTestDTO {
 
+  @JsonProperty(value ="unionEnum")
+  private UnionEnum unionEnum;
+
+  public enum UnionEnum {
+    ONEOF("oneof"),
+    ANYOF("anyof"),
+    ALLOF("allof");
+
+    private String value;
+
+    UnionEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
+
   @JsonProperty(value ="name")
   @NonNull
   private String name;
+
+  @JsonProperty(value ="id")
+  @NonNull
+  private Integer id;
 
   @JsonProperty(value ="unionIntegerEnum")
   private UnionIntegerEnum unionIntegerEnum;
@@ -66,43 +95,14 @@ public class ApiTestDTO {
     }
   }
 
-  @JsonProperty(value ="id")
-  @NonNull
-  private Integer id;
-
-  @JsonProperty(value ="unionEnum")
-  private UnionEnum unionEnum;
-
-  public enum UnionEnum {
-    ONEOF("oneof"),
-    ANYOF("anyof"),
-    ALLOF("allof");
-
-    private String value;
-
-    UnionEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
-
 
   @Builder
-  private ApiTestDTO(@NonNull String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, @NonNull Integer id, UnionEnum unionEnum) {
+  private ApiTestDTO(UnionEnum unionEnum, @NonNull String name, @NonNull Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {
+    this.unionEnum = unionEnum;
     this.name = name;
+    this.id = id;
     this.unionIntegerEnum = unionIntegerEnum;
     this.unionNumberEnum = unionNumberEnum;
-    this.id = id;
-    this.unionEnum = unionEnum;
 
   }
 

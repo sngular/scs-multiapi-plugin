@@ -109,7 +109,7 @@ public class MapperUtil {
 
   public static String getPojoName(final String namePojo, final String prefix, final String suffix) {
     return StringUtils.defaultIfBlank(prefix, "")
-           + namePojo
+           + StringUtils.capitalize(namePojo)
            + StringUtils.defaultIfBlank(suffix, "");
   }
 

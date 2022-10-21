@@ -10,34 +10,29 @@ import net.coru.multifileplugin.pathparameter.model.exception.ModelClassExceptio
 
 public class TestInfoDTO {
 
+  @JsonProperty(value ="testers")
+  private List<String> testers = new ArrayList<String>();
   @JsonProperty(value ="testName")
   private final String testName;
-  @JsonProperty(value ="testers")
-  private final List<String> testers;
 
-  private TestInfoDTO(String testName, List<String> testers) {
-    this.testName = testName;
+  private TestInfoDTO(List<String> testers, String testName) {
     this.testers = testers;
+    this.testName = testName;
 
     validateRequiredAttributes();
   }
 
   private TestInfoDTO(TestInfoDTOBuilder builder) {
-    this.testName = builder.testName;
     this.testers = builder.testers;
+    this.testName = builder.testName;
 
     validateRequiredAttributes();
   }
 
   public static class TestInfoDTOBuilder {
 
-    private String testName;
     private List<String> testers = new ArrayList<String>();
-
-    public TestInfoDTO.TestInfoDTOBuilder testName(String testName) {
-      this.testName = testName;
-      return this;
-    }
+    private String testName;
     public TestInfoDTO.TestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
@@ -52,10 +47,27 @@ public class TestInfoDTO {
       return this;
     }
 
+    public TestInfoDTO.TestInfoDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+
     public TestInfoDTO build() {
       TestInfoDTO testInfoDTO = new TestInfoDTO(this);
       return testInfoDTO;
     }
+  }
+
+  /**
+  * Get testers
+  * @return testers
+  */
+  @Schema(name = "testers", required = false)
+  public List<String> getTesters() {
+    return testers;
+  }
+  public void setTesters(List<String> testers) {
+    this.testers = testers;
   }
 
   /**
@@ -67,15 +79,6 @@ public class TestInfoDTO {
     return testName;
   }
 
-  /**
-  * Get testers
-  * @return testers
-  */
-  @Schema(name = "testers", required = true)
-  public List<String> getTesters() {
-    return testers;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -85,20 +88,20 @@ public class TestInfoDTO {
       return false;
     }
     TestInfoDTO testInfoDTO = (TestInfoDTO) o;
-    return Objects.equals(this.testName, testInfoDTO.testName) && Objects.equals(this.testers, testInfoDTO.testers);
+    return Objects.equals(this.testers, testInfoDTO.testers) && Objects.equals(this.testName, testInfoDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName, testers);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TestInfoDTO {\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
+    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -119,9 +122,6 @@ public class TestInfoDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.testName)) {
-      satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.testers)) {
       satisfiedCondition = false;
     }
 

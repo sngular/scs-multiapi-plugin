@@ -10,34 +10,29 @@ import net.coru.multifileplugin.testapi.model.exception.ModelClassException;
 
 public class ApiTestDTO {
 
-  @JsonProperty(value ="testName")
-  private final String testName;
   @JsonProperty(value ="testers")
   private final List<String> testers;
+  @JsonProperty(value ="testName")
+  private final String testName;
 
-  private ApiTestDTO(String testName, List<String> testers) {
-    this.testName = testName;
+  private ApiTestDTO(List<String> testers, String testName) {
     this.testers = testers;
+    this.testName = testName;
 
     validateRequiredAttributes();
   }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
-    this.testName = builder.testName;
     this.testers = builder.testers;
+    this.testName = builder.testName;
 
     validateRequiredAttributes();
   }
 
   public static class ApiTestDTOBuilder {
 
-    private String testName;
     private List<String> testers = new ArrayList<String>();
-
-    public ApiTestDTO.ApiTestDTOBuilder testName(String testName) {
-      this.testName = testName;
-      return this;
-    }
+    private String testName;
     public ApiTestDTO.ApiTestDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
@@ -52,19 +47,15 @@ public class ApiTestDTO {
       return this;
     }
 
+    public ApiTestDTO.ApiTestDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+
     public ApiTestDTO build() {
       ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
-  }
-
-  /**
-  * Get testName
-  * @return testName
-  */
-  @Schema(name = "testName", required = true)
-  public String getTestName() {
-    return testName;
   }
 
   /**
@@ -76,6 +67,15 @@ public class ApiTestDTO {
     return testers;
   }
 
+  /**
+  * Get testName
+  * @return testName
+  */
+  @Schema(name = "testName", required = true)
+  public String getTestName() {
+    return testName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -85,20 +85,20 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.testName, apiTestDTO.testName) && Objects.equals(this.testers, apiTestDTO.testers);
+    return Objects.equals(this.testers, apiTestDTO.testers) && Objects.equals(this.testName, apiTestDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName, testers);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestDTO {\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
+    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -118,10 +118,10 @@ public class ApiTestDTO {
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-    if (!Objects.nonNull(this.testName)) {
+    if (!Objects.nonNull(this.testers)) {
       satisfiedCondition = false;
     }
-    else if (!Objects.nonNull(this.testers)) {
+    else if (!Objects.nonNull(this.testName)) {
       satisfiedCondition = false;
     }
 

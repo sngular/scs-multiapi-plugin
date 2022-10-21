@@ -4,94 +4,55 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.multifileplugin.inlineschemacreation.model.ApiTestTypeDTO;
 import java.util.List;
 import java.util.ArrayList;
 
 public class ApiTestDTO {
 
-  @JsonProperty(value ="name")
-  private String name;
   @JsonProperty(value ="description")
   private String description;
-  @JsonProperty(value ="testTypeList")
-  private List<ApiTestTypeDTO> testTypeList = new ArrayList<ApiTestTypeDTO>();
-  @JsonProperty(value ="testProcessor")
-  private ApiTestProcessorDTO testProcessor;
+  @JsonProperty(value ="tags")
+  private List<String> tags = new ArrayList<String>();
+  @JsonProperty(value ="name")
+  private String name;
   @JsonProperty(value ="id")
   private Integer id;
   @JsonProperty(value ="priority")
   private Integer priority;
-  @JsonProperty(value ="tags")
-  private List<String> tags = new ArrayList<String>();
+  @JsonProperty(value ="apiTestTypeDTO")
+  private List<ApiTestTypeDTO> apiTestTypeDTO = new ArrayList<ApiTestTypeDTO>();
 
-  private ApiTestDTO(String name, String description, List<ApiTestTypeDTO> testTypeList, ApiTestProcessorDTO testProcessor, Integer id, Integer priority, List<String> tags) {
-    this.name = name;
+  private ApiTestDTO(String description, List<String> tags, String name, Integer id, Integer priority, List<ApiTestTypeDTO> apiTestTypeDTO) {
     this.description = description;
-    this.testTypeList = testTypeList;
-    this.testProcessor = testProcessor;
+    this.tags = tags;
+    this.name = name;
     this.id = id;
     this.priority = priority;
-    this.tags = tags;
+    this.apiTestTypeDTO = apiTestTypeDTO;
 
   }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
-    this.name = builder.name;
     this.description = builder.description;
-    this.testTypeList = builder.testTypeList;
-    this.testProcessor = builder.testProcessor;
+    this.tags = builder.tags;
+    this.name = builder.name;
     this.id = builder.id;
     this.priority = builder.priority;
-    this.tags = builder.tags;
+    this.apiTestTypeDTO = builder.apiTestTypeDTO;
 
   }
 
   public static class ApiTestDTOBuilder {
 
-    private String name;
     private String description;
-    private List<ApiTestTypeDTO> testTypeList = new ArrayList<ApiTestTypeDTO>();
-    private ApiTestProcessorDTO testProcessor;
+    private List<String> tags = new ArrayList<String>();
+    private String name;
     private Integer id;
     private Integer priority;
-    private List<String> tags = new ArrayList<String>();
-
-    public ApiTestDTO.ApiTestDTOBuilder name(String name) {
-      this.name = name;
-      return this;
-    }
+    private List<ApiTestTypeDTO> apiTestTypeDTO = new ArrayList<ApiTestTypeDTO>();
 
     public ApiTestDTO.ApiTestDTOBuilder description(String description) {
       this.description = description;
-      return this;
-    }
-    public ApiTestDTO.ApiTestDTOBuilder testTypeList(List<ApiTestTypeDTO> testTypeList) {
-      if (!testTypeList.isEmpty()) {
-        this.testTypeList.addAll(testTypeList);
-      }
-      return this;
-    }
-
-    public ApiTestDTO.ApiTestDTOBuilder testTypeLis(ApiTestTypeDTO testTypeLis) {
-      if (testTypeLis != null) {
-        this.testTypeList.add(testTypeLis);
-      }
-      return this;
-    }
-
-    public ApiTestDTO.ApiTestDTOBuilder testProcessor(ApiTestProcessorDTO testProcessor) {
-      this.testProcessor = testProcessor;
-      return this;
-    }
-
-    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
-      this.id = id;
-      return this;
-    }
-
-    public ApiTestDTO.ApiTestDTOBuilder priority(Integer priority) {
-      this.priority = priority;
       return this;
     }
     public ApiTestDTO.ApiTestDTOBuilder tags(List<String> tags) {
@@ -108,22 +69,38 @@ public class ApiTestDTO {
       return this;
     }
 
+    public ApiTestDTO.ApiTestDTOBuilder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
+      this.id = id;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder priority(Integer priority) {
+      this.priority = priority;
+      return this;
+    }
+    public ApiTestDTO.ApiTestDTOBuilder ApiTestTypeDTO(List<ApiTestTypeDTO> ApiTestTypeDTO) {
+      if (!apiTestTypeDTO.isEmpty()) {
+        this.apiTestTypeDTO.addAll(ApiTestTypeDTO);
+      }
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder ApiTestTypeDT(ApiTestTypeDTO ApiTestTypeDT) {
+      if (ApiTestTypeDT != null) {
+        this.apiTestTypeDTO.add(ApiTestTypeDT);
+      }
+      return this;
+    }
+
     public ApiTestDTO build() {
       ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
-  }
-
-  /**
-  * Get name
-  * @return name
-  */
-  @Schema(name = "name", required = false)
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
@@ -139,27 +116,27 @@ public class ApiTestDTO {
   }
 
   /**
-  * Get testTypeList
-  * @return testTypeList
+  * Get tags
+  * @return tags
   */
-  @Schema(name = "testTypeList", required = false)
-  public List<ApiTestTypeDTO> getTestTypeList() {
-    return testTypeList;
+  @Schema(name = "tags", required = false)
+  public List<String> getTags() {
+    return tags;
   }
-  public void setTestTypeList(List<ApiTestTypeDTO> testTypeList) {
-    this.testTypeList = testTypeList;
+  public void setTags(List<String> tags) {
+    this.tags = tags;
   }
 
   /**
-  * Get testProcessor
-  * @return testProcessor
+  * Get name
+  * @return name
   */
-  @Schema(name = "testProcessor", required = false)
-  public ApiTestProcessorDTO getTestProcessor() {
-    return testProcessor;
+  @Schema(name = "name", required = false)
+  public String getName() {
+    return name;
   }
-  public void setTestProcessor(ApiTestProcessorDTO testProcessor) {
-    this.testProcessor = testProcessor;
+  public void setName(String name) {
+    this.name = name;
   }
 
   /**
@@ -187,15 +164,15 @@ public class ApiTestDTO {
   }
 
   /**
-  * Get tags
-  * @return tags
+  * Get apiTestTypeDTO
+  * @return apiTestTypeDTO
   */
-  @Schema(name = "tags", required = false)
-  public List<String> getTags() {
-    return tags;
+  @Schema(name = "apiTestTypeDTO", required = false)
+  public List<ApiTestTypeDTO> getApiTestTypeDTO() {
+    return apiTestTypeDTO;
   }
-  public void setTags(List<String> tags) {
-    this.tags = tags;
+  public void setApiTestTypeDTO(List<ApiTestTypeDTO> apiTestTypeDTO) {
+    this.apiTestTypeDTO = apiTestTypeDTO;
   }
 
   @Override
@@ -207,25 +184,24 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.description, apiTestDTO.description) && Objects.equals(this.testTypeList, apiTestDTO.testTypeList) && Objects.equals(this.testProcessor, apiTestDTO.testProcessor) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.priority, apiTestDTO.priority) && Objects.equals(this.tags, apiTestDTO.tags);
+    return Objects.equals(this.description, apiTestDTO.description) && Objects.equals(this.tags, apiTestDTO.tags) && Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.priority, apiTestDTO.priority) && Objects.equals(this.apiTestTypeDTO, apiTestDTO.apiTestTypeDTO);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, testTypeList, testProcessor, id, priority, tags);
+    return Objects.hash(description, tags, name, id, priority, apiTestTypeDTO);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestDTO {\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
     sb.append(" description: ").append(toIndentedString(description)).append("\n");
-    sb.append(" testTypeList: ").append(toIndentedString(testTypeList)).append("\n");
-    sb.append(" testProcessor: ").append(toIndentedString(testProcessor)).append("\n");
+    sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append(" name: ").append(toIndentedString(name)).append("\n");
     sb.append(" id: ").append(toIndentedString(id)).append("\n");
     sb.append(" priority: ").append(toIndentedString(priority)).append("\n");
-    sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append(" apiTestTypeDTO: ").append(toIndentedString(apiTestTypeDTO)).append("\n");
     sb.append("}");
     return sb.toString();
   }

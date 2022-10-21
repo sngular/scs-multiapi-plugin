@@ -1,10 +1,10 @@
-package net.coru.scsplugin.business_model.model.event.consumer;
+package net.coru.scsplugin.filegenerationissue.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.business_model.model.event.CustomerEventMessageDTO;
+import net.coru.scsplugin.filegenerationissue.model.event.CustomerEventMessageDTO;
 
 @Configuration
 public class TestClassName {

@@ -1,10 +1,10 @@
-package net.coru.scsplugin.business_model.model.event;
+package net.coru.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.OrderDTO;
+import net.coru.scsplugin.filegeneration.model.event.OrderDTO;
 
 public class OrderCreatedDTO {
 

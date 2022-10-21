@@ -10,19 +10,19 @@ import lombok.NonNull;
 @Data
 public class ApiErrorDTO {
 
-  @JsonProperty(value ="message")
-  @NonNull
-  private String message;
-
   @JsonProperty(value ="code")
   @NonNull
   private Integer code;
 
+  @JsonProperty(value ="message")
+  @NonNull
+  private String message;
+
 
   @Builder
-  private ApiErrorDTO(@NonNull String message, @NonNull Integer code) {
-    this.message = message;
+  private ApiErrorDTO(@NonNull Integer code, @NonNull String message) {
     this.code = code;
+    this.message = message;
 
   }
 

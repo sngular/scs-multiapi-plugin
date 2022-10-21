@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import io.swagger.parser.OpenAPIParser;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -31,7 +30,6 @@ import io.swagger.v3.parser.exception.ReadContentException;
 import net.coru.api.generator.plugin.openapi.exception.FileParseException;
 import net.coru.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -125,20 +123,6 @@ public class OpenApiUtil {
       result = fileURL.toString();
     }
     return result;
-  }
-
-  public static List<String> getListComponentsObjects(final OpenAPI openAPI) {
-    final Components components = openAPI.getComponents();
-    final var listObject = new ArrayList<String>();
-
-    if (MapUtils.isNotEmpty(components.getSchemas())) {
-      components.getSchemas().forEach((key, value) -> {
-        if ("object".equals(value.getType()) || MapperPathUtil.checkSchemaCombinator(value)) {
-          listObject.add(key);
-        }
-      });
-    }
-    return listObject;
   }
 
   public static Map<String, Schema<?>> processBasicSchemas(final OpenAPI openApi) {

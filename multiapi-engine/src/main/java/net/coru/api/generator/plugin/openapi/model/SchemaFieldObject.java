@@ -10,18 +10,22 @@ import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"baseName"})
 public class SchemaFieldObject {
 
   private String baseName;
 
-  private String dataTypeSimple;
+  @Default
+  private String dataTypeSimple = "Object";
 
   private String dataType;
 

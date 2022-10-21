@@ -5,10 +5,30 @@ on:
     branches: [ main ]
 
 jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check if version is updated
+      uses: avides/actions-project-version-check@v1.3
+      id: engine_version_check
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        file-to-check: multiapi-engine/pom.xml
+      continue-on-error: true
+    - name: Check if version is updated
+      uses: avides/actions-project-version-check@v1.3
+      id: maven_plugin_version_check
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        file-to-check: scs-multiapi-maven-plugin/pom.xml
+      continue-on-error: true
+
   build:
 
     runs-on: ubuntu-latest
-
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    needs: [check-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -44,13 +64,6 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Publish Gradle plugin to Gradle Repo
-        run: |
-          cd scs-multiapi-gradle-plugin
-          gradle wrapper
-          chmod +x gradlew
-          ./gradlew publishPlugins -Dgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Dgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
-
       - name: Maven version
         uses: JActions/maven-version@v1.0.0
         id: get-version
@@ -63,4 +76,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: ${{ steps.get-version.outputs.version }}
           prerelease: false
-          title: "Release ${{ steps.get-version.outputs.version }}"
+          title: "Mavem Release ${{ steps.get-version.outputs.version }}"

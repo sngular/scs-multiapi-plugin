@@ -8,37 +8,37 @@ import net.coru.multifileplugin.pathparameter.model.exception.ModelClassExceptio
 
 public class ErrorDTO {
 
-  @JsonProperty(value ="message")
-  private final String message;
   @JsonProperty(value ="code")
   private final Integer code;
+  @JsonProperty(value ="message")
+  private final String message;
 
-  private ErrorDTO(String message, Integer code) {
-    this.message = message;
+  private ErrorDTO(Integer code, String message) {
     this.code = code;
+    this.message = message;
 
     validateRequiredAttributes();
   }
 
   private ErrorDTO(ErrorDTOBuilder builder) {
-    this.message = builder.message;
     this.code = builder.code;
+    this.message = builder.message;
 
     validateRequiredAttributes();
   }
 
   public static class ErrorDTOBuilder {
 
-    private String message;
     private Integer code;
-
-    public ErrorDTO.ErrorDTOBuilder message(String message) {
-      this.message = message;
-      return this;
-    }
+    private String message;
 
     public ErrorDTO.ErrorDTOBuilder code(Integer code) {
       this.code = code;
+      return this;
+    }
+
+    public ErrorDTO.ErrorDTOBuilder message(String message) {
+      this.message = message;
       return this;
     }
 
@@ -46,15 +46,6 @@ public class ErrorDTO {
       ErrorDTO errorDTO = new ErrorDTO(this);
       return errorDTO;
     }
-  }
-
-  /**
-  * Get message
-  * @return message
-  */
-  @Schema(name = "message", required = true)
-  public String getMessage() {
-    return message;
   }
 
   /**
@@ -66,6 +57,15 @@ public class ErrorDTO {
     return code;
   }
 
+  /**
+  * Get message
+  * @return message
+  */
+  @Schema(name = "message", required = true)
+  public String getMessage() {
+    return message;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -75,20 +75,20 @@ public class ErrorDTO {
       return false;
     }
     ErrorDTO errorDTO = (ErrorDTO) o;
-    return Objects.equals(this.message, errorDTO.message) && Objects.equals(this.code, errorDTO.code);
+    return Objects.equals(this.code, errorDTO.code) && Objects.equals(this.message, errorDTO.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message, code);
+    return Objects.hash(code, message);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ErrorDTO {\n");
-    sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append(" code: ").append(toIndentedString(code)).append("\n");
+    sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -108,10 +108,10 @@ public class ErrorDTO {
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-    if (!Objects.nonNull(this.message)) {
+    if (!Objects.nonNull(this.code)) {
       satisfiedCondition = false;
     }
-    else if (!Objects.nonNull(this.code)) {
+    else if (!Objects.nonNull(this.message)) {
       satisfiedCondition = false;
     }
 

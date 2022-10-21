@@ -1,6 +1,6 @@
-package net.coru.scsplugin.business_model.model.event.consumer;
+package net.coru.scsplugin.filegeneration.model.event.consumer;
 
-import net.coru.scsplugin.business_model.model.event.OrderCreatedDTO;
+import net.coru.scsplugin.filegeneration.model.event.OrderCreatedDTO;
 
 public interface IPublishOperationFileGeneration {
 

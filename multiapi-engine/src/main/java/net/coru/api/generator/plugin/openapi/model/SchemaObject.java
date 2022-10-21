@@ -7,7 +7,9 @@
 package net.coru.api.generator.plugin.openapi.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +28,7 @@ public class SchemaObject {
 
   private List<String> importList = new ArrayList<>();
 
-  private List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
+  private Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
 
   private String schemaCombinator;
 
@@ -34,7 +36,7 @@ public class SchemaObject {
 
     private final List<String> importList = new ArrayList<>();
 
-    private final List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
+    private final Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
 
     public SchemaObjectBuilder importList(final List<String> importList) {
       this.importList.addAll(importList);
