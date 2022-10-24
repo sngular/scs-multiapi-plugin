@@ -225,7 +225,7 @@ public class ApiMapFieldDTO {
     boolean satisfiedCondition = false;
 
     if (Objects.nonNull(this.keyType)) {
-          satisfiedCondition = true;
+      satisfiedCondition = true;
     } else if (Objects.nonNull(this.type)) {
       satisfiedCondition = true;
     } else if (Objects.nonNull(this.defaultValues)) {

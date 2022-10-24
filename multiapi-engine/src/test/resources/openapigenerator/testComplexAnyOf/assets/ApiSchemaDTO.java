@@ -215,7 +215,7 @@ public class ApiSchemaDTO {
     boolean satisfiedCondition = false;
 
     if (Objects.nonNull(this.type)) {
-          satisfiedCondition = true;
+      satisfiedCondition = true;
     } else if (Objects.nonNull(this.properties)) {
       satisfiedCondition = true;
     } else if (Objects.nonNull(this.name)) {
@@ -237,13 +237,13 @@ public class ApiSchemaDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.type)) {
-        satisfiedCondition = false;
+      satisfiedCondition = false;
     } else if (!Objects.nonNull(this.name)) {
-    satisfiedCondition = false;
+      satisfiedCondition = false;
     } else if (!Objects.nonNull(this.id)) {
-    satisfiedCondition = false;
+      satisfiedCondition = false;
     } else if (!Objects.nonNull(this.subjectName)) {
-    satisfiedCondition = false;
+      satisfiedCondition = false;
     }
 
     if (!satisfiedCondition) {

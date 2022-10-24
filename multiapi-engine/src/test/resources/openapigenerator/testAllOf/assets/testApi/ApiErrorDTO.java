@@ -109,7 +109,7 @@ public class ApiErrorDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.code)) {
-        satisfiedCondition = false;
+      satisfiedCondition = false;
     } else if (!Objects.nonNull(this.message)) {
       satisfiedCondition = false;
     }

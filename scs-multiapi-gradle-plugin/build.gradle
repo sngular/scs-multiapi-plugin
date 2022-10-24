@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 plugins {
   id 'java-gradle-plugin'
   id 'com.gradle.plugin-publish' version '1.0.0'
@@ -5,6 +7,7 @@ plugins {
   id 'groovy'
   id 'jvm-test-suite'
   id 'checkstyle'
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 java {
@@ -26,10 +29,12 @@ def SCSMultiApiPluginVersion = version
 def SCSMultiApiPluginArtifact = name
 
 dependencies {
-  implementation localGroovy()
-  implementation 'org.assertj:assertj-core:3.23.1'
+  shadow localGroovy()
+  shadow gradleApi()
+
   implementation 'net.coru:multiapi-engine:4.1.1'
-  implementation("com.puppycrawl.tools:checkstyle:10.3.1")
+  testImplementation 'org.assertj:assertj-core:3.23.1'
+  testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }
 
 jar {
@@ -37,6 +42,19 @@ jar {
     attributes 'Implementation-Version': (version ? version : 'unknown')
   }
 }
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+
+  target = tasks.shadowJar
+}
+
+shadowJar {
+  archiveBaseName.set('')
+  archiveClassifier.set('')
+  archiveVersion.set('')
+}
+
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
 
 task sourcesJar(type: Jar) {
   classifier = 'sources'

@@ -110,8 +110,7 @@ public class ApiTestDTO {
 
     if (!Objects.nonNull(this.name)) {
       satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.id)) {
+    } else if (!Objects.nonNull(this.id)) {
       satisfiedCondition = false;
     }
 

@@ -986,7 +986,7 @@ public class ApiTypeArrayDTO {
     boolean satisfiedCondition = false;
 
     if (Objects.nonNull(this.precision)) {
-          satisfiedCondition = true;
+      satisfiedCondition = true;
     } else if (Objects.nonNull(this.defaultItem)) {
       satisfiedCondition = true;
     } else if (Objects.nonNull(this.maximum)) {

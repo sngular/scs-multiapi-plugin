@@ -253,9 +253,7 @@ public class ${schema.className} {
 
   <#list schema.fieldObjectList as field>
     <#if field == schema.fieldObjectList?first>
-    if (Objects.nonNull(this.${field.baseName?uncap_first})) {
-    <#else> else if (Objects.nonNull(this.${field.baseName?uncap_first})) {
-    </#if>
+    if (Objects.nonNull(this.${field.baseName?uncap_first})) {<#else> else if (Objects.nonNull(this.${field.baseName?uncap_first})) {</#if>
       satisfiedCondition = true;
     }</#list>
 
@@ -272,9 +270,7 @@ public class ${schema.className} {
 
   <#list schema.fieldObjectList?filter(f -> f.required) as field>
     <#if field?index == 0>
-    if (!Objects.nonNull(this.${field.baseName?uncap_first})) {
-    <#else> else if (!Objects.nonNull(this.${field.baseName?uncap_first})) {
-    </#if>
+    if (!Objects.nonNull(this.${field.baseName?uncap_first})) {<#else> else if (!Objects.nonNull(this.${field.baseName?uncap_first})) {</#if>
       satisfiedCondition = false;
     }</#list>
 

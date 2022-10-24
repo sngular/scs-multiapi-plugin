@@ -295,7 +295,7 @@ public class ApiSequenceFieldDTO {
     boolean satisfiedCondition = false;
 
     if (Objects.nonNull(this.elements)) {
-          satisfiedCondition = true;
+      satisfiedCondition = true;
     } else if (Objects.nonNull(this.type)) {
       satisfiedCondition = true;
     } else if (Objects.nonNull(this.properties)) {

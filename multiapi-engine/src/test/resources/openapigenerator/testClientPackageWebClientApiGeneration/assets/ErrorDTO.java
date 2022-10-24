@@ -110,8 +110,7 @@ public class ErrorDTO {
 
     if (!Objects.nonNull(this.code)) {
       satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.message)) {
+    } else if (!Objects.nonNull(this.message)) {
       satisfiedCondition = false;
     }
 

@@ -271,7 +271,7 @@ public class ApiArrayFieldDTO {
     boolean satisfiedCondition = false;
 
     if (Objects.nonNull(this.uniqueItems)) {
-          satisfiedCondition = true;
+      satisfiedCondition = true;
     } else if (Objects.nonNull(this.type)) {
       satisfiedCondition = true;
     } else if (Objects.nonNull(this.defaultValues)) {
