@@ -406,7 +406,11 @@
     <property name="checks" value="ParameterNumber"/>
   </module>
   <module name="SuppressionSingleFilter">
-    <property name="files" value="[\\/]test[\\/]"/>
+    <property name="files" value="[\\/]test[\\/].*"/>
+    <property name="checks" value="[a-zA-Z0-9]*"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[\\/]multiapi-engine/src/test/resources[\\/].*"/>
     <property name="checks" value="[a-zA-Z0-9]*"/>
   </module>
   <module name="SuppressionSingleFilter">
