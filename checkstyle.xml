@@ -409,4 +409,9 @@
     <property name="files" value="[\\/]test[\\/]"/>
     <property name="checks" value="[a-zA-Z0-9]*"/>
   </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*AsyncApiGenerator.java"/>
+    <property name="checks" value="ClassDataAbstractionCoupling"/>
+  </module>
+  
 </module>

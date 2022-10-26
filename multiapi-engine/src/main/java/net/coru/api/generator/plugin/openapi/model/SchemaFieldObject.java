@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"baseName"})
+@EqualsAndHashCode(of = "baseName")
 public class SchemaFieldObject {
 
   private String baseName;

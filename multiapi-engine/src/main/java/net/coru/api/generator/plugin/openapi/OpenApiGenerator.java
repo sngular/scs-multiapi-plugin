@@ -263,13 +263,6 @@ public class OpenApiGenerator {
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
-        if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-          try {
-            templateFactory.fillTemplateModelClassException(fileModelToSave, true);
-          } catch (IOException | TemplateException e) {
-            throw new GeneratedSourcesException(fileModelToSave, e);
-          }
-        }
       }
     });
 
@@ -280,18 +273,26 @@ public class OpenApiGenerator {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile,
                                                                                                         modelPackage);
     checkRequiredOrCombinatorExists(schemaObjectList);
-    schemaObjectList.forEach(schemaObject -> {
+    schemaObjectList.values().forEach(schemaObject -> {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
     });
+
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
+      try {
+        templateFactory.fillTemplateModelClassException(fileModelToSave, true);
+      } catch (IOException | TemplateException e) {
+        throw new GeneratedSourcesException(fileModelToSave, e);
+      }
+    }
   }
 
-  private void checkRequiredOrCombinatorExists(final List<SchemaObject> schemaList) {
+  private void checkRequiredOrCombinatorExists(final Map<String, SchemaObject> schemaList) {
     boolean shouldGenerateException = false;
-    final var schemaListIt = schemaList.listIterator();
+    final var schemaListIt = schemaList.values().iterator();
     while (schemaListIt.hasNext() && !shouldGenerateException) {
       final var schema = schemaListIt.next();
       if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
@@ -322,9 +323,6 @@ public class OpenApiGenerator {
 
       writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
 
-    }
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(fileModelToSave, false);
     }
   }
 }

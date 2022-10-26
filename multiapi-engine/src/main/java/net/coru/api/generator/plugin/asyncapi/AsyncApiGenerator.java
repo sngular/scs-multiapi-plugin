@@ -45,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @Slf4j
 public class AsyncApiGenerator {
 
