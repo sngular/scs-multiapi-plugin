@@ -68,10 +68,11 @@ jobs:
           SIGN_KEY_PASS: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Maven version
-        uses: JActions/maven-version@v1.0.0
         id: get-version
-        with:
-          pom: ./scs-multiapi-maven-plugin/pom.xml
+        run: "echo \"resolved-version=\
+          $(mvn --file=./scs-multiapi-maven-plugin/pom.xml'
+          --quiet --non-recursive
+          exec:exec -Dexec.executable=echo -Dexec.args='${project.version}')\" >> \"${GITHUB_OUTPUT}\""
 
       - name: Create a Release
         uses: marvinpinto/action-automatic-releases@latest

@@ -1,4 +1,4 @@
-name: Java CI with Maven (Push)
+name: Java CI with Gradle (Push)
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
       id: version_check
       uses: jyeany/version-check-gradle@1.0.4
       with:
-        organization: 'net.coru' # optional parameter
+        organization: 'net.coru'
         access-token: ${{ secrets.GITHUB_TOKEN }}
   build:
 
