@@ -55,12 +55,12 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave) throws IOException, TemplateException {
+  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass, false);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass, overwriteEnabled);
 
   }
 
@@ -120,7 +120,7 @@ public class TemplateFactory {
                                                                                                                                                       TemplateException {
     final Template template = cfg.getTemplate(templateName);
 
-    if (!Files.exists(Path.of(path)) || !checkOverwrite) {
+    if (!Files.exists(Path.of(path)) || checkOverwrite) {
       final FileWriter writer = new FileWriter(path);
       template.process(root, writer);
       writer.close();

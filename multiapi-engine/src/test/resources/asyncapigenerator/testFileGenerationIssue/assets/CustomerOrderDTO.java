@@ -1,11 +1,11 @@
-package net.coru.scsplugin.business_model.model.event;
+package net.coru.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.business_model.model.event.OrderedItemDTO;
-import net.coru.scsplugin.business_model.model.event.PaymentDetailsDTO;
+import net.coru.scsplugin.filegenerationissue.model.event.OrderedItemDTO;
+import net.coru.scsplugin.filegenerationissue.model.event.PaymentDetailsDTO;
 import java.util.List;
 import java.util.ArrayList;
 

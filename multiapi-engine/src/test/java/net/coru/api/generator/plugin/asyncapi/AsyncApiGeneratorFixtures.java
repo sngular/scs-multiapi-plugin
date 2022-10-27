@@ -28,14 +28,33 @@ public class AsyncApiGeneratorFixtures {
                                             .ids("publishOperationFileGeneration")
                                             .classNamePostfix("TestClassName")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("net.coru.scsplugin.business_model.model.event.consumer")
-                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .apiPackage("net.coru.scsplugin.filegeneration.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.filegeneration.model.event")
                                             .build())
           .supplier(OperationParameterObject.builder()
                                             .ids("subscribeOperationFileGeneration")
                                             .modelNameSuffix("Mapper")
-                                            .apiPackage("net.coru.scsplugin.business_model.model.event.producer")
-                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .apiPackage("net.coru.scsplugin.filegeneration.model.event.producer")
+                                            .modelPackage("net.coru.scsplugin.filegeneration.model.event")
+                                            .build())
+          .build()
+  );
+
+  final static List<SpecFile> TEST_ISSUE_GENERATION = List.of(
+    SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testIssueGeneration/event-api.yml")
+          .consumer(OperationParameterObject.builder()
+                                            .ids("response")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("net.coru.scsplugin.issuegeneration.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.issuegeneration.model.event")
+                                            .build())
+          .supplier(OperationParameterObject.builder()
+                                            .ids("clients")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("net.coru.scsplugin.issuegeneration.model.event.producer")
+                                            .modelPackage("net.coru.scsplugin.issuegeneration.model.event")
                                             .build())
           .build()
   );
@@ -48,14 +67,14 @@ public class AsyncApiGeneratorFixtures {
                                             .ids("onCustomerEvent")
                                             .classNamePostfix("TestClassName")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("net.coru.scsplugin.business_model.model.event.consumer")
-                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .apiPackage("net.coru.scsplugin.filegenerationissue.model.event.consumer")
+                                            .modelPackage("net.coru.scsplugin.filegenerationissue.model.event")
                                             .build())
           .supplier(OperationParameterObject.builder()
                                             .ids("onCustomerOrderEvent")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("net.coru.scsplugin.business_model.model.event.producer")
-                                            .modelPackage("net.coru.scsplugin.business_model.model.event")
+                                            .apiPackage("net.coru.scsplugin.filegenerationissue.model.event.producer")
+                                            .modelPackage("net.coru.scsplugin.filegenerationissue.model.event")
                                             .build())
           .build()
   );
@@ -119,11 +138,11 @@ public class AsyncApiGeneratorFixtures {
   final static String GENERATED = "generated/";
 
   static Function<Path, Boolean> validateTestFileGeneration() {
-    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/consumer";
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/filegeneration/model/event/consumer";
 
-    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/producer";
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/filegeneration/model/event/producer";
 
-    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/business_model/model/event";
+    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/filegeneration/model/event";
 
     List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGeneration/assets/IPublishOperation.java",
@@ -149,13 +168,39 @@ public class AsyncApiGeneratorFixtures {
       modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }
 
+  static Function<Path, Boolean> validateTestIssueGeneration() {
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/issuegeneration/model/event/consumer";
+
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/issuegeneration/model/event/producer";
+
+    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/issuegeneration/model/event";
+
+    List<String> expectedConsumerFiles = List.of(
+        "asyncapigenerator/testIssueGeneration/assets/IResponse.java",
+        "asyncapigenerator/testIssueGeneration/assets/Subscriber.java");
+
+    List<String> expectedProducerFiles = List.of(
+        "asyncapigenerator/testIssueGeneration/assets/IClients.java",
+        "asyncapigenerator/testIssueGeneration/assets/Producer.java");
+
+    List<String> expectedModelFiles = List.of(
+      "asyncapigenerator/testIssueGeneration/assets/DataClientDTO.java",
+      "asyncapigenerator/testIssueGeneration/assets/DataDTO.java",
+      "asyncapigenerator/testIssueGeneration/assets/StatusDTO.java",
+      "asyncapigenerator/testIssueGeneration/assets/StatusMsgDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+      modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+  }
+
   static Function<Path, Boolean> validateTestFileGenerationIssue() {
 
-    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/consumer";
+    String DEFAULT_CONSUMER_FOLDER = "generated/net/coru/scsplugin/filegenerationissue/model/event/consumer";
 
-    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/business_model/model/event/producer";
+    String DEFAULT_PRODUCER_FOLDER = "generated/net/coru/scsplugin/filegenerationissue/model/event/producer";
 
-    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/business_model/model/event";
+    String DEFAULT_MODEL_FOLDER = "generated/net/coru/scsplugin/filegenerationissue/model/event";
 
     List<String> expectedConsumerFiles = List.of(
       "asyncapigenerator/testFileGenerationIssue/assets/IOnCustomerEvent.java",

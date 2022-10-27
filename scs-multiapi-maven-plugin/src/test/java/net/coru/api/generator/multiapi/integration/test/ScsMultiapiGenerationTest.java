@@ -73,9 +73,7 @@ public class ScsMultiapiGenerationTest {
     List<String> expectedModelFiles = List.of(
         "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiErrorDTO.java",
         "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestDTO.java",
-        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestInfoDTO.java",
-        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestsDTO.java"
-    );
+        "net/coru/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "/assets/ApiTestInfoDTO.java"    );
 
     List<String> expectedExceptionFilenames = List.of("ModelClassException.java");
 

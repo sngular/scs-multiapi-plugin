@@ -10,34 +10,29 @@ import net.coru.multifileplugin.pathwithspecialchar.model.exception.ModelClassEx
 
 public class ApiTestInfoDTO {
 
+  @JsonProperty(value ="testers")
+  private List<String> testers = new ArrayList<String>();
   @JsonProperty(value ="testName")
   private final String testName;
-  @JsonProperty(value ="testers")
-  private final List<String> testers;
 
-  private ApiTestInfoDTO(String testName, List<String> testers) {
-    this.testName = testName;
+  private ApiTestInfoDTO(List<String> testers, String testName) {
     this.testers = testers;
+    this.testName = testName;
 
     validateRequiredAttributes();
   }
 
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
-    this.testName = builder.testName;
     this.testers = builder.testers;
+    this.testName = builder.testName;
 
     validateRequiredAttributes();
   }
 
   public static class ApiTestInfoDTOBuilder {
 
-    private String testName;
     private List<String> testers = new ArrayList<String>();
-
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
-      this.testName = testName;
-      return this;
-    }
+    private String testName;
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
@@ -52,10 +47,27 @@ public class ApiTestInfoDTO {
       return this;
     }
 
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+
     public ApiTestInfoDTO build() {
       ApiTestInfoDTO apiTestInfoDTO = new ApiTestInfoDTO(this);
       return apiTestInfoDTO;
     }
+  }
+
+  /**
+  * Get testers
+  * @return testers
+  */
+  @Schema(name = "testers", required = false)
+  public List<String> getTesters() {
+    return testers;
+  }
+  public void setTesters(List<String> testers) {
+    this.testers = testers;
   }
 
   /**
@@ -67,15 +79,6 @@ public class ApiTestInfoDTO {
     return testName;
   }
 
-  /**
-  * Get testers
-  * @return testers
-  */
-  @Schema(name = "testers", required = true)
-  public List<String> getTesters() {
-    return testers;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -85,20 +88,20 @@ public class ApiTestInfoDTO {
       return false;
     }
     ApiTestInfoDTO apiTestInfoDTO = (ApiTestInfoDTO) o;
-    return Objects.equals(this.testName, apiTestInfoDTO.testName) && Objects.equals(this.testers, apiTestInfoDTO.testers);
+    return Objects.equals(this.testers, apiTestInfoDTO.testers) && Objects.equals(this.testName, apiTestInfoDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName, testers);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestInfoDTO {\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
+    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -119,9 +122,6 @@ public class ApiTestInfoDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.testName)) {
-      satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.testers)) {
       satisfiedCondition = false;
     }
 

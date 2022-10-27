@@ -9,32 +9,27 @@ import java.util.ArrayList;
 
 public class ApiTestAllOfDTO {
 
-  @JsonProperty(value ="testName")
-  private String testName;
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
+  @JsonProperty(value ="testName")
+  private String testName;
 
-  private ApiTestAllOfDTO(String testName, List<String> testers) {
-    this.testName = testName;
+  private ApiTestAllOfDTO(List<String> testers, String testName) {
     this.testers = testers;
+    this.testName = testName;
 
   }
 
   private ApiTestAllOfDTO(ApiTestAllOfDTOBuilder builder) {
-    this.testName = builder.testName;
     this.testers = builder.testers;
+    this.testName = builder.testName;
 
   }
 
   public static class ApiTestAllOfDTOBuilder {
 
-    private String testName;
     private List<String> testers = new ArrayList<String>();
-
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testName(String testName) {
-      this.testName = testName;
-      return this;
-    }
+    private String testName;
     public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
@@ -49,22 +44,15 @@ public class ApiTestAllOfDTO {
       return this;
     }
 
+    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+
     public ApiTestAllOfDTO build() {
       ApiTestAllOfDTO apiTestAllOfDTO = new ApiTestAllOfDTO(this);
       return apiTestAllOfDTO;
     }
-  }
-
-  /**
-  * Get testName
-  * @return testName
-  */
-  @Schema(name = "testName", required = false)
-  public String getTestName() {
-    return testName;
-  }
-  public void setTestName(String testName) {
-    this.testName = testName;
   }
 
   /**
@@ -79,6 +67,18 @@ public class ApiTestAllOfDTO {
     this.testers = testers;
   }
 
+  /**
+  * Get testName
+  * @return testName
+  */
+  @Schema(name = "testName", required = false)
+  public String getTestName() {
+    return testName;
+  }
+  public void setTestName(String testName) {
+    this.testName = testName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -88,20 +88,20 @@ public class ApiTestAllOfDTO {
       return false;
     }
     ApiTestAllOfDTO apiTestAllOfDTO = (ApiTestAllOfDTO) o;
-    return Objects.equals(this.testName, apiTestAllOfDTO.testName) && Objects.equals(this.testers, apiTestAllOfDTO.testers);
+    return Objects.equals(this.testers, apiTestAllOfDTO.testers) && Objects.equals(this.testName, apiTestAllOfDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(testName, testers);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestAllOfDTO {\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
+    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
     sb.append("}");
     return sb.toString();
   }

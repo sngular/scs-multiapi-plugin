@@ -1,0 +1,247 @@
+package net.coru.multifileplugin.testcomplexanyof.model;
+
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import net.coru.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
+import java.util.List;
+import java.util.ArrayList;
+import net.coru.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
+
+public class ApiMapFieldDTO {
+
+  @JsonProperty(value ="keyType")
+  private String keyType;
+  @JsonProperty(value ="type")
+  private String type;
+  @JsonProperty(value ="defaultValues")
+  private List<Object> defaultValues = new ArrayList<Object>();
+  @JsonProperty(value ="name")
+  private String name;
+  @JsonProperty(value ="mapSize")
+  private Integer mapSize;
+  @JsonProperty(value ="mapTypes")
+  private List<ApiTypeArrayDTO> mapTypes = new ArrayList<ApiTypeArrayDTO>();
+
+  private ApiMapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<ApiTypeArrayDTO> mapTypes) {
+    this.keyType = keyType;
+    this.type = type;
+    this.defaultValues = defaultValues;
+    this.name = name;
+    this.mapSize = mapSize;
+    this.mapTypes = mapTypes;
+
+    validatePartialCombinations();
+  }
+
+  private ApiMapFieldDTO(ApiMapFieldDTOBuilder builder) {
+    this.keyType = builder.keyType;
+    this.type = builder.type;
+    this.defaultValues = builder.defaultValues;
+    this.name = builder.name;
+    this.mapSize = builder.mapSize;
+    this.mapTypes = builder.mapTypes;
+
+    validatePartialCombinations();
+  }
+
+  public static class ApiMapFieldDTOBuilder {
+
+    private String keyType;
+    private String type;
+    private List<Object> defaultValues = new ArrayList<Object>();
+    private String name;
+    private Integer mapSize;
+    private List<ApiTypeArrayDTO> mapTypes = new ArrayList<ApiTypeArrayDTO>();
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder keyType(String keyType) {
+      this.keyType = keyType;
+      return this;
+    }
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder type(String type) {
+      this.type = type;
+      return this;
+    }
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValues(List<Object> defaultValues) {
+      if (!defaultValues.isEmpty()) {
+        this.defaultValues.addAll(defaultValues);
+      }
+      return this;
+    }
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValue(Object defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
+      }
+      return this;
+    }
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapSize(Integer mapSize) {
+      this.mapSize = mapSize;
+      return this;
+    }
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapTypes(List<ApiTypeArrayDTO> mapTypes) {
+      if (!mapTypes.isEmpty()) {
+        this.mapTypes.addAll(mapTypes);
+      }
+      return this;
+    }
+
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapType(ApiTypeArrayDTO mapType) {
+      if (mapType != null) {
+        this.mapTypes.add(mapType);
+      }
+      return this;
+    }
+
+    public ApiMapFieldDTO build() {
+      ApiMapFieldDTO apiMapFieldDTO = new ApiMapFieldDTO(this);
+      return apiMapFieldDTO;
+    }
+  }
+
+  /**
+  * Get keyType
+  * @return keyType
+  */
+  @Schema(name = "keyType", required = false)
+  public String getKeyType() {
+    return keyType;
+  }
+  public void setKeyType(String keyType) {
+    this.keyType = keyType;
+  }
+
+  /**
+  * Get type
+  * @return type
+  */
+  @Schema(name = "type", required = false)
+  public String getType() {
+    return type;
+  }
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  /**
+  * Get defaultValues
+  * @return defaultValues
+  */
+  @Schema(name = "defaultValues", required = false)
+  public List<Object> getDefaultValues() {
+    return defaultValues;
+  }
+  public void setDefaultValues(List<Object> defaultValues) {
+    this.defaultValues = defaultValues;
+  }
+
+  /**
+  * Get name
+  * @return name
+  */
+  @Schema(name = "name", required = false)
+  public String getName() {
+    return name;
+  }
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+  * Get mapSize
+  * @return mapSize
+  */
+  @Schema(name = "mapSize", required = false)
+  public Integer getMapSize() {
+    return mapSize;
+  }
+  public void setMapSize(Integer mapSize) {
+    this.mapSize = mapSize;
+  }
+
+  /**
+  * Get mapTypes
+  * @return mapTypes
+  */
+  @Schema(name = "mapTypes", required = false)
+  public List<ApiTypeArrayDTO> getMapTypes() {
+    return mapTypes;
+  }
+  public void setMapTypes(List<ApiTypeArrayDTO> mapTypes) {
+    this.mapTypes = mapTypes;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ApiMapFieldDTO apiMapFieldDTO = (ApiMapFieldDTO) o;
+    return Objects.equals(this.keyType, apiMapFieldDTO.keyType) && Objects.equals(this.type, apiMapFieldDTO.type) && Objects.equals(this.defaultValues, apiMapFieldDTO.defaultValues) && Objects.equals(this.name, apiMapFieldDTO.name) && Objects.equals(this.mapSize, apiMapFieldDTO.mapSize) && Objects.equals(this.mapTypes, apiMapFieldDTO.mapTypes);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(keyType, type, defaultValues, name, mapSize, mapTypes);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ApiMapFieldDTO {\n");
+    sb.append(" keyType: ").append(toIndentedString(keyType)).append("\n");
+    sb.append(" type: ").append(toIndentedString(type)).append("\n");
+    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
+    sb.append(" name: ").append(toIndentedString(name)).append("\n");
+    sb.append(" mapSize: ").append(toIndentedString(mapSize)).append("\n");
+    sb.append(" mapTypes: ").append(toIndentedString(mapTypes)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+  * Convert the given object to string with each line indented by 4 spaces
+  * (except the first line).
+  */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n ");
+  }
+
+  private void validatePartialCombinations() {
+    boolean satisfiedCondition = false;
+
+    if (Objects.nonNull(this.keyType)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.type)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.defaultValues)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.name)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.mapSize)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.mapTypes)) {
+      satisfiedCondition = true;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiMapFieldDTO");
+    }
+  }
+
+
+}

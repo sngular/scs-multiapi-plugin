@@ -84,13 +84,9 @@ public class ${schema.className} {
 
   <#list schema.fieldObjectList as field>
     <#if field == schema.fieldObjectList?first>
-    if (Objects.nonNull(this.${field.baseName?uncap_first})) {
-    <#else>
-    else if (Objects.nonNull(this.${field.baseName?uncap_first})) {
-    </#if>
+    if (Objects.nonNull(this.${field.baseName?uncap_first})) {<#else> else if (Objects.nonNull(this.${field.baseName?uncap_first})) {</#if>
       satisfiedCondition = true;
-    }
-  </#list>
+    }</#list>
 
     if (!satisfiedCondition) {
       throw new ModelClassException("${schema.className}");

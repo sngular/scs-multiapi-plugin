@@ -23,8 +23,11 @@ import java.util.regex.Pattern;
 import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import net.coru.api.generator.plugin.PluginConstants;
+import net.coru.api.generator.plugin.exception.GeneratedSourcesException;
 import net.coru.api.generator.plugin.openapi.exception.CodeGenerationException;
 import net.coru.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import net.coru.api.generator.plugin.openapi.model.AuthObject;
@@ -255,37 +258,56 @@ public class OpenApiGenerator {
   private void processModelsWhenOverWriteIsTrue(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
       final String modelPackage,
-      final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
+      final Map<String, Schema<?>> basicSchemaMap) {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile, modelPackage);
-      checkRequiredOrCombinatorExists(basicSchemaObject);
+      if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
+        writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      }
+    });
+
+  }
+
+  private void writeModel(
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
+    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile,
+                                                                                                        modelPackage);
+    checkRequiredOrCombinatorExists(schemaObjectList);
+    schemaObjectList.values().forEach(schemaObject -> {
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), basicSchemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
     });
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(fileModelToSave);
+      try {
+        templateFactory.fillTemplateModelClassException(fileModelToSave, true);
+      } catch (IOException | TemplateException e) {
+        throw new GeneratedSourcesException(fileModelToSave, e);
+      }
     }
   }
 
-  private void checkRequiredOrCombinatorExists(final SchemaObject schema) {
-    if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
-      generateExceptionTemplate = true;
-    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
-      final var fieldListIt = schema.getFieldObjectList().listIterator();
-      if (fieldListIt.hasNext()) {
-        do {
+  private void checkRequiredOrCombinatorExists(final Map<String, SchemaObject> schemaList) {
+    boolean shouldGenerateException = false;
+    final var schemaListIt = schemaList.values().iterator();
+    while (schemaListIt.hasNext() && !shouldGenerateException) {
+      final var schema = schemaListIt.next();
+      if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
+        shouldGenerateException = true;
+      } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
+        final var fieldListIt = schema.getFieldObjectList().iterator();
+        while (fieldListIt.hasNext() && !shouldGenerateException) {
           final var field = fieldListIt.next();
           if (field.isRequired()) {
-            generateExceptionTemplate = true;
+            shouldGenerateException = true;
           }
-        } while (fieldListIt.hasNext() && !generateExceptionTemplate);
+        }
       }
     }
+    generateExceptionTemplate = shouldGenerateException;
   }
 
   private void processWhenOverwriteModelIsFalse(
@@ -298,17 +320,9 @@ public class OpenApiGenerator {
       if (!overwriteModelList.add(schemaName + modelPackage)) {
         throw new DuplicateModelClassException(schemaName, modelPackage);
       }
-      final var basicSchemaObject = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName,
-                                                                                 specFile, modelPackage);
-      checkRequiredOrCombinatorExists(basicSchemaObject);
-      try {
-        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), basicSchemaObject);
-      } catch (IOException | TemplateException e) {
-        e.printStackTrace();
-      }
-    }
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(fileModelToSave);
+
+      writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+
     }
   }
 }

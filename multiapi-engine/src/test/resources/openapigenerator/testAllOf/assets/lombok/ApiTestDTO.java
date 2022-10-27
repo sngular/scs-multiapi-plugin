@@ -12,19 +12,19 @@ import lombok.NonNull;
 @Data
 public class ApiTestDTO {
 
-  @JsonProperty(value ="testName")
-  @NonNull
-  private String testName;
-
   @JsonProperty(value ="testers")
   @NonNull
   private List<String> testers = new ArrayList<String>();
 
+  @JsonProperty(value ="testName")
+  @NonNull
+  private String testName;
+
 
   @Builder
-  private ApiTestDTO(@NonNull String testName, @NonNull List<String> testers) {
-    this.testName = testName;
+  private ApiTestDTO(@NonNull List<String> testers, @NonNull String testName) {
     this.testers = testers;
+    this.testName = testName;
 
   }
 

@@ -12,23 +12,22 @@ import lombok.NonNull;
 @Data
 public class GameInfoDTO {
 
-  @JsonProperty(value ="rooms")
-  @NonNull
-  private Integer rooms;
-
   @JsonProperty(value ="gameName")
   @NonNull
   private String gameName;
 
-  @JsonProperty(value ="players")
+  @JsonProperty(value ="rooms")
   @NonNull
+  private Integer rooms;
+
+  @JsonProperty(value ="players")
   private List<String> players = new ArrayList<String>();
 
 
   @Builder
-  private GameInfoDTO(@NonNull Integer rooms, @NonNull String gameName, @NonNull List<String> players) {
-    this.rooms = rooms;
+  private GameInfoDTO(@NonNull String gameName, @NonNull Integer rooms, List<String> players) {
     this.gameName = gameName;
+    this.rooms = rooms;
     this.players = players;
 
   }

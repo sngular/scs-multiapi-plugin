@@ -1,4 +1,4 @@
-package net.coru.scsplugin.business_model.model.event;
+package net.coru.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 

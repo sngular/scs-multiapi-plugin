@@ -1,6 +1,6 @@
-package net.coru.scsplugin.business_model.model.event.producer;
+package net.coru.scsplugin.filegenerationissue.model.event.producer;
 
-import net.coru.scsplugin.business_model.model.event.CustomerOrderEventMessageDTO;
+import net.coru.scsplugin.filegenerationissue.model.event.CustomerOrderEventMessageDTO;
 
 public interface IOnCustomerOrderEvent {
 

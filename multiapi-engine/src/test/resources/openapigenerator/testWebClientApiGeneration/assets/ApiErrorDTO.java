@@ -8,37 +8,37 @@ import net.coru.multifileplugin.webclientapi.model.exception.ModelClassException
 
 public class ApiErrorDTO {
 
-  @JsonProperty(value ="message")
-  private final String message;
   @JsonProperty(value ="code")
   private final Integer code;
+  @JsonProperty(value ="message")
+  private final String message;
 
-  private ApiErrorDTO(String message, Integer code) {
-    this.message = message;
+  private ApiErrorDTO(Integer code, String message) {
     this.code = code;
+    this.message = message;
 
     validateRequiredAttributes();
   }
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
-    this.message = builder.message;
     this.code = builder.code;
+    this.message = builder.message;
 
     validateRequiredAttributes();
   }
 
   public static class ApiErrorDTOBuilder {
 
-    private String message;
     private Integer code;
-
-    public ApiErrorDTO.ApiErrorDTOBuilder message(String message) {
-      this.message = message;
-      return this;
-    }
+    private String message;
 
     public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
       this.code = code;
+      return this;
+    }
+
+    public ApiErrorDTO.ApiErrorDTOBuilder message(String message) {
+      this.message = message;
       return this;
     }
 
@@ -46,15 +46,6 @@ public class ApiErrorDTO {
       ApiErrorDTO apiErrorDTO = new ApiErrorDTO(this);
       return apiErrorDTO;
     }
-  }
-
-  /**
-  * Get message
-  * @return message
-  */
-  @Schema(name = "message", required = true)
-  public String getMessage() {
-    return message;
   }
 
   /**
@@ -66,6 +57,15 @@ public class ApiErrorDTO {
     return code;
   }
 
+  /**
+  * Get message
+  * @return message
+  */
+  @Schema(name = "message", required = true)
+  public String getMessage() {
+    return message;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -75,20 +75,20 @@ public class ApiErrorDTO {
       return false;
     }
     ApiErrorDTO apiErrorDTO = (ApiErrorDTO) o;
-    return Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.code, apiErrorDTO.code);
+    return Objects.equals(this.code, apiErrorDTO.code) && Objects.equals(this.message, apiErrorDTO.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message, code);
+    return Objects.hash(code, message);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiErrorDTO {\n");
-    sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append(" code: ").append(toIndentedString(code)).append("\n");
+    sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -108,10 +108,9 @@ public class ApiErrorDTO {
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-    if (!Objects.nonNull(this.message)) {
+    if (!Objects.nonNull(this.code)) {
       satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.code)) {
+    } else if (!Objects.nonNull(this.message)) {
       satisfiedCondition = false;
     }
 

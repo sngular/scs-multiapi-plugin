@@ -10,8 +10,33 @@ import net.coru.multifileplugin.enumgeneration.model.exception.ModelClassExcepti
 
 public class ApiTestDTO {
 
+  @JsonProperty(value ="unionEnum")
+  private final UnionEnum unionEnum;
+  public enum UnionEnum {
+    ONEOF("oneof"),
+    ANYOF("anyof"),
+    ALLOF("allof");
+
+    private String value;
+
+    UnionEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
   @JsonProperty(value ="name")
   private final String name;
+  @JsonProperty(value ="id")
+  private final Integer id;
   @JsonProperty(value ="unionIntegerEnum")
   private UnionIntegerEnum unionIntegerEnum;
   public enum UnionIntegerEnum {
@@ -58,62 +83,46 @@ public class ApiTestDTO {
       return String.valueOf(value);
     }
   }
-  @JsonProperty(value ="id")
-  private final Integer id;
-  @JsonProperty(value ="unionEnum")
-  private final UnionEnum unionEnum;
-  public enum UnionEnum {
-    ONEOF("oneof"),
-    ANYOF("anyof"),
-    ALLOF("allof");
 
-    private String value;
-
-    UnionEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
-
-  private ApiTestDTO(String name, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum, Integer id, UnionEnum unionEnum) {
+  private ApiTestDTO(UnionEnum unionEnum, String name, Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {
+    this.unionEnum = unionEnum;
     this.name = name;
+    this.id = id;
     this.unionIntegerEnum = unionIntegerEnum;
     this.unionNumberEnum = unionNumberEnum;
-    this.id = id;
-    this.unionEnum = unionEnum;
 
     validateRequiredAttributes();
   }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
+    this.unionEnum = builder.unionEnum;
     this.name = builder.name;
+    this.id = builder.id;
     this.unionIntegerEnum = builder.unionIntegerEnum;
     this.unionNumberEnum = builder.unionNumberEnum;
-    this.id = builder.id;
-    this.unionEnum = builder.unionEnum;
 
     validateRequiredAttributes();
   }
 
   public static class ApiTestDTOBuilder {
 
+    private UnionEnum unionEnum;
     private String name;
+    private Integer id;
     private UnionIntegerEnum unionIntegerEnum;
     private UnionNumberEnum unionNumberEnum;
-    private Integer id;
-    private UnionEnum unionEnum;
+    public ApiTestDTO.ApiTestDTOBuilder unionEnum(UnionEnum unionEnum) {
+      this.unionEnum = unionEnum;
+      return this;
+    }
 
     public ApiTestDTO.ApiTestDTOBuilder name(String name) {
       this.name = name;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
+      this.id = id;
       return this;
     }
     public ApiTestDTO.ApiTestDTOBuilder unionIntegerEnum(UnionIntegerEnum unionIntegerEnum) {
@@ -125,19 +134,19 @@ public class ApiTestDTO {
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
-      this.id = id;
-      return this;
-    }
-    public ApiTestDTO.ApiTestDTOBuilder unionEnum(UnionEnum unionEnum) {
-      this.unionEnum = unionEnum;
-      return this;
-    }
-
     public ApiTestDTO build() {
       ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
+  }
+
+  /**
+  * Get unionEnum
+  * @return unionEnum
+  */
+  @Schema(name = "unionEnum", required = true)
+  public UnionEnum getUnionEnum() {
+    return unionEnum;
   }
 
   /**
@@ -147,6 +156,15 @@ public class ApiTestDTO {
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
+  }
+
+  /**
+  * Get id
+  * @return id
+  */
+  @Schema(name = "id", required = true)
+  public Integer getId() {
+    return id;
   }
 
   /**
@@ -173,24 +191,6 @@ public class ApiTestDTO {
     this.unionNumberEnum = unionNumberEnum;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
-  @Schema(name = "id", required = true)
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-  * Get unionEnum
-  * @return unionEnum
-  */
-  @Schema(name = "unionEnum", required = true)
-  public UnionEnum getUnionEnum() {
-    return unionEnum;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -200,23 +200,23 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.unionIntegerEnum, apiTestDTO.unionIntegerEnum) && Objects.equals(this.unionNumberEnum, apiTestDTO.unionNumberEnum) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.unionEnum, apiTestDTO.unionEnum);
+    return Objects.equals(this.unionEnum, apiTestDTO.unionEnum) && Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.unionIntegerEnum, apiTestDTO.unionIntegerEnum) && Objects.equals(this.unionNumberEnum, apiTestDTO.unionNumberEnum);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, unionIntegerEnum, unionNumberEnum, id, unionEnum);
+    return Objects.hash(unionEnum, name, id, unionIntegerEnum, unionNumberEnum);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestDTO {\n");
+    sb.append(" unionEnum: ").append(toIndentedString(unionEnum)).append("\n");
     sb.append(" name: ").append(toIndentedString(name)).append("\n");
+    sb.append(" id: ").append(toIndentedString(id)).append("\n");
     sb.append(" unionIntegerEnum: ").append(toIndentedString(unionIntegerEnum)).append("\n");
     sb.append(" unionNumberEnum: ").append(toIndentedString(unionNumberEnum)).append("\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
-    sb.append(" unionEnum: ").append(toIndentedString(unionEnum)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -236,13 +236,11 @@ public class ApiTestDTO {
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-    if (!Objects.nonNull(this.name)) {
+    if (!Objects.nonNull(this.unionEnum)) {
       satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.id)) {
+    } else if (!Objects.nonNull(this.name)) {
       satisfiedCondition = false;
-    }
-    else if (!Objects.nonNull(this.unionEnum)) {
+    } else if (!Objects.nonNull(this.id)) {
       satisfiedCondition = false;
     }
 

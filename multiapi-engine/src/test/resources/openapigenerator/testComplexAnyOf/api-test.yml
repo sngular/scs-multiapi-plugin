@@ -1,0 +1,466 @@
+openapi: 3.0.2
+info:
+  title: Schema Management
+  version: "1.0"
+servers:
+- url: https://localhost/v1
+paths:
+  /schema:
+    post:
+      tags:
+      - schemas
+      operationId: createSchema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/schema"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /schema/{name}:
+    get:
+      tags:
+      - schemas
+      operationId: getSchema
+      parameters:
+      - name: name
+        in: path
+        description: Schema name to get
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - schemas
+      operationId: updateSchema
+      parameters:
+      - name: name
+        in: path
+        description: Schema name to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/schema"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schema/{id}:
+    delete:
+      tags:
+      - schemas
+      operationId: deleteSchema
+      parameters:
+      - name: id
+        in: path
+        description: Subject name to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schemas:
+    get:
+      tags:
+      - schemas
+      operationId: getSchemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - schemas
+      operationId: deleteSchemas
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schema_master/{subject}:
+    get:
+      tags:
+      - schemas
+      operationId: getSchemaMaster
+      parameters:
+      - name: subject
+        in: path
+        description: Schema Subject to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+
+  /schema_master/{schemaType}:
+    post:
+      tags:
+      - schemas
+      operationId: createSchemaMaster
+      parameters:
+      - name: schemaType
+        in: path
+        description: Schema Type to create
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/schema"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schema"
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /schemas/names:
+    get:
+      tags:
+      - schemas
+      operationId: getAllSchemaNames
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arrayNames'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+components:
+  schemas:
+    arrayNames:
+      type: array
+      items:
+        type: string
+    schema:
+      type: object
+      required:
+      - id
+      - subjectName
+      - name
+      - type
+      - properties
+      properties:
+        id:
+          type: string
+        subjectName:
+          type: string
+        name:
+          type: string
+        requiredFields:
+          $ref: "#/components/schemas/typeArray"
+        type:
+          type: string
+        properties:
+          $ref: "#/components/schemas/typeArray"
+    stringField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: array
+          items: string
+        regex:
+          type: string
+        minLength:
+          type: integer
+          format: int32
+        maxLength:
+          type: integer
+          format: int32
+        format:
+          type: integer
+          format: int32
+        valueLength:
+          type: integer
+          format: int32
+        properties:
+          type: array
+          items: string
+    arrayField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          $ref: "#/components/schemas/typeArray"
+        values:
+          $ref: "#/components/schemas/typeArray"
+        regex:
+          type: string
+        minItems:
+          type: integer
+          format: int32
+        arraySize:
+          type: integer
+          format: int32
+        uniqueItems:
+          type: boolean
+    booleanField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValue:
+          type: boolean
+    dateField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: object
+        format:
+          type: string
+    enumField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: array
+          items: string
+        defaultValue:
+          type: string
+        enumValues:
+          type: array
+          items: string
+    mapField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: array
+          items:
+            type: object
+        mapTypes:
+          $ref: "#/components/schemas/typeArray"
+        keyType:
+          type: string
+        mapSize:
+          type: integer
+          format: int32
+    numberField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: array
+          items:
+            type: object
+        defaultValue:
+          type: integer
+          format: int64
+        minimum:
+          type: integer
+          format: int32
+        maximum:
+          type: integer
+          format: int32
+        flagExclusiveMinimum:
+          type: boolean
+        flagExclusiveMaximum:
+          type: boolean
+        multipleOf:
+          type: integer
+          format: int32
+        numberEnum:
+          type: string
+          enum:
+          - integer
+          - float
+        precision:
+          type: integer
+          format: int32
+        scale:
+          type: integer
+          format: int32
+    objectField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        defaultValues:
+          type: array
+          items: object
+        properties:
+          $ref: "#/components/schemas/typeArray"
+        requiredValues:
+          type: array
+          items: string
+    unionField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        values:
+          $ref: "#/components/schemas/typeArray"
+        defaultItem:
+          anyOf:
+          - $ref: "#/components/schemas/stringField"
+          - $ref: "#/components/schemas/arrayField"
+          - $ref: "#/components/schemas/booleanField"
+          - $ref: "#/components/schemas/dateField"
+          - $ref: "#/components/schemas/enumField"
+          - $ref: "#/components/schemas/mapField"
+          - $ref: "#/components/schemas/numberField"
+          - $ref: "#/components/schemas/objectField"
+          - $ref: "#/components/schemas/unionField"
+          - $ref: "#/components/schemas/sequenceField"
+        unionEnum:
+          type: string
+          enum:
+          - oneof
+          - anyof
+          - allof
+        generatedFlag:
+          type: boolean
+        optionalUnion:
+          type: boolean
+    typeArray:
+      type: array
+      items:
+        anyOf:
+        - $ref: "#/components/schemas/stringField"
+        - $ref: "#/components/schemas/arrayField"
+        - $ref: "#/components/schemas/booleanField"
+        - $ref: "#/components/schemas/dateField"
+        - $ref: "#/components/schemas/enumField"
+        - $ref: "#/components/schemas/mapField"
+        - $ref: "#/components/schemas/numberField"
+        - $ref: "#/components/schemas/objectField"
+        - $ref: "#/components/schemas/unionField"
+        - $ref: "#/components/schemas/sequenceField"
+    sequenceField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        initialValue:
+          type: string
+        defaultValues:
+          type: array
+          items: object
+        properties:
+          $ref: "#/components/schemas/typeArray"
+        elements:
+          type: integer
+          format: int32
+        increment:
+          type: integer
+          format: int32
+        seqEnum:
+          type: string
+          enum:
+          - YEAR
+          - MONTH
+          - DAY
+          - HOUR
+          - MINUTE
+          - SECOND
+
+

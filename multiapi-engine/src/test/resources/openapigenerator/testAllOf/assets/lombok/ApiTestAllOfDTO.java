@@ -11,17 +11,17 @@ import lombok.Data;
 @Data
 public class ApiTestAllOfDTO {
 
-  @JsonProperty(value ="testName")
-  private String testName;
-
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
 
+  @JsonProperty(value ="testName")
+  private String testName;
+
 
   @Builder
-  private ApiTestAllOfDTO(String testName, List<String> testers) {
-    this.testName = testName;
+  private ApiTestAllOfDTO(List<String> testers, String testName) {
     this.testers = testers;
+    this.testName = testName;
 
   }
 
