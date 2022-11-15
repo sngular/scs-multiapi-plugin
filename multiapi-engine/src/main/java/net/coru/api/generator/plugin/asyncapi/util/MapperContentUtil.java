@@ -41,13 +41,13 @@ public class MapperContentUtil {
   public static List<SchemaObject> mapComponentToSchemaObject(final Map<String, JsonNode> totalSchemas, final String modelPackage, final String component, final JsonNode model,
       final String prefix, final String suffix) {
     final List<SchemaObject> schemasList = new ArrayList<>();
-    final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
-
-    schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList));
-
-    while (!modelToBuildList.isEmpty()) {
-      final var modelToBuild = modelToBuildList.remove();
-      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild.toUpperCase()), prefix, suffix, modelToBuildList));
+    if (Objects.nonNull(model)) {
+      final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
+      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList));
+      while (!modelToBuildList.isEmpty()) {
+        final var modelToBuild = modelToBuildList.remove();
+        schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild.toUpperCase()), prefix, suffix, modelToBuildList));
+      }
     }
     return schemasList;
   }
