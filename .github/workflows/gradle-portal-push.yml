@@ -59,9 +59,10 @@ jobs:
           cd scs-multiapi-gradle-plugin
           gradle wrapper
           chmod +x gradlew
+          ./gradlew build
           ./gradlew publishPlugins -Dgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Dgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
 
-      - name: Maven version
+      - name: Gradle version
         uses: thecodemonkey/action-get-gradle-version@master
         id: get-version
         with:
