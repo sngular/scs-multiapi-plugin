@@ -69,11 +69,8 @@ jobs:
 
       - name: Maven version
         id: get-version
-        run: "echo \"resolved-version=\
-          $(mvn --file=./scs-multiapi-maven-plugin/pom.xml
-          --quiet --non-recursive
-          exec:exec -Dexec.executable=echo -Dexec.args='${project.version}')\" >> \"${GITHUB_OUTPUT}\""
-
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+     
       - name: Create a Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
