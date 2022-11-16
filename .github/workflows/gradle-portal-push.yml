@@ -22,6 +22,7 @@ jobs:
       with:
         organization: 'net.coru'
         access-token: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
   build:
 
     runs-on: ubuntu-latest
