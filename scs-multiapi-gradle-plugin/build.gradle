@@ -22,7 +22,7 @@ repositories {
 }
 
 group = 'net.coru'
-version = '4.1.1'
+version = '4.2.1'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -32,7 +32,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'net.coru:multiapi-engine:4.2.0'
+  implementation 'net.coru:multiapi-engine:4.2.1'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }
