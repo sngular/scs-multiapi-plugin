@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -73,7 +74,7 @@ public class TemplateFactory {
   }
 
   private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
-    final File fileToSave = new File(filePathToSave.replace(".", "/"));
+    final File fileToSave = Paths.get(filePathToSave).normalize().toFile();
     fileToSave.mkdirs();
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
     fillTemplate(pathToSaveMainClass, templateName, root);
