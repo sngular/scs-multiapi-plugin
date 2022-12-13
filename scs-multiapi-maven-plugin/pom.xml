@@ -4,7 +4,7 @@
 
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.2.3</version>
+  <version>4.2.4</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -144,7 +144,7 @@
     <dependency>
       <groupId>net.coru</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.2.3</version>
+      <version>4.2.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -433,7 +433,7 @@
             <phase>verify</phase>
             <configuration>
               <gpgArguments>
-                <arg>--pinentry-mode</arg>
+                <arg>- -pinentry-mode</arg>
                 <arg>loopback</arg>
               </gpgArguments>
             </configuration>

@@ -9,23 +9,32 @@ public class MessageDTO {
 
   @JsonProperty(value ="description")
   private String description;
+  @JsonProperty(value ="message")
+  private MessageDTO message;
 
-  private MessageDTO(String description) {
+  private MessageDTO(String description, MessageDTO message) {
     this.description = description;
+    this.message = message;
 
   }
 
   private MessageDTO(MessageDTOBuilder builder) {
     this.description = builder.description;
+    this.message = builder.message;
 
   }
 
   public static class MessageDTOBuilder {
 
     private String description;
+    private MessageDTO message;
 
     public MessageDTO.MessageDTOBuilder description(String description) {
       this.description = description;
+      return this;
+    }
+    public MessageDTO.MessageDTOBuilder message(MessageDTO message) {
+      this.message = message;
       return this;
     }
 
@@ -47,6 +56,18 @@ public class MessageDTO {
     this.description = description;
   }
 
+  /**
+  * Get message
+  * @return message
+  */
+  @Schema(name = "message", required = false)
+  public MessageDTO getMessage() {
+    return message;
+  }
+  public void setMessage(MessageDTO message) {
+    this.message = message;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -56,12 +77,12 @@ public class MessageDTO {
       return false;
     }
     MessageDTO messageDTO = (MessageDTO) o;
-    return Objects.equals(this.description, messageDTO.description);
+    return Objects.equals(this.description, messageDTO.description) && Objects.equals(this.message, messageDTO.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(description);
+    return Objects.hash(description, message);
   }
 
   @Override
@@ -69,6 +90,7 @@ public class MessageDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("class MessageDTO {\n");
     sb.append(" description: ").append(toIndentedString(description)).append("\n");
+    sb.append(" message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }

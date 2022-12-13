@@ -38,6 +38,8 @@ components:
       properties:
         description:
           type: string
+        message:
+          $ref: "#/components/schemas/Message"
 tags:
 - name: games
   description: Test description for SCC MultiApi Plugin.
