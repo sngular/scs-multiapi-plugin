@@ -56,6 +56,7 @@ jobs:
         cd multiapi-engine
         mvn -B install
     - name: Build Maven Plugin
+      # Uses production profile to sign with gpg plugin
       run: |
         cd scs-multiapi-maven-plugin
         mvn -P production -B test
