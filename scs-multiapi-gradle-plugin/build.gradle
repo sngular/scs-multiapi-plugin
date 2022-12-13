@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'net.coru'
-version = '4.2.4'
+version = '4.2.5'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version

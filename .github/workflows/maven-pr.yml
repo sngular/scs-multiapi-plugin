@@ -58,7 +58,7 @@ jobs:
     - name: Build Maven Plugin
       run: |
         cd scs-multiapi-maven-plugin
-        mvn -B test
+        mvn -P production -B test
     - name: Build Gradle Plugin
       run: |
         cd scs-multiapi-gradle-plugin
