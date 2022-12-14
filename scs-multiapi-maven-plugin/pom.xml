@@ -155,7 +155,7 @@
     <dependency>
       <groupId>net.coru</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.2.4</version>
+      <version>4.2.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
