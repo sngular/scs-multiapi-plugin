@@ -4,7 +4,7 @@
 
   <groupId>net.coru</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.2.4</version>
+  <version>4.2.5</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -97,6 +97,17 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>davidgarciago</id>
+      <name>David García Gondell</name>
+      <email>david.garciag@sngular.com</email>
+      <organization>Corunet</organization>
+      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <roles>
+        <role>Junior Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>
@@ -144,7 +155,7 @@
     <dependency>
       <groupId>net.coru</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.2.4</version>
+      <version>4.2.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -420,26 +431,6 @@
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <gpgArguments>
-                <arg>- -pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
@@ -454,5 +445,41 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <profiles>
+    <profile>
+      <id>production</id>
+      <activation>
+        <property>
+          <name>production</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>verify</phase>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
