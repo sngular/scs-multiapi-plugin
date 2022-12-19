@@ -1,6 +1,6 @@
 package com.sngular.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
 
-import net.coru.apigenerator.asyncapi.CreateOrder;
+import com.sngular.apigenerator.asyncapi.CreateOrder;
 
 public interface ISubscribeOperation {
 

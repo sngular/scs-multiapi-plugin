@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.coru</groupId>
+  <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1</version>
 
@@ -28,7 +28,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>net.coru</groupId>
+        <groupId>com.sngular</groupId>
         <artifactId>scs-multiapi-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -48,8 +48,8 @@
               <supplier>
                 <ids>publishOperation2</ids>
                 <modelNameSuffix>DTO</modelNameSuffix>
-                <apiPackage>net.coru.generator.multiapi.model.event.producer2</apiPackage>
-                <modelPackage>net.coru.generator.multiapi.model.event</modelPackage>
+                <apiPackage>com.sngular.generator.multiapi.model.event.producer2</apiPackage>
+                <modelPackage>com.sngular.generator.multiapi.model.event</modelPackage>
               </supplier>
             </specFile>
           </specFiles>

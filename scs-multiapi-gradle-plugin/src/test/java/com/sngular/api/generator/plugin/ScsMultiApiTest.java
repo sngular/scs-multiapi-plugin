@@ -16,7 +16,7 @@ class ScsMultiApiTest {
   @Test
   void greeterPluginAddsOpenApiTaskToProject() {
     Project project = ProjectBuilder.builder().build();
-    project.getPluginManager().apply("net.coru.scs-multiapi-gradle-plugin");
+    project.getPluginManager().apply("com.sngular.scs-multiapi-gradle-plugin");
 
     assertTrue(project.getTasks().getByName("openApiTask") instanceof OpenApiTask);
   }
@@ -24,7 +24,7 @@ class ScsMultiApiTest {
   @Test
   void greeterPluginAddsAsyncApiTaskTaskToProject() {
     Project project = ProjectBuilder.builder().build();
-    project.getPluginManager().apply("net.coru.scs-multiapi-gradle-plugin");
+    project.getPluginManager().apply("com.sngular.scs-multiapi-gradle-plugin");
 
     assertTrue(project.getTasks().getByName("asyncApiTask") instanceof AsyncApiTask);
   }

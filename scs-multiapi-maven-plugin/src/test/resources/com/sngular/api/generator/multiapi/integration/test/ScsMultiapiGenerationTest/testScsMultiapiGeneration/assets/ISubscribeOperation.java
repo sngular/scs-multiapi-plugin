@@ -1,6 +1,6 @@
 package com.sngular.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
 
-import net.coru.generator.multiapi.model.event.CreateOrderMapper;
+import com.sngular.generator.multiapi.model.event.CreateOrderMapper;
 
 public interface ISubscribeOperation {
 

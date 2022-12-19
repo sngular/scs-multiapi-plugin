@@ -19,7 +19,7 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
 
-group = 'net.coru'
+group = 'com.sngular'
 version = '4.2.5'
 
 def SCSMultiApiPluginGroupId = group
@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'net.coru:multiapi-engine:4.2.5'
+  implementation 'com.sngular:multiapi-engine:4.2.5'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }
@@ -39,7 +39,7 @@ jar {
   manifest {
     attributes 'Implementation-Title': 'Gradle Quickstart',
                'Implementation-Version': (version ? version : 'unknown'),
-               'Main-Class': 'net.coru.api.generator.plugin.ScsMultiApi'
+               'Main-Class': 'com.sngular.api.generator.plugin.ScsMultiApi'
   }
 }
 
@@ -80,10 +80,10 @@ pluginBundle {
 gradlePlugin {
   plugins {
     scsMultiApiPlugin {
-      id = 'net.coru.scs-multiapi-gradle-plugin'
+      id = 'com.sngular.scs-multiapi-gradle-plugin'
       displayName = 'SCS MultiApi Plugin'
       description = 'OpenApi/Asyncapi Generator tool for Spring Boot applications'
-      implementationClass = 'net.coru.api.generator.plugin.ScsMultiApi'
+      implementationClass = 'com.sngular.api.generator.plugin.ScsMultiApi'
     }
   }
 }
@@ -101,7 +101,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'net.coru:scs-multiapi-gradle-plugin:4.2.3'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.2.3'
         implementation 'org.assertj:assertj-core:3.23.1'
       }
 

@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.generator.multiapi.rest.model.ApiTestInfoDTO;
-import net.coru.generator.multiapi.rest.model.ApiErrorDTO;
-import net.coru.generator.multiapi.rest.model.ApiTestDTO;
+import com.sngular.generator.multiapi.rest.model.ApiTestInfoDTO;
+import com.sngular.generator.multiapi.rest.model.ApiErrorDTO;
+import com.sngular.generator.multiapi.rest.model.ApiTestDTO;
 
 public interface TestApi {
 

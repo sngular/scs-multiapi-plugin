@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testmultifile.second.model.TestSecondDTO;
-import net.coru.multifileplugin.testmultifile.second.model.ErrorSecondDTO;
-import net.coru.multifileplugin.testmultifile.second.model.TestInfoSecondDTO;
+import com.sngular.multifileplugin.testmultifile.second.model.TestSecondDTO;
+import com.sngular.multifileplugin.testmultifile.second.model.ErrorSecondDTO;
+import com.sngular.multifileplugin.testmultifile.second.model.TestInfoSecondDTO;
 
 public interface TestSecondApi {
 

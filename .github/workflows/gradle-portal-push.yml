@@ -20,7 +20,7 @@ jobs:
       id: version_check
       uses: jyeany/version-check-gradle@1.0.4
       with:
-        organization: 'net.coru'
+        organization: 'com.sngular'
         access-token: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
   build:

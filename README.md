@@ -57,7 +57,7 @@ As commented above, they both could be used at the same time, setting a double
 
 ```xml
 <plugin>
-  <groupId>net.coru</groupId>
+  <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>3.2.0</version>
   <executions>
@@ -113,7 +113,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id 'java'
-  id 'net.coru.scs-multiapi-gradle-plugin' version '4.0.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.0.0'
 
   openapimodel {
 
@@ -148,7 +148,7 @@ which the plugin is designed.
 
 ```xml
 <plugin>
-<groupId>net.coru</groupId>
+<groupId>com.sngular</groupId>
 <artifactId>scs-multiapi-maven-plugin</artifactId>
 <version>3.2.0</version>
 <executions>
@@ -168,13 +168,13 @@ which the plugin is designed.
             <ids>publishOperation</ids>
             <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
             <modelNameSuffix>DTO</modelNameSuffix>
-            <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
-            <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
+            <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </consumer>
           <supplier>
             <ids>subscribeOperation</ids>
-            <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-            <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+            <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
           </supplier>
         </specFile>
       </specFiles>
@@ -194,8 +194,8 @@ openapimodel {
   specFile {
     {
         filePath = './src/main/resources/api/rest/api-rest.yml'
-        apiPackage = 'net.coru.world_domination.api'
-        modelPackage = 'net.coru.world_domination.model'
+        apiPackage = 'com.sngular.world_domination.api'
+        modelPackage = 'com.sngular.world_domination.model'
         useTagsGroup = true
     }
     overWriteModel = true
@@ -233,18 +233,18 @@ YML files as you want.
           <ids>publishOperation</ids>
           <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
           <modelNameSuffix>DTO</modelNameSuffix>
-          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
-          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
+          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
       </consumer>
       <supplier>
           <ids>subscribeOperation</ids>
-          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
       </supplier>
       <streamBridge>
           <ids>streamBridgeOperation</ids>
-          <apiPackage>net.coru.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-          <modelPackage>net.coru.apigenerator.asyncapi.business_model.model.event</modelPackage>
+          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
       </streamBridge>
   </specFile>
   ```
@@ -255,18 +255,18 @@ YML files as you want.
       filePath = './src/main/resources/api/event/event-api.yml'
       consumer {
           ids = 'publishOperation'
-          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.consumer'
-          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.consumer'
+          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
       }
       supplier {
           ids = 'subscribeOperation'
-          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
-          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
+          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
       }
       streamBridge {
           ids = 'streamBridgeOperation'
-          apiPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event.producer'
-          modelPackage = 'net.coru.apigenerator.asyncapi.business_model.model.event'
+          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
+          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
       }
     }
     overWriteModel = true
@@ -336,7 +336,7 @@ the pom.xml file.
 will try to use the `groupId` attribute from the YML file that is in use.
 - **Default package name**: If neither of the previous options were given, the
 plugin will use a default package name, that is stablished as
-`net.coru.apigenerator.asyncapi`.
+`com.sngular.apigenerator.asyncapi`.
 
 ### How modelPackage is setted?
 
@@ -353,7 +353,7 @@ order/createCommand:
     subscribe:
       operationId: "subscribeOperation"
       message:
-        $ref: '#/components/messages/net.coru.apigenerator.asyncapi.model.CreateOrder'
+        $ref: '#/components/messages/com.sngular.apigenerator.asyncapi.model.CreateOrder'
 ```
 
 - **Namespace from Avro**: If the user doesn't provide a package name, and the
@@ -371,7 +371,7 @@ order/created:
 
 - **Default package name**: If neither of the previous options were given, the
 plugin will use a default package name, that is stablished as
-`net.coru.apigenerator.asyncapi.model`.
+`com.sngular.apigenerator.asyncapi.model`.
 
 ### Class Generation
 
@@ -443,7 +443,7 @@ class implementing the interface defined above.
 ```java
 @Mapper
 public interface Mapper {
-  Order map(net.coru.apigenerator.asyncapi.business_model.model.event.Order value);
+  Order map(com.sngular.apigenerator.asyncapi.business_model.model.event.Order value);
 }
 ```
 
@@ -458,7 +458,7 @@ public class subscribeOperation implements ISubscribeOperation {
 
   @Override
   public void subscribeOperation(final Order value) {
-    net.coru.apigenerator.asyncapi.business_model.model.Order orderMapped = mapper.map(value);
+    com.sngular.apigenerator.asyncapi.business_model.model.Order orderMapped = mapper.map(value);
     //TODO: implement the functionality
   }
 }
@@ -556,7 +556,7 @@ file. Here is an example of a basic configuration:
 
 ```xml
 <plugin>
-  <groupId>net.coru</groupId>
+  <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>4.0.0</version>
   <executions>
@@ -568,8 +568,8 @@ file. Here is an example of a basic configuration:
             <specFiles>
                 <specFile>
                     <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
-                    <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
-                    <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
+                    <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
+                    <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
                     <modelNameSuffix>DTO</modelNameSuffix>
                 </specFile>
             </specFiles>
@@ -584,8 +584,8 @@ openapimodel {
     specFile {
       {
         filePath = './src/main/resources/api/api.yml'
-        apiPackage = 'net.coru.apigenerator.openapi.api'
-        modelPackage = 'net.coru.apigenerator.openapi.api.model'
+        apiPackage = 'com.sngular.apigenerator.openapi.api'
+        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
         useTagsGroup = true
       }
     overWriteModel = true
@@ -624,8 +624,8 @@ specFiles.
     <specFiles>
         <specFile>
             <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
-            <apiPackage>net.coru.apigenerator.openapi.api</apiPackage>
-            <modelPackage>net.coru.apigenerator.openapi.api.model</modelPackage>
+            <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
+            <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
             <modelNameSuffix>DTO</modelNameSuffix>
         </specFile>
     </specFiles>
@@ -637,8 +637,8 @@ openapimodel {
   specFile {
     {
       filePath = './src/main/resources/api/api.yml'
-      apiPackage = 'net.coru.apigenerator.openapi.api'
-      modelPackage = 'net.coru.apigenerator.openapi.api.model'
+      apiPackage = 'com.sngular.apigenerator.openapi.api'
+      modelPackage = 'com.sngular.apigenerator.openapi.api.model'
       useTagsGroup = true
     }
     overWriteModel = true
@@ -653,8 +653,8 @@ that will be used. Each specFile has their own configuration:
 | Name                     | Description                                                                                                                                                                                         | Example                                           |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | filePath                 | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage               | Path where the api interface will be located                                                                                                                                                        | net.coru.apigenerator.openapi                     |
-| modelPackage             | Path where the models will be located                                                                                                                                                               | net.coru.apigenerator.openapi.model               |
+| apiPackage               | Path where the api interface will be located                                                                                                                                                        | com.sngular.apigenerator.openapi                     |
+| modelPackage             | Path where the models will be located                                                                                                                                                               | com.sngular.apigenerator.openapi.model               |
 | modelNamePrefix          | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                               |
 | modelNameSuffix          | Suffix that will be used after every model´s name                                                                                                                                                   | DTO                                               |
 | callMode                 | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                             |
@@ -674,7 +674,7 @@ be saved in the api of the project.
 
 | Name                                                | Description                                                                                                                                                                                                                                                                     | Example                              |
 |-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | net.coru.apigenerator.openapi.client |
+| clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | com.sngular.apigenerator.openapi.client |
 | [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                    |
 | overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                |
 

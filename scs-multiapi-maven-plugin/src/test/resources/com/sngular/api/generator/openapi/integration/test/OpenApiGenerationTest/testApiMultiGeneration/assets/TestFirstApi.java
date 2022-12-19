@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testmultifile.first.model.TestFirstDTO;
-import net.coru.multifileplugin.testmultifile.first.model.ErrorFirstDTO;
-import net.coru.multifileplugin.testmultifile.first.model.TestInfoFirstDTO;
+import com.sngular.multifileplugin.testmultifile.first.model.TestFirstDTO;
+import com.sngular.multifileplugin.testmultifile.first.model.ErrorFirstDTO;
+import com.sngular.multifileplugin.testmultifile.first.model.TestInfoFirstDTO;
 
 public interface TestFirstApi {
 

@@ -31,9 +31,9 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileFirst = Collections.singletonList( "net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+    List<String> expectedFileFirst = Collections.singletonList( "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                                  "/TestFirstApi.java");
-    List<String> expectedFileSecond = Collections.singletonList("net/coru/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+    List<String> expectedFileSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                      "/TestSecondApi.java");
 
     List<String> expectedExceptionFilesFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");
@@ -42,10 +42,10 @@ public class OpenApiGenerationTest {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
-    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/first");
-    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/second");
-    Path pathToExceptionFirst = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/first/model/exception");
-    Path pathToExceptionSecond = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/multifileplugin/testmultifile/second/model/exception");
+    Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/first");
+    Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/second");
+    Path pathToExceptionFirst = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/first/model/exception");
+    Path pathToExceptionSecond = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/second/model/exception");
 
     File targetFirstFolder = pathToTargetFirst.toFile();
     assertThat(targetFirstFolder).isNotEmptyDirectory();

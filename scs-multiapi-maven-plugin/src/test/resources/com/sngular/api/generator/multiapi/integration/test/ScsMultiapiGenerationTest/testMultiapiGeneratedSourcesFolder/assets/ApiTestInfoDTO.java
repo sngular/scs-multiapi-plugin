@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import net.coru.generator.multiapi.rest.model.exception.ModelClassException;
+import com.sngular.generator.multiapi.rest.model.exception.ModelClassException;
 
 public class ApiTestInfoDTO {
 

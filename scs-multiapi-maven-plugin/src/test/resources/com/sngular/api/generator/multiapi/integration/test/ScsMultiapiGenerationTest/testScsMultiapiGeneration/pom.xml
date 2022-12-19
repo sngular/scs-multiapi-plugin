@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.coru</groupId>
+  <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1</version>
 
@@ -28,7 +28,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>net.coru</groupId>
+        <groupId>com.sngular</groupId>
         <artifactId>scs-multiapi-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -45,14 +45,14 @@
                     <ids>publishOperation</ids>
                     <classNamePostfix>TestClassName</classNamePostfix>
                     <modelNameSuffix>DTO</modelNameSuffix>
-                    <apiPackage>net.coru.generator.multiapi.model.event.consumer</apiPackage>
-                    <modelPackage>net.coru.generator.multiapi.model.event</modelPackage>
+                    <apiPackage>com.sngular.generator.multiapi.model.event.consumer</apiPackage>
+                    <modelPackage>com.sngular.generator.multiapi.model.event</modelPackage>
                   </consumer>
                   <supplier>
                     <ids>subscribeOperation</ids>
                     <modelNameSuffix>Mapper</modelNameSuffix>
-                    <apiPackage>net.coru.generator.multiapi.model.event.producer</apiPackage>
-                    <modelPackage>net.coru.generator.multiapi.model.event</modelPackage>
+                    <apiPackage>com.sngular.generator.multiapi.model.event.producer</apiPackage>
+                    <modelPackage>com.sngular.generator.multiapi.model.event</modelPackage>
                   </supplier>
                 </specFile>
               </specFiles>
@@ -68,8 +68,8 @@
               <specFiles>
                 <specFile>
                   <filePath>api-test.yml</filePath>
-                  <apiPackage>net.coru.generator.multiapi.rest</apiPackage>
-                  <modelPackage>net.coru.generator.multiapi.rest.model</modelPackage>
+                  <apiPackage>com.sngular.generator.multiapi.rest</apiPackage>
+                  <modelPackage>com.sngular.generator.multiapi.rest.model</modelPackage>
                   <modelNamePrefix>Api</modelNamePrefix>
                   <modelNameSuffix>DTO</modelNameSuffix>
                 </specFile>

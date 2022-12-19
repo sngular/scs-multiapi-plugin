@@ -48,8 +48,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru");
-    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/net/coru/generator/multiapi/model/event/producer2");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular");
+    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/generator/multiapi/model/event/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
     File targetSecondYmlDirectory = pathToTargetSecondYml.toFile();
