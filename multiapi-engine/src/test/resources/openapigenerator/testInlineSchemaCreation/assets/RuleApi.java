@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.inlineschemacreation;
+package com.sngular.multifileplugin.inlineschemacreation;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.inlineschemacreation.model.ApiTestDTO;
-import net.coru.multifileplugin.inlineschemacreation.model.ApiErrorDTO;
+import com.sngular.multifileplugin.inlineschemacreation.model.ApiTestDTO;
+import com.sngular.multifileplugin.inlineschemacreation.model.ApiErrorDTO;
 
 public interface RuleApi {
 

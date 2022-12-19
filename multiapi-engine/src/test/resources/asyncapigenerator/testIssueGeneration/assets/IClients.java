@@ -1,6 +1,6 @@
-package net.coru.scsplugin.issuegeneration.model.event.producer;
+package com.sngular.scsplugin.issuegeneration.model.event.producer;
 
-import net.coru.scsplugin.issuegeneration.model.event.DataClientDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.DataClientDTO;
 
 public interface IClients {
 

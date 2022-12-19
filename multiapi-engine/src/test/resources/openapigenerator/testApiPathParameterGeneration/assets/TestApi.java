@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.pathparameter;
+package com.sngular.multifileplugin.pathparameter;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.pathparameter.model.TestInfoDTO;
-import net.coru.multifileplugin.pathparameter.model.ErrorDTO;
-import net.coru.multifileplugin.pathparameter.model.TestDTO;
+import com.sngular.multifileplugin.pathparameter.model.TestInfoDTO;
+import com.sngular.multifileplugin.pathparameter.model.ErrorDTO;
+import com.sngular.multifileplugin.pathparameter.model.TestDTO;
 
 public interface TestApi {
 

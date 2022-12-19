@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "Order",
-  "namespace": "com.corunet.disashop.business_model.model.event",
+  "namespace": "com.sngular.disashop.business_model.model.event",
   "fields": [
     {
       "name": "ref",

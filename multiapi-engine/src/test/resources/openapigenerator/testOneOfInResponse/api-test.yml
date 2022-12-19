@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Corunet Challenge Game Server
+  title: Sngular Challenge Game Server
   license:
     name: MIT
 servers:

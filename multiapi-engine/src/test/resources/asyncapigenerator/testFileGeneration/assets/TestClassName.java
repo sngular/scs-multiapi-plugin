@@ -1,10 +1,10 @@
-package net.coru.scsplugin.filegeneration.model.event.consumer;
+package com.sngular.scsplugin.filegeneration.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.filegeneration.model.event.OrderCreatedDTO;
+import com.sngular.scsplugin.filegeneration.model.event.OrderCreatedDTO;
 
 @Configuration
 public class TestClassName {

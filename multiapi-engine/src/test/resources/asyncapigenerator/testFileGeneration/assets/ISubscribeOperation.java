@@ -1,6 +1,6 @@
-package net.coru.scsplugin.filegeneration.model.event.producer;
+package com.sngular.scsplugin.filegeneration.model.event.producer;
 
-import net.coru.scsplugin.filegeneration.model.event.CreateOrderMapper;
+import com.sngular.scsplugin.filegeneration.model.event.CreateOrderMapper;
 
 public interface ISubscribeOperationFileGeneration {
 

@@ -1,4 +1,4 @@
-package net.coru.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import net.coru.scsplugin.filegeneration.model.event.OrderProductDTO;
+import com.sngular.scsplugin.filegeneration.model.event.OrderProductDTO;
 
 public class OrderLineDTO {
 

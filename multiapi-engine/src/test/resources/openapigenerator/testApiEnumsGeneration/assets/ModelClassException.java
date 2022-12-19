@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.enumgeneration.model.exception;
+package com.sngular.multifileplugin.enumgeneration.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

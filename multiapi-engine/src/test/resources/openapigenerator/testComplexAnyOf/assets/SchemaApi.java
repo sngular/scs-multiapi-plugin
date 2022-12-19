@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testcomplexanyof.api;
+package com.sngular.multifileplugin.testcomplexanyof.api;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testcomplexanyof.model.ApiSchemaDTO;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiSchemaDTO;
 
 public interface SchemaApi {
 

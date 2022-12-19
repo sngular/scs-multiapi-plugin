@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoneofinresponse.model;
+package com.sngular.multifileplugin.testoneofinresponse.model;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import net.coru.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
 
 @Data
 public class InlineResponse200ListGamesOneOfDTO {

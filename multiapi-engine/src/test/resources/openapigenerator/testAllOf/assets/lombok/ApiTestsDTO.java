@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.lombok.testapi.model;
+package com.sngular.multifileplugin.lombok.testapi.model;
 
 import java.util.Objects;
 

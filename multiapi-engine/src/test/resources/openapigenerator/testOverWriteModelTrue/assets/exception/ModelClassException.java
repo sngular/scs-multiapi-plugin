@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoverwriteapi.model.exception;
+package com.sngular.multifileplugin.testoverwriteapi.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.enumlombokgeneration;
+package com.sngular.multifileplugin.enumlombokgeneration;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.enumlombokgeneration.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.enumlombokgeneration.model.ApiErrorDTO;
-import net.coru.multifileplugin.enumlombokgeneration.model.ApiTestDTO;
+import com.sngular.multifileplugin.enumlombokgeneration.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.enumlombokgeneration.model.ApiErrorDTO;
+import com.sngular.multifileplugin.enumlombokgeneration.model.ApiTestDTO;
 
 public interface TestApi {
 

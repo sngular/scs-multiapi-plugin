@@ -1,6 +1,6 @@
-package net.coru.scsplugin.issuegeneration.model.event.consumer;
+package com.sngular.scsplugin.issuegeneration.model.event.consumer;
 
-import net.coru.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
 
 public interface IResponse {
 

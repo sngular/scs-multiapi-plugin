@@ -1,10 +1,10 @@
-package net.coru.scsplugin.issuegeneration.model.event.consumer;
+package com.sngular.scsplugin.issuegeneration.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
 
 @Configuration
 public class Subscriber {

@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testrestclient.model.exception;
+package com.sngular.multifileplugin.testrestclient.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

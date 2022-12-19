@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.clpkgwebclientapi.client.auth;
+package com.sngular.multifileplugin.clpkgwebclientapi.client.auth;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;

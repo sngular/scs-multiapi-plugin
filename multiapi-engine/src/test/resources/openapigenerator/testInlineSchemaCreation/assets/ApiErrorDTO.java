@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.inlineschemacreation.model;
+package com.sngular.multifileplugin.inlineschemacreation.model;
 
 import java.util.Objects;
 

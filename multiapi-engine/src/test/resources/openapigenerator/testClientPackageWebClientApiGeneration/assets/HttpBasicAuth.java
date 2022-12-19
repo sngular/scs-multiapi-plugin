@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.clpkgwebclientapi.client.auth;
+package com.sngular.multifileplugin.clpkgwebclientapi.client.auth;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;

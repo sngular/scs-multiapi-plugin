@@ -29,8 +29,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testapi")
-          .modelPackage("net.coru.multifileplugin.testapi.model")
+          .apiPackage("com.sngular.multifileplugin.testapi")
+          .modelPackage("com.sngular.multifileplugin.testapi.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .build()
@@ -40,8 +40,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testComplexAnyOf/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testcomplexanyof.api")
-          .modelPackage("net.coru.multifileplugin.testcomplexanyof.model")
+          .apiPackage("com.sngular.multifileplugin.testcomplexanyof.api")
+          .modelPackage("com.sngular.multifileplugin.testcomplexanyof.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .build()
@@ -51,8 +51,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.lombok.testapi")
-          .modelPackage("net.coru.multifileplugin.lombok.testapi.model")
+          .apiPackage("com.sngular.multifileplugin.lombok.testapi")
+          .modelPackage("com.sngular.multifileplugin.lombok.testapi.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
@@ -63,8 +63,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testOverWriteModelTrue/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testoverwriteapi")
-          .modelPackage("net.coru.multifileplugin.testoverwriteapi.model")
+          .apiPackage("com.sngular.multifileplugin.testoverwriteapi")
+          .modelPackage("com.sngular.multifileplugin.testoverwriteapi.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -75,8 +75,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiClientGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testapiclient")
-          .modelPackage("net.coru.multifileplugin.testapiclient.model")
+          .apiPackage("com.sngular.multifileplugin.testapiclient")
+          .modelPackage("com.sngular.multifileplugin.testapiclient.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
@@ -87,8 +87,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testInlineSchemaCreation/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.inlineschemacreation")
-          .modelPackage("net.coru.multifileplugin.inlineschemacreation.model")
+          .apiPackage("com.sngular.multifileplugin.inlineschemacreation")
+          .modelPackage("com.sngular.multifileplugin.inlineschemacreation.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -99,8 +99,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiParametersWithContentGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.parameterwithcontent")
-          .modelPackage("net.coru.multifileplugin.parameterwithcontent.model")
+          .apiPackage("com.sngular.multifileplugin.parameterwithcontent")
+          .modelPackage("com.sngular.multifileplugin.parameterwithcontent.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -111,8 +111,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathWithSpecialCharGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.pathwithspecialchar")
-          .modelPackage("net.coru.multifileplugin.pathwithspecialchar.model")
+          .apiPackage("com.sngular.multifileplugin.pathwithspecialchar")
+          .modelPackage("com.sngular.multifileplugin.pathwithspecialchar.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -123,8 +123,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiReactiveGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.reactivegeneration")
-          .modelPackage("net.coru.multifileplugin.reactivegeneration.model")
+          .apiPackage("com.sngular.multifileplugin.reactivegeneration")
+          .modelPackage("com.sngular.multifileplugin.reactivegeneration.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -136,8 +136,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiTagsGeneration/api-tags-test.yml")
-          .apiPackage("net.coru.multifileplugin.tagsgeneration")
-          .modelPackage("net.coru.multifileplugin.tagsgeneration.model")
+          .apiPackage("com.sngular.multifileplugin.tagsgeneration")
+          .modelPackage("com.sngular.multifileplugin.tagsgeneration.model")
           .modelNameSuffix("DTO")
           .useTagsGroup(true)
           .useLombokModelAnnotation(false)
@@ -148,8 +148,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testMultipleRefGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.multipleref")
-          .modelPackage("net.coru.multifileplugin.multipleref.model")
+          .apiPackage("com.sngular.multifileplugin.multipleref")
+          .modelPackage("com.sngular.multifileplugin.multipleref.model")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
           .build()
@@ -159,8 +159,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathParameterGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.pathparameter")
-          .modelPackage("net.coru.multifileplugin.pathparameter.model")
+          .apiPackage("com.sngular.multifileplugin.pathparameter")
+          .modelPackage("com.sngular.multifileplugin.pathparameter.model")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
           .build()
@@ -170,8 +170,8 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testWebClientApiGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.webclientapi")
-          .modelPackage("net.coru.multifileplugin.webclientapi.model")
+          .apiPackage("com.sngular.multifileplugin.webclientapi")
+          .modelPackage("com.sngular.multifileplugin.webclientapi.model")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -184,9 +184,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.clpkgwebclientapi")
-          .modelPackage("net.coru.multifileplugin.clpkgwebclientapi.model")
-          .clientPackage("net.coru.multifileplugin.clpkgwebclientapi.client")
+          .apiPackage("com.sngular.multifileplugin.clpkgwebclientapi")
+          .modelPackage("com.sngular.multifileplugin.clpkgwebclientapi.model")
+          .clientPackage("com.sngular.multifileplugin.clpkgwebclientapi.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
           .callMode(true)
@@ -197,9 +197,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.restclient")
-          .modelPackage("net.coru.multifileplugin.restclient.model")
-          .clientPackage("net.coru.multifileplugin.restclient.client")
+          .apiPackage("com.sngular.multifileplugin.restclient")
+          .modelPackage("com.sngular.multifileplugin.restclient.model")
+          .clientPackage("com.sngular.multifileplugin.restclient.client")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(false)
@@ -211,9 +211,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.enumgeneration")
-          .modelPackage("net.coru.multifileplugin.enumgeneration.model")
-          .clientPackage("net.coru.multifileplugin.enumgeneration.client")
+          .apiPackage("com.sngular.multifileplugin.enumgeneration")
+          .modelPackage("com.sngular.multifileplugin.enumgeneration.model")
+          .clientPackage("com.sngular.multifileplugin.enumgeneration.client")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .build()
@@ -223,9 +223,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.enumlombokgeneration")
-          .modelPackage("net.coru.multifileplugin.enumlombokgeneration.model")
-          .clientPackage("net.coru.multifileplugin.enumlombokgeneration.client")
+          .apiPackage("com.sngular.multifileplugin.enumlombokgeneration")
+          .modelPackage("com.sngular.multifileplugin.enumlombokgeneration.model")
+          .clientPackage("com.sngular.multifileplugin.enumlombokgeneration.client")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
@@ -236,9 +236,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testExternalRefsGeneration/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.externalref")
-          .modelPackage("net.coru.multifileplugin.externalref.model")
-          .clientPackage("net.coru.multifileplugin.externalref.client")
+          .apiPackage("com.sngular.multifileplugin.externalref")
+          .modelPackage("com.sngular.multifileplugin.externalref.model")
+          .clientPackage("com.sngular.multifileplugin.externalref.client")
           .modelNamePrefix("Api")
           .modelNameSuffix("DTO")
           .build()
@@ -248,9 +248,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testAnyOfInResponse/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testanyofinresponse")
-          .modelPackage("net.coru.multifileplugin.testanyofinresponse.model")
-          .clientPackage("net.coru.multifileplugin.testanyofinresponse.client")
+          .apiPackage("com.sngular.multifileplugin.testanyofinresponse")
+          .modelPackage("com.sngular.multifileplugin.testanyofinresponse.model")
+          .clientPackage("com.sngular.multifileplugin.testanyofinresponse.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -260,9 +260,9 @@ public final class OpenApiGeneratorFixtures {
     SpecFile
           .builder()
           .filePath("openapigenerator/testOneOfInResponse/api-test.yml")
-          .apiPackage("net.coru.multifileplugin.testoneofinresponse")
-          .modelPackage("net.coru.multifileplugin.testoneofinresponse.model")
-          .clientPackage("net.coru.multifileplugin.testoneofinresponse.client")
+          .apiPackage("com.sngular.multifileplugin.testoneofinresponse")
+          .modelPackage("com.sngular.multifileplugin.testoneofinresponse.model")
+          .clientPackage("com.sngular.multifileplugin.testoneofinresponse.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -270,11 +270,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testoneofinresponse";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testoneofinresponse/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testoneofinresponse/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testoneofinresponse/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testoneofinresponse/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testOneOfInResponse/assets/GamesApi.java");
@@ -294,11 +294,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateAllOf() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapi";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testapi/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testapi/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testapi/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testAllOf/assets/testApi/TestApi.java");
@@ -318,11 +318,11 @@ public final class OpenApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateComplesAnyOf() {
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testcomplexanyof/api";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testcomplexanyof/api";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testcomplexanyof/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testcomplexanyof/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testcomplexanyof/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testcomplexanyof/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
       "openapigenerator/testComplexAnyOf/assets/SchemaApi.java",
@@ -352,9 +352,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateAllOfLombok() {
 
-    final String DEFAULT_LOMBOK_TARGET_API = "generated/net/coru/multifileplugin/lombok/testapi";
+    final String DEFAULT_LOMBOK_TARGET_API = "generated/com/sngular/multifileplugin/lombok/testapi";
 
-    final String DEFAULT_LOMBOK_MODEL_API = "generated/net/coru/multifileplugin/lombok/testapi/model";
+    final String DEFAULT_LOMBOK_MODEL_API = "generated/com/sngular/multifileplugin/lombok/testapi/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testAllOf/assets/lombok/TestApi.java");
@@ -372,11 +372,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateOverwriteModeTrue() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testoverwriteapi";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoverwriteapi";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testoverwriteapi/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testoverwriteapi/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testoverwriteapi/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testoverwriteapi/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testOverWriteModelTrue/assets/TestApi.java");
@@ -396,9 +396,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateApiClientGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testapiclient";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapiclient";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testapiclient/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testapiclient/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiClientGeneration/assets/TestApi.java");
@@ -415,9 +415,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateInlineSchemaCreation() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/inlineschemacreation";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/inlineschemacreation";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/inlineschemacreation/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/inlineschemacreation/model";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testInlineSchemaCreation/assets/RuleApi.java",
@@ -437,9 +437,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateParametersWithSchemaGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/parameterwithcontent";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/parameterwithcontent";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/parameterwithcontent/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/parameterwithcontent/model";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiParametersWithContentGeneration/assets/TestApi.java");
@@ -456,9 +456,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validatePathWithSpecialCharGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathwithspecialchar";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/pathwithspecialchar";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/pathwithspecialchar/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/pathwithspecialchar/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiPathWithSpecialCharGeneration/assets/TestApi.java",
@@ -477,9 +477,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateApiReactiveGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/reactivegeneration";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/reactivegeneration";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/reactivegeneration/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/reactivegeneration/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiReactiveGeneration/assets/TestApi.java"
@@ -497,9 +497,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateTagsGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/tagsgeneration";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/tagsgeneration";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/tagsgeneration/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/tagsgeneration/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiTagsGeneration/assets/TestTagFirstApi.java",
@@ -518,9 +518,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateMultipleRefGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/multipleref";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/multipleref";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/multipleref/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/multipleref/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testMultipleRefGeneration/assets/TestApi.java"
@@ -537,9 +537,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validatePathParameterGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/pathparameter";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/pathparameter";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/pathparameter/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/pathparameter/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiPathParameterGeneration/assets/TestApi.java"
@@ -557,9 +557,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateWebClientGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/webclientapi";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/webclientapi";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/webclientapi/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/webclientapi/model";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testWebClientApiGeneration/assets/TestApi.java"
@@ -577,11 +577,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateClientPackageWebClientGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/client";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/clpkgwebclientapi/client";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/client/auth";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/clpkgwebclientapi/client/auth";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/clpkgwebclientapi/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/clpkgwebclientapi/model/exception";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testClientPackageWebClientApiGeneration/assets/TestClient.java"
@@ -601,11 +601,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateRestClientGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/restclient";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/restclient";
 
-    final String CLIENT_TARGET_API = "generated/net/coru/multifileplugin/restclient/client";
+    final String CLIENT_TARGET_API = "generated/com/sngular/multifileplugin/restclient/client";
 
-    final String CLIENT_MODEL_API = "generated/net/coru/multifileplugin/restclient/client/auth";
+    final String CLIENT_MODEL_API = "generated/com/sngular/multifileplugin/restclient/client/auth";
 
     List<String> expectedTestApiFile = List.of(
         "openapigenerator/testRestClientApiGeneration/assets/TestApi.java"
@@ -627,11 +627,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateEnumsGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumgeneration";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/enumgeneration";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/enumgeneration/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/enumgeneration/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/enumgeneration/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/enumgeneration/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiEnumsGeneration/assets/TestApi.java");
@@ -651,9 +651,9 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateEnumsLombokGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/enumlombokgeneration";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/enumlombokgeneration";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/enumlombokgeneration/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/enumlombokgeneration/model";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testApiEnumsLombokGeneration/assets/TestApi.java");
@@ -670,11 +670,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateExternalRefGeneration() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/externalref";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/externalref";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/externalref/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/externalref/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/externalref/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/externalref/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testExternalRefsGeneration/assets/TestApi.java");
@@ -691,11 +691,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateAnyOfInResponse() {
 
-    final String DEFAULT_TARGET_API = "generated/net/coru/multifileplugin/testanyofinresponse";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testanyofinresponse";
 
-    final String DEFAULT_MODEL_API = "generated/net/coru/multifileplugin/testanyofinresponse/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testanyofinresponse/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/net/coru/multifileplugin/testanyofinresponse/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testanyofinresponse/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
         "openapigenerator/testAnyOfInResponse/assets/GamesApi.java");

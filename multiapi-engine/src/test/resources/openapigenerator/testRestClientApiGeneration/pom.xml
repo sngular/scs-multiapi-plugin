@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.coru</groupId>
+  <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
   <version>1</version>
 
@@ -28,7 +28,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>net.coru</groupId>
+        <groupId>com.sngular</groupId>
         <artifactId>scs-multiapi-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -42,8 +42,8 @@
           <fileSpecs>
             <specFile>
               <filePath>api-test.yml</filePath>
-              <apiPackage>net.coru.multifileplugin.testrestclient</apiPackage>
-              <modelPackage>net.coru.multifileplugin.testrestclient.model</modelPackage>
+              <apiPackage>com.sngular.multifileplugin.testrestclient</apiPackage>
+              <modelPackage>com.sngular.multifileplugin.testrestclient.model</modelPackage>
               <callMode>true</callMode>
               <modelNamePrefix>Api</modelNamePrefix>
               <modelNameSuffix>DTO</modelNameSuffix>

@@ -1,4 +1,4 @@
-package net.coru.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
-import net.coru.scsplugin.filegeneration.model.event.OrderLineMapper;
+import com.sngular.scsplugin.filegeneration.model.event.OrderLineMapper;
 
 public class OrderMapper {
 

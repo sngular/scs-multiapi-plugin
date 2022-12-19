@@ -1,10 +1,10 @@
-package net.coru.scsplugin.filegenerationissue.model.event.producer;
+package com.sngular.scsplugin.filegenerationissue.model.event.producer;
 
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.filegenerationissue.model.event.CustomerOrderEventMessageDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.CustomerOrderEventMessageDTO;
 
 @Configuration
 public class Producer {

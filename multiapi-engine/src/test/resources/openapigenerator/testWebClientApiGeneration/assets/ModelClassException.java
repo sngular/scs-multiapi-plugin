@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.webclientapi.model.exception;
+package com.sngular.multifileplugin.webclientapi.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

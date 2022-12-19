@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testcomplexanyof.model.exception;
+package com.sngular.multifileplugin.testcomplexanyof.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

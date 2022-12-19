@@ -1,8 +1,8 @@
-package net.coru.scsplugin.streambridge.model.event.producer;
+package com.sngular.scsplugin.streambridge.model.event.producer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
-import net.coru.scsplugin.streambridge.model.event.OrderCreated;
+import com.sngular.scsplugin.streambridge.model.event.OrderCreated;
 
 @Component
 public class StreamBridgeProducer {

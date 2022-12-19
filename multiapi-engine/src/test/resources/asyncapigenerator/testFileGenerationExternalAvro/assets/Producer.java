@@ -1,10 +1,10 @@
-package net.coru.scsplugin.externalavro.model.event.producer;
+package com.sngular.scsplugin.externalavro.model.event.producer;
 
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.externalavro.model.event.Order;
+import com.sngular.scsplugin.externalavro.model.event.Order;
 
 @Configuration
 public class Producer {

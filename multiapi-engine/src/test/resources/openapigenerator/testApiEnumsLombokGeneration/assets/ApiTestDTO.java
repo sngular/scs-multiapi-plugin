@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.enumlombokgeneration.model;
+package com.sngular.multifileplugin.enumlombokgeneration.model;
 
 import java.util.Objects;
 

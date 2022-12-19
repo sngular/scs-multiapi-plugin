@@ -1,10 +1,10 @@
-package net.coru.scsplugin.externalavro.model.event.consumer;
+package com.sngular.scsplugin.externalavro.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.externalavro.model.event.CreateOrder;
+import com.sngular.scsplugin.externalavro.model.event.CreateOrder;
 
 @Configuration
 public class Subscriber {

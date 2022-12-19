@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapiclient;
+package com.sngular.multifileplugin.testapiclient;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testapiclient.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testapiclient.model.ApiErrorDTO;
-import net.coru.multifileplugin.testapiclient.model.ApiTestDTO;
+import com.sngular.multifileplugin.testapiclient.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.testapiclient.model.ApiErrorDTO;
+import com.sngular.multifileplugin.testapiclient.model.ApiTestDTO;
 
 public interface TestApi {
 

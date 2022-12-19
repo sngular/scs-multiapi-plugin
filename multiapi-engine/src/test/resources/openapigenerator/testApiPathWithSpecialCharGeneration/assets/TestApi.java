@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.pathwithspecialchar;
+package com.sngular.multifileplugin.pathwithspecialchar;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.pathwithspecialchar.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.pathwithspecialchar.model.ApiErrorDTO;
+import com.sngular.multifileplugin.pathwithspecialchar.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.pathwithspecialchar.model.ApiErrorDTO;
 
 public interface TestApi {
 

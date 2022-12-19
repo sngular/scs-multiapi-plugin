@@ -1,10 +1,10 @@
-package net.coru.scsplugin.filegeneration.model.event.producer;
+package com.sngular.scsplugin.filegeneration.model.event.producer;
 
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.filegeneration.model.event.CreateOrderMapper;
+import com.sngular.scsplugin.filegeneration.model.event.CreateOrderMapper;
 
 @Configuration
 public class Producer {

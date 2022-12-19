@@ -1,10 +1,10 @@
-package net.coru.scsplugin.withoutids.model.event.consumer;
+package com.sngular.scsplugin.withoutids.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.withoutids.model.event.CreateOrderDTO;
+import com.sngular.scsplugin.withoutids.model.event.CreateOrderDTO;
 
 @Configuration
 public class TestClassName {

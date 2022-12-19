@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoverwriteapi;
+package com.sngular.multifileplugin.testoverwriteapi;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testoverwriteapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.testoverwriteapi.model.ApiErrorDTO;
-import net.coru.multifileplugin.testoverwriteapi.model.ApiTestDTO;
+import com.sngular.multifileplugin.testoverwriteapi.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.testoverwriteapi.model.ApiErrorDTO;
+import com.sngular.multifileplugin.testoverwriteapi.model.ApiTestDTO;
 
 public interface TestApi {
 

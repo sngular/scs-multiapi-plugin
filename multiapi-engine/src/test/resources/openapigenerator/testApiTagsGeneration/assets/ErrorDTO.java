@@ -1,10 +1,10 @@
-package net.coru.multifileplugin.tagsgeneration.model;
+package com.sngular.multifileplugin.tagsgeneration.model;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.multifileplugin.tagsgeneration.model.exception.ModelClassException;
+import com.sngular.multifileplugin.tagsgeneration.model.exception.ModelClassException;
 
 public class ErrorDTO {
 

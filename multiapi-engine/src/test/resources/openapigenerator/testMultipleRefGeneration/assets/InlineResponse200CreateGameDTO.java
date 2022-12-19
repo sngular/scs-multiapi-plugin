@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.multipleref.model;
+package com.sngular.multifileplugin.multipleref.model;
 
 import java.util.Objects;
 

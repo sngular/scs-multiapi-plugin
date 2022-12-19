@@ -8,7 +8,7 @@ package com.sngular.api.generator.plugin;
 
 public class PluginConstants {
 
-  public static final String DEFAULT_API_PACKAGE = "net.coru.apigenerator";
+  public static final String DEFAULT_API_PACKAGE = "com.sngular.apigenerator";
 
   public static final String GENERATED_SOURCES_FOLDER = "generated-sources";
 

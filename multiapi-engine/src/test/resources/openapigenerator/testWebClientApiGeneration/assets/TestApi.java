@@ -1,17 +1,17 @@
-package net.coru.multifileplugin.webclientapi;
+package com.sngular.multifileplugin.webclientapi;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.coru.apigenerator.openapi.client.ApiWebClient;
+import com.sngular.apigenerator.openapi.client.ApiWebClient;
 
-import net.coru.multifileplugin.webclientapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.webclientapi.model.ApiErrorDTO;
-import net.coru.multifileplugin.webclientapi.model.ApiTestDTO;
+import com.sngular.multifileplugin.webclientapi.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.webclientapi.model.ApiErrorDTO;
+import com.sngular.multifileplugin.webclientapi.model.ApiTestDTO;
 
-import net.coru.apigenerator.openapi.client.auth.Authentication;
-import net.coru.apigenerator.openapi.client.auth.HttpBasicAuth;
+import com.sngular.apigenerator.openapi.client.auth.Authentication;
+import com.sngular.apigenerator.openapi.client.auth.HttpBasicAuth;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;

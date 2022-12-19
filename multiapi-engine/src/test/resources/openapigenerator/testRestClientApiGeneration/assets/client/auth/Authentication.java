@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.restclient.client.auth;
+package com.sngular.multifileplugin.restclient.client.auth;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;

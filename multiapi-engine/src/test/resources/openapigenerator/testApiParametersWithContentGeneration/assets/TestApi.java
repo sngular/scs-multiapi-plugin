@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.parameterwithcontent;
+package com.sngular.multifileplugin.parameterwithcontent;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.parameterwithcontent.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.parameterwithcontent.model.ApiErrorDTO;
-import net.coru.multifileplugin.parameterwithcontent.model.ApiInlineParameterShowTestByIdTestIdDTO;
-import net.coru.multifileplugin.parameterwithcontent.model.ApiTestDTO;
+import com.sngular.multifileplugin.parameterwithcontent.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.parameterwithcontent.model.ApiErrorDTO;
+import com.sngular.multifileplugin.parameterwithcontent.model.ApiInlineParameterShowTestByIdTestIdDTO;
+import com.sngular.multifileplugin.parameterwithcontent.model.ApiTestDTO;
 
 public interface TestApi {
 

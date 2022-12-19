@@ -1,10 +1,10 @@
-package net.coru.multifileplugin.pathwithspecialchar.model;
+package com.sngular.multifileplugin.pathwithspecialchar.model;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.multifileplugin.pathwithspecialchar.model.exception.ModelClassException;
+import com.sngular.multifileplugin.pathwithspecialchar.model.exception.ModelClassException;
 
 public class ApiTestDTO {
 

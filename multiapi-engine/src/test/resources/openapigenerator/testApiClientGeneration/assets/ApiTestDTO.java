@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapiclient.model;
+package com.sngular.multifileplugin.testapiclient.model;
 
 import java.util.Objects;
 

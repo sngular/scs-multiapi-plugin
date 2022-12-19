@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoneofinresponse;
+package com.sngular.multifileplugin.testoneofinresponse;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.testoneofinresponse.model.InlineResponse200ListGamesOneOfDTO;
+import com.sngular.multifileplugin.testoneofinresponse.model.InlineResponse200ListGamesOneOfDTO;
 
 public interface GamesApi {
 
