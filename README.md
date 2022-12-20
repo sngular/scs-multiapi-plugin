@@ -59,7 +59,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>3.2.0</version>
+  <version>4.2.5</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -113,7 +113,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id 'java'
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.0.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.2.5'
 
   openapimodel {
 
@@ -148,40 +148,40 @@ which the plugin is designed.
 
 ```xml
 <plugin>
-<groupId>com.sngular</groupId>
-<artifactId>scs-multiapi-maven-plugin</artifactId>
-<version>3.2.0</version>
-<executions>
-  <execution>
-    <phase>generate-sources</phase>
-    <goals>
-      <goal>asyncapi-generation</goal>
-    </goals>
-    <configuration>
-      <specFiles>
-        <specFile>
-          <filePath>PATH_TO_YML</filePath>
-        </specFile>
-        <specFile>
-          <filePath>PATH_TO_YML</filePath>
-          <consumer>
-            <ids>publishOperation</ids>
-            <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-            <modelNameSuffix>DTO</modelNameSuffix>
-            <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
-            <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
-          </consumer>
-          <supplier>
-            <ids>subscribeOperation</ids>
-            <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-            <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
-          </supplier>
-        </specFile>
-      </specFiles>
-      <generatedSourcesFolder>sources-generated</generatedSourcesFolder>
-    </configuration>
-  </execution>
-</executions>
+  <groupId>com.sngular</groupId>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <version>4.2.5</version>
+  <executions>
+    <execution>
+      <phase>generate-sources</phase>
+      <goals>
+        <goal>asyncapi-generation</goal>
+      </goals>
+      <configuration>
+        <specFiles>
+          <specFile>
+            <filePath>PATH_TO_YML</filePath>
+          </specFile>
+          <specFile>
+            <filePath>PATH_TO_YML</filePath>
+            <consumer>
+              <ids>publishOperation</ids>
+              <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
+              <modelNameSuffix>DTO</modelNameSuffix>
+              <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
+              <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            </consumer>
+            <supplier>
+              <ids>subscribeOperation</ids>
+              <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+              <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
+            </supplier>
+          </specFile>
+        </specFiles>
+        <generatedSourcesFolder>sources-generated</generatedSourcesFolder>
+      </configuration>
+    </execution>
+  </executions>
 </plugin>
 ```
 
@@ -558,7 +558,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.0.0</version>
+  <version>4.2.5</version>
   <executions>
     <execution>
         <goals>
