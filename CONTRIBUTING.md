@@ -94,7 +94,7 @@ further defined and clarified by project maintainers.
 
 You can report incidents related to abusive, harassing, or otherwise
 unacceptable behavior by contacting the project team
-at [info@coru.net](mailto:info@coru.net). All complaints will be reviewed and
+at [os3@sngular.com](mailto:os3@sngular.com). All complaints will be reviewed and
 investigated and will result in a response that is deemed necessary and
 appropriate to the circumstances. The project team is obligated to maintain
 confidentiality concerning the reporter of an incident. Further details of
