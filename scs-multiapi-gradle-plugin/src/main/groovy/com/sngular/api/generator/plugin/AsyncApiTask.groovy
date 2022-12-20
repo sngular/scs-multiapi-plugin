@@ -11,6 +11,7 @@ import com.sngular.api.generator.plugin.model.AsyncApiModelExtension
 import com.sngular.api.generator.plugin.model.AsyncApiSpecFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
