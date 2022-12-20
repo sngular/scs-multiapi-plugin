@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.externalref.model.exception;
+package com.sngular.multifileplugin.externalref.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

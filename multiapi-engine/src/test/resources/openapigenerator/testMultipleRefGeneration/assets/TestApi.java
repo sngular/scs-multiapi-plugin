@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.multipleref;
+package com.sngular.multifileplugin.multipleref;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.multipleref.model.InlineResponse200CreateGameDTO;
+import com.sngular.multifileplugin.multipleref.model.InlineResponse200CreateGameDTO;
 
 public interface TestApi {
 

@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testanyofinresponse.model.exception;
+package com.sngular.multifileplugin.testanyofinresponse.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

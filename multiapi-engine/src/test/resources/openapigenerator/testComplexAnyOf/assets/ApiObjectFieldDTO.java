@@ -1,13 +1,13 @@
-package net.coru.multifileplugin.testcomplexanyof.model;
+package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import net.coru.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
 public class ApiObjectFieldDTO {
 

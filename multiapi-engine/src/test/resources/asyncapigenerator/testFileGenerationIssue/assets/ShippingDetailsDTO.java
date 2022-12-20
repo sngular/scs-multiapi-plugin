@@ -1,4 +1,4 @@
-package net.coru.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 

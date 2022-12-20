@@ -1,10 +1,10 @@
-package net.coru.scsplugin.issuegeneration.model.event.producer;
+package com.sngular.scsplugin.issuegeneration.model.event.producer;
 
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import net.coru.scsplugin.issuegeneration.model.event.DataClientDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.DataClientDTO;
 
 @Configuration
 public class Producer {

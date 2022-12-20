@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.lombok.testapi;
+package com.sngular.multifileplugin.lombok.testapi;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.lombok.testapi.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.lombok.testapi.model.ApiErrorDTO;
-import net.coru.multifileplugin.lombok.testapi.model.ApiTestDTO;
+import com.sngular.multifileplugin.lombok.testapi.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.lombok.testapi.model.ApiErrorDTO;
+import com.sngular.multifileplugin.lombok.testapi.model.ApiTestDTO;
 
 public interface TestApi {
 

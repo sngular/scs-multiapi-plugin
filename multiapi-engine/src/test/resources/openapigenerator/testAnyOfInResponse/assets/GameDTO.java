@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testanyofinresponse.model;
+package com.sngular.multifileplugin.testanyofinresponse.model;
 
 import java.util.Objects;
 

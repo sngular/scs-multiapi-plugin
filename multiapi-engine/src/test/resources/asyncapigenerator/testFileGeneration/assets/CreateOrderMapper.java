@@ -1,11 +1,11 @@
-package net.coru.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.filegeneration.model.event.WaiterMapper;
-import net.coru.scsplugin.filegeneration.model.event.OrderMapper;
+import com.sngular.scsplugin.filegeneration.model.event.WaiterMapper;
+import com.sngular.scsplugin.filegeneration.model.event.OrderMapper;
 
 public class CreateOrderMapper {
 

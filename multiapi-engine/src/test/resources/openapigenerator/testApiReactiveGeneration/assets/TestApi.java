@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.reactivegeneration;
+package com.sngular.multifileplugin.reactivegeneration;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,9 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import springfox.documentation.annotations.ApiIgnore;
 
-import net.coru.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
-import net.coru.multifileplugin.reactivegeneration.model.ApiErrorDTO;
-import net.coru.multifileplugin.reactivegeneration.model.ApiTestDTO;
+import com.sngular.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
+import com.sngular.multifileplugin.reactivegeneration.model.ApiErrorDTO;
+import com.sngular.multifileplugin.reactivegeneration.model.ApiTestDTO;
 
 public interface TestApi {
 

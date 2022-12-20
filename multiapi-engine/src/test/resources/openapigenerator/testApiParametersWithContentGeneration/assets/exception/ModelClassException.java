@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi.model.exception;
+package com.sngular.multifileplugin.testapi.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

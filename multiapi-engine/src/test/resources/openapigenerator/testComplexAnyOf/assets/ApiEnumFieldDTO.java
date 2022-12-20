@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testcomplexanyof.model;
+package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 

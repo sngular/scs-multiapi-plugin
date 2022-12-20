@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testtags.model.exception;
+package com.sngular.multifileplugin.testtags.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

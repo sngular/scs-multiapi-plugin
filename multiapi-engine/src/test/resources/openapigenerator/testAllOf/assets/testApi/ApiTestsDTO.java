@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testapi.model;
+package com.sngular.multifileplugin.testapi.model;
 
 import java.util.Objects;
 

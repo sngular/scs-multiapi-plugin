@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.parameterwithcontent.model.exception;
+package com.sngular.multifileplugin.parameterwithcontent.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

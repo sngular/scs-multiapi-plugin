@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.externalref;
+package com.sngular.multifileplugin.externalref;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.externalref.model.ApiTestDTO;
+import com.sngular.multifileplugin.externalref.model.ApiTestDTO;
 
 public interface TestApi {
 

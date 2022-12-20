@@ -1,12 +1,12 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Corunet Challenge Game Server
+  title: Sngular Challenge Game Server
   description: Test File for SCC MultiApi Plugin.
   contact:
-    name: Corunet
-    url: coru.net
-    email: info@coru.net
+    name: Sngular
+    url: sngular.com
+    email: os3@sngular.com
   license:
     name: MIT
 servers:

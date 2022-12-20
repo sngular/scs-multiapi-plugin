@@ -1,11 +1,11 @@
-package net.coru.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import net.coru.scsplugin.filegenerationissue.model.event.OrderedItemDTO;
-import net.coru.scsplugin.filegenerationissue.model.event.PaymentDetailsDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.OrderedItemDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.PaymentDetailsDTO;
 import java.util.List;
 import java.util.ArrayList;
 

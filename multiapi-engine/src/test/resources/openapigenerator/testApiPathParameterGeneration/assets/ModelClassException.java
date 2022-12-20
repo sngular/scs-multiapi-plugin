@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.pathparameter.model.exception;
+package com.sngular.multifileplugin.pathparameter.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

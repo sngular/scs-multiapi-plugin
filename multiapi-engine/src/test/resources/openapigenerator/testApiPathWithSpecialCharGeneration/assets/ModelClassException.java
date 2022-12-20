@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.pathwithspecialchar.model.exception;
+package com.sngular.multifileplugin.pathwithspecialchar.model.exception;
 
 public class ModelClassException extends RuntimeException {
 

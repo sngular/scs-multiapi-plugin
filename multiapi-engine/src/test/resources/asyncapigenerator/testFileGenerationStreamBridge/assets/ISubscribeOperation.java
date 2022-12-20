@@ -1,6 +1,6 @@
-package net.coru.scsplugin.streambridge.model.event.consumer;
+package com.sngular.scsplugin.streambridge.model.event.consumer;
 
-import net.coru.scsplugin.streambridge.model.event.CreateOrderDTO;
+import com.sngular.scsplugin.streambridge.model.event.CreateOrderDTO;
 
 public interface ISubscribeOperationStreamBridge {
 

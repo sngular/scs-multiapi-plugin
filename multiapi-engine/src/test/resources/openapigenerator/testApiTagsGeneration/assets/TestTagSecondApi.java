@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.tagsgeneration;
+package com.sngular.multifileplugin.tagsgeneration;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import net.coru.multifileplugin.tagsgeneration.model.TestInfoDTO;
-import net.coru.multifileplugin.tagsgeneration.model.ErrorDTO;
+import com.sngular.multifileplugin.tagsgeneration.model.TestInfoDTO;
+import com.sngular.multifileplugin.tagsgeneration.model.ErrorDTO;
 
 public interface TestTagSecondApi {
 

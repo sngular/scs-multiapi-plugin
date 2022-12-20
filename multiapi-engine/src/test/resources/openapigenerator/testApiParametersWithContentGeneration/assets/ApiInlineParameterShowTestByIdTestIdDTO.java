@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.parameterwithcontent.model;
+package com.sngular.multifileplugin.parameterwithcontent.model;
 
 import java.util.Objects;
 

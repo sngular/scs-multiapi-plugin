@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.testoneofinresponse.model;
+package com.sngular.multifileplugin.testoneofinresponse.model;
 
 import java.util.Objects;
 

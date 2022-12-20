@@ -1,4 +1,4 @@
-package net.coru.multifileplugin.parameterwithcontent.model;
+package com.sngular.multifileplugin.parameterwithcontent.model;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import net.coru.multifileplugin.parameterwithcontent.model.exception.ModelClassException;
+import com.sngular.multifileplugin.parameterwithcontent.model.exception.ModelClassException;
 
 public class ApiTestInfoDTO {
 
