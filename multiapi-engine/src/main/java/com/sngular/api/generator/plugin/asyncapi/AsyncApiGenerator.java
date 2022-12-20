@@ -6,11 +6,32 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.PluginConstants;
-import com.sngular.api.generator.plugin.asyncapi.exception.*;
+import com.sngular.api.generator.plugin.asyncapi.exception.ChannelNameException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
+import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
@@ -23,16 +44,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @Slf4j

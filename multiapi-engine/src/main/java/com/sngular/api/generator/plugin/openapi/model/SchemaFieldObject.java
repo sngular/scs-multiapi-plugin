@@ -6,10 +6,14 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
-import lombok.*;
-import lombok.Builder.Default;
-
 import java.util.Map;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder

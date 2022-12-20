@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.test.utils.TestUtils;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
 public final class OpenApiGeneratorFixtures {

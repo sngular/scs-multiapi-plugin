@@ -14,9 +14,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.test.utils.TestUtils;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
 
 public class AsyncApiGeneratorFixtures {
 

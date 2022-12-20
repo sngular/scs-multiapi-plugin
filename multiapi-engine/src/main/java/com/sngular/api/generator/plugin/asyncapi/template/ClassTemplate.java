@@ -6,11 +6,11 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
+import java.nio.file.Path;
+
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import lombok.Builder;
 import lombok.Value;
-
-import java.nio.file.Path;
 
 @Value
 @Builder
