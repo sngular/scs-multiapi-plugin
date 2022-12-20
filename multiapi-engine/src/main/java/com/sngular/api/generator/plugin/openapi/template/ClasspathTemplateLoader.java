@@ -6,6 +6,8 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import freemarker.cache.TemplateLoader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 

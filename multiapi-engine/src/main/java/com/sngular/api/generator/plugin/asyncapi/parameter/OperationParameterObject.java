@@ -12,13 +12,13 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 @Data
 @Builder

@@ -6,20 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
@@ -42,6 +28,14 @@ import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 public class OpenApiGenerator {
 

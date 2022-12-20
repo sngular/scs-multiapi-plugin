@@ -6,15 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.parser.OpenAPIParser;
@@ -33,6 +24,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class OpenApiUtil {
 

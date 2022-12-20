@@ -6,40 +6,23 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.openapi.model.*;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.*;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.BasicTypeConstants;
-import com.sngular.api.generator.plugin.openapi.model.ContentObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
-import com.sngular.api.generator.plugin.openapi.model.OperationObject;
-import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.RequestObject;
-import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class MapperPathUtil {
 

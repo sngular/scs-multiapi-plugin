@@ -6,6 +6,16 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
+import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,16 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import com.sngular.api.generator.plugin.openapi.model.AuthObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 
 public class TemplateFactory {
 

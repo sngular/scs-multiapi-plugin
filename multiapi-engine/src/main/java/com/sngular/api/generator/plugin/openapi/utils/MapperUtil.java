@@ -6,16 +6,12 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.Objects;
-
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.IntegerSchema;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.media.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 public class MapperUtil {
 

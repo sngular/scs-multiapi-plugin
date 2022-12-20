@@ -6,28 +6,18 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiConsumer;
-
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.ComposedSchema;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.ObjectSchema;
-import io.swagger.v3.oas.models.media.Schema;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import io.swagger.v3.oas.models.media.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.function.BiConsumer;
 
 public class MapperContentUtil {
 

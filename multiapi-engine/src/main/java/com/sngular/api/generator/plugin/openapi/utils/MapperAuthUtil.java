@@ -6,18 +6,18 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MapperAuthUtil {
 
