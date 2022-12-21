@@ -1,5 +1,8 @@
-package com.sngular.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
+package com.sngular.generator.multiapi.rest;
 
+import java.util.Optional;
+import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;

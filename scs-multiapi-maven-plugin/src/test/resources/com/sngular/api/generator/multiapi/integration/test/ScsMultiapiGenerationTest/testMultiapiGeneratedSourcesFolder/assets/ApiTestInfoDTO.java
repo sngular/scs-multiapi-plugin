@@ -1,4 +1,4 @@
-package com.sngular.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testMultiapiGeneratedSourcesFolder.assets;
+package com.sngular.generator.multiapi.rest.model;
 
 import java.util.Objects;
 

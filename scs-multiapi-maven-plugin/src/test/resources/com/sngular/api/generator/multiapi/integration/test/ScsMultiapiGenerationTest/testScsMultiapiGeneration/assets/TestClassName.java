@@ -1,4 +1,4 @@
-package com.sngular.api.generator.multiapi.integration.test.ScsMultiapiGenerationTest.testScsMultiapiGeneration.assets;
+package com.sngular.generator.multiapi.model.event.consumer;
 
 import java.util.function.Consumer;
 

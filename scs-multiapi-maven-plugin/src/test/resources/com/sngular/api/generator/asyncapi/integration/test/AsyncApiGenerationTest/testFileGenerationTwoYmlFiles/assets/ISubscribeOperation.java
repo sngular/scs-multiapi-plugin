@@ -1,4 +1,4 @@
-package com.sngular.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
+package com.sngular;
 
 import com.sngular.apigenerator.asyncapi.CreateOrder;
 

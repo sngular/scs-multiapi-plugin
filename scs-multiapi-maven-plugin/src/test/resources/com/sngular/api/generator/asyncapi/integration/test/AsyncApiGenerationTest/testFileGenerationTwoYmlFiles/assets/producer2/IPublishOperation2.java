@@ -1,4 +1,4 @@
-package com.sngular.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets.producer2;
+package com.sngular.generator.multiapi.model.event.producer2;
 
 import com.sngular.generator.multiapi.model.event.OrderCreatedDTO;
 
