@@ -1,4 +1,4 @@
-package com.sngular.api.generator.openapi.integration.test.OpenApiGenerationTest.testApiMultiGeneration.assets;
+package com.sngular.multifileplugin.testmultifile.first;
 
 import java.util.Optional;
 import java.util.List;
