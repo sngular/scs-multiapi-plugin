@@ -1,4 +1,4 @@
-package com.sngular.api.generator.asyncapi.integration.test.AsyncApiGenerationTest.testFileGenerationTwoYmlFiles.assets;
+package com.sngular;
 
 import java.util.function.Supplier;
 
