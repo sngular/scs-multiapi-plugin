@@ -4,16 +4,16 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.6</version>
+  <version>4.3.7</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
   <description>Code generation plugin based on yml files under AsyncApi and OpenApi specifications.</description>
-  <url>https://github.com/corunet/scs-multiapi-plugin</url>
+  <url>https://github.com/sngular/scs-multiapi-plugin</url>
   <licenses>
     <license>
       <name>Mozilla Public License 2.0</name>
-      <url>https://github.com/corunet/scs-multiapi-plugin/blob/main/LICENSE</url>
+      <url>https://github.com/sngular/scs-multiapi-plugin/blob/main/LICENSE</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -23,8 +23,7 @@
       <id>jegarcia</id>
       <name>Jose Enrique Garcia Maciñeiras</name>
       <email>joseenrique.garcia@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Principal Engineer</role>
         <role>Team Leader</role>
@@ -35,8 +34,7 @@
       <id>fcampostato</id>
       <name>Fernando Campos Tato</name>
       <email>fernando.campos@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -46,8 +44,7 @@
       <id>jmejutovazquez</id>
       <name>Javier Mejuto Vázquez</name>
       <email>javier.mejuto@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Junior Developer</role>
       </roles>
@@ -57,8 +54,7 @@
       <id>cmunozgomez</id>
       <name>Cesar Munoz Gomez</name>
       <email>cesar.munoz@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -68,8 +64,7 @@
       <id>Rivarsal</id>
       <name>Pablo José López Rivadulla</name>
       <email>pablo.lopezr@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -79,8 +74,7 @@
       <id>mcabezasp</id>
       <name>Miguel Cabezas Puerto</name>
       <email>miguel.cabezas@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Junior Developer</role>
       </roles>
@@ -90,8 +84,7 @@
       <id>irodigl</id>
       <name>Isabel Rodríguez Iglesias</name>
       <email>isabel.rodriguez@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -101,8 +94,17 @@
       <id>davidgarciago</id>
       <name>David García Gondell</name>
       <email>david.garciag@sngular.com</email>
-      <organization>Corunet</organization>
-      <organizationUrl>https://corunet.github.io/</organizationUrl>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
+      <roles>
+        <role>Junior Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>DianaGomezGar</id>
+      <name>Diana Gómez García</name>
+      <email>diana.gomez@sngular.com</email>
+      <organizationUrl>https://singular.github.io/</organizationUrl>
       <roles>
         <role>Junior Developer</role>
       </roles>
@@ -111,9 +113,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</developerConnection>
-    <url>scm:git:git@github.com:corunet/scs-multiapi-plugin.git</url>
+    <connection>scm:git:git@github.com:sngular/scs-multiapi-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:sngular/scs-multiapi-plugin.git</developerConnection>
+    <url>scm:git:git@github.com:sngular/scs-multiapi-plugin.git</url>
   </scm>
 
   <distributionManagement>
@@ -155,7 +157,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.3.6</version>
+      <version>4.3.7</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

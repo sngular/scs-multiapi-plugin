@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:4.3.6'
+  implementation 'com.sngular:multiapi-engine:4.3.7'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }
@@ -72,8 +72,8 @@ artifacts {
 }
 
 pluginBundle {
-  website = 'https://corunet.github.io/scs-multiapi-plugin/'
-  vcsUrl = 'https://github.com/corunet/scs-multiapi-plugin'
+  website = 'https://sngular.github.io/scs-multiapi-plugin/'
+  vcsUrl = 'https://github.com/sngular/scs-multiapi-plugin'
   tags = ['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool']
 }
 
@@ -133,7 +133,7 @@ publishing {
         version = SCSMultiApiPluginVersion
         name = 'SCS MultiApi Plugin'
         description = 'Grable Plugin for the SCS MultiApi Generator'
-        url = 'https://corunet.github.io/scs-multiapi-plugin/'
+        url = 'https://sngular.github.io/scs-multiapi-plugin/'
       }
     }
     mavenJava(MavenPublication) {
@@ -144,7 +144,7 @@ publishing {
         version = SCSMultiApiPluginVersion
         name = 'SCS MultiApi Plugin'
         description = 'Grable Plugin for the SCS MultiApi Generator'
-        url = 'https://corunet.github.io/scs-multiapi-plugin/'
+        url = 'https://sngular.github.io/scs-multiapi-plugin/'
 
         licenses {
           license {
@@ -154,9 +154,9 @@ publishing {
         }
 
         scm {
-          connection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
-          developerConnection = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
-          url = 'scm:git:git@github.com:corunet/scs-multiapi-plugin.git'
+          connection = 'scm:git:git@github.com:sngular/scs-multiapi-plugin.git'
+          developerConnection = 'scm:git:git@github.com:sngular/scs-multiapi-plugin.git'
+          url = 'scm:git:git@github.com:sngular/scs-multiapi-plugin.git'
         }
 
       }
