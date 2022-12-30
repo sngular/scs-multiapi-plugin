@@ -90,12 +90,12 @@ public class MapperContentUtil {
 
   private static void getTypeImports(final HashMap<String, List<String>> listHashMap, final SchemaFieldObject fieldObject) {
     if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
-      if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+      if (fieldObject.getDataTypeSimple().equalsIgnoreCase(ARRAY)) {
         listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
         listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
-      } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
-                 || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+      } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(BIG_DECIMAL)
+                 || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
       }
     }
