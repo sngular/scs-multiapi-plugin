@@ -38,6 +38,7 @@ import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.io.FilenameUtils;
@@ -261,7 +262,7 @@ public class OpenApiGenerator {
       final Map<String, Schema<?>> basicSchemaMap) {
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
+      if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema || basicSchema instanceof MapSchema && basicSchema.getAdditionalProperties() != null) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       }
     });

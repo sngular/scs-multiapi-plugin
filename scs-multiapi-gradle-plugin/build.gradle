@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:4.3.7'
+  implementation 'com.sngular:multiapi-engine:4.3.8'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }

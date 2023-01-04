@@ -268,6 +268,30 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_ADDITIONAL_PROPERTIES = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testAdditionalProperties/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testadditionalproperties")
+          .modelPackage("com.sngular.multifileplugin.testadditionalproperties.model")
+          .clientPackage("com.sngular.multifileplugin.testadditionalproperties.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_ADDITIONAL_PROPERTIES_WITH_SCHEMA = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testAdditionalPropertiesWithSchema/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testadditionalpropertiesWithSchema")
+          .modelPackage("com.sngular.multifileplugin.testadditionalpropertiesWithSchema.model")
+          .clientPackage("com.sngular.multifileplugin.testadditionalpropertiesWithSchema.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -709,6 +733,43 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedExceptionFiles = List.of(
         "openapigenerator/testAnyOfInResponse/assets/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateAdditionalProperties() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalproperties";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalproperties/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalproperties/model/exception";
+
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalProperties/assets/TestAPI.java");
+
+    final List<String> expectedTestApiModelFiles = List.of("openapigenerator/testAdditionalProperties/assets/TestDTO.java");
+
+    final List<String> expectedExceptionFiles = List.of();
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateAdditionalPropertiesWithSchema() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithSchema";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithSchema/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithSchema/model/exception";
+
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithSchema/assets/TestAPI.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testAdditionalPropertiesWithSchema/assets/SubtestDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithSchema/assets/TestDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of();
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }

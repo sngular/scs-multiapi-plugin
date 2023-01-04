@@ -1,0 +1,42 @@
+---
+openapi: "3.0.0"
+info:
+  contact:
+    name: Os3 Team
+    email: os3-info@sngular.com
+  version: 1.0.0
+  title: Testing example file
+  license:
+    name: MIT
+  description: Testing example file
+servers:
+- url: http://localhost:8080/v1
+tags:
+- name: testAdditionalProperties
+  description: Test service
+paths:
+  /test:
+    summary: testAdditionalProperties
+    get:
+      summary: testAdditionalProperties
+      description: Test File for SCC MultiApi Plugin.
+      tags:
+      - test
+      operationId: testAdditionalProperties
+      responses:
+        '200':
+          description: An object with additional properties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/test'
+components:
+  schemas:
+    test:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+      additionalProperties: true

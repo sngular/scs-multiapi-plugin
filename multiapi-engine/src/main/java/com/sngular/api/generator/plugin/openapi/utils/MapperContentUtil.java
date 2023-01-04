@@ -106,7 +106,12 @@ public class MapperContentUtil {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (Objects.nonNull(schema.getProperties())) {
-      fieldObjectArrayList.addAll(processFieldObjectList(null, null, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
+      if (Objects.nonNull(schema.getAdditionalProperties())) {
+        schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
+        fieldObjectArrayList.addAll(processFieldObjectList("additionalProperties", null, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
+      } else {
+        fieldObjectArrayList.addAll(processFieldObjectList(null, null, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
+      }
     } else if (ARRAY.equalsIgnoreCase(schema.getType())) {
       final ArraySchema arraySchema = (ArraySchema) schema;
       fieldObjectArrayList.addAll(processFieldObjectList(null, null, arraySchema.getItems(), specFile, totalSchemas, compositedSchemas, antiLoopList));
@@ -325,10 +330,29 @@ public class MapperContentUtil {
       field.setImportClass(getImportClass(typeArray));
       field.setDataTypeSimple(ARRAY);
     } else if (value instanceof MapSchema) {
-      final var typeMap = MapperUtil.getTypeMap((MapSchema) value, specFile);
-      field.setDataTypeSimple(MAP);
-      field.setDataType(typeMap);
-      field.setImportClass(getImportClass(typeMap));
+      if (Objects.nonNull(value.getAdditionalProperties())) {
+        field.setDataTypeSimple(MAP);
+        final String typeObject;
+        if (value.getAdditionalProperties() instanceof Boolean && (Boolean) value.getAdditionalProperties()) {
+          typeObject = OBJECT;
+        } else {
+          final Schema additionalProperties = (Schema) value.getAdditionalProperties();
+          if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
+            typeObject = getRef(additionalProperties, specFile);
+          } else if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase("object")) {
+            typeObject = additionalProperties.getType();
+          } else {
+            typeObject = OBJECT;
+          }
+        }
+        field.setDataType(typeObject);
+        field.setImportClass(getImportClass(typeObject));
+      } else {
+        final var typeMap = MapperUtil.getTypeMap((MapSchema) value, specFile);
+        field.setDataTypeSimple(MAP);
+        field.setDataType(typeMap);
+        field.setImportClass(getImportClass(typeMap));
+      }
     } else if (Objects.nonNull(value.getType()) && OBJECT.equalsIgnoreCase(value.getType())) {
       var typeObject = "";
       if (StringUtils.isNotBlank(value.get$ref())) {
