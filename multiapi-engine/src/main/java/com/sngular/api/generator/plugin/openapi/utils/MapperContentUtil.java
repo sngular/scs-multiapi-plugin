@@ -221,10 +221,10 @@ public class MapperContentUtil {
     final SchemaFieldObject field;
     if (Objects.nonNull(value.get$ref())) {
       final var typeName = cleanRefName(value);
-      if (antiLoopList.contains(typeName)) {
+      if (antiLoopList.contains(typeName) || totalSchemas.containsKey(typeName) || compositedSchemas.containsKey(typeName)) {
         fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
-                                   .baseName(key)
+                                   .baseName(typeName)
                                    .dataType(MapperUtil.getPojoName(typeName, specFile))
                                    .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
                                    .build());
