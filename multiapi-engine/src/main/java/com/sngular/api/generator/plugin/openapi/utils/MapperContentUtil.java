@@ -63,12 +63,13 @@ public class MapperContentUtil {
     final var listSchema = getFields(totalSchemas, schema, specFile, schemasToGenerateList, antiLoopList);
 
     schemasToGenerateList.put(StringUtils.defaultIfBlank(schema.getName(), nameSchema), SchemaObject.builder()
-                       .schemaName(StringUtils.defaultIfBlank(schema.getName(), nameSchema))
-                       .className(MapperUtil.getPojoName(nameSchema, specFile))
-                       .importList(getImportList(listSchema, modelPackage))
-                       .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
-                       .fieldObjectList(listSchema)
-                       .build());
+                                                                                                    .schemaName(StringUtils.defaultIfBlank(schema.getName(), nameSchema))
+                                                                                                    .className(MapperUtil.getPojoName(nameSchema, specFile))
+                                                                                                    .importList(getImportList(listSchema, modelPackage))
+                                                                                                    .schemaCombinator(
+                                                                                                        StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                                                                                                    .fieldObjectList(listSchema)
+                                                                                                    .build());
     return schemasToGenerateList;
   }
 
@@ -101,7 +102,8 @@ public class MapperContentUtil {
     }
   }
 
-  private static List<SchemaFieldObject> getFields(final Map<String, Schema> totalSchemas, final Schema<?> schema, final SpecFile specFile,
+  private static List<SchemaFieldObject> getFields(
+      final Map<String, Schema> totalSchemas, final Schema<?> schema, final SpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
@@ -128,7 +130,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processAllOf(final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final SpecFile specFile,
+  private static List<SchemaFieldObject> processAllOf(
+      final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final SpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
@@ -146,7 +149,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processAnyOfOneOf(final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final SpecFile specFile,
+  private static List<SchemaFieldObject> processAnyOfOneOf(
+      final Map<String, Schema> totalSchemas, final List<Schema> schemaList, final SpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
@@ -171,7 +175,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processFieldObjectList(final String fieldName, final String className, final Schema<?> schema, final SpecFile specFile,
+  private static List<SchemaFieldObject> processFieldObjectList(
+      final String fieldName, final String className, final Schema<?> schema, final SpecFile specFile,
       final Map<String, Schema> totalSchemas, final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new LinkedList<SchemaFieldObject>();
     if (ARRAY.equalsIgnoreCase(schema.getType())) {
@@ -194,11 +199,11 @@ public class MapperContentUtil {
           compositedSchemas.put(composedSchemaName, schemaObjectComposed);
         }
         fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(schemaObjectComposed.getClassName())
-                                   .dataTypeSimple(schemaObjectComposed.getClassName())
-                                   .build());
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(schemaObjectComposed.getClassName())
+                                     .dataTypeSimple(schemaObjectComposed.getClassName())
+                                     .build());
       }
     } else {
       final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
@@ -208,7 +213,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static BiConsumer<String, Schema> processProperties(final Map<String, Schema> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
+  private static BiConsumer<String, Schema> processProperties(
+      final Map<String, Schema> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
       final List<SchemaFieldObject> fieldObjectArrayList, final SpecFile specFile, final Schema<?> schema, final List<String> antiLoopList) {
     return (key, value) -> {
       final var enumValues = value.getEnum();
@@ -220,7 +226,8 @@ public class MapperContentUtil {
     };
   }
 
-  private static List<SchemaFieldObject> processObjectProperty(final Map<String, Schema> totalSchemas, final String key, final Schema value,
+  private static List<SchemaFieldObject> processObjectProperty(
+      final Map<String, Schema> totalSchemas, final String key, final Schema value,
       final Map<String, SchemaObject> compositedSchemas, final SpecFile specFile, final Schema<?> schema, final List<String> antiLoopList) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
     final SchemaFieldObject field;
@@ -228,11 +235,11 @@ public class MapperContentUtil {
       final var typeName = cleanRefName(value);
       if (antiLoopList.contains(typeName)) {
         fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(key)
-                                   .dataType(MapperUtil.getPojoName(typeName, specFile))
-                                   .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
-                                   .build());
+                                     .builder()
+                                     .baseName(key)
+                                     .dataType(MapperUtil.getPojoName(typeName, specFile))
+                                     .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
+                                     .build());
       } else {
         antiLoopList.add(typeName);
         fieldObjectArrayList.addAll(processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList));
@@ -247,7 +254,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processArray(final String fieldName, final String className, final Schema<?> schema, final SpecFile specFile,
+  private static List<SchemaFieldObject> processArray(
+      final String fieldName, final String className, final Schema<?> schema, final SpecFile specFile,
       final Map<String, Schema> totalSchemas, final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
     if (Objects.nonNull(schema.getItems())) {
@@ -263,26 +271,26 @@ public class MapperContentUtil {
         var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
         if (Objects.isNull(schemaObjectComposed)) {
           schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), items, specFile,
-                               totalSchemas, compositedSchemas, antiLoopList);
+                                                      totalSchemas, compositedSchemas, antiLoopList);
           compositedSchemas.put(composedSchemaName, schemaObjectComposed);
         }
         fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(schemaObjectComposed.getClassName())
-                                   .dataTypeSimple(ARRAY)
-                                   .importClass(schemaObjectComposed.getClassName())
-                                   .build());
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(schemaObjectComposed.getClassName())
+                                     .dataTypeSimple(ARRAY)
+                                     .importClass(schemaObjectComposed.getClassName())
+                                     .build());
       } else if (Objects.nonNull(items.getProperties())) {
         compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile, specFile.getModelPackage()));
         fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataType(MapperUtil.getPojoName(fieldName, specFile)).dataTypeSimple(ARRAY).build());
       } else {
         fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
-                                   .dataTypeSimple(ARRAY)
-                                   .build());
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
+                                     .dataTypeSimple(ARRAY)
+                                     .build());
       }
     } else {
       fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataType(OBJECT).dataTypeSimple(ARRAY).build());
@@ -294,7 +302,8 @@ public class MapperContentUtil {
     return !(value instanceof ArraySchema || value instanceof ObjectSchema || value instanceof ComposedSchema);
   }
 
-  private static SchemaObject createComposedSchema(final String fieldName, final Schema<?> schema, final SpecFile specFile, final Map<String, Schema> totalSchemas,
+  private static SchemaObject createComposedSchema(
+      final String fieldName, final Schema<?> schema, final SpecFile specFile, final Map<String, Schema> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     if (Objects.nonNull(schema.getAllOf())) {
@@ -309,12 +318,12 @@ public class MapperContentUtil {
     }
 
     return SchemaObject.builder()
-                .schemaName(fieldName)
-                .className(MapperUtil.getPojoName(fieldName, specFile))
-                .importList(getImportList(fieldObjectArrayList, specFile.getModelPackage()))
-                .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
-                .fieldObjectList(fieldObjectArrayList)
-                .build();
+                       .schemaName(fieldName)
+                       .className(MapperUtil.getPojoName(fieldName, specFile))
+                       .importList(getImportList(fieldObjectArrayList, specFile.getModelPackage()))
+                       .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                       .fieldObjectList(fieldObjectArrayList)
+                       .build();
   }
 
   private static void setFieldType(final SchemaFieldObject field, final Schema<?> value, final Schema<?> schema, final SpecFile specFile, final String key) {
@@ -332,19 +341,7 @@ public class MapperContentUtil {
     } else if (value instanceof MapSchema) {
       if (Objects.nonNull(value.getAdditionalProperties())) {
         field.setDataTypeSimple(MAP);
-        final String typeObject;
-        if (value.getAdditionalProperties() instanceof Boolean && (Boolean) value.getAdditionalProperties()) {
-          typeObject = OBJECT;
-        } else {
-          final Schema additionalProperties = (Schema) value.getAdditionalProperties();
-          if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
-            typeObject = getRef(additionalProperties, specFile);
-          } else if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase("object")) {
-            typeObject = additionalProperties.getType();
-          } else {
-            typeObject = OBJECT;
-          }
-        }
+        final String typeObject = getMapTypeObject(value, specFile);
         field.setDataType(typeObject);
         field.setImportClass(getImportClass(typeObject));
       } else {
@@ -363,6 +360,43 @@ public class MapperContentUtil {
     }
   }
 
+  private static String getMapTypeObject(final Schema schema, final SpecFile specFile) {
+    final String typeObject;
+    if (schema.getAdditionalProperties() instanceof Boolean && (Boolean) schema.getAdditionalProperties()) {
+      typeObject = OBJECT;
+    } else {
+      final Schema additionalProperties = (Schema) schema.getAdditionalProperties();
+      if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
+        typeObject = getRef(additionalProperties, specFile);
+      } else if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase("object")) {
+        final var additionalPropertiesField =
+            SchemaFieldObject.builder().baseName(additionalProperties.getName()).dataTypeSimple(MapperUtil.getSimpleType(additionalProperties, specFile)).build();
+        setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
+        typeObject = getMapFieldType(additionalPropertiesField);
+      } else {
+        typeObject = OBJECT;
+      }
+    }
+    return typeObject;
+  }
+
+  private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
+    final String fieldType;
+    switch (StringUtils.uncapitalize(schemaFieldObject.getDataTypeSimple())) {
+      case BIG_DECIMAL:
+      case INTEGER:
+      case DOUBLE:
+      case FLOAT:
+      case LONG:
+      case STRING:
+        fieldType = StringUtils.capitalize(schemaFieldObject.getDataTypeSimple());
+        break;
+      default:
+        fieldType = OBJECT;
+    }
+    return fieldType;
+  }
+
   private static String getRef(final Schema<?> schema, final SpecFile specFile) {
     final String typeObject;
     typeObject = MapperUtil.getPojoName(cleanRefName(schema), specFile);
@@ -374,7 +408,8 @@ public class MapperContentUtil {
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
-  private static void processEnumField(final String key, final Schema<?> value, final SpecFile specFile, final List<SchemaFieldObject> fieldObjectArrayList,
+  private static void processEnumField(
+      final String key, final Schema<?> value, final SpecFile specFile, final List<SchemaFieldObject> fieldObjectArrayList,
       final List<?> enumValues, final Schema<?> schema) {
     final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
     field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));

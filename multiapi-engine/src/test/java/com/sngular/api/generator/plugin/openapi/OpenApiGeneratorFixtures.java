@@ -292,6 +292,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_ADDITIONAL_PROPERTIES_WITH_UNNAMED_OBJECT = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testAdditionalPropertiesWithUnnamedObject/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject")
+          .modelPackage("com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model")
+          .clientPackage("com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -767,6 +779,31 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
         "openapigenerator/testAdditionalPropertiesWithSchema/assets/SubtestDTO.java",
         "openapigenerator/testAdditionalPropertiesWithSchema/assets/TestDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of();
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateAdditionalPropertiesWithUnnamedObject() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithUnnamedObject";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithUnnamedObject/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithUnnamedObject/model/exception";
+
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestAPI.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/ArraySchemaDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/EnumSchemaDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/SecondTestDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestAdditionalPropertyAdditionalPropertyDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestAdditionalPropertyDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestDTO.java",
+        "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/ThirdTestDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of();
