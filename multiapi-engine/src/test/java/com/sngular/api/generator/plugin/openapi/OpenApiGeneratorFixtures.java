@@ -26,7 +26,7 @@ public final class OpenApiGeneratorFixtures {
   final static String TARGET = "target";
 
   final static List<SpecFile> TEST_ALL_OF = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testapi")
@@ -37,7 +37,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   final static List<SpecFile> TEST_COMPLEX_ANY_OF = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testComplexAnyOf/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testcomplexanyof.api")
@@ -48,7 +48,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   final static List<SpecFile> TEST_ALL_OF_LOMBOK = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.lombok.testapi")
@@ -60,7 +60,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   final static List<SpecFile> TEST_OVER_WRITE_MODEL_TRUE = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testOverWriteModelTrue/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testoverwriteapi")
@@ -72,7 +72,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_API_CLIENT_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiClientGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testapiclient")
@@ -84,7 +84,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_INLINE_SCHEMA_CREATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testInlineSchemaCreation/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.inlineschemacreation")
@@ -96,7 +96,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_PARAMETER_WITH_CONTENT_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiParametersWithContentGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.parameterwithcontent")
@@ -108,7 +108,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_PATH_WITH_SLASH_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathWithSpecialCharGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.pathwithspecialchar")
@@ -120,7 +120,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_API_REACTIVE_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiReactiveGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.reactivegeneration")
@@ -133,7 +133,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_API_TAGS_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiTagsGeneration/api-tags-test.yml")
           .apiPackage("com.sngular.multifileplugin.tagsgeneration")
@@ -145,7 +145,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_MULTIPLE_REF_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testMultipleRefGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.multipleref")
@@ -156,7 +156,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_PATH_PARAMETER_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiPathParameterGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.pathparameter")
@@ -167,7 +167,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_WEB_CLIENT_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testWebClientApiGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.webclientapi")
@@ -181,7 +181,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.clpkgwebclientapi")
@@ -194,7 +194,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_REST_CLIENT_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.restclient")
@@ -208,7 +208,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_ENUMS_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.enumgeneration")
@@ -220,7 +220,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_ENUMS_LOMBOK_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.enumlombokgeneration")
@@ -233,7 +233,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_EXTERNAL_REF_GENERATION = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testExternalRefsGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.externalref")
@@ -245,7 +245,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_ANY_OF_IN_RESPONSE = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testAnyOfInResponse/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testanyofinresponse")
@@ -257,7 +257,7 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_ONE_OF_IN_RESPONSE = List.of(
-    SpecFile
+      SpecFile
           .builder()
           .filePath("openapigenerator/testOneOfInResponse/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.testoneofinresponse")
@@ -361,27 +361,27 @@ public final class OpenApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testcomplexanyof/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
-      "openapigenerator/testComplexAnyOf/assets/SchemaApi.java",
-      "openapigenerator/testComplexAnyOf/assets/SchemaMasterApi.java",
-      "openapigenerator/testComplexAnyOf/assets/SchemasApi.java");
+        "openapigenerator/testComplexAnyOf/assets/SchemaApi.java",
+        "openapigenerator/testComplexAnyOf/assets/SchemaMasterApi.java",
+        "openapigenerator/testComplexAnyOf/assets/SchemasApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
-      "openapigenerator/testComplexAnyOf/assets/ApiArrayFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiBooleanFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiDateFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiEnumFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiMapFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiNumberFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiObjectFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiSchemaDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiSequenceFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiStringFieldDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiTypeArrayDTO.java",
-      "openapigenerator/testComplexAnyOf/assets/ApiUnionFieldDTO.java"
+        "openapigenerator/testComplexAnyOf/assets/ApiArrayFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiBooleanFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiDateFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiEnumFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiMapFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiNumberFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiObjectFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiSchemaDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiSequenceFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiStringFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiTypeArrayDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiUnionFieldDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
-      "openapigenerator/testComplexAnyOf/assets/ModelClassException.java");
+        "openapigenerator/testComplexAnyOf/assets/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
@@ -755,15 +755,11 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalproperties/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalproperties/model/exception";
-
-    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalProperties/assets/TestAPI.java");
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalProperties/assets/TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of("openapigenerator/testAdditionalProperties/assets/TestDTO.java");
 
-    final List<String> expectedExceptionFiles = List.of();
-
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateAdditionalPropertiesWithSchema() {
@@ -772,18 +768,14 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithSchema/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithSchema/model/exception";
-
-    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithSchema/assets/TestAPI.java");
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithSchema/assets/TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         "openapigenerator/testAdditionalPropertiesWithSchema/assets/SubtestDTO.java",
         "openapigenerator/testAdditionalPropertiesWithSchema/assets/TestDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateAdditionalPropertiesWithUnnamedObject() {
@@ -792,9 +784,7 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithUnnamedObject/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesWithUnnamedObject/model/exception";
-
-    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestAPI.java");
+    final List<String> expectedTestApiFile = List.of("openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/ArraySchemaDTO.java",
@@ -806,9 +796,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testAdditionalPropertiesWithUnnamedObject/assets/ThirdTestDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   private static Boolean commonTest(
