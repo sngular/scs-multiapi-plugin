@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import com.sngular.api.generator.plugin.PluginConstants;
@@ -37,7 +38,9 @@ import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.io.FilenameUtils;
@@ -52,6 +55,8 @@ public class OpenApiGenerator {
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".client";
 
   private static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
+
+  private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
 
   private final Boolean overwriteModel;
 
@@ -79,7 +84,8 @@ public class OpenApiGenerator {
 
   private boolean useLombok;
 
-  public OpenApiGenerator(final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
+  public OpenApiGenerator(
+      final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
       final File targetFolder, final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
@@ -198,7 +204,6 @@ public class OpenApiGenerator {
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
     templateFactory.setModelPackageName(modelPackage);
-
     if (Boolean.TRUE.equals(overwriteModel)) {
       processModelsWhenOverWriteIsTrue(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
     } else {
@@ -260,18 +265,76 @@ public class OpenApiGenerator {
       final String modelPackage,
       final Map<String, Schema<?>> basicSchemaMap) {
 
+    final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
+
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
+        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
+                                           schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
       }
     });
+    if (!additionalPropertiesSchemas.isEmpty()) {
+      processModelsAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
+    }
+  }
 
+  private void processModelsAdditionalProperties(
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
+      final String modelPackage,
+      final Map<String, Schema<?>> basicSchemaMap) {
+
+    final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
+
+    basicSchemaMap.forEach((schemaName, basicSchema) -> {
+      if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
+        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
+                                           schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
+      } else if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema || Objects.isNull(basicSchema.get$ref())) {
+        writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      } else {
+        writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      }
+    });
+    if (!additionalPropertiesSchemas.isEmpty()) {
+      processModelsAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
+    }
+  }
+
+  private void writeModelRefSchema(
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
+    final Schema additionalPropertiesSchema = new ObjectSchema();
+    final Map<String, Schema> properties = new HashMap<>();
+    final String[] refSplit = basicSchema.get$ref().split("/");
+    properties.put(refSplit[refSplit.length - 1], basicSchema);
+    additionalPropertiesSchema.properties(properties);
+    additionalPropertiesSchema.name(schemaName);
+    writeModel(specFile, openAPI, fileModelToSave, modelPackage, refSplit[refSplit.length - 1], additionalPropertiesSchema);
+  }
+
+  private void writeModelWithAdditionalProperties(
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema,
+      final Consumer<Schema<?>> addAdditionalSchema) {
+
+    final Schema<?> schemaToWrite = basicSchema;
+    if (schemaToWrite.getAdditionalProperties() instanceof Schema<?> && !(schemaToWrite.getAdditionalProperties() instanceof ArraySchema)) {
+      final Schema<?> additionalPropertiesSchema = (Schema<?>) schemaToWrite.getAdditionalProperties();
+      if (Objects.isNull(additionalPropertiesSchema.get$ref())) {
+        if (Objects.nonNull(additionalPropertiesSchema.getType()) && additionalPropertiesSchema.getType().equalsIgnoreCase("object")) {
+          additionalPropertiesSchema.set$ref("#components/schemas/" + schemaName + ADDITIONAL_PROPERTY_NAME);
+          schemaToWrite.setAdditionalProperties(additionalPropertiesSchema);
+        }
+      }
+      addAdditionalSchema.accept(additionalPropertiesSchema);
+    }
+    writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, schemaToWrite);
   }
 
   private void writeModel(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile,
-                                                                                                        modelPackage);
+                                                                              modelPackage);
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
@@ -314,6 +377,8 @@ public class OpenApiGenerator {
       final SpecFile specFile, final OpenAPI openAPI,
       final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
 
+    final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
+
     for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
       final String schemaName = entry.getKey();
       final Schema<?> basicSchema = entry.getValue();
@@ -321,8 +386,16 @@ public class OpenApiGenerator {
         throw new DuplicateModelClassException(schemaName, modelPackage);
       }
 
-      writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
+        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
+                                           schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
+      } else {
+        writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      }
+    }
 
+    if (!additionalPropertiesSchemas.isEmpty()) {
+      processModelsAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
     }
   }
 }

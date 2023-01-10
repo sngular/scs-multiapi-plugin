@@ -97,7 +97,12 @@ public class MapperPathUtil {
     if (schema instanceof ArraySchema) {
       dataType = "array-" + MapperUtil.getTypeArray((ArraySchema) schema, specFile);
     } else if (schema instanceof MapSchema) {
-      dataType = "map-" + MapperUtil.getTypeMap((MapSchema) schema, specFile);
+      if (schema.getAdditionalProperties() != null) {
+        dataType = OBJECT;
+      } else {
+        dataType = "map-" + MapperUtil.getTypeMap((MapSchema) schema, specFile);
+      }
+
     } else if (OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
