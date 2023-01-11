@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class ApiTestDTO {
 
+  @JsonProperty(value ="testProcessor")
+  private ApiTestProcessorDTO testProcessor;
   @JsonProperty(value ="description")
   private String description;
   @JsonProperty(value ="tags")
@@ -22,7 +24,8 @@ public class ApiTestDTO {
   @JsonProperty(value ="apiTestTypeDTO")
   private List<ApiTestTypeDTO> apiTestTypeDTO = new ArrayList<ApiTestTypeDTO>();
 
-  private ApiTestDTO(String description, List<String> tags, String name, Integer id, Integer priority, List<ApiTestTypeDTO> apiTestTypeDTO) {
+  private ApiTestDTO(ApiTestProcessorDTO testProcessor, String description, List<String> tags, String name, Integer id, Integer priority, List<ApiTestTypeDTO> apiTestTypeDTO) {
+    this.testProcessor = testProcessor;
     this.description = description;
     this.tags = tags;
     this.name = name;
@@ -33,6 +36,7 @@ public class ApiTestDTO {
   }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
+    this.testProcessor = builder.testProcessor;
     this.description = builder.description;
     this.tags = builder.tags;
     this.name = builder.name;
@@ -44,12 +48,17 @@ public class ApiTestDTO {
 
   public static class ApiTestDTOBuilder {
 
+    private ApiTestProcessorDTO testProcessor;
     private String description;
     private List<String> tags = new ArrayList<String>();
     private String name;
     private Integer id;
     private Integer priority;
     private List<ApiTestTypeDTO> apiTestTypeDTO = new ArrayList<ApiTestTypeDTO>();
+    public ApiTestDTO.ApiTestDTOBuilder testProcessor(ApiTestProcessorDTO testProcessor) {
+      this.testProcessor = testProcessor;
+      return this;
+    }
 
     public ApiTestDTO.ApiTestDTOBuilder description(String description) {
       this.description = description;
@@ -101,6 +110,18 @@ public class ApiTestDTO {
       ApiTestDTO apiTestDTO = new ApiTestDTO(this);
       return apiTestDTO;
     }
+  }
+
+  /**
+  * Get testProcessor
+  * @return testProcessor
+  */
+  @Schema(name = "testProcessor", required = false)
+  public ApiTestProcessorDTO getTestProcessor() {
+    return testProcessor;
+  }
+  public void setTestProcessor(ApiTestProcessorDTO testProcessor) {
+    this.testProcessor = testProcessor;
   }
 
   /**
@@ -184,18 +205,19 @@ public class ApiTestDTO {
       return false;
     }
     ApiTestDTO apiTestDTO = (ApiTestDTO) o;
-    return Objects.equals(this.description, apiTestDTO.description) && Objects.equals(this.tags, apiTestDTO.tags) && Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.priority, apiTestDTO.priority) && Objects.equals(this.apiTestTypeDTO, apiTestDTO.apiTestTypeDTO);
+    return Objects.equals(this.testProcessor, apiTestDTO.testProcessor) && Objects.equals(this.description, apiTestDTO.description) && Objects.equals(this.tags, apiTestDTO.tags) && Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.priority, apiTestDTO.priority) && Objects.equals(this.apiTestTypeDTO, apiTestDTO.apiTestTypeDTO);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(description, tags, name, id, priority, apiTestTypeDTO);
+    return Objects.hash(testProcessor, description, tags, name, id, priority, apiTestTypeDTO);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiTestDTO {\n");
+    sb.append(" testProcessor: ").append(toIndentedString(testProcessor)).append("\n");
     sb.append(" description: ").append(toIndentedString(description)).append("\n");
     sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
     sb.append(" name: ").append(toIndentedString(name)).append("\n");

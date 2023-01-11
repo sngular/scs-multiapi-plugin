@@ -27,19 +27,21 @@ paths:
               schema:
                 type: object
                 properties:
+                  description:
+                    type: string
                   code:
                     type: integer
                   message:
-                    $ref: "#/components/schemas/Message"
+                    $ref: "#/components/schemas/message"
 components:
   schemas:
-    Message:
+    message:
       type: object
       properties:
         description:
           type: string
         message:
-          $ref: "#/components/schemas/Message"
+          $ref: "#/components/schemas/message"
 tags:
 - name: games
   description: Test description for SCC MultiApi Plugin.
