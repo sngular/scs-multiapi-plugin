@@ -79,7 +79,7 @@ public class ${schema.className} {
 </#list>
 
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "Object">${field.dataType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>List<${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "Object">${field.dataType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
     </#list>
@@ -114,7 +114,7 @@ public class ${schema.className} {
   public static class ${schema.className}Builder {
 
 <#list schema.fieldObjectList as field>
-  <#if field.dataType?has_content && field.dataTypeSimple == "array">
+  <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     private List<${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
     private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String,${field.dataType}>();
@@ -127,7 +127,7 @@ public class ${schema.className} {
   </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-  <#if field.dataType?has_content && field.dataTypeSimple == "array">
+  <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     public ${schema.className}.${schema.className}Builder ${field.baseName}(List<${field.dataType}> ${field.baseName}) {
       if (!${field.baseName?uncap_first}.isEmpty()) {
         this.${field.baseName?uncap_first}.addAll(${field.baseName});
@@ -157,7 +157,7 @@ public class ${schema.className} {
       return this;
     }
   <#elseif field.dataType?has_content && field.dataTypeSimple == "Object">
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(${field.dataType?cap_first} ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataType?cap_first} ${field.baseName?uncap_first}) {
       this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
       return this;
     }
@@ -182,7 +182,7 @@ public class ${schema.className} {
   * @return ${field.baseName?uncap_first}
   */
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
-  <#if field.dataType?has_content && field.dataTypeSimple == "array">
+  <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
   public List<${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName?uncap_first};
   }

@@ -63,7 +63,7 @@ public class MapperUtil {
     } else {
       type = ObjectUtils.defaultIfNull(StringUtils.capitalize(schema.getType()), "Object");
     }
-    return type;
+    return StringUtils.capitalize(type);
   }
 
   public static String getTypeMap(final MapSchema mapSchema, final SpecFile specFile) {

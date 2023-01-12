@@ -74,9 +74,9 @@ public class ApiTestDTO {
   private UnionNumberEnum unionNumberEnum;
 
   public enum UnionNumberEnum {
-    BIG_DECIMAL_1.1(new BigDecimal("1.1")),
-    BIG_DECIMAL_3.3(new BigDecimal("3.3")),
-    BIG_DECIMAL_2.2(new BigDecimal("2.2"));
+    BIG_DECIMAL_1_DOT_1(new BigDecimal("1.1")),
+    BIG_DECIMAL_2_DOT_2(new BigDecimal("2.2")),
+    BIG_DECIMAL_4_DOT_4(new BigDecimal("4.4"));
 
     private BigDecimal value;
 

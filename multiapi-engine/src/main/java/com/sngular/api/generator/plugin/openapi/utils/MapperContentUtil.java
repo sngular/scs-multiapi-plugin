@@ -91,12 +91,12 @@ public class MapperContentUtil {
 
   private static void getTypeImports(final HashMap<String, List<String>> listHashMap, final SchemaFieldObject fieldObject) {
     if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
-      if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
+      if (fieldObject.getDataTypeSimple().equalsIgnoreCase(ARRAY)) {
         listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
         listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
-      } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
-                 || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+      } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(BIG_DECIMAL)
+                 || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
       }
     }
@@ -233,16 +233,17 @@ public class MapperContentUtil {
     final SchemaFieldObject field;
     if (Objects.nonNull(value.get$ref())) {
       final var typeName = cleanRefName(value);
-      if (antiLoopList.contains(typeName)) {
-        fieldObjectArrayList.add(SchemaFieldObject
-                                     .builder()
-                                     .baseName(key)
-                                     .dataType(MapperUtil.getPojoName(typeName, specFile))
-                                     .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
-                                     .build());
-      } else {
+      if (!antiLoopList.contains(typeName)
+          && ((totalSchemas.containsKey(typeName) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) || value.get$ref().contains(key))) {
         antiLoopList.add(typeName);
         fieldObjectArrayList.addAll(processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList));
+      } else {
+        fieldObjectArrayList.add(SchemaFieldObject
+                                   .builder()
+                                   .baseName(key)
+                                   .dataType(MapperUtil.getPojoName(typeName, specFile))
+                                   .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
+                                   .build());
       }
     } else if (isBasicType(value)) {
       field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
@@ -420,9 +421,9 @@ public class MapperContentUtil {
 
     for (var enumValue : enumValues) {
       String valueName = enumValue.toString();
-      valueName = valueName.replace("\\.", "_DOT_");
+      valueName = valueName.replace(".", "_DOT_");
 
-      switch (dataType) {
+      switch (StringUtils.uncapitalize(dataType)) {
         case INTEGER:
           enumValuesMap.put("INTEGER_" + valueName, enumValue.toString());
           break;
