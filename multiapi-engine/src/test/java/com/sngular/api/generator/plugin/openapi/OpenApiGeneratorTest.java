@@ -68,7 +68,13 @@ class OpenApiGeneratorTest {
       Arguments.of("testAnyOfInResponse",OpenApiGeneratorFixtures.TEST_ANY_OF_IN_RESPONSE,
                    OpenApiGeneratorFixtures.validateAnyOfInResponse()),
       Arguments.of("testOneOfInResponse",OpenApiGeneratorFixtures.TEST_ONE_OF_IN_RESPONSE,
-                   OpenApiGeneratorFixtures.validateOneOfInResponse())
+                   OpenApiGeneratorFixtures.validateOneOfInResponse()),
+      Arguments.of("testAdditionalProperties",OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES,
+                   OpenApiGeneratorFixtures.validateAdditionalProperties()),
+      Arguments.of("testAdditionalPropertiesWithSchema",OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_SCHEMA,
+                   OpenApiGeneratorFixtures.validateAdditionalPropertiesWithSchema()),
+      Arguments.of("testAdditionalPropertiesWithUnnamedObject",OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_UNNAMED_OBJECT,
+                   OpenApiGeneratorFixtures.validateAdditionalPropertiesWithUnnamedObject())
     );
   }
 
