@@ -304,6 +304,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_COCONUT_SCHEMA = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testCoconutSchema/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testCoconutSchema")
+          .modelPackage("com.sngular.multifileplugin.testCoconutSchema.model")
+          .clientPackage("com.sngular.multifileplugin.testCoconutSchema.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -797,6 +809,41 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
+  static Function<Path, Boolean> validateCoconutSchema() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCoconutSchema";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCoconutSchema/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCoconutSchema/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testCoconutSchema/assets/SchemaApi.java",
+        "openapigenerator/testCoconutSchema/assets/SchemaMasterApi.java",
+        "openapigenerator/testCoconutSchema/assets/SchemasApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testCoconutSchema/assets/model/ArrayFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/BooleanFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/DateFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/EnumFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/FieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/MapFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/NumberFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/ObjectFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/SchemaDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/SequenceFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/StringFieldDTO.java",
+        "openapigenerator/testCoconutSchema/assets/model/UnionFieldDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+        "openapigenerator/testCoconutSchema/assets/exception/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   private static Boolean commonTest(

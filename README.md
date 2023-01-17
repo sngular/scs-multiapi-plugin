@@ -1,7 +1,7 @@
 # SCS MultiApi Plugin
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/corunet/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=corunet/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
-[![Maven Central](https://img.shields.io/maven-central/v/net.coru/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.coru%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9a486e91e2b245d8abe2e523c95bdf9a)](https://www.codacy.com/gh/sngular/scs-multiapi-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sngular/scs-multiapi-plugin&amp;utm_campaign=Badge_Grade)
+[![Maven Central](https://img.shields.io/maven-central/v/com.sngular/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.sngular%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
 
 This is a plugin designed to help developers automatizing the creation of
 code classes from YML files based on AsyncApi and OpenAPI. It is presented in 2 flavours
@@ -59,7 +59,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.2.5</version>
+  <version>4.3.11</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -113,7 +113,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id 'java'
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.2.5'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.3.11'
 
   openapimodel {
 
@@ -150,7 +150,7 @@ which the plugin is designed.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.2.5</version>
+  <version>4.3.11</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -558,7 +558,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.2.5</version>
+  <version>4.3.11</version>
   <executions>
     <execution>
         <goals>

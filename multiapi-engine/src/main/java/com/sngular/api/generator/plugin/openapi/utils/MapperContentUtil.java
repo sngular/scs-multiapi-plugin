@@ -233,17 +233,18 @@ public class MapperContentUtil {
     final SchemaFieldObject field;
     if (Objects.nonNull(value.get$ref())) {
       final var typeName = cleanRefName(value);
-      if (!antiLoopList.contains(typeName)
-          && ((totalSchemas.containsKey(typeName) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) || value.get$ref().contains(key))) {
+      if (!antiLoopList.contains(typeName) &&
+          ((totalSchemas.containsKey(typeName) && Objects.nonNull(totalSchemas.get(typeName).getType()) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) ||
+           value.get$ref().contains(key))) {
         antiLoopList.add(typeName);
         fieldObjectArrayList.addAll(processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList));
       } else {
         fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(key)
-                                   .dataType(MapperUtil.getPojoName(typeName, specFile))
-                                   .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
-                                   .build());
+                                     .builder()
+                                     .baseName(key)
+                                     .dataType(MapperUtil.getPojoName(typeName, specFile))
+                                     .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
+                                     .build());
       }
     } else if (isBasicType(value)) {
       field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
