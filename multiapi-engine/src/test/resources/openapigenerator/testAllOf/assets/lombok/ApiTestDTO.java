@@ -22,6 +22,7 @@ public class ApiTestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ApiTestDTO(@NonNull List<String> testers, @NonNull String testName) {
     this.testers = testers;
     this.testName = testName;

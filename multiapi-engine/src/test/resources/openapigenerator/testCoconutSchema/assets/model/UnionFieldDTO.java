@@ -54,6 +54,7 @@ public class UnionFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private UnionFieldDTO(Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<FieldDTO> fieldDTO) {
     this.generatedFlag = generatedFlag;
     this.type = type;

@@ -227,6 +227,10 @@ public class ApiTypeArrayDTO {
     validatePartialCombinations();
   }
 
+  public static ApiTypeArrayDTO.ApiTypeArrayDTOBuilder builder() {
+    return new ApiTypeArrayDTO.ApiTypeArrayDTOBuilder();
+  }
+
   public static class ApiTypeArrayDTOBuilder {
 
     private Integer precision;
@@ -311,9 +315,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder requiredValue(Object requiredValue) {
-      if (requiredValue != null) {
-        this.requiredValues.add(requiredValue);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder requiredValues(Object requiredValues) {
+      if (requiredValues != null) {
+        this.requiredValues.add(requiredValues);
       }
       return this;
     }
@@ -349,9 +353,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder enumValue(Object enumValue) {
-      if (enumValue != null) {
-        this.enumValues.add(enumValue);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder enumValues(Object enumValues) {
+      if (enumValues != null) {
+        this.enumValues.add(enumValues);
       }
       return this;
     }
@@ -362,9 +366,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder propertie(Object propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder properties(Object properties) {
+      if (properties != null) {
+        this.properties.add(properties);
       }
       return this;
     }
@@ -375,9 +379,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }
@@ -411,9 +415,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder mapType(ApiTypeArrayDTO mapType) {
-      if (mapType != null) {
-        this.mapTypes.add(mapType);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder mapTypes(ApiTypeArrayDTO mapTypes) {
+      if (mapTypes != null) {
+        this.mapTypes.add(mapTypes);
       }
       return this;
     }
@@ -464,9 +468,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder value(ApiTypeArrayDTO value) {
-      if (value != null) {
-        this.values.add(value);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder values(ApiTypeArrayDTO values) {
+      if (values != null) {
+        this.values.add(values);
       }
       return this;
     }

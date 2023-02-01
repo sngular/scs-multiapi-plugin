@@ -14,6 +14,7 @@ public class EnumSchemaDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private EnumSchemaDTO(String enumSchema) {
     this.enumSchema = enumSchema;
 

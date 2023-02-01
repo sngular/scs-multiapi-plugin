@@ -21,6 +21,7 @@ public class TestAdditionalPropertyAdditionalPropertyDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private TestAdditionalPropertyAdditionalPropertyDTO(@NonNull String name, Map<String, Object> testAdditionalPropertyAdditionalPropertyDTO) {
     this.name = name;
     this.testAdditionalPropertyAdditionalPropertyDTO = testAdditionalPropertyAdditionalPropertyDTO;

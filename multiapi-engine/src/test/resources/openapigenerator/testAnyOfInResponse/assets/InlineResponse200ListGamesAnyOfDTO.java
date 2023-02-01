@@ -34,6 +34,7 @@ public class InlineResponse200ListGamesAnyOfDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private InlineResponse200ListGamesAnyOfDTO(@NonNull String gameName, @NonNull String name, @NonNull Integer id, @NonNull Integer rooms, List<String> players) {
     this.gameName = gameName;
     this.name = name;

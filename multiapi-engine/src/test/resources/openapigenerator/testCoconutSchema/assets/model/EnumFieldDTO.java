@@ -28,6 +28,7 @@ public class EnumFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private EnumFieldDTO(List<String> enumValues, String type, List<String> defaultValues, String name, String defaultValue) {
     this.enumValues = enumValues;
     this.type = type;

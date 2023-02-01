@@ -22,6 +22,7 @@ public class SecondTestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private SecondTestDTO(Map<String, EnumSchemaDTO> additionalProperties, @NonNull String id) {
     this.additionalProperties = additionalProperties;
     this.id = id;

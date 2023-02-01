@@ -25,6 +25,7 @@ public class GameInfoDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private GameInfoDTO(@NonNull String gameName, @NonNull Integer rooms, List<String> players) {
     this.gameName = gameName;
     this.rooms = rooms;

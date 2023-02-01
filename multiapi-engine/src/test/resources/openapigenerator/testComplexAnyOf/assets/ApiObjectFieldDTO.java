@@ -42,6 +42,10 @@ public class ApiObjectFieldDTO {
     validatePartialCombinations();
   }
 
+  public static ApiObjectFieldDTO.ApiObjectFieldDTOBuilder builder() {
+    return new ApiObjectFieldDTO.ApiObjectFieldDTOBuilder();
+  }
+
   public static class ApiObjectFieldDTOBuilder {
 
     private List<Object> requiredValues = new ArrayList<Object>();
@@ -56,9 +60,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValue(Object requiredValue) {
-      if (requiredValue != null) {
-        this.requiredValues.add(requiredValue);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(Object requiredValues) {
+      if (requiredValues != null) {
+        this.requiredValues.add(requiredValues);
       }
       return this;
     }
@@ -74,9 +78,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder propertie(ApiTypeArrayDTO propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder properties(ApiTypeArrayDTO properties) {
+      if (properties != null) {
+        this.properties.add(properties);
       }
       return this;
     }
@@ -87,9 +91,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }

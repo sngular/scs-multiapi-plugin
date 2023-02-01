@@ -24,6 +24,10 @@ public class ApiTestProcessorDTO {
 
   }
 
+  public static ApiTestProcessorDTO.ApiTestProcessorDTOBuilder builder() {
+    return new ApiTestProcessorDTO.ApiTestProcessorDTOBuilder();
+  }
+
   public static class ApiTestProcessorDTOBuilder {
 
     private String name;

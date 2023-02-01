@@ -20,6 +20,7 @@ public class SubtestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private SubtestDTO(@NonNull String name, @NonNull Integer code) {
     this.name = name;
     this.code = code;

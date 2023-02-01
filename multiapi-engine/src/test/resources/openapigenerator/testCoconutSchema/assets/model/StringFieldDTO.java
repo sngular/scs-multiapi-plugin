@@ -40,6 +40,7 @@ public class StringFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private StringFieldDTO(Integer maxLength, String type, List<String> properties, List<String> defaultValues, String name, String regex, Integer minLength, String format, Integer valueLength) {
     this.maxLength = maxLength;
     this.type = type;

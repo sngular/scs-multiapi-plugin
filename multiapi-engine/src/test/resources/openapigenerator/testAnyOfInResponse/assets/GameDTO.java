@@ -20,6 +20,7 @@ public class GameDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private GameDTO(@NonNull String name, @NonNull Integer id) {
     this.name = name;
     this.id = id;

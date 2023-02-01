@@ -37,6 +37,7 @@ public class ArrayFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ArrayFieldDTO(Boolean uniqueItems, String type, List<String> defaultValues, String name, Integer arraySize, String regex, Integer minItems, List<FieldDTO> fieldDTO) {
     this.uniqueItems = uniqueItems;
     this.type = type;

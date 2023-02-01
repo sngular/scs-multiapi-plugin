@@ -97,6 +97,7 @@ public class ApiTestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ApiTestDTO(UnionEnum unionEnum, @NonNull String name, @NonNull Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {
     this.unionEnum = unionEnum;
     this.name = name;

@@ -27,6 +27,10 @@ public class ErrorDTO {
     validateRequiredAttributes();
   }
 
+  public static ErrorDTO.ErrorDTOBuilder builder() {
+    return new ErrorDTO.ErrorDTOBuilder();
+  }
+
   public static class ErrorDTOBuilder {
 
     private Integer code;

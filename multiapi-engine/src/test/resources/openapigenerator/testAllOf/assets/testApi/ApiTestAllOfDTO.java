@@ -26,6 +26,10 @@ public class ApiTestAllOfDTO {
 
   }
 
+  public static ApiTestAllOfDTO.ApiTestAllOfDTOBuilder builder() {
+    return new ApiTestAllOfDTO.ApiTestAllOfDTOBuilder();
+  }
+
   public static class ApiTestAllOfDTOBuilder {
 
     private List<String> testers = new ArrayList<String>();
@@ -37,9 +41,9 @@ public class ApiTestAllOfDTO {
       return this;
     }
 
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder tester(String tester) {
-      if (tester != null) {
-        this.testers.add(tester);
+    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder addTesters(String testers) {
+      if (testers != null) {
+        this.testers.add(testers);
       }
       return this;
     }

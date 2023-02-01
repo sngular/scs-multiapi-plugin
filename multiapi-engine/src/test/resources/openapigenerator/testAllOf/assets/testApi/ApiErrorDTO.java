@@ -27,6 +27,10 @@ public class ApiErrorDTO {
     validateRequiredAttributes();
   }
 
+  public static ApiErrorDTO.ApiErrorDTOBuilder builder() {
+    return new ApiErrorDTO.ApiErrorDTOBuilder();
+  }
+
   public static class ApiErrorDTOBuilder {
 
     private Integer code;

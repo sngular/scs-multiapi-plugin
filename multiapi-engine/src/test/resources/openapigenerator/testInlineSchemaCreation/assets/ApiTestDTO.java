@@ -46,6 +46,10 @@ public class ApiTestDTO {
 
   }
 
+  public static ApiTestDTO.ApiTestDTOBuilder builder() {
+    return new ApiTestDTO.ApiTestDTOBuilder();
+  }
+
   public static class ApiTestDTOBuilder {
 
     private ApiTestProcessorDTO testProcessor;
@@ -71,9 +75,9 @@ public class ApiTestDTO {
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder tag(String tag) {
-      if (tag != null) {
-        this.tags.add(tag);
+    public ApiTestDTO.ApiTestDTOBuilder tags(String tags) {
+      if (tags != null) {
+        this.tags.add(tags);
       }
       return this;
     }
@@ -92,16 +96,16 @@ public class ApiTestDTO {
       this.priority = priority;
       return this;
     }
-    public ApiTestDTO.ApiTestDTOBuilder ApiTestTypeDTO(List<ApiTestTypeDTO> ApiTestTypeDTO) {
+    public ApiTestDTO.ApiTestDTOBuilder apiTestTypeDTO(List<ApiTestTypeDTO> apiTestTypeDTO) {
       if (!apiTestTypeDTO.isEmpty()) {
-        this.apiTestTypeDTO.addAll(ApiTestTypeDTO);
+        this.apiTestTypeDTO.addAll(apiTestTypeDTO);
       }
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder ApiTestTypeDT(ApiTestTypeDTO ApiTestTypeDT) {
-      if (ApiTestTypeDT != null) {
-        this.apiTestTypeDTO.add(ApiTestTypeDT);
+    public ApiTestDTO.ApiTestDTOBuilder apiTestTypeDTO(ApiTestTypeDTO apiTestTypeDTO) {
+      if (apiTestTypeDTO != null) {
+        this.apiTestTypeDTO.add(apiTestTypeDTO);
       }
       return this;
     }

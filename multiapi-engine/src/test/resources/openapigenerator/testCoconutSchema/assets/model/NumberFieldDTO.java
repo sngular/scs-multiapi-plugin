@@ -71,6 +71,7 @@ public class NumberFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private NumberFieldDTO(Integer precision, Integer maximum, String type, List<Object> defaultValues, String name, Integer multipleOf, Integer scale, Integer minimum, Boolean flagExclusiveMinimum, Boolean flagExclusiveMaximum, NumberEnum numberEnum, Long defaultValue) {
     this.precision = precision;
     this.maximum = maximum;

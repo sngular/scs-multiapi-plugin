@@ -14,6 +14,7 @@ public class FieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private FieldDTO(Object field) {
     this.field = field;
 

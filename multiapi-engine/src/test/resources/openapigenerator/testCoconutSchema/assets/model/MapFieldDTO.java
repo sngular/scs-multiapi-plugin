@@ -31,6 +31,7 @@ public class MapFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private MapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<FieldDTO> fieldDTO) {
     this.keyType = keyType;
     this.type = type;

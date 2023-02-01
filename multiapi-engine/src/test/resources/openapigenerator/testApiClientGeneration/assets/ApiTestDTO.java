@@ -20,6 +20,7 @@ public class ApiTestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ApiTestDTO(@NonNull String name, @NonNull Integer id) {
     this.name = name;
     this.id = id;

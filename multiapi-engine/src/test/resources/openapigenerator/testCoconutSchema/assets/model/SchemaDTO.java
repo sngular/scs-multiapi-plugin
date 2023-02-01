@@ -39,6 +39,7 @@ public class SchemaDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private SchemaDTO(@NonNull String type, Map<String, FieldDTO> additionalProperties, @NonNull String name, @NonNull String id, @NonNull String subjectName, List<String> requiredFields) {
     this.type = type;
     this.additionalProperties = additionalProperties;

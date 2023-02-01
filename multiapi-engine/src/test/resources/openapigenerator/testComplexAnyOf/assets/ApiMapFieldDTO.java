@@ -46,6 +46,10 @@ public class ApiMapFieldDTO {
     validatePartialCombinations();
   }
 
+  public static ApiMapFieldDTO.ApiMapFieldDTOBuilder builder() {
+    return new ApiMapFieldDTO.ApiMapFieldDTOBuilder();
+  }
+
   public static class ApiMapFieldDTOBuilder {
 
     private String keyType;
@@ -71,9 +75,9 @@ public class ApiMapFieldDTO {
       return this;
     }
 
-    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }
@@ -94,9 +98,9 @@ public class ApiMapFieldDTO {
       return this;
     }
 
-    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapType(ApiTypeArrayDTO mapType) {
-      if (mapType != null) {
-        this.mapTypes.add(mapType);
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapTypes(ApiTypeArrayDTO mapTypes) {
+      if (mapTypes != null) {
+        this.mapTypes.add(mapTypes);
       }
       return this;
     }

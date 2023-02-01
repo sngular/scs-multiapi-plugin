@@ -20,6 +20,7 @@ public class ApiErrorDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ApiErrorDTO(@NonNull Integer code, @NonNull String message) {
     this.code = code;
     this.message = message;

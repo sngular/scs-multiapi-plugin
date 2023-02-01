@@ -17,6 +17,7 @@ public class ArraySchemaDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ArraySchemaDTO(String name, Integer index) {
     this.name = name;
     this.index = index;

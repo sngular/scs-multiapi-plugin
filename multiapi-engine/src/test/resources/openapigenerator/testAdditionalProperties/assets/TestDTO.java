@@ -21,6 +21,7 @@ public class TestDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private TestDTO(Map<String, Object> additionalProperties, @NonNull String id) {
     this.additionalProperties = additionalProperties;
     this.id = id;

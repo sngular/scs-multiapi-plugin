@@ -23,6 +23,7 @@ public class DateFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private DateFieldDTO(String type, Object defaultValues, String name, String format) {
     this.type = type;
     this.defaultValues = defaultValues;

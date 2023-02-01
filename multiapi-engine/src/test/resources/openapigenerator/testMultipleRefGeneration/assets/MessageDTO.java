@@ -24,6 +24,10 @@ public class MessageDTO {
 
   }
 
+  public static MessageDTO.MessageDTOBuilder builder() {
+    return new MessageDTO.MessageDTOBuilder();
+  }
+
   public static class MessageDTOBuilder {
 
     private String description;

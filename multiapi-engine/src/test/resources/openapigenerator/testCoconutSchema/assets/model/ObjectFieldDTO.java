@@ -28,6 +28,7 @@ public class ObjectFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private ObjectFieldDTO(List<String> requiredValues, String type, List<Object> defaultValues, String name, List<FieldDTO> fieldDTO) {
     this.requiredValues = requiredValues;
     this.type = type;

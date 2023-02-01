@@ -20,6 +20,7 @@ public class BooleanFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private BooleanFieldDTO(String type, String name, Boolean defaultValue) {
     this.type = type;
     this.name = name;

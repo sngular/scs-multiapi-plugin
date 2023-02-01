@@ -63,6 +63,7 @@ public class SequenceFieldDTO {
 
 
   @Builder
+  @JsonPOJOBuilder
   private SequenceFieldDTO(Integer elements, String type, List<Object> defaultValues, SeqEnum seqEnum, String name, String initialValue, List<FieldDTO> fieldDTO, Integer increment) {
     this.elements = elements;
     this.type = type;
