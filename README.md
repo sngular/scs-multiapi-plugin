@@ -12,23 +12,23 @@ Maven and Gradle
 - [SCS MultiApi Plugin](#scs-multiapi-plugin)
 - [Index](#index)
 - [Main Configuration](#main-configuration)
-  - [How to configure the POM file](#how-to-configure-the-pom-file)
-  - [How to configure the build.gradle file](#how-to-configure-the-build-file)
+    - [How to configure the POM file](#how-to-configure-the-pom-file)
+    - [How to configure the build.gradle file](#how-to-configure-the-build-file)
 - [AsyncApi Generator](#asyncapi-generator)
-  - [Configuration](#configuration)
-    - [Generated Sources Folder](#generated-sources-folder)
-  - [How apiPackage is setted?](#how-apipackage-is-setted)
-  - [How modelPackage is setted?](#how-modelpackage-is-setted)
-  - [Class Generation](#class-generation)
-    - [Consumer and Supplier classes](#consumer-and-supplier-classes)
-      - [Method interfaces](#method-interfaces)
-      - [Mapper](#mapper)
-        - [Implementation](#implementation)
-    - [Stream Bridge class](#stream-bridge-class)
+    - [Configuration](#configuration)
+        - [Generated Sources Folder](#generated-sources-folder)
+    - [How apiPackage is setted?](#how-apipackage-is-setted)
+    - [How modelPackage is setted?](#how-modelpackage-is-setted)
+    - [Class Generation](#class-generation)
+        - [Consumer and Supplier classes](#consumer-and-supplier-classes)
+            - [Method interfaces](#method-interfaces)
+            - [Mapper](#mapper)
+                - [Implementation](#implementation)
+        - [Stream Bridge class](#stream-bridge-class)
 - [OpenApi Generator](#openapi-generator)
-  - [Getting Started](#getting-started)
-  - [Initial Considerations](#initial-considerations)
-  - [Usage](#usage)
+    - [Getting Started](#getting-started)
+    - [Initial Considerations](#initial-considerations)
+    - [Usage](#usage)
 
 ## Main Configuration
 
@@ -56,10 +56,11 @@ As commented above, they both could be used at the same time, setting a double
 *execution* for the plugin in the `pom.xml` file.
 
 ```xml
+
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.11</version>
+  <version>4.3.12</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -113,7 +114,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id 'java'
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.3.11'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.3.12'
 
   openapimodel {
 
@@ -147,10 +148,11 @@ The plugin defined `phase` and `goal` parameters are expected to be
 which the plugin is designed.
 
 ```xml
+
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.11</version>
+  <version>4.3.12</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -193,10 +195,10 @@ In this case we have an extension model to fulfill. Similar to the Maven one.
 openapimodel {
   specFile {
     {
-        filePath = './src/main/resources/api/rest/api-rest.yml'
-        apiPackage = 'com.sngular.world_domination.api'
-        modelPackage = 'com.sngular.world_domination.model'
-        useTagsGroup = true
+      filePath = './src/main/resources/api/rest/api-rest.yml'
+      apiPackage = 'com.sngular.world_domination.api'
+      modelPackage = 'com.sngular.world_domination.model'
+      useTagsGroup = true
     }
     overWriteModel = true
   }
@@ -210,12 +212,12 @@ YML files as you want.
 **specFiles** could be configured in two different ways:
 
 1. The first one is to configure only the YML file. This is made using the
-  **filePath** parameter, that expects to receive the path to the file. Using
-  the plugin in this way, you can't configure the model package or the api
-  package in the pom file, neither other options, so they will be configured as
-  its explained in [apiPackage](#how-apipackage-is-setted) and
-  [modelPackage](#how-modelpackage-is-setted) sections.  
-  This way it's limited to the usage of Consumer and Supplier methods.
+   **filePath** parameter, that expects to receive the path to the file. Using
+   the plugin in this way, you can't configure the model package or the api
+   package in the pom file, neither other options, so they will be configured as
+   its explained in [apiPackage](#how-apipackage-is-setted) and
+   [modelPackage](#how-modelpackage-is-setted) sections.  
+   This way it's limited to the usage of Consumer and Supplier methods.
 
     ```xml
     <specFile>
@@ -224,53 +226,54 @@ YML files as you want.
     ```
 
 2. The second one is to configure the YML file with the consumers, supplier
-  producers and streamBrige producers that you want to generate.
+   producers and streamBrige producers that you want to generate.
 
   ```xml
-  <specFile>
-      <filePath>PATH_TO_YML</filePath>
-      <consumer>
-          <ids>publishOperation</ids>
-          <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
-          <modelNameSuffix>DTO</modelNameSuffix>
-          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
-          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
-      </consumer>
-      <supplier>
-          <ids>subscribeOperation</ids>
-          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
-      </supplier>
-      <streamBridge>
-          <ids>streamBridgeOperation</ids>
-          <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
-          <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
-      </streamBridge>
-  </specFile>
+
+<specFile>
+  <filePath>PATH_TO_YML</filePath>
+  <consumer>
+    <ids>publishOperation</ids>
+    <classNamePostfix>MY_CONSUMER_CLASS</classNamePostfix>
+    <modelNameSuffix>DTO</modelNameSuffix>
+    <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.consumer</apiPackage>
+    <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
+  </consumer>
+  <supplier>
+    <ids>subscribeOperation</ids>
+    <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+    <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
+  </supplier>
+  <streamBridge>
+    <ids>streamBridgeOperation</ids>
+    <apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>
+    <modelPackage>com.sngular.apigenerator.asyncapi.business_model.model.event</modelPackage>
+  </streamBridge>
+</specFile>
   ```
 
   ```groovy
   specFile {
-    {
-      filePath = './src/main/resources/api/event/event-api.yml'
-      consumer {
-          ids = 'publishOperation'
-          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.consumer'
-          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
-      }
-      supplier {
-          ids = 'subscribeOperation'
-          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
-          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
-      }
-      streamBridge {
-          ids = 'streamBridgeOperation'
-          apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
-          modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
-      }
+  {
+    filePath = './src/main/resources/api/event/event-api.yml'
+    consumer {
+      ids = 'publishOperation'
+      apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.consumer'
+      modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
     }
-    overWriteModel = true
+    supplier {
+      ids = 'subscribeOperation'
+      apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
+      modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
+    }
+    streamBridge {
+      ids = 'streamBridgeOperation'
+      apiPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event.producer'
+      modelPackage = 'com.sngular.apigenerator.asyncapi.business_model.model.event'
+    }
   }
+  overWriteModel = true
+}
   ```
 
 As you can see in the example above, there are three blocks of parameters that
@@ -278,37 +281,37 @@ can be configured in the plugin.
 
 - **filePath**: This parameter works in the same way as in the first option.
 - **consumer**, **supplier** and **streamBridge**: They are both configured in
-the same way and can receive the same parameters. These parameters are:
-  - **ids**: With this parameter you can set the operationId that you want to
-  be generated as subscriber or publisher. If this parameter is not defined for
-  the `consumer` section, all the subscribe operations defined in the YML file,
-  will be generated. If only one of `supplier` and `streamBridge` sections are
-  defined, and this parameter is not defined inside it, all the publish
-  operations defined in the YML file will be generated. If both `supplier` and
-  `streamBridge` sections are defined, it`s needed to define which operations
-  belong to each category.
-  - **classNamePostfix**: This parameter receives the name of the class that
-  it's going to be generated containing the Beans. This parameter is optional,
-  and by default the classes will be called `Producer`, `StreamBridgeProducer`
-  and `Subscriber`.
-  - **modelNameSuffix**: With this parameter you can set the suffix that is
-  going to be used in the entities of the generated classes. For example if
-  you set this to `DTO`, and there is a class named `EntityClass`, it will
-  result as `EntityClassDTO`. This parameter is optional.
-  - **apiPackage**: This parameter receive a package name, where the
-  generated classes will be generated. This parameter is optional.
-  Check [how the apiPackage is setted](#how-apipackage-is-setted) for
-  more information about how this parameter works, and the values it
-  could have.
-  - **modelPackage**: This parameter receives a package name, where the entities
-  used for the generated classes are defined. As it's explained in the
-  [Mapper Section](#mapper), those entities are usually auto-generated, so the
-  plugin expects the modelPackage to be the package where them are included.
-    **Note that the plugin doesn't create the entities neither checks their
-  existence**, it takes their names from the YML file and assume that they are
-  created by the user. As the previous parameter, this is also optional.
-  Check [how the modelPackage is setted](#how-modelpackage-is-setted) for more
-  information about how his parameter works, and the values it could have.
+  the same way and can receive the same parameters. These parameters are:
+    - **ids**: With this parameter you can set the operationId that you want to
+      be generated as subscriber or publisher. If this parameter is not defined for
+      the `consumer` section, all the subscribe operations defined in the YML file,
+      will be generated. If only one of `supplier` and `streamBridge` sections are
+      defined, and this parameter is not defined inside it, all the publish
+      operations defined in the YML file will be generated. If both `supplier` and
+      `streamBridge` sections are defined, it`s needed to define which operations
+      belong to each category.
+    - **classNamePostfix**: This parameter receives the name of the class that
+      it's going to be generated containing the Beans. This parameter is optional,
+      and by default the classes will be called `Producer`, `StreamBridgeProducer`
+      and `Subscriber`.
+    - **modelNameSuffix**: With this parameter you can set the suffix that is
+      going to be used in the entities of the generated classes. For example if
+      you set this to `DTO`, and there is a class named `EntityClass`, it will
+      result as `EntityClassDTO`. This parameter is optional.
+    - **apiPackage**: This parameter receive a package name, where the
+      generated classes will be generated. This parameter is optional.
+      Check [how the apiPackage is setted](#how-apipackage-is-setted) for
+      more information about how this parameter works, and the values it
+      could have.
+    - **modelPackage**: This parameter receives a package name, where the entities
+      used for the generated classes are defined. As it's explained in the
+      [Mapper Section](#mapper), those entities are usually auto-generated, so the
+      plugin expects the modelPackage to be the package where them are included.
+      **Note that the plugin doesn't create the entities neither checks their
+      existence**, it takes their names from the YML file and assume that they are
+      created by the user. As the previous parameter, this is also optional.
+      Check [how the modelPackage is setted](#how-modelpackage-is-setted) for more
+      information about how his parameter works, and the values it could have.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -331,47 +334,47 @@ the pom.xml file, as in the example above, files will remain in
 The api package could be set in three different ways.
 
 - **User definition**: The user provides a package name using the parameter in
-the pom.xml file.
+  the pom.xml file.
 - **GroupID from YML**: If the user doesn't provide a package name, the plugin
-will try to use the `groupId` attribute from the YML file that is in use.
+  will try to use the `groupId` attribute from the YML file that is in use.
 - **Default package name**: If neither of the previous options were given, the
-plugin will use a default package name, that is stablished as
-`com.sngular.apigenerator.asyncapi`.
+  plugin will use a default package name, that is stablished as
+  `com.sngular.apigenerator.asyncapi`.
 
 ### How modelPackage is setted?
 
 The model package could be set in four different ways.
 
 - **User definition**: The user provides a package name using the parameter in
-the pom.xml file.
+  the pom.xml file.
 - **Namespace from YML**: If the user doesn't provide a package name, the
-plugin will check if the entity name definition in the YML file, includes a
-complete package name.
+  plugin will check if the entity name definition in the YML file, includes a
+  complete package name.
 
 ```yaml
 order/createCommand:
-    subscribe:
-      operationId: "subscribeOperation"
-      message:
-        $ref: '#/components/messages/com.sngular.apigenerator.asyncapi.model.CreateOrder'
+  subscribe:
+    operationId: "subscribeOperation"
+    message:
+      $ref: '#/components/messages/com.sngular.apigenerator.asyncapi.model.CreateOrder'
 ```
 
 - **Namespace from Avro**: If the user doesn't provide a package name, and the
-entity is defined by an Avro Schema, the plugin will check for a `namespace`
-attribute defined in the Avro file, and if there is, it will use it. The plugin
-expects to receive a relative path from the `yml` file folder.
+  entity is defined by an Avro Schema, the plugin will check for a `namespace`
+  attribute defined in the Avro file, and if there is, it will use it. The plugin
+  expects to receive a relative path from the `yml` file folder.
 
 ```yaml
 order/created:
-    publish:
-      operationId: "publishOperation"
-      message:
-        $ref: 'path_to_Avro_file'
+  publish:
+    operationId: "publishOperation"
+    message:
+      $ref: 'path_to_Avro_file'
 ```
 
 - **Default package name**: If neither of the previous options were given, the
-plugin will use a default package name, that is stablished as
-`com.sngular.apigenerator.asyncapi.model`.
+  plugin will use a default package name, that is stablished as
+  `com.sngular.apigenerator.asyncapi.model`.
 
 ### Class Generation
 
@@ -385,18 +388,20 @@ interfaces of the next section. Their names could be modified using the
 **Subscriber**.
 
 ```java
+
 @Configuration
 public class StreamTopicListenerConsumer {
 
-    private final ISubscribeOperation subscribeOperation;
+  private final ISubscribeOperation subscribeOperation;
 
-    protected StreamTopicListenerConsumer(final ISubscribeOperation subscribeOperation){
-      this.subscribeOperation = subscribeOperation;
-    }
+  protected StreamTopicListenerConsumer(final ISubscribeOperation subscribeOperation) {
+    this.subscribeOperation = subscribeOperation;
+  }
 
-    @Bean
-    public Consumer<CreateOrder> consumerSubscribeOperation(){ 
-      return value -> subscribeOperation.subscribeOperation(value); }
+  @Bean
+  public Consumer<CreateOrder> consumerSubscribeOperation() {
+    return value -> subscribeOperation.subscribeOperation(value);
+  }
 }
 ```
 
@@ -441,8 +446,10 @@ Down here you have an example of the mapper utility class as well as a simple
 class implementing the interface defined above.
 
 ```java
+
 @Mapper
 public interface Mapper {
+
   Order map(com.sngular.apigenerator.asyncapi.business_model.model.event.Order value);
 }
 ```
@@ -450,8 +457,10 @@ public interface Mapper {
 ###### Implementation
 
 ```java
+
 @Component
 public class subscribeOperation implements ISubscribeOperation {
+
   private final Mapper mapper;
 
   public subscribeOperation(final Mapper mapper) {this.mapper = mapper;}
@@ -472,14 +481,15 @@ specified on the [Usage section](#usage), being by default
 **StreamBridgeProducer**.
 
 ```java
+
 @Configuration
 public class StreamBridgeProducer {
 
-    private StreamBridge streamBridge;
+  private StreamBridge streamBridge;
 
-    public void streamBridgeOperation(CreateOrder createOrder){
-        streamBridge.send("publishOperation", createOrder);
-    }
+  public void streamBridgeOperation(CreateOrder createOrder) {
+    streamBridge.send("publishOperation", createOrder);
+  }
 }
 ```
 
@@ -548,32 +558,33 @@ Depending on the approach with which you are going to use the plugin, other
 dependencies will be necessary, for example:
 
 - spring-boot-starter-webflux, in case you want to implement an API with
-responses in Mono/Flux Reactor types or use them for external calls through
-Spring WebClient.
+  responses in Mono/Flux Reactor types or use them for external calls through
+  Spring WebClient.
 
 After you have these installed, you need to add this plugin in your pom.xml or build.gradle
 file. Here is an example of a basic configuration:
 
 ```xml
+
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.11</version>
+  <version>4.3.12</version>
   <executions>
     <execution>
-        <goals>
-            <goal>openapi-generation</goal>
-        </goals>
-        <configuration>
-            <specFiles>
-                <specFile>
-                    <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
-                    <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
-                    <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
-                    <modelNameSuffix>DTO</modelNameSuffix>
-                </specFile>
-            </specFiles>
-        </configuration>
+      <goals>
+        <goal>openapi-generation</goal>
+      </goals>
+      <configuration>
+        <specFiles>
+          <specFile>
+            <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
+            <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
+            <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
+            <modelNameSuffix>DTO</modelNameSuffix>
+          </specFile>
+        </specFiles>
+      </configuration>
     </execution>
   </executions>
 </plugin>
@@ -581,15 +592,15 @@ file. Here is an example of a basic configuration:
 
 ```groovy
 openapimodel {
-    specFile {
-      {
-        filePath = './src/main/resources/api/api.yml'
-        apiPackage = 'com.sngular.apigenerator.openapi.api'
-        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
-        useTagsGroup = true
-      }
-    overWriteModel = true
+  specFile {
+    {
+      filePath = './src/main/resources/api/api.yml'
+      apiPackage = 'com.sngular.apigenerator.openapi.api'
+      modelPackage = 'com.sngular.apigenerator.openapi.api.model'
+      useTagsGroup = true
     }
+    overWriteModel = true
+  }
 }
 ```
 
@@ -607,7 +618,7 @@ We establish here some of these options that are not yet supported and that
 will be added to this plugin as time goes by and the existing need among users.
 
 - Using Multiple Authentication Types within the security options both at an
-operational and general level.
+  operational and general level.
 
 - The use of OAuth 2 and OpenID Connect Discovery Authentication Types.
 
@@ -620,15 +631,16 @@ receive calls, depending on the options of configuration selected in said
 specFiles.
 
 ```xml
+
 <configuration>
-    <specFiles>
-        <specFile>
-            <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
-            <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
-            <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
-            <modelNameSuffix>DTO</modelNameSuffix>
-        </specFile>
-    </specFiles>
+  <specFiles>
+    <specFile>
+      <filePath>${project.basedir}/src/main/resources/api/api.yml</filePath>
+      <apiPackage>com.sngular.apigenerator.openapi.api</apiPackage>
+      <modelPackage>com.sngular.apigenerator.openapi.api.model</modelPackage>
+      <modelNameSuffix>DTO</modelNameSuffix>
+    </specFile>
+  </specFiles>
 </configuration>
 ```
 

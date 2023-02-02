@@ -110,6 +110,28 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>RaulBejaranoSngular</id>
+      <name>Raúl Bejarano</name>
+      <email>raul.bejarano@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>sngular.com</organizationUrl>
+      <roles>
+        <role>Senior Software Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>AdrianLagarteraSngular</id>
+      <name>Adrian Lagartera</name>
+      <email>adrian.lagartera@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Senior Backend Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>

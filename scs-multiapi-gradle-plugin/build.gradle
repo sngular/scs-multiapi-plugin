@@ -38,8 +38,8 @@ dependencies {
 jar {
   manifest {
     attributes 'Implementation-Title': 'Gradle Quickstart',
-               'Implementation-Version': (version ? version : 'unknown'),
-               'Main-Class': 'com.sngular.api.generator.plugin.ScsMultiApi'
+        'Implementation-Version': (version ? version : 'unknown'),
+        'Main-Class': 'com.sngular.api.generator.plugin.ScsMultiApi'
   }
 }
 
@@ -89,8 +89,8 @@ gradlePlugin {
 }
 
 checkstyle {
-    toolVersion "10.3.1"
-    configFile = file("../checkstyle.xml")
+  toolVersion "10.3.1"
+  configFile = file("../checkstyle.xml")
 }
 
 testing {
