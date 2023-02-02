@@ -44,7 +44,9 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestFileGenerationStreamBridge", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_STREAM_BRIDGE,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationStreamBridge()),
         Arguments.of("TestFileGenerationWithoutIds", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITHOUT_IDS,
-                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds())
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds()),
+        Arguments.of("TestFileGenerationArrayString", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_ARRAY_STRING,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString())
     );
   }
 
