@@ -44,7 +44,7 @@ public class ApiTestDTO {
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder addTesters(String testers) {
+    public ApiTestDTO.ApiTestDTOBuilder testers(String testers) {
       if (testers != null) {
         this.testers.add(testers);
       }

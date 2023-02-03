@@ -44,7 +44,7 @@ public class TestInfoDTO {
       return this;
     }
 
-    public TestInfoDTO.TestInfoDTOBuilder addTesters(String testers) {
+    public TestInfoDTO.TestInfoDTOBuilder testers(String testers) {
       if (testers != null) {
         this.testers.add(tester);
       }

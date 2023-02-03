@@ -9,6 +9,7 @@ import com.sngular.multifileplugin.testadditionalpropertiesWithSchema.model.Subt
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class TestDTO {
@@ -22,7 +23,7 @@ public class TestDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private TestDTO(Map<String, SubtestDTO> additionalProperties, @NonNull String id) {
     this.additionalProperties = additionalProperties;
     this.id = id;

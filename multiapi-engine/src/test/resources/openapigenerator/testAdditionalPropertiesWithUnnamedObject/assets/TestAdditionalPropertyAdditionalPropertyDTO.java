@@ -8,23 +8,24 @@ import java.util.HashMap;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class TestAdditionalPropertyAdditionalPropertyDTO {
+
+  @JsonProperty(value ="additionalProperties")
+  private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
   @JsonProperty(value ="name")
   @NonNull
   private String name;
 
-  @JsonProperty(value ="testAdditionalPropertyAdditionalPropertyDTO")
-  private Map<String, Object> testAdditionalPropertyAdditionalPropertyDTO = new HashMap<String, Object>();
-
 
   @Builder
-  @JsonPOJOBuilder
-  private TestAdditionalPropertyAdditionalPropertyDTO(@NonNull String name, Map<String, Object> testAdditionalPropertyAdditionalPropertyDTO) {
+  @Jacksonized
+  private TestAdditionalPropertyAdditionalPropertyDTO(Map<String, Object> additionalProperties, @NonNull String name) {
+    this.additionalProperties = additionalProperties;
     this.name = name;
-    this.testAdditionalPropertyAdditionalPropertyDTO = testAdditionalPropertyAdditionalPropertyDTO;
 
   }
 

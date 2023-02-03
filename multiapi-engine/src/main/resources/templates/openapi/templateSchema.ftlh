@@ -139,7 +139,7 @@ public class ${schema.className} {
       return this;
     }
 
-    public ${schema.className}.${schema.className}Builder ${field.baseName?cap_first}(${field.dataType} ${field.baseName?uncap_first}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataType} ${field.baseName?uncap_first}) {
       if (${field.baseName?uncap_first} != null) {
         this.${field.baseName?uncap_first}.add(${field.baseName?uncap_first});
       }

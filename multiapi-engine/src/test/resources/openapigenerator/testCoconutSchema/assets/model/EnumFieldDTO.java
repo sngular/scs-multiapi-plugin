@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class EnumFieldDTO {
@@ -28,7 +29,7 @@ public class EnumFieldDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private EnumFieldDTO(List<String> enumValues, String type, List<String> defaultValues, String name, String defaultValue) {
     this.enumValues = enumValues;
     this.type = type;

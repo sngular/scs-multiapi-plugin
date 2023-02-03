@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
 
 @Data
@@ -34,7 +35,7 @@ public class InlineResponse200ListGamesOneOfDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private InlineResponse200ListGamesOneOfDTO(@NonNull String gameName, @NonNull String name, @NonNull Integer id, @NonNull Integer rooms, List<String> players) {
     this.gameName = gameName;
     this.name = name;

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class GameInfoDTO {
@@ -25,7 +26,7 @@ public class GameInfoDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private GameInfoDTO(@NonNull String gameName, @NonNull Integer rooms, List<String> players) {
     this.gameName = gameName;
     this.rooms = rooms;

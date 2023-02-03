@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class MapFieldDTO {
@@ -26,19 +27,19 @@ public class MapFieldDTO {
   @JsonProperty(value ="mapSize")
   private Integer mapSize;
 
-  @JsonProperty(value ="fieldDTO")
-  private List<FieldDTO> fieldDTO = new ArrayList<FieldDTO>();
+  @JsonProperty(value ="mapTypes")
+  private List<FieldDTO> mapTypes = new ArrayList<FieldDTO>();
 
 
   @Builder
-  @JsonPOJOBuilder
-  private MapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<FieldDTO> fieldDTO) {
+  @Jacksonized
+  private MapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<FieldDTO> mapTypes) {
     this.keyType = keyType;
     this.type = type;
     this.defaultValues = defaultValues;
     this.name = name;
     this.mapSize = mapSize;
-    this.fieldDTO = fieldDTO;
+    this.mapTypes = mapTypes;
 
   }
 

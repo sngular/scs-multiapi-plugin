@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ArrayFieldDTO {
@@ -32,13 +33,13 @@ public class ArrayFieldDTO {
   @JsonProperty(value ="minItems")
   private Integer minItems;
 
-  @JsonProperty(value ="fieldDTO")
-  private List<FieldDTO> fieldDTO = new ArrayList<FieldDTO>();
+  @JsonProperty(value ="values")
+  private List<FieldDTO> values = new ArrayList<FieldDTO>();
 
 
   @Builder
-  @JsonPOJOBuilder
-  private ArrayFieldDTO(Boolean uniqueItems, String type, List<String> defaultValues, String name, Integer arraySize, String regex, Integer minItems, List<FieldDTO> fieldDTO) {
+  @Jacksonized
+  private ArrayFieldDTO(Boolean uniqueItems, String type, List<String> defaultValues, String name, Integer arraySize, String regex, Integer minItems, List<FieldDTO> values) {
     this.uniqueItems = uniqueItems;
     this.type = type;
     this.defaultValues = defaultValues;
@@ -46,7 +47,7 @@ public class ArrayFieldDTO {
     this.arraySize = arraySize;
     this.regex = regex;
     this.minItems = minItems;
-    this.fieldDTO = fieldDTO;
+    this.values = values;
 
   }
 

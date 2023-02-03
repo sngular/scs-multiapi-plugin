@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ApiTestInfoDTO {
@@ -21,7 +22,7 @@ public class ApiTestInfoDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private ApiTestInfoDTO(List<String> testers, @NonNull String testName) {
     this.testers = testers;
     this.testName = testName;

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ApiErrorDTO {
@@ -20,7 +21,7 @@ public class ApiErrorDTO {
 
 
   @Builder
-  @JsonPOJOBuilder
+  @Jacksonized
   private ApiErrorDTO(@NonNull Integer code, @NonNull String message) {
     this.code = code;
     this.message = message;
