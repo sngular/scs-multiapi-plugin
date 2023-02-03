@@ -79,6 +79,10 @@ public class ApiSequenceFieldDTO {
     validatePartialCombinations();
   }
 
+  public static ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder builder() {
+    return new ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder();
+  }
+
   public static class ApiSequenceFieldDTOBuilder {
 
     private Integer elements;
@@ -106,9 +110,9 @@ public class ApiSequenceFieldDTO {
       return this;
     }
 
-    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder propertie(ApiTypeArrayDTO propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder properties(ApiTypeArrayDTO properties) {
+      if (properties != null) {
+        this.properties.add(properties);
       }
       return this;
     }
@@ -119,9 +123,9 @@ public class ApiSequenceFieldDTO {
       return this;
     }
 
-    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }

@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ArraySchemaDTO {
@@ -17,6 +18,7 @@ public class ArraySchemaDTO {
 
 
   @Builder
+  @Jacksonized
   private ArraySchemaDTO(String name, Integer index) {
     this.name = name;
     this.index = index;

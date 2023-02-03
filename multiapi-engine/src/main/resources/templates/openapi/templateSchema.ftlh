@@ -111,6 +111,10 @@ public class ${schema.className} {
   </#if>
   }
 
+  public static ${schema.className}.${schema.className}Builder builder() {
+    return new ${schema.className}.${schema.className}Builder();
+  }
+
   public static class ${schema.className}Builder {
 
 <#list schema.fieldObjectList as field>
@@ -128,31 +132,31 @@ public class ${schema.className} {
 </#list>
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(List<${field.dataType}> ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(List<${field.dataType}> ${field.baseName?uncap_first}) {
       if (!${field.baseName?uncap_first}.isEmpty()) {
-        this.${field.baseName?uncap_first}.addAll(${field.baseName});
+        this.${field.baseName?uncap_first}.addAll(${field.baseName?uncap_first});
       }
       return this;
     }
 
-    public ${schema.className}.${schema.className}Builder ${field.baseName?substring(0, field.baseName?length - 1)}(${field.dataType} ${field.baseName?substring(0, field.baseName?length - 1)}) {
-      if (${field.baseName?substring(0, field.baseName?length - 1)} != null) {
-        this.${field.baseName?uncap_first}.add(${field.baseName?substring(0, field.baseName?length - 1)});
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataType} ${field.baseName?uncap_first}) {
+      if (${field.baseName?uncap_first} != null) {
+        this.${field.baseName?uncap_first}.add(${field.baseName?uncap_first});
       }
       return this;
     }
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(Map<String, ${field.dataType}> ${field.baseName?uncap_first}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(Map<String, ${field.dataType}> ${field.baseName?uncap_first}) {
       this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
       return this;
     }
 
-    public ${schema.className}.${schema.className}Builder ${field.baseName}Value(String key, ${field.dataType} value) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}Value(String key, ${field.dataType} value) {
       this.${field.baseName?uncap_first}.put(key, value);
       return this;
     }
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(${field.baseName?cap_first} ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.baseName?cap_first} ${field.baseName}) {
       this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
       return this;
     }

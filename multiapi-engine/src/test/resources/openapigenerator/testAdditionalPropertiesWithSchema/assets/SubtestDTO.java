@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class SubtestDTO {
@@ -20,6 +21,7 @@ public class SubtestDTO {
 
 
   @Builder
+  @Jacksonized
   private SubtestDTO(@NonNull String name, @NonNull Integer code) {
     this.name = name;
     this.code = code;

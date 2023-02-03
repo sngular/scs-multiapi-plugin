@@ -20,6 +20,7 @@ import lombok.NonNull;
     <#break>
   </#if>
 </#list>
+import lombok.extern.jackson.Jacksonized;
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
 </#if>
@@ -69,6 +70,7 @@ public class ${schema.className} {
 </#list>
 
   @Builder
+  @Jacksonized
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
     <#if field.required>@NonNull </#if><#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "Object">${field.dataType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>

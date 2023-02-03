@@ -32,6 +32,10 @@ public class ApiDateFieldDTO {
 
   }
 
+  public static ApiDateFieldDTO.ApiDateFieldDTOBuilder builder() {
+    return new ApiDateFieldDTO.ApiDateFieldDTOBuilder();
+  }
+
   public static class ApiDateFieldDTOBuilder {
 
     private String type;

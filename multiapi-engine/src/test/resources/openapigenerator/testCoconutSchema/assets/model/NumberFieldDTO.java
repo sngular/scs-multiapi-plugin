@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class NumberFieldDTO {
@@ -71,6 +72,7 @@ public class NumberFieldDTO {
 
 
   @Builder
+  @Jacksonized
   private NumberFieldDTO(Integer precision, Integer maximum, String type, List<Object> defaultValues, String name, Integer multipleOf, Integer scale, Integer minimum, Boolean flagExclusiveMinimum, Boolean flagExclusiveMaximum, NumberEnum numberEnum, Long defaultValue) {
     this.precision = precision;
     this.maximum = maximum;

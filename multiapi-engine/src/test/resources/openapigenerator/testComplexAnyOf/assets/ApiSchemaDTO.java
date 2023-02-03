@@ -48,6 +48,10 @@ public class ApiSchemaDTO {
     validatePartialCombinations();
   }
 
+  public static ApiSchemaDTO.ApiSchemaDTOBuilder builder() {
+    return new ApiSchemaDTO.ApiSchemaDTOBuilder();
+  }
+
   public static class ApiSchemaDTOBuilder {
 
     private String type;
@@ -68,9 +72,9 @@ public class ApiSchemaDTO {
       return this;
     }
 
-    public ApiSchemaDTO.ApiSchemaDTOBuilder propertie(ApiTypeArrayDTO propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiSchemaDTO.ApiSchemaDTOBuilder properties(ApiTypeArrayDTO properties) {
+      if (properties != null) {
+        this.properties.add(properties);
       }
       return this;
     }
@@ -96,9 +100,9 @@ public class ApiSchemaDTO {
       return this;
     }
 
-    public ApiSchemaDTO.ApiSchemaDTOBuilder requiredField(ApiTypeArrayDTO requiredField) {
-      if (requiredField != null) {
-        this.requiredFields.add(requiredField);
+    public ApiSchemaDTO.ApiSchemaDTOBuilder requiredFields(ApiTypeArrayDTO requiredFields) {
+      if (requiredFields != null) {
+        this.requiredFields.add(requiredFields);
       }
       return this;
     }

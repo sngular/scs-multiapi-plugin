@@ -104,6 +104,10 @@ public class ApiTestDTO {
     validateRequiredAttributes();
   }
 
+  public static ApiTestDTO.ApiTestDTOBuilder builder() {
+    return new ApiTestDTO.ApiTestDTOBuilder();
+  }
+
   public static class ApiTestDTOBuilder {
 
     private UnionEnum unionEnum;

@@ -38,6 +38,10 @@ public class ApiEnumFieldDTO {
 
   }
 
+  public static ApiEnumFieldDTO.ApiEnumFieldDTOBuilder builder() {
+    return new ApiEnumFieldDTO.ApiEnumFieldDTOBuilder();
+  }
+
   public static class ApiEnumFieldDTOBuilder {
 
     private List<Object> enumValues = new ArrayList<Object>();
@@ -52,9 +56,9 @@ public class ApiEnumFieldDTO {
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValue(Object enumValue) {
-      if (enumValue != null) {
-        this.enumValues.add(enumValue);
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(Object enumValues) {
+      if (enumValues != null) {
+        this.enumValues.add(enumValues);
       }
       return this;
     }
@@ -70,9 +74,9 @@ public class ApiEnumFieldDTO {
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }

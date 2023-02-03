@@ -183,7 +183,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.addAll(processArray(fieldName, className, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
     } else if (Objects.nonNull(schema.get$ref())) {
       final String refSchemaName = getRef(schema, specFile);
-      final var field = SchemaFieldObject.builder().baseName(refSchemaName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
+      final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
       setFieldType(field, schema, schema, specFile, refSchemaName);
       fieldObjectArrayList.add(field);
     } else if (schema instanceof ObjectSchema || schema instanceof ComposedSchema) {
@@ -265,7 +265,7 @@ public class MapperContentUtil {
       final var items = arraySchema.getItems();
       if (Objects.nonNull(items.get$ref())) {
         final String refSchemaName = getRef(items, specFile);
-        final var field = SchemaFieldObject.builder().baseName(refSchemaName).dataTypeSimple(ARRAY).dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile)).build();
+        final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(ARRAY).dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile)).build();
         setFieldType(field, arraySchema.getItems(), arraySchema.getItems(), specFile, refSchemaName);
         fieldObjectArrayList.add(field);
       } else if (ObjectUtils.anyNotNull(items.getAnyOf(), items.getAllOf(), items.getOneOf())) {

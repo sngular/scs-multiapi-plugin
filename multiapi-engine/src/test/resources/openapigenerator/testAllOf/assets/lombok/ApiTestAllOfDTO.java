@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ApiTestAllOfDTO {
@@ -19,6 +20,7 @@ public class ApiTestAllOfDTO {
 
 
   @Builder
+  @Jacksonized
   private ApiTestAllOfDTO(List<String> testers, String testName) {
     this.testers = testers;
     this.testName = testName;

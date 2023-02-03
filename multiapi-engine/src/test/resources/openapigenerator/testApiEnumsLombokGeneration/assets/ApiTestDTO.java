@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class ApiTestDTO {
@@ -97,6 +98,7 @@ public class ApiTestDTO {
 
 
   @Builder
+  @Jacksonized
   private ApiTestDTO(UnionEnum unionEnum, @NonNull String name, @NonNull Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {
     this.unionEnum = unionEnum;
     this.name = name;

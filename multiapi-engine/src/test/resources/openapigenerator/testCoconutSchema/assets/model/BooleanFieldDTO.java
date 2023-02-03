@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class BooleanFieldDTO {
@@ -20,6 +21,7 @@ public class BooleanFieldDTO {
 
 
   @Builder
+  @Jacksonized
   private BooleanFieldDTO(String type, String name, Boolean defaultValue) {
     this.type = type;
     this.name = name;

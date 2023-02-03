@@ -54,6 +54,10 @@ public class ApiArrayFieldDTO {
     validatePartialCombinations();
   }
 
+  public static ApiArrayFieldDTO.ApiArrayFieldDTOBuilder builder() {
+    return new ApiArrayFieldDTO.ApiArrayFieldDTOBuilder();
+  }
+
   public static class ApiArrayFieldDTOBuilder {
 
     private Boolean uniqueItems;
@@ -81,9 +85,9 @@ public class ApiArrayFieldDTO {
       return this;
     }
 
-    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValue(ApiTypeArrayDTO defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValues(ApiTypeArrayDTO defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }
@@ -114,9 +118,9 @@ public class ApiArrayFieldDTO {
       return this;
     }
 
-    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder value(ApiTypeArrayDTO value) {
-      if (value != null) {
-        this.values.add(value);
+    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder values(ApiTypeArrayDTO values) {
+      if (values != null) {
+        this.values.add(values);
       }
       return this;
     }

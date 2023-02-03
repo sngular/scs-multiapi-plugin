@@ -29,6 +29,10 @@ public class ApiTestInfoDTO {
     validateRequiredAttributes();
   }
 
+  public static ApiTestInfoDTO.ApiTestInfoDTOBuilder builder() {
+    return new ApiTestInfoDTO.ApiTestInfoDTOBuilder();
+  }
+
   public static class ApiTestInfoDTOBuilder {
 
     private List<String> testers = new ArrayList<String>();
@@ -40,9 +44,9 @@ public class ApiTestInfoDTO {
       return this;
     }
 
-    public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
-      if (tester != null) {
-        this.testers.add(tester);
+    public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(String testers) {
+      if (testers != null) {
+        this.testers.add(testers);
       }
       return this;
     }

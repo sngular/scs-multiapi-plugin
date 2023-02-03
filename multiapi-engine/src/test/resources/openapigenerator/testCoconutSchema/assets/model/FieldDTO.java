@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class FieldDTO {
@@ -14,6 +15,7 @@ public class FieldDTO {
 
 
   @Builder
+  @Jacksonized
   private FieldDTO(Object field) {
     this.field = field;
 

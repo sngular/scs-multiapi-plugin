@@ -9,16 +9,17 @@ import java.util.HashMap;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class TestAdditionalPropertyDTO {
 
+  @JsonProperty(value ="additionalProperties")
+  private Map<String, TestAdditionalPropertyAdditionalPropertyDTO> additionalProperties = new HashMap<String, TestAdditionalPropertyAdditionalPropertyDTO>();
+
   @JsonProperty(value ="code")
   @NonNull
   private Integer code;
-
-  @JsonProperty(value ="testAdditionalPropertyDTO")
-  private Map<String, TestAdditionalPropertyAdditionalPropertyDTO> testAdditionalPropertyDTO = new HashMap<String, TestAdditionalPropertyAdditionalPropertyDTO>();
 
   @JsonProperty(value ="text")
   @NonNull
@@ -26,9 +27,10 @@ public class TestAdditionalPropertyDTO {
 
 
   @Builder
-  private TestAdditionalPropertyDTO(@NonNull Integer code, Map<String, TestAdditionalPropertyAdditionalPropertyDTO> testAdditionalPropertyDTO, @NonNull String text) {
+  @Jacksonized
+  private TestAdditionalPropertyDTO(Map<String, TestAdditionalPropertyAdditionalPropertyDTO> additionalProperties, @NonNull Integer code, @NonNull String text) {
+    this.additionalProperties = additionalProperties;
     this.code = code;
-    this.testAdditionalPropertyDTO = testAdditionalPropertyDTO;
     this.text = text;
 
   }

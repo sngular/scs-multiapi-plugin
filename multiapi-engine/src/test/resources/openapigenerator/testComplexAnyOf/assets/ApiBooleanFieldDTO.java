@@ -28,6 +28,10 @@ public class ApiBooleanFieldDTO {
 
   }
 
+  public static ApiBooleanFieldDTO.ApiBooleanFieldDTOBuilder builder() {
+    return new ApiBooleanFieldDTO.ApiBooleanFieldDTOBuilder();
+  }
+
   public static class ApiBooleanFieldDTOBuilder {
 
     private String type;

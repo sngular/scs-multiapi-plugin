@@ -11,6 +11,7 @@ import com.sngular.multifileplugin.testCoconutSchema.model.FieldDTO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class SchemaDTO {
@@ -39,6 +40,7 @@ public class SchemaDTO {
 
 
   @Builder
+  @Jacksonized
   private SchemaDTO(@NonNull String type, Map<String, FieldDTO> additionalProperties, @NonNull String name, @NonNull String id, @NonNull String subjectName, List<String> requiredFields) {
     this.type = type;
     this.additionalProperties = additionalProperties;

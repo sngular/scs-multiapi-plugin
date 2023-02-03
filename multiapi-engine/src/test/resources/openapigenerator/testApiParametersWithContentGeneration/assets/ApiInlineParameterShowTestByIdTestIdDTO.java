@@ -20,6 +20,10 @@ public class ApiInlineParameterShowTestByIdTestIdDTO {
 
   }
 
+  public static ApiInlineParameterShowTestByIdTestIdDTO.ApiInlineParameterShowTestByIdTestIdDTOBuilder builder() {
+    return new ApiInlineParameterShowTestByIdTestIdDTO.ApiInlineParameterShowTestByIdTestIdDTOBuilder();
+  }
+
   public static class ApiInlineParameterShowTestByIdTestIdDTOBuilder {
 
     private String email;

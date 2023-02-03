@@ -24,6 +24,10 @@ public class ApiTestTypeDTO {
 
   }
 
+  public static ApiTestTypeDTO.ApiTestTypeDTOBuilder builder() {
+    return new ApiTestTypeDTO.ApiTestTypeDTOBuilder();
+  }
+
   public static class ApiTestTypeDTOBuilder {
 
     private String name;

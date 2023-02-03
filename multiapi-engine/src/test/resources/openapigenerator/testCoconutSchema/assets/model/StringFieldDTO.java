@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class StringFieldDTO {
@@ -40,6 +41,7 @@ public class StringFieldDTO {
 
 
   @Builder
+  @Jacksonized
   private StringFieldDTO(Integer maxLength, String type, List<String> properties, List<String> defaultValues, String name, String regex, Integer minLength, String format, Integer valueLength) {
     this.maxLength = maxLength;
     this.type = type;

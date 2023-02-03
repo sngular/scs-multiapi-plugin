@@ -54,6 +54,10 @@ public class ApiStringFieldDTO {
 
   }
 
+  public static ApiStringFieldDTO.ApiStringFieldDTOBuilder builder() {
+    return new ApiStringFieldDTO.ApiStringFieldDTOBuilder();
+  }
+
   public static class ApiStringFieldDTOBuilder {
 
     private Integer maxLength;
@@ -82,9 +86,9 @@ public class ApiStringFieldDTO {
       return this;
     }
 
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder propertie(Object propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(Object properties) {
+      if (properties != null) {
+        this.properties.add(properties);
       }
       return this;
     }
@@ -95,9 +99,9 @@ public class ApiStringFieldDTO {
       return this;
     }
 
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }

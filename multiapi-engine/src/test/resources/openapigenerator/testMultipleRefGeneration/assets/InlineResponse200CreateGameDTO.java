@@ -28,6 +28,10 @@ public class InlineResponse200CreateGameDTO {
 
   }
 
+  public static InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder builder() {
+    return new InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder();
+  }
+
   public static class InlineResponse200CreateGameDTOBuilder {
 
     private String description;

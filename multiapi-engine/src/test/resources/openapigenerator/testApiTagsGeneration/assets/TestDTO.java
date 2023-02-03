@@ -27,6 +27,10 @@ public class TestDTO {
     validateRequiredAttributes();
   }
 
+  public static TestDTO.TestDTOBuilder builder() {
+    return new TestDTO.TestDTOBuilder();
+  }
+
   public static class TestDTOBuilder {
 
     private String name;

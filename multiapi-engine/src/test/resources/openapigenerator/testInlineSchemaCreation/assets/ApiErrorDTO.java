@@ -24,6 +24,10 @@ public class ApiErrorDTO {
 
   }
 
+  public static ApiErrorDTO.ApiErrorDTOBuilder builder() {
+    return new ApiErrorDTO.ApiErrorDTOBuilder();
+  }
+
   public static class ApiErrorDTOBuilder {
 
     private Integer code;

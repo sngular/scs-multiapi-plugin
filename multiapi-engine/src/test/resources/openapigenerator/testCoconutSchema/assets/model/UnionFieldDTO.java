@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 public class UnionFieldDTO {
+
+  @JsonProperty(value ="defaultItem")
+  private List<FieldDTO> defaultItem = new ArrayList<FieldDTO>();
 
   @JsonProperty(value ="generatedFlag")
   private Boolean generatedFlag;
@@ -49,18 +53,20 @@ public class UnionFieldDTO {
   @JsonProperty(value ="optionalUnion")
   private Boolean optionalUnion;
 
-  @JsonProperty(value ="fieldDTO")
-  private List<FieldDTO> fieldDTO = new ArrayList<FieldDTO>();
+  @JsonProperty(value ="values")
+  private List<FieldDTO> values = new ArrayList<FieldDTO>();
 
 
   @Builder
-  private UnionFieldDTO(Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<FieldDTO> fieldDTO) {
+  @Jacksonized
+  private UnionFieldDTO(List<FieldDTO> defaultItem, Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<FieldDTO> values) {
+    this.defaultItem = defaultItem;
     this.generatedFlag = generatedFlag;
     this.type = type;
     this.unionEnum = unionEnum;
     this.name = name;
     this.optionalUnion = optionalUnion;
-    this.fieldDTO = fieldDTO;
+    this.values = values;
 
   }
 

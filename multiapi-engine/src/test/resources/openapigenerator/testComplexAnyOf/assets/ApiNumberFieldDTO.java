@@ -87,6 +87,10 @@ public class ApiNumberFieldDTO {
 
   }
 
+  public static ApiNumberFieldDTO.ApiNumberFieldDTOBuilder builder() {
+    return new ApiNumberFieldDTO.ApiNumberFieldDTOBuilder();
+  }
+
   public static class ApiNumberFieldDTOBuilder {
 
     private Integer precision;
@@ -123,9 +127,9 @@ public class ApiNumberFieldDTO {
       return this;
     }
 
-    public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
-        this.defaultValues.add(defaultValue);
+    public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValues(Object defaultValues) {
+      if (defaultValues != null) {
+        this.defaultValues.add(defaultValues);
       }
       return this;
     }
