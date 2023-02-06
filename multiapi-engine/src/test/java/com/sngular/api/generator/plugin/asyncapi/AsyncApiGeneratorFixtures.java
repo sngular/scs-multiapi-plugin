@@ -286,8 +286,8 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event";
 
     final List<String> expectedModelFiles = List.of(
-        "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayDto.java",
-        "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayMessageDto.java");
+        "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayDTO.java",
+        "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayMessageDTO.java");
 
     return path -> modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }
