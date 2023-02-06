@@ -214,7 +214,7 @@ components:
       items:
         type: string
     field:
-      oneOf:
+      anyOf:
       - $ref: "#/components/schemas/stringField"
       - $ref: "#/components/schemas/arrayField"
       - $ref: "#/components/schemas/booleanField"
@@ -225,7 +225,8 @@ components:
       - $ref: "#/components/schemas/objectField"
       - $ref: "#/components/schemas/unionField"
       - $ref: "#/components/schemas/sequenceField"
-
+      discriminator:
+        propertyName: type
     schema:
       type: object
       required:
