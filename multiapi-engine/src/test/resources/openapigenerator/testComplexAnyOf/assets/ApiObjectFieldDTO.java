@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
+@JsonDeserialize(builder = ApiObjectFieldDTO.ApiObjectFieldDTOBuilder.class)
 public class ApiObjectFieldDTO {
 
   @JsonProperty(value ="requiredValues")
@@ -46,6 +49,7 @@ public class ApiObjectFieldDTO {
     return new ApiObjectFieldDTO.ApiObjectFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiObjectFieldDTOBuilder {
 
     private List<Object> requiredValues = new ArrayList<Object>();

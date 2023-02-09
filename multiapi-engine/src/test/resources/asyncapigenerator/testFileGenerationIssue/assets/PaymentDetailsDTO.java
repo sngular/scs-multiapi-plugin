@@ -2,9 +2,12 @@ package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = PaymentDetailsDTO.PaymentDetailsDTOBuilder.class)
 public class PaymentDetailsDTO {
 
   @JsonProperty(value ="creditCardNumber")
@@ -24,6 +27,7 @@ public class PaymentDetailsDTO {
     return new PaymentDetailsDTO.PaymentDetailsDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class PaymentDetailsDTOBuilder {
 
     private String creditCardNumber;

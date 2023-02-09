@@ -2,12 +2,15 @@ package com.sngular.multifileplugin.pathparameter.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.pathparameter.model.exception.ModelClassException;
 
+@JsonDeserialize(builder = TestInfoDTO.TestInfoDTOBuilder.class)
 public class TestInfoDTO {
 
   @JsonProperty(value ="testers")
@@ -33,6 +36,7 @@ public class TestInfoDTO {
     return new TestInfoDTO.TestInfoDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class TestInfoDTOBuilder {
 
     private List<String> testers = new ArrayList<String>();

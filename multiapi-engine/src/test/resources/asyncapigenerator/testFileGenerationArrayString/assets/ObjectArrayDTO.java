@@ -2,11 +2,14 @@ package com.sngular.scsplugin.arraywithstring.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ObjectArrayDTO.ObjectArrayDTOBuilder.class)
 public class ObjectArrayDTO {
 
   @JsonProperty(value ="idObject")
@@ -34,6 +37,7 @@ public class ObjectArrayDTO {
     return new ObjectArrayDTO.ObjectArrayDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ObjectArrayDTOBuilder {
 
     private Integer idObject;

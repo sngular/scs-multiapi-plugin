@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
+@JsonDeserialize(builder = ApiTypeArrayDTO.ApiTypeArrayDTOBuilder.class)
 public class ApiTypeArrayDTO {
 
   @JsonProperty(value ="precision")
@@ -231,6 +234,7 @@ public class ApiTypeArrayDTO {
     return new ApiTypeArrayDTO.ApiTypeArrayDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTypeArrayDTOBuilder {
 
     private Integer precision;

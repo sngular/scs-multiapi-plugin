@@ -2,9 +2,12 @@ package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = OrderProductDTO.OrderProductDTOBuilder.class)
 public class OrderProductDTO {
 
   @JsonProperty(value ="ref")
@@ -36,6 +39,7 @@ public class OrderProductDTO {
     return new OrderProductDTO.OrderProductDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderProductDTOBuilder {
 
     private String ref;

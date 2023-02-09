@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiEnumFieldDTO.ApiEnumFieldDTOBuilder.class)
 public class ApiEnumFieldDTO {
 
   @JsonProperty(value ="enumValues")
@@ -42,6 +45,7 @@ public class ApiEnumFieldDTO {
     return new ApiEnumFieldDTO.ApiEnumFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiEnumFieldDTOBuilder {
 
     private List<Object> enumValues = new ArrayList<Object>();

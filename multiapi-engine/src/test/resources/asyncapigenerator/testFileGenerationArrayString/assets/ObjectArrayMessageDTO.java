@@ -2,10 +2,13 @@ package com.sngular.scsplugin.arraywithstring.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.scsplugin.arraywithstring.model.event.ObjectArrayDTO;
 
+@JsonDeserialize(builder = ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder.class)
 public class ObjectArrayMessageDTO {
 
   @JsonProperty(value ="payload")
@@ -25,6 +28,7 @@ public class ObjectArrayMessageDTO {
     return new ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ObjectArrayMessageDTOBuilder {
 
     private ObjectArrayDTO payload;

@@ -2,10 +2,13 @@ package com.sngular.multifileplugin.pathparameter.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.pathparameter.model.exception.ModelClassException;
 
+@JsonDeserialize(builder = TestDTO.TestDTOBuilder.class)
 public class TestDTO {
 
   @JsonProperty(value ="name")
@@ -31,6 +34,7 @@ public class TestDTO {
     return new TestDTO.TestDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class TestDTOBuilder {
 
     private String name;

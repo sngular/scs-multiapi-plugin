@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.inlineschemacreation.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ApiTestProcessorDTO.ApiTestProcessorDTOBuilder.class)
 public class ApiTestProcessorDTO {
 
   @JsonProperty(value ="name")
@@ -28,6 +31,7 @@ public class ApiTestProcessorDTO {
     return new ApiTestProcessorDTO.ApiTestProcessorDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTestProcessorDTOBuilder {
 
     private String name;

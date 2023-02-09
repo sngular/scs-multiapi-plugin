@@ -145,6 +145,18 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_ISSUE_GENERATE_SUPPLIER = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testIssueGenerateSupplier/async-api.yml")
+          .supplier(OperationParameterObject.builder()
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("company.mail.messaging")
+                                            .modelPackage("company.mail.model")
+                                            .useLombokModelAnnotation(true)
+                                            .build())
+          .build());
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -288,6 +300,17 @@ public class AsyncApiGeneratorFixtures {
     final List<String> expectedModelFiles = List.of(
         "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayDTO.java",
         "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayMessageDTO.java");
+
+    return path -> modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestIssueGenerateSupplier() {
+    final String DEFAULT_MODEL_FOLDER = "generated/company/mail/model";
+
+    final List<String> expectedModelFiles = List.of(
+        "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
+        "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java",
+        "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestMessageDTO.java");
 
     return path -> modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }

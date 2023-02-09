@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package company.mail.model;
 
 import java.util.Objects;
 
@@ -6,41 +6,41 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegeneration.model.event.OrderDTO;
+import company.mail.model.MailRequestDTO;
 
-@JsonDeserialize(builder = OrderCreatedDTO.OrderCreatedDTOBuilder.class)
-public class OrderCreatedDTO {
+@JsonDeserialize(builder = MailRequestMessageDTO.MailRequestMessageDTOBuilder.class)
+public class MailRequestMessageDTO {
 
   @JsonProperty(value ="payload")
-  private OrderDTO payload;
+  private MailRequestDTO payload;
 
-  private OrderCreatedDTO(OrderDTO payload) {
+  private MailRequestMessageDTO(MailRequestDTO payload) {
     this.payload = payload;
 
   }
 
-  private OrderCreatedDTO(OrderCreatedDTOBuilder builder) {
+  private MailRequestMessageDTO(MailRequestMessageDTOBuilder builder) {
     this.payload = builder.payload;
 
   }
 
-  public static OrderCreatedDTO.OrderCreatedDTOBuilder builder() {
-    return new OrderCreatedDTO.OrderCreatedDTOBuilder();
+  public static MailRequestMessageDTO.MailRequestMessageDTOBuilder builder() {
+    return new MailRequestMessageDTO.MailRequestMessageDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class OrderCreatedDTOBuilder {
+  public static class MailRequestMessageDTOBuilder {
 
-    private OrderDTO payload;
+    private MailRequestDTO payload;
 
-    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(OrderDTO payload) {
+    public MailRequestMessageDTO.MailRequestMessageDTOBuilder payload(MailRequestDTO payload) {
       this.payload = payload;
       return this;
     }
 
-    public OrderCreatedDTO build() {
-      OrderCreatedDTO orderCreatedDTO = new OrderCreatedDTO(this);
-      return orderCreatedDTO;
+    public MailRequestMessageDTO build() {
+      MailRequestMessageDTO mailRequestMessageDTO = new MailRequestMessageDTO(this);
+      return mailRequestMessageDTO;
     }
   }
 
@@ -49,10 +49,10 @@ public class OrderCreatedDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public OrderDTO getPayload() {
+  public MailRequestDTO getPayload() {
     return payload;
   }
-  public void setPayload(OrderDTO payload) {
+  public void setPayload(MailRequestDTO payload) {
     this.payload = payload;
   }
 
@@ -64,8 +64,8 @@ public class OrderCreatedDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderCreatedDTO orderCreatedDTO = (OrderCreatedDTO) o;
-    return Objects.equals(this.payload, orderCreatedDTO.payload);
+    MailRequestMessageDTO mailRequestMessageDTO = (MailRequestMessageDTO) o;
+    return Objects.equals(this.payload, mailRequestMessageDTO.payload);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class OrderCreatedDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderCreatedDTO {\n");
+    sb.append("class MailRequestMessageDTO {\n");
     sb.append(" payload: ").append(toIndentedString(payload)).append("\n");
     sb.append("}");
     return sb.toString();

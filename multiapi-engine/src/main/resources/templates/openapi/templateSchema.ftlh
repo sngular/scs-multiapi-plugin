@@ -2,6 +2,8 @@ package ${packageModel};
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "enum">
@@ -20,6 +22,7 @@ import ${packageModel}.exception.ModelClassException;
     </#if>
 </#list>
 
+@JsonDeserialize(builder = ${schema.className}.${schema.className}Builder.class)
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
@@ -115,6 +118,7 @@ public class ${schema.className} {
     return new ${schema.className}.${schema.className}Builder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ${schema.className}Builder {
 
 <#list schema.fieldObjectList as field>

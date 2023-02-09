@@ -2,10 +2,13 @@ package com.sngular.scsplugin.issuegeneration.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.scsplugin.issuegeneration.model.event.StatusMsgDTO;
 
+@JsonDeserialize(builder = StatusDTO.StatusDTOBuilder.class)
 public class StatusDTO {
 
   @JsonProperty(value ="payload")
@@ -25,6 +28,7 @@ public class StatusDTO {
     return new StatusDTO.StatusDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class StatusDTOBuilder {
 
     private StatusMsgDTO payload;

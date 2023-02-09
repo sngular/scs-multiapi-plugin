@@ -2,10 +2,13 @@ package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder.class)
 public class CustomerEventPayloadDTO {
 
   @JsonProperty(value ="customerId")
@@ -54,6 +57,7 @@ public class CustomerEventPayloadDTO {
     return new CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerEventPayloadDTOBuilder {
 
     private String customerId;

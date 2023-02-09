@@ -2,6 +2,8 @@ package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import com.sngular.scsplugin.filegeneration.model.event.OrderLineMapper;
 
+@JsonDeserialize(builder = OrderMapper.OrderMapperBuilder.class)
 public class OrderMapper {
 
   @JsonProperty(value ="ref")
@@ -40,6 +43,7 @@ public class OrderMapper {
     return new OrderMapper.OrderMapperBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderMapperBuilder {
 
     private String ref;

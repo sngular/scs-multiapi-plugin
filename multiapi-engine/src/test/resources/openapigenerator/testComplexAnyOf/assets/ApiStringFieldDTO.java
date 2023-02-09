@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiStringFieldDTO.ApiStringFieldDTOBuilder.class)
 public class ApiStringFieldDTO {
 
   @JsonProperty(value ="maxLength")
@@ -58,6 +61,7 @@ public class ApiStringFieldDTO {
     return new ApiStringFieldDTO.ApiStringFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiStringFieldDTOBuilder {
 
     private Integer maxLength;

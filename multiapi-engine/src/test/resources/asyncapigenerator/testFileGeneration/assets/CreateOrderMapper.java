@@ -2,11 +2,14 @@ package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.scsplugin.filegeneration.model.event.WaiterMapper;
 import com.sngular.scsplugin.filegeneration.model.event.OrderMapper;
 
+@JsonDeserialize(builder = CreateOrderMapper.CreateOrderMapperBuilder.class)
 public class CreateOrderMapper {
 
   @JsonProperty(value ="order")
@@ -30,6 +33,7 @@ public class CreateOrderMapper {
     return new CreateOrderMapper.CreateOrderMapperBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CreateOrderMapperBuilder {
 
     private OrderMapper order;

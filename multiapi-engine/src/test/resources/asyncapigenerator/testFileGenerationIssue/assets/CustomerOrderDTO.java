@@ -2,6 +2,8 @@ package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.scsplugin.filegenerationissue.model.event.OrderedItemDTO;
@@ -9,6 +11,7 @@ import com.sngular.scsplugin.filegenerationissue.model.event.PaymentDetailsDTO;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = CustomerOrderDTO.CustomerOrderDTOBuilder.class)
 public class CustomerOrderDTO {
 
   @JsonProperty(value ="id")
@@ -52,6 +55,7 @@ public class CustomerOrderDTO {
     return new CustomerOrderDTO.CustomerOrderDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerOrderDTOBuilder {
 
     private String id;
