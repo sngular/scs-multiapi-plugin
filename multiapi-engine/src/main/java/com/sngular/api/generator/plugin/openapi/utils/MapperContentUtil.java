@@ -56,13 +56,18 @@ public class MapperContentUtil {
   private MapperContentUtil() {}
 
   public static Map<String, SchemaObject> mapComponentToSchemaObject(
-      final Map<String, Schema> totalSchemas, final Schema<?> schema, final String nameSchema, final SpecFile specFile,
-      final String modelPackage) {
-    final var schemasToGenerateList = new HashMap<String, SchemaObject>();
-    final var antiLoopList = new LinkedList<String>();
-    final var listSchema = getFields(totalSchemas, schema, specFile, schemasToGenerateList, antiLoopList);
+      final Map<String, Schema> totalSchemas, final Schema<?> schema, final String nameSchema, final SpecFile specFile) {
+    return mapComponentToSchemaObject(totalSchemas, new HashMap<>(), new ArrayList<>(), schema, StringUtils.defaultIfBlank(schema.getName(), nameSchema), specFile,
+                                      specFile.getModelPackage());
+  }
 
-    schemasToGenerateList.put(StringUtils.defaultIfBlank(schema.getName(), nameSchema), SchemaObject.builder()
+  private static Map<String, SchemaObject> mapComponentToSchemaObject(
+      final Map<String, Schema> totalSchemas, final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Schema<?> schema, final String nameSchema,
+      final SpecFile specFile, final String modelPackage) {
+    antiLoopList.add(nameSchema);
+    final var listSchema = getFields(totalSchemas, schema, specFile, compositedSchemas, antiLoopList);
+
+    compositedSchemas.put(StringUtils.defaultIfBlank(schema.getName(), nameSchema), SchemaObject.builder()
                                                                                                     .schemaName(StringUtils.defaultIfBlank(schema.getName(), nameSchema))
                                                                                                     .className(MapperUtil.getPojoName(nameSchema, specFile))
                                                                                                     .importList(getImportList(listSchema, modelPackage))
@@ -70,7 +75,7 @@ public class MapperContentUtil {
                                                                                                         StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
                                                                                                     .fieldObjectList(listSchema)
                                                                                                     .build());
-    return schemasToGenerateList;
+    return compositedSchemas;
   }
 
   private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList, final String modelPackage) {
@@ -140,7 +145,7 @@ public class MapperContentUtil {
         final String[] pathObjectRef = ref.get$ref().split("/");
         final String schemaName = pathObjectRef[pathObjectRef.length - 1];
         final var schemaToProcess = totalSchemas.get(schemaName);
-        fieldObjectArrayList.addAll(processFieldObjectList(schemaName, schemaName, schemaToProcess, specFile, totalSchemas, compositedSchemas, antiLoopList));
+        fieldObjectArrayList.addAll(processFieldObjectList(null, null, schemaToProcess, specFile, totalSchemas, compositedSchemas, antiLoopList));
         for (var fieldObject : fieldObjectArrayList) {
           fieldObject.setRequired(true);
         }
@@ -162,7 +167,7 @@ public class MapperContentUtil {
         if (compositedSchemas.containsKey(schemaName)) {
           fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(schemaName).dataType(schemaName).build());
         } else {
-          fieldObjectArrayList.addAll(processFieldObjectList(schemaName, schemaName, schemaToProcess, specFile, totalSchemas, compositedSchemas, antiLoopList));
+          fieldObjectArrayList.addAll(processFieldObjectList(null, schemaName, schemaToProcess, specFile, totalSchemas, compositedSchemas, antiLoopList));
         }
       } else {
         for (var fieldObject : fieldObjectArrayList) {
@@ -181,6 +186,41 @@ public class MapperContentUtil {
     final var fieldObjectArrayList = new LinkedList<SchemaFieldObject>();
     if (ARRAY.equalsIgnoreCase(schema.getType())) {
       fieldObjectArrayList.addAll(processArray(fieldName, className, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
+    } else if (schema instanceof MapSchema) {
+      if (OBJECT.equalsIgnoreCase(schema.getType())) {
+        schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
+      }
+      if (Objects.nonNull(schema.getAdditionalProperties())) {
+        if (!(schema.getAdditionalProperties() instanceof Schema)) {
+          fieldObjectArrayList
+              .add(SchemaFieldObject
+                   .builder()
+                   .baseName(fieldName + "Map")
+                   .dataType(MapperUtil.getSimpleType(schema.getAdditionalProperties()))
+                   .dataTypeSimple(MAP)
+                   .build());
+        } else {
+          final Schema mapSchema;
+          if (schema.getAdditionalProperties() instanceof MapSchema) {
+            mapSchema = (MapSchema) schema.getAdditionalProperties();
+          } else if (schema.getAdditionalProperties() instanceof ComposedSchema) {
+            mapSchema = (ComposedSchema) schema.getAdditionalProperties();
+          } else if (schema.getAdditionalProperties() instanceof ObjectSchema) {
+            mapSchema = (ObjectSchema) schema.getAdditionalProperties();
+          } else {
+            mapSchema = (Schema) schema.getAdditionalProperties();
+          }
+          compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, mapSchema, StringUtils.defaultIfBlank(className, fieldName + "Map"),
+                                                              specFile, specFile.getModelPackage()));
+          fieldObjectArrayList
+            .add(SchemaFieldObject
+                   .builder()
+                   .baseName(fieldName + "Map")
+                   .dataType(MapperUtil.getPojoName(fieldName + "Map", specFile))
+                   .dataTypeSimple(MAP)
+                   .build());
+        }
+      }
     } else if (Objects.nonNull(schema.get$ref())) {
       final String refSchemaName = getRef(schema, specFile);
       final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
@@ -189,8 +229,38 @@ public class MapperContentUtil {
     } else if (schema instanceof ObjectSchema || schema instanceof ComposedSchema) {
       if (MapUtils.isEmpty(schema.getProperties())) {
         fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(OBJECT).build());
-      } else if (schema instanceof ObjectSchema || ObjectUtils.allNull(className, fieldName)) {
-        schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
+      } else if (schema instanceof ObjectSchema) {
+        if (ObjectUtils.allNull(className, fieldName)) {
+          schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
+        } else {
+          if (antiLoopList.contains(className)) {
+            fieldObjectArrayList
+                .add(SchemaFieldObject
+                     .builder()
+                     .baseName(className)
+                     .dataType(MapperUtil.getPojoName(className, specFile))
+                     .dataTypeSimple("Object")
+                     .build());
+          } else if (antiLoopList.contains(fieldName)) {
+            fieldObjectArrayList
+                .add(SchemaFieldObject
+                     .builder()
+                     .baseName(fieldName)
+                     .dataType(MapperUtil.getPojoName(fieldName, specFile))
+                     .dataTypeSimple("Object")
+                     .build());
+          } else {
+            compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, schema, StringUtils.defaultIfBlank(className, fieldName), specFile,
+                                                                specFile.getModelPackage()));
+            fieldObjectArrayList
+                .add(SchemaFieldObject
+                     .builder()
+                     .baseName(fieldName)
+                     .dataType(MapperUtil.getPojoName(fieldName, specFile))
+                     .dataTypeSimple("Object")
+                     .build());
+          }
+        }
       } else {
         final var composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
         var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
@@ -284,7 +354,7 @@ public class MapperContentUtil {
                                      .importClass(schemaObjectComposed.getClassName())
                                      .build());
       } else if (Objects.nonNull(items.getProperties())) {
-        compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile, specFile.getModelPackage()));
+        compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile));
         fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataType(MapperUtil.getPojoName(fieldName, specFile)).dataTypeSimple(ARRAY).build());
       } else {
         fieldObjectArrayList.add(SchemaFieldObject

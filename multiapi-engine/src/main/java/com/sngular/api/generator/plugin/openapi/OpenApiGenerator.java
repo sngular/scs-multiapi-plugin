@@ -275,9 +275,9 @@ public class OpenApiGenerator {
                                            schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
       }
     });
-    if (!additionalPropertiesSchemas.isEmpty()) {
+/*    if (!additionalPropertiesSchemas.isEmpty()) {
       processModelsAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
-    }
+    }*/
   }
 
   private void processModelsAdditionalProperties(
@@ -333,8 +333,8 @@ public class OpenApiGenerator {
 
   private void writeModel(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile,
-                                                                              modelPackage);
+    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile
+    );
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {

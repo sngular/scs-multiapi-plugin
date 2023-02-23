@@ -316,6 +316,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_CREATE_DTO = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testCreateDTO/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testCreateDto")
+          .modelPackage("com.sngular.multifileplugin.testCreateDto.model")
+          .clientPackage("com.sngular.multifileplugin.testCreateDto.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -844,6 +856,27 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testCoconutSchema/assets/exception/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateCreateDto() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCreateDto";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCreateDto/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateDto/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testCreateDto/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+      "openapigenerator/testCreateDto/assets/model/AddressDTO.java",
+      "openapigenerator/testCreateDto/assets/model/PropertiesDTO.java",
+      "openapigenerator/testCreateDto/assets/model/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   private static Boolean commonTest(
