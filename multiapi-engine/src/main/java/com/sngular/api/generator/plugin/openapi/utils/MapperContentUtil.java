@@ -191,34 +191,46 @@ public class MapperContentUtil {
         schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
       }
       if (Objects.nonNull(schema.getAdditionalProperties())) {
-        if (!(schema.getAdditionalProperties() instanceof Schema)) {
-          fieldObjectArrayList
-              .add(SchemaFieldObject
-                   .builder()
-                   .baseName(fieldName + "Map")
-                   .dataType(MapperUtil.getSimpleType(schema.getAdditionalProperties()))
-                   .dataTypeSimple(MAP)
-                   .build());
-        } else {
-          final Schema mapSchema;
-          if (schema.getAdditionalProperties() instanceof MapSchema) {
-            mapSchema = (MapSchema) schema.getAdditionalProperties();
-          } else if (schema.getAdditionalProperties() instanceof ComposedSchema) {
-            mapSchema = (ComposedSchema) schema.getAdditionalProperties();
-          } else if (schema.getAdditionalProperties() instanceof ObjectSchema) {
-            mapSchema = (ObjectSchema) schema.getAdditionalProperties();
+        if (schema.getAdditionalProperties() instanceof Schema<?>) {
+          final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
+          if (Objects.nonNull(additionalProperties.get$ref())) {
+            final String refSchemaName = getRef(additionalProperties, specFile);
+            final var field = SchemaFieldObject.builder()
+                    .baseName(fieldName)
+                    .dataType(refSchemaName)
+                    .dataTypeSimple(MAP)
+                    .build();
+            setFieldType(field, schema, additionalProperties, specFile, refSchemaName);
+            fieldObjectArrayList.add(field);
           } else {
-            mapSchema = (Schema) schema.getAdditionalProperties();
+            final Schema<?> mapSchema;
+            if (additionalProperties instanceof MapSchema) {
+              mapSchema = additionalProperties;
+            } else if (additionalProperties instanceof ComposedSchema) {
+              mapSchema = additionalProperties;
+            } else if (schema.getAdditionalProperties() instanceof ObjectSchema) {
+              mapSchema = additionalProperties;
+            } else {
+              mapSchema = (Schema<?>) schema.getAdditionalProperties();
+            }
+            compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, mapSchema, StringUtils.defaultIfBlank(className, fieldName + "Map"),
+                    specFile, specFile.getModelPackage()));
+            fieldObjectArrayList
+                    .add(SchemaFieldObject
+                            .builder()
+                            .baseName(fieldName + "Map")
+                            .dataType(MapperUtil.getPojoName(fieldName + "Map", specFile))
+                            .dataTypeSimple(MAP)
+                            .build());
           }
-          compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, mapSchema, StringUtils.defaultIfBlank(className, fieldName + "Map"),
-                                                              specFile, specFile.getModelPackage()));
+        } else {
           fieldObjectArrayList
-            .add(SchemaFieldObject
-                   .builder()
-                   .baseName(fieldName + "Map")
-                   .dataType(MapperUtil.getPojoName(fieldName + "Map", specFile))
-                   .dataTypeSimple(MAP)
-                   .build());
+                  .add(SchemaFieldObject
+                          .builder()
+                          .baseName(fieldName + "Map")
+                          .dataType(MapperUtil.getSimpleType(schema.getAdditionalProperties()))
+                          .dataTypeSimple(MAP)
+                          .build());
         }
       }
     } else if (Objects.nonNull(schema.get$ref())) {
