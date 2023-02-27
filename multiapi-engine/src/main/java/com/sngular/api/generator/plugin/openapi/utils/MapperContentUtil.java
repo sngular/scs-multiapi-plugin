@@ -262,13 +262,14 @@ public class MapperContentUtil {
                      .dataTypeSimple("Object")
                      .build());
           } else {
-            compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, schema, StringUtils.defaultIfBlank(className, fieldName), specFile,
+            final String name = StringUtils.defaultIfBlank(className, fieldName);
+            compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, schema, name, specFile,
                                                                 specFile.getModelPackage()));
             fieldObjectArrayList
                 .add(SchemaFieldObject
                      .builder()
-                     .baseName(fieldName)
-                     .dataType(MapperUtil.getPojoName(fieldName, specFile))
+                     .baseName(name)
+                     .dataType(MapperUtil.getPojoName(name, specFile))
                      .dataTypeSimple("Object")
                      .build());
           }
