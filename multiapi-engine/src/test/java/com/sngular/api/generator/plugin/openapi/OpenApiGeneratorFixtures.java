@@ -316,6 +316,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
+       SpecFile
+               .builder()
+               .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
+               .apiPackage("com.sngular.multifileplugin.testValidationAnnotations")
+               .modelPackage("com.sngular.multifileplugin.testValidationAnnotations.model")
+               .clientPackage("com.sngular.multifileplugin.testValidationAnnotations.client")
+               .modelNameSuffix("DTO")
+               .useLombokModelAnnotation(true)
+               .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -842,6 +854,31 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedExceptionFiles = List.of(
         "openapigenerator/testCoconutSchema/assets/exception/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateValidationAnnotations() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testapi/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+            "openapigenerator/testValidationAnnotations/assets/testApi/TestApi.java");
+
+    final List<String> expectedTestApiModelFiles = List.of(
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiErrorDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestAllOfDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestInfoDTO.java"
+
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+            "openapigenerator/testValidationAnnotations/assets/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }

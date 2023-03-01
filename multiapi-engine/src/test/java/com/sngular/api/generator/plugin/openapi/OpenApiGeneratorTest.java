@@ -77,7 +77,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testAdditionalPropertiesWithUnnamedObject", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_UNNAMED_OBJECT,
                      OpenApiGeneratorFixtures.validateAdditionalPropertiesWithUnnamedObject()),
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
-                     OpenApiGeneratorFixtures.validateCoconutSchema())
+                     OpenApiGeneratorFixtures.validateCoconutSchema()),
+        Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
+                    OpenApiGeneratorFixtures.validateValidationAnnotations())
     );
   }
 
