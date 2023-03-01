@@ -247,7 +247,7 @@ public class MapperContentUtil {
                                      .build());
       }
     } else if (isBasicType(value)) {
-      field = SchemaFieldObject.builder().baseName(key).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
+      field = SchemaFieldObject.builder().baseName(key).minimum(value.getMinimum()).maximum(value.getMaximum()).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {

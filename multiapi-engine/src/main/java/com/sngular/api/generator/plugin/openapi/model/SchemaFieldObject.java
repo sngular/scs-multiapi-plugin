@@ -6,6 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,10 @@ import lombok.NoArgsConstructor;
 public class SchemaFieldObject {
 
   private String baseName;
+  @Default
+  private BigDecimal maximum = null;
+  @Default
+  private BigDecimal minimum = null;
 
   @Default
   private String dataTypeSimple = "Object";
