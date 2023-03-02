@@ -78,10 +78,10 @@ class OpenApiGeneratorTest {
                      OpenApiGeneratorFixtures.validateAdditionalPropertiesWithUnnamedObject()),
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
                      OpenApiGeneratorFixtures.validateCoconutSchema()),
-        Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                    OpenApiGeneratorFixtures.validateValidationAnnotations()),
-        Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                    OpenApiGeneratorFixtures.validateValidationAnnotationsLombok())
+        Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_OPENAPI,
+                    OpenApiGeneratorFixtures.validateValidationAnnotationsOpenApi()),
+        Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK_OPENAPI,
+                    OpenApiGeneratorFixtures.validateValidationAnnotationsLombokOpenApi())
     );
   }
 

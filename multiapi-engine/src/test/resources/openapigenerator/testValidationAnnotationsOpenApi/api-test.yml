@@ -103,4 +103,6 @@ components:
           minimum: 10
           maximum: 200
         message:
+          minLength: 50
+          maxLength: 200
           type: string

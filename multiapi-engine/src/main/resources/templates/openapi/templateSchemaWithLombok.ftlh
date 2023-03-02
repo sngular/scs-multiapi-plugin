@@ -35,6 +35,13 @@ public class ${schema.className} {
   <#if field.maximum?has_content>
   @Max(${field.maximum})
   </#if>
+  <#if field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength}, max =${field.maxLength})
+  <#elseif field.maxLength?has_content && !field.minLength?has_content>
+  @Size(max =${field.maxLength})
+  <#elseif !field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength})
+  </#if>
   @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.required?has_content && field.required == true>
   @NonNull

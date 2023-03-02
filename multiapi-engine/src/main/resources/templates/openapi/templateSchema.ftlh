@@ -29,6 +29,13 @@ public class ${schema.className} {
   <#if field.maximum?has_content>
   @Max(${field.maximum})
   </#if>
+  <#if field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength}, max =${field.maxLength})
+  <#elseif field.maxLength?has_content && !field.minLength?has_content>
+  @Size(max =${field.maxLength})
+  <#elseif !field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength})
+  </#if>
   @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     <#if field.required>
