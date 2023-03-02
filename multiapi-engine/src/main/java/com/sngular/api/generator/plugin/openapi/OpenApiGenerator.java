@@ -199,16 +199,11 @@ public class OpenApiGenerator {
   }
 
   private void createModelTemplate(final SpecFile specFile, final OpenAPI openAPI) throws TemplateException, IOException {
-
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
     templateFactory.setModelPackageName(modelPackage);
-    if (Boolean.TRUE.equals(overwriteModel)) {
-      processModelsWhenOverWriteIsTrue(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
-    } else {
-      processWhenOverwriteModelIsFalse(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap);
-    }
+    processModels(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
   }
 
   private void processPackage(final String apiPackage) {
@@ -260,25 +255,28 @@ public class OpenApiGenerator {
     return path;
   }
 
-  private void processModelsWhenOverWriteIsTrue(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
-      final String modelPackage,
-      final Map<String, Schema<?>> basicSchemaMap) {
-
+  private void processModels(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
+                             final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
+                             final boolean overwrite) {
     final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      if(basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
+      if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
+        throw new DuplicateModelClassException(schemaName, modelPackage);
+      }
+
+      if (Objects.nonNull(basicSchema.get$ref())) {
+        writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
+      } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
         writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
                 schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
-      } else if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
+      } else if (!(basicSchema instanceof ArraySchema)) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
-      } else if (Objects.nonNull(basicSchema.get$ref())) {
-        writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       }
     });
+
     if (!additionalPropertiesSchemas.isEmpty()) {
-      processModelsWhenOverWriteIsTrue(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
+      processModels(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas, overwrite);
     }
   }
 
@@ -297,18 +295,18 @@ public class OpenApiGenerator {
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema,
       final Consumer<Schema<?>> addAdditionalSchema) {
 
-    final Schema<?> schemaToWrite = basicSchema;
-    if (schemaToWrite.getAdditionalProperties() instanceof Schema<?> && !(schemaToWrite.getAdditionalProperties() instanceof ArraySchema)) {
-      final Schema<?> additionalPropertiesSchema = (Schema<?>) schemaToWrite.getAdditionalProperties();
+    if (basicSchema.getAdditionalProperties() instanceof Schema<?> && !(basicSchema.getAdditionalProperties() instanceof ArraySchema)) {
+      final Schema<?> additionalPropertiesSchema = (Schema<?>) basicSchema.getAdditionalProperties();
       if (Objects.isNull(additionalPropertiesSchema.get$ref())) {
-        if (Objects.nonNull(additionalPropertiesSchema.getType()) && additionalPropertiesSchema.getType().equalsIgnoreCase("object")) {
+        /*if (Objects.nonNull(additionalPropertiesSchema.getType()) && additionalPropertiesSchema.getType().equalsIgnoreCase("object")) {
           additionalPropertiesSchema.set$ref("#components/schemas/" + schemaName + ADDITIONAL_PROPERTY_NAME);
-          schemaToWrite.setAdditionalProperties(additionalPropertiesSchema);
-        }
+          basicSchema.setAdditionalProperties(additionalPropertiesSchema);
+        }*/
+        addAdditionalSchema.accept(additionalPropertiesSchema);
       }
-      addAdditionalSchema.accept(additionalPropertiesSchema);
+      //FIXME: Should we only accept only schemas that aren't refs?
     }
-    writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, schemaToWrite);
+    writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
   }
 
   private void writeModel(
@@ -351,33 +349,5 @@ public class OpenApiGenerator {
       }
     }
     generateExceptionTemplate = shouldGenerateException;
-  }
-
-  private void processWhenOverwriteModelIsFalse(
-      final SpecFile specFile, final OpenAPI openAPI,
-      final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap) throws TemplateException, IOException {
-
-    final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
-
-    for (Entry<String, Schema<?>> entry : basicSchemaMap.entrySet()) {
-      final String schemaName = entry.getKey();
-      final Schema<?> basicSchema = entry.getValue();
-      if (!overwriteModelList.add(schemaName + modelPackage)) {
-        throw new DuplicateModelClassException(schemaName, modelPackage);
-      }
-
-      if(basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
-        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
-                schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
-      } else if (basicSchema instanceof ObjectSchema || basicSchema instanceof ComposedSchema) {
-        writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
-      } else if (Objects.nonNull(basicSchema.get$ref())) {
-        writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
-      }
-    }
-
-    if (!additionalPropertiesSchemas.isEmpty()) {
-      processWhenOverwriteModelIsFalse(specFile, openAPI, fileModelToSave, modelPackage, additionalPropertiesSchemas);
-    }
   }
 }
