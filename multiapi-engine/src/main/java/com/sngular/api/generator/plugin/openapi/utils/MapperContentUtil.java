@@ -109,6 +109,11 @@ public class MapperContentUtil {
           listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max", "javax.validation.constraints.Min"));
         }
       }
+      else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(STRING)
+              || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(STRING)){
+        if (Objects.nonNull(fieldObject.getMaxLength()) || Objects.nonNull(fieldObject.getMinLength()))
+          listHashMap.computeIfAbsent(STRING, key -> List.of("javax.validation.constraints.Size"));
+      }
     }
   }
 

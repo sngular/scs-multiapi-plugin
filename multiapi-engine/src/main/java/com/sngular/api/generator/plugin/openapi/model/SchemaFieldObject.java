@@ -24,10 +24,18 @@ import lombok.NoArgsConstructor;
 public class SchemaFieldObject {
 
   private String baseName;
+
   @Default
   private BigDecimal maximum = null;
+
   @Default
   private BigDecimal minimum = null;
+
+  @Default
+  private String minLength = null;
+
+  @Default
+  private String maxLength = null;
 
   @Default
   private String dataTypeSimple = "Object";
