@@ -3,6 +3,8 @@ package com.sngular.multifileplugin.lombok.testapi.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -11,6 +13,8 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class ApiErrorDTO {
 
+  @Min(10)
+  @Max(200)
   @JsonProperty(value ="code")
   @NonNull
   private Integer code;

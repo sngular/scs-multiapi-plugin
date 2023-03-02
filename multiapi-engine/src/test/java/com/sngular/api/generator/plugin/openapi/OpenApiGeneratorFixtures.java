@@ -316,16 +316,27 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  static final List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
-       SpecFile
-               .builder()
-               .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
-               .apiPackage("com.sngular.multifileplugin.testValidationAnnotations")
-               .modelPackage("com.sngular.multifileplugin.testValidationAnnotations.model")
-               .clientPackage("com.sngular.multifileplugin.testValidationAnnotations.client")
-               .modelNameSuffix("DTO")
-               .useLombokModelAnnotation(true)
-               .build()
+  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.testapi")
+                  .modelPackage("com.sngular.multifileplugin.testapi.model")
+                  .modelNamePrefix("Api")
+                  .modelNameSuffix("DTO")
+                  .build()
+  );
+
+  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS_LOMBOK = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.lombok.testapi")
+                  .modelPackage("com.sngular.multifileplugin.lombok.testapi.model")
+                  .modelNamePrefix("Api")
+                  .modelNameSuffix("DTO")
+                  .useLombokModelAnnotation(true)
+                  .build()
   );
 
   static Function<Path, Boolean> validateOneOfInResponse() {
@@ -882,6 +893,28 @@ public final class OpenApiGeneratorFixtures {
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
+
+  static Function<Path, Boolean> validateValidationAnnotationsLombok() {
+
+    final String DEFAULT_LOMBOK_TARGET_API = "generated/com/sngular/multifileplugin/lombok/testapi";
+
+    final String DEFAULT_LOMBOK_MODEL_API = "generated/com/sngular/multifileplugin/lombok/testapi/model";
+
+    List<String> expectedTestApiFile = List.of(
+            "openapigenerator/testAllOf/assets/lombok/TestApi.java");
+
+    List<String> expectedTestApiModelFiles = List.of(
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiErrorDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestAllOfDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestInfoDTO.java"
+
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
+  }
+
+
 
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,
