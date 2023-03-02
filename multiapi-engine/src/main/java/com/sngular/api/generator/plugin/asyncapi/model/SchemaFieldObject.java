@@ -6,11 +6,13 @@
 
 package com.sngular.api.generator.plugin.asyncapi.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -20,6 +22,18 @@ import lombok.NoArgsConstructor;
 public class SchemaFieldObject {
 
   private String baseName;
+
+  @Default
+  private BigDecimal maximum = null;
+
+  @Default
+  private BigDecimal minimum = null;
+
+  @Default
+  private Integer minLength = null;
+
+  @Default
+  private Integer maxLength = null;
 
   private String dataTypeSimple;
 

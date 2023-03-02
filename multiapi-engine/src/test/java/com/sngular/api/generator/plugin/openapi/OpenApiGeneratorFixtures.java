@@ -316,10 +316,10 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS_OPENAPI = List.of(
+  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
           SpecFile
                   .builder()
-                  .filePath("openapigenerator/testValidationAnnotationsOpenApi/api-test.yml")
+                  .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
                   .apiPackage("com.sngular.multifileplugin.testapi")
                   .modelPackage("com.sngular.multifileplugin.testapi.model")
                   .modelNamePrefix("Api")
@@ -327,10 +327,10 @@ public final class OpenApiGeneratorFixtures {
                   .build()
   );
 
-  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS_LOMBOK_OPENAPI = List.of(
+  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS_LOMBOK = List.of(
           SpecFile
                   .builder()
-                  .filePath("openapigenerator/testValidationAnnotationsOpenApi/api-test.yml")
+                  .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
                   .apiPackage("com.sngular.multifileplugin.lombok.testapi")
                   .modelPackage("com.sngular.multifileplugin.lombok.testapi.model")
                   .modelNamePrefix("Api")
@@ -869,7 +869,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotationsOpenApi() {
+  static Function<Path, Boolean> validateValidationAnnotations() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
@@ -878,23 +878,23 @@ public final class OpenApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
 
     final List<String> expectedTestApiFile = List.of(
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/testApi/TestApi.java");
+            "openapigenerator/testValidationAnnotations/assets/testApi/TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/testApi/ApiErrorDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/testApi/ApiTestAllOfDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/testApi/ApiTestDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/testApi/ApiTestInfoDTO.java"
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiErrorDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestAllOfDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/testApi/ApiTestInfoDTO.java"
 
     );
 
     final List<String> expectedExceptionFiles = List.of(
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/ModelClassException.java");
+            "openapigenerator/testValidationAnnotations/assets/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotationsLombokOpenApi() {
+  static Function<Path, Boolean> validateValidationAnnotationsLombok() {
 
     final String DEFAULT_LOMBOK_TARGET_API = "generated/com/sngular/multifileplugin/lombok/testapi";
 
@@ -904,10 +904,10 @@ public final class OpenApiGeneratorFixtures {
             "openapigenerator/testAllOf/assets/lombok/TestApi.java");
 
     List<String> expectedTestApiModelFiles = List.of(
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/lombok/ApiErrorDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/lombok/ApiTestAllOfDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/lombok/ApiTestDTO.java",
-            "openapigenerator/testValidationAnnotationsOpenApi/assets/lombok/ApiTestInfoDTO.java"
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiErrorDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestAllOfDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestDTO.java",
+            "openapigenerator/testValidationAnnotations/assets/lombok/ApiTestInfoDTO.java"
 
     );
 

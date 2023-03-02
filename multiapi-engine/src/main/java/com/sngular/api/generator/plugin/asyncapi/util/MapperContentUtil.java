@@ -34,6 +34,10 @@ public class MapperContentUtil {
 
   private static final String BIG_DECIMAL = "bigDecimal";
 
+  private static final String INTEGER = "integer";
+
+  private static final String STRING = "string";
+
   private static String schemaCombinatorType;
 
   private MapperContentUtil() {}
@@ -91,6 +95,21 @@ public class MapperContentUtil {
       } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+      }
+      else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(INTEGER)
+              || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(INTEGER)){
+        if (Objects.nonNull(fieldObject.getMaximum()) && Objects.isNull(fieldObject.getMinimum()))
+          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max"));
+        else if (Objects.nonNull(fieldObject.getMinimum()) && Objects.isNull(fieldObject.getMaximum()))
+          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Min"));
+        else if (Objects.nonNull(fieldObject.getMinimum()) && Objects.nonNull(fieldObject.getMaximum())) {
+          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max", "javax.validation.constraints.Min"));
+        }
+      }
+      else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(STRING)
+              || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(STRING)){
+        if (Objects.nonNull(fieldObject.getMaxLength()) || Objects.nonNull(fieldObject.getMinLength()))
+          listHashMap.computeIfAbsent(STRING, key -> List.of("javax.validation.constraints.Size"));
       }
     }
   }
