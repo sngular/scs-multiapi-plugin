@@ -4,10 +4,9 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
 
 public class ApiErrorDTO {

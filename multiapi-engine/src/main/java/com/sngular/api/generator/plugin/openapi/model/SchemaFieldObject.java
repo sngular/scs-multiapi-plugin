@@ -32,10 +32,10 @@ public class SchemaFieldObject {
   private BigDecimal minimum = null;
 
   @Default
-  private String minLength = null;
+  private Integer minLength = null;
 
   @Default
-  private String maxLength = null;
+  private Integer maxLength = null;
 
   @Default
   private String dataTypeSimple = "Object";
