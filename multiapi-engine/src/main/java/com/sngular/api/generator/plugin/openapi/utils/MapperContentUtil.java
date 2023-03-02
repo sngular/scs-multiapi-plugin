@@ -99,6 +99,14 @@ public class MapperContentUtil {
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
       }
+    } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(INTEGER)){
+      if (Objects.nonNull(fieldObject.getMaximum()) && Objects.isNull(fieldObject.getMinimum()))
+        listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max"));
+      else if (Objects.nonNull(fieldObject.getMinimum()) && Objects.isNull(fieldObject.getMaximum()))
+        listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Min"));
+      else {
+        listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max", "javax.validation.constraints.Min"));
+      }
     }
   }
 
