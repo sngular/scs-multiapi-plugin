@@ -29,6 +29,12 @@ import ${packageModel}.exception.ModelClassException;
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
+  <#if field.minimum?has_content>
+  @Min(${field.minimum})
+  </#if>
+  <#if field.maximum?has_content>
+  @Max(${field.maximum})
+  </#if>
   @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.required?has_content && field.required == true>
   @NonNull
