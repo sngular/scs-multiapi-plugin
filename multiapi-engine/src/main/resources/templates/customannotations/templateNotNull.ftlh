@@ -10,7 +10,10 @@ ElementType.ANNOTATION_TYPE})
 @Constraint(validatedBy = NotNullValidator.class)
 @Documented
 public @interface NotNull {
-String message() default "Value is null."
-Class<?>[] groups() default {};
-Class<? extends Payload>[] payload() default {};
+
+    String message() default "Value is null."
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }
