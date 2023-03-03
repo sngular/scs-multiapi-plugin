@@ -23,6 +23,7 @@ import ${packageModel}.exception.ModelClassException;
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
+  @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.minimum?has_content>
   @Min(${field.minimum})
   </#if>
@@ -36,7 +37,9 @@ public class ${schema.className} {
   <#elseif !field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength})
   </#if>
-  @JsonProperty(value ="${field.baseName?uncap_first}")
+  <#if field.required?has_content && field.required == true>
+  @NotNull
+  </#if>
   <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     <#if field.required>
   private final List<${field.dataType}> ${field.baseName?uncap_first};

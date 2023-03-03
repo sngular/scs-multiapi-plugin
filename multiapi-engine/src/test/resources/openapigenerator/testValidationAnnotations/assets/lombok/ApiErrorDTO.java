@@ -14,14 +14,14 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class ApiErrorDTO {
 
+  @JsonProperty(value ="code")
   @Min(10)
   @Max(200)
-  @JsonProperty(value ="code")
   @NonNull
   private Integer code;
 
-  @Size(min =50, max =200)
   @JsonProperty(value ="message")
+  @Size(min =50, max =200)
   @NonNull
   private String message;
 

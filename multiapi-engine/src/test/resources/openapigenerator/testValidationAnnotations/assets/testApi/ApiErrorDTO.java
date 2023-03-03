@@ -11,12 +11,14 @@ import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
 
 public class ApiErrorDTO {
 
+  @JsonProperty(value ="code")
   @Min(10)
   @Max(200)
-  @JsonProperty(value ="code")
+  @NotNull
   private final Integer code;
-  @Size(min =50, max =200)
   @JsonProperty(value ="message")
+  @Size(min =50, max =200)
+  @NotNull
   private final String message;
 
   private ApiErrorDTO(Integer code, String message) {
