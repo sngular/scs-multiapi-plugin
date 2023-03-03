@@ -38,6 +38,18 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MODEL_EXCEPTION = "templateModelClassException.ftlh";
 
+  public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
+
+  public static final String TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION = "templateNotNullValidator.ftlh";
+
+  public static final String TEMPLATE_MIN_ANNOTATION = "templateMin.ftlh";
+
+  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_ANNOTATION = "templateMax.ftlh";
+
+  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidator.ftlh";
+
   private TemplateIndexConstants() {}
 
 }

@@ -3,13 +3,13 @@ package ${packageModel};
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class NotNullValidator implements ConstraintValidator<NotNull, String> {
+public class NotNullValidator implements ConstraintValidator<NotNull, Object> {
     @Override
     public void initialize(NotNull constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) {
             return false;
         } else {
