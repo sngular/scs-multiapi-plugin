@@ -269,7 +269,7 @@ public class OpenApiGenerator {
         writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
         writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
-                schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
+            schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
       } else if (!(basicSchema instanceof ArraySchema)) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       }
@@ -298,13 +298,8 @@ public class OpenApiGenerator {
     if (basicSchema.getAdditionalProperties() instanceof Schema<?> && !(basicSchema.getAdditionalProperties() instanceof ArraySchema)) {
       final Schema<?> additionalPropertiesSchema = (Schema<?>) basicSchema.getAdditionalProperties();
       if (Objects.isNull(additionalPropertiesSchema.get$ref())) {
-        /*if (Objects.nonNull(additionalPropertiesSchema.getType()) && additionalPropertiesSchema.getType().equalsIgnoreCase("object")) {
-          additionalPropertiesSchema.set$ref("#components/schemas/" + schemaName + ADDITIONAL_PROPERTY_NAME);
-          basicSchema.setAdditionalProperties(additionalPropertiesSchema);
-        }*/
         addAdditionalSchema.accept(additionalPropertiesSchema);
       }
-      //FIXME: Should we only accept only schemas that aren't refs?
     }
     writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
   }
