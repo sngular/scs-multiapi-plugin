@@ -19,6 +19,12 @@ import ${packageModel}.exception.ModelClassException;
     <#break>
     </#if>
 </#list>
+<#list schema.fieldObjectList as field>
+    <#if field.required?has_content && field.required == true>
+import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+      <#break>
+    </#if>
+</#list>
 
 public class ${schema.className} {
 
