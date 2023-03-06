@@ -1,4 +1,4 @@
-package ${packageModel};
+package ${packageModel}.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,8 +10,8 @@ ElementType.ANNOTATION_TYPE})
 @Constraint(validatedBy = MaxValidator.class)
 @Documented
 public @interface Max {
-    String message() default "Value is bigger than the maximum." +
-        " found: ${validatedValue}";
+    Integer maximum();
+    String message() default "Value is bigger than the maximum.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

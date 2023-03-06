@@ -1,19 +1,23 @@
-package ${packageModel};
+package ${packageModel}.customvalidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class MinValidator implements ConstraintValidator<Max, Integer> {
-@Override
-public void initialize(Max constraintAnnotation) {
-}
+public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
-@Override
-public boolean isValid(Integer value, ConstraintValidatorContext context) {
-    if (value > context) {
-        return false;
-    } else {
-        return true;
+    private Integer maximum;
+
+    @Override
+    public void initialize(Max constraintAnnotation) {
+        this.maximum = constraintAnnotation.maximum()
     }
-}
+
+    @Override
+    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+        if (value > this.maximum) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

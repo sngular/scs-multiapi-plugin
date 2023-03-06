@@ -1,4 +1,4 @@
-package ${packageModel};
+package ${packageModel}.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,8 +10,8 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = MinValidator.class)
 @Documented
 public @interface Min {
-    String message() default "Value is smaller than the minimum." +
-        " found: ${validatedValue}";
+    Integer minimum();
+    String message() default "Value is smaller than the minimum.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
