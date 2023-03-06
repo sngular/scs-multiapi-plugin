@@ -255,9 +255,10 @@ public class OpenApiGenerator {
     return path;
   }
 
-  private void processModels(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
-                             final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
-                             final boolean overwrite) {
+  private void processModels(
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
+      final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
+      final boolean overwrite) {
     final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
@@ -269,7 +270,7 @@ public class OpenApiGenerator {
         writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
         writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
-            schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
+                                           schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
       } else if (!(basicSchema instanceof ArraySchema)) {
         writeModel(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema);
       }
