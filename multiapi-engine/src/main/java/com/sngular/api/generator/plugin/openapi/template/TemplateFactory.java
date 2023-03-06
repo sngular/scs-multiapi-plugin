@@ -65,6 +65,10 @@ public class TemplateFactory {
           fillTemplateMin(filePathToSave);
           fillTemplateMinValidator(filePathToSave);
         }
+        if(Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())){
+          fillTemplateSize(filePathToSave);
+          fillTemplateSizeValidator(filePathToSave);
+        }
       }
     }
 
@@ -148,6 +152,19 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
 
+  public final void fillTemplateSize(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Size.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateSizeValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("SizeValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
 
   public final void fillTemplate(
           final String filePathToSave, final SpecFile specFile, final String className,

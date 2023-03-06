@@ -50,6 +50,10 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidator.ftlh";
 
+  public static final String TEMPLATE_SIZE_ANNOTATION = "templateSize.ftlh";
+
+  public static final String TEMPLATE_SIZE_VALIDATOR_ANNOTATION = "templateSizeValidator.ftlh";
+
   private TemplateIndexConstants() {}
 
 }
