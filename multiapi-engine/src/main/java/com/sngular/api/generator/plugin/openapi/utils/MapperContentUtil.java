@@ -247,8 +247,10 @@ public class MapperContentUtil {
                                      .build());
       }
     } else if (isBasicType(value)) {
-      field = SchemaFieldObject.builder().baseName(key).minimum(value.getMinimum()).maximum(value.getMaximum()).minLength(value.getMinLength()).maxLength(value.getMaxLength())
-                               .dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
+      field =
+          SchemaFieldObject.builder().baseName(key).minimum(value.getMinimum()).maximum(value.getMaximum()).exclusiveMaximum(value.getExclusiveMaximum())
+                           .exclusiveMinimum(value.getExclusiveMinimum()).minLength(value.getMinLength()).maxLength(value.getMaxLength())
+                           .dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {

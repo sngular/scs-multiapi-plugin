@@ -11,6 +11,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Min {
     int minimum();
+    boolean exclusive();
     String message() default "Value is smaller than the minimum.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

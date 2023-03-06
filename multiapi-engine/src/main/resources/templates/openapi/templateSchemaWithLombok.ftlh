@@ -49,10 +49,10 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.minimum?has_content>
-  @Min(${field.minimum})
+  @Min(minimum = ${field.minimum}, exclusive = ${field.exclusiveMinimum})
   </#if>
   <#if field.maximum?has_content>
-  @Max(${field.maximum})
+  @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum}})
   </#if>
   <#if field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength}, max =${field.maxLength})

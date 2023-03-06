@@ -12,13 +12,14 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
 public class ApiErrorDTO {
 
-  @JsonProperty(value ="code")
+  @JsonProperty(value = "code")
   @Min(10)
   @Max(200)
   @NotNull
   private final Integer code;
-  @JsonProperty(value ="message")
-  @Size(min =50, max =200)
+
+  @JsonProperty(value = "message")
+  @Size(min = 50, max = 200)
   @NotNull
   private final String message;
 
@@ -43,6 +44,7 @@ public class ApiErrorDTO {
   public static class ApiErrorDTOBuilder {
 
     private Integer code;
+
     private String message;
 
     public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
@@ -62,18 +64,20 @@ public class ApiErrorDTO {
   }
 
   /**
-  * Get code
-  * @return code
-  */
+   * Get code
+   *
+   * @return code
+   */
   @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
   }
 
   /**
-  * Get message
-  * @return message
-  */
+   * Get message
+   *
+   * @return message
+   */
   @Schema(name = "message", required = true)
   public String getMessage() {
     return message;
@@ -107,16 +111,14 @@ public class ApiErrorDTO {
   }
 
   /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;

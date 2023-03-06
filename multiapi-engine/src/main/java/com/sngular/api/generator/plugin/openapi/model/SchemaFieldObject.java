@@ -32,6 +32,11 @@ public class SchemaFieldObject {
   private BigDecimal minimum = null;
 
   @Default
+  private boolean exclusiveMaximum = false;
+
+  @Default
+  private boolean exclusiveMinimum = false;
+  @Default
   private Integer minLength = null;
 
   @Default

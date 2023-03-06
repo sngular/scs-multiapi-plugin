@@ -6,15 +6,24 @@ import javax.validation.ConstraintValidatorContext;
 public class MinValidator implements ConstraintValidator<Min, Integer> {
 
     private int minimum;
+    private boolean exclusive;
 
     @Override
     public void initialize(Min constraintAnnotation) {
         this.minimum = constraintAnnotation.minimum()
+        this.exclusive = constraintAnnotation.exclusive()
     }
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (value < this.minimum) {
+        if (exclusive) {
+            if (value < this.minimum) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        if (value <= this.minimum) {
             return false;
         } else {
             return true;

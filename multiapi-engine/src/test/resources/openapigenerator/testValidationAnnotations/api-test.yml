@@ -47,6 +47,10 @@ paths:
           description: The id of the test to retrieve
           schema:
             type: integer
+            exclusiveMinimum: false
+            minimum: 10
+            exclusiveMaximum: true
+            maximum: 100
             format: int32
       responses:
         '200':
