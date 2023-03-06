@@ -10,7 +10,7 @@ ElementType.ANNOTATION_TYPE})
 @Constraint(validatedBy = MaxValidator.class)
 @Documented
 public @interface Max {
-    Integer maximum();
+    int maximum();
     String message() default "Value is bigger than the maximum.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

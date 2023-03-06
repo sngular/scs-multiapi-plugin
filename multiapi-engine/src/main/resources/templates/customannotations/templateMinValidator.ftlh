@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class MinValidator implements ConstraintValidator<Min, Integer> {
 
-    private Integer minimum;
+    private int minimum;
 
     @Override
     public void initialize(Min constraintAnnotation) {

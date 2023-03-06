@@ -30,10 +30,12 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
                                                                   TemplateIndexConstants.TEMPLATE_OAUTH, TemplateIndexConstants.TEMPLATE_OAUTH_FLOW);
 
-  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION, TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
+  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 
   private final Map<String, String> templatesMap = new HashMap<>();
@@ -80,7 +82,8 @@ public class ClasspathTemplateLoader implements TemplateLoader {
     });
     TEMPLATE_ANNOTATION_FILES.forEach(templateAnnotationFile -> {
       try {
-        templates.put(templateAnnotationFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/customannotations/" + templateAnnotationFile)).getContent()));
+        templates.put(templateAnnotationFile,
+                      readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/customannotations/" + templateAnnotationFile)).getContent()));
       } catch (final IOException e) {
         e.printStackTrace();
       }

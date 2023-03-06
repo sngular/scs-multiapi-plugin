@@ -14,6 +14,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import ${import};
 </#list>
 <#list schema.fieldObjectList as field>
+    <#if field.maxLength?has_content || field.minLength?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.maximum?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.minimum?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
     <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
     <#break>

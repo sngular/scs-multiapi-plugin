@@ -99,21 +99,6 @@ public class MapperContentUtil {
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
       }
-      else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(INTEGER)
-              || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(INTEGER)){
-        if (Objects.nonNull(fieldObject.getMaximum()) && Objects.isNull(fieldObject.getMinimum()))
-          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max"));
-        else if (Objects.nonNull(fieldObject.getMinimum()) && Objects.isNull(fieldObject.getMaximum()))
-          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Min"));
-        else if (Objects.nonNull(fieldObject.getMinimum()) && Objects.nonNull(fieldObject.getMaximum())) {
-          listHashMap.computeIfAbsent(INTEGER, key -> List.of("javax.validation.constraints.Max", "javax.validation.constraints.Min"));
-        }
-      }
-      else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equalsIgnoreCase(STRING)
-              || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equalsIgnoreCase(STRING)){
-        if (Objects.nonNull(fieldObject.getMaxLength()) || Objects.nonNull(fieldObject.getMinLength()))
-          listHashMap.computeIfAbsent(STRING, key -> List.of("javax.validation.constraints.Size"));
-      }
     }
   }
 
@@ -262,7 +247,8 @@ public class MapperContentUtil {
                                      .build());
       }
     } else if (isBasicType(value)) {
-      field = SchemaFieldObject.builder().baseName(key).minimum(value.getMinimum()).maximum(value.getMaximum()).minLength(value.getMinLength()).maxLength(value.getMaxLength()).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
+      field = SchemaFieldObject.builder().baseName(key).minimum(value.getMinimum()).maximum(value.getMaximum()).minLength(value.getMinLength()).maxLength(value.getMaxLength())
+                               .dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {

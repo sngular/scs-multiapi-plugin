@@ -3,9 +3,9 @@ package com.sngular.multifileplugin.lombok.testapi.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;

@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
-    private Integer maximum;
+    private int maximum;
 
     @Override
     public void initialize(Max constraintAnnotation) {
