@@ -7,12 +7,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
 public class ApiTestDTO {
 
   @JsonProperty(value ="testers")
+  @NotNull
   private final List<String> testers;
   @JsonProperty(value ="testName")
+  @NotNull
   private final String testName;
 
   private ApiTestDTO(List<String> testers, String testName) {

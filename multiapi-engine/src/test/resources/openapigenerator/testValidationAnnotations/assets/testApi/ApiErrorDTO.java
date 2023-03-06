@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
 public class ApiErrorDTO {
 
