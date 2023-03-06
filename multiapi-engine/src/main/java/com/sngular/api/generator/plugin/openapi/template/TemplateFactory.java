@@ -19,6 +19,7 @@ import java.util.Objects;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import freemarker.template.Configuration;
@@ -51,6 +52,13 @@ public class TemplateFactory {
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
+      for(SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()){
+        if(fieldObject.isRequired()){
+          fillTemplateNotNull(filePathToSave);
+          fillTemplateNotNullValidator(filePathToSave);
+          break;
+        }
+      }
     }
 
   }
@@ -87,6 +95,22 @@ public class TemplateFactory {
     writeTemplateToFile(createNameTemplate(authName), root, pathToSaveMainClass);
 
   }
+
+  public final void fillTemplateNotNull(final String filePathToSave) throws IOException, TemplateException{
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("NotNull.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateNotNullValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("NotNullValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
 
   public final void fillTemplate(
           final String filePathToSave, final SpecFile specFile, final String className,

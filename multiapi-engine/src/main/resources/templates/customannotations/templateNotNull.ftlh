@@ -1,4 +1,4 @@
-package ${packageModel};
+package ${packageModel}.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,7 +11,7 @@ ElementType.ANNOTATION_TYPE})
 @Documented
 public @interface NotNull {
 
-    String message() default "Value is null."
+    String message() default "Value is null.";
 
     Class<?>[] groups() default {};
 
