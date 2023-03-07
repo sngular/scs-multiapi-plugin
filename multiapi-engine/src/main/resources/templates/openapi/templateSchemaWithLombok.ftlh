@@ -53,6 +53,12 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
         <#break>
     </#if>
 </#list>
+<#list schema.fieldObjectList as field>
+    <#if field.uniqueItems?has_content && field.uniqueItems == true>
+import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
+        <#break>
+    </#if>
+</#list>
 import lombok.Builder;
 import lombok.Data;
 <#list schema.fieldObjectList as field>
@@ -88,6 +94,9 @@ public class ${schema.className} {
   </#if>
   <#if field.minItems?has_content>
   @MinItems(minimum = ${field.minItems})
+  </#if>
+  <#if field.uniqueItems?has_content && field.uniqueItems == true>
+  @UniqueItems
   </#if>
   <#if field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength}, max =${field.maxLength})

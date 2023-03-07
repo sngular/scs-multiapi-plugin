@@ -13,7 +13,7 @@ public class MaxItemsValidator implements ConstraintValidator<MaxItems, Array> {
   }
 
   @Override
-  public boolean isValid(Integer value, ConstraintValidatorContext context) {
+  public boolean isValid(Array value, ConstraintValidatorContext context) {
     if (value.size() > this.maximum) {
       return false;
     } else {

@@ -15,6 +15,7 @@ import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
 import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
 
 public class ApiErrorDTO {
 
@@ -32,6 +33,7 @@ public class ApiErrorDTO {
   @JsonProperty(value ="test")
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
+  @UniqueItems
   private List<Integer> test = new ArrayList<Integer>();
 
   private ApiErrorDTO(Integer code, String message, List<Integer> test) {

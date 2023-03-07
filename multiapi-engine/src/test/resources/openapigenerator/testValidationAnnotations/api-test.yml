@@ -116,3 +116,4 @@ components:
             type: integer
           maxItems: 10
           minItems: 5
+          uniqueItems: true

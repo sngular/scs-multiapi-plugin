@@ -42,7 +42,9 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                                         TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 

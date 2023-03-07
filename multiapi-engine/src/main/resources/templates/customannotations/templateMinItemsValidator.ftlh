@@ -13,7 +13,7 @@ public class MinItemsValidator implements ConstraintValidator<MinItems, Array> {
   }
 
   @Override
-  public boolean isValid(Integer value, ConstraintValidatorContext context) {
+  public boolean isValid(Array value, ConstraintValidatorContext context) {
     if (value.size() < this.minimum) {
       return false;
     } else {

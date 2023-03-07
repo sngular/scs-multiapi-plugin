@@ -295,6 +295,7 @@ public class MapperContentUtil {
                                      .baseName(fieldName)
                                      .maxItems(arraySchema.getMaxItems())
                                      .minItems(arraySchema.getMinItems())
+                                     .uniqueItems(arraySchema.getUniqueItems())
                                      .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
                                      .dataTypeSimple(ARRAY)
                                      .build());

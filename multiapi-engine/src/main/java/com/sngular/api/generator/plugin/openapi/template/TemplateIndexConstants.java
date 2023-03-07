@@ -70,6 +70,10 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION = "templateMinItemsValidator.ftlh";
 
+  public static final String TEMPLATE_UNIQUE_ITEMS_ANNOTATION = "templateUniqueItems.ftlh";
+
+  public static final String TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION = "templateUniqueItemsValidator.ftlh";
+
   private TemplateIndexConstants() {}
 
 }
