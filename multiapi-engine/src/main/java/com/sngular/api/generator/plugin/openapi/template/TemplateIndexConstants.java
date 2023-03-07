@@ -54,6 +54,10 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_SIZE_VALIDATOR_ANNOTATION = "templateSizeValidator.ftlh";
 
+  public static final String TEMPLATE_PATTERN_ANNOTATION = "templatePattern.ftlh";
+
+  public static final String TEMPLATE_PATTERN_VALIDATOR_ANNOTATION = "templatePatternValidator.ftlh";
+
   private TemplateIndexConstants() {}
 
 }

@@ -32,15 +32,19 @@ public class SchemaFieldObject {
   private BigDecimal minimum = null;
 
   @Default
-  private boolean exclusiveMaximum = false;
+  private Boolean exclusiveMaximum = null;
 
   @Default
-  private boolean exclusiveMinimum = false;
+  private Boolean exclusiveMinimum = null;
+
   @Default
   private Integer minLength = null;
 
   @Default
   private Integer maxLength = null;
+
+  @Default
+  private String pattern = null;
 
   @Default
   private String dataTypeSimple = "Object";

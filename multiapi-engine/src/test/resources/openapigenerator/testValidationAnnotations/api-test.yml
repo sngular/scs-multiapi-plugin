@@ -47,9 +47,7 @@ paths:
           description: The id of the test to retrieve
           schema:
             type: integer
-            exclusiveMinimum: false
             minimum: 10
-            exclusiveMaximum: true
             maximum: 100
             format: int32
       responses:
@@ -105,8 +103,11 @@ components:
           type: integer
           format: int32
           minimum: 10
+          exclusiveMinimum: false
           maximum: 200
+          exclusiveMaximum: true
         message:
           type: string
           minLength: 50
           maxLength: 200
+          pattern: "^[a-zA-Z0-9_.-]*$"

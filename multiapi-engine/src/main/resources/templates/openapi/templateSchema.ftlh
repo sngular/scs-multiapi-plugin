@@ -38,6 +38,11 @@ import ${packageModel}.exception.ModelClassException;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
+  <#if field.pattern?has_content>
+import ${packageModel}.customvalidator.Pattern;
+  </#if>
+</#list>
+<#list schema.fieldObjectList as field>
     <#if field.required?has_content && field.required == true>
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
       <#break>
@@ -48,11 +53,17 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
-  <#if field.minimum?has_content>
-  @Min(minimum = ${field.minimum}, exclusive = ${field.exclusiveMinimum})
+  <#if field.minimum?has_content && (!field.exclusiveMinimum?has_content || field.exclusiveMinimum == false)>
+  @Min(minimum = ${field.minimum})
   </#if>
-  <#if field.maximum?has_content>
-  @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum}})
+  <#if field.minimum?has_content && field.exclusiveMinimum?has_content && field.exclusiveMinimum == true>
+  @Min(minimum = ${field.minimum}, exclusive = ${field.exclusiveMinimum?string})
+  </#if>
+  <#if field.maximum?has_content && (!field.exclusiveMaximum?has_content || field.exclusiveMaximum == false)>
+  @Max(maximum = ${field.maximum})
+  </#if>
+  <#if field.maximum?has_content && field.exclusiveMaximum?has_content && field.exclusiveMaximum == true>
+  @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum?string})
   </#if>
   <#if field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength}, max =${field.maxLength})
@@ -60,6 +71,9 @@ public class ${schema.className} {
   @Size(max =${field.maxLength})
   <#elseif !field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength})
+  </#if>
+  <#if field.pattern?has_content>
+  @Pattern(regex = "${field.pattern}")
   </#if>
   <#if field.required?has_content && field.required == true>
   @NotNull

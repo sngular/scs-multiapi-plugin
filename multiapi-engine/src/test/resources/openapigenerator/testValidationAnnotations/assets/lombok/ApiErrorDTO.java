@@ -15,8 +15,8 @@ import lombok.extern.jackson.Jacksonized;
 public class ApiErrorDTO {
 
   @JsonProperty(value ="code")
-  @Min(10)
-  @Max(200)
+  @Min(minimum = 10)
+  @Max(maximum = 200, exclusive = true)
   @NonNull
   private Integer code;
 

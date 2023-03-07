@@ -69,6 +69,10 @@ public class TemplateFactory {
           fillTemplateSize(filePathToSave);
           fillTemplateSizeValidator(filePathToSave);
         }
+        if (Objects.nonNull(fieldObject.getPattern())){
+          fillTemplatePattern(filePathToSave);
+          fillTemplatePatternValidator(filePathToSave);
+        }
       }
     }
 
@@ -163,6 +167,20 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("SizeValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplatePattern(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Pattern.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplatePatternValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("PatternValidator.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
 
