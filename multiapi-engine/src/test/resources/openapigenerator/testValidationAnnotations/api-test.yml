@@ -106,6 +106,7 @@ components:
           exclusiveMinimum: false
           maximum: 200
           exclusiveMaximum: true
+          multipleOf: 10.55
         message:
           type: string
           minLength: 50

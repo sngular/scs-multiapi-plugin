@@ -73,6 +73,10 @@ public class TemplateFactory {
           fillTemplatePattern(filePathToSave);
           fillTemplatePatternValidator(filePathToSave);
         }
+        if (Objects.nonNull(fieldObject.getMultipleOf())){
+          fillTemplateMultipleOf(filePathToSave);
+          fillTemplateMultipleOfValidator(filePathToSave);
+        }
       }
     }
 
@@ -174,14 +178,28 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("Pattern.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION, root, pathToSaveMainClass);
   }
 
   public final void fillTemplatePatternValidator(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("PatternValidator.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMultipleOf(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOf.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMultipleOfValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOfValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
 
   public final void fillTemplate(

@@ -42,6 +42,17 @@ import lombok.extern.jackson.Jacksonized;
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
 </#if>
+<#list schema.fieldObjectList as field>
+    <#if field.pattern?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+  <#if field.multipleOf?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
+    <#break>
+  </#if>
+</#list>
 
 @Data
 public class ${schema.className} {
@@ -66,6 +77,12 @@ public class ${schema.className} {
   @Size(max =${field.maxLength})
   <#elseif !field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength})
+  </#if>
+  <#if field.pattern?has_content>
+  @Pattern(regex = "${field.pattern}")
+  </#if>
+  <#if field.multipleOf?has_content>
+  @MultipleOf(multiple = "${field.multipleOf}")
   </#if>
   <#if field.required?has_content && field.required == true>
   @NonNull

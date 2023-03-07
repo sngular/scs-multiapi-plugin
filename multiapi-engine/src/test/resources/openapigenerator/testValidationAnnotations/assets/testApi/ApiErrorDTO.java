@@ -9,6 +9,7 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
 import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
 import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
 public class ApiErrorDTO {
@@ -16,6 +17,7 @@ public class ApiErrorDTO {
   @JsonProperty(value ="code")
   @Min(minimum = 10)
   @Max(maximum = 200, exclusive = true)
+  @MultipleOf(multiple = "10,55")
   @NotNull
   private final Integer code;
   @JsonProperty(value ="message")

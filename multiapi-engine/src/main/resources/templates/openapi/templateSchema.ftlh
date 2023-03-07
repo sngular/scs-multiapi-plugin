@@ -40,6 +40,13 @@ import ${packageModel}.exception.ModelClassException;
 <#list schema.fieldObjectList as field>
   <#if field.pattern?has_content>
 import ${packageModel}.customvalidator.Pattern;
+    <#break>
+  </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+  <#if field.multipleOf?has_content>
+import ${packageModel}.customvalidator.MultipleOf;
+    <#break>
   </#if>
 </#list>
 <#list schema.fieldObjectList as field>
@@ -74,6 +81,9 @@ public class ${schema.className} {
   </#if>
   <#if field.pattern?has_content>
   @Pattern(regex = "${field.pattern}")
+  </#if>
+  <#if field.multipleOf?has_content>
+  @MultipleOf(multiple = "${field.multipleOf}")
   </#if>
   <#if field.required?has_content && field.required == true>
   @NotNull

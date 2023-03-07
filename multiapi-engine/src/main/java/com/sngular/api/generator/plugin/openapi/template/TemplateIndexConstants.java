@@ -58,6 +58,10 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_PATTERN_VALIDATOR_ANNOTATION = "templatePatternValidator.ftlh";
 
+  public static final String TEMPLATE_MULTIPLEOF_ANNOTATION = "templateMultipleOf.ftlh";
+
+  public static final String TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION = "templateMultipleOfValidator.ftlh";
+
   private TemplateIndexConstants() {}
 
 }

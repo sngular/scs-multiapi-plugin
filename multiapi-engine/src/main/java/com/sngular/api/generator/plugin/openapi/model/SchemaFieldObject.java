@@ -47,6 +47,9 @@ public class SchemaFieldObject {
   private String pattern = null;
 
   @Default
+  private BigDecimal multipleOf = null;
+
+  @Default
   private String dataTypeSimple = "Object";
 
   private String dataType;
