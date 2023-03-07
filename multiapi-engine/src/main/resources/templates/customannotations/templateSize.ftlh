@@ -11,6 +11,10 @@ ElementType.ANNOTATION_TYPE})
 @Documented
 public @interface Size {
 
+    int min();
+
+    int max();
+
     String message() default "Value is not between the correct values.";
 
     Class<?>[] groups() default {};
