@@ -377,7 +377,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateComplesAnyOf() {
+  static Function<Path, Boolean> validateComplexAnyOf() {
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testcomplexanyof/api";
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testcomplexanyof/model";
@@ -393,6 +393,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testComplexAnyOf/assets/ApiArrayFieldDTO.java",
         "openapigenerator/testComplexAnyOf/assets/ApiBooleanFieldDTO.java",
         "openapigenerator/testComplexAnyOf/assets/ApiDateFieldDTO.java",
+        "openapigenerator/testComplexAnyOf/assets/ApiDefaultItemDTO.java",
         "openapigenerator/testComplexAnyOf/assets/ApiEnumFieldDTO.java",
         "openapigenerator/testComplexAnyOf/assets/ApiMapFieldDTO.java",
         "openapigenerator/testComplexAnyOf/assets/ApiNumberFieldDTO.java",

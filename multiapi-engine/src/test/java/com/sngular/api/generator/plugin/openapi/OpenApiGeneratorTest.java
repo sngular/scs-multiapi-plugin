@@ -37,7 +37,7 @@ class OpenApiGeneratorTest {
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
         Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF, OpenApiGeneratorFixtures.validateAllOf()),
-        Arguments.of("testComplexAnyOf", OpenApiGeneratorFixtures.TEST_COMPLEX_ANY_OF, OpenApiGeneratorFixtures.validateComplesAnyOf()),
+        Arguments.of("testComplexAnyOf", OpenApiGeneratorFixtures.TEST_COMPLEX_ANY_OF, OpenApiGeneratorFixtures.validateComplexAnyOf()),
         Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK, OpenApiGeneratorFixtures.validateAllOfLombok()),
         Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE, OpenApiGeneratorFixtures.validateOverwriteModeTrue()),
         Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION, OpenApiGeneratorFixtures.validateApiClientGeneration()),
