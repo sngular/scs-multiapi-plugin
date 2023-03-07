@@ -30,6 +30,29 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
         <#break>
     </#if>
 </#list>
+<#list schema.fieldObjectList as field>
+    <#if field.pattern?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.multipleOf?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.maxItems?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.minItems?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
+        <#break>
+    </#if>
+</#list>
 import lombok.Builder;
 import lombok.Data;
 <#list schema.fieldObjectList as field>
@@ -42,17 +65,6 @@ import lombok.extern.jackson.Jacksonized;
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
 </#if>
-<#list schema.fieldObjectList as field>
-    <#if field.pattern?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
-    </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-  <#if field.multipleOf?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
-    <#break>
-  </#if>
-</#list>
 
 @Data
 public class ${schema.className} {
@@ -70,6 +82,12 @@ public class ${schema.className} {
   </#if>
   <#if field.maximum?has_content && field.exclusiveMaximum?has_content && field.exclusiveMaximum == true>
   @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum?string})
+  </#if>
+  <#if field.maxItems?has_content>
+  @MaxItems(maximum = ${field.maxItems})
+  </#if>
+  <#if field.minItems?has_content>
+  @MinItems(minimum = ${field.minItems})
   </#if>
   <#if field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength}, max =${field.maxLength})

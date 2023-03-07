@@ -35,8 +35,14 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                                         TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION, TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 

@@ -32,6 +32,18 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
+    <#if field.maxItems?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.minItems?has_content>
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
     <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
     <#break>
@@ -71,6 +83,12 @@ public class ${schema.className} {
   </#if>
   <#if field.maximum?has_content && field.exclusiveMaximum?has_content && field.exclusiveMaximum == true>
   @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum?string})
+  </#if>
+  <#if field.maxItems?has_content>
+  @MaxItems(maximum = ${field.maxItems})
+  </#if>
+  <#if field.minItems?has_content>
+  @MinItems(minimum = ${field.minItems})
   </#if>
   <#if field.maxLength?has_content && field.minLength?has_content>
   @Size(min =${field.minLength}, max =${field.maxLength})

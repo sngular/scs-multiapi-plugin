@@ -38,6 +38,12 @@ public class SchemaFieldObject {
   private Boolean exclusiveMinimum = null;
 
   @Default
+  private Integer minItems = null;
+
+  @Default
+  private Integer maxItems = null;
+
+  @Default
   private Integer minLength = null;
 
   @Default

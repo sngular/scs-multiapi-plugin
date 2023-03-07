@@ -293,6 +293,8 @@ public class MapperContentUtil {
         fieldObjectArrayList.add(SchemaFieldObject
                                      .builder()
                                      .baseName(fieldName)
+                                     .maxItems(arraySchema.getMaxItems())
+                                     .minItems(arraySchema.getMinItems())
                                      .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
                                      .dataTypeSimple(ARRAY)
                                      .build());

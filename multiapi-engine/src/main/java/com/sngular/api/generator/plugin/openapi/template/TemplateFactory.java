@@ -61,9 +61,17 @@ public class TemplateFactory {
           fillTemplateMax(filePathToSave);
           fillTemplateMaxValidator(filePathToSave);
         }
+        if (Objects.nonNull(fieldObject.getMaxItems())) {
+          fillTemplateMaxItems(filePathToSave);
+          fillTemplateMaxItemsValidator(filePathToSave);
+        }
         if (Objects.nonNull(fieldObject.getMinimum())) {
           fillTemplateMin(filePathToSave);
           fillTemplateMinValidator(filePathToSave);
+        }
+        if (Objects.nonNull(fieldObject.getMinItems())) {
+          fillTemplateMinItems(filePathToSave);
+          fillTemplateMinItemsValidator(filePathToSave);
         }
         if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
           fillTemplateSize(filePathToSave);
@@ -200,6 +208,36 @@ public class TemplateFactory {
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOfValidator.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMaxItems(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxItems.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMaxItemsValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxItemsValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMinItems(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinItems.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMinItemsValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinItemsValidator.java").toString();
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
 
   public final void fillTemplate(
