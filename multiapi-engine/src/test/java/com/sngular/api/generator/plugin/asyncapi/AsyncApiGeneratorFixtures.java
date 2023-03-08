@@ -64,7 +64,7 @@ public class AsyncApiGeneratorFixtures {
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testCustomValidators/event-api.yml")
           .consumer(OperationParameterObject.builder()
-                                            .ids("customvValidatorResponse")
+                                            .ids("customValidatorResponse")
                                             .modelNameSuffix("DTO")
                                             .apiPackage("com.sngular.scsplugin.customvalidators.model.event.consumer")
                                             .modelPackage("com.sngular.scsplugin.customvalidators.model.event")

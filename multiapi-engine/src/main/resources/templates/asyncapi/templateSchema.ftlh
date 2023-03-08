@@ -14,9 +14,63 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import ${import};
 </#list>
 <#list schema.fieldObjectList as field>
+    <#if field.maxLength?has_content || field.minLength?has_content>
+import ${packageModel}.customvalidator.Size;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.maximum?has_content>
+import ${packageModel}.customvalidator.Max;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.minimum?has_content>
+import ${packageModel}.customvalidator.Min;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.maxItems?has_content>
+import ${packageModel}.customvalidator.MaxItems;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.minItems?has_content>
+import ${packageModel}.customvalidator.MinItems;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
     <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
-    <#break>
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.pattern?has_content>
+import ${packageModel}.customvalidator.Pattern;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.multipleOf?has_content>
+import ${packageModel}.customvalidator.MultipleOf;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.required?has_content && field.required == true>
+import ${packageModel}.customvalidator.NotNull;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+    <#if field.uniqueItems?has_content && field.uniqueItems == true>
+import ${packageModel}.customvalidator.UniqueItems;
+        <#break>
     </#if>
 </#list>
 
@@ -24,6 +78,43 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
+<#if field.minimum?has_content && (!field.exclusiveMinimum?has_content || field.exclusiveMinimum == false)>
+  @Min(minimum = ${field.minimum})
+</#if>
+<#if field.minimum?has_content && field.exclusiveMinimum?has_content && field.exclusiveMinimum == true>
+  @Min(minimum = ${field.minimum}, exclusive = ${field.exclusiveMinimum?string})
+</#if>
+<#if field.maximum?has_content && (!field.exclusiveMaximum?has_content || field.exclusiveMaximum == false)>
+  @Max(maximum = ${field.maximum})
+</#if>
+<#if field.maximum?has_content && field.exclusiveMaximum?has_content && field.exclusiveMaximum == true>
+  @Max(maximum = ${field.maximum}, exclusive = ${field.exclusiveMaximum?string})
+</#if>
+<#if field.maxItems?has_content>
+  @MaxItems(maximum = ${field.maxItems})
+</#if>
+<#if field.minItems?has_content>
+  @MinItems(minimum = ${field.minItems})
+</#if>
+<#if field.uniqueItems?has_content && field.uniqueItems == true>
+  @UniqueItems
+</#if>
+<#if field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength}, max =${field.maxLength})
+<#elseif field.maxLength?has_content && !field.minLength?has_content>
+  @Size(max =${field.maxLength})
+<#elseif !field.maxLength?has_content && field.minLength?has_content>
+  @Size(min =${field.minLength})
+</#if>
+<#if field.pattern?has_content>
+  @Pattern(regex = "${field.pattern}")
+</#if>
+<#if field.multipleOf?has_content>
+  @MultipleOf(multiple = "${field.multipleOf}")
+</#if>
+<#if field.required?has_content && field.required == true>
+  @NotNull
+</#if>
   <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     <#if field.required>
   private final List<${field.dataType}> ${field.baseName?uncap_first};

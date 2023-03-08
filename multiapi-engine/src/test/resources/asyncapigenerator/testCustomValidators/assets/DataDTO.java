@@ -1,23 +1,50 @@
-package com.sngular.scsplugin.issuegeneration.model.event;
+package com.sngular.scsplugin.customvalidators.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.scsplugin.customvalidators.model.event.Integer;
+import java.util.List;
+import java.util.ArrayList;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
+import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
+import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
 
 public class DataDTO {
 
   @JsonProperty(value ="clientId")
+  @Min(minimum = 10)
+  @Max(maximum = 200, exclusive = true)
+  @MultipleOf(multiple = "10.55")
+  @NotNull
   private Integer clientId;
   @JsonProperty(value ="clientName")
+  @Size(min =50, max =200)
+  @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
+  @NotNull
   private String clientName;
   @JsonProperty(value ="flightNumber")
   private String flightNumber;
+  @JsonProperty(value ="test")
+  @MaxItems(maximum = 10)
+  @MinItems(minimum = 5)
+  @UniqueItems
+  @NotNull
+  private List<integer> test = new ArrayList<integer>();
 
-  private DataDTO(Integer clientId, String clientName, String flightNumber) {
+  private DataDTO(Integer clientId, String clientName, String flightNumber, List<integer> test) {
     this.clientId = clientId;
     this.clientName = clientName;
     this.flightNumber = flightNumber;
+    this.test = test;
 
   }
 
@@ -25,6 +52,7 @@ public class DataDTO {
     this.clientId = builder.clientId;
     this.clientName = builder.clientName;
     this.flightNumber = builder.flightNumber;
+    this.test = builder.test;
 
   }
 
@@ -37,6 +65,7 @@ public class DataDTO {
     private Integer clientId;
     private String clientName;
     private String flightNumber;
+    private List<integer> test = new ArrayList<integer>();
 
     public DataDTO.DataDTOBuilder clientId(Integer clientId) {
       this.clientId = clientId;
@@ -50,6 +79,19 @@ public class DataDTO {
 
     public DataDTO.DataDTOBuilder flightNumber(String flightNumber) {
       this.flightNumber = flightNumber;
+      return this;
+    }
+    public DataDTO.DataDTOBuilder test(List<integer> test) {
+      if (!test.isEmpty()) {
+        this.test.addAll(test);
+      }
+      return this;
+    }
+
+    public DataDTO.DataDTOBuilder tes(integer tes) {
+      if (tes != null) {
+        this.test.add(tes);
+      }
       return this;
     }
 
@@ -95,6 +137,18 @@ public class DataDTO {
     this.flightNumber = flightNumber;
   }
 
+  /**
+  * Get test
+  * @return test
+  */
+  @Schema(name = "test", required = false)
+  public List<integer> getTest() {
+    return test;
+  }
+  public void setTest(List<integer> test) {
+    this.test = test;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -104,12 +158,12 @@ public class DataDTO {
       return false;
     }
     DataDTO dataDTO = (DataDTO) o;
-    return Objects.equals(this.clientId, dataDTO.clientId) && Objects.equals(this.clientName, dataDTO.clientName) && Objects.equals(this.flightNumber, dataDTO.flightNumber);
+    return Objects.equals(this.clientId, dataDTO.clientId) && Objects.equals(this.clientName, dataDTO.clientName) && Objects.equals(this.flightNumber, dataDTO.flightNumber) && Objects.equals(this.test, dataDTO.test);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clientId, clientName, flightNumber);
+    return Objects.hash(clientId, clientName, flightNumber, test);
   }
 
   @Override
@@ -119,6 +173,7 @@ public class DataDTO {
     sb.append(" clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append(" clientName: ").append(toIndentedString(clientName)).append("\n");
     sb.append(" flightNumber: ").append(toIndentedString(flightNumber)).append("\n");
+    sb.append(" test: ").append(toIndentedString(test)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,8 +1,8 @@
-package com.sngular.scsplugin.issuegeneration.model.event.consumer;
+package com.sngular.scsplugin.customvalidators.model.event.consumer;
 
-import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.customvalidators.model.event.StatusDTO;
 
-public interface IResponse {
+public interface ICustomValidatorResponse {
 
-  void response(final StatusDTO value);
+  void customValidatorResponse(final StatusDTO value);
 }

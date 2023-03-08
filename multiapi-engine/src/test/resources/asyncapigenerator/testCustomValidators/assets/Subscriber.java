@@ -1,23 +1,23 @@
-package com.sngular.scsplugin.issuegeneration.model.event.consumer;
+package com.sngular.scsplugin.customvalidators.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.customvalidators.model.event.StatusDTO;
 
 @Configuration
 public class Subscriber {
 
-  private final IResponse response;
+  private final ICustomValidatorResponse customValidatorResponse;
 
-  protected Subscriber(final IResponse response) {
-    this.response = response;
+  protected Subscriber(final ICustomValidatorResponse customValidatorResponse) {
+    this.customValidatorResponse = customValidatorResponse;
   }
 
   @Bean
-  public Consumer<StatusDTO> response() {
-    return value -> response.response(value);
+  public Consumer<StatusDTO> customValidatorResponse() {
+    return value -> customValidatorResponse.customValidatorResponse(value);
   }
 
 

@@ -1,8 +1,8 @@
-package com.sngular.scsplugin.issuegeneration.model.event.producer;
+package com.sngular.scsplugin.customvalidators.model.event.producer;
 
-import com.sngular.scsplugin.issuegeneration.model.event.DataClientDTO;
+import com.sngular.scsplugin.customvalidators.model.event.DataClientDTO;
 
-public interface IClients {
+public interface ICustomValidatorClients {
 
-  DataClientDTO clients();
+  DataClientDTO customValidatorClients();
 }

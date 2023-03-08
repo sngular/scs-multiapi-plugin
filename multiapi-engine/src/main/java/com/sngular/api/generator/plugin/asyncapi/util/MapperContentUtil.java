@@ -252,6 +252,7 @@ public class MapperContentUtil {
       } else if (schema.has("enum")) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
+        System.out.println("hey");
         fieldObject = SchemaFieldObject
           .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
       }

@@ -54,6 +54,11 @@ components:
           - KO
     data:
       type: object
+      required:
+        - clientId
+        - clientName
+        - test
+        - flightNumber
       properties:
         clientId:
           type: integer
@@ -79,3 +84,4 @@ components:
           maxItems: 10
           minItems: 5
           uniqueItems: true
+          description: Array para probar anotaciones
