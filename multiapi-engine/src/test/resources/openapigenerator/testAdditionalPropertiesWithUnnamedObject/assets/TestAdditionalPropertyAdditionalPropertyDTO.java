@@ -14,7 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 public class TestAdditionalPropertyAdditionalPropertyDTO {
 
   @JsonProperty(value ="additionalProperties")
-  private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  private Map<String, List<ArraySchemaDTO>> additionalProperties = new HashMap<String, List<ArraySchemaDTO>>();
 
   @JsonProperty(value ="name")
   @NonNull
@@ -23,7 +23,7 @@ public class TestAdditionalPropertyAdditionalPropertyDTO {
 
   @Builder
   @Jacksonized
-  private TestAdditionalPropertyAdditionalPropertyDTO(Map<String, Object> additionalProperties, @NonNull String name) {
+  private TestAdditionalPropertyAdditionalPropertyDTO(Map<String, List<ArraySchemaDTO>> additionalProperties, @NonNull String name) {
     this.additionalProperties = additionalProperties;
     this.name = name;
 
