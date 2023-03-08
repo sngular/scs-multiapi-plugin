@@ -24,6 +24,8 @@ import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumExcepti
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject.SchemaObjectBuilder;
+import io.swagger.util.Json;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
@@ -252,9 +254,50 @@ public class MapperContentUtil {
       } else if (schema.has("enum")) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
-        System.out.println("hey");
+        final Iterator<Map.Entry<String,JsonNode>> iterator = schema.fields();
+        Entry<String, JsonNode> current = null;
         fieldObject = SchemaFieldObject
-          .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
+                          .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
+        while(iterator.hasNext()){
+          current = iterator.next();
+          switch (current.getKey()){
+            case "minimum":
+              fieldObject.setMinimum(current.getValue().decimalValue());
+              break;
+            case "maximum":
+              fieldObject.setMaximum(current.getValue().decimalValue());
+              break;
+            case "exclusiveMinimum":
+              fieldObject.setExclusiveMinimum(current.getValue().booleanValue());
+              break;
+            case "exclusiveMaximum":
+              fieldObject.setExclusiveMaximum(current.getValue().booleanValue());
+              break;
+            case "maxItems":
+              fieldObject.setMaxItems(current.getValue().intValue());
+              break;
+            case "maxLength":
+              fieldObject.setMaxLength(current.getValue().intValue());
+              break;
+            case "minItems":
+              fieldObject.setMinItems(current.getValue().intValue());
+              break;
+            case "minLength":
+              fieldObject.setMinLength(current.getValue().intValue());
+              break;
+            case "pattern":
+              fieldObject.setPattern(current.getValue().toString());
+              break;
+            case "uniqueItems":
+              fieldObject.setUniqueItems(current.getValue().booleanValue());
+              break;
+            case "multipleOf":
+              fieldObject.setMultipleOf(current.getValue().decimalValue());
+              break;
+            default:
+              break;
+          }
+        }
       }
     } else if (schema.has("$ref")) {
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
