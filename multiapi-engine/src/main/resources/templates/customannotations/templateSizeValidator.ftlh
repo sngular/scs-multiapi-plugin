@@ -10,6 +10,7 @@ public class SizeValidator implements ConstraintValidator<Size, Integer> {
 
     @Override
     public void initialize(Size constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
         this.min = constraintAnnotation.min();
         this.max = constraintAnnotation.max();
     }

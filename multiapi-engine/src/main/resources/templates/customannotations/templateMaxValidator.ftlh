@@ -10,6 +10,7 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
     @Override
     public void initialize(Max constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
         this.maximum = constraintAnnotation.maximum()
         this.exclusive = constraintAnnotation.exclusive()
     }

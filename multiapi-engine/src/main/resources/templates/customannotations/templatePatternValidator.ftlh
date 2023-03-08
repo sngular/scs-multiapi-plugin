@@ -9,6 +9,7 @@ public class PatternValidator implements ConstraintValidator<Pattern, String> {
 
   @Override
   public void initialize(Pattern constraintAnnotation) {
+    ConstraintValidator.super.initialize(constraintAnnotation);
     this.regex = constraintAnnotation.regex();
   }
 

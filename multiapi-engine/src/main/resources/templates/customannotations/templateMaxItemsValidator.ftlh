@@ -9,6 +9,7 @@ public class MaxItemsValidator implements ConstraintValidator<MaxItems, Array> {
 
   @Override
   public void initialize(MaxItems constraintAnnotation) {
+    ConstraintValidator.super.initialize(constraintAnnotation);
     this.maximum = constraintAnnotation.maximum()
   }
 

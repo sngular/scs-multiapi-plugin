@@ -9,6 +9,7 @@ public class MinItemsValidator implements ConstraintValidator<MinItems, Array> {
 
   @Override
   public void initialize(MinItems constraintAnnotation) {
+    ConstraintValidator.super.initialize(constraintAnnotation);
     this.minimum = constraintAnnotation.minimum()
   }
 

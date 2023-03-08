@@ -8,6 +8,7 @@ public class NotNullValidator implements ConstraintValidator<NotNull, Object> {
 
     @Override
     public void initialize(NotNull constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override

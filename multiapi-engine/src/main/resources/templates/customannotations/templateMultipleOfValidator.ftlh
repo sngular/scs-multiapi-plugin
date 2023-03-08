@@ -12,6 +12,7 @@ public class MultipleOfValidator implements ConstraintValidator<MultipleOf, BigD
 
   @Override
   public void initialize(final MultipleOf constraintAnnotation) {
+    ConstraintValidator.super.initialize(constraintAnnotation);
     this.multiple = new BigDecimal(constraintAnnotation.multiple());
   }
 
