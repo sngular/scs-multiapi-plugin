@@ -177,19 +177,8 @@ public class MapperContentUtil {
       return fieldObjectArrayList;
     }
 
-    if (STRING.equalsIgnoreCase(schema.getType()) && Objects.nonNull(schema.getEnum())) {
-      Map<String, String> enumValues = new HashMap<>();
-      int i = 0;
-      for (Object v : schema.getEnum()) {
-        enumValues.put(Integer.toString(i++), (String) v);
-      }
-
-      final var field = SchemaFieldObject.builder()
-                                         .baseName(schema.getName())
-                                         .dataTypeSimple(STRING)
-                                         .enumValues(enumValues)
-                                         .build();
-      fieldObjectArrayList.add(field);
+    if (Objects.nonNull(schema.getEnum())) {
+      processEnumField(schema.getName(), schema, specFile, fieldObjectArrayList, schema.getEnum(), schema);
     }
 
     return fieldObjectArrayList;
