@@ -51,8 +51,6 @@ public class MapperContentUtil {
 
   private static final String STRING = "string";
 
-  private static String schemaCombinatorType;
-
   private MapperContentUtil() {
   }
 
@@ -75,12 +73,24 @@ public class MapperContentUtil {
     }
     final var listSchema = getFields(totalSchemas, schema, specFile, compositedSchemas, antiLoopList);
 
+    String schemaCombinatorType = "";
+    if (Objects.nonNull(schema.getAllOf())) {
+      schemaCombinatorType = "allOf";
+    }
+
+    if (Objects.nonNull(schema.getAnyOf())) {
+      schemaCombinatorType = "anyOf";
+    }
+
+    if (Objects.nonNull(schema.getOneOf())) {
+      schemaCombinatorType = "oneOf";
+    }
+
     compositedSchemas.put(StringUtils.defaultIfBlank(schema.getName(), nameSchema), SchemaObject.builder()
                                                                                                 .schemaName(StringUtils.defaultIfBlank(schema.getName(), nameSchema))
                                                                                                 .className(MapperUtil.getPojoName(nameSchema, specFile))
                                                                                                 .importList(getImportList(listSchema, modelPackage))
-                                                                                                .schemaCombinator(
-                                                                                                    StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                                                                                                .schemaCombinator(schemaCombinatorType)
                                                                                                 .fieldObjectList(listSchema)
                                                                                                 .build());
     return compositedSchemas;
@@ -124,7 +134,6 @@ public class MapperContentUtil {
       final Map<String, Schema> totalSchemas, final Schema<?> schema, final SpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
-    schemaCombinatorType = null;
 
     if (Objects.nonNull(schema.getProperties())) {
       if (Objects.nonNull(schema.getAdditionalProperties())) {
@@ -157,23 +166,17 @@ public class MapperContentUtil {
     }
 
     if (Objects.nonNull(schema.getAllOf())) {
-      fieldObjectArrayList.addAll(
-          processAllOf(totalSchemas, schema.getAllOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "allOf";
+      fieldObjectArrayList.addAll(processAllOf(totalSchemas, schema.getAllOf(), specFile, compositedSchemas, antiLoopList));
       return fieldObjectArrayList;
     }
 
     if (Objects.nonNull(schema.getAnyOf())) {
-      fieldObjectArrayList.addAll(
-          processAnyOfOneOf(totalSchemas, schema.getAnyOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "anyOf";
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getAnyOf(), specFile, compositedSchemas, antiLoopList));
       return fieldObjectArrayList;
     }
 
     if (Objects.nonNull(schema.getOneOf())) {
-      fieldObjectArrayList.addAll(
-          processAnyOfOneOf(totalSchemas, schema.getOneOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "oneOf";
+      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getOneOf(), specFile, compositedSchemas, antiLoopList));
       return fieldObjectArrayList;
     }
 
@@ -527,6 +530,7 @@ public class MapperContentUtil {
       final String fieldName, final Schema<?> schema, final SpecFile specFile, final Map<String, Schema> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+    String schemaCombinatorType = "";
     if (Objects.nonNull(schema.getAllOf())) {
       fieldObjectArrayList.addAll(
           processAllOf(totalSchemas, schema.getAllOf(), specFile, compositedSchemas, antiLoopList));
@@ -545,7 +549,7 @@ public class MapperContentUtil {
                        .schemaName(fieldName)
                        .className(MapperUtil.getPojoName(fieldName, specFile))
                        .importList(getImportList(fieldObjectArrayList, specFile.getModelPackage()))
-                       .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                       .schemaCombinator(schemaCombinatorType)
                        .fieldObjectList(fieldObjectArrayList)
                        .build();
   }
