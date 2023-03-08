@@ -33,7 +33,6 @@ public class ApiSchemaDTO {
     this.requiredFields = requiredFields;
 
     validateRequiredAttributes();
-    validatePartialCombinations();
   }
 
   private ApiSchemaDTO(ApiSchemaDTOBuilder builder) {
@@ -45,7 +44,6 @@ public class ApiSchemaDTO {
     this.requiredFields = builder.requiredFields;
 
     validateRequiredAttributes();
-    validatePartialCombinations();
   }
 
   public static ApiSchemaDTO.ApiSchemaDTOBuilder builder() {
@@ -215,27 +213,6 @@ public class ApiSchemaDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.properties)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.id)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.subjectName)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.requiredFields)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiSchemaDTO");
-    }
-  }
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
