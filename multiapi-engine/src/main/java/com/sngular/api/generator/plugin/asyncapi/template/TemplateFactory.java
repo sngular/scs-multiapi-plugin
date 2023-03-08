@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -121,6 +122,137 @@ public class TemplateFactory {
 
   }
 
+  public final void fillTemplateNotNull(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("NotNull.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateNotNullValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("NotNullValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMax(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Max.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMaxValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMin(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Min.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMinValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateSize(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Size.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateSizeValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("SizeValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplatePattern(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("Pattern.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplatePatternValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("PatternValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMultipleOf(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOf.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMultipleOfValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOfValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMaxItems(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxItems.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMaxItemsValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxItemsValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMinItems(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinItems.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateMinItemsValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinItemsValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateUniqueItems(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("UniqueItems.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION, root, pathToSaveMainClass);
+  }
+
+  public final void fillTemplateUniqueItemsValidator(final String filePathToSave) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve("UniqueItemsValidator.java").toString();
+    writeTemplateToFile(com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
+  }
+
   private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok) throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
@@ -132,6 +264,44 @@ public class TemplateFactory {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
+      for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
+        if (fieldObject.isRequired()) {
+          fillTemplateNotNull(filePath.toString());
+          fillTemplateNotNullValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMaximum())) {
+          fillTemplateMax(filePath.toString());
+          fillTemplateMaxValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMaxItems())) {
+          fillTemplateMaxItems(filePath.toString());
+          fillTemplateMaxItemsValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMinimum())) {
+          fillTemplateMin(filePath.toString());
+          fillTemplateMinValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMinItems())) {
+          fillTemplateMinItems(filePath.toString());
+          fillTemplateMinItemsValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
+          fillTemplateSize(filePath.toString());
+          fillTemplateSizeValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getPattern())){
+          fillTemplatePattern(filePath.toString());
+          fillTemplatePatternValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getMultipleOf())){
+          fillTemplateMultipleOf(filePath.toString());
+          fillTemplateMultipleOfValidator(filePath.toString());
+        }
+        if (Objects.nonNull(fieldObject.getUniqueItems())){
+          fillTemplateUniqueItems(filePath.toString());
+          fillTemplateUniqueItemsValidator(filePath.toString());
+        }
+      }
     }
   }
 

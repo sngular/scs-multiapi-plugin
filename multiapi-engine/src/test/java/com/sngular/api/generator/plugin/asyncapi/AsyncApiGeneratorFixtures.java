@@ -59,6 +59,25 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
+  final static List<SpecFile> TEST_CUSTOM_VALIDATORS = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testCustomValidators/event-api.yml")
+          .consumer(OperationParameterObject.builder()
+                                            .ids("customvValidatorResponse")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("com.sngular.scsplugin.customvalidators.model.event.consumer")
+                                            .modelPackage("com.sngular.scsplugin.customvalidators.model.event")
+                                            .build())
+          .supplier(OperationParameterObject.builder()
+                                            .ids("customValidatorClients")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("com.sngular.scsplugin.customvalidators.model.event.producer")
+                                            .modelPackage("com.sngular.scsplugin.customvalidators.model.event")
+                                            .build())
+          .build()
+  );
+
   final static List<SpecFile> TEST_FILE_GENERATION_ISSUE = List.of(
       SpecFile
           .builder()
@@ -200,6 +219,32 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testIssueGeneration/assets/DataDTO.java",
         "asyncapigenerator/testIssueGeneration/assets/StatusDTO.java",
         "asyncapigenerator/testIssueGeneration/assets/StatusMsgDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateCustomValidators() {
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event/consumer";
+
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event/producer";
+
+    final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event";
+
+    final List<String> expectedConsumerFiles = List.of(
+        "asyncapigenerator/testCustomValidators/assets/IResponse.java",
+        "asyncapigenerator/testCustomValidators/assets/Subscriber.java");
+
+    final List<String> expectedProducerFiles = List.of(
+        "asyncapigenerator/testCustomValidators/assets/IClients.java",
+        "asyncapigenerator/testCustomValidators/assets/Producer.java");
+
+    final List<String> expectedModelFiles = List.of(
+        "asyncapigenerator/testCustomValidators/assets/DataClientDTO.java",
+        "asyncapigenerator/testCustomValidators/assets/DataDTO.java",
+        "asyncapigenerator/testCustomValidators/assets/StatusDTO.java",
+        "asyncapigenerator/testCustomValidators/assets/StatusMsgDTO.java"
     );
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
