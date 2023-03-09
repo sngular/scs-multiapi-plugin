@@ -6,7 +6,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class SchemaFieldObjectType {
+import lombok.Data;
+
+@Data
+public class SchemaFieldObjectType  {
 
   public static final String OBJECT = "Object";
 
@@ -32,6 +35,19 @@ public class SchemaFieldObjectType {
 
   private static final Map<String, String> typeMappings = Map.of(
       OBJECT, "Object",
+      ARRAY, "List<?>",
+      MAP, "Map<String, ?>",
+      BIG_DECIMAL, "BigDecimal",
+      INTEGER, "Integer",
+      DOUBLE, "Double",
+      FLOAT, "Float",
+      LONG, "Long",
+      STRING, "String",
+      ENUM, "Enum"
+  );
+
+  private static final Map<String, String> implTypeMappings = Map.of(
+      OBJECT, "Object",
       ARRAY, "ArrayList<?>",
       MAP, "HashMap<String, ?>",
       BIG_DECIMAL, "BigDecimal",
@@ -40,10 +56,10 @@ public class SchemaFieldObjectType {
       FLOAT, "Float",
       LONG, "Long",
       STRING, "String",
-      ENUM, "enum"
+      ENUM, "Enum"
   );
 
-  private final SchemaFieldObjectType innerType;
+  private SchemaFieldObjectType innerType;
 
   private final String baseType;
 
@@ -70,6 +86,19 @@ public class SchemaFieldObjectType {
     return new SchemaFieldObjectType(types.next(), constructTypeFromList(types));
   }
 
+  public void setDeepType(SchemaFieldObjectType type) {
+    if (Objects.isNull(innerType)) {
+      innerType = type;
+      return;
+    }
+
+    innerType.setDeepType(type);
+  }
+
+  public void setDeepType(String type) {
+    setDeepType(new SchemaFieldObjectType(type));
+  }
+
   public boolean containsType(String type) {
     if (Objects.isNull(innerType)) {
       return type.equals(baseType);
@@ -78,9 +107,8 @@ public class SchemaFieldObjectType {
     return type.equals(baseType) || innerType.containsType(type);
   }
 
-  @Override
-  public String toString() {
-    String baseString = typeMappings.getOrDefault(baseType, baseType);
+  private String mapIntoString(Map<String, String> mappings) {
+    String baseString = mappings.getOrDefault(baseType, baseType);
     if (!baseString.contains("?")) {
       return baseString;
     }
@@ -89,7 +117,16 @@ public class SchemaFieldObjectType {
       throw new RuntimeException(String.format("Field object type '%s' missing an inner type", baseType));
     }
 
-    return baseString.replace("?", innerType.toString());
+    return baseString.replace("?", innerType.mapIntoString(typeMappings));
+  }
+
+  public String toImplString() {
+    return mapIntoString(implTypeMappings);
+  }
+
+  @Override
+  public String toString() {
+    return mapIntoString(typeMappings);
   }
 
   @Override

@@ -33,6 +33,8 @@ import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectTy
 
 public class MapperContentUtil {
 
+  private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
+
   private MapperContentUtil() {
   }
 
@@ -460,13 +462,12 @@ public class MapperContentUtil {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     Object addPropObj = schema.getAdditionalProperties();
-    if (addPropObj instanceof Boolean || addPropObj instanceof ObjectSchema
-        || addPropObj instanceof MapSchema || addPropObj instanceof ComposedSchema) {
+    if (addPropObj instanceof Boolean) {
       fieldObjectArrayList
           .add(SchemaFieldObject
                    .builder()
-                   .baseName(fieldName + "Map")
-                   .dataType(SchemaFieldObjectType.fromTypeList(MAP, MapperUtil.getSimpleType(schema.getAdditionalProperties())))
+                   .baseName(fieldName)
+                   .dataType(SchemaFieldObjectType.fromTypeList(MAP, OBJECT))
                    .build());
 
       return fieldObjectArrayList;
@@ -486,27 +487,30 @@ public class MapperContentUtil {
     }
 
     if (additionalProperties instanceof ArraySchema) {
-      compositedSchemas.putAll(
-          mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, additionalProperties, "additionalProperties", specFile,
-                                     specFile.getModelPackage()));
       fieldObjectArrayList
           .add(SchemaFieldObject
                    .builder()
                    .baseName("additionalProperties")
-                   .dataType(SchemaFieldObjectType.fromTypeList(MAP, ARRAY, MapperUtil.getPojoName("additionalProperties", specFile)))
+                   .dataType(SchemaFieldObjectType.fromTypeList(MAP, ARRAY, MapperUtil.getSimpleType(additionalProperties.getItems(), specFile)))
                    .build());
 
       return fieldObjectArrayList;
     }
 
-    fieldObjectArrayList.addAll(
-        processFieldObjectList(fieldName, className, additionalProperties, specFile, totalSchemas, compositedSchemas,
-                               antiLoopList));
+    final String type = isBasicType(additionalProperties) ? MapperUtil.getSimpleType(additionalProperties, specFile)
+                            : MapperUtil.getPojoName(schema.getName() + ADDITIONAL_PROPERTY_NAME, specFile);
+    fieldObjectArrayList
+        .add(SchemaFieldObject
+                 .builder()
+                 .baseName(fieldName)
+                 .dataType(SchemaFieldObjectType.fromTypeList(MAP, type))
+                 .build());
+
     return fieldObjectArrayList;
   }
 
   private static boolean isBasicType(final Schema value) {
-    return !(value instanceof ArraySchema || value instanceof ObjectSchema || value instanceof ComposedSchema);
+    return !(value instanceof ArraySchema || value instanceof ObjectSchema || value instanceof ComposedSchema || value instanceof MapSchema);
   }
 
   private static SchemaObject createComposedSchema(
@@ -566,49 +570,46 @@ public class MapperContentUtil {
         typeObject = getRef(schema, specFile);
       }
       field.setImportClass(getImportClass(typeObject));
-      field.setDataType(new SchemaFieldObjectType(field.getDataType(), typeObject)); //TODO
+      field.getDataType().setDeepType(typeObject);
     }
   }
 
   private static String getMapTypeObject(final Schema schema, final SpecFile specFile) {
-    final String typeObject;
-    if (schema.getAdditionalProperties() instanceof Boolean && (Boolean) schema.getAdditionalProperties()) {
-      typeObject = OBJECT;
-    } else {
-      final Schema additionalProperties = (Schema) schema.getAdditionalProperties();
-      if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
-        typeObject = getRef(additionalProperties, specFile);
-      } else if (StringUtils.isNotBlank(
-          additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase("object")) {
-        final var additionalPropertiesField = SchemaFieldObject
-                                                  .builder()
-                                                  .baseName(additionalProperties.getName())
-                                                  .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(additionalProperties, specFile)))
-                                                  .build();
-        setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
-        typeObject = getMapFieldType(additionalPropertiesField);
-      } else {
-        typeObject = OBJECT;
-      }
+    if (schema.getAdditionalProperties() instanceof Boolean) {
+      return OBJECT;
     }
-    return typeObject;
+
+    final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
+    if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
+      return getRef(additionalProperties, specFile);
+    }
+
+    if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase(OBJECT)) {
+      final var additionalPropertiesField = SchemaFieldObject
+                                                .builder()
+                                                .baseName(additionalProperties.getName())
+                                                .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(additionalProperties, specFile)))
+                                                .build();
+      setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
+      return getMapFieldType(additionalPropertiesField);
+    }
+
+    return OBJECT;
   }
 
   private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
-    final String fieldType;
-    switch (StringUtils.uncapitalize(schemaFieldObject.getDataTypeSimple())) {
+    final String fieldType = schemaFieldObject.getDataType().toString();
+    switch (fieldType) {
       case BIG_DECIMAL:
       case INTEGER:
       case DOUBLE:
       case FLOAT:
       case LONG:
       case STRING:
-        fieldType = StringUtils.capitalize(schemaFieldObject.getDataTypeSimple());
-        break;
+        return fieldType;
       default:
-        fieldType = OBJECT;
+        return OBJECT;
     }
-    return fieldType;
   }
 
   private static String getRef(final Schema<?> schema, final SpecFile specFile) {
@@ -629,11 +630,11 @@ public class MapperContentUtil {
     final var field = SchemaFieldObject
                           .builder()
                           .baseName(key)
-                          .dataType(new SchemaFieldObjectType("enum"))
+                          .dataType(new SchemaFieldObjectType(ENUM))
                           .build();
     field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
     final var dataType = MapperUtil.getSimpleType(value, specFile);
-    field.setDataType(new SchemaFieldObjectType(field.getDataType(), dataType)); //TODO
+    field.getDataType().setDeepType(dataType);
 
     final HashMap<String, String> enumValuesMap = new HashMap<>();
 
@@ -641,7 +642,7 @@ public class MapperContentUtil {
       String valueName = enumValue.toString();
       valueName = valueName.replace(".", "_DOT_");
 
-      switch (StringUtils.uncapitalize(dataType)) {
+      switch (dataType) {
         case INTEGER:
           enumValuesMap.put("INTEGER_" + valueName, enumValue.toString());
           break;

@@ -13,8 +13,8 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class TestDTO {
 
-  @JsonProperty(value ="additionalPropertiesMap")
-  private Map<String, Object> additionalPropertiesMap = new HashMap<String, Object>();
+  @JsonProperty(value ="additionalProperties")
+  private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
   @JsonProperty(value ="id")
   @NonNull
@@ -23,8 +23,8 @@ public class TestDTO {
 
   @Builder
   @Jacksonized
-  private TestDTO(Map<String, Object> additionalPropertiesMap, @NonNull String id) {
-    this.additionalPropertiesMap = additionalPropertiesMap;
+  private TestDTO(Map<String, Object> additionalProperties, @NonNull String id) {
+    this.additionalProperties = additionalProperties;
     this.id = id;
 
   }

@@ -75,6 +75,7 @@ public class ApiDefaultItemDTO {
     private ObjectField objectField;
     private MapField mapField;
     private ApiUnionFieldDTO unionField;
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder stringField(StringField stringField) {
       this.stringField = stringField;
       return this;
@@ -83,30 +84,37 @@ public class ApiDefaultItemDTO {
       this.sequenceField = sequenceField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder dateField(DateField dateField) {
       this.dateField = dateField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumField(EnumField enumField) {
       this.enumField = enumField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder booleanField(BooleanField booleanField) {
       this.booleanField = booleanField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder arrayField(ArrayField arrayField) {
       this.arrayField = arrayField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder numberField(NumberField numberField) {
       this.numberField = numberField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder objectField(ObjectField objectField) {
       this.objectField = objectField;
       return this;
     }
+
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapField(MapField mapField) {
       this.mapField = mapField;
       return this;
