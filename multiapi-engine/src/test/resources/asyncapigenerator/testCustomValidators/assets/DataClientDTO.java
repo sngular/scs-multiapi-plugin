@@ -1,10 +1,10 @@
-package com.sngular.scsplugin.customvalidators.model.event;
+package com.sngular.scsplugin.customvalidator.model.event;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.customvalidators.model.event.DataDTO;
+import com.sngular.scsplugin.customvalidator.model.event.DataDTO;
 
 public class DataClientDTO {
 

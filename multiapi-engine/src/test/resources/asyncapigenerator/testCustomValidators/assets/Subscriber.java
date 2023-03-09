@@ -1,10 +1,10 @@
-package com.sngular.scsplugin.customvalidators.model.event.consumer;
+package com.sngular.scsplugin.customvalidator.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.customvalidators.model.event.StatusDTO;
+import com.sngular.scsplugin.customvalidator.model.event.StatusDTO;
 
 @Configuration
 public class Subscriber {

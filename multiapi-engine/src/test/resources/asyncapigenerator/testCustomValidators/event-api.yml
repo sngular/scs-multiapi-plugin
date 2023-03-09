@@ -55,16 +55,16 @@ components:
     data:
       type: object
       required:
-        - clientId
-        - clientName
-        - test
-        - flightNumber
+      - clientId
+      - clientName
+      - test
+      - flightNumber
       properties:
         clientId:
           type: integer
           minimum: 10
           exclusiveMinimum: false
-          maximum: 10000
+          maximum: 200
           exclusiveMaximum: true
           multipleOf: 10.55
           description: Id del cliente.

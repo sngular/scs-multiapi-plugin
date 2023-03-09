@@ -1,6 +1,6 @@
-package com.sngular.scsplugin.customvalidators.model.event.consumer;
+package com.sngular.scsplugin.customvalidator.model.event.consumer;
 
-import com.sngular.scsplugin.customvalidators.model.event.StatusDTO;
+import com.sngular.scsplugin.customvalidator.model.event.StatusDTO;
 
 public interface ICustomValidatorResponse {
 
