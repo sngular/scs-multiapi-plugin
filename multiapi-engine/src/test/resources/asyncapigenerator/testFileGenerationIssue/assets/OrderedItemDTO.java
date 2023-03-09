@@ -4,17 +4,23 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.Size;
+import com.sngular.scsplugin.filegenerationissue.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.NotNull;
 
 public class OrderedItemDTO {
 
   @JsonProperty(value ="catalogItemId")
   private Long catalogItemId;
   @JsonProperty(value ="name")
-  private String name;
+  @Size(min =3, max =250)
+  @NotNull
+  private final String name;
   @JsonProperty(value ="quantity")
   private Integer quantity;
   @JsonProperty(value ="price")
-  private Double price;
+  @NotNull
+  private final Double price;
 
   private OrderedItemDTO(Long catalogItemId, String name, Integer quantity, Double price) {
     this.catalogItemId = catalogItemId;
@@ -22,6 +28,7 @@ public class OrderedItemDTO {
     this.quantity = quantity;
     this.price = price;
 
+    validateRequiredAttributes();
   }
 
   private OrderedItemDTO(OrderedItemDTOBuilder builder) {
@@ -30,6 +37,7 @@ public class OrderedItemDTO {
     this.quantity = builder.quantity;
     this.price = builder.price;
 
+    validateRequiredAttributes();
   }
 
   public static OrderedItemDTO.OrderedItemDTOBuilder builder() {
@@ -85,12 +93,9 @@ public class OrderedItemDTO {
   * Get name
   * @return name
   */
-  @Schema(name = "name", required = false)
+  @Schema(name = "name", required = true)
   public String getName() {
     return name;
-  }
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
@@ -109,12 +114,9 @@ public class OrderedItemDTO {
   * Get price
   * @return price
   */
-  @Schema(name = "price", required = false)
+  @Schema(name = "price", required = true)
   public Double getPrice() {
     return price;
-  }
-  public void setPrice(Double price) {
-    this.price = price;
   }
 
   @Override
@@ -158,5 +160,18 @@ public class OrderedItemDTO {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.name)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.price)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("OrderedItemDTO");
+    }
+  }
 
 }

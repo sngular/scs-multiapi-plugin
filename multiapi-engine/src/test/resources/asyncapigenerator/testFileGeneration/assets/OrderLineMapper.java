@@ -7,24 +7,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.scsplugin.filegeneration.model.event.OrderProductMapper;
+import com.sngular.scsplugin.filegeneration.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 
 public class OrderLineMapper {
 
   @JsonProperty(value ="ref")
-  private String ref;
+  @NotNull
+  private final String ref;
   @JsonProperty(value ="products")
-  private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
+  @NotNull
+  private final List<OrderProductMapper> products;
 
   private OrderLineMapper(String ref, List<OrderProductMapper> products) {
     this.ref = ref;
     this.products = products;
 
+    validateRequiredAttributes();
   }
 
   private OrderLineMapper(OrderLineMapperBuilder builder) {
     this.ref = builder.ref;
     this.products = builder.products;
 
+    validateRequiredAttributes();
   }
 
   public static OrderLineMapper.OrderLineMapperBuilder builder() {
@@ -64,24 +70,18 @@ public class OrderLineMapper {
   * Get ref
   * @return ref
   */
-  @Schema(name = "ref", required = false)
+  @Schema(name = "ref", required = true)
   public String getRef() {
     return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
   }
 
   /**
   * Get products
   * @return products
   */
-  @Schema(name = "products", required = false)
+  @Schema(name = "products", required = true)
   public List<OrderProductMapper> getProducts() {
     return products;
-  }
-  public void setProducts(List<OrderProductMapper> products) {
-    this.products = products;
   }
 
   @Override
@@ -123,5 +123,18 @@ public class OrderLineMapper {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.ref)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.products)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("OrderLineMapper");
+    }
+  }
 
 }

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Size;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Max;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Min;
-import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxItems;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinItems;
+import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MultipleOf;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.NotNull;
@@ -39,7 +39,7 @@ public class DataDTO {
   @MinItems(minimum = 5)
   @UniqueItems
   @NotNull
-  private final List<integer> test = new ArrayList<integer>();
+  private final List<integer> test;
 
   private DataDTO(Integer clientId, String clientName, String flightNumber, List<integer> test) {
     this.clientId = clientId;
@@ -47,6 +47,7 @@ public class DataDTO {
     this.flightNumber = flightNumber;
     this.test = test;
 
+    validateRequiredAttributes();
   }
 
   private DataDTO(DataDTOBuilder builder) {
@@ -55,6 +56,7 @@ public class DataDTO {
     this.flightNumber = builder.flightNumber;
     this.test = builder.test;
 
+    validateRequiredAttributes();
   }
 
   public static DataDTO.DataDTOBuilder builder() {
@@ -110,9 +112,6 @@ public class DataDTO {
   public Integer getClientId() {
     return clientId;
   }
-  public void setClientId(Integer clientId) {
-    this.clientId = clientId;
-  }
 
   /**
   * Get clientName
@@ -121,9 +120,6 @@ public class DataDTO {
   @Schema(name = "clientName", required = true)
   public String getClientName() {
     return clientName;
-  }
-  public void setClientName(String clientName) {
-    this.clientName = clientName;
   }
 
   /**
@@ -134,9 +130,6 @@ public class DataDTO {
   public String getFlightNumber() {
     return flightNumber;
   }
-  public void setFlightNumber(String flightNumber) {
-    this.flightNumber = flightNumber;
-  }
 
   /**
   * Get test
@@ -145,9 +138,6 @@ public class DataDTO {
   @Schema(name = "test", required = true)
   public List<integer> getTest() {
     return test;
-  }
-  public void setTest(List<integer> test) {
-    this.test = test;
   }
 
   @Override
@@ -191,5 +181,22 @@ public class DataDTO {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.clientId)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.clientName)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.flightNumber)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.test)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("DataDTO");
+    }
+  }
 
 }

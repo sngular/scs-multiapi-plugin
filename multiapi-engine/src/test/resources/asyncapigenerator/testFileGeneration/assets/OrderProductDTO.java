@@ -4,17 +4,23 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.scsplugin.filegeneration.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 
 public class OrderProductDTO {
 
   @JsonProperty(value ="ref")
-  private String ref;
+  @NotNull
+  private final String ref;
   @JsonProperty(value ="productRef")
-  private String productRef;
+  @NotNull
+  private final String productRef;
   @JsonProperty(value ="price")
-  private String price;
+  @NotNull
+  private final String price;
   @JsonProperty(value ="quantity")
-  private String quantity;
+  @NotNull
+  private final String quantity;
 
   private OrderProductDTO(String ref, String productRef, String price, String quantity) {
     this.ref = ref;
@@ -22,6 +28,7 @@ public class OrderProductDTO {
     this.price = price;
     this.quantity = quantity;
 
+    validateRequiredAttributes();
   }
 
   private OrderProductDTO(OrderProductDTOBuilder builder) {
@@ -30,6 +37,7 @@ public class OrderProductDTO {
     this.price = builder.price;
     this.quantity = builder.quantity;
 
+    validateRequiredAttributes();
   }
 
   public static OrderProductDTO.OrderProductDTOBuilder builder() {
@@ -73,48 +81,36 @@ public class OrderProductDTO {
   * Get ref
   * @return ref
   */
-  @Schema(name = "ref", required = false)
+  @Schema(name = "ref", required = true)
   public String getRef() {
     return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
   }
 
   /**
   * Get productRef
   * @return productRef
   */
-  @Schema(name = "productRef", required = false)
+  @Schema(name = "productRef", required = true)
   public String getProductRef() {
     return productRef;
-  }
-  public void setProductRef(String productRef) {
-    this.productRef = productRef;
   }
 
   /**
   * Get price
   * @return price
   */
-  @Schema(name = "price", required = false)
+  @Schema(name = "price", required = true)
   public String getPrice() {
     return price;
-  }
-  public void setPrice(String price) {
-    this.price = price;
   }
 
   /**
   * Get quantity
   * @return quantity
   */
-  @Schema(name = "quantity", required = false)
+  @Schema(name = "quantity", required = true)
   public String getQuantity() {
     return quantity;
-  }
-  public void setQuantity(String quantity) {
-    this.quantity = quantity;
   }
 
   @Override
@@ -158,5 +154,22 @@ public class OrderProductDTO {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.ref)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.productRef)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.price)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.quantity)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("OrderProductDTO");
+    }
+  }
 
 }

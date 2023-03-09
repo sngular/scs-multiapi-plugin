@@ -238,6 +238,8 @@ public class MapperContentUtil {
         if (items.has("$ref")) {
           modelToBuildList.add(MapperUtil.getRefClass(items));
         }
+        final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
+        Entry<String, JsonNode> current = null;
         fieldObject =
             SchemaFieldObject
                 .builder()
@@ -246,6 +248,23 @@ public class MapperContentUtil {
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
                 .build();
+        while (iterator.hasNext()) {
+          current = iterator.next();
+          switch (current.getKey()) {
+            case "maxItems":
+              fieldObject.setMaxItems(current.getValue().intValue());
+              break;
+            case "minItems":
+              fieldObject.setMinItems(current.getValue().intValue());
+              break;
+            case "uniqueItems":
+              fieldObject.setUniqueItems(current.getValue().booleanValue());
+              break;
+            default:
+              break;
+          }
+        }
+        fieldObject.setRequired(required);
       } else if (schema.has("enum")) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
@@ -290,14 +309,11 @@ public class MapperContentUtil {
             case "multipleOf":
               fieldObject.setMultipleOf(current.getValue().toString());
               break;
-            case "required":
-              fieldObject.setRequired(current.getValue().booleanValue());
-              break;
             default:
               break;
           }
         }
-        setFieldType(fieldObject, schema, required, prefix, suffix);
+        fieldObject.setRequired(required);
       }
     } else if (schema.has("$ref")) {
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
@@ -337,11 +353,7 @@ public class MapperContentUtil {
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
         }
-      } else if (INTEGER.equalsIgnoreCase(value.get("type").textValue())){
-        field.setDataTypeSimple(INTEGER);
-      } else if (STRING.equalsIgnoreCase(value.get("type").textValue())) {
-        field.setDataTypeSimple(STRING);
-      }else {
+      } else {
         throw new NonSupportedSchemaException(value.toPrettyString());
       }
     }
