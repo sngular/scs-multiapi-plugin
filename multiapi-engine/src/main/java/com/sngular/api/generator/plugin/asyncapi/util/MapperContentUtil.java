@@ -156,23 +156,25 @@ public class MapperContentUtil {
   private static void extractFieldsComplexObject(
       final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
       final Collection<String> modelToBuildList, final String prefix, final String suffix) {
-    final var field = fieldsIt.next();
-    final var fieldName = field.getKey();
-    final var fieldBody = field.getValue();
-    if (fieldBody.has("$ref")) {
-      final String fieldType = extractTypeFromBody(fieldBody);
-      modelToBuildList.add(fieldType);
-      fieldObjectArrayList.add(
-          SchemaFieldObject.builder()
-                           .baseName(fieldName)
-                           .dataType(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                           .dataTypeSimple(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                           .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                           .required(false)
-                           .build());
-    } else if (fieldBody.elements().hasNext()) {
-      final var fieldObjectsIt = fieldBody.fields();
-      extractFieldsComplexObject(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
+    while (fieldsIt.hasNext()){
+      final var field = fieldsIt.next();
+      final var fieldName = field.getKey();
+      final var fieldBody = field.getValue();
+      if (fieldBody.has("$ref")) {
+        final String fieldType = extractTypeFromBody(fieldBody);
+        modelToBuildList.add(fieldType);
+        fieldObjectArrayList.add(
+            SchemaFieldObject.builder()
+                             .baseName(fieldName)
+                             .dataType(MapperUtil.getPojoName(fieldType, prefix, suffix))
+                             .dataTypeSimple(MapperUtil.getPojoName(fieldType, prefix, suffix))
+                             .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
+                             .required(false)
+                             .build());
+      }else if (fieldBody.elements().hasNext()) {
+        final var fieldObjectsIt = fieldBody.fields();
+        extractFieldsComplexObject(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
+      }
     }
   }
 
@@ -242,27 +244,6 @@ public class MapperContentUtil {
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
                 .build();
-        final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-        Entry<String, JsonNode> current = null;
-        while (iterator.hasNext()) {
-          current = iterator.next();
-          switch (current.getKey()) {
-            case "maxItems":
-              fieldObject.setMaxItems(current.getValue().intValue());
-              break;
-            case "minItems":
-              fieldObject.setMinItems(current.getValue().intValue());
-              break;
-            case "uniqueItems":
-              fieldObject.setUniqueItems(current.getValue().booleanValue());
-              break;
-            case "required":
-              fieldObject.setRequired(current.getValue().booleanValue());
-              break;
-            default:
-              break;
-          }
-        }
       } else if (schema.has("enum")) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
@@ -305,7 +286,7 @@ public class MapperContentUtil {
               fieldObject.setUniqueItems(current.getValue().booleanValue());
               break;
             case "multipleOf":
-              fieldObject.setMultipleOf(current.getValue().decimalValue());
+              fieldObject.setMultipleOf(current.getValue().toString());
               break;
             case "required":
               fieldObject.setRequired(current.getValue().booleanValue());
