@@ -12,6 +12,8 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_CONTENT_SCHEMA_LOMBOK = "templateSchemaWithLombok.ftlh";
 
+  public static final String TEMPLATE_MODEL_EXCEPTION = "templateModelClassException.ftlh";
+
   public static final String TEMPLATE_API_SUPPLIERS = "templateSuppliers.ftlh";
 
   public static final String TEMPLATE_API_CONSUMERS = "templateConsumers.ftlh";

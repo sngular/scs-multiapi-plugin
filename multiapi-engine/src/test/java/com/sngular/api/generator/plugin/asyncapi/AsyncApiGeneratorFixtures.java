@@ -66,14 +66,14 @@ public class AsyncApiGeneratorFixtures {
           .consumer(OperationParameterObject.builder()
                                             .ids("customValidatorResponse")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.customvalidators.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.customvalidators.model.event")
+                                            .apiPackage("com.sngular.scsplugin.customvalidator.model.event.consumer")
+                                            .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
                                             .build())
           .supplier(OperationParameterObject.builder()
                                             .ids("customValidatorClients")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.customvalidators.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.customvalidators.model.event")
+                                            .apiPackage("com.sngular.scsplugin.customvalidator.model.event.producer")
+                                            .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
                                             .build())
           .build()
   );
@@ -226,11 +226,11 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateCustomValidators() {
-    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event/consumer";
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/consumer";
 
-    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event/producer";
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/producer";
 
-    final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/customvalidators/model/event";
+    final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event";
 
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testCustomValidators/assets/IResponse.java",
