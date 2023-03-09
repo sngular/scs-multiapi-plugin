@@ -1,23 +1,17 @@
-package ${packageModel}.customvalidator;
+package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
     ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PatternValidator.class)
+@Constraint(validatedBy = UniqueItemsValidator.class)
 @Documented
-public @interface Pattern {
-
-  String regex();
-
-  String message() default "Value does not fulfill the pattern.";
-
+public @interface UniqueItems {
+  String message() default "Items are not unique.";
   Class<?>[] groups() default {};
-
   Class<? extends Payload>[] payload() default {};
 
 }

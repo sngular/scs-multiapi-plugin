@@ -202,7 +202,7 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateMultipleOf(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
-    final Path pathToCustomValidatorPackage = filePathToSave.resolve("exception");
+    final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToCustomValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
     final String pathToSaveMainClass = pathToCustomValidatorPackage.resolve("MultipleOf.java").toString();

@@ -1,4 +1,4 @@
-package ${packageModel}.customvalidator;
+package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,18 +7,13 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
     ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = SizeValidator.class)
+@Constraint(validatedBy = NotNullValidator.class)
 @Documented
-public @interface Size {
+public @interface NotNull {
 
-    int min();
-
-    int max();
-
-    String message() default "Value is not between the correct values.";
+    String message() default "Value is null.";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

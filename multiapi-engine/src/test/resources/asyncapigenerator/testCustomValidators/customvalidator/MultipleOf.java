@@ -1,20 +1,19 @@
-package ${packageModel}.customvalidator;
+package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
     ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PatternValidator.class)
+@Constraint(validatedBy = MultipleOfValidator.class)
 @Documented
-public @interface Pattern {
+public @interface MultipleOf {
 
-  String regex();
+  String multiple();
 
-  String message() default "Value does not fulfill the pattern.";
+  String message() default "Value must be a multiple of the number.";
 
   Class<?>[] groups() default {};
 

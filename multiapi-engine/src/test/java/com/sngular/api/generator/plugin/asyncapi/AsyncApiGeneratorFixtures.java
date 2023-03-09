@@ -232,6 +232,8 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event";
 
+    final String DEFAULT_CUSTOMVALIDATOR_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/customvalidator";
+
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testCustomValidators/assets/IResponse.java",
         "asyncapigenerator/testCustomValidators/assets/Subscriber.java");
@@ -247,8 +249,29 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testCustomValidators/assets/StatusMsgDTO.java"
     );
 
+    final List<String> expectedValidatorFiles = List.of(
+        "asyncapigenerator/testCustomValidators/customvalidator/Max.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MaxItems.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MaxItemsValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MaxValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/Min.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MinItems.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MinItemsValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MinValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MultipleOf.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/MultipleOfValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/NotNull.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/NotNullValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/Pattern.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/PatternValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/Size.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/SizeValidator.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/UniqueItems.java",
+        "asyncapigenerator/testCustomValidators/customvalidator/UniqueItemsValidator.java"
+    );
+
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
-                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER) && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestFileGenerationIssue() {
@@ -372,6 +395,23 @@ public class AsyncApiGeneratorFixtures {
         TestUtils.validateFiles(expectedModelFiles, targetProducerFolder);
       }
     } catch (final IOException e) {
+      result = Boolean.FALSE;
+    }
+    return result;
+  }
+
+  private static boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder){
+    Boolean result = Boolean.TRUE;
+    try{
+      final Path pathToTarget = Path.of(resultPath.toString(), "target");
+
+      if (!expectedValidatorFiles.isEmpty()){
+        final Path pathToTargetCustomValidator = pathToTarget.resolve(default_customvalidator_folder);
+        final File targetCustomValidatorFolder = pathToTargetCustomValidator.toFile();
+        assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
+        TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
+      }
+    } catch (final IOException e){
       result = Boolean.FALSE;
     }
     return result;

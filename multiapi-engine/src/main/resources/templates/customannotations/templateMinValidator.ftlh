@@ -11,8 +11,8 @@ public class MinValidator implements ConstraintValidator<Min, Integer> {
     @Override
     public void initialize(Min constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        this.minimum = constraintAnnotation.minimum()
-        this.exclusive = constraintAnnotation.exclusive()
+        this.minimum = constraintAnnotation.minimum();
+        this.exclusive = constraintAnnotation.exclusive();
     }
 
     @Override
