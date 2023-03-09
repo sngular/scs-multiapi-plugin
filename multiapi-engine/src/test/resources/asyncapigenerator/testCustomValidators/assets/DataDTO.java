@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Size;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Max;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Min;
+import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxItems;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinItems;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
@@ -24,20 +25,21 @@ public class DataDTO {
   @Max(maximum = 200, exclusive = true)
   @MultipleOf(multiple = "10.55")
   @NotNull
-  private Integer clientId;
+  private final Integer clientId;
   @JsonProperty(value ="clientName")
   @Size(min =50, max =200)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
   @NotNull
-  private String clientName;
+  private final String clientName;
   @JsonProperty(value ="flightNumber")
-  private String flightNumber;
+  @NotNull
+  private final String flightNumber;
   @JsonProperty(value ="test")
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
   @UniqueItems
   @NotNull
-  private List<integer> test = new ArrayList<integer>();
+  private final List<integer> test = new ArrayList<integer>();
 
   private DataDTO(Integer clientId, String clientName, String flightNumber, List<integer> test) {
     this.clientId = clientId;
@@ -104,7 +106,7 @@ public class DataDTO {
   * Get clientId
   * @return clientId
   */
-  @Schema(name = "clientId", required = false)
+  @Schema(name = "clientId", required = true)
   public Integer getClientId() {
     return clientId;
   }
@@ -116,7 +118,7 @@ public class DataDTO {
   * Get clientName
   * @return clientName
   */
-  @Schema(name = "clientName", required = false)
+  @Schema(name = "clientName", required = true)
   public String getClientName() {
     return clientName;
   }
@@ -128,7 +130,7 @@ public class DataDTO {
   * Get flightNumber
   * @return flightNumber
   */
-  @Schema(name = "flightNumber", required = false)
+  @Schema(name = "flightNumber", required = true)
   public String getFlightNumber() {
     return flightNumber;
   }
@@ -140,7 +142,7 @@ public class DataDTO {
   * Get test
   * @return test
   */
-  @Schema(name = "test", required = false)
+  @Schema(name = "test", required = true)
   public List<integer> getTest() {
     return test;
   }

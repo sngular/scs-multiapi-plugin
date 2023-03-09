@@ -128,7 +128,9 @@ public class MapperContentUtil {
       final ArrayList<SchemaFieldObject> fieldObjectArrayList) {
     final Set<String> requiredSet = new HashSet<>();
     if (model.has("required")) {
-      model.get("required").fieldNames().forEachRemaining(requiredSet::add);
+      JsonNode arrayNode = model.get("required");
+      Iterator<JsonNode> fields = arrayNode.iterator();
+      fields.forEachRemaining(field -> requiredSet.add(field.textValue()));
     }
     final var properties = model.get("properties");
     if (!(properties.has("anyOf") || properties.has("allOf") || properties.has("oneOf"))) {
@@ -295,6 +297,7 @@ public class MapperContentUtil {
               break;
           }
         }
+        setFieldType(fieldObject, schema, required, prefix, suffix);
       }
     } else if (schema.has("$ref")) {
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
@@ -334,7 +337,11 @@ public class MapperContentUtil {
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
         }
-      } else {
+      } else if (INTEGER.equalsIgnoreCase(value.get("type").textValue())){
+        field.setDataTypeSimple(INTEGER);
+      } else if (STRING.equalsIgnoreCase(value.get("type").textValue())) {
+        field.setDataTypeSimple(STRING);
+      }else {
         throw new NonSupportedSchemaException(value.toPrettyString());
       }
     }
