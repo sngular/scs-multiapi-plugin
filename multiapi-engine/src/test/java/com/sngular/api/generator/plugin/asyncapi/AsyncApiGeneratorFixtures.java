@@ -175,6 +175,8 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event";
 
+    final String DEFAULT_CUSTOMVALIDATOR_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/customvalidator";
+
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGeneration/assets/IPublishOperation.java",
         "asyncapigenerator/testFileGeneration/assets/TestClassName.java");
@@ -195,8 +197,13 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testFileGeneration/assets/WaiterMapper.java"
     );
 
+    final List<String> expectedValidatorFiles = List.of(
+        "asyncapigenerator/testFileGeneration/customvalidator/NotNull.java",
+        "asyncapigenerator/testFileGeneration/customvalidator/NotNullValidator.java"
+    );
+
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
-                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER) && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestIssueGeneration() {
@@ -282,6 +289,8 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event";
 
+    final String DEFAULT_CUSTOMVALIDATOR_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/customvalidator";
+
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGenerationIssue/assets/IOnCustomerEvent.java",
         "asyncapigenerator/testFileGenerationIssue/assets/TestClassName.java");
@@ -302,8 +311,15 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testFileGenerationIssue/assets/ShippingDetailsDTO.java"
     );
 
+    final List<String> expectedValidatorFiles = List.of(
+        "asyncapigenerator/testFileGenerationIssue/customvalidator/NotNull.java",
+        "asyncapigenerator/testFileGenerationIssue/customvalidator/NotNullValidator.java",
+        "asyncapigenerator/testFileGenerationIssue/customvalidator/Size.java",
+        "asyncapigenerator/testFileGenerationIssue/customvalidator/SizeValidator.java"
+    );
+
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
-                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+                     modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER) && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestFileGenerationExternalAvro() {

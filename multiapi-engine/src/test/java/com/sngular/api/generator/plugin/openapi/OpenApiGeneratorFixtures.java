@@ -877,6 +877,8 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
 
+    final String DEFAULT_CUSTOMVALIDATOR_API = "generated/com/sngular/multifileplugin/testapi/model/customvalidator";
+
     final List<String> expectedTestApiFile = List.of(
             "openapigenerator/testValidationAnnotations/assets/testApi/TestApi.java");
 
@@ -891,7 +893,29 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
             "openapigenerator/testValidationAnnotations/assets/ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    final List<String> expectedValidatorFiles = List.of(
+        "openapigenerator/testValidationAnnotations/customvalidator/Max.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MaxItems.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MaxItemsValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MaxValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/Min.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MinItems.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MinItemsValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MinValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MultipleOf.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/MultipleOfValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/NotNull.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/NotNullValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/Pattern.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/PatternValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/Size.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/SizeValidator.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/UniqueItems.java",
+        "openapigenerator/testValidationAnnotations/customvalidator/UniqueItemsValidator.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API)
+        && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_API);
   }
 
   static Function<Path, Boolean> validateValidationAnnotationsLombok() {
@@ -940,6 +964,24 @@ public final class OpenApiGeneratorFixtures {
         File targetModelException = pathToTargetException.toFile();
         assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
+      }
+    } catch (IOException e) {
+      result = Boolean.FALSE;
+    }
+    return result;
+  }
+
+  private static Boolean customValidatorTest(
+      final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator){
+    Boolean result = Boolean.TRUE;
+    try {
+      final Path pathToTarget = Path.of(resultPath.toString(), "target");
+
+      if (!expectedValidatorFiles.isEmpty()){
+        final Path pathToTargetCustomValidator = pathToTarget.resolve(targetCustomValidator);
+        final File targetCustomValidatorFolder = pathToTargetCustomValidator.toFile();
+        assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
+        TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
     } catch (IOException e) {
       result = Boolean.FALSE;
