@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.*;
+import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.OBJECT;
 
 @Data
 @Builder
