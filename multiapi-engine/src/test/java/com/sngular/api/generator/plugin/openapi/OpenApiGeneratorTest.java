@@ -79,7 +79,7 @@ class OpenApiGeneratorTest {
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
                      OpenApiGeneratorFixtures.validateCoconutSchema()),
         Arguments.of("testCreateDto", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
-                     OpenApiGeneratorFixtures.validateCreateDto())
+                     OpenApiGeneratorFixtures.validateCreateDTO())
     );
   }
 
