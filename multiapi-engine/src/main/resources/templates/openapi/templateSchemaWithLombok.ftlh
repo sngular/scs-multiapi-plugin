@@ -37,7 +37,7 @@ public class ${schema.className} {
   <#if field.dataType.baseType == "Array">
   private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "Map">
-  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.tgetImplementationTypeString()}();
+  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "Enum">
   private ${field.baseName?cap_first} ${field.baseName?uncap_first};
 

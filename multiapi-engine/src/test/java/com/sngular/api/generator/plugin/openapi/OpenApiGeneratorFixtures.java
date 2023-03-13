@@ -320,9 +320,9 @@ public final class OpenApiGeneratorFixtures {
       SpecFile
           .builder()
           .filePath("openapigenerator/testCreateDTO/api-test.yml")
-          .apiPackage("com.sngular.multifileplugin.testCreateDto")
-          .modelPackage("com.sngular.multifileplugin.testCreateDto.model")
-          .clientPackage("com.sngular.multifileplugin.testCreateDto.client")
+          .apiPackage("com.sngular.multifileplugin.testCreateDTO")
+          .modelPackage("com.sngular.multifileplugin.testCreateDTO.model")
+          .clientPackage("com.sngular.multifileplugin.testCreateDTO.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()

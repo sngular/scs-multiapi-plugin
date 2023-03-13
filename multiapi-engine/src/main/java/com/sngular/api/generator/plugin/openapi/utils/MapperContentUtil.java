@@ -44,6 +44,9 @@ import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectTy
 public class MapperContentUtil {
 
   private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
+  private static final String ANY_OF_COMBINATOR = "anyOf";
+  private static final String ONE_OF_COMBINATOR = "oneOf";
+  private static final String ALL_OF_COMBINATOR = "allOf";
 
   private MapperContentUtil() {
   }
@@ -66,15 +69,15 @@ public class MapperContentUtil {
 
     String schemaCombinatorType = "";
     if (Objects.nonNull(schema.getAllOf())) {
-      schemaCombinatorType = "allOf";
+      schemaCombinatorType = ALL_OF_COMBINATOR;
     }
 
     if (Objects.nonNull(schema.getAnyOf())) {
-      schemaCombinatorType = "anyOf";
+      schemaCombinatorType = ANY_OF_COMBINATOR;
     }
 
     if (Objects.nonNull(schema.getOneOf())) {
-      schemaCombinatorType = "oneOf";
+      schemaCombinatorType = ONE_OF_COMBINATOR;
     }
 
     compositedSchemas.put(StringUtils.defaultIfBlank(schema.getName(), nameSchema), SchemaObject.builder()
@@ -134,11 +137,7 @@ public class MapperContentUtil {
         fieldObjectArrayList.addAll(
             processFieldObjectList(null, null, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
       }
-
-      return fieldObjectArrayList;
-    }
-
-    if (ARRAY.equalsIgnoreCase(schema.getType())) {
+    } else if (ARRAY.equalsIgnoreCase(schema.getType())) {
       final ArraySchema arraySchema = (ArraySchema) schema;
       final String itemType = Objects.nonNull(arraySchema.getItems().get$ref()) ? getRef(arraySchema.getItems(), specFile) : arraySchema.getItems().getType();
 
@@ -147,26 +146,13 @@ public class MapperContentUtil {
                                          .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, itemType))
                                          .build();
       fieldObjectArrayList.add(field);
-
-      return fieldObjectArrayList;
-    }
-
-    if (Objects.nonNull(schema.getAllOf())) {
+    } else if (Objects.nonNull(schema.getAllOf())) {
       fieldObjectArrayList.addAll(processAllOf(totalSchemas, schema.getAllOf(), specFile, compositedSchemas, antiLoopList));
-      return fieldObjectArrayList;
-    }
-
-    if (Objects.nonNull(schema.getAnyOf())) {
+    } else if (Objects.nonNull(schema.getAnyOf())) {
       fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getAnyOf(), specFile, compositedSchemas, antiLoopList));
-      return fieldObjectArrayList;
-    }
-
-    if (Objects.nonNull(schema.getOneOf())) {
+    } else if (Objects.nonNull(schema.getOneOf())) {
       fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, schema.getOneOf(), specFile, compositedSchemas, antiLoopList));
-      return fieldObjectArrayList;
-    }
-
-    if (Objects.nonNull(schema.getEnum())) {
+    } else if (Objects.nonNull(schema.getEnum())) {
       processEnumField(schema.getName(), schema, specFile, fieldObjectArrayList, schema.getEnum(), schema);
     }
 
@@ -234,10 +220,7 @@ public class MapperContentUtil {
     if (ARRAY.equalsIgnoreCase(schema.getType())) {
       fieldObjectArrayList.addAll(
           processArray(fieldName, className, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
-      return fieldObjectArrayList;
-    }
-
-    if (schema instanceof MapSchema) {
+    } else if (schema instanceof MapSchema) {
       if (OBJECT.equalsIgnoreCase(schema.getType())) {
         schema.getProperties().forEach(
             processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
@@ -248,11 +231,7 @@ public class MapperContentUtil {
             processAdditionalProperties(fieldName, className, schema, specFile, totalSchemas, compositedSchemas,
                                         antiLoopList));
       }
-
-      return fieldObjectArrayList;
-    }
-
-    if (Objects.nonNull(schema.get$ref())) {
+    } else if (Objects.nonNull(schema.get$ref())) {
       final String refSchemaName = getRef(schema, specFile);
       final var field = SchemaFieldObject.builder()
                                          .baseName(fieldName)
@@ -260,10 +239,7 @@ public class MapperContentUtil {
                                          .build();
       setFieldType(field, schema, schema, specFile, refSchemaName);
       fieldObjectArrayList.add(field);
-      return fieldObjectArrayList;
-    }
-
-    if (!(schema instanceof ObjectSchema || schema instanceof ComposedSchema)) {
+    } else if (!(schema instanceof ObjectSchema || schema instanceof ComposedSchema)) {
       final var field = SchemaFieldObject
                             .builder()
                             .baseName(fieldName)
@@ -271,71 +247,58 @@ public class MapperContentUtil {
                             .build();
       setFieldType(field, schema, schema, specFile, "");
       fieldObjectArrayList.add(field);
-      return fieldObjectArrayList;
-    }
-
-    if (MapUtils.isEmpty(schema.getProperties()) && !(schema instanceof ComposedSchema)) {
+    } else if (MapUtils.isEmpty(schema.getProperties()) && !(schema instanceof ComposedSchema)) {
       fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
                                    .baseName(fieldName)
                                    .dataType(new SchemaFieldObjectType(OBJECT))
                                    .build());
-      return fieldObjectArrayList;
-    }
-
-    if (schema instanceof ObjectSchema) {
+    } else if (schema instanceof ObjectSchema) {
       if (ObjectUtils.allNull(className, fieldName)) {
         schema.getProperties().forEach(
             processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
-        return fieldObjectArrayList;
-      }
-
-      if (antiLoopList.contains(className)) {
+      } else if (antiLoopList.contains(className)) {
         fieldObjectArrayList
             .add(SchemaFieldObject
                      .builder()
                      .baseName(className)
                      .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(className, specFile)))
                      .build());
-        return fieldObjectArrayList;
-      }
-
-      if (antiLoopList.contains(fieldName)) {
+      } else if (antiLoopList.contains(fieldName)) {
         fieldObjectArrayList
             .add(SchemaFieldObject
                      .builder()
                      .baseName(fieldName)
                      .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(fieldName, specFile)))
                      .build());
-        return fieldObjectArrayList;
+      } else {
+        final String name = StringUtils.defaultIfBlank(className, fieldName);
+        compositedSchemas.putAll(
+            mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, schema, name, specFile,
+                                       specFile.getModelPackage()));
+        fieldObjectArrayList
+            .add(SchemaFieldObject
+                     .builder()
+                     .baseName(name)
+                     .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(name, specFile)))
+                     .build());
+      }
+    } else {
+      final var composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
+      var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
+      if (Objects.isNull(schemaObjectComposed)) {
+        schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), schema, specFile,
+                                                    totalSchemas, compositedSchemas, antiLoopList);
+        compositedSchemas.put(composedSchemaName, schemaObjectComposed);
       }
 
-      final String name = StringUtils.defaultIfBlank(className, fieldName);
-      compositedSchemas.putAll(
-          mapComponentToSchemaObject(totalSchemas, compositedSchemas, antiLoopList, schema, name, specFile,
-                                     specFile.getModelPackage()));
-      fieldObjectArrayList
-          .add(SchemaFieldObject
-                   .builder()
-                   .baseName(name)
-                   .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(name, specFile)))
-                   .build());
-      return fieldObjectArrayList;
+      fieldObjectArrayList.add(SchemaFieldObject
+                                   .builder()
+                                   .baseName(fieldName)
+                                   .dataType(SchemaFieldObjectType.fromTypeList(schemaObjectComposed.getClassName(), schemaObjectComposed.getClassName()))
+                                   .build());
     }
 
-    final var composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
-    var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
-    if (Objects.isNull(schemaObjectComposed)) {
-      schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), schema, specFile,
-                                                  totalSchemas, compositedSchemas, antiLoopList);
-      compositedSchemas.put(composedSchemaName, schemaObjectComposed);
-    }
-
-    fieldObjectArrayList.add(SchemaFieldObject
-                                 .builder()
-                                 .baseName(fieldName)
-                                 .dataType(SchemaFieldObjectType.fromTypeList(schemaObjectComposed.getClassName(), schemaObjectComposed.getClassName()))
-                                 .build());
     return fieldObjectArrayList;
   }
 
@@ -401,55 +364,48 @@ public class MapperContentUtil {
                                    .baseName(fieldName)
                                    .dataType(new SchemaFieldObjectType(OBJECT))
                                    .build());
-      return fieldObjectArrayList;
-    }
+    } else {
+      final var items = schema.getItems();
+      if (Objects.nonNull(items.get$ref())) {
+        final String refSchemaName = getRef(items, specFile);
+        final var field = SchemaFieldObject
+                              .builder()
+                              .baseName(fieldName)
+                              .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
+                              .build();
+        setFieldType(field, items, items, specFile, refSchemaName);
+        fieldObjectArrayList.add(field);
+      } else if (ObjectUtils.anyNotNull(items.getAnyOf(), items.getAllOf(), items.getOneOf())) {
+        final String composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
+        SchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
+        if (Objects.isNull(schemaObjectComposed)) {
+          schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), items, specFile,
+                                                      totalSchemas, compositedSchemas, antiLoopList);
+          compositedSchemas.put(composedSchemaName, schemaObjectComposed);
+        }
 
-    final var items = schema.getItems();
-    if (Objects.nonNull(items.get$ref())) {
-      final String refSchemaName = getRef(items, specFile);
-      final var field = SchemaFieldObject
-                            .builder()
-                            .baseName(fieldName)
-                            .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
-                            .build();
-      setFieldType(field, items, items, specFile, refSchemaName);
-      fieldObjectArrayList.add(field);
-      return fieldObjectArrayList;
-    }
-
-    if (ObjectUtils.anyNotNull(items.getAnyOf(), items.getAllOf(), items.getOneOf())) {
-      final String composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
-      SchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
-      if (Objects.isNull(schemaObjectComposed)) {
-        schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), items, specFile,
-                                                    totalSchemas, compositedSchemas, antiLoopList);
-        compositedSchemas.put(composedSchemaName, schemaObjectComposed);
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, schemaObjectComposed.getClassName()))
+                                     .importClass(schemaObjectComposed.getClassName())
+                                     .build());
+      } else if (Objects.nonNull(items.getProperties())) {
+        compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile));
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
+                                     .build());
+      } else {
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
+                                     .build());
       }
-
-      fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, schemaObjectComposed.getClassName()))
-                                   .importClass(schemaObjectComposed.getClassName())
-                                   .build());
-      return fieldObjectArrayList;
     }
 
-    if (Objects.nonNull(items.getProperties())) {
-      compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile));
-      fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
-                                   .build());
-      return fieldObjectArrayList;
-    }
-
-    fieldObjectArrayList.add(SchemaFieldObject
-                                 .builder()
-                                 .baseName(fieldName)
-                                 .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
-                                 .build());
     return fieldObjectArrayList;
   }
 
@@ -466,42 +422,34 @@ public class MapperContentUtil {
                    .baseName(fieldName)
                    .dataType(SchemaFieldObjectType.fromTypeList(MAP, OBJECT))
                    .build());
-
-      return fieldObjectArrayList;
+    } else {
+      final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
+      if (Objects.nonNull(additionalProperties.get$ref())) {
+        final String refSchemaName = getRef(additionalProperties, specFile);
+        final var field = SchemaFieldObject.builder()
+                                           .baseName(fieldName)
+                                           .dataType(SchemaFieldObjectType.fromTypeList(MAP, refSchemaName))
+                                           .build();
+        setFieldType(field, schema, additionalProperties, specFile, refSchemaName);
+        fieldObjectArrayList.add(field);
+      } else if (additionalProperties instanceof ArraySchema) {
+        fieldObjectArrayList
+            .add(SchemaFieldObject
+                     .builder()
+                     .baseName("additionalProperties")
+                     .dataType(SchemaFieldObjectType.fromTypeList(MAP, ARRAY, MapperUtil.getSimpleType(additionalProperties.getItems(), specFile)))
+                     .build());
+      } else {
+        final String type = isBasicType(additionalProperties) ? MapperUtil.getSimpleType(additionalProperties, specFile)
+                                : MapperUtil.getPojoName(schema.getName() + ADDITIONAL_PROPERTY_NAME, specFile);
+        fieldObjectArrayList
+            .add(SchemaFieldObject
+                     .builder()
+                     .baseName(fieldName)
+                     .dataType(SchemaFieldObjectType.fromTypeList(MAP, type))
+                     .build());
+      }
     }
-
-    final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
-    if (Objects.nonNull(additionalProperties.get$ref())) {
-      final String refSchemaName = getRef(additionalProperties, specFile);
-      final var field = SchemaFieldObject.builder()
-                                         .baseName(fieldName)
-                                         .dataType(SchemaFieldObjectType.fromTypeList(MAP, refSchemaName))
-                                         .build();
-      setFieldType(field, schema, additionalProperties, specFile, refSchemaName);
-      fieldObjectArrayList.add(field);
-
-      return fieldObjectArrayList;
-    }
-
-    if (additionalProperties instanceof ArraySchema) {
-      fieldObjectArrayList
-          .add(SchemaFieldObject
-                   .builder()
-                   .baseName("additionalProperties")
-                   .dataType(SchemaFieldObjectType.fromTypeList(MAP, ARRAY, MapperUtil.getSimpleType(additionalProperties.getItems(), specFile)))
-                   .build());
-
-      return fieldObjectArrayList;
-    }
-
-    final String type = isBasicType(additionalProperties) ? MapperUtil.getSimpleType(additionalProperties, specFile)
-                            : MapperUtil.getPojoName(schema.getName() + ADDITIONAL_PROPERTY_NAME, specFile);
-    fieldObjectArrayList
-        .add(SchemaFieldObject
-                 .builder()
-                 .baseName(fieldName)
-                 .dataType(SchemaFieldObjectType.fromTypeList(MAP, type))
-                 .build());
 
     return fieldObjectArrayList;
   }
@@ -518,15 +466,15 @@ public class MapperContentUtil {
     if (Objects.nonNull(schema.getAllOf())) {
       fieldObjectArrayList.addAll(
           processAllOf(totalSchemas, schema.getAllOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "allOf";
+      schemaCombinatorType = ALL_OF_COMBINATOR;
     } else if (Objects.nonNull(schema.getAnyOf())) {
       fieldObjectArrayList.addAll(
           processAnyOfOneOf(totalSchemas, schema.getAnyOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "anyOf";
+      schemaCombinatorType = ANY_OF_COMBINATOR;
     } else if (Objects.nonNull(schema.getOneOf())) {
       fieldObjectArrayList.addAll(
           processAnyOfOneOf(totalSchemas, schema.getOneOf(), specFile, compositedSchemas, antiLoopList));
-      schemaCombinatorType = "oneOf";
+      schemaCombinatorType = ONE_OF_COMBINATOR;
     }
 
     return SchemaObject.builder()
@@ -570,30 +518,30 @@ public class MapperContentUtil {
   }
 
   private static String getMapTypeObject(final Schema schema, final SpecFile specFile) {
+    String type = OBJECT;
     if (schema.getAdditionalProperties() instanceof Boolean) {
-      return OBJECT;
+      type = OBJECT;
+    } else {
+      final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
+      if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
+        type = getRef(additionalProperties, specFile);
+      } else if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase(OBJECT)) {
+        final var additionalPropertiesField = SchemaFieldObject
+                                                  .builder()
+                                                  .baseName(additionalProperties.getName())
+                                                  .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(additionalProperties, specFile)))
+                                                  .build();
+        setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
+        type = getMapFieldType(additionalPropertiesField);
+      }
     }
 
-    final Schema<?> additionalProperties = (Schema<?>) schema.getAdditionalProperties();
-    if (StringUtils.isNotBlank(additionalProperties.get$ref())) {
-      return getRef(additionalProperties, specFile);
-    }
-
-    if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase(OBJECT)) {
-      final var additionalPropertiesField = SchemaFieldObject
-                                                .builder()
-                                                .baseName(additionalProperties.getName())
-                                                .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(additionalProperties, specFile)))
-                                                .build();
-      setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
-      return getMapFieldType(additionalPropertiesField);
-    }
-
-    return OBJECT;
+    return type;
   }
 
   private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
     final String fieldType = schemaFieldObject.getDataType().toString();
+    String type;
     switch (fieldType) {
       case BIG_DECIMAL:
       case INTEGER:
@@ -601,10 +549,14 @@ public class MapperContentUtil {
       case FLOAT:
       case LONG:
       case STRING:
-        return fieldType;
+        type = fieldType;
+        break;
       default:
-        return OBJECT;
+        type = OBJECT;
+        break;
     }
+
+    return type;
   }
 
   private static String getRef(final Schema<?> schema, final SpecFile specFile) {

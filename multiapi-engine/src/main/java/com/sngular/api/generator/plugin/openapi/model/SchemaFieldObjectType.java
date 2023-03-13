@@ -9,7 +9,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class SchemaFieldObjectType  {
+public class SchemaFieldObjectType {
 
   public static final String OBJECT = "Object";
 
@@ -100,11 +100,7 @@ public class SchemaFieldObjectType  {
   }
 
   public boolean containsType(String type) {
-    if (Objects.isNull(innerType)) {
-      return type.equals(baseType);
-    }
-
-    return type.equals(baseType) || innerType.containsType(type);
+    return type.equals(baseType) || (Objects.nonNull(innerType) && innerType.containsType(type));
   }
 
   private String mapIntoString(Map<String, String> mappings) {

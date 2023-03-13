@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testCreateDto.model;
+package com.sngular.multifileplugin.testCreateDTO.model;
 
 import java.util.Objects;
 
