@@ -120,7 +120,7 @@ public class SchemaFieldObjectType  {
     return baseString.replace("?", innerType.mapIntoString(typeMappings));
   }
 
-  public String toImplString() {
+  public String getImplementationTypeString() {
     return mapIntoString(implTypeMappings);
   }
 

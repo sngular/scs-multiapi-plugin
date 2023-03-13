@@ -281,10 +281,11 @@ public class OpenApiGenerator {
     final Schema additionalPropertiesSchema = new ObjectSchema();
     final Map<String, Schema> properties = new HashMap<>();
     final String[] refSplit = basicSchema.get$ref().split("/");
-    properties.put(refSplit[refSplit.length - 1], basicSchema);
+    final String refSchemaName = refSplit[refSplit.length - 1];
+    properties.put(refSchemaName, basicSchema);
     additionalPropertiesSchema.properties(properties);
-    additionalPropertiesSchema.name(refSplit[refSplit.length - 1]);
-    writeModel(specFile, openAPI, fileModelToSave, modelPackage, refSplit[refSplit.length - 1], additionalPropertiesSchema);
+    additionalPropertiesSchema.name(refSchemaName);
+    writeModel(specFile, openAPI, fileModelToSave, modelPackage, refSchemaName, additionalPropertiesSchema);
   }
 
   private void writeModelWithAdditionalProperties(

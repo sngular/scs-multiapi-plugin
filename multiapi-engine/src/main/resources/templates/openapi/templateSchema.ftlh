@@ -29,13 +29,13 @@ public class ${schema.className} {
     <#if field.required>
   private final ${field.dataType} ${field.baseName?uncap_first};
     <#else>
-  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.toImplString()}();
+  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
     </#if>
   <#elseif field.dataType.baseType == "Map">
     <#if field.required>
   private final ${field.dataType} ${field.baseName?uncap_first};
     <#else>
-  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.toImplString()}();
+  private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
     </#if>
   <#elseif field.dataType.baseType == "Enum">
     <#if field.required>
@@ -120,9 +120,9 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "Array">
-    private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.toImplString()}();
+    private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "Map">
-    private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.toImplString()}();
+    private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "Enum">
     private ${field.baseName?cap_first} ${field.baseName?uncap_first};
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "Object">
