@@ -82,9 +82,7 @@ public class OpenApiGenerator {
 
   private boolean useLombok;
 
-  public OpenApiGenerator(
-      final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
-      final File targetFolder, final File basedir) {
+  public OpenApiGenerator(final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId, final File targetFolder, final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
@@ -254,8 +252,7 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave,
-      final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
       final boolean overwrite) {
     final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
 
@@ -305,8 +302,7 @@ public class OpenApiGenerator {
 
   private void writeModel(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile
-    );
+    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
