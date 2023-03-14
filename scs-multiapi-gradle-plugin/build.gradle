@@ -1,6 +1,6 @@
 plugins {
   id 'java-gradle-plugin'
-  id 'com.gradle.plugin-publish' version '1.0.0'
+  id 'com.gradle.plugin-publish' version '1.1.0'
   id 'maven-publish'
   id 'groovy'
   id 'jvm-test-suite'
@@ -52,13 +52,13 @@ shadowJar {
 }
 
 
-task sourcesJar(type: Jar) {
-  archiveClassifier = 'sources'
+tasks.register('sourcesJar', Jar) {
+  archiveClassifier.set('sources')
   from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar) {
-  archiveClassifier = "javadoc"
+tasks.register('javadocJar', Jar) {
+  archiveClassifier.set('javadoc')
   from javadoc
 }
 
@@ -71,19 +71,16 @@ artifacts {
   archives javadocJar
 }
 
-pluginBundle {
-  website = 'https://sngular.github.io/scs-multiapi-plugin/'
-  vcsUrl = 'https://github.com/sngular/scs-multiapi-plugin'
-  tags = ['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool']
-}
-
 gradlePlugin {
+  website.set('https://sngular.github.io/scs-multiapi-plugin/')
+  vcsUrl.set('https://github.com/sngular/scs-multiapi-plugin')
   plugins {
-    scsMultiApiPlugin {
+    create('scsMultiApiPlugin') {
       id = 'com.sngular.scs-multiapi-gradle-plugin'
       displayName = 'SCS MultiApi Plugin'
       description = 'OpenApi/Asyncapi Generator tool for Spring Boot applications'
       implementationClass = 'com.sngular.api.generator.plugin.ScsMultiApi'
+      tags.set(['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool'])
     }
   }
 }
