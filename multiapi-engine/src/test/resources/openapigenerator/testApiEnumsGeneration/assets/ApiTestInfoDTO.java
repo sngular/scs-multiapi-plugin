@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.enumgeneration.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.enumgeneration.model.customvalidator.NotNull;
 
 public class ApiTestInfoDTO {
 

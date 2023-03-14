@@ -14,48 +14,48 @@ import ${import};
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.maxLength?has_content || field.minLength?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
+import ${packageModel}.customvalidator.Size;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.maximum?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
+import ${packageModel}.customvalidator.Max;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.minimum?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
+import ${packageModel}.customvalidator.Min;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.pattern?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+import ${packageModel}.customvalidator.Pattern;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.multipleOf?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
+import ${packageModel}.customvalidator.MultipleOf;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.maxItems?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
+import ${packageModel}.customvalidator.MaxItems;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.minItems?has_content>
-import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
+import ${packageModel}.customvalidator.MinItems;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.uniqueItems?has_content && field.uniqueItems == true>
-import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
+import ${packageModel}.customvalidator.UniqueItems;
         <#break>
     </#if>
 </#list>

@@ -11,7 +11,7 @@ ElementType.ANNOTATION_TYPE})
 @Documented
 public @interface Max {
     int maximum();
-    boolean exclusive()
+    boolean exclusive();
     String message() default "Value is bigger than the maximum.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

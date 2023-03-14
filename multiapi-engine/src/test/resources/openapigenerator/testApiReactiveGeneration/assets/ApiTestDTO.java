@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.reactivegeneration.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.reactivegeneration.model.customvalidator.NotNull;
 
 public class ApiTestDTO {
 

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import com.sngular.multifileplugin.enumgeneration.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.enumgeneration.model.customvalidator.NotNull;
 
 public class ApiTestDTO {
 

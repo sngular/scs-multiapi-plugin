@@ -79,9 +79,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
                      OpenApiGeneratorFixtures.validateCoconutSchema()),
         Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                    OpenApiGeneratorFixtures.validateValidationAnnotations()),
+                     OpenApiGeneratorFixtures.validateValidationAnnotations()),
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                    OpenApiGeneratorFixtures.validateValidationAnnotationsLombok())
+                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok())
     );
   }
 

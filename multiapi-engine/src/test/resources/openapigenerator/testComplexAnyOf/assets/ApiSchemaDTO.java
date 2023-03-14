@@ -8,7 +8,7 @@ import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.testcomplexanyof.model.customvalidator.NotNull;
 
 public class ApiSchemaDTO {
 
