@@ -22,7 +22,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ApiErrorDTO {
 
   @JsonProperty(value ="code")
-  @Min(minimum = 10)
+  @Min(minimum = 10, exclusive = false)
   @Max(maximum = 200, exclusive = true)
   @MultipleOf(multiple = "10.55")
   @NonNull
