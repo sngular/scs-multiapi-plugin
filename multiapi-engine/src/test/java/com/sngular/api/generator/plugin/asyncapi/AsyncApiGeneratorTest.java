@@ -48,7 +48,9 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestFileGenerationArrayString", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_ARRAY_STRING,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
         Arguments.of("TestIssueGenerateSupplier", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
-                     AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier())
+                     AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
+        Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
+                     AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop())
     );
   }
 

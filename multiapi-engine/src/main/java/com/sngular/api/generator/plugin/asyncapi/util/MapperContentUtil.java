@@ -46,7 +46,12 @@ public class MapperContentUtil {
       schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList));
       while (!modelToBuildList.isEmpty()) {
         final var modelToBuild = modelToBuildList.remove();
-        schemasList.add(buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild.toUpperCase()), prefix, suffix, modelToBuildList));
+        final var nexElement = buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get(modelToBuild.toUpperCase()), prefix, suffix, modelToBuildList);
+        if (schemasList.contains(nexElement)) {
+          modelToBuildList.remove();
+        } else {
+          schemasList.add(nexElement);
+        }
       }
     }
     return schemasList;

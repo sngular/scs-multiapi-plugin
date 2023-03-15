@@ -157,6 +157,18 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_ISSUE_INFINITE_LOOP = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testIssueInfiniteLoop/async-api.yml")
+          .supplier(OperationParameterObject.builder()
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("com.sngular.scsplugin.infiniteLoop.messaging")
+                                            .modelPackage("com.sngular.scsplugin.infiniteLoop.model")
+                                            .useLombokModelAnnotation(true)
+                                            .build())
+          .build());
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -311,6 +323,16 @@ public class AsyncApiGeneratorFixtures {
         "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
         "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java",
         "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestMessageDTO.java");
+
+    return path -> modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestIssueInfiniteLoop() {
+    final String DEFAULT_MODEL_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model";
+
+    final List<String> expectedModelFiles = List.of(
+        //"asyncapigenerator/testIssueInfiniteLoop/assets/ConfigDTO.java",
+        "asyncapigenerator/testIssueInfiniteLoop/assets/MailRequesInfiniteDTO.java");
 
     return path -> modelTest(path, expectedModelFiles, DEFAULT_MODEL_FOLDER);
   }

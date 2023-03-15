@@ -169,7 +169,7 @@ public class AsyncApiGenerator {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
     final List<JsonNode> referenceList = node.findValues("$ref");
     referenceList.forEach(reference ->
-        processReference(node, reference, ymlParentPath, totalSchemas)
+        processReference(node, reference, ymlParentPath, totalSchemas, referenceList)
     );
     final List<JsonNode> messagesList = node.findValues("messages");
     final List<JsonNode> schemasList = node.findValues("schemas");
@@ -203,7 +203,7 @@ public class AsyncApiGenerator {
       final var node = om.readTree(file);
       if (Objects.nonNull(node.findValue(componentName))) {
         returnNode = node.findValue(componentName);
-        checkReference(node, returnNode, ymlParentPath, totalSchemas);
+        checkReference(node, returnNode, ymlParentPath, totalSchemas, null);
       } else {
         throw new NonSupportedSchemaException(node.toPrettyString());
       }
@@ -211,7 +211,8 @@ public class AsyncApiGenerator {
     return returnNode;
   }
 
-  private void processReference(final JsonNode node, final JsonNode reference, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas) {
+  private void processReference(final JsonNode node, final JsonNode reference, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+      final List<JsonNode> referenceList) {
     final String referenceLink = reference.asText();
     final String componentName = referenceLink.substring(referenceLink.lastIndexOf("/") + 1);
     final JsonNode component;
@@ -221,7 +222,7 @@ public class AsyncApiGenerator {
       } else {
         component = node.findValue(componentName);
         if (Objects.nonNull(component)) {
-          checkReference(node, component, ymlParentPath, totalSchemas);
+          checkReference(node, component, ymlParentPath, totalSchemas, referenceList);
         }
       }
     } catch (final IOException e) {
@@ -232,10 +233,29 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void checkReference(final JsonNode mainNode, final JsonNode node, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas) {
+  private void processLocalReferences(final JsonNode mainNode, final JsonNode localReference, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+      final List<JsonNode> referenceList) {
+    final String referenceLink = localReference.asText();
+    final String localComponentName = referenceLink.substring(referenceLink.lastIndexOf("/") + 1);
+    Boolean found = false;
+    if (referenceList != null) {
+      for (JsonNode element : referenceList) {
+        if (localComponentName.equals(element.textValue().substring(element.textValue().lastIndexOf("/") + 1))) {
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      processReference(mainNode, localReference, ymlParentPath, totalSchemas, referenceList);
+    }
+  }
+
+  private void checkReference(final JsonNode mainNode, final JsonNode node, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+      final List<JsonNode> referenceList) {
     final var localReferences = node.findValues("$ref");
     if (!localReferences.isEmpty()) {
-      localReferences.forEach(localReference -> processReference(mainNode, localReference, ymlParentPath, totalSchemas));
+      localReferences.forEach(localReference -> processLocalReferences(mainNode, localReference, ymlParentPath, totalSchemas, referenceList));
     }
   }
 
