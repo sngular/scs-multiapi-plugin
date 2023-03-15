@@ -3,7 +3,6 @@ package com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.mo
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model.TestAdditionalPropertyAdditionalPropertyDTO;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
