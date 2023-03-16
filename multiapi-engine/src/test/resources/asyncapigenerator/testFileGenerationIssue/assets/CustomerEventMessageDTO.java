@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.message;
+package com.sngular.scsplugin.filegenerationissue.model.event.messages;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegenerationissue.model.event.schema.CustomerEventPayloadDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO;
 
 @JsonDeserialize(builder = CustomerEventMessageDTO.CustomerEventMessageDTOBuilder.class)
 public class CustomerEventMessageDTO {

@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.arraywithstring.supplier;
 
-import com.sngular.scsplugin.arraywithstring.model.ObjectArrayMessageDTO;
+import com.sngular.scsplugin.arraywithstring.model.messages.ObjectArrayMessageDTO;
 
 public interface IObjectArrayString {
 

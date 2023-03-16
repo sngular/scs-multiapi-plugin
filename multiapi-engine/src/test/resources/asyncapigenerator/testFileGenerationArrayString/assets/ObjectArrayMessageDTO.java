@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.arraywithstring.model.event.message;
+package com.sngular.scsplugin.arraywithstring.model.event.messages;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.arraywithstring.model.event.schema.ObjectArrayDTO;
+import com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO;
 
 @JsonDeserialize(builder = ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder.class)
 public class ObjectArrayMessageDTO {

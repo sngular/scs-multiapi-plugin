@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schema;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
 
 import java.util.Objects;
 
@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegenerationissue.model.event.schema.OrderedItemDTO;
-import com.sngular.scsplugin.filegenerationissue.model.event.schema.PaymentDetailsDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO;
 import java.util.List;
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schema;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
-import com.sngular.scsplugin.filegeneration.model.event.schema.OrderLineDTO;
+import com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO;
 
 @JsonDeserialize(builder = OrderDTO.OrderDTOBuilder.class)
 public class OrderDTO {

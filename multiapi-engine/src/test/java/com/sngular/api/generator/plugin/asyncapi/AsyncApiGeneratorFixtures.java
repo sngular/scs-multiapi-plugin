@@ -178,9 +178,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/producer";
 
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegeneration/model/event/messages";
 
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGeneration/assets/IPublishOperation.java",
@@ -215,9 +215,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/producer";
 
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/messages";
 
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testIssueGeneration/assets/IResponse.java",
@@ -248,9 +248,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/producer";
 
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationissue/model/event/messages";
 
     final List<String> expectedConsumerFiles = List.of(
         "asyncapigenerator/testFileGenerationIssue/assets/IOnCustomerEvent.java",
@@ -333,9 +333,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestFileGenerationArrayString() {
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
         "asyncapigenerator/testFileGenerationArrayString/assets/ObjectArrayDTO.java"
@@ -350,9 +350,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestIssueGenerateSupplier() {
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/company/mail/model/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/company/mail/model/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/company/mail/model/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/company/mail/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
         "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
@@ -368,9 +368,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestIssueInfiniteLoop() {
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model/schema";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model/message";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
         "asyncapigenerator/testIssueInfiniteLoop/assets/ConfigDTO.java",

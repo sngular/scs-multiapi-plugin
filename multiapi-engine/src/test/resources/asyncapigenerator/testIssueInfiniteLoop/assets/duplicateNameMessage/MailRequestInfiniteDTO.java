@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.infiniteLoop.model.message;
+package com.sngular.scsplugin.infiniteLoop.model.messages;
 
 import java.util.Objects;
 
@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class MailRequestInfiniteDTO {
 
   @JsonProperty(value ="payload")
-  private com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload;
+  private com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO payload;
 
-  private MailRequestInfiniteDTO(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
+  private MailRequestInfiniteDTO(com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO payload) {
     this.payload = payload;
 
   }
@@ -30,9 +30,9 @@ public class MailRequestInfiniteDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class MailRequestInfiniteDTOBuilder {
 
-    private com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload;
+    private com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO payload;
 
-    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder payload(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder payload(com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -48,10 +48,10 @@ public class MailRequestInfiniteDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO getPayload() {
+  public com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO getPayload() {
     return payload;
   }
-  public void setPayload(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
+  public void setPayload(com.sngular.scsplugin.infiniteLoop.model.schemas.MailRequestInfiniteDTO payload) {
     this.payload = payload;
   }
 

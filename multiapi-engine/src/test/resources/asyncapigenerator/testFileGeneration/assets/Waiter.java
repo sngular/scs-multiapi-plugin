@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schema;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
