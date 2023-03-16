@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.infiniteLoop.model;
+package com.sngular.scsplugin.infiniteLoop.model.message;
 
 import java.util.Objects;
 
@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.infiniteLoop.model.MailRequestInfiniteDTO;
 
 @JsonDeserialize(builder = MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder.class)
 public class MailRequestInfiniteDTO {
 
   @JsonProperty(value ="payload")
-  private MailRequestInfiniteDTO payload;
+  private com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload;
 
-  private MailRequestInfiniteDTO(MailRequestInfiniteDTO payload) {
+  private MailRequestInfiniteDTO(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
     this.payload = payload;
 
   }
@@ -31,9 +30,9 @@ public class MailRequestInfiniteDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class MailRequestInfiniteDTOBuilder {
 
-    private MailRequestInfiniteDTO payload;
+    private com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload;
 
-    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder payload(MailRequestInfiniteDTO payload) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder payload(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -49,10 +48,10 @@ public class MailRequestInfiniteDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public MailRequestInfiniteDTO getPayload() {
+  public com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO getPayload() {
     return payload;
   }
-  public void setPayload(MailRequestInfiniteDTO payload) {
+  public void setPayload(com.sngular.scsplugin.infiniteLoop.model.schema.MailRequestInfiniteDTO payload) {
     this.payload = payload;
   }
 

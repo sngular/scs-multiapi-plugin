@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.schema;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.filegeneration.model.event.OrderProductMapper;
+import com.sngular.scsplugin.filegeneration.model.event.schema.OrderProductMapper;
 
 @JsonDeserialize(builder = OrderLineMapper.OrderLineMapperBuilder.class)
 public class OrderLineMapper {

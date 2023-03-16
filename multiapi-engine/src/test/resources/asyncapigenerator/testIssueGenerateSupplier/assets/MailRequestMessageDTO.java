@@ -1,4 +1,4 @@
-package company.mail.model;
+package company.mail.model.message;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import company.mail.model.MailRequestDTO;
+import company.mail.model.schema.MailRequestDTO;
 
 @JsonDeserialize(builder = MailRequestMessageDTO.MailRequestMessageDTOBuilder.class)
 public class MailRequestMessageDTO {

@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.message;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegeneration.model.event.OrderDTO;
+import com.sngular.scsplugin.filegeneration.model.event.schema.OrderDTO;
 
 @JsonDeserialize(builder = OrderCreatedDTO.OrderCreatedDTOBuilder.class)
 public class OrderCreatedDTO {

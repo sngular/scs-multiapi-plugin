@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.issuegeneration.model.event;
+package com.sngular.scsplugin.issuegeneration.model.event.message;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.issuegeneration.model.event.StatusMsgDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.schema.StatusMsgDTO;
 
 @JsonDeserialize(builder = StatusDTO.StatusDTOBuilder.class)
 public class StatusDTO {

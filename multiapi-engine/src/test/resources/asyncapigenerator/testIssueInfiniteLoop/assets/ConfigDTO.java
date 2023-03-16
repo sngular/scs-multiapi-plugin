@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.infiniteLoop.model;
+package com.sngular.scsplugin.infiniteLoop.model.schema;
 
 import java.util.Objects;
 
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.infiniteLoop.model.MailRequestInfiniteDTO;
 
 @JsonDeserialize(builder = ConfigDTO.ConfigDTOBuilder.class)
 public class ConfigDTO {

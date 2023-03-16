@@ -1,4 +1,4 @@
-package company.mail.model.schema;
+package com.sngular.scsplugin.infiniteLoop.model.schema;
 
 import java.util.Objects;
 
@@ -9,67 +9,67 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
-@JsonDeserialize(builder = MailRequestDTO.MailRequestDTOBuilder.class)
-public class MailRequestDTO {
+@JsonDeserialize(builder = MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder.class)
+public class MailRequestInfiniteDTO {
 
   @JsonProperty(value ="sender")
   private String sender;
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
-  @JsonProperty(value ="configurationDTO")
-  private ConfigurationDTO configurationDTO;
+  @JsonProperty(value ="configDTO")
+  private ConfigDTO configDTO;
 
-  private MailRequestDTO(String sender, List<String> recipients, ConfigurationDTO configurationDTO) {
+  private MailRequestInfiniteDTO(String sender, List<String> recipients, ConfigDTO configDTO) {
     this.sender = sender;
     this.recipients = recipients;
-    this.configurationDTO = configurationDTO;
+    this.configDTO = configDTO;
 
   }
 
-  private MailRequestDTO(MailRequestDTOBuilder builder) {
+  private MailRequestInfiniteDTO(MailRequestInfiniteDTOBuilder builder) {
     this.sender = builder.sender;
     this.recipients = builder.recipients;
-    this.configurationDTO = builder.configurationDTO;
+    this.configDTO = builder.configDTO;
 
   }
 
-  public static MailRequestDTO.MailRequestDTOBuilder builder() {
-    return new MailRequestDTO.MailRequestDTOBuilder();
+  public static MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder builder() {
+    return new MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class MailRequestDTOBuilder {
+  public static class MailRequestInfiniteDTOBuilder {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private ConfigurationDTO configurationDTO;
+    private ConfigDTO configDTO;
 
-    public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder sender(String sender) {
       this.sender = sender;
       return this;
     }
-    public MailRequestDTO.MailRequestDTOBuilder recipients(List<String> recipients) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder recipients(List<String> recipients) {
       if (!recipients.isEmpty()) {
         this.recipients.addAll(recipients);
       }
       return this;
     }
 
-    public MailRequestDTO.MailRequestDTOBuilder recipient(String recipient) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder recipient(String recipient) {
       if (recipient != null) {
         this.recipients.add(recipient);
       }
       return this;
     }
 
-    public MailRequestDTO.MailRequestDTOBuilder configurationDTO(ConfigurationDTO configurationDTO) {
-      this.configurationDTO = configurationDTO;
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder configDTO(ConfigDTO configDTO) {
+      this.configDTO = configDTO;
       return this;
     }
 
-    public MailRequestDTO build() {
-      MailRequestDTO mailRequestDTO = new MailRequestDTO(this);
-      return mailRequestDTO;
+    public MailRequestInfiniteDTO build() {
+      MailRequestInfiniteDTO mailRequestInfiniteDTO = new MailRequestInfiniteDTO(this);
+      return mailRequestInfiniteDTO;
     }
   }
 
@@ -98,15 +98,15 @@ public class MailRequestDTO {
   }
 
   /**
-  * Get configurationDTO
-  * @return configurationDTO
+  * Get configDTO
+  * @return configDTO
   */
-  @Schema(name = "configurationDTO", required = false)
-  public ConfigurationDTO getConfigurationDTO() {
-    return configurationDTO;
+  @Schema(name = "configDTO", required = false)
+  public ConfigDTO getConfigDTO() {
+    return configDTO;
   }
-  public void setConfigurationDTO(ConfigurationDTO configurationDTO) {
-    this.configurationDTO = configurationDTO;
+  public void setConfigDTO(ConfigDTO configDTO) {
+    this.configDTO = configDTO;
   }
 
   @Override
@@ -117,22 +117,22 @@ public class MailRequestDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MailRequestDTO mailRequestDTO = (MailRequestDTO) o;
-    return Objects.equals(this.sender, mailRequestDTO.sender) && Objects.equals(this.recipients, mailRequestDTO.recipients) && Objects.equals(this.configurationDTO, mailRequestDTO.configurationDTO);
+    MailRequestInfiniteDTO mailRequestInfiniteDTO = (MailRequestInfiniteDTO) o;
+    return Objects.equals(this.sender, mailRequestInfiniteDTO.sender) && Objects.equals(this.recipients, mailRequestInfiniteDTO.recipients) && Objects.equals(this.configDTO, mailRequestInfiniteDTO.configDTO);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sender, recipients, configurationDTO);
+    return Objects.hash(sender, recipients, configDTO);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MailRequestDTO {\n");
+    sb.append("class MailRequestInfiniteDTO {\n");
     sb.append(" sender: ").append(toIndentedString(sender)).append("\n");
     sb.append(" recipients: ").append(toIndentedString(recipients)).append("\n");
-    sb.append(" configurationDTO: ").append(toIndentedString(configurationDTO)).append("\n");
+    sb.append(" configDTO: ").append(toIndentedString(configDTO)).append("\n");
     sb.append("}");
     return sb.toString();
   }
