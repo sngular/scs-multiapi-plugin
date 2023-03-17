@@ -18,13 +18,13 @@ public class MinValidator implements ConstraintValidator<Min, Integer> {
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
         if (exclusive) {
-            if (value < this.minimum) {
+            if (value <= this.minimum) {
                 return false;
             } else {
                 return true;
             }
         }
-        if (value <= this.minimum) {
+        if (value < this.minimum) {
             return false;
         } else {
             return true;

@@ -18,13 +18,13 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
         if (exclusive) {
-            if (value > this.maximum) {
+            if (value >= this.maximum) {
                 return false;
             } else {
                 return true;
             }
         }
-        if (value >= this.maximum) {
+        if (value > this.maximum) {
             return false;
         } else {
             return true;
