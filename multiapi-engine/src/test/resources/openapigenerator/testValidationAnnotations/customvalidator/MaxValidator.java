@@ -1,5 +1,7 @@
 package com.sngular.multifileplugin.testapi.model.customvalidator;
 
+import java.util.Objects;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -17,6 +19,9 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
+        if (Objects.isNull(value)) {
+            return true;
+        }
         if (exclusive) {
             if (value >= this.maximum) {
                 return false;
