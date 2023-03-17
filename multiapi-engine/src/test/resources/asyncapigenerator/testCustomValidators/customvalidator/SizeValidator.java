@@ -3,7 +3,7 @@ package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class SizeValidator implements ConstraintValidator<Size, Integer> {
+public class SizeValidator implements ConstraintValidator<Size, String> {
 
     private int min;
     private int max;
@@ -16,14 +16,14 @@ public class SizeValidator implements ConstraintValidator<Size, Integer> {
     }
 
     @Override
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
 
         if (max != 0 && min == 0){
-            return value <= max;
+            return value.length() <= max;
         } else if (min != 0 && max == 0){
-            return value >= min;
+            return value.length() >= min;
         } else if (max != 0 && min != 0){
-            return value <= max && value >= min;
+            return value.length() <= max && value.length() >= min;
         }
 
         return false;
