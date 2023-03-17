@@ -1,5 +1,7 @@
 package com.sngular.multifileplugin.testapi.model.customvalidator;
 
+import java.util.Objects;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -15,6 +17,9 @@ public class PatternValidator implements ConstraintValidator<Pattern, String> {
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+    if (Objects.isNull(value))
+      return true;
+
     return value.matches(regex);
   }
 }
