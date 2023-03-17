@@ -1,5 +1,7 @@
 package com.sngular.scsplugin.filegenerationissue.model.event.customvalidator;
 
+import java.util.Objects;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -17,6 +19,8 @@ public class SizeValidator implements ConstraintValidator<Size, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (Objects.isNull(value))
+            return true;
 
         if (max != 0 && min == 0){
             return value.length() <= max;
