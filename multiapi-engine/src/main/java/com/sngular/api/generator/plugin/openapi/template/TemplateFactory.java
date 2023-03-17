@@ -175,6 +175,7 @@ public class TemplateFactory {
   public final void fillTemplateSize(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("Size.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -189,6 +190,7 @@ public class TemplateFactory {
   public final void fillTemplatePattern(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("Pattern.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -203,6 +205,7 @@ public class TemplateFactory {
   public final void fillTemplateMultipleOf(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("MultipleOf.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -247,6 +250,7 @@ public class TemplateFactory {
   public final void fillTemplateUniqueItems(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("UniqueItems.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION, root, pathToSaveMainClass);
   }
