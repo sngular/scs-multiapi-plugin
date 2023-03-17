@@ -3,12 +3,13 @@ package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class UniqueItemsValidator implements ConstraintValidator<UniqueItems, List> {
+public class UniqueItemsValidator implements ConstraintValidator<UniqueItems, List<?>> {
 
   @Override
   public void initialize(UniqueItems constraintAnnotation) {
@@ -16,8 +17,11 @@ public class UniqueItemsValidator implements ConstraintValidator<UniqueItems, Li
   }
 
   @Override
-  public boolean isValid(List value, ConstraintValidatorContext context) {
-    Set<?> s = new HashSet<>(Arrays.asList(value));
+  public boolean isValid(List<?> value, ConstraintValidatorContext context) {
+    if (Objects.isNull(value))
+      return true;
+
+    Set<?> s = new HashSet<>(value);
     if (s.size() == value.size()){
       return true;
     } else {
