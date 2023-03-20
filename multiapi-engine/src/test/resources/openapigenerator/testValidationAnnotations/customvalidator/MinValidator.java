@@ -13,7 +13,7 @@ public class MinValidator implements ConstraintValidator<Min, Integer> {
     @Override
     public void initialize(Min constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        this.minimum = constraintAnnotation.minimum();
+        this.minimum = Integer.parseInt(constraintAnnotation.minimum());
         this.exclusive = constraintAnnotation.exclusive();
     }
 
@@ -23,13 +23,13 @@ public class MinValidator implements ConstraintValidator<Min, Integer> {
             return true;
         }
         if (exclusive) {
-            if (value <= this.minimum) {
+            if (value.intValue() <= this.minimum) {
                 return false;
             } else {
                 return true;
             }
         }
-        if (value < this.minimum) {
+        if (value.intValue() < this.minimum) {
             return false;
         } else {
             return true;

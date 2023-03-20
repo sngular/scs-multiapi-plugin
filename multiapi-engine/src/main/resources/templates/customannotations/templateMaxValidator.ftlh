@@ -112,18 +112,18 @@ public class MaxValidator implements ConstraintValidator<Max, Double> {
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+    public boolean isValid(Double value, ConstraintValidatorContext context) {
         if (Objects.isNull(value)) {
             return true;
         }
         if (exclusive) {
-            if (value >= this.maximum) {
+            if (value.doubleValue() >= this.maximum) {
                 return false;
             } else {
                 return true;
             }
         }
-        if (value > this.maximum) {
+        if (value.doubleValue() > this.maximum) {
             return false;
         } else {
             return true;

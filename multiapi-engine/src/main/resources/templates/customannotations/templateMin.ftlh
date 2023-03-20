@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = MinValidator.class)
 @Documented
 public @interface Min {
-    int minimum();
+    String minimum();
     boolean exclusive();
     String message() default "Value is smaller than the minimum.";
     Class<?>[] groups() default {};
