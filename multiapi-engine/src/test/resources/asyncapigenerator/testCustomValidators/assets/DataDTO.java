@@ -21,8 +21,8 @@ import com.sngular.scsplugin.customvalidator.model.event.customvalidator.UniqueI
 public class DataDTO {
 
   @JsonProperty(value ="clientId")
-  @Min(minimum = 10, exclusive = false)
-  @Max(maximum = 200, exclusive = true)
+  @Min(minimum = "10", exclusive = false)
+  @Max(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10")
   @NotNull
   private final Integer clientId;
