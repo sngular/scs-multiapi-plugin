@@ -72,7 +72,7 @@ jobs:
         id: get-version
         run:  |
           cd scs-multiapi-maven-plugin
-          echo name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | tee $GITHUB_OUTPUT
+          echo "version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" | tee $GITHUB_OUTPUT
      
       - name: Create a Release
         uses: marvinpinto/action-automatic-releases@latest
