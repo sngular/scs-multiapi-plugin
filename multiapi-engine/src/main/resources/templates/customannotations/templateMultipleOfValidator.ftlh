@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class MultipleOfValidator implements ConstraintValidator<MultipleOf, BigDecimal> {
 
-  private String multiple;
+  private BigDecimal multiple;
 
   @Override
   public void initialize(final MultipleOf constraintAnnotation) {
