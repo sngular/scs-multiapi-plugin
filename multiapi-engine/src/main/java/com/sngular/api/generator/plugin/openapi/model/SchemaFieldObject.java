@@ -26,10 +26,10 @@ public class SchemaFieldObject {
   private String baseName;
 
   @Default
-  private BigDecimal maximum = null;
+  private String maximum = null;
 
   @Default
-  private BigDecimal minimum = null;
+  private String minimum = null;
 
   @Default
   private Boolean exclusiveMaximum = null;

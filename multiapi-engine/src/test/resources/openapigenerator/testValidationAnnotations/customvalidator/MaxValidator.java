@@ -13,7 +13,7 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
     @Override
     public void initialize(Max constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        this.maximum = constraintAnnotation.maximum();
+        this.maximum = Integer.parseInt(constraintAnnotation.maximum());
         this.exclusive = constraintAnnotation.exclusive();
     }
 
@@ -23,13 +23,13 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
             return true;
         }
         if (exclusive) {
-            if (value >= this.maximum) {
+            if (value.intValue() >= this.maximum) {
                 return false;
             } else {
                 return true;
             }
         }
-        if (value > this.maximum) {
+        if (value.intValue() > this.maximum) {
             return false;
         } else {
             return true;
