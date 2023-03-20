@@ -26,6 +26,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import javax.xml.validation.Schema;
 
 public class TemplateFactory {
 
@@ -145,10 +146,11 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplateMaxValidator(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
+  public final void fillTemplateMaxValidator(final Path filePathToSave, final String modelPackage, final SchemaObject schemaObject) throws IOException, TemplateException {
     final Path pathToValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
+    root.put("schema", schemaObject);
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("MaxValidator.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -161,10 +163,11 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplateMinValidator(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
+  public final void fillTemplateMinValidator(final Path filePathToSave, final String modelPackage, final SchemaObject schemaObject) throws IOException, TemplateException {
     final Path pathToValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
+    root.put("schema", schemaObject);
     final String pathToSaveMainClass = pathToValidatorPackage.resolve("MinValidator.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -209,10 +212,11 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplateMultipleOfValidator(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
+  public final void fillTemplateMultipleOfValidator(final Path filePathToSave, final String modelPackage, final SchemaObject schemaObject) throws IOException, TemplateException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToCustomValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
+    root.put("schema", schemaObject);
     final String pathToSaveMainClass = pathToCustomValidatorPackage.resolve("MultipleOfValidator.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION, root, pathToSaveMainClass);
   }
@@ -283,7 +287,7 @@ public class TemplateFactory {
         }
         if (Objects.nonNull(fieldObject.getMaximum())) {
           fillTemplateMax(filePath, classTemplate.getModelPackage());
-          fillTemplateMaxValidator(filePath, classTemplate.getModelPackage());
+          fillTemplateMaxValidator(filePath, classTemplate.getModelPackage(), schemaObject);
         }
         if (Objects.nonNull(fieldObject.getMaxItems())) {
           fillTemplateMaxItems(filePath, classTemplate.getModelPackage());
@@ -291,7 +295,7 @@ public class TemplateFactory {
         }
         if (Objects.nonNull(fieldObject.getMinimum())) {
           fillTemplateMin(filePath, classTemplate.getModelPackage());
-          fillTemplateMinValidator(filePath, classTemplate.getModelPackage());
+          fillTemplateMinValidator(filePath, classTemplate.getModelPackage(), schemaObject);
         }
         if (Objects.nonNull(fieldObject.getMinItems())) {
           fillTemplateMinItems(filePath, classTemplate.getModelPackage());
@@ -307,7 +311,7 @@ public class TemplateFactory {
         }
         if (Objects.nonNull(fieldObject.getMultipleOf())){
           fillTemplateMultipleOf(filePath, classTemplate.getModelPackage());
-          fillTemplateMultipleOfValidator(filePath, classTemplate.getModelPackage());
+          fillTemplateMultipleOfValidator(filePath, classTemplate.getModelPackage(), schemaObject);
         }
         if (Objects.nonNull(fieldObject.getUniqueItems())){
           fillTemplateUniqueItems(filePath, classTemplate.getModelPackage());

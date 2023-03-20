@@ -23,7 +23,7 @@ public class DataDTO {
   @JsonProperty(value ="clientId")
   @Min(minimum = 10, exclusive = false)
   @Max(maximum = 200, exclusive = true)
-  @MultipleOf(multiple = "10.55")
+  @MultipleOf(multiple = "10")
   @NotNull
   private final Integer clientId;
   @JsonProperty(value ="clientName")
