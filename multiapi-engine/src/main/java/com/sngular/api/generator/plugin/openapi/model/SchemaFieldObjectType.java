@@ -1,12 +1,12 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import lombok.Data;
+import org.apache.commons.collections4.IteratorUtils;
 
 @Data
 public class SchemaFieldObjectType {
@@ -74,16 +74,15 @@ public class SchemaFieldObjectType {
   }
 
   public static SchemaFieldObjectType fromTypeList(String... types) {
-    Iterator<String> typeIterator = Arrays.stream(types).iterator();
-    return constructTypeFromList(typeIterator);
+    return constructTypeFromList(IteratorUtils.arrayIterator(types));
   }
 
   private static SchemaFieldObjectType constructTypeFromList(Iterator<String> types) {
-    if (!types.hasNext()) {
-      return null;
+    SchemaFieldObjectType result = null;
+    if (types.hasNext()) {
+      result = new SchemaFieldObjectType(types.next(), constructTypeFromList(types));
     }
-
-    return new SchemaFieldObjectType(types.next(), constructTypeFromList(types));
+    return result;
   }
 
   public void setDeepType(SchemaFieldObjectType type) {

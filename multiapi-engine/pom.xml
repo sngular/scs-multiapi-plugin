@@ -241,6 +241,7 @@
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <goals>
