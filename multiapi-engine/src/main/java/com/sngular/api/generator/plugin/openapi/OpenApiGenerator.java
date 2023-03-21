@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -335,20 +336,65 @@ public class OpenApiGenerator {
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile,
                                                                               modelPackage);
+    Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
     });
+
+    try {
+      fillTemplates(fileModelToSave, propertiesSet);
+    } catch (IOException | TemplateException e){
+      e.printStackTrace();
+    }
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
         templateFactory.fillTemplateModelClassException(fileModelToSave, true);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(fileModelToSave, e);
+      }
+    }
+  }
+
+  private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {
+    final Iterator<String> iterator = fieldProperties.iterator();
+    while(iterator.hasNext()){
+      String current = iterator.next();
+      switch(current){
+        case "Size":
+          templateFactory.fillTemplateSize(filePathToSave);
+          templateFactory.fillTemplateSizeValidator(filePathToSave);
+        case "Pattern":
+          templateFactory.fillTemplatePattern(filePathToSave);
+          templateFactory.fillTemplatePatternValidator(filePathToSave);
+        case "MultipleOf":
+          templateFactory.fillTemplateMultipleOf(filePathToSave);
+          templateFactory.fillTemplateMultipleOfValidator(filePathToSave);
+        case "Max":
+          templateFactory.fillTemplateMax(filePathToSave);
+          templateFactory.fillTemplateMaxValidator(filePathToSave);
+        case "Min":
+          templateFactory.fillTemplateMin(filePathToSave);
+          templateFactory.fillTemplateMinValidator(filePathToSave);
+        case "MaxItems":
+          templateFactory.fillTemplateMaxItems(filePathToSave);
+          templateFactory.fillTemplateMaxItemsValidator(filePathToSave);
+        case "MinItems":
+          templateFactory.fillTemplateMinItems(filePathToSave);
+          templateFactory.fillTemplateMinItemsValidator(filePathToSave);
+        case "NotNull":
+          templateFactory.fillTemplateNotNull(filePathToSave);
+          templateFactory.fillTemplateNotNullValidator(filePathToSave);
+        case "UniqueItems":
+          templateFactory.fillTemplateUniqueItems(filePathToSave);
+          templateFactory.fillTemplateUniqueItemsValidator(filePathToSave);
+        default:
+          break;
       }
     }
   }

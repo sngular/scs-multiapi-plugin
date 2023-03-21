@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 <#list schema.fieldObjectList as field>
-    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
 public class MinValidator implements ConstraintValidator<Min, BigDecimal> {
 
     private BigDecimal minimum;
@@ -36,7 +36,7 @@ public class MinValidator implements ConstraintValidator<Min, Double> {
     public void initialize(Min constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
 <#list schema.fieldObjectList as field>
-    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
         this.minimum = new BigDecimal(constraintAnnotation.minimum());
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
@@ -54,7 +54,7 @@ public class MinValidator implements ConstraintValidator<Min, Double> {
 
     @Override
 <#list schema.fieldObjectList as field>
-    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+    <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
         if (Objects.isNull(value)) {
             return true;

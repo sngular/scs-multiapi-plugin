@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 <#list schema.fieldObjectList as field>
-  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
 public class MultipleOfValidator implements ConstraintValidator<MultipleOf, BigDecimal> {
 
   private BigDecimal multiple;
@@ -35,7 +35,7 @@ public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Doub
   public void initialize(final MultipleOf constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
 <#list schema.fieldObjectList as field>
-  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
     this.multiple = new BigDecimal(constraintAnnotation.multiple());
       <#break>
   <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
@@ -53,7 +53,7 @@ public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Doub
 
   @Override
 <#list schema.fieldObjectList as field>
-  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigdecimal")>
+  <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
   public boolean isValid(final BigDecimal value, final ConstraintValidatorContext constraintValidatorContext) {
     BigDecimal[] divisionResult = value.divideAndRemainder(multiple);
 
