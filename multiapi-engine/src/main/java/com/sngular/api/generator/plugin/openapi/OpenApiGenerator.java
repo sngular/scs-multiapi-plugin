@@ -368,31 +368,22 @@ public class OpenApiGenerator {
       switch(current){
         case "Size":
           templateFactory.fillTemplateSize(filePathToSave);
-          templateFactory.fillTemplateSizeValidator(filePathToSave);
         case "Pattern":
           templateFactory.fillTemplatePattern(filePathToSave);
-          templateFactory.fillTemplatePatternValidator(filePathToSave);
         case "MultipleOf":
           templateFactory.fillTemplateMultipleOf(filePathToSave);
-          templateFactory.fillTemplateMultipleOfValidator(filePathToSave);
         case "Max":
           templateFactory.fillTemplateMax(filePathToSave);
-          templateFactory.fillTemplateMaxValidator(filePathToSave);
         case "Min":
           templateFactory.fillTemplateMin(filePathToSave);
-          templateFactory.fillTemplateMinValidator(filePathToSave);
         case "MaxItems":
           templateFactory.fillTemplateMaxItems(filePathToSave);
-          templateFactory.fillTemplateMaxItemsValidator(filePathToSave);
         case "MinItems":
           templateFactory.fillTemplateMinItems(filePathToSave);
-          templateFactory.fillTemplateMinItemsValidator(filePathToSave);
         case "NotNull":
           templateFactory.fillTemplateNotNull(filePathToSave);
-          templateFactory.fillTemplateNotNullValidator(filePathToSave);
         case "UniqueItems":
           templateFactory.fillTemplateUniqueItems(filePathToSave);
-          templateFactory.fillTemplateUniqueItemsValidator(filePathToSave);
         default:
           break;
       }
