@@ -44,8 +44,11 @@ import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectTy
 public class MapperContentUtil {
 
   private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
+
   private static final String ANY_OF_COMBINATOR = "anyOf";
+
   private static final String ONE_OF_COMBINATOR = "oneOf";
+
   private static final String ALL_OF_COMBINATOR = "allOf";
 
   private MapperContentUtil() {
@@ -227,9 +230,7 @@ public class MapperContentUtil {
       }
 
       if (Objects.nonNull(schema.getAdditionalProperties())) {
-        fieldObjectArrayList.addAll(
-            processAdditionalProperties(fieldName, className, schema, specFile, totalSchemas, compositedSchemas,
-                                        antiLoopList));
+        fieldObjectArrayList.addAll(processAdditionalProperties(fieldName, schema, specFile));
       }
     } else if (Objects.nonNull(schema.get$ref())) {
       final String refSchemaName = getRef(schema, specFile);
@@ -409,9 +410,7 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static List<SchemaFieldObject> processAdditionalProperties(
-      final String fieldName, final String className, final Schema<?> schema, final SpecFile specFile, final Map<String, Schema> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
+  private static List<SchemaFieldObject> processAdditionalProperties(final String fieldName, final Schema<?> schema, final SpecFile specFile) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     Object addPropObj = schema.getAdditionalProperties();

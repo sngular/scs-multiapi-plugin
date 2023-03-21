@@ -1,12 +1,10 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import lombok.Data;
-import org.apache.commons.collections4.IteratorUtils;
 
 @Data
 public class SchemaFieldObjectType {
@@ -74,24 +72,23 @@ public class SchemaFieldObjectType {
   }
 
   public static SchemaFieldObjectType fromTypeList(String... types) {
-    return constructTypeFromList(IteratorUtils.arrayIterator(types));
-  }
+    final SchemaFieldObjectType result = new SchemaFieldObjectType(types[0], null);
+    SchemaFieldObjectType objectType = result;
 
-  private static SchemaFieldObjectType constructTypeFromList(Iterator<String> types) {
-    SchemaFieldObjectType result = null;
-    if (types.hasNext()) {
-      result = new SchemaFieldObjectType(types.next(), constructTypeFromList(types));
+    for (int i = 1; i < types.length; i++) {
+      objectType = objectType.innerType = new SchemaFieldObjectType(types[i], null);
     }
+
     return result;
   }
 
   public void setDeepType(SchemaFieldObjectType type) {
-    if (Objects.isNull(innerType)) {
-      innerType = type;
-      return;
+    SchemaFieldObjectType parentType = this;
+    while(Objects.nonNull(parentType.innerType)) {
+      parentType = parentType.innerType;
     }
 
-    innerType.setDeepType(type);
+    parentType.innerType = type;
   }
 
   public void setDeepType(String type) {
@@ -104,17 +101,16 @@ public class SchemaFieldObjectType {
 
   private String mapIntoString(Map<String, String> mappings) {
     String baseString = mappings.getOrDefault(baseType, baseType);
-    if (!baseString.contains("?")) {
-      return baseString;
-    }
+    boolean hasInner = baseString.contains("?");
 
-    if (Objects.isNull(innerType)) {
+    if (hasInner && Objects.isNull(innerType)) {
       throw new RuntimeException(String.format("Field object type '%s' missing an inner type", baseType));
     }
 
-    return baseString.replace("?", innerType.mapIntoString(typeMappings));
+    return hasInner ? baseString.replace("?", innerType.mapIntoString(typeMappings)) : baseString;
   }
 
+  @SuppressWarnings("unused") // This method is invoked by templates
   public String getImplementationTypeString() {
     return mapIntoString(implTypeMappings);
   }
@@ -126,14 +122,14 @@ public class SchemaFieldObjectType {
 
   @Override
   public boolean equals(final Object obj) {
-    if (!(obj instanceof SchemaFieldObjectType)) {
-      return false;
+    boolean result = false;
+    if (obj instanceof SchemaFieldObjectType) {
+      SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
+      final boolean baseTypeIsEqual = baseType.equals(other.baseType);
+      final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
+      result = baseTypeIsEqual && innerTypeIsEqual;
     }
 
-    SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
-    final boolean baseTypeIsEqual = baseType.equals(other.baseType);
-    final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
-
-    return baseTypeIsEqual && innerTypeIsEqual;
+    return result;
   }
 }
