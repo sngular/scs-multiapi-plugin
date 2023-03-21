@@ -34,10 +34,6 @@ public class MapperContentUtil {
 
   private static final String BIG_DECIMAL = "bigDecimal";
 
-  private static final String INTEGER = "integer";
-
-  private static final String STRING = "string";
-
   private static String schemaCombinatorType;
 
   private MapperContentUtil() {}
@@ -233,11 +229,6 @@ public class MapperContentUtil {
       } else if (schema.has("items")) {
         final var items = schema.get("items");
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
-        if (items.has("$ref")) {
-          modelToBuildList.add(MapperUtil.getRefClass(items));
-        }
-        final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-        Entry<String, JsonNode> current = null;
         fieldObject =
             SchemaFieldObject
                 .builder()
@@ -246,71 +237,14 @@ public class MapperContentUtil {
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
                 .build();
-        while (iterator.hasNext()) {
-          current = iterator.next();
-          switch (current.getKey()) {
-            case "maxItems":
-              fieldObject.setMaxItems(current.getValue().intValue());
-              break;
-            case "minItems":
-              fieldObject.setMinItems(current.getValue().intValue());
-              break;
-            case "uniqueItems":
-              fieldObject.setUniqueItems(current.getValue().booleanValue());
-              break;
-            default:
-              break;
-          }
-        }
-        fieldObject.setRequired(required);
+        handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (schema.has("enum")) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
-        final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-        Entry<String, JsonNode> current = null;
         fieldObject = SchemaFieldObject
                           .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .build();
-        while (iterator.hasNext()) {
-          current = iterator.next();
-          switch (current.getKey()) {
-            case "minimum":
-              fieldObject.setMinimum(current.getValue().decimalValue());
-              break;
-            case "maximum":
-              fieldObject.setMaximum(current.getValue().decimalValue());
-              break;
-            case "exclusiveMinimum":
-              fieldObject.setExclusiveMinimum(current.getValue().booleanValue());
-              break;
-            case "exclusiveMaximum":
-              fieldObject.setExclusiveMaximum(current.getValue().booleanValue());
-              break;
-            case "maxItems":
-              fieldObject.setMaxItems(current.getValue().intValue());
-              break;
-            case "maxLength":
-              fieldObject.setMaxLength(current.getValue().intValue());
-              break;
-            case "minItems":
-              fieldObject.setMinItems(current.getValue().intValue());
-              break;
-            case "minLength":
-              fieldObject.setMinLength(current.getValue().intValue());
-              break;
-            case "pattern":
-              fieldObject.setPattern(current.getValue().toString().replaceAll("\"", ""));
-              break;
-            case "uniqueItems":
-              fieldObject.setUniqueItems(current.getValue().booleanValue());
-              break;
-            case "multipleOf":
-              fieldObject.setMultipleOf(current.getValue().toString());
-              break;
-            default:
-              break;
-          }
-        }
+        setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
       }
     } else if (schema.has("$ref")) {
@@ -328,6 +262,76 @@ public class MapperContentUtil {
                         .build();
     }
     return fieldObject;
+  }
+
+  private static void handleItems(final JsonNode schema, Collection<String> modelToBuildList, SchemaFieldObject fieldObject, final boolean required, JsonNode items){
+    if (items.has("$ref")) {
+      modelToBuildList.add(MapperUtil.getRefClass(items));
+    }
+    final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
+    Entry<String, JsonNode> current = null;
+    while (iterator.hasNext()) {
+      current = iterator.next();
+      switch (current.getKey()) {
+        case "maxItems":
+          fieldObject.setMaxItems(current.getValue().intValue());
+          break;
+        case "minItems":
+          fieldObject.setMinItems(current.getValue().intValue());
+          break;
+        case "uniqueItems":
+          fieldObject.setUniqueItems(current.getValue().booleanValue());
+          break;
+        default:
+          break;
+      }
+    }
+    fieldObject.setRequired(required);
+  }
+
+  private static void setFieldProperties(SchemaFieldObject fieldObject, JsonNode schema){
+    final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
+    Entry<String, JsonNode> current;
+    while (iterator.hasNext()) {
+      current = iterator.next();
+      switch (current.getKey()) {
+        case "minimum":
+          fieldObject.setMinimum(current.getValue().decimalValue());
+          break;
+        case "maximum":
+          fieldObject.setMaximum(current.getValue().decimalValue());
+          break;
+        case "exclusiveMinimum":
+          fieldObject.setExclusiveMinimum(current.getValue().booleanValue());
+          break;
+        case "exclusiveMaximum":
+          fieldObject.setExclusiveMaximum(current.getValue().booleanValue());
+          break;
+        case "maxItems":
+          fieldObject.setMaxItems(current.getValue().intValue());
+          break;
+        case "maxLength":
+          fieldObject.setMaxLength(current.getValue().intValue());
+          break;
+        case "minItems":
+          fieldObject.setMinItems(current.getValue().intValue());
+          break;
+        case "minLength":
+          fieldObject.setMinLength(current.getValue().intValue());
+          break;
+        case "pattern":
+          fieldObject.setPattern(current.getValue().toString().replaceAll("\"", ""));
+          break;
+        case "uniqueItems":
+          fieldObject.setUniqueItems(current.getValue().booleanValue());
+          break;
+        case "multipleOf":
+          fieldObject.setMultipleOf(current.getValue().toString());
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   private static void setFieldType(final SchemaFieldObject field, final JsonNode value, final boolean required, final String prefix, final String suffix) {
