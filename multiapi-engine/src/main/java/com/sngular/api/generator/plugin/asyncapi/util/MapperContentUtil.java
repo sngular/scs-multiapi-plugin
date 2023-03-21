@@ -24,8 +24,6 @@ import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumExcepti
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject.SchemaObjectBuilder;
-import io.swagger.util.Json;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
