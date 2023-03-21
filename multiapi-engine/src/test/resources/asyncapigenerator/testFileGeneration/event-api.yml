@@ -30,4 +30,4 @@ channels:
       operationId: "subscribeOperationFileGeneration"
       message:
         payload:
-          $ref: './assets/path.yml#/components/messages/CreateOrder'
+          $ref: './assets/path.yml#/components/schemas/CreateOrder'

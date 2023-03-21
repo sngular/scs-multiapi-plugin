@@ -1,4 +1,4 @@
-package company.mail.model.schemas;
+package company.mail.model;
 
 import java.util.Objects;
 
@@ -17,9 +17,9 @@ public class MailRequestDTO {
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
   @JsonProperty(value ="configurationDTO")
-  private company.mail.model.schemas.ConfigurationDTO configurationDTO;
+  private ConfigurationDTO configurationDTO;
 
-  private MailRequestDTO(String sender, List<String> recipients, company.mail.model.schemas.ConfigurationDTO configurationDTO) {
+  private MailRequestDTO(String sender, List<String> recipients, ConfigurationDTO configurationDTO) {
     this.sender = sender;
     this.recipients = recipients;
     this.configurationDTO = configurationDTO;
@@ -42,7 +42,7 @@ public class MailRequestDTO {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private company.mail.model.schemas.ConfigurationDTO configurationDTO;
+    private ConfigurationDTO configurationDTO;
 
     public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {
       this.sender = sender;
@@ -62,7 +62,7 @@ public class MailRequestDTO {
       return this;
     }
 
-    public MailRequestDTO.MailRequestDTOBuilder configurationDTO(company.mail.model.schemas.ConfigurationDTO configurationDTO) {
+    public MailRequestDTO.MailRequestDTOBuilder configurationDTO(ConfigurationDTO configurationDTO) {
       this.configurationDTO = configurationDTO;
       return this;
     }
@@ -102,10 +102,10 @@ public class MailRequestDTO {
   * @return configurationDTO
   */
   @Schema(name = "configurationDTO", required = false)
-  public company.mail.model.schemas.ConfigurationDTO getConfigurationDTO() {
+  public ConfigurationDTO getConfigurationDTO() {
     return configurationDTO;
   }
-  public void setConfigurationDTO(company.mail.model.schemas.ConfigurationDTO configurationDTO) {
+  public void setConfigurationDTO(ConfigurationDTO configurationDTO) {
     this.configurationDTO = configurationDTO;
   }
 

@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO;
 
 @JsonDeserialize(builder = DataClientDTO.DataClientDTOBuilder.class)
 public class DataClientDTO {
 
   @JsonProperty(value ="payload")
-  private DataDTO payload;
+  private com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO payload;
 
-  private DataClientDTO(DataDTO payload) {
+  private DataClientDTO(com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO payload) {
     this.payload = payload;
 
   }
@@ -31,9 +30,9 @@ public class DataClientDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class DataClientDTOBuilder {
 
-    private DataDTO payload;
+    private com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO payload;
 
-    public DataClientDTO.DataClientDTOBuilder payload(DataDTO payload) {
+    public DataClientDTO.DataClientDTOBuilder payload(com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -49,10 +48,10 @@ public class DataClientDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public DataDTO getPayload() {
+  public com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO getPayload() {
     return payload;
   }
-  public void setPayload(DataDTO payload) {
+  public void setPayload(com.sngular.scsplugin.issuegeneration.model.event.schemas.DataDTO payload) {
     this.payload = payload;
   }
 

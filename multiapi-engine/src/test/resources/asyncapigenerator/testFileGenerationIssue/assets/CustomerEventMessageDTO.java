@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO;
 
 @JsonDeserialize(builder = CustomerEventMessageDTO.CustomerEventMessageDTOBuilder.class)
 public class CustomerEventMessageDTO {
 
   @JsonProperty(value ="payload")
-  private CustomerEventPayloadDTO payload;
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO payload;
 
-  private CustomerEventMessageDTO(CustomerEventPayloadDTO payload) {
+  private CustomerEventMessageDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO payload) {
     this.payload = payload;
 
   }
@@ -31,9 +30,9 @@ public class CustomerEventMessageDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerEventMessageDTOBuilder {
 
-    private CustomerEventPayloadDTO payload;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO payload;
 
-    public CustomerEventMessageDTO.CustomerEventMessageDTOBuilder payload(CustomerEventPayloadDTO payload) {
+    public CustomerEventMessageDTO.CustomerEventMessageDTOBuilder payload(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -49,10 +48,10 @@ public class CustomerEventMessageDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public CustomerEventPayloadDTO getPayload() {
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO getPayload() {
     return payload;
   }
-  public void setPayload(CustomerEventPayloadDTO payload) {
+  public void setPayload(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO payload) {
     this.payload = payload;
   }
 

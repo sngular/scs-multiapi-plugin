@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO;
 
 @JsonDeserialize(builder = StatusDTO.StatusDTOBuilder.class)
 public class StatusDTO {
 
   @JsonProperty(value ="payload")
-  private StatusMsgDTO payload;
+  private com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO payload;
 
-  private StatusDTO(StatusMsgDTO payload) {
+  private StatusDTO(com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO payload) {
     this.payload = payload;
 
   }
@@ -31,9 +30,9 @@ public class StatusDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class StatusDTOBuilder {
 
-    private StatusMsgDTO payload;
+    private com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO payload;
 
-    public StatusDTO.StatusDTOBuilder payload(StatusMsgDTO payload) {
+    public StatusDTO.StatusDTOBuilder payload(com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -49,10 +48,10 @@ public class StatusDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public StatusMsgDTO getPayload() {
+  public com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO getPayload() {
     return payload;
   }
-  public void setPayload(StatusMsgDTO payload) {
+  public void setPayload(com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO payload) {
     this.payload = payload;
   }
 

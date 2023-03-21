@@ -37,9 +37,9 @@ public class CustomerEventPayloadDTO {
     }
   }
   @JsonProperty(value ="customerDTO")
-  private CustomerDTO customerDTO;
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
 
-  private CustomerEventPayloadDTO(String customerId, EventType eventType, CustomerDTO customerDTO) {
+  private CustomerEventPayloadDTO(String customerId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
     this.customerId = customerId;
     this.eventType = eventType;
     this.customerDTO = customerDTO;
@@ -62,7 +62,7 @@ public class CustomerEventPayloadDTO {
 
     private String customerId;
     private EventType eventType;
-    private CustomerDTO customerDTO;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
 
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerId(String customerId) {
       this.customerId = customerId;
@@ -73,7 +73,7 @@ public class CustomerEventPayloadDTO {
       return this;
     }
 
-    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerDTO(CustomerDTO customerDTO) {
+    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
       this.customerDTO = customerDTO;
       return this;
     }
@@ -113,10 +113,10 @@ public class CustomerEventPayloadDTO {
   * @return customerDTO
   */
   @Schema(name = "customerDTO", required = false)
-  public CustomerDTO getCustomerDTO() {
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomerDTO() {
     return customerDTO;
   }
-  public void setCustomerDTO(CustomerDTO customerDTO) {
+  public void setCustomerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
     this.customerDTO = customerDTO;
   }
 

@@ -6,18 +6,16 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper;
-import com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper;
 
 @JsonDeserialize(builder = CreateOrderMapper.CreateOrderMapperBuilder.class)
 public class CreateOrderMapper {
 
   @JsonProperty(value ="order")
-  private OrderMapper order;
+  private com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper order;
   @JsonProperty(value ="waiter")
-  private WaiterMapper waiter;
+  private com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper waiter;
 
-  private CreateOrderMapper(OrderMapper order, WaiterMapper waiter) {
+  private CreateOrderMapper(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper order, com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper waiter) {
     this.order = order;
     this.waiter = waiter;
 
@@ -36,15 +34,15 @@ public class CreateOrderMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CreateOrderMapperBuilder {
 
-    private OrderMapper order;
-    private WaiterMapper waiter;
+    private com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper order;
+    private com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper waiter;
 
-    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
+    public CreateOrderMapper.CreateOrderMapperBuilder order(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper order) {
       this.order = order;
       return this;
     }
 
-    public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
+    public CreateOrderMapper.CreateOrderMapperBuilder waiter(com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper waiter) {
       this.waiter = waiter;
       return this;
     }
@@ -60,10 +58,10 @@ public class CreateOrderMapper {
   * @return order
   */
   @Schema(name = "order", required = false)
-  public OrderMapper getOrder() {
+  public com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper getOrder() {
     return order;
   }
-  public void setOrder(OrderMapper order) {
+  public void setOrder(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderMapper order) {
     this.order = order;
   }
 
@@ -72,10 +70,10 @@ public class CreateOrderMapper {
   * @return waiter
   */
   @Schema(name = "waiter", required = false)
-  public WaiterMapper getWaiter() {
+  public com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper getWaiter() {
     return waiter;
   }
-  public void setWaiter(WaiterMapper waiter) {
+  public void setWaiter(com.sngular.scsplugin.filegeneration.model.event.schemas.WaiterMapper waiter) {
     this.waiter = waiter;
   }
 

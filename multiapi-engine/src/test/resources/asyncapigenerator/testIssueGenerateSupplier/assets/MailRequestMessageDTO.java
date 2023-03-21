@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import company.mail.model.schemas.MailRequestDTO;
 
 @JsonDeserialize(builder = MailRequestMessageDTO.MailRequestMessageDTOBuilder.class)
 public class MailRequestMessageDTO {
 
   @JsonProperty(value ="payload")
-  private MailRequestDTO payload;
+  private company.mail.model.schemas.MailRequestDTO payload;
 
-  private MailRequestMessageDTO(MailRequestDTO payload) {
+  private MailRequestMessageDTO(company.mail.model.schemas.MailRequestDTO payload) {
     this.payload = payload;
 
   }
@@ -31,9 +30,9 @@ public class MailRequestMessageDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class MailRequestMessageDTOBuilder {
 
-    private MailRequestDTO payload;
+    private company.mail.model.schemas.MailRequestDTO payload;
 
-    public MailRequestMessageDTO.MailRequestMessageDTOBuilder payload(MailRequestDTO payload) {
+    public MailRequestMessageDTO.MailRequestMessageDTOBuilder payload(company.mail.model.schemas.MailRequestDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -49,10 +48,10 @@ public class MailRequestMessageDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public MailRequestDTO getPayload() {
+  public company.mail.model.schemas.MailRequestDTO getPayload() {
     return payload;
   }
-  public void setPayload(MailRequestDTO payload) {
+  public void setPayload(company.mail.model.schemas.MailRequestDTO payload) {
     this.payload = payload;
   }
 

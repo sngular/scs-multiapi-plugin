@@ -65,6 +65,11 @@ public class MapperUtil {
     return getPojoName(getRefClass(schema), prefix, suffix);
   }
 
+  public static String getLongRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
+    return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
+  }
+
   public static String getRefClass(final JsonNode schema) {
     final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
     return pathObjectRef[pathObjectRef.length - 1];
