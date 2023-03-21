@@ -6,6 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -35,32 +36,40 @@ public class SchemaFieldObjectType {
 
   public static final String ENUM = "Enum";
 
+  public static final String DATE = "Date";
+
+  public static final String DATETIME = "DateTime";
+
   public static final Set<String> BASIC_TYPES = Set.of(STRING, INTEGER, OBJECT);
 
-  private static final Map<String, String> typeMappings = Map.of(
-      OBJECT, "Object",
-      ARRAY, "List<?>",
-      MAP, "Map<String, ?>",
-      BIG_DECIMAL, "BigDecimal",
-      INTEGER, "Integer",
-      DOUBLE, "Double",
-      FLOAT, "Float",
-      LONG, "Long",
-      STRING, "String",
-      ENUM, "Enum"
+  private static final Map<String, String> typeMappings = Map.ofEntries(
+      new SimpleImmutableEntry<>(OBJECT, "Object"),
+      new SimpleImmutableEntry<>(ARRAY, "List<?>"),
+      new SimpleImmutableEntry<>(MAP, "Map<String, ?>"),
+      new SimpleImmutableEntry<>(BIG_DECIMAL, "BigDecimal"),
+      new SimpleImmutableEntry<>(INTEGER, "Integer"),
+      new SimpleImmutableEntry<>(DOUBLE, "Double"),
+      new SimpleImmutableEntry<>(FLOAT, "Float"),
+      new SimpleImmutableEntry<>(LONG, "Long"),
+      new SimpleImmutableEntry<>(STRING, "String"),
+      new SimpleImmutableEntry<>(ENUM, "Enum"),
+      new SimpleImmutableEntry<>(DATE, "LocalDate"),
+      new SimpleImmutableEntry<>(DATETIME, "LocalDateTime")
   );
 
-  private static final Map<String, String> implTypeMappings = Map.of(
-      OBJECT, "Object",
-      ARRAY, "ArrayList<?>",
-      MAP, "HashMap<String, ?>",
-      BIG_DECIMAL, "BigDecimal",
-      INTEGER, "Integer",
-      DOUBLE, "Double",
-      FLOAT, "Float",
-      LONG, "Long",
-      STRING, "String",
-      ENUM, "Enum"
+  private static final Map<String, String> implTypeMappings = Map.ofEntries(
+      new SimpleImmutableEntry<>(OBJECT, "Object"),
+      new SimpleImmutableEntry<>(ARRAY, "ArrayList<?>"),
+      new SimpleImmutableEntry<>(MAP, "HashMap<String, ?>"),
+      new SimpleImmutableEntry<>(BIG_DECIMAL, "BigDecimal"),
+      new SimpleImmutableEntry<>(INTEGER, "Integer"),
+      new SimpleImmutableEntry<>(DOUBLE, "Double"),
+      new SimpleImmutableEntry<>(FLOAT, "Float"),
+      new SimpleImmutableEntry<>(LONG, "Long"),
+      new SimpleImmutableEntry<>(STRING, "String"),
+      new SimpleImmutableEntry<>(ENUM, "Enum"),
+      new SimpleImmutableEntry<>(DATE, "LocalDate"),
+      new SimpleImmutableEntry<>(DATETIME, "LocalDateTime")
   );
 
   private SchemaFieldObjectType innerType;
