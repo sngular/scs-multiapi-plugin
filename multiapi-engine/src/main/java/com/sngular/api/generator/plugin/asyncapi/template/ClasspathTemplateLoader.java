@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
@@ -22,14 +23,20 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                              "interfaceSupplier.ftlh", "templateStreamBridge.ftlh", "templateSchema.ftlh",
                                                              "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh");
 
-  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION, TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
+  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION, TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION, TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION, TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();

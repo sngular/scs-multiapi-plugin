@@ -251,12 +251,15 @@ public class MapperContentUtil {
           SchemaFieldObject.builder().baseName(key).exclusiveMaximum(value.getExclusiveMaximum())
                            .exclusiveMinimum(value.getExclusiveMinimum()).minLength(value.getMinLength()).maxLength(value.getMaxLength())
                            .pattern(value.getPattern()).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
-      if (Objects.nonNull(value.getMultipleOf()))
+      if (Objects.nonNull(value.getMultipleOf())) {
         field.setMultipleOf(value.getMultipleOf().toString());
-      if (Objects.nonNull(value.getMaximum()))
+      }
+      if (Objects.nonNull(value.getMaximum())) {
         field.setMaximum(value.getMaximum().toString());
-      if (Objects.nonNull(value.getMinimum()))
+      }
+      if (Objects.nonNull(value.getMinimum())) {
         field.setMinimum(value.getMinimum().toString());
+      }
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {

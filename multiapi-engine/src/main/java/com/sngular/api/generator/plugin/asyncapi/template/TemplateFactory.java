@@ -305,15 +305,15 @@ public class TemplateFactory {
           fillTemplateSize(filePath, classTemplate.getModelPackage());
           fillTemplateSizeValidator(filePath, classTemplate.getModelPackage());
         }
-        if (Objects.nonNull(fieldObject.getPattern())){
+        if (Objects.nonNull(fieldObject.getPattern())) {
           fillTemplatePattern(filePath, classTemplate.getModelPackage());
           fillTemplatePatternValidator(filePath, classTemplate.getModelPackage());
         }
-        if (Objects.nonNull(fieldObject.getMultipleOf())){
+        if (Objects.nonNull(fieldObject.getMultipleOf())) {
           fillTemplateMultipleOf(filePath, classTemplate.getModelPackage());
           fillTemplateMultipleOfValidator(filePath, classTemplate.getModelPackage(), schemaObject);
         }
-        if (Objects.nonNull(fieldObject.getUniqueItems())){
+        if (Objects.nonNull(fieldObject.getUniqueItems())) {
           fillTemplateUniqueItems(filePath, classTemplate.getModelPackage());
           fillTemplateUniqueItemsValidator(filePath, classTemplate.getModelPackage());
         }

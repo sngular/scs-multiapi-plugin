@@ -74,13 +74,13 @@ public class TemplateFactory {
         if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
           propertiesSet.add("Size");
         }
-        if (Objects.nonNull(fieldObject.getPattern())){
+        if (Objects.nonNull(fieldObject.getPattern())) {
           propertiesSet.add("Pattern");
         }
-        if (Objects.nonNull(fieldObject.getMultipleOf())){
+        if (Objects.nonNull(fieldObject.getMultipleOf())) {
           propertiesSet.add("MultipleOf");
         }
-        if (Objects.nonNull(fieldObject.getUniqueItems())){
+        if (Objects.nonNull(fieldObject.getUniqueItems())) {
           propertiesSet.add("UniqueItems");
         }
       }

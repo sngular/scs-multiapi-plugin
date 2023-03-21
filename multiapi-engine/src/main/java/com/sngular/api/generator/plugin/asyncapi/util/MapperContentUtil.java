@@ -158,7 +158,7 @@ public class MapperContentUtil {
   private static void extractFieldsComplexObject(
       final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
       final Collection<String> modelToBuildList, final String prefix, final String suffix) {
-    while (fieldsIt.hasNext()){
+    while (fieldsIt.hasNext()) {
       final var field = fieldsIt.next();
       final var fieldName = field.getKey();
       final var fieldBody = field.getValue();
@@ -173,7 +173,7 @@ public class MapperContentUtil {
                              .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
                              .required(false)
                              .build());
-      }else if (fieldBody.elements().hasNext()) {
+      } else if (fieldBody.elements().hasNext()) {
         final var fieldObjectsIt = fieldBody.fields();
         extractFieldsComplexObject(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
       }
