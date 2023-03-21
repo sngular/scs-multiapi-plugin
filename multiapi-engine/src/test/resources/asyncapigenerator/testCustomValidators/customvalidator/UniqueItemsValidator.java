@@ -22,10 +22,6 @@ public class UniqueItemsValidator implements ConstraintValidator<UniqueItems, Li
       return true;
 
     Set<?> s = new HashSet<>(value);
-    if (s.size() == value.size()){
-      return true;
-    } else {
-      return false;
-    }
+    return s.size() == value.size();
   }
 }

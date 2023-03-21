@@ -17,9 +17,6 @@ public class PatternValidator implements ConstraintValidator<Pattern, String> {
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-    if (Objects.isNull(value))
-      return true;
-
-    return value.matches(regex);
+    return Objects.isNull(value) || value.matches(regex);
   }
 }

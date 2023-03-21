@@ -18,13 +18,6 @@ public class MaxItemsValidator implements ConstraintValidator<MaxItems, List<?>>
 
   @Override
   public boolean isValid(List<?> value, ConstraintValidatorContext context) {
-    if (Objects.isNull(value))
-      return true;
-
-    if (value.size() > this.maximum) {
-      return false;
-    } else {
-      return true;
-    }
+    return Objects.isNull(value) || !(value.size() > this.maximum);
   }
 }
