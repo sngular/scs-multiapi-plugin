@@ -17,27 +17,19 @@ import io.swagger.v3.oas.models.media.StringSchema;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.BIG_DECIMAL;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OBJECT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INTEGER;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ARRAY;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NUMBER;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_32;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_64;
+
 public class MapperUtil {
-
-  public static final String INTEGER = "integer";
-
-  public static final String DOUBLE = "double";
-
-  public static final String FLOAT = "float";
-
-  public static final String NUMBER = "number";
-
-  public static final String INT_32 = "int32";
-
-  public static final String INT_64 = "int64";
-
-  public static final String LONG = "long";
-
-  public static final String BIG_DECIMAL = "bigDecimal";
-
-  public static final String STRING = "String";
-
-  public static final String OBJECT = "Object";
 
   private MapperUtil() {}
 
@@ -63,11 +55,11 @@ public class MapperUtil {
     } else if (INT_32.equalsIgnoreCase(schema.getType()) || INT_64.equalsIgnoreCase(schema.getType())) {
       type = INTEGER;
     } else if (schema instanceof ArraySchema) {
-      type = MapperPathUtil.ARRAY;
+      type = ARRAY;
     } else {
-      type = ObjectUtils.defaultIfNull(StringUtils.capitalize(schema.getType()), OBJECT);
+      type = ObjectUtils.defaultIfNull(schema.getType(), OBJECT);
     }
-    return StringUtils.capitalize(type);
+    return type;
   }
 
   public static String getSimpleType(final Object schema) {
@@ -91,7 +83,7 @@ public class MapperUtil {
     if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
       typeMap = STRING;
     } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
-      typeMap = "Integer";
+      typeMap = INTEGER;
     } else {
       final Schema<?> schema = (Schema<?>) mapSchema.getAdditionalProperties();
       if (StringUtils.isNotBlank(schema.get$ref())) {
@@ -107,7 +99,7 @@ public class MapperUtil {
     if (array.getItems() instanceof StringSchema) {
       typeArray = STRING;
     } else if (array.getItems() instanceof IntegerSchema) {
-      typeArray = "Integer";
+      typeArray = INTEGER;
     } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
       final String[] pathObjectRef = array.getItems().get$ref().split("/");
       typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);

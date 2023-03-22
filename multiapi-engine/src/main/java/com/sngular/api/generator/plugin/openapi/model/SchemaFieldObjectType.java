@@ -9,38 +9,24 @@ package com.sngular.api.generator.plugin.openapi.model;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import lombok.Data;
 
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ARRAY;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.MAP;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.BIG_DECIMAL;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OBJECT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ENUM;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INTEGER;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATETIME;
+
 @Data
 public class SchemaFieldObjectType {
-
-  public static final String OBJECT = "Object";
-
-  public static final String ARRAY = "Array";
-
-  public static final String MAP = "Map";
-
-  public static final String BIG_DECIMAL = "BigDecimal";
-
-  public static final String INTEGER = "Integer";
-
-  public static final String DOUBLE = "Double";
-
-  public static final String FLOAT = "Float";
-
-  public static final String LONG = "Long";
-
-  public static final String STRING = "String";
-
-  public static final String ENUM = "Enum";
-
-  public static final String DATE = "Date";
-
-  public static final String DATETIME = "DateTime";
-
-  public static final Set<String> BASIC_TYPES = Set.of(STRING, INTEGER, OBJECT);
 
   private static final Map<String, String> typeMappings = Map.ofEntries(
       new SimpleImmutableEntry<>(OBJECT, "Object"),
@@ -99,7 +85,7 @@ public class SchemaFieldObjectType {
 
   public void setDeepType(SchemaFieldObjectType type) {
     SchemaFieldObjectType parentType = this;
-    while(Objects.nonNull(parentType.innerType)) {
+    while (Objects.nonNull(parentType.innerType)) {
       parentType = parentType.innerType;
     }
 
@@ -111,7 +97,7 @@ public class SchemaFieldObjectType {
   }
 
   public boolean containsType(String type) {
-    return type.equals(baseType) || (Objects.nonNull(innerType) && innerType.containsType(type));
+    return type.equalsIgnoreCase(baseType) || (Objects.nonNull(innerType) && innerType.containsType(type));
   }
 
   private String mapIntoString(Map<String, String> mappings) {

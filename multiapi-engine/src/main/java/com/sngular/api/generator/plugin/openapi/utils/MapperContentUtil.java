@@ -29,17 +29,17 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.ARRAY;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.MAP;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.BIG_DECIMAL;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.OBJECT;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.ENUM;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.INTEGER;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.LONG;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.FLOAT;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.DOUBLE;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.STRING;
-import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.BASIC_TYPES;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ARRAY;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.MAP;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.BIG_DECIMAL;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OBJECT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ENUM;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INTEGER;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NO_IMPORT_TYPE;
 
 public class MapperContentUtil {
 
@@ -618,7 +618,7 @@ public class MapperContentUtil {
   }
 
   private static String getImportClass(final String type) {
-    return StringUtils.isNotBlank(type) && !BASIC_TYPES.contains(type) ? type : "";
+    return StringUtils.isNotBlank(type) && !NO_IMPORT_TYPE.contains(type) ? StringUtils.capitalize(type) : "";
   }
 
 }

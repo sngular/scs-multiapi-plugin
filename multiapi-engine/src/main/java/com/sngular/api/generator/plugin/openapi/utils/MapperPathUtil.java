@@ -16,7 +16,7 @@ import java.util.Set;
 
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.BasicTypeConstants;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.model.ContentObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
@@ -41,13 +41,20 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INTEGER;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OBJECT;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.MAP;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ARRAY;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_32;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_64;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.BOOLEAN;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NUMBER;
+
 public class MapperPathUtil {
-
-  public static final String ARRAY = "array";
-
-  public static final String MAP = "map";
-
-  public static final String OBJECT = "object";
 
   public static final String INLINE_PARAMETER = "InlineParameter";
 
@@ -322,7 +329,7 @@ public class MapperPathUtil {
                                           .refName(pojoName)
                                           .build());
         } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
-                   && BasicTypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
+                   && TypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
           contentObjects.add(ContentObject.builder()
                                           .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
                                           .name(mediaTypeEntry.getKey())
@@ -367,14 +374,14 @@ public class MapperPathUtil {
     final String typeName;
     if (Objects.nonNull(schema.getType())) {
       switch (schema.getType()) {
-        case BasicTypeConstants.INTEGER:
+        case INTEGER:
           typeName = getIntegerFormat(schema);
           break;
-        case BasicTypeConstants.NUMBER:
+        case NUMBER:
           typeName = getNumberFormat(schema);
           break;
-        case BasicTypeConstants.BOOLEAN:
-          typeName = "Boolean";
+        case BOOLEAN:
+          typeName = BOOLEAN;
           break;
         case ARRAY:
           final ArraySchema arraySchema = (ArraySchema) schema;
@@ -383,9 +390,9 @@ public class MapperPathUtil {
         case OBJECT:
           typeName = pojoName;
           break;
-        case BasicTypeConstants.STRING:
+        case STRING:
         default:
-          typeName = "String";
+          typeName = STRING;
           break;
       }
     } else {
@@ -406,22 +413,22 @@ public class MapperPathUtil {
 
   private static String getIntegerFormat(final Schema<?> schema) {
     String typeName = "";
-    if ("int32".equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
-      typeName = "Integer";
-    } else if ("int64".equalsIgnoreCase(schema.getFormat())) {
-      typeName = "Long";
+    if (INT_32.equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
+      typeName = INTEGER;
+    } else if (INT_64.equalsIgnoreCase(schema.getFormat())) {
+      typeName = LONG;
     }
     return typeName;
   }
 
   private static String getNumberFormat(final Schema<?> schema) {
     String typeName = "";
-    if ("float".equalsIgnoreCase(schema.getFormat())) {
-      typeName = "Float";
-    } else if ("double".equalsIgnoreCase(schema.getFormat())) {
-      typeName = "Double";
+    if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
+      typeName = FLOAT;
+    } else if (DOUBLE.equalsIgnoreCase(schema.getFormat())) {
+      typeName = DOUBLE;
     } else if (schema.getFormat().isEmpty()) {
-      typeName = "Integer";
+      typeName = INTEGER;
     }
     return typeName;
   }
@@ -437,6 +444,7 @@ public class MapperPathUtil {
       final String[] wholeRef = schema.get$ref().split("/");
       dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
     }
+
     return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith(MAP) ? MAP : dataType;
   }
 
