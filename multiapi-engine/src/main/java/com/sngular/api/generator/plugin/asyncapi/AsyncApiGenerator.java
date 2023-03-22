@@ -67,6 +67,8 @@ public class AsyncApiGenerator {
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
+  public static final String REF = "$ref";
+
   public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
   private final List<String> processedOperationIds = new ArrayList<>();
@@ -129,15 +131,10 @@ public class AsyncApiGenerator {
           processOperation(fileParameter, ymlParentPath, entry, channel, operationId, channelPayload, totalSchemas);
 
           if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
-            final String className;
-            if (channel.has(SUBSCRIBE)) {
-              className = CONSUMER_CLASS_NAME;
-            } else {
-              className = SUPPLIER_CLASS_NAME;
-            }
+            final String className = channel.has(SUBSCRIBE) ? CONSUMER_CLASS_NAME : SUPPLIER_CLASS_NAME;
             checkClassPackageDuplicate(className, DEFAULT_ASYNCAPI_API_PACKAGE);
             processSupplierMethod(channelPayload, null, ymlParentPath, totalSchemas, false, "", "DTO");
-            addProcessedClassesAndPackagesToGlobalVariables(className, DEFAULT_ASYNCAPI_API_PACKAGE, className);
+            addProcessedClassesAndPackagesToGlobalVariables(null, DEFAULT_ASYNCAPI_API_PACKAGE, className);
           }
 
         }
@@ -167,7 +164,7 @@ public class AsyncApiGenerator {
 
   private Map<String, JsonNode> getAllSchemas(final Path ymlParentPath, final JsonNode node) {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
-    final List<JsonNode> referenceList = node.findValues("$ref");
+    final List<JsonNode> referenceList = node.findValues(REF);
     referenceList.forEach(reference ->
         processReference(node, reference, ymlParentPath, totalSchemas, referenceList)
     );
@@ -179,10 +176,10 @@ public class AsyncApiGenerator {
                            message.fields().forEachRemaining(fieldSchema -> {
                              if (fieldSchema.getValue().has("payload")) {
                                final var payload = fieldSchema.getValue().get("payload");
-                               if (!payload.has("$ref")) {
+                               if (!payload.has(REF)) {
                                  totalSchemas.put(("messages/" + fieldSchema.getKey()).toUpperCase(), payload);
                                } else {
-                                 totalSchemas.putIfAbsent(("messages/" + fieldSchema.getKey()).toUpperCase(), payload.get("$ref"));
+                                 totalSchemas.putIfAbsent(("messages/" + fieldSchema.getKey()).toUpperCase(), payload.get(REF));
                                }
                              }
                            })
@@ -240,7 +237,7 @@ public class AsyncApiGenerator {
 
   private void checkReference(final JsonNode mainNode, final JsonNode node, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final List<JsonNode> referenceList) {
-    final var localReferences = node.findValues("$ref");
+    final var localReferences = node.findValues(REF);
     if (!localReferences.isEmpty()) {
       localReferences.forEach(localReference -> processReference(mainNode, localReference, ymlParentPath, totalSchemas, referenceList));
     }
@@ -448,11 +445,11 @@ public class AsyncApiGenerator {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
     String namespace = null;
-    if (message.has("$ref")) {
+    if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParentPath);
     } else if (message.has("payload")) {
       final var payload = message.get("payload");
-      if (payload.has("$ref")) {
+      if (payload.has(REF)) {
         namespace = processMethodRef(payload, modelPackage, ymlParentPath);
       } else {
         namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
@@ -465,7 +462,7 @@ public class AsyncApiGenerator {
 
   private String processMethodRef(final JsonNode messageBody, final String modelPackage, final Path ymlParentPath) throws IOException {
     final String namespace;
-    final String messageContent = messageBody.get("$ref").asText();
+    final String messageContent = messageBody.get(REF).asText();
     if (messageContent.startsWith("#")) {
       namespace = processModelPackage(MapperUtil.getLongRefClass(messageBody), modelPackage);
     } else if (messageContent.contains("#")) {
@@ -497,7 +494,7 @@ public class AsyncApiGenerator {
   }
 
   private String processExternalRef(final String modelPackage, final Path ymlParentPath, final JsonNode message) throws IOException {
-    final String[] pathToFile = message.get("$ref").asText().split("#");
+    final String[] pathToFile = message.get(REF).asText().split("#");
     final String filePath = pathToFile[0];
     final String componentPath = pathToFile[1];
     final String component;
