@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.4.1</version>
+  <version>4.5.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -125,6 +125,17 @@
       <id>AdrianLagarteraSngular</id>
       <name>Adrian Lagartera</name>
       <email>adrian.lagartera@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Senior Backend Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
+      <id>josemenvegsngular</id>
+      <name>Jose Maria Mendez Vega</name>
+      <email>ajosemaria.mendez@sngular.com</email>
       <organization>Sngular</organization>
       <organizationUrl>https://www.sngular.com</organizationUrl>
       <roles>
