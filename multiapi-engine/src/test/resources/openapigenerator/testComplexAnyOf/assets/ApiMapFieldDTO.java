@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
 @JsonDeserialize(builder = ApiMapFieldDTO.ApiMapFieldDTOBuilder.class)
 public class ApiMapFieldDTO {
@@ -35,7 +33,6 @@ public class ApiMapFieldDTO {
     this.mapSize = mapSize;
     this.mapTypes = mapTypes;
 
-    validatePartialCombinations();
   }
 
   private ApiMapFieldDTO(ApiMapFieldDTOBuilder builder) {
@@ -46,7 +43,6 @@ public class ApiMapFieldDTO {
     this.mapSize = builder.mapSize;
     this.mapTypes = builder.mapTypes;
 
-    validatePartialCombinations();
   }
 
   public static ApiMapFieldDTO.ApiMapFieldDTOBuilder builder() {
@@ -229,27 +225,6 @@ public class ApiMapFieldDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.keyType)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.mapSize)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.mapTypes)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiMapFieldDTO");
-    }
-  }
 
 
 }

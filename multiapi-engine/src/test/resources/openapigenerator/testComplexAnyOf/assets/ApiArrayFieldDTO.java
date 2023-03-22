@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
 @JsonDeserialize(builder = ApiArrayFieldDTO.ApiArrayFieldDTOBuilder.class)
 public class ApiArrayFieldDTO {
@@ -41,7 +39,6 @@ public class ApiArrayFieldDTO {
     this.minItems = minItems;
     this.values = values;
 
-    validatePartialCombinations();
   }
 
   private ApiArrayFieldDTO(ApiArrayFieldDTOBuilder builder) {
@@ -54,7 +51,6 @@ public class ApiArrayFieldDTO {
     this.minItems = builder.minItems;
     this.values = builder.values;
 
-    validatePartialCombinations();
   }
 
   public static ApiArrayFieldDTO.ApiArrayFieldDTOBuilder builder() {
@@ -275,31 +271,6 @@ public class ApiArrayFieldDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.uniqueItems)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.arraySize)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.regex)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.minItems)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.values)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiArrayFieldDTO");
-    }
-  }
 
 
 }

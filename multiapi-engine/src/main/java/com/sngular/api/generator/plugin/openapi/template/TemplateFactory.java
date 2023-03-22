@@ -39,6 +39,7 @@ public class TemplateFactory {
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
+    cfg.setAPIBuiltinEnabled(true);
     final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
     root.put("checkBasicTypes", basicDataTypes);
 

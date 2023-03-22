@@ -17,9 +17,9 @@ public class ApiStringFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
-  private List<Object> properties = new ArrayList<Object>();
+  private List<String> properties = new ArrayList<String>();
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  private List<String> defaultValues = new ArrayList<String>();
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="regex")
@@ -31,7 +31,7 @@ public class ApiStringFieldDTO {
   @JsonProperty(value ="valueLength")
   private Integer valueLength;
 
-  private ApiStringFieldDTO(Integer maxLength, String type, List<Object> properties, List<Object> defaultValues, String name, String regex, Integer minLength, Integer format, Integer valueLength) {
+  private ApiStringFieldDTO(Integer maxLength, String type, List<String> properties, List<String> defaultValues, String name, String regex, Integer minLength, Integer format, Integer valueLength) {
     this.maxLength = maxLength;
     this.type = type;
     this.properties = properties;
@@ -66,8 +66,8 @@ public class ApiStringFieldDTO {
 
     private Integer maxLength;
     private String type;
-    private List<Object> properties = new ArrayList<Object>();
-    private List<Object> defaultValues = new ArrayList<Object>();
+    private List<String> properties = new ArrayList<String>();
+    private List<String> defaultValues = new ArrayList<String>();
     private String name;
     private String regex;
     private Integer minLength;
@@ -83,27 +83,27 @@ public class ApiStringFieldDTO {
       this.type = type;
       return this;
     }
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(List<Object> properties) {
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(List<String> properties) {
       if (!properties.isEmpty()) {
         this.properties.addAll(properties);
       }
       return this;
     }
 
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(Object properties) {
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(String properties) {
       if (properties != null) {
         this.properties.add(properties);
       }
       return this;
     }
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(List<Object> defaultValues) {
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(List<String> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;
     }
 
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(Object defaultValues) {
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(String defaultValues) {
       if (defaultValues != null) {
         this.defaultValues.add(defaultValues);
       }
@@ -170,10 +170,10 @@ public class ApiStringFieldDTO {
   * @return properties
   */
   @Schema(name = "properties", required = false)
-  public List<Object> getProperties() {
+  public List<String> getProperties() {
     return properties;
   }
-  public void setProperties(List<Object> properties) {
+  public void setProperties(List<String> properties) {
     this.properties = properties;
   }
 
@@ -182,10 +182,10 @@ public class ApiStringFieldDTO {
   * @return defaultValues
   */
   @Schema(name = "defaultValues", required = false)
-  public List<Object> getDefaultValues() {
+  public List<String> getDefaultValues() {
     return defaultValues;
   }
-  public void setDefaultValues(List<Object> defaultValues) {
+  public void setDefaultValues(List<String> defaultValues) {
     this.defaultValues = defaultValues;
   }
 

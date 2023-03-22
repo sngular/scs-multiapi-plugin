@@ -1,6 +1,6 @@
 plugins {
   id 'java-gradle-plugin'
-  id 'com.gradle.plugin-publish' version '1.0.0'
+  id 'com.gradle.plugin-publish' version '1.1.0'
   id 'maven-publish'
   id 'groovy'
   id 'jvm-test-suite'
@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '4.3.13'
+version = '4.4.1'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:4.3.13'
+  implementation 'com.sngular:multiapi-engine:4.4.1'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
 }
@@ -38,7 +38,7 @@ dependencies {
 jar {
   manifest {
     attributes 'Implementation-Title': 'Gradle Quickstart',
-        'Implementation-Version': (version ? version : 'unknown'),
+        'Implementation-Version': (archiveVersion ? archiveVersion : 'unknown'),
         'Main-Class': 'com.sngular.api.generator.plugin.ScsMultiApi'
   }
 }
@@ -52,13 +52,13 @@ shadowJar {
 }
 
 
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
+tasks.register('sourcesJar', Jar) {
+  archiveClassifier.set('sources')
   from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar) {
-  classifier = "javadoc"
+tasks.register('javadocJar', Jar) {
+  archiveClassifier.set('javadoc')
   from javadoc
 }
 
@@ -71,19 +71,16 @@ artifacts {
   archives javadocJar
 }
 
-pluginBundle {
-  website = 'https://sngular.github.io/scs-multiapi-plugin/'
-  vcsUrl = 'https://github.com/sngular/scs-multiapi-plugin'
-  tags = ['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool']
-}
-
 gradlePlugin {
+  website.set('https://sngular.github.io/scs-multiapi-plugin/')
+  vcsUrl.set('https://github.com/sngular/scs-multiapi-plugin')
   plugins {
-    scsMultiApiPlugin {
+    create('scsMultiApiPlugin') {
       id = 'com.sngular.scs-multiapi-gradle-plugin'
       displayName = 'SCS MultiApi Plugin'
       description = 'OpenApi/Asyncapi Generator tool for Spring Boot applications'
       implementationClass = 'com.sngular.api.generator.plugin.ScsMultiApi'
+      tags.set(['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool'])
     }
   }
 }
@@ -101,7 +98,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.3.13'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.4.1'
         implementation 'org.assertj:assertj-core:3.23.1'
       }
 

@@ -15,6 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType.OBJECT;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,9 +27,7 @@ public class SchemaFieldObject {
   private String baseName;
 
   @Default
-  private String dataTypeSimple = "Object";
-
-  private String dataType;
+  private SchemaFieldObjectType dataType = new SchemaFieldObjectType(OBJECT);
 
   private String importClass;
 

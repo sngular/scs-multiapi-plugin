@@ -13,17 +13,17 @@ import java.util.ArrayList;
 public class ApiEnumFieldDTO {
 
   @JsonProperty(value ="enumValues")
-  private List<Object> enumValues = new ArrayList<Object>();
+  private List<String> enumValues = new ArrayList<String>();
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  private List<String> defaultValues = new ArrayList<String>();
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="defaultValue")
   private String defaultValue;
 
-  private ApiEnumFieldDTO(List<Object> enumValues, String type, List<Object> defaultValues, String name, String defaultValue) {
+  private ApiEnumFieldDTO(List<String> enumValues, String type, List<String> defaultValues, String name, String defaultValue) {
     this.enumValues = enumValues;
     this.type = type;
     this.defaultValues = defaultValues;
@@ -48,19 +48,19 @@ public class ApiEnumFieldDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiEnumFieldDTOBuilder {
 
-    private List<Object> enumValues = new ArrayList<Object>();
+    private List<String> enumValues = new ArrayList<String>();
     private String type;
-    private List<Object> defaultValues = new ArrayList<Object>();
+    private List<String> defaultValues = new ArrayList<String>();
     private String name;
     private String defaultValue;
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(List<Object> enumValues) {
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(List<String> enumValues) {
       if (!enumValues.isEmpty()) {
         this.enumValues.addAll(enumValues);
       }
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(Object enumValues) {
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(String enumValues) {
       if (enumValues != null) {
         this.enumValues.add(enumValues);
       }
@@ -71,14 +71,14 @@ public class ApiEnumFieldDTO {
       this.type = type;
       return this;
     }
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(List<Object> defaultValues) {
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(List<String> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(Object defaultValues) {
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(String defaultValues) {
       if (defaultValues != null) {
         this.defaultValues.add(defaultValues);
       }
@@ -106,10 +106,10 @@ public class ApiEnumFieldDTO {
   * @return enumValues
   */
   @Schema(name = "enumValues", required = false)
-  public List<Object> getEnumValues() {
+  public List<String> getEnumValues() {
     return enumValues;
   }
-  public void setEnumValues(List<Object> enumValues) {
+  public void setEnumValues(List<String> enumValues) {
     this.enumValues = enumValues;
   }
 
@@ -130,10 +130,10 @@ public class ApiEnumFieldDTO {
   * @return defaultValues
   */
   @Schema(name = "defaultValues", required = false)
-  public List<Object> getDefaultValues() {
+  public List<String> getDefaultValues() {
     return defaultValues;
   }
-  public void setDefaultValues(List<Object> defaultValues) {
+  public void setDefaultValues(List<String> defaultValues) {
     this.defaultValues = defaultValues;
   }
 

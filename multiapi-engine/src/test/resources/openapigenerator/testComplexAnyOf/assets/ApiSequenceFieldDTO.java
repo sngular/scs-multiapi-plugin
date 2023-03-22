@@ -7,10 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 
 @JsonDeserialize(builder = ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder.class)
 public class ApiSequenceFieldDTO {
@@ -66,7 +65,6 @@ public class ApiSequenceFieldDTO {
     this.initialValue = initialValue;
     this.increment = increment;
 
-    validatePartialCombinations();
   }
 
   private ApiSequenceFieldDTO(ApiSequenceFieldDTOBuilder builder) {
@@ -79,7 +77,6 @@ public class ApiSequenceFieldDTO {
     this.initialValue = builder.initialValue;
     this.increment = builder.increment;
 
-    validatePartialCombinations();
   }
 
   public static ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder builder() {
@@ -299,31 +296,6 @@ public class ApiSequenceFieldDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.elements)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.properties)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.seqEnum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.initialValue)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.increment)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiSequenceFieldDTO");
-    }
-  }
 
 
 }

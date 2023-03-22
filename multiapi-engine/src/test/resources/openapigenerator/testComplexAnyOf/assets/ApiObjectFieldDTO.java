@@ -6,16 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
 @JsonDeserialize(builder = ApiObjectFieldDTO.ApiObjectFieldDTOBuilder.class)
 public class ApiObjectFieldDTO {
 
   @JsonProperty(value ="requiredValues")
-  private List<Object> requiredValues = new ArrayList<Object>();
+  private List<String> requiredValues = new ArrayList<String>();
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
@@ -25,14 +23,13 @@ public class ApiObjectFieldDTO {
   @JsonProperty(value ="name")
   private String name;
 
-  private ApiObjectFieldDTO(List<Object> requiredValues, String type, List<ApiTypeArrayDTO> properties, List<Object> defaultValues, String name) {
+  private ApiObjectFieldDTO(List<String> requiredValues, String type, List<ApiTypeArrayDTO> properties, List<Object> defaultValues, String name) {
     this.requiredValues = requiredValues;
     this.type = type;
     this.properties = properties;
     this.defaultValues = defaultValues;
     this.name = name;
 
-    validatePartialCombinations();
   }
 
   private ApiObjectFieldDTO(ApiObjectFieldDTOBuilder builder) {
@@ -42,7 +39,6 @@ public class ApiObjectFieldDTO {
     this.defaultValues = builder.defaultValues;
     this.name = builder.name;
 
-    validatePartialCombinations();
   }
 
   public static ApiObjectFieldDTO.ApiObjectFieldDTOBuilder builder() {
@@ -52,19 +48,19 @@ public class ApiObjectFieldDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiObjectFieldDTOBuilder {
 
-    private List<Object> requiredValues = new ArrayList<Object>();
+    private List<String> requiredValues = new ArrayList<String>();
     private String type;
     private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
     private List<Object> defaultValues = new ArrayList<Object>();
     private String name;
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(List<Object> requiredValues) {
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(List<String> requiredValues) {
       if (!requiredValues.isEmpty()) {
         this.requiredValues.addAll(requiredValues);
       }
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(Object requiredValues) {
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(String requiredValues) {
       if (requiredValues != null) {
         this.requiredValues.add(requiredValues);
       }
@@ -118,10 +114,10 @@ public class ApiObjectFieldDTO {
   * @return requiredValues
   */
   @Schema(name = "requiredValues", required = false)
-  public List<Object> getRequiredValues() {
+  public List<String> getRequiredValues() {
     return requiredValues;
   }
-  public void setRequiredValues(List<Object> requiredValues) {
+  public void setRequiredValues(List<String> requiredValues) {
     this.requiredValues = requiredValues;
   }
 
@@ -214,25 +210,6 @@ public class ApiObjectFieldDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.requiredValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.properties)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiObjectFieldDTO");
-    }
-  }
 
 
 }
