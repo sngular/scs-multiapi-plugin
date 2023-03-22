@@ -46,9 +46,9 @@ public class MapperContentUtil {
       schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList, parentPackage));
       while (!modelToBuildList.isEmpty()) {
         final var modelToBuild = modelToBuildList.remove();
-        final var path = modelToBuild.split("(\\.|\\/)");
+        final var path = MapperUtil.splitName(modelToBuild);
         final var nexElement = buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
-                                                 prefix, suffix, modelToBuildList, path.length >=2 ? path[path.length - 2] : "");
+                                                 prefix, suffix, modelToBuildList, path.length >= 2 ? path[path.length - 2] : "");
         if (schemasList.contains(nexElement)) {
           modelToBuildList.remove();
         } else {
@@ -63,7 +63,7 @@ public class MapperContentUtil {
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
 
     final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList);
-    final var splitPackage = component.split("(\\.|\\/)");
+    final var splitPackage = MapperUtil.splitName(component);
     final String className = splitPackage[splitPackage.length - 1];
     return SchemaObject.builder()
                                 .schemaName(StringUtils.capitalize(className))
@@ -159,7 +159,7 @@ public class MapperContentUtil {
       if (fieldBody.has("$ref")) {
         String fieldType = extractTypeFromBody(fieldBody);
         modelToBuildList.add(fieldType);
-        final var splitPackage = fieldType.split("(\\.|\\/)");
+        final var splitPackage = MapperUtil.splitName(fieldType);
         fieldType = splitPackage[splitPackage.length - 1];
         fieldObjectArrayList.add(
             SchemaFieldObject.builder()
@@ -180,7 +180,7 @@ public class MapperContentUtil {
   private static String extractTypeFromBody(final JsonNode fieldBody) {
     String bodyType = fieldBody.get("$ref").asText();
     if (bodyType.contains("#")) {
-      final String[] path = bodyType.split("/");
+      final String[] path = MapperUtil.splitName(bodyType);
       bodyType = path[path.length - 2] + "." + StringUtils.capitalize(path[path.length - 1]);
     }
     return bodyType;
@@ -231,9 +231,9 @@ public class MapperContentUtil {
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
         String parentPackage = null;
         if (items.has("$ref")) {
-          var longtype = MapperUtil.getLongRefClass(items);
-          final String[] path = longtype.split("/");
-          parentPackage = path.length>1 ? path[path.length - 2] : "";
+          final var longtype = MapperUtil.getLongRefClass(items);
+          final String[] path = MapperUtil.splitName(longtype);
+          parentPackage = path.length > 1 ? path[path.length - 2] : "";
           modelToBuildList.add(longtype);
         }
         fieldObject =
@@ -289,8 +289,8 @@ public class MapperContentUtil {
           }
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
-          final String[] path = value.get("$ref").textValue().split("/");
-          field.setParentPackage(path[path.length-2]);
+          final String[] path = MapperUtil.splitName(value.get("$ref").textValue());
+          field.setParentPackage(path[path.length - 2]);
         }
       } else {
         throw new NonSupportedSchemaException(value.toPrettyString());

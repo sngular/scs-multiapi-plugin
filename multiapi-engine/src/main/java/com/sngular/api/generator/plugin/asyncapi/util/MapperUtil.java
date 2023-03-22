@@ -66,12 +66,12 @@ public class MapperUtil {
   }
 
   public static String getLongRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
+    final String[] pathObjectRef = splitName(schema.get("$ref").textValue());
     return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
   }
 
   public static String getRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
+    final String[] pathObjectRef = splitName(schema.get("$ref").textValue());
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
@@ -119,6 +119,10 @@ public class MapperUtil {
     return StringUtils.defaultIfBlank(prefix, "")
            + StringUtils.capitalize(namePojo)
            + StringUtils.defaultIfBlank(suffix, "");
+  }
+
+  public static String[] splitName(final String name) {
+    return name.split("(\\.|\\/)");
   }
 
 }
