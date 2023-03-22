@@ -19,18 +19,6 @@ public class SizeValidator implements ConstraintValidator<Size, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value))
-            return true;
-
-        if (max != 0 && min == 0){
-            return value.length() <= max;
-        } else if (min != 0 && max == 0){
-            return value.length() >= min;
-        } else if (max != 0 && min != 0){
-            return value.length() <= max && value.length() >= min;
-        }
-
-        return false;
-
+        return Objects.isNull(value) || ((max == 0 || value.length <= max) && (min == 0 || value.length >= min));
     }
 }
