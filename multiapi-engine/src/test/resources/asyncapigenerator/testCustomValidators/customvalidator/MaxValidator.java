@@ -19,20 +19,6 @@ public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.intValue() >= this.maximum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.intValue() > this.maximum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.intValue() < this.maximum || (!exclusive && value.intValue() == this.maximum));
     }
 }
