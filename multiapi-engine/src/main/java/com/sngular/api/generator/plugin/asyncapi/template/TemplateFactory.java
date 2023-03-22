@@ -13,10 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
@@ -102,15 +105,69 @@ public class TemplateFactory {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
     }
 
+    Set<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
-        fillTemplateSchema(classTemplate, false);
+        fillTemplateSchema(classTemplate, false, propertiesSet);
       } catch (final IOException | TemplateException exception) {
         throw new FileSystemException(exception);
       }
     });
 
+    try {
+      fillTemplates(schemaObjectMap.get(0).getFilePath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
+    } catch (IOException | TemplateException e){
+      e.printStackTrace();
+    }
+
     this.generateInterfaces();
+  }
+
+  private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
+    final Iterator<String> iterator = fieldProperties.iterator();
+    while (iterator.hasNext()) {
+      String current = iterator.next();
+      switch (current) {
+        case "Size":
+          fillTemplateCustom(filePathToSave, modelPackage,"Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
+                                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          break;
+        case "Pattern":
+          fillTemplateCustom(filePathToSave, modelPackage, "Pattern.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+                             "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
+          break;
+        case "MultipleOf":
+          fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+                             "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
+          break;
+        case "Max":
+          fillTemplateCustom(filePathToSave, modelPackage, "Max.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
+                             "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
+          break;
+        case "Min":
+          fillTemplateCustom(filePathToSave, modelPackage, "Min.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
+                             "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
+          break;
+        case "MaxItems":
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxItems.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+                             "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        case "MinItems":
+          fillTemplateCustom(filePathToSave, modelPackage, "MinItems.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+                             "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        case "NotNull":
+          fillTemplateCustom(filePathToSave, modelPackage, "NotNull.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+                             "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
+          break;
+        case "UniqueItems":
+          fillTemplateCustom(filePathToSave, modelPackage, "UniqueItems.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+                             "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
@@ -132,7 +189,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok) throws IOException, TemplateException {
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, Set<String> propertiesSet) throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -144,43 +201,35 @@ public class TemplateFactory {
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        if (fieldObject.isRequired()) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "NotNull.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
-                             "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
+          propertiesSet.add("NotNull");
         }
         if (Objects.nonNull(fieldObject.getMaximum())) {
           root.put("schema", schemaObject);
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "Max.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
-                             "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
+          propertiesSet.add("Max");
         }
         if (Objects.nonNull(fieldObject.getMaxItems())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "MaxItems.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
-                             "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
+          propertiesSet.add("MaxItems");
         }
         if (Objects.nonNull(fieldObject.getMinimum())) {
           root.put("schema", schemaObject);
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "Min.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
-                             "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
+          propertiesSet.add("Min");
         }
         if (Objects.nonNull(fieldObject.getMinItems())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "MinItems.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                             "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+          propertiesSet.add("MinItems");
         }
         if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION,
-                             "SizeValidator.java", TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          propertiesSet.add("Size");
         }
         if (Objects.nonNull(fieldObject.getPattern())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "Pattern.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
-                             "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
+          propertiesSet.add("Pattern");
         }
         if (Objects.nonNull(fieldObject.getMultipleOf())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "MultipleOf.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
-                             "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
+          root.put("schema", schemaObject);
+          propertiesSet.add("MultipleOf");
         }
         if (Objects.nonNull(fieldObject.getUniqueItems())) {
-          fillTemplateCustom(filePath, classTemplate.getModelPackage(), "UniqueItems.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
-                             "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
+          propertiesSet.add("UniqueItems");
         }
       }
     }

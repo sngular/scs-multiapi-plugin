@@ -6,7 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
