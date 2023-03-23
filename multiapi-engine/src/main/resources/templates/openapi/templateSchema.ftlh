@@ -102,9 +102,9 @@ public class ${schema.className} {
   <#if field.restrictionProperties.maxLength?has_content && field.restrictionProperties.minLength?has_content>
   @Size(min =${field.restrictionProperties.minLength}, max =${field.restrictionProperties.maxLength})
   <#elseif field.restrictionProperties.maxLength?has_content && !field.restrictionProperties.minLength?has_content>
-  @Size(max =${field.restrictionProperties.maxLength})
+  @Size(max =${field.restrictionProperties.maxLength}, min =0)
   <#elseif !field.restrictionProperties.maxLength?has_content && field.restrictionProperties.minLength?has_content>
-  @Size(min =${field.restrictionProperties.minLength})
+  @Size(max =0, min =${field.restrictionProperties.minLength})
   </#if>
   <#if field.restrictionProperties.pattern?has_content>
   @Pattern(regex = "${field.restrictionProperties.pattern}")
