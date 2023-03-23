@@ -56,78 +56,22 @@ public class MaxValidator implements ConstraintValidator<Max, Double> {
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value >= this.maximum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value > this.maximum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value < this.maximum || (!exclusive && value == this.maximum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.intValue() >= this.maximum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.intValue() > this.maximum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.intValue() < this.maximum || (!exclusive && value.intValue() == this.maximum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
     public boolean isValid(Float value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.floatValue() >= this.maximum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.floatValue() > this.maximum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.floatValue() < this.maximum || (!exclusive && value.floatValue() == this.maximum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
     public boolean isValid(Double value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.doubleValue() >= this.maximum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.doubleValue() > this.maximum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.doubleValue() < this.maximum || (!exclusive && value.doubleValue() == this.maximum));
     }
     </#if>
 </#list>

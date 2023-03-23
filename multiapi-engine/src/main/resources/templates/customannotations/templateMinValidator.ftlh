@@ -56,78 +56,22 @@ public class MinValidator implements ConstraintValidator<Min, Double> {
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value <= this.minimum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value < this.minimum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value > this.minimum || (!exclusive && value == this.minimum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.intValue() <= this.minimum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.intValue() < this.minimum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.intValue() > this.minimum || (!exclusive && value.intValue() == this.minimum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
     public boolean isValid(Float value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.floatValue() <= this.minimum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.floatValue() < this.minimum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.floatValue() > this.minimum || (!exclusive && value.floatValue() == this.minimum));
     }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
     public boolean isValid(Double value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.doubleValue() <= this.minimum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.doubleValue() < this.minimum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.doubleValue() > this.minimum || (!exclusive && value.doubleValue() == this.minimum));
     }
     </#if>
 </#list>

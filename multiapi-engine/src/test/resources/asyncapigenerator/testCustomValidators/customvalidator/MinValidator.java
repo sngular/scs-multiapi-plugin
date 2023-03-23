@@ -19,20 +19,6 @@ public class MinValidator implements ConstraintValidator<Min, Integer> {
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) {
-            return true;
-        }
-        if (exclusive) {
-            if (value.intValue() <= this.minimum) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        if (value.intValue() < this.minimum) {
-            return false;
-        } else {
-            return true;
-        }
+        return Objects.isNull(value) || (value.intValue() > this.minimum || (!exclusive && value.intValue() == this.minimum));
     }
 }
