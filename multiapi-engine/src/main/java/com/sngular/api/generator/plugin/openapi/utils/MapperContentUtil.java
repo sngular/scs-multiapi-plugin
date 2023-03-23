@@ -41,8 +41,12 @@ import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATE;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LOCALDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LOCALDATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ZONEDDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ZONEDDATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OFFSETDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OFFSETDATETIME;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NO_IMPORT_TYPE;
 
 public class MapperContentUtil {
@@ -128,12 +132,28 @@ public class MapperContentUtil {
       listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
     }
 
-    if (type.containsType(DATE)) {
-      listHashMap.computeIfAbsent(DATE, key -> List.of("java.time.LocalDate"));
+    if (type.containsType(LOCALDATE)) {
+      listHashMap.computeIfAbsent(LOCALDATE, key -> List.of("java.time.LocalDate"));
     }
 
-    if (type.containsType(DATETIME)) {
-      listHashMap.computeIfAbsent(DATETIME, key -> List.of("java.time.LocalDateTime"));
+    if (type.containsType(LOCALDATETIME)) {
+      listHashMap.computeIfAbsent(LOCALDATETIME, key -> List.of("java.time.LocalDateTime"));
+    }
+
+    if (type.containsType(ZONEDDATE)) {
+      listHashMap.computeIfAbsent(ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+    }
+
+    if (type.containsType(ZONEDDATETIME)) {
+      listHashMap.computeIfAbsent(ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+    }
+
+    if (type.containsType(OFFSETDATE)) {
+      listHashMap.computeIfAbsent(OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+    }
+
+    if (type.containsType(OFFSETDATETIME)) {
+      listHashMap.computeIfAbsent(OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
     }
   }
 
@@ -351,7 +371,7 @@ public class MapperContentUtil {
                                      .build());
       }
     } else if (STRING.equalsIgnoreCase(value.getType())) {
-      field = processStringProperty(key, value);
+      field = processStringProperty(key, value, specFile);
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else if (isBasicType(value)) {
@@ -368,8 +388,8 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static SchemaFieldObject processStringProperty(String propertyName, Schema<?> schema) {
-    final String resultingType = schema instanceof DateSchema ? DATE : (schema instanceof DateTimeSchema ? DATETIME : STRING);
+  private static SchemaFieldObject processStringProperty(final String propertyName, final Schema<?> schema, final SpecFile specFile) {
+    final String resultingType = schema instanceof DateSchema ? getDateType(specFile) : (schema instanceof DateTimeSchema ? getDateTimeType(specFile) : STRING);
     return SchemaFieldObject
                .builder()
                .baseName(propertyName)
@@ -642,6 +662,32 @@ public class MapperContentUtil {
 
   private static String getImportClass(final String type) {
     return StringUtils.isNotBlank(type) && !NO_IMPORT_TYPE.contains(type) ? StringUtils.capitalize(type) : "";
+  }
+
+  private static String getDateType(final SpecFile specFile) {
+    String dateType = LOCALDATE;
+    switch (specFile.getUseTimeType()) {
+      case ZONED:
+        dateType = ZONEDDATE;
+        break;
+      case OFFSET:
+        dateType = OFFSETDATE;
+    }
+
+    return dateType;
+  }
+
+  private static String getDateTimeType(final SpecFile specFile) {
+    String dateTimeType = LOCALDATETIME;
+    switch (specFile.getUseTimeType()) {
+      case ZONED:
+        dateTimeType = ZONEDDATETIME;
+        break;
+      case OFFSET:
+        dateTimeType = OFFSETDATETIME;
+    }
+
+    return dateTimeType;
   }
 
 }

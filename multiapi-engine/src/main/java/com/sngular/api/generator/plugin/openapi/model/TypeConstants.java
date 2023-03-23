@@ -34,9 +34,17 @@ public final class TypeConstants {
 
   public static final String ENUM = "enum";
 
-  public static final String DATE = "date";
+  public static final String LOCALDATE = "localdate";
 
-  public static final String DATETIME = "datetime";
+  public static final String LOCALDATETIME = "localdatetime";
+
+  public static final String ZONEDDATE = "zoneddate";
+
+  public static final String ZONEDDATETIME = "zoneddatetime";
+
+  public static final String OFFSETDATE = "offsetdate";
+
+  public static final String OFFSETDATETIME = "offsetdatetime";
 
   public static final String INT_32 = "int32";
 
@@ -45,6 +53,10 @@ public final class TypeConstants {
   public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
 
   public static final Set<String> NO_IMPORT_TYPE = Set.of(STRING, INTEGER, OBJECT);
+
+  public enum TimeType {
+    LOCAL, ZONED, OFFSET
+  }
 
   private TypeConstants() {
 

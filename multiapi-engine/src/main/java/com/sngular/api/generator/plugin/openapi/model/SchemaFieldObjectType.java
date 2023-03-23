@@ -22,8 +22,12 @@ import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATE;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LOCALDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LOCALDATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ZONEDDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ZONEDDATETIME;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OFFSETDATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OFFSETDATETIME;
 
 @Data
 public class SchemaFieldObjectType {
@@ -39,8 +43,12 @@ public class SchemaFieldObjectType {
       new SimpleImmutableEntry<>(LONG, "Long"),
       new SimpleImmutableEntry<>(STRING, "String"),
       new SimpleImmutableEntry<>(ENUM, "Enum"),
-      new SimpleImmutableEntry<>(DATE, "LocalDate"),
-      new SimpleImmutableEntry<>(DATETIME, "LocalDateTime")
+      new SimpleImmutableEntry<>(LOCALDATE, "LocalDate"),
+      new SimpleImmutableEntry<>(LOCALDATETIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(ZONEDDATE, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(ZONEDDATETIME, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(OFFSETDATE, "OffsetDateTime"),
+      new SimpleImmutableEntry<>(OFFSETDATETIME, "OffsetDateTime")
   );
 
   private static final Map<String, String> implTypeMappings = Map.ofEntries(
@@ -54,8 +62,12 @@ public class SchemaFieldObjectType {
       new SimpleImmutableEntry<>(LONG, "Long"),
       new SimpleImmutableEntry<>(STRING, "String"),
       new SimpleImmutableEntry<>(ENUM, "Enum"),
-      new SimpleImmutableEntry<>(DATE, "LocalDate"),
-      new SimpleImmutableEntry<>(DATETIME, "LocalDateTime")
+      new SimpleImmutableEntry<>(LOCALDATE, "LocalDate"),
+      new SimpleImmutableEntry<>(LOCALDATETIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(ZONEDDATE, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(ZONEDDATETIME, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(OFFSETDATE, "OffsetDateTime"),
+      new SimpleImmutableEntry<>(OFFSETDATETIME, "OffsetDateTime")
   );
 
   private SchemaFieldObjectType innerType;
