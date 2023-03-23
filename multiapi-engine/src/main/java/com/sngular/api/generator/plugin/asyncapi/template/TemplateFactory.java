@@ -202,7 +202,6 @@ public class TemplateFactory {
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        fieldObject.getRestrictions().addAnnotations();
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok))
           propertiesSet.add("NotNull");

@@ -56,7 +56,6 @@ public class TemplateFactory {
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        fieldObject.getRestrictionProperties().addAnnotations();
         propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)){
           propertiesSet.add("NotNull");
