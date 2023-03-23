@@ -56,36 +56,13 @@ public class TemplateFactory {
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
+        fieldObject.getRestrictionProperties().addAnnotations();
+        propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)){
           propertiesSet.add("NotNull");
-        }
-        if (Objects.nonNull(fieldObject.getMaximum())) {
-          propertiesSet.add("Max");
-        }
-        if (Objects.nonNull(fieldObject.getMaxItems())) {
-          propertiesSet.add("MaxItems");
-        }
-        if (Objects.nonNull(fieldObject.getMinimum())) {
-          propertiesSet.add("Min");
-        }
-        if (Objects.nonNull(fieldObject.getMinItems())) {
-          propertiesSet.add("MinItems");
-        }
-        if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
-          propertiesSet.add("Size");
-        }
-        if (Objects.nonNull(fieldObject.getPattern())) {
-          propertiesSet.add("Pattern");
-        }
-        if (Objects.nonNull(fieldObject.getMultipleOf())) {
-          propertiesSet.add("MultipleOf");
-        }
-        if (Objects.nonNull(fieldObject.getUniqueItems())) {
-          propertiesSet.add("UniqueItems");
         }
       }
     }
-
   }
 
   public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {

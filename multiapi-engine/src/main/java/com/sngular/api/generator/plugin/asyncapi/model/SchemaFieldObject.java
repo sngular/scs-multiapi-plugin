@@ -6,12 +6,10 @@
 
 package com.sngular.api.generator.plugin.asyncapi.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,40 +21,9 @@ public class SchemaFieldObject {
 
   private String baseName;
 
-  @Default
-  private BigDecimal maximum = null;
-
-  @Default
-  private BigDecimal minimum = null;
-
-  @Default
-  private Boolean exclusiveMaximum = null;
-
-  @Default
-  private Boolean exclusiveMinimum = null;
-
-  @Default
-  private Boolean uniqueItems = null;
-
-  @Default
-  private Integer minItems = null;
-
-  @Default
-  private Integer maxItems = null;
-
-  @Default
-  private Integer minLength = null;
-
-  @Default
-  private Integer maxLength = null;
-
-  @Default
-  private String pattern = null;
-
-  @Default
-  private String multipleOf = null;
-
   private String dataTypeSimple;
+
+  private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
 
   private String dataType;
 

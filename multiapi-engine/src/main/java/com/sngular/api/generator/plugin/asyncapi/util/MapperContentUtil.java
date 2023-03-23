@@ -24,6 +24,7 @@ import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumExcepti
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
@@ -162,6 +163,7 @@ public class MapperContentUtil {
         fieldObjectArrayList.add(
             SchemaFieldObject.builder()
                              .baseName(fieldName)
+                             .restrictions(new SchemaFieldObjectProperties())
                              .dataType(MapperUtil.getPojoName(fieldType, prefix, suffix))
                              .dataTypeSimple(MapperUtil.getPojoName(fieldType, prefix, suffix))
                              .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
@@ -224,7 +226,7 @@ public class MapperContentUtil {
     if (schema.has("type")) {
       final var type = schema.get("type").textValue();
       if ("object".equalsIgnoreCase(type)) {
-        fieldObject = SchemaFieldObject.builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
+        fieldObject = SchemaFieldObject.builder().restrictions(new SchemaFieldObjectProperties()).baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
       } else if (schema.has("items")) {
         final var items = schema.get("items");
@@ -233,6 +235,7 @@ public class MapperContentUtil {
             SchemaFieldObject
                 .builder()
                 .baseName(name)
+                .restrictions(new SchemaFieldObjectProperties())
                 .dataType(arrayType)
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
@@ -242,7 +245,8 @@ public class MapperContentUtil {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
         fieldObject = SchemaFieldObject
-                          .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .builder().restrictions(new SchemaFieldObjectProperties()).baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .build();
         setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
@@ -254,11 +258,13 @@ public class MapperContentUtil {
               .builder()
               .baseName(refSchemaName)
               .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+              .restrictions(new SchemaFieldObjectProperties())
               .build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
       fieldObject = SchemaFieldObject
                         .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .restrictions(new SchemaFieldObjectProperties())
                         .build();
     }
     return fieldObject;
@@ -274,13 +280,13 @@ public class MapperContentUtil {
       current = iterator.next();
       switch (current.getKey()) {
         case "maxItems":
-          fieldObject.setMaxItems(current.getValue().intValue());
+          fieldObject.getRestrictions().setMaxItems(current.getValue().intValue());
           break;
         case "minItems":
-          fieldObject.setMinItems(current.getValue().intValue());
+          fieldObject.getRestrictions().setMinItems(current.getValue().intValue());
           break;
         case "uniqueItems":
-          fieldObject.setUniqueItems(current.getValue().booleanValue());
+          fieldObject.getRestrictions().setUniqueItems(current.getValue().booleanValue());
           break;
         default:
           break;
@@ -296,37 +302,37 @@ public class MapperContentUtil {
       current = iterator.next();
       switch (current.getKey()) {
         case "minimum":
-          fieldObject.setMinimum(current.getValue().decimalValue());
+          fieldObject.getRestrictions().setMinimum(current.getValue().asText());
           break;
         case "maximum":
-          fieldObject.setMaximum(current.getValue().decimalValue());
+          fieldObject.getRestrictions().setMaximum(current.getValue().asText());
           break;
         case "exclusiveMinimum":
-          fieldObject.setExclusiveMinimum(current.getValue().booleanValue());
+          fieldObject.getRestrictions().setExclusiveMinimum(current.getValue().booleanValue());
           break;
         case "exclusiveMaximum":
-          fieldObject.setExclusiveMaximum(current.getValue().booleanValue());
+          fieldObject.getRestrictions().setExclusiveMaximum(current.getValue().booleanValue());
           break;
         case "maxItems":
-          fieldObject.setMaxItems(current.getValue().intValue());
+          fieldObject.getRestrictions().setMaxItems(current.getValue().intValue());
           break;
         case "maxLength":
-          fieldObject.setMaxLength(current.getValue().intValue());
+          fieldObject.getRestrictions().setMaxLength(current.getValue().intValue());
           break;
         case "minItems":
-          fieldObject.setMinItems(current.getValue().intValue());
+          fieldObject.getRestrictions().setMinItems(current.getValue().intValue());
           break;
         case "minLength":
-          fieldObject.setMinLength(current.getValue().intValue());
+          fieldObject.getRestrictions().setMinLength(current.getValue().intValue());
           break;
         case "pattern":
-          fieldObject.setPattern(current.getValue().toString().replaceAll("\"", ""));
+          fieldObject.getRestrictions().setPattern(current.getValue().toString().replaceAll("\"", ""));
           break;
         case "uniqueItems":
-          fieldObject.setUniqueItems(current.getValue().booleanValue());
+          fieldObject.getRestrictions().setUniqueItems(current.getValue().booleanValue());
           break;
         case "multipleOf":
-          fieldObject.setMultipleOf(current.getValue().toString());
+          fieldObject.getRestrictions().setMultipleOf(current.getValue().asText());
           break;
         default:
           break;
@@ -376,6 +382,7 @@ public class MapperContentUtil {
                .dataType(MapperUtil.getSimpleType(value, prefix, suffix))
                .required(required)
                .enumValues(enumValues)
+               .restrictions(new SchemaFieldObjectProperties())
                .build();
   }
 

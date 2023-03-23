@@ -139,12 +139,12 @@ public class TemplateFactory {
         case "MultipleOf":
           fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
                              "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
-          break;
-        case "Max":
+           break;
+        case "Maximum":
           fillTemplateCustom(filePathToSave, modelPackage, "Max.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
                              "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
           break;
-        case "Min":
+        case "Minimum":
           fillTemplateCustom(filePathToSave, modelPackage, "Min.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
                              "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
           break;
@@ -195,42 +195,17 @@ public class TemplateFactory {
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       final Map<String, Object> rootSchema = new HashMap<>();
       rootSchema.put("schema", schemaObject);
+      root.put("schema", schemaObject);
       final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
+        fieldObject.getRestrictions().addAnnotations();
+        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok))
           propertiesSet.add("NotNull");
-        }
-        if (Objects.nonNull(fieldObject.getMaximum())) {
-          root.put("schema", schemaObject);
-          propertiesSet.add("Max");
-        }
-        if (Objects.nonNull(fieldObject.getMaxItems())) {
-          propertiesSet.add("MaxItems");
-        }
-        if (Objects.nonNull(fieldObject.getMinimum())) {
-          root.put("schema", schemaObject);
-          propertiesSet.add("Min");
-        }
-        if (Objects.nonNull(fieldObject.getMinItems())) {
-          propertiesSet.add("MinItems");
-        }
-        if (Objects.nonNull(fieldObject.getMinLength()) || Objects.nonNull(fieldObject.getMaxLength())) {
-          propertiesSet.add("Size");
-        }
-        if (Objects.nonNull(fieldObject.getPattern())) {
-          propertiesSet.add("Pattern");
-        }
-        if (Objects.nonNull(fieldObject.getMultipleOf())) {
-          root.put("schema", schemaObject);
-          propertiesSet.add("MultipleOf");
-        }
-        if (Objects.nonNull(fieldObject.getUniqueItems())) {
-          propertiesSet.add("UniqueItems");
-        }
       }
     }
   }

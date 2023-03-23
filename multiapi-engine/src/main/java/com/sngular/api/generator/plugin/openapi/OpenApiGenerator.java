@@ -370,30 +370,39 @@ public class OpenApiGenerator {
         case "Size":
           templateFactory.fillTemplateCustom(filePathToSave, "Size.java", "SizeValidator.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          break;
         case "Pattern":
           templateFactory.fillTemplateCustom(filePathToSave, "Pattern.java", "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
+          break;
         case "MultipleOf":
           templateFactory.fillTemplateCustom(filePathToSave, "MultipleOf.java", "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
-        case "Max":
+          break;
+        case "Maximum":
           templateFactory.fillTemplateCustom(filePathToSave, "Max.java", "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
-        case "Min":
+          break;
+        case "Minimum":
           templateFactory.fillTemplateCustom(filePathToSave, "Min.java", "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
+          break;
         case "MaxItems":
           templateFactory.fillTemplateCustom(filePathToSave, "MaxItems.java", "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
+          break;
         case "MinItems":
           templateFactory.fillTemplateCustom(filePathToSave, "MinItems.java", "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+          break;
         case "NotNull":
           templateFactory.fillTemplateCustom(filePathToSave, "NotNull.java", "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
+          break;
         case "UniqueItems":
           templateFactory.fillTemplateCustom(filePathToSave, "UniqueItems.java", "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
                                              TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
+          break;
         default:
           break;
       }

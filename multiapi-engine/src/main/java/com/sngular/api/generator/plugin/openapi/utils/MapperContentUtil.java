@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -160,7 +161,7 @@ public class MapperContentUtil {
         final String schemaName = pathObjectRef[pathObjectRef.length - 1];
         final var schemaToProcess = totalSchemas.get(schemaName);
         if (compositedSchemas.containsKey(schemaName)) {
-          fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(schemaName).dataType(schemaName).build());
+          fieldObjectArrayList.add(SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(schemaName).dataType(schemaName).build());
         } else {
           fieldObjectArrayList.addAll(processFieldObjectList(schemaName, schemaName, schemaToProcess, specFile, totalSchemas, compositedSchemas, antiLoopList));
         }
@@ -183,12 +184,12 @@ public class MapperContentUtil {
       fieldObjectArrayList.addAll(processArray(fieldName, className, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
     } else if (Objects.nonNull(schema.get$ref())) {
       final String refSchemaName = getRef(schema, specFile);
-      final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
+      final var field = SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
       setFieldType(field, schema, schema, specFile, refSchemaName);
       fieldObjectArrayList.add(field);
     } else if (schema instanceof ObjectSchema || schema instanceof ComposedSchema) {
       if (MapUtils.isEmpty(schema.getProperties())) {
-        fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(OBJECT).build());
+        fieldObjectArrayList.add(SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(fieldName).dataTypeSimple(OBJECT).build());
       } else if (schema instanceof ObjectSchema || ObjectUtils.allNull(className, fieldName)) {
         schema.getProperties().forEach(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
       } else {
@@ -206,7 +207,7 @@ public class MapperContentUtil {
                                      .build());
       }
     } else {
-      final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
+      final var field = SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(fieldName).dataTypeSimple(MapperUtil.getSimpleType(schema, specFile)).build();
       setFieldType(field, schema, schema, specFile, "");
       fieldObjectArrayList.add(field);
     }
@@ -242,30 +243,41 @@ public class MapperContentUtil {
         fieldObjectArrayList.add(SchemaFieldObject
                                      .builder()
                                      .baseName(key)
+                                     .restrictionProperties(new SchemaFieldObjectProperties())
                                      .dataType(MapperUtil.getPojoName(typeName, specFile))
                                      .dataTypeSimple(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile))
                                      .build());
       }
     } else if (isBasicType(value)) {
       field =
-          SchemaFieldObject.builder().baseName(key).exclusiveMaximum(value.getExclusiveMaximum())
-                           .exclusiveMinimum(value.getExclusiveMinimum()).minLength(value.getMinLength()).maxLength(value.getMaxLength())
-                           .pattern(value.getPattern()).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
-      if (Objects.nonNull(value.getMultipleOf())) {
-        field.setMultipleOf(value.getMultipleOf().toString());
-      }
-      if (Objects.nonNull(value.getMaximum())) {
-        field.setMaximum(value.getMaximum().toString());
-      }
-      if (Objects.nonNull(value.getMinimum())) {
-        field.setMinimum(value.getMinimum().toString());
-      }
+          SchemaFieldObject.builder().baseName(key).restrictionProperties(new SchemaFieldObjectProperties()).dataTypeSimple(MapperUtil.getSimpleType(value, specFile)).build();
+      addPropertiesToFieldObject(field, value);
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {
       fieldObjectArrayList.addAll(processFieldObjectList(key, key, value, specFile, totalSchemas, compositedSchemas, antiLoopList));
     }
     return fieldObjectArrayList;
+  }
+
+  private static void addPropertiesToFieldObject(final SchemaFieldObject fieldObject, final Schema value){
+    fieldObject.getRestrictionProperties().setPattern(value.getPattern());
+    fieldObject.getRestrictionProperties().setMaxItems(value.getMaxItems());
+    fieldObject.getRestrictionProperties().setMinItems(value.getMinItems());
+    fieldObject.getRestrictionProperties().setMaxLength(value.getMaxLength());
+    fieldObject.getRestrictionProperties().setMinLength(value.getMinLength());
+    fieldObject.getRestrictionProperties().setUniqueItems(value.getUniqueItems());
+    fieldObject.getRestrictionProperties().setExclusiveMaximum(value.getExclusiveMaximum());
+    fieldObject.getRestrictionProperties().setExclusiveMinimum(value.getExclusiveMinimum());
+    if (Objects.nonNull(value.getMultipleOf())) {
+      fieldObject.getRestrictionProperties().setMultipleOf(value.getMultipleOf().toString());
+    }
+    if (Objects.nonNull(value.getMaximum())) {
+      fieldObject.getRestrictionProperties().setMaximum(value.getMaximum().toString());
+    }
+    if (Objects.nonNull(value.getMinimum())) {
+      fieldObject.getRestrictionProperties().setMinimum(value.getMinimum().toString());
+    }
   }
 
   private static List<SchemaFieldObject> processArray(
@@ -277,7 +289,8 @@ public class MapperContentUtil {
       final var items = arraySchema.getItems();
       if (Objects.nonNull(items.get$ref())) {
         final String refSchemaName = getRef(items, specFile);
-        final var field = SchemaFieldObject.builder().baseName(fieldName).dataTypeSimple(ARRAY).dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile)).build();
+        final var field = SchemaFieldObject.builder().baseName(fieldName).restrictionProperties(new SchemaFieldObjectProperties()).dataTypeSimple(ARRAY).dataType(MapperUtil.getSimpleType(arraySchema.getItems()
+            , specFile)).build();
         setFieldType(field, arraySchema.getItems(), arraySchema.getItems(), specFile, refSchemaName);
         fieldObjectArrayList.add(field);
       } else if (ObjectUtils.anyNotNull(items.getAnyOf(), items.getAllOf(), items.getOneOf())) {
@@ -291,26 +304,28 @@ public class MapperContentUtil {
         fieldObjectArrayList.add(SchemaFieldObject
                                      .builder()
                                      .baseName(fieldName)
+                                     .restrictionProperties(new SchemaFieldObjectProperties())
                                      .dataType(schemaObjectComposed.getClassName())
                                      .dataTypeSimple(ARRAY)
                                      .importClass(schemaObjectComposed.getClassName())
                                      .build());
       } else if (Objects.nonNull(items.getProperties())) {
         compositedSchemas.putAll(mapComponentToSchemaObject(totalSchemas, items, fieldName, specFile, specFile.getModelPackage()));
-        fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataType(MapperUtil.getPojoName(fieldName, specFile)).dataTypeSimple(ARRAY).build());
+        fieldObjectArrayList.add(SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(fieldName).
+                                                  dataType(MapperUtil.getPojoName(fieldName, specFile)).dataTypeSimple(ARRAY).build());
       } else {
-        fieldObjectArrayList.add(SchemaFieldObject
-                                     .builder()
-                                     .baseName(fieldName)
-                                     .maxItems(arraySchema.getMaxItems())
-                                     .minItems(arraySchema.getMinItems())
-                                     .uniqueItems(arraySchema.getUniqueItems())
-                                     .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
-                                     .dataTypeSimple(ARRAY)
-                                     .build());
+        final SchemaFieldObject field = SchemaFieldObject.builder()
+                                                         .baseName(fieldName)
+                                                         .restrictionProperties(new SchemaFieldObjectProperties())
+                                                         .dataType(MapperUtil.getSimpleType(arraySchema.getItems(), specFile))
+                                                         .dataTypeSimple(ARRAY)
+                                                         .build();
+        fieldObjectArrayList.add(field);
+        addPropertiesToFieldObject(field, schema);
       }
     } else {
-      fieldObjectArrayList.add(SchemaFieldObject.builder().baseName(fieldName).dataType(OBJECT).dataTypeSimple(ARRAY).build());
+      fieldObjectArrayList.add(SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(fieldName).dataType(OBJECT).
+                                                dataTypeSimple(ARRAY).build());
     }
     return fieldObjectArrayList;
   }
@@ -387,7 +402,8 @@ public class MapperContentUtil {
         typeObject = getRef(additionalProperties, specFile);
       } else if (StringUtils.isNotBlank(additionalProperties.getType()) && !additionalProperties.getType().equalsIgnoreCase("object")) {
         final var additionalPropertiesField =
-            SchemaFieldObject.builder().baseName(additionalProperties.getName()).dataTypeSimple(MapperUtil.getSimpleType(additionalProperties, specFile)).build();
+            SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(additionalProperties.getName()).
+                             dataTypeSimple(MapperUtil.getSimpleType(additionalProperties, specFile)).build();
         setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
         typeObject = getMapFieldType(additionalPropertiesField);
       } else {
@@ -428,7 +444,7 @@ public class MapperContentUtil {
   private static void processEnumField(
       final String key, final Schema<?> value, final SpecFile specFile, final List<SchemaFieldObject> fieldObjectArrayList,
       final List<?> enumValues, final Schema<?> schema) {
-    final var field = SchemaFieldObject.builder().baseName(key).dataTypeSimple("enum").build();
+    final var field = SchemaFieldObject.builder().restrictionProperties(new SchemaFieldObjectProperties()).baseName(key).dataTypeSimple("enum").build();
     field.setRequired(Objects.nonNull(schema.getRequired()) && schema.getRequired().contains(key));
     final var dataType = MapperUtil.getSimpleType(value, specFile);
     field.setDataType(dataType);

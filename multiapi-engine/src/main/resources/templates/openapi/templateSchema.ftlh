@@ -14,31 +14,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import ${import};
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.maxLength?has_content || field.minLength?has_content>
+    <#if field.restrictionProperties.maxLength?has_content || field.restrictionProperties.minLength?has_content>
 import ${packageModel}.customvalidator.Size;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.maximum?has_content>
+    <#if field.restrictionProperties.maximum?has_content>
 import ${packageModel}.customvalidator.Max;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.minimum?has_content>
+    <#if field.restrictionProperties.minimum?has_content>
 import ${packageModel}.customvalidator.Min;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.maxItems?has_content>
+    <#if field.restrictionProperties.maxItems?has_content>
 import ${packageModel}.customvalidator.MaxItems;
         <#break>
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.minItems?has_content>
+    <#if field.restrictionProperties.minItems?has_content>
 import ${packageModel}.customvalidator.MinItems;
         <#break>
     </#if>
@@ -50,13 +50,13 @@ import ${packageModel}.exception.ModelClassException;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-  <#if field.pattern?has_content>
+  <#if field.restrictionProperties.pattern?has_content>
 import ${packageModel}.customvalidator.Pattern;
     <#break>
   </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-  <#if field.multipleOf?has_content>
+  <#if field.restrictionProperties.multipleOf?has_content>
 import ${packageModel}.customvalidator.MultipleOf;
     <#break>
   </#if>
@@ -68,7 +68,7 @@ import ${packageModel}.customvalidator.NotNull;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-    <#if field.uniqueItems?has_content && field.uniqueItems == true>
+    <#if field.restrictionProperties.uniqueItems?has_content && field.restrictionProperties.uniqueItems == true>
 import ${packageModel}.customvalidator.UniqueItems;
         <#break>
     </#if>
@@ -78,39 +78,39 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
-  <#if field.minimum?has_content && (!field.exclusiveMinimum?has_content || field.exclusiveMinimum == false)>
-  @Min(minimum = "${field.minimum}", exclusive = false)
+  <#if field.restrictionProperties.minimum?has_content && (!field.restrictionProperties.exclusiveMinimum?has_content || field.restrictionProperties.exclusiveMinimum == false)>
+  @Min(minimum = "${field.restrictionProperties.minimum}", exclusive = false)
   </#if>
-  <#if field.minimum?has_content && field.exclusiveMinimum?has_content && field.exclusiveMinimum == true>
-  @Min(minimum = "${field.minimum}", exclusive = ${field.exclusiveMinimum?string})
+  <#if field.restrictionProperties.minimum?has_content && field.restrictionProperties.exclusiveMinimum?has_content && field.restrictionProperties.exclusiveMinimum == true>
+  @Min(minimum = "${field.restrictionProperties.minimum}", exclusive = ${field.restrictionProperties.exclusiveMinimum?string})
   </#if>
-  <#if field.maximum?has_content && (!field.exclusiveMaximum?has_content || field.exclusiveMaximum == false)>
-  @Max(maximum = "${field.maximum}", exclusive = false)
+  <#if field.restrictionProperties.maximum?has_content && (!field.restrictionProperties.exclusiveMaximum?has_content || field.restrictionProperties.exclusiveMaximum == false)>
+  @Max(maximum = "${field.restrictionProperties.maximum}", exclusive = false)
   </#if>
-  <#if field.maximum?has_content && field.exclusiveMaximum?has_content && field.exclusiveMaximum == true>
-  @Max(maximum = "${field.maximum}", exclusive = ${field.exclusiveMaximum?string})
+  <#if field.restrictionProperties.maximum?has_content && field.restrictionProperties.exclusiveMaximum?has_content && field.restrictionProperties.exclusiveMaximum == true>
+  @Max(maximum = "${field.restrictionProperties.maximum}", exclusive = ${field.restrictionProperties.exclusiveMaximum?string})
   </#if>
-  <#if field.maxItems?has_content>
-  @MaxItems(maximum = ${field.maxItems})
+  <#if field.restrictionProperties.maxItems?has_content>
+  @MaxItems(maximum = ${field.restrictionProperties.maxItems})
   </#if>
-  <#if field.minItems?has_content>
-  @MinItems(minimum = ${field.minItems})
+  <#if field.restrictionProperties.minItems?has_content>
+  @MinItems(minimum = ${field.restrictionProperties.minItems})
   </#if>
-  <#if field.uniqueItems?has_content && field.uniqueItems == true>
+  <#if field.restrictionProperties.uniqueItems?has_content && field.restrictionProperties.uniqueItems == true>
   @UniqueItems
   </#if>
-  <#if field.maxLength?has_content && field.minLength?has_content>
-  @Size(min =${field.minLength}, max =${field.maxLength})
-  <#elseif field.maxLength?has_content && !field.minLength?has_content>
-  @Size(max =${field.maxLength})
-  <#elseif !field.maxLength?has_content && field.minLength?has_content>
-  @Size(min =${field.minLength})
+  <#if field.restrictionProperties.maxLength?has_content && field.restrictionProperties.minLength?has_content>
+  @Size(min =${field.restrictionProperties.minLength}, max =${field.restrictionProperties.maxLength})
+  <#elseif field.restrictionProperties.maxLength?has_content && !field.restrictionProperties.minLength?has_content>
+  @Size(max =${field.restrictionProperties.maxLength})
+  <#elseif !field.restrictionProperties.maxLength?has_content && field.restrictionProperties.minLength?has_content>
+  @Size(min =${field.restrictionProperties.minLength})
   </#if>
-  <#if field.pattern?has_content>
-  @Pattern(regex = "${field.pattern}")
+  <#if field.restrictionProperties.pattern?has_content>
+  @Pattern(regex = "${field.restrictionProperties.pattern}")
   </#if>
-  <#if field.multipleOf?has_content>
-  @MultipleOf(multiple = "${field.multipleOf}")
+  <#if field.restrictionProperties.multipleOf?has_content>
+  @MultipleOf(multiple = "${field.restrictionProperties.multipleOf}")
   </#if>
   <#if field.required?has_content && field.required == true>
   @NotNull
