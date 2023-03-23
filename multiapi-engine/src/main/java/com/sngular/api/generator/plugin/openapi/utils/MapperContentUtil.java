@@ -21,6 +21,8 @@ import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.DateSchema;
+import io.swagger.v3.oas.models.media.DateTimeSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
@@ -39,6 +41,8 @@ import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATE;
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DATETIME;
 import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NO_IMPORT_TYPE;
 
 public class MapperContentUtil {
@@ -122,6 +126,14 @@ public class MapperContentUtil {
 
     if (type.containsType(BIG_DECIMAL)) {
       listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+    }
+
+    if (type.containsType(DATE)) {
+      listHashMap.computeIfAbsent(DATE, key -> List.of("java.time.LocalDate"));
+    }
+
+    if (type.containsType(DATETIME)) {
+      listHashMap.computeIfAbsent(DATETIME, key -> List.of("java.time.LocalDateTime"));
     }
   }
 
@@ -320,17 +332,16 @@ public class MapperContentUtil {
       final Map<String, Schema> totalSchemas, final String key, final Schema value, final Map<String, SchemaObject> compositedSchemas, final SpecFile specFile,
       final Schema<?> schema, final List<String> antiLoopList) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
+
     final SchemaFieldObject field;
     if (Objects.nonNull(value.get$ref())) {
       final var typeName = cleanRefName(value);
+
       if (!antiLoopList.contains(typeName) &&
-          ((totalSchemas.containsKey(typeName) && Objects.nonNull(
-              totalSchemas.get(typeName).getType()) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) ||
+          ((totalSchemas.containsKey(typeName) && Objects.nonNull(totalSchemas.get(typeName).getType()) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) ||
            value.get$ref().contains(key))) {
         antiLoopList.add(typeName);
-        fieldObjectArrayList.addAll(
-            processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas,
-                                   antiLoopList));
+        fieldObjectArrayList.addAll(processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList));
       } else {
         fieldObjectArrayList.add(SchemaFieldObject
                                      .builder()
@@ -339,6 +350,10 @@ public class MapperContentUtil {
                                                                                   MapperUtil.getPojoName(typeName, specFile)))
                                      .build());
       }
+    } else if (STRING.equalsIgnoreCase(value.getType())) {
+      field = processStringProperty(key, value);
+      setFieldType(field, value, schema, specFile, key);
+      fieldObjectArrayList.add(field);
     } else if (isBasicType(value)) {
       field = SchemaFieldObject
                   .builder()
@@ -348,10 +363,18 @@ public class MapperContentUtil {
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {
-      fieldObjectArrayList.addAll(
-          processFieldObjectList(key, key, value, specFile, totalSchemas, compositedSchemas, antiLoopList));
+      fieldObjectArrayList.addAll(processFieldObjectList(key, key, value, specFile, totalSchemas, compositedSchemas, antiLoopList));
     }
     return fieldObjectArrayList;
+  }
+
+  private static SchemaFieldObject processStringProperty(String propertyName, Schema<?> schema) {
+    final String resultingType = schema instanceof DateSchema ? DATE : (schema instanceof DateTimeSchema ? DATETIME : STRING);
+    return SchemaFieldObject
+               .builder()
+               .baseName(propertyName)
+               .dataType(new SchemaFieldObjectType(resultingType))
+               .build();
   }
 
   private static List<SchemaFieldObject> processArray(
