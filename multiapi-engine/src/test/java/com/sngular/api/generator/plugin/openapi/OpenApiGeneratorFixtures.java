@@ -1067,13 +1067,13 @@ static Function<Path, Boolean> validateValidationAnnotations() {
 
         final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateDTO/model/exception";
 
-        final String COMMON_PATH = "openapigenerator/testValidationAnnotations/";
+        final String COMMON_PATH = "openapigenerator/testCreateDTO/";
 
         final String ASSETS_PATH = COMMON_PATH + "assets/";
     
 
         final List<String> expectedTestApiFile = List.of(
-            ASSETS_PATH +"TestApi.java"
+            ASSETS_PATH + "TestApi.java"
         );
 
         final List<String> expectedTestApiModelFiles = List.of(
