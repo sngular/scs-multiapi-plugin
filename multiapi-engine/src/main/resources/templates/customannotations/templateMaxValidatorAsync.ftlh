@@ -12,69 +12,67 @@ import javax.validation.ConstraintValidatorContext;
 
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
-public class MultipleOfValidator implements ConstraintValidator<MultipleOf, BigDecimal> {
+public class MaxValidator implements ConstraintValidator<Max, BigDecimal> {
 
-  private BigDecimal multiple;
-      <#break>
+    private BigDecimal maximum;
+        <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
-public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Integer> {
+public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
-  private int multiple;
+    private int maximum;
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
-public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Float> {
+public class MaxValidator implements ConstraintValidator<Max, Float> {
 
-  private float multiple;
+    private float maximum;
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
-public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Double> {
+    public class MaxValidator implements ConstraintValidator<Max, Double> {
 
-  private double multiple;
+    private double maximum;
     </#if>
 </#list>
+    private boolean exclusive;
 
-  @Override
-  public void initialize(final MultipleOf constraintAnnotation) {
-    ConstraintValidator.super.initialize(constraintAnnotation);
+    @Override
+    public void initialize(Max constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
-    this.multiple = new BigDecimal(constraintAnnotation.multiple());
+        this.maximum = new BigDecimal(constraintAnnotation.maximum());
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
-    this.multiple = Integer.parseInt(constraintAnnotation.multiple());
+        this.maximum = Integer.parseInt(constraintAnnotation.maximum());
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
-    this.multiple = Float.parseFloat(constraintAnnotation.multiple());
+        this.maximum = Float.parseFloat(constraintAnnotation.maximum());
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
-    this.multiple = Double.parseDouble(constraintAnnotation.multiple());
-        <#break>
+        this.maximum = Double.parseDouble(constraintAnnotation.maximum());
     </#if>
 </#list>
-  }
+        this.exclusive = constraintAnnotation.exclusive();
+    }
 
-  @Override
+    @Override
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>
-  public boolean isValid(final BigDecimal value, final ConstraintValidatorContext constraintValidatorContext) {
-    BigDecimal[] divisionResult = value.divideAndRemainder(multiple);
-
-    return Objects.equals(divisionResult[1], new BigDecimal(0));
-  }
+    public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
+        return Objects.isNull(value) || (value < this.maximum || (!exclusive && value == this.maximum));
+    }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Integer" || field.dataTypeSimple == "integer")>
-  public boolean isValid(final Integer value, final ConstraintValidatorContext constraintValidatorContext) {
-    return value.intValue() % multiple == 0;
-  }
+    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+        return Objects.isNull(value) || (value.intValue() < this.maximum || (!exclusive && value.intValue() == this.maximum));
+    }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
-  public boolean isValid(final Float value, final ConstraintValidatorContext constraintValidatorContext) {
-    return value.floatValue() % multiple == 0;
-  }
+    public boolean isValid(Float value, ConstraintValidatorContext context) {
+        return Objects.isNull(value) || (value.floatValue() < this.maximum || (!exclusive && value.floatValue() == this.maximum));
+    }
         <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
-  public boolean isValid(final Double value, final ConstraintValidatorContext constraintValidatorContext) {
-    return value.doubleValue() % multiple == 0;
-  }
-        <#break>
+    public boolean isValid(Double value, ConstraintValidatorContext context) {
+        return Objects.isNull(value) || (value.doubleValue() < this.maximum || (!exclusive && value.doubleValue() == this.maximum));
+    }
     </#if>
 </#list>
 }

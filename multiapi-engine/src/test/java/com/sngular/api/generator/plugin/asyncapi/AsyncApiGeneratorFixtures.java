@@ -282,7 +282,7 @@ public class AsyncApiGeneratorFixtures {
         CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MinValidator.java",
         CUSTOM_VALIDATOR_PATH + "MultipleOf.java",
-        CUSTOM_VALIDATOR_PATH + "MultipleOfValidatorAsync.java",
+        CUSTOM_VALIDATOR_PATH + "MultipleOfValidator.java",
         CUSTOM_VALIDATOR_PATH + "NotNull.java",
         CUSTOM_VALIDATOR_PATH + "NotNullValidator.java",
         CUSTOM_VALIDATOR_PATH + "Pattern.java",

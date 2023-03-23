@@ -30,11 +30,11 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MIN_ANNOTATION = "templateMin.ftlh";
 
-  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinValidator.ftlh";
+  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinValidatorAsync.ftlh";
 
   public static final String TEMPLATE_MAX_ANNOTATION = "templateMax.ftlh";
 
-  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidator.ftlh";
+  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidatorAsync.ftlh";
 
   public static final String TEMPLATE_SIZE_ANNOTATION = "templateSize.ftlh";
 
@@ -51,6 +51,7 @@ public class TemplateIndexConstants {
   public static final String TEMPLATE_MAX_ITEMS_ANNOTATION = "templateMaxItems.ftlh";
 
   public static final String TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION = "templateMaxItemsValidator.ftlh";
+
 
   public static final String TEMPLATE_MIN_ITEMS_ANNOTATION = "templateMinItems.ftlh";
 
