@@ -339,6 +339,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_CREATE_DTO = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testCreateDTO/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testCreateDTO")
+          .modelPackage("com.sngular.multifileplugin.testCreateDTO.model")
+          .clientPackage("com.sngular.multifileplugin.testCreateDTO.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -396,7 +408,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateComplesAnyOf() {
+  static Function<Path, Boolean> validateComplexAnyOf() {
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testcomplexanyof/api";
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testcomplexanyof/model";
@@ -416,6 +428,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiArrayFieldDTO.java",
         ASSETS_PATH + "ApiBooleanFieldDTO.java",
         ASSETS_PATH + "ApiDateFieldDTO.java",
+        ASSETS_PATH + "ApiDefaultItemDTO.java",
         ASSETS_PATH + "ApiEnumFieldDTO.java",
         ASSETS_PATH + "ApiMapFieldDTO.java",
         ASSETS_PATH + "ApiNumberFieldDTO.java",
@@ -967,7 +980,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotations() {
+static Function<Path, Boolean> validateValidationAnnotations() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
@@ -1045,6 +1058,32 @@ public final class OpenApiGeneratorFixtures {
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
   }
+
+    static Function<Path, Boolean> validateCreateDTO() {
+
+        final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCreateDTO";
+
+        final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCreateDTO/model";
+
+        final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateDTO/model/exception";
+
+        final String COMMON_PATH = "openapigenerator/testValidationAnnotations/";
+
+        final String ASSETS_PATH = COMMON_PATH + "assets/";
+    
+
+        final List<String> expectedTestApiFile = List.of(
+            ASSETS_PATH +"TestApi.java"
+        );
+
+        final List<String> expectedTestApiModelFiles = List.of(
+          ASSETS_PATH + "model/AddressDTO.java",
+          ASSETS_PATH + "model/PropertiesDTO.java",
+          ASSETS_PATH + "model/TestDTO.java"
+        );
+
+        return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    }
 
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,

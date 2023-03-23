@@ -243,7 +243,8 @@ components:
           type: string
         defaultValues:
           type: array
-          items: string
+          items:
+            type: string
         regex:
           type: string
         minLength:
@@ -260,7 +261,8 @@ components:
           format: int32
         properties:
           type: array
-          items: string
+          items:
+            type: string
     arrayField:
       type: object
       properties:
@@ -311,12 +313,14 @@ components:
           type: string
         defaultValues:
           type: array
-          items: string
+          items:
+            type: string
         defaultValue:
           type: string
         enumValues:
           type: array
-          items: string
+          items:
+            type: string
     mapField:
       type: object
       properties:
@@ -382,12 +386,14 @@ components:
           type: string
         defaultValues:
           type: array
-          items: object
+          items:
+            type: object
         properties:
           $ref: "#/components/schemas/typeArray"
         requiredValues:
           type: array
-          items: string
+          items:
+            type: string
     unionField:
       type: object
       properties:
@@ -444,7 +450,8 @@ components:
           type: string
         defaultValues:
           type: array
-          items: object
+          items:
+            type: object
         properties:
           $ref: "#/components/schemas/typeArray"
         elements:

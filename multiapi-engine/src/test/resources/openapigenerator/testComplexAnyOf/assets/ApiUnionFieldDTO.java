@@ -5,15 +5,13 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
 public class ApiUnionFieldDTO {
 
   @JsonProperty(value ="defaultItem")
-  private Object defaultItem;
+  private ApiDefaultItemDTO defaultItem;
   @JsonProperty(value ="generatedFlag")
   private Boolean generatedFlag;
   @JsonProperty(value ="type")
@@ -48,7 +46,7 @@ public class ApiUnionFieldDTO {
   @JsonProperty(value ="values")
   private List<ApiTypeArrayDTO> values = new ArrayList<ApiTypeArrayDTO>();
 
-  private ApiUnionFieldDTO(Object defaultItem, Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<ApiTypeArrayDTO> values) {
+  private ApiUnionFieldDTO(ApiDefaultItemDTO defaultItem, Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<ApiTypeArrayDTO> values) {
     this.defaultItem = defaultItem;
     this.generatedFlag = generatedFlag;
     this.type = type;
@@ -57,7 +55,6 @@ public class ApiUnionFieldDTO {
     this.optionalUnion = optionalUnion;
     this.values = values;
 
-    validatePartialCombinations();
   }
 
   private ApiUnionFieldDTO(ApiUnionFieldDTOBuilder builder) {
@@ -69,7 +66,6 @@ public class ApiUnionFieldDTO {
     this.optionalUnion = builder.optionalUnion;
     this.values = builder.values;
 
-    validatePartialCombinations();
   }
 
   public static ApiUnionFieldDTO.ApiUnionFieldDTOBuilder builder() {
@@ -78,7 +74,7 @@ public class ApiUnionFieldDTO {
 
   public static class ApiUnionFieldDTOBuilder {
 
-    private Object defaultItem;
+    private ApiDefaultItemDTO defaultItem;
     private Boolean generatedFlag;
     private String type;
     private UnionEnum unionEnum;
@@ -86,7 +82,7 @@ public class ApiUnionFieldDTO {
     private Boolean optionalUnion;
     private List<ApiTypeArrayDTO> values = new ArrayList<ApiTypeArrayDTO>();
 
-    public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder defaultItem(Object defaultItem) {
+    public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder defaultItem(ApiDefaultItemDTO defaultItem) {
       this.defaultItem = defaultItem;
       return this;
     }
@@ -139,10 +135,10 @@ public class ApiUnionFieldDTO {
   * @return defaultItem
   */
   @Schema(name = "defaultItem", required = false)
-  public Object getDefaultItem() {
+  public ApiDefaultItemDTO getDefaultItem() {
     return defaultItem;
   }
-  public void setDefaultItem(Object defaultItem) {
+  public void setDefaultItem(ApiDefaultItemDTO defaultItem) {
     this.defaultItem = defaultItem;
   }
 
@@ -261,29 +257,6 @@ public class ApiUnionFieldDTO {
     return o.toString().replace("\n", "\n ");
   }
 
-  private void validatePartialCombinations() {
-    boolean satisfiedCondition = false;
-
-    if (Objects.nonNull(this.defaultItem)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.generatedFlag)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.unionEnum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.optionalUnion)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.values)) {
-      satisfiedCondition = true;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiUnionFieldDTO");
-    }
-  }
 
 
 }

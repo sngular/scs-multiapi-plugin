@@ -35,6 +35,10 @@ public class MapperUtil {
 
   public static final String BIG_DECIMAL = "bigDecimal";
 
+  public static final String STRING = "String";
+
+  public static final String OBJECT = "Object";
+
   private MapperUtil() {}
 
   public static String getSimpleType(final Schema<?> schema, final SpecFile specFile) {
@@ -61,15 +65,31 @@ public class MapperUtil {
     } else if (schema instanceof ArraySchema) {
       type = MapperPathUtil.ARRAY;
     } else {
-      type = ObjectUtils.defaultIfNull(StringUtils.capitalize(schema.getType()), "Object");
+      type = ObjectUtils.defaultIfNull(StringUtils.capitalize(schema.getType()), OBJECT);
     }
     return StringUtils.capitalize(type);
+  }
+
+  public static String getSimpleType(final Object schema) {
+    final String type;
+    if (schema instanceof Boolean) {
+      type = OBJECT;
+    } else if (schema instanceof Integer) {
+      type = INTEGER;
+    } else if (schema instanceof Float) {
+      type = FLOAT;
+    } else if (schema instanceof Double) {
+      type = DOUBLE;
+    } else {
+      type = STRING;
+    }
+    return type;
   }
 
   public static String getTypeMap(final MapSchema mapSchema, final SpecFile specFile) {
     var typeMap = "";
     if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
-      typeMap = "String";
+      typeMap = STRING;
     } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
       typeMap = "Integer";
     } else {
@@ -85,7 +105,7 @@ public class MapperUtil {
   public static String getTypeArray(final ArraySchema array, final SpecFile specFile) {
     var typeArray = "";
     if (array.getItems() instanceof StringSchema) {
-      typeArray = "String";
+      typeArray = STRING;
     } else if (array.getItems() instanceof IntegerSchema) {
       typeArray = "Integer";
     } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
