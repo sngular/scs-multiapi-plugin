@@ -101,8 +101,8 @@ public class SchemaFieldObjectType {
   }
 
   private String mapIntoString(Map<String, String> mappings) {
-    String baseString = mappings.getOrDefault(baseType, baseType);
-    boolean hasInner = baseString.contains("?");
+    final String baseString = mappings.getOrDefault(baseType, baseType);
+    final boolean hasInner = baseString.contains("?");
 
     if (hasInner && Objects.isNull(innerType)) {
       throw new RuntimeException(String.format("Field object type '%s' missing an inner type", baseType));
@@ -125,7 +125,7 @@ public class SchemaFieldObjectType {
   public boolean equals(final Object obj) {
     boolean result = false;
     if (obj instanceof SchemaFieldObjectType) {
-      SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
+      final SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
       final boolean baseTypeIsEqual = baseType.equals(other.baseType);
       final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
       result = baseTypeIsEqual && innerTypeIsEqual;

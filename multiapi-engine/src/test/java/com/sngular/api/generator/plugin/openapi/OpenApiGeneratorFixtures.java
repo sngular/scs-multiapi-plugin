@@ -328,6 +328,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_DATE_TIME = List.of(
+    SpecFile
+        .builder()
+        .filePath("openapigenerator/testDateTime/api-test.yml")
+        .apiPackage("com.sngular.multifileplugin.testDateTime")
+        .modelPackage("com.sngular.multifileplugin.testDateTime.model")
+        .clientPackage("com.sngular.multifileplugin.testDateTime.client")
+        .modelNameSuffix("DTO")
+        .useLombokModelAnnotation(true)
+        .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -875,6 +887,24 @@ public final class OpenApiGeneratorFixtures {
       "openapigenerator/testCreateDTO/assets/model/AddressDTO.java",
       "openapigenerator/testCreateDTO/assets/model/PropertiesDTO.java",
       "openapigenerator/testCreateDTO/assets/model/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateDateTime() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testDateTime";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testDateTime/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testDateTime/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testDateTime/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testDateTime/assets/model/TestDateDTO.java"
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
