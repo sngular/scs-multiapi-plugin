@@ -67,9 +67,11 @@ public class AsyncApiGenerator {
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
-  public static final String REF = "$ref";
-
   public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
+
+  private static final String PAYLOAD = "payload";
+
+  private static final String REF = "$ref";
 
   private final List<String> processedOperationIds = new ArrayList<>();
 
@@ -174,8 +176,8 @@ public class AsyncApiGenerator {
                                                                    fieldSchema.getValue())));
     messagesList.forEach(message ->
                            message.fields().forEachRemaining(fieldSchema -> {
-                             if (fieldSchema.getValue().has("payload")) {
-                               final var payload = fieldSchema.getValue().get("payload");
+                             if (fieldSchema.getValue().has(PAYLOAD)) {
+                               final var payload = fieldSchema.getValue().get(PAYLOAD);
                                if (!payload.has(REF)) {
                                  totalSchemas.put(("messages/" + fieldSchema.getKey()).toUpperCase(), payload);
                                } else {
@@ -429,7 +431,7 @@ public class AsyncApiGenerator {
     final var className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
     final var schemaToBuild = totalSchemas.get((parentPackage + "/" + className).toUpperCase());
     final Path[] filePath = new Path[1];
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, modelPackage, className, schemaToBuild, null, classSuffix, parentPackage);
+    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
     schemaObjectList.forEach(schemaObject -> {
       filePath[0] = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + "/" + schemaObject.getParentPackage()));
       templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, usingLombok, filePath[0]);
@@ -447,8 +449,8 @@ public class AsyncApiGenerator {
     String namespace = null;
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParentPath);
-    } else if (message.has("payload")) {
-      final var payload = message.get("payload");
+    } else if (message.has(PAYLOAD)) {
+      final var payload = message.get(PAYLOAD);
       if (payload.has(REF)) {
         namespace = processMethodRef(payload, modelPackage, ymlParentPath);
       } else {

@@ -27,6 +27,8 @@ public class MapperUtil {
 
   public static final String BIG_DECIMAL = "bigDecimal";
 
+  public static final String REF = "$ref";
+
   private MapperUtil() {}
 
   public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix) {
@@ -55,7 +57,7 @@ public class MapperUtil {
           type = INTEGER;
         }
       }
-    } else if (schema.has("$ref")) {
+    } else if (schema.has(REF)) {
       type = getRef(schema, prefix, suffix);
     }
     return type;
@@ -66,12 +68,12 @@ public class MapperUtil {
   }
 
   public static String getLongRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = splitName(schema.get("$ref").textValue());
+    final String[] pathObjectRef = splitName(schema.get(REF).textValue());
     return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
   }
 
   public static String getRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = splitName(schema.get("$ref").textValue());
+    final String[] pathObjectRef = splitName(schema.get(REF).textValue());
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
@@ -90,7 +92,7 @@ public class MapperUtil {
     if (arrayNode.has("type")) {
       mapValueType = arrayNode.get("type");
     } else {
-      mapValueType = arrayNode.get("$ref");
+      mapValueType = arrayNode.get(REF);
     }
     typeArray = getCollectionType(arrayNode, mapValueType, prefix, suffix);
     return typeArray;
@@ -101,13 +103,13 @@ public class MapperUtil {
     if (!typeMap.contains("#")) {
       if ("string".equalsIgnoreCase(mapValueType.textValue())) {
         typeMap = "String";
-      } else if ("integer".equalsIgnoreCase(mapValueType.textValue())) {
+      } else if (INTEGER.equalsIgnoreCase(mapValueType.textValue())) {
         typeMap = "Integer";
       } else {
         typeMap = mapValueType.textValue();
       }
     } else {
-      final var valueSchema = mapNode.findPath("$ref");
+      final var valueSchema = mapNode.findPath(REF);
       if (Objects.nonNull(valueSchema)) {
         getRef(valueSchema, prefix, suffix);
       }

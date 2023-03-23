@@ -34,7 +34,7 @@ public class MapperContentUtil {
 
   private static final String BIG_DECIMAL = "bigDecimal";
 
-  public static final String $_REF = "$ref";
+  public static final String REF = "$ref";
 
   public static final String TYPE = "type";
 
@@ -44,20 +44,24 @@ public class MapperContentUtil {
 
   public static final String ONE_OF = "oneOf";
 
+  public static final String OBJECT = "object";
+
+  public static final String PROPERTIES = "properties";
+
   private static String schemaCombinatorType;
 
   private MapperContentUtil() {}
 
-  public static List<SchemaObject> mapComponentToSchemaObject(final Map<String, JsonNode> totalSchemas, final String modelPackage, final String component, final JsonNode model,
+  public static List<SchemaObject> mapComponentToSchemaObject(final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
                                                               final String prefix, final String suffix, final String parentPackage) {
     final List<SchemaObject> schemasList = new ArrayList<>();
     if (Objects.nonNull(model)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
-      schemasList.add(buildSchemaObject(totalSchemas, modelPackage, component, model, prefix, suffix, modelToBuildList, parentPackage));
+      schemasList.add(buildSchemaObject(totalSchemas, component, model, prefix, suffix, modelToBuildList, parentPackage));
       while (!modelToBuildList.isEmpty()) {
         final var modelToBuild = modelToBuildList.remove();
         final var path = MapperUtil.splitName(modelToBuild);
-        final var nexElement = buildSchemaObject(totalSchemas, modelPackage, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
+        final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
                                                  prefix, suffix, modelToBuildList, path.length >= 2 ? path[path.length - 2] : "");
         if (schemasList.contains(nexElement)) {
           modelToBuildList.remove();
@@ -69,7 +73,7 @@ public class MapperContentUtil {
     return schemasList;
   }
 
-  private static SchemaObject buildSchemaObject(final Map<String, JsonNode> totalSchemas, final String modelPackage, final String component, final JsonNode model,
+  private static SchemaObject buildSchemaObject(final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
 
     final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList);
@@ -78,14 +82,14 @@ public class MapperContentUtil {
     return SchemaObject.builder()
                                 .schemaName(StringUtils.capitalize(className))
                                 .className(MapperUtil.getPojoName(className, prefix, suffix))
-                                .importList(getImportList(listSchema, modelPackage))
+                                .importList(getImportList(listSchema))
                                 .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
                                 .fieldObjectList(listSchema)
                                 .parentPackage(parentPackage)
                                 .build();
   }
 
-  private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList, final String modelPackage) {
+  private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList) {
     final var listHashMap = new HashMap<String, List<String>>();
     final var importList = new ArrayList<String>();
 
@@ -116,7 +120,7 @@ public class MapperContentUtil {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (model.has(TYPE)) {
-      if ("object".equalsIgnoreCase(model.get(TYPE).textValue())) {
+      if (OBJECT.equalsIgnoreCase(model.get(TYPE).textValue())) {
         processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList);
       } else if (ARRAY.equalsIgnoreCase(model.get(TYPE).textValue())) {
         fieldObjectArrayList.add(processFieldObjectList("", model, required, prefix, suffix, modelToBuildList));
@@ -137,15 +141,15 @@ public class MapperContentUtil {
     if (model.has("required")) {
       model.get("required").fieldNames().forEachRemaining(requiredSet::add);
     }
-    final var properties = model.get("properties");
+    final var properties = model.get(PROPERTIES);
     if (!(properties.has(ANY_OF) || properties.has(ALL_OF) || properties.has(ONE_OF))) {
-      final var propertiesIt = model.get("properties").fieldNames();
+      final var propertiesIt = model.get(PROPERTIES).fieldNames();
       while (propertiesIt.hasNext()) {
         final var property = propertiesIt.next();
         fieldObjectArrayList.add(
-            processFieldObjectList(property, model.get("properties").path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList));
-        if (model.get("properties").path(property).has($_REF)) {
-          modelToBuildList.add(MapperUtil.getLongRefClass(model.get("properties").path(property)));
+            processFieldObjectList(property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList));
+        if (model.get(PROPERTIES).path(property).has(REF)) {
+          modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
         }
       }
     } else if (properties.has(ALL_OF)) {
@@ -166,7 +170,7 @@ public class MapperContentUtil {
       final var field = fieldsIt.next();
       final var fieldName = field.getKey();
       final var fieldBody = field.getValue();
-      if (fieldBody.has($_REF)) {
+      if (fieldBody.has(REF)) {
         String fieldType = extractTypeFromBody(fieldBody);
         modelToBuildList.add(fieldType);
         final var splitPackage = MapperUtil.splitName(fieldType);
@@ -188,7 +192,7 @@ public class MapperContentUtil {
   }
 
   private static String extractTypeFromBody(final JsonNode fieldBody) {
-    String bodyType = fieldBody.get($_REF).asText();
+    String bodyType = fieldBody.get(REF).asText();
     if (bodyType.contains("#")) {
       final String[] path = MapperUtil.splitName(bodyType);
       bodyType = path[path.length - 2] + "." + StringUtils.capitalize(path[path.length - 1]);
@@ -209,7 +213,7 @@ public class MapperContentUtil {
   private static SchemaFieldObject solveElement(final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
       final JsonNode element, final Collection<String> modelToBuildList) {
     final SchemaFieldObject result;
-    if (element.has($_REF)) {
+    if (element.has(REF)) {
       final String schemaName = MapperUtil.getLongRefClass(element);
       final var schemaToProcess = totalSchemas.get(schemaName.toUpperCase());
       result = processFieldObjectList(schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList);
@@ -226,14 +230,14 @@ public class MapperContentUtil {
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (schema.has(TYPE)) {
       final var type = schema.get(TYPE).textValue();
-      if ("object".equalsIgnoreCase(type)) {
+      if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject = SchemaFieldObject.builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
       } else if (schema.has("items")) {
         final var items = schema.get("items");
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
         String parentPackage = null;
-        if (items.has($_REF)) {
+        if (items.has(REF)) {
           final var longType = MapperUtil.getLongRefClass(items);
           final String[] path = MapperUtil.splitName(longType);
           parentPackage = path.length > 1 ? path[path.length - 2] : "";
@@ -254,8 +258,8 @@ public class MapperContentUtil {
         fieldObject = SchemaFieldObject
           .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
       }
-    } else if (schema.has($_REF)) {
-      final String[] path = MapperUtil.splitName(schema.get($_REF).textValue());
+    } else if (schema.has(REF)) {
+      final String[] path = MapperUtil.splitName(schema.get(REF).textValue());
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
       fieldObject =
         SchemaFieldObject
@@ -279,7 +283,7 @@ public class MapperContentUtil {
         final var typeArray = MapperUtil.getTypeArray(value, prefix, suffix);
         field.setDataType(typeArray);
         field.setImportClass(getImportClass(typeArray));
-      } else if (value.get(TYPE).textValue().equalsIgnoreCase("object")) {
+      } else if (value.get(TYPE).textValue().equalsIgnoreCase(OBJECT)) {
         if (value.has("additionalProperties")) {
           final var typeMap = MapperUtil.getTypeMap(value, prefix, suffix);
           field.setDataTypeSimple(MAP);
@@ -287,12 +291,12 @@ public class MapperContentUtil {
           field.setImportClass(getImportClass(typeMap));
         } else {
           var typeObject = "";
-          if (value.has($_REF)) {
+          if (value.has(REF)) {
             typeObject = MapperUtil.getRef(value, prefix, suffix);
           }
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
-          final String[] path = MapperUtil.splitName(value.get($_REF).textValue());
+          final String[] path = MapperUtil.splitName(value.get(REF).textValue());
           field.setParentPackage(path[path.length - 2]);
         }
       } else {
