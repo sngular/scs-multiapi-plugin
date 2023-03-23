@@ -144,6 +144,7 @@ public class MapperContentUtil {
 
       final var field = SchemaFieldObject.builder()
                                          .baseName("items")
+                                         .restrictionProperties(new SchemaFieldObjectProperties())
                                          .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, itemType))
                                          .build();
       fieldObjectArrayList.add(field);
@@ -255,6 +256,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
                                    .baseName(fieldName)
+                                   .restrictionProperties(new SchemaFieldObjectProperties())
                                    .dataType(new SchemaFieldObjectType(OBJECT))
                                    .build());
     } else if (schema instanceof ObjectSchema) {
@@ -266,6 +268,7 @@ public class MapperContentUtil {
             .add(SchemaFieldObject
                      .builder()
                      .baseName(className)
+                     .restrictionProperties(new SchemaFieldObjectProperties())
                      .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(className, specFile)))
                      .build());
       } else if (antiLoopList.contains(fieldName)) {
@@ -273,6 +276,7 @@ public class MapperContentUtil {
             .add(SchemaFieldObject
                      .builder()
                      .baseName(fieldName)
+                     .restrictionProperties(new SchemaFieldObjectProperties())
                      .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(fieldName, specFile)))
                      .build());
       } else {
@@ -284,6 +288,7 @@ public class MapperContentUtil {
             .add(SchemaFieldObject
                      .builder()
                      .baseName(name)
+                     .restrictionProperties(new SchemaFieldObjectProperties())
                      .dataType(SchemaFieldObjectType.fromTypeList(OBJECT, MapperUtil.getPojoName(name, specFile)))
                      .build());
       }
@@ -299,6 +304,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
                                    .baseName(fieldName)
+                                   .restrictionProperties(new SchemaFieldObjectProperties())
                                    .dataType(SchemaFieldObjectType.fromTypeList(schemaObjectComposed.getClassName(), schemaObjectComposed.getClassName()))
                                    .build());
     }
@@ -350,7 +356,7 @@ public class MapperContentUtil {
                   .baseName(key)
                   .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(value, specFile)))
                   .build();
-      addPropertiesToFieldObject(field, value)
+      addPropertiesToFieldObject(field, value);
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {
@@ -389,6 +395,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
                                    .baseName(fieldName)
+                                   .restrictionProperties(new SchemaFieldObjectProperties())
                                    .dataType(new SchemaFieldObjectType(OBJECT))
                                    .build());
     } else {
@@ -428,12 +435,13 @@ public class MapperContentUtil {
                                      .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
                                      .build());
       } else {
-        fieldObjectArrayList.add(SchemaFieldObject
-                                     .builder()
-                                     .restrictionProperties(new SchemaFieldObjectProperties())
-                                     .baseName(fieldName)
-                                     .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
-                                     .build());
+        SchemaFieldObject field = SchemaFieldObject
+                                      .builder()
+                                      .restrictionProperties(new SchemaFieldObjectProperties())
+                                      .baseName(fieldName)
+                                      .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getSimpleType(items, specFile)))
+                                      .build();
+        fieldObjectArrayList.add(field);
         addPropertiesToFieldObject(field, schema);
       }
     }
@@ -452,6 +460,7 @@ public class MapperContentUtil {
           .add(SchemaFieldObject
                    .builder()
                    .baseName(fieldName)
+                   .restrictionProperties(new SchemaFieldObjectProperties())
                    .dataType(SchemaFieldObjectType.fromTypeList(MAP, OBJECT))
                    .build());
     } else {
@@ -460,6 +469,7 @@ public class MapperContentUtil {
         final String refSchemaName = getRef(additionalProperties, specFile);
         final var field = SchemaFieldObject.builder()
                                            .baseName(fieldName)
+                                           .restrictionProperties(new SchemaFieldObjectProperties())
                                            .dataType(SchemaFieldObjectType.fromTypeList(MAP, refSchemaName))
                                            .build();
         setFieldType(field, schema, additionalProperties, specFile, refSchemaName);
@@ -469,6 +479,7 @@ public class MapperContentUtil {
             .add(SchemaFieldObject
                      .builder()
                      .baseName("additionalProperties")
+                     .restrictionProperties(new SchemaFieldObjectProperties())
                      .dataType(SchemaFieldObjectType.fromTypeList(MAP, ARRAY, MapperUtil.getSimpleType(additionalProperties.getItems(), specFile)))
                      .build());
       } else {
@@ -478,6 +489,7 @@ public class MapperContentUtil {
             .add(SchemaFieldObject
                      .builder()
                      .baseName(fieldName)
+                     .restrictionProperties(new SchemaFieldObjectProperties())
                      .dataType(SchemaFieldObjectType.fromTypeList(MAP, type))
                      .build());
       }
