@@ -52,7 +52,6 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION = "templateMaxItemsValidator.ftlh";
 
-
   public static final String TEMPLATE_MIN_ITEMS_ANNOTATION = "templateMinItems.ftlh";
 
   public static final String TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION = "templateMinItemsValidator.ftlh";

@@ -45,8 +45,11 @@ import static com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectTy
 public class MapperContentUtil {
 
   private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
+
   private static final String ANY_OF_COMBINATOR = "anyOf";
+
   private static final String ONE_OF_COMBINATOR = "oneOf";
+
   private static final String ALL_OF_COMBINATOR = "allOf";
 
   private MapperContentUtil() {
@@ -366,7 +369,7 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static void addPropertiesToFieldObject(final SchemaFieldObject fieldObject, final Schema value){
+  private static void addPropertiesToFieldObject(final SchemaFieldObject fieldObject, final Schema value) {
     fieldObject.getRestrictionProperties().setPattern(value.getPattern());
     fieldObject.getRestrictionProperties().setMaxItems(value.getMaxItems());
     fieldObject.getRestrictionProperties().setMinItems(value.getMinItems());

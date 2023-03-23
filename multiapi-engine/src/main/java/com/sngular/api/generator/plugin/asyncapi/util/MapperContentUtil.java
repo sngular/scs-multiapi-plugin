@@ -270,7 +270,7 @@ public class MapperContentUtil {
     return fieldObject;
   }
 
-  private static void handleItems(final JsonNode schema, Collection<String> modelToBuildList, SchemaFieldObject fieldObject, final boolean required, JsonNode items){
+  private static void handleItems(final JsonNode schema, Collection<String> modelToBuildList, SchemaFieldObject fieldObject, final boolean required, JsonNode items) {
     if (items.has("$ref")) {
       modelToBuildList.add(MapperUtil.getRefClass(items));
     }
@@ -295,7 +295,7 @@ public class MapperContentUtil {
     fieldObject.setRequired(required);
   }
 
-  private static void setFieldProperties(SchemaFieldObject fieldObject, JsonNode schema){
+  private static void setFieldProperties(SchemaFieldObject fieldObject, JsonNode schema) {
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
     Entry<String, JsonNode> current;
     while (iterator.hasNext()) {

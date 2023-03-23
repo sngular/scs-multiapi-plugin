@@ -811,7 +811,6 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-
     final List<String> expectedTestApiFile = List.of(
         ASSETS_PATH + "TestApi.java");
 
@@ -925,7 +924,6 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-
     final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
@@ -980,7 +978,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-static Function<Path, Boolean> validateValidationAnnotations() {
+  static Function<Path, Boolean> validateValidationAnnotations() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
@@ -1059,31 +1057,30 @@ static Function<Path, Boolean> validateValidationAnnotations() {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
   }
 
-    static Function<Path, Boolean> validateCreateDTO() {
+  static Function<Path, Boolean> validateCreateDTO() {
 
-        final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCreateDTO";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCreateDTO";
 
-        final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCreateDTO/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCreateDTO/model";
 
-        final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateDTO/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateDTO/model/exception";
 
-        final String COMMON_PATH = "openapigenerator/testCreateDTO/";
+    final String COMMON_PATH = "openapigenerator/testCreateDTO/";
 
-        final String ASSETS_PATH = COMMON_PATH + "assets/";
-    
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-        final List<String> expectedTestApiFile = List.of(
-            ASSETS_PATH + "TestApi.java"
-        );
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "TestApi.java"
+    );
 
-        final List<String> expectedTestApiModelFiles = List.of(
-          ASSETS_PATH + "model/AddressDTO.java",
-          ASSETS_PATH + "model/PropertiesDTO.java",
-          ASSETS_PATH + "model/TestDTO.java"
-        );
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/AddressDTO.java",
+        ASSETS_PATH + "model/PropertiesDTO.java",
+        ASSETS_PATH + "model/TestDTO.java"
+    );
 
-        return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
-    }
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
 
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,

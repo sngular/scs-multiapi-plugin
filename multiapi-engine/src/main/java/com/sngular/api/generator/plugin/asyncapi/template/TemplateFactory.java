@@ -116,7 +116,7 @@ public class TemplateFactory {
 
     try {
       fillTemplates(schemaObjectMap.get(0).getFilePath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
-    } catch (IOException | TemplateException e){
+    } catch (IOException | TemplateException e) {
       e.printStackTrace();
     }
 
@@ -129,8 +129,8 @@ public class TemplateFactory {
       String current = iterator.next();
       switch (current) {
         case "Size":
-          fillTemplateCustom(filePathToSave, modelPackage,"Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
-                                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
+                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
           break;
         case "Pattern":
           fillTemplateCustom(filePathToSave, modelPackage, "Pattern.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
@@ -139,7 +139,7 @@ public class TemplateFactory {
         case "MultipleOf":
           fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
                              "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
-           break;
+          break;
         case "Maximum":
           fillTemplateCustom(filePathToSave, modelPackage, "Max.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
                              "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
@@ -178,7 +178,8 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplateCustom(final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
+  public final void fillTemplateCustom(
+      final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
       final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToCustomValidatorPackage.toFile().mkdirs();
@@ -203,8 +204,9 @@ public class TemplateFactory {
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok))
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
           propertiesSet.add("NotNull");
+        }
       }
     }
   }

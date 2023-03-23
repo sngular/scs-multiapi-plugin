@@ -58,7 +58,7 @@ public class TemplateFactory {
                           pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)){
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
           propertiesSet.add("NotNull");
         }
       }

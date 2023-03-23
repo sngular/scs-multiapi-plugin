@@ -45,61 +45,69 @@ public class SchemaFieldObjectProperties {
 
   private Set<String> properties;
 
-  public SchemaFieldObjectProperties(){
+  public SchemaFieldObjectProperties() {
     properties = new HashSet<>();
   }
 
-  public void setMultipleOf(String multipleOf){
+  public void setMultipleOf(String multipleOf) {
     this.multipleOf = multipleOf;
     this.properties.add("MultipleOf");
   }
 
-  public void setPattern(String pattern){
+  public void setPattern(String pattern) {
     this.pattern = pattern;
-    if (Objects.nonNull(pattern))
+    if (Objects.nonNull(pattern)) {
       properties.add("Pattern");
+    }
   }
 
-  public void setMaxLength(Integer maxLength){
+  public void setMaxLength(Integer maxLength) {
     this.maxLength = maxLength;
-    if (Objects.nonNull(maxLength))
+    if (Objects.nonNull(maxLength)) {
       properties.add("Size");
+    }
   }
 
-  public void setMinLength(Integer minLength){
+  public void setMinLength(Integer minLength) {
     this.minLength = minLength;
-    if (Objects.nonNull(minLength))
+    if (Objects.nonNull(minLength)) {
       properties.add("Size");
+    }
   }
 
-  public void setMaxItems(Integer maxItems){
+  public void setMaxItems(Integer maxItems) {
     this.maxItems = maxItems;
-    if (Objects.nonNull(maxItems))
+    if (Objects.nonNull(maxItems)) {
       properties.add("MaxItems");
+    }
   }
 
-  public void setMinItems(Integer minItems){
+  public void setMinItems(Integer minItems) {
     this.minItems = minItems;
-    if (Objects.nonNull(minItems))
+    if (Objects.nonNull(minItems)) {
       properties.add("MinItems");
+    }
   }
 
-  public void setUniqueItems(Boolean uniqueItems){
+  public void setUniqueItems(Boolean uniqueItems) {
     this.uniqueItems = uniqueItems;
-    if (Objects.nonNull(uniqueItems))
+    if (Objects.nonNull(uniqueItems)) {
       properties.add("UniqueItems");
+    }
   }
 
-  public void setMaximum(String maximum){
+  public void setMaximum(String maximum) {
     this.maximum = maximum;
-    if (Objects.nonNull(maximum))
+    if (Objects.nonNull(maximum)) {
       properties.add("Maximum");
+    }
   }
 
-  public void setMinimum(String mininum){
+  public void setMinimum(String mininum) {
     this.minimum = mininum;
-    if (Objects.nonNull(mininum))
+    if (Objects.nonNull(mininum)) {
       properties.add("Minimum");
+    }
   }
 
 }
