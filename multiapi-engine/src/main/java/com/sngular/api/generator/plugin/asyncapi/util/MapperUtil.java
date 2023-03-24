@@ -34,7 +34,7 @@ public class MapperUtil {
     if (schema.has("type")) {
       type = schema.get("type").textValue();
       String format = null;
-      if (type.equalsIgnoreCase("string")) {
+      if ("string".equalsIgnoreCase(type)) {
         type = "String";
       }
       if (schema.has("format")) {

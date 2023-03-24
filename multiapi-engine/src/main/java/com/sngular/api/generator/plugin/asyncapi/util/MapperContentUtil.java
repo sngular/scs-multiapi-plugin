@@ -23,8 +23,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
@@ -123,8 +123,8 @@ public class MapperContentUtil {
       final ArrayList<SchemaFieldObject> fieldObjectArrayList) {
     final Set<String> requiredSet = new HashSet<>();
     if (model.has("required")) {
-      JsonNode arrayNode = model.get("required");
-      Iterator<JsonNode> fields = arrayNode.iterator();
+      final JsonNode arrayNode = model.get("required");
+      final Iterator<JsonNode> fields = arrayNode.iterator();
       fields.forEachRemaining(field -> requiredSet.add(field.textValue()));
     }
     final var properties = model.get("properties");
@@ -270,7 +270,8 @@ public class MapperContentUtil {
     return fieldObject;
   }
 
-  private static void handleItems(final JsonNode schema, Collection<String> modelToBuildList, SchemaFieldObject fieldObject, final boolean required, JsonNode items) {
+  private static void handleItems(
+      final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required, final JsonNode items) {
     if (items.has("$ref")) {
       modelToBuildList.add(MapperUtil.getRefClass(items));
     }
@@ -295,44 +296,45 @@ public class MapperContentUtil {
     fieldObject.setRequired(required);
   }
 
-  private static void setFieldProperties(SchemaFieldObject fieldObject, JsonNode schema) {
+  private static void setFieldProperties(final SchemaFieldObject fieldObject, final JsonNode schema) {
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
     Entry<String, JsonNode> current;
+    final SchemaFieldObjectProperties props = fieldObject.getRestrictions();
     while (iterator.hasNext()) {
       current = iterator.next();
       switch (current.getKey()) {
         case "minimum":
-          fieldObject.getRestrictions().setMinimum(current.getValue().asText());
+          props.setMinimum(current.getValue().asText());
           break;
         case "maximum":
-          fieldObject.getRestrictions().setMaximum(current.getValue().asText());
+          props.setMaximum(current.getValue().asText());
           break;
         case "exclusiveMinimum":
-          fieldObject.getRestrictions().setExclusiveMinimum(current.getValue().booleanValue());
+          props.setExclusiveMinimum(current.getValue().booleanValue());
           break;
         case "exclusiveMaximum":
-          fieldObject.getRestrictions().setExclusiveMaximum(current.getValue().booleanValue());
+          props.setExclusiveMaximum(current.getValue().booleanValue());
           break;
         case "maxItems":
-          fieldObject.getRestrictions().setMaxItems(current.getValue().intValue());
+          props.setMaxItems(current.getValue().intValue());
           break;
         case "maxLength":
-          fieldObject.getRestrictions().setMaxLength(current.getValue().intValue());
+          props.setMaxLength(current.getValue().intValue());
           break;
         case "minItems":
-          fieldObject.getRestrictions().setMinItems(current.getValue().intValue());
+          props.setMinItems(current.getValue().intValue());
           break;
         case "minLength":
-          fieldObject.getRestrictions().setMinLength(current.getValue().intValue());
+          props.setMinLength(current.getValue().intValue());
           break;
         case "pattern":
-          fieldObject.getRestrictions().setPattern(current.getValue().toString().replaceAll("\"", ""));
+          props.setPattern(current.getValue().toString().replaceAll("\"", ""));
           break;
         case "uniqueItems":
-          fieldObject.getRestrictions().setUniqueItems(current.getValue().booleanValue());
+          props.setUniqueItems(current.getValue().booleanValue());
           break;
         case "multipleOf":
-          fieldObject.getRestrictions().setMultipleOf(current.getValue().asText());
+          props.setMultipleOf(current.getValue().asText());
           break;
         default:
           break;

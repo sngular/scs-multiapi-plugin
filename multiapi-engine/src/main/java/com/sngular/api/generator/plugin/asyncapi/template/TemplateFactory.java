@@ -105,7 +105,7 @@ public class TemplateFactory {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
     }
 
-    Set<String> propertiesSet = new HashSet<>();
+    final Set<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
         fillTemplateSchema(classTemplate, false, propertiesSet);
@@ -126,7 +126,7 @@ public class TemplateFactory {
   private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
     final Iterator<String> iterator = fieldProperties.iterator();
     while (iterator.hasNext()) {
-      String current = iterator.next();
+      final String current = iterator.next();
       switch (current) {
         case "Size":
           fillTemplateCustom(filePathToSave, modelPackage, "Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
@@ -190,7 +190,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, Set<String> propertiesSet) throws IOException, TemplateException {
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet) throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {

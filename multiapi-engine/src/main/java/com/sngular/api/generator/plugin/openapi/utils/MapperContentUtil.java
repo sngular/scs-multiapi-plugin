@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
@@ -586,7 +585,7 @@ public class MapperContentUtil {
   }
 
   private static String getMapTypeObject(final Schema schema, final SpecFile specFile) {
-    String type = TypeConstants.OBJECT;
+    final String type;
     if (schema.getAdditionalProperties() instanceof Boolean) {
       type = TypeConstants.OBJECT;
     } else {
@@ -601,6 +600,8 @@ public class MapperContentUtil {
                                                   .build();
         setFieldType(additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
         type = getMapFieldType(additionalPropertiesField);
+      } else {
+        type = TypeConstants.OBJECT;
       }
     }
 
