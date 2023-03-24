@@ -5,12 +5,15 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.parameterwithcontent.model.exception.ModelClassException;
+import com.sngular.multifileplugin.parameterwithcontent.model.customvalidator.NotNull;
 
 public class ApiErrorDTO {
 
   @JsonProperty(value ="code")
+  @NotNull
   private final Integer code;
   @JsonProperty(value ="message")
+  @NotNull
   private final String message;
 
   private ApiErrorDTO(Integer code, String message) {

@@ -8,18 +8,23 @@ import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testcomplexanyof.model.customvalidator.NotNull;
 
 public class ApiSchemaDTO {
 
   @JsonProperty(value ="type")
+  @NotNull
   private final String type;
   @JsonProperty(value ="properties")
   private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
   @JsonProperty(value ="name")
+  @NotNull
   private final String name;
   @JsonProperty(value ="id")
+  @NotNull
   private final String id;
   @JsonProperty(value ="subjectName")
+  @NotNull
   private final String subjectName;
   @JsonProperty(value ="requiredFields")
   private List<ApiTypeArrayDTO> requiredFields = new ArrayList<ApiTypeArrayDTO>();

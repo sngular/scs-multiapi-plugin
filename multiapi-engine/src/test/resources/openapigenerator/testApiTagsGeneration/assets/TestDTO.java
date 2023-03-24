@@ -5,12 +5,15 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.tagsgeneration.model.exception.ModelClassException;
+import com.sngular.multifileplugin.tagsgeneration.model.customvalidator.NotNull;
 
 public class TestDTO {
 
   @JsonProperty(value ="name")
+  @NotNull
   private final String name;
   @JsonProperty(value ="id")
+  @NotNull
   private final Integer id;
 
   private TestDTO(String name, Integer id) {

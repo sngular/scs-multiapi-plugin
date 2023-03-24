@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import freemarker.cache.TemplateLoader;
+import freemarker.template.Template;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 
@@ -28,6 +29,22 @@ public class ClasspathTemplateLoader implements TemplateLoader {
   private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
                                                                   TemplateIndexConstants.TEMPLATE_OAUTH, TemplateIndexConstants.TEMPLATE_OAUTH_FLOW);
+
+  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 
@@ -69,6 +86,14 @@ public class ClasspathTemplateLoader implements TemplateLoader {
     TEMPLATE_AUTH_FILES.forEach(templateAuthFile -> {
       try {
         templates.put(templateAuthFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/authTemplates/" + templateAuthFile)).getContent()));
+      } catch (final IOException e) {
+        e.printStackTrace();
+      }
+    });
+    TEMPLATE_ANNOTATION_FILES.forEach(templateAnnotationFile -> {
+      try {
+        templates.put(templateAnnotationFile,
+                      readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/customannotations/" + templateAnnotationFile)).getContent()));
       } catch (final IOException e) {
         e.printStackTrace();
       }

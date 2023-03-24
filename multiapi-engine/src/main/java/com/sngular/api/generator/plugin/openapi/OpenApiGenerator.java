@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
+import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
@@ -304,20 +306,74 @@ public class OpenApiGenerator {
   private void writeModel(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
+    Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
-        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject);
+        templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
       } catch (IOException | TemplateException e) {
         e.printStackTrace();
       }
     });
+
+    try {
+      fillTemplates(fileModelToSave, propertiesSet);
+    } catch (IOException | TemplateException e) {
+      e.printStackTrace();
+    }
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
         templateFactory.fillTemplateModelClassException(fileModelToSave, true);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(fileModelToSave, e);
+      }
+    }
+  }
+
+  private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {
+    final Iterator<String> iterator = fieldProperties.iterator();
+    while (iterator.hasNext()) {
+      String current = iterator.next();
+      switch (current) {
+        case "Size":
+          templateFactory.fillTemplateCustom(filePathToSave, "Size.java", "SizeValidator.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          break;
+        case "Pattern":
+          templateFactory.fillTemplateCustom(filePathToSave, "Pattern.java", "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
+          break;
+        case "MultipleOf":
+          templateFactory.fillTemplateCustom(filePathToSave, "MultipleOf.java", "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
+          break;
+        case "Maximum":
+          templateFactory.fillTemplateCustom(filePathToSave, "Max.java", "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
+          break;
+        case "Minimum":
+          templateFactory.fillTemplateCustom(filePathToSave, "Min.java", "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
+          break;
+        case "MaxItems":
+          templateFactory.fillTemplateCustom(filePathToSave, "MaxItems.java", "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        case "MinItems":
+          templateFactory.fillTemplateCustom(filePathToSave, "MinItems.java", "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        case "NotNull":
+          templateFactory.fillTemplateCustom(filePathToSave, "NotNull.java", "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
+          break;
+        case "UniqueItems":
+          templateFactory.fillTemplateCustom(filePathToSave, "UniqueItems.java", "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+                                             TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
+          break;
+        default:
+          break;
       }
     }
   }

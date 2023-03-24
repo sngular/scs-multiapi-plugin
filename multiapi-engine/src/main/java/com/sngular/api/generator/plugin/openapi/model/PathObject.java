@@ -30,7 +30,6 @@ public class PathObject {
 
     private final List<OperationObject> operationObjects = new ArrayList<>();
 
-
     public PathObjectBuilder operationObjects(final List<OperationObject> operationObjects) {
       this.operationObjects.addAll(operationObjects);
       return this;

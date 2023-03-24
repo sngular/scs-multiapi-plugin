@@ -169,22 +169,22 @@ public class AsyncApiGenerator {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
     final List<JsonNode> referenceList = node.findValues("$ref");
     referenceList.forEach(reference ->
-        processReference(node, reference, ymlParentPath, totalSchemas)
+                              processReference(node, reference, ymlParentPath, totalSchemas)
     );
     final List<JsonNode> messagesList = node.findValues("messages");
     final List<JsonNode> schemasList = node.findValues("schemas");
     schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent(fieldSchema.getKey().toUpperCase(), fieldSchema.getValue())));
     messagesList.forEach(message ->
-                           message.fields().forEachRemaining(fieldSchema -> {
-                             if (fieldSchema.getValue().has("payload")) {
-                               final var payload = fieldSchema.getValue().get("payload");
-                               if (!payload.has("$ref")) {
-                                 totalSchemas.put(fieldSchema.getKey().toUpperCase(), payload);
-                               } else {
-                                 totalSchemas.putIfAbsent(fieldSchema.getKey().toUpperCase(), payload.get("$ref"));
+                             message.fields().forEachRemaining(fieldSchema -> {
+                               if (fieldSchema.getValue().has("payload")) {
+                                 final var payload = fieldSchema.getValue().get("payload");
+                                 if (!payload.has("$ref")) {
+                                   totalSchemas.put(fieldSchema.getKey().toUpperCase(), payload);
+                                 } else {
+                                   totalSchemas.putIfAbsent(fieldSchema.getKey().toUpperCase(), payload.get("$ref"));
+                                 }
                                }
-                             }
-                           })
+                             })
     );
     return totalSchemas;
   }
@@ -265,8 +265,8 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-          final OperationParameterObject operation, final String operationId,
-          final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+      final OperationParameterObject operation, final String operationId,
+      final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
       final List<String> operationIds = operation.getOperationIds();
@@ -417,14 +417,16 @@ public class AsyncApiGenerator {
     return evaluated;
   }
 
-  private void processSupplierMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void processSupplierMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final boolean usingLombok, final String prefix, final String suffix, final Path filePath) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, filePath);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
-  private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName,
+  private void processStreamBridgeMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName,
       final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix, final String suffix, final Path path) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     final String regex = "[a-zA-Z0-9.\\-]*";
@@ -435,7 +437,8 @@ public class AsyncApiGenerator {
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
   }
 
-  private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void processSubscribeMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final boolean usingLombok, final String prefix, final String suffix, final Path filePath) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, filePath);
@@ -452,9 +455,6 @@ public class AsyncApiGenerator {
       templateFactory.addSchemaObject(modelPackage, className, schemaObject, usingLombok, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     });
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(filePath, modelPackage);
-    }
   }
 
   private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String prefix, final String suffix)
@@ -552,7 +552,7 @@ public class AsyncApiGenerator {
       final var splitPackage = extractedPackage.split("\\.");
       final var className = splitPackage[splitPackage.length - 1];
       processedPackage =
-        StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
+          StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
     } else {
       processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(extractedPackage);
     }

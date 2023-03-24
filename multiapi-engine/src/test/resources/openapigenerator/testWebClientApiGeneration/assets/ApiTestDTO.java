@@ -5,12 +5,15 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.webclientapi.model.exception.ModelClassException;
+import com.sngular.multifileplugin.webclientapi.model.customvalidator.NotNull;
 
 public class ApiTestDTO {
 
   @JsonProperty(value ="name")
+  @NotNull
   private final String name;
   @JsonProperty(value ="id")
+  @NotNull
   private final Integer id;
 
   private ApiTestDTO(String name, Integer id) {

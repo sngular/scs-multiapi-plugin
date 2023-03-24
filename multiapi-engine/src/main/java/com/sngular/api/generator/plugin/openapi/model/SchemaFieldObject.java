@@ -29,6 +29,8 @@ public class SchemaFieldObject {
   @Default
   private SchemaFieldObjectType dataType = new SchemaFieldObjectType(OBJECT);
 
+  private SchemaFieldObjectProperties restrictionProperties = new SchemaFieldObjectProperties();
+
   private String importClass;
 
   private boolean required;
