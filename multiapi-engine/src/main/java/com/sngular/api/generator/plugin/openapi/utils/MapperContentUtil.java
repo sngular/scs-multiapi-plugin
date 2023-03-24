@@ -227,7 +227,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.addAll(
           processArray(fieldName, className, schema, specFile, totalSchemas, compositedSchemas, antiLoopList));
     } else if (schema instanceof MapSchema) {
-      if (OBJECT.equalsIgnoreCase(schema.getType())) {
+      if (OBJECT.equalsIgnoreCase(schema.getType()) && Objects.nonNull(schema.getProperties())) {
         schema.getProperties().forEach(
             processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList));
       }
