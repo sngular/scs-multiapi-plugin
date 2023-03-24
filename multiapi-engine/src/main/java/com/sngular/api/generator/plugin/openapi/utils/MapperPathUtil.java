@@ -16,7 +16,6 @@ import java.util.Set;
 
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.model.ContentObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
@@ -24,6 +23,7 @@ import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.RequestObject;
 import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -40,19 +40,6 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.DOUBLE;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.FLOAT;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INTEGER;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.LONG;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.OBJECT;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.MAP;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.ARRAY;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_32;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.INT_64;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.STRING;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.BOOLEAN;
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.NUMBER;
 
 public class MapperPathUtil {
 
@@ -91,7 +78,7 @@ public class MapperPathUtil {
       components.getSchemas().forEach((key, value) -> {
         if (!mapComponents.containsKey(key)) {
           final var type = checkSchemaType(value, specFile);
-          mapComponents.put(key, OBJECT.equalsIgnoreCase(type) ? MapperUtil.getPojoName(key, specFile) : type);
+          mapComponents.put(key, TypeConstants.OBJECT.equalsIgnoreCase(type) ? MapperUtil.getPojoName(key, specFile) : type);
         }
       });
     }
@@ -105,16 +92,16 @@ public class MapperPathUtil {
       dataType = "array-" + MapperUtil.getTypeArray((ArraySchema) schema, specFile);
     } else if (schema instanceof MapSchema) {
       if (schema.getAdditionalProperties() != null) {
-        dataType = OBJECT;
+        dataType = TypeConstants.OBJECT;
       } else {
         dataType = "map-" + MapperUtil.getTypeMap((MapSchema) schema, specFile);
       }
 
-    } else if (OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
+    } else if (TypeConstants.OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
     } else if (!Objects.nonNull(schema.getType()) && Boolean.TRUE.equals(checkSchemaCombinator(schema))) {
-      dataType = OBJECT;
+      dataType = TypeConstants.OBJECT;
     } else {
       dataType = schema.getType();
     }
@@ -253,7 +240,7 @@ public class MapperPathUtil {
                                               .description(refParameter.getDescription())
                                               .in(refParameter.getDescription())
                                               .className(MapperUtil.getSimpleType(refParameter.getSchema(), specFile))
-                                              .isCollection(ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
+                                              .isCollection(TypeConstants.ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
                                               .build());
         } else if (Objects.nonNull(parameter.getContent())) {
           addInlineParametersToList(contentClassName, parameterObjects, parameter, specFile, globalObject);
@@ -264,7 +251,7 @@ public class MapperPathUtil {
                                               .description(parameter.getDescription())
                                               .in(parameter.getIn())
                                               .className(MapperUtil.getSimpleType(parameter.getSchema(), specFile))
-                                              .isCollection(ARRAY.equalsIgnoreCase(parameter.getSchema().getType()))
+                                              .isCollection(TypeConstants.ARRAY.equalsIgnoreCase(parameter.getSchema().getType()))
                                               .build());
         }
       }
@@ -279,7 +266,7 @@ public class MapperPathUtil {
     for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
       final String inlineParameter = getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
                                                  + StringUtils.capitalize(parameter.getName()), specFile);
-      if (OBJECT.equalsIgnoreCase(contentEntrySet.getValue().getSchema().getType())) {
+      if (TypeConstants.OBJECT.equalsIgnoreCase(contentEntrySet.getValue().getSchema().getType())) {
         parameterObjects.add(ParameterObject.builder()
                                             .name(parameter.getName())
                                             .required(parameter.getRequired())
@@ -339,7 +326,7 @@ public class MapperPathUtil {
         } else if (Boolean.TRUE.equals(checkSchemaCombinator(mediaTypeEntry.getValue().getSchema()))) {
           final var composedSchemaPojoName = preparePojoNameForComposedSchema(inlineObject, mediaTypeEntry.getValue().getSchema(), specFile);
           contentObjects.add(ContentObject.builder()
-                                          .typeData(OBJECT)
+                                          .typeData(TypeConstants.OBJECT)
                                           .name(mediaTypeEntry.getKey())
                                           .importName(StringUtils.capitalize(
                                               mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), composedSchemaPojoName)))
@@ -358,7 +345,7 @@ public class MapperPathUtil {
     return contentObjects;
   }
 
-  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema schema, final SpecFile specFile) {
+  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema<?> schema, final SpecFile specFile) {
     String composedSchemaPojoName = "";
     if (Objects.nonNull(schema.getAllOf())) {
       composedSchemaPojoName = getPojoName(inlineObject + "AllOf", specFile);
@@ -374,25 +361,25 @@ public class MapperPathUtil {
     final String typeName;
     if (Objects.nonNull(schema.getType())) {
       switch (schema.getType()) {
-        case INTEGER:
+        case TypeConstants.INTEGER:
           typeName = getIntegerFormat(schema);
           break;
-        case NUMBER:
+        case TypeConstants.NUMBER:
           typeName = getNumberFormat(schema);
           break;
-        case BOOLEAN:
-          typeName = BOOLEAN;
+        case TypeConstants.BOOLEAN:
+          typeName = TypeConstants.BOOLEAN;
           break;
-        case ARRAY:
+        case TypeConstants.ARRAY:
           final ArraySchema arraySchema = (ArraySchema) schema;
           typeName = getListName(globalObject, pojoName, arraySchema);
           break;
-        case OBJECT:
+        case TypeConstants.OBJECT:
           typeName = pojoName;
           break;
-        case STRING:
+        case TypeConstants.STRING:
         default:
-          typeName = STRING;
+          typeName = TypeConstants.STRING;
           break;
       }
     } else {
@@ -413,22 +400,22 @@ public class MapperPathUtil {
 
   private static String getIntegerFormat(final Schema<?> schema) {
     String typeName = "";
-    if (INT_32.equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
-      typeName = INTEGER;
-    } else if (INT_64.equalsIgnoreCase(schema.getFormat())) {
-      typeName = LONG;
+    if (TypeConstants.INT_32.equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
+      typeName = TypeConstants.INTEGER;
+    } else if (TypeConstants.INT_64.equalsIgnoreCase(schema.getFormat())) {
+      typeName = TypeConstants.LONG;
     }
     return typeName;
   }
 
   private static String getNumberFormat(final Schema<?> schema) {
     String typeName = "";
-    if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
-      typeName = FLOAT;
-    } else if (DOUBLE.equalsIgnoreCase(schema.getFormat())) {
-      typeName = DOUBLE;
+    if (TypeConstants.FLOAT.equalsIgnoreCase(schema.getFormat())) {
+      typeName = TypeConstants.FLOAT;
+    } else if (TypeConstants.DOUBLE.equalsIgnoreCase(schema.getFormat())) {
+      typeName = TypeConstants.DOUBLE;
     } else if (schema.getFormat().isEmpty()) {
-      typeName = INTEGER;
+      typeName = TypeConstants.INTEGER;
     }
     return typeName;
   }
@@ -445,18 +432,18 @@ public class MapperPathUtil {
       dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
     }
 
-    return dataType.startsWith(ARRAY) ? ARRAY : dataType.startsWith(MAP) ? MAP : dataType;
+    return dataType.startsWith(TypeConstants.ARRAY) ? TypeConstants.ARRAY : (dataType.startsWith(TypeConstants.MAP) ? TypeConstants.MAP : dataType);
   }
 
   private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes, final String pojoName) {
 
     var refSchema = "";
 
-    if (ARRAY.equalsIgnoreCase(schema.getType())) {
+    if (TypeConstants.ARRAY.equalsIgnoreCase(schema.getType())) {
       final ArraySchema arraySchema = (ArraySchema) schema;
-      if (OBJECT.equalsIgnoreCase(schema.getItems().getType())) {
+      if (TypeConstants.OBJECT.equalsIgnoreCase(schema.getItems().getType())) {
         refSchema = pojoName;
-      } else if (ARRAY.equalsIgnoreCase(schema.getItems().getType())) {
+      } else if (TypeConstants.ARRAY.equalsIgnoreCase(schema.getItems().getType())) {
         refSchema = mapRefName(schema.getItems(), componentsTypes, pojoName);
       } else {
         refSchema = StringUtils.isNotBlank(arraySchema.getItems().get$ref()) ? getRefSchema(arraySchema.getItems().get$ref(), componentsTypes) : null;
