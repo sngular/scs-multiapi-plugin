@@ -16,6 +16,7 @@ import java.util.function.BiConsumer;
 
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
@@ -326,6 +327,7 @@ public class MapperContentUtil {
                   .baseName(key)
                   .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(value, specFile)))
                   .build();
+      addPropertiesToFieldObject(field, value);
       setFieldType(field, value, schema, specFile, key);
       fieldObjectArrayList.add(field);
     } else {
@@ -336,11 +338,33 @@ public class MapperContentUtil {
 
   private static SchemaFieldObject processStringProperty(final String propertyName, final Schema<?> schema, final SpecFile specFile) {
     final String resultingType = schema instanceof DateSchema ? getDateType(specFile) : (schema instanceof DateTimeSchema ? getDateTimeType(specFile) : TypeConstants.STRING);
-    return SchemaFieldObject
-               .builder()
-               .baseName(propertyName)
-               .dataType(new SchemaFieldObjectType(resultingType))
-               .build();
+    final SchemaFieldObject field = SchemaFieldObject
+                                        .builder()
+                                        .baseName(propertyName)
+                                        .dataType(new SchemaFieldObjectType(resultingType))
+                                        .build();
+    addPropertiesToFieldObject(field, schema);
+    return field;
+  }
+
+  private static void addPropertiesToFieldObject(final SchemaFieldObject fieldObject, final Schema value) {
+    fieldObject.getRestrictionProperties().setPattern(value.getPattern());
+    fieldObject.getRestrictionProperties().setMaxItems(value.getMaxItems());
+    fieldObject.getRestrictionProperties().setMinItems(value.getMinItems());
+    fieldObject.getRestrictionProperties().setMaxLength(value.getMaxLength());
+    fieldObject.getRestrictionProperties().setMinLength(value.getMinLength());
+    fieldObject.getRestrictionProperties().setUniqueItems(value.getUniqueItems());
+    fieldObject.getRestrictionProperties().setExclusiveMaximum(value.getExclusiveMaximum());
+    fieldObject.getRestrictionProperties().setExclusiveMinimum(value.getExclusiveMinimum());
+    if (Objects.nonNull(value.getMultipleOf())) {
+      fieldObject.getRestrictionProperties().setMultipleOf(value.getMultipleOf().toString());
+    }
+    if (Objects.nonNull(value.getMaximum())) {
+      fieldObject.getRestrictionProperties().setMaximum(value.getMaximum().toString());
+    }
+    if (Objects.nonNull(value.getMinimum())) {
+      fieldObject.getRestrictionProperties().setMinimum(value.getMinimum().toString());
+    }
   }
 
   private static List<SchemaFieldObject> processArray(
@@ -388,11 +412,13 @@ public class MapperContentUtil {
                                      .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
                                      .build());
       } else {
-        fieldObjectArrayList.add(SchemaFieldObject
-                                     .builder()
-                                     .baseName(fieldName)
-                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getSimpleType(items, specFile)))
-                                     .build());
+        final SchemaFieldObject field = SchemaFieldObject
+                                            .builder()
+                                            .baseName(fieldName)
+                                            .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getSimpleType(items, specFile)))
+                                            .build();
+        fieldObjectArrayList.add(field);
+        addPropertiesToFieldObject(field, schema);
       }
     }
 

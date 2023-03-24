@@ -1,0 +1,119 @@
+---
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Sngular Test Api
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/v1
+paths:
+  /test:
+    summary: available test
+    get:
+      summary: List all available test
+      operationId: listTest
+      tags:
+        - test
+      responses:
+        '200':
+          description: A paged array of tests
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Test"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /test/{testId}:
+    summary:  other available test
+    get:
+      summary: Info for a specific test
+      operationId: showTestById
+      tags:
+        - test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          description: The id of the test to retrieve
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestInfo"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Test:
+      allOf:
+        - $ref: "#/components/schemas/TestAllOf"
+    TestAllOf:
+      type: object
+      properties:
+        testName:
+          type: string
+        testers:
+          type: array
+          items:
+            type: string
+    TestInfo:
+      type: object
+      required:
+        - testName
+        - testers
+      properties:
+        testName:
+          type: string
+        testers:
+          type: array
+          items:
+            type: string
+    Tests:
+      type: array
+      items:
+        $ref: "#/components/schemas/Test"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          minimum: 10
+          exclusiveMinimum: false
+          maximum: 200
+          exclusiveMaximum: true
+          multipleOf: 10.55
+        message:
+          type: string
+          minLength: 50
+          maxLength: 200
+          pattern: "^[a-zA-Z0-9_.-]*$"
+        test:
+          type: array
+          items:
+            type: integer
+          maxItems: 10
+          minItems: 5
+          uniqueItems: true

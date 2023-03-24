@@ -12,13 +12,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import freemarker.template.Configuration;
@@ -45,15 +48,21 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject) throws IOException, TemplateException {
+  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, Set<String> propertiesSet) throws IOException,
+                                                                                                                                                                TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
                           pathToSaveMainClass);
+      for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
+        propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
+          propertiesSet.add("NotNull");
+        }
+      }
     }
-
   }
 
   public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {
@@ -89,9 +98,21 @@ public class TemplateFactory {
 
   }
 
+  public final void fillTemplateCustom(
+      final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
+      final String validatorTemplate) throws IOException, TemplateException {
+    final File fileToSave = new File(filePathToSave);
+    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
+    pathToValidatorPackage.toFile().mkdirs();
+    final String pathToSaveMainClass = pathToValidatorPackage.resolve(annotationFileName).toString();
+    writeTemplateToFile(annotationTemplate, root, pathToSaveMainClass);
+    final String pathToSaveMainClassValidator = pathToValidatorPackage.resolve(validatorFileName).toString();
+    writeTemplateToFile(validatorTemplate, root, pathToSaveMainClassValidator);
+  }
+
   public final void fillTemplate(
-          final String filePathToSave, final SpecFile specFile, final String className,
-          final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
+      final String filePathToSave, final SpecFile specFile, final String className,
+      final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("pathObjects", pathObjects);

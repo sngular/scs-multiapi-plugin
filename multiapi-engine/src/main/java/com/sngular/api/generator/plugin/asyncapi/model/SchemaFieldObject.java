@@ -23,6 +23,8 @@ public class SchemaFieldObject {
 
   private String dataTypeSimple;
 
+  private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
+
   private String dataType;
 
   private String importClass;

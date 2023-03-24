@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import com.sngular.multifileplugin.enumgeneration.model.exception.ModelClassException;
+import com.sngular.multifileplugin.enumgeneration.model.customvalidator.NotNull;
 
 public class ApiTestDTO {
 
   @JsonProperty(value ="unionEnum")
+  @NotNull
   private final UnionEnum unionEnum;
   public enum UnionEnum {
     ONEOF("oneof"),
@@ -34,8 +36,10 @@ public class ApiTestDTO {
     }
   }
   @JsonProperty(value ="name")
+  @NotNull
   private final String name;
   @JsonProperty(value ="id")
+  @NotNull
   private final Integer id;
   @JsonProperty(value ="unionIntegerEnum")
   private UnionIntegerEnum unionIntegerEnum;

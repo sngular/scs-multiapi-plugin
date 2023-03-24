@@ -46,7 +46,8 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestFileGenerationWithoutIds", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITHOUT_IDS,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds()),
         Arguments.of("TestFileGenerationArrayString", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_ARRAY_STRING,
-                     AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString())
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
+        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators())
     );
   }
 
