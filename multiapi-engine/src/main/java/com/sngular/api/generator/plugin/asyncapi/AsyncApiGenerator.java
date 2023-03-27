@@ -533,16 +533,16 @@ public class AsyncApiGenerator {
   }
 
   private String capitalizeWithPrefix(final String name) {
-    String response = "";
+    final StringBuilder response = new StringBuilder();
     if (name.contains(SLASH)) {
       final var splitPackage = MapperUtil.splitName(name);
       for (int i = 0; i < splitPackage.length; i++) {
-        response += PACKAGE_SEPARATOR_STR + (i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));
+        response.append(PACKAGE_SEPARATOR_STR).append(i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));
       }
     } else {
-      response = PACKAGE_SEPARATOR_STR + StringUtils.capitalize(name);
+      response.append(PACKAGE_SEPARATOR_STR).append(StringUtils.capitalize(name));
     }
-    return response;
+    return response.toString();
   }
 
   private String processModelPackage(final String extractedPackage, final String modelPackage) {

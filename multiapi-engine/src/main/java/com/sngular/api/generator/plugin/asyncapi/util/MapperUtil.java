@@ -29,7 +29,7 @@ public class MapperUtil {
 
   public static final String REF = "$ref";
 
-  private static final String DIVISOR = "(\\.|\\/)";
+  private static final String DIVISOR = "([./])";
 
   private MapperUtil() {}
 
