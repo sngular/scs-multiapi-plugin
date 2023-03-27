@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.Size;
+import com.sngular.scsplugin.filegenerationissue.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = CustomerDTO.CustomerDTOBuilder.class)
 public class CustomerDTO {
@@ -13,15 +16,25 @@ public class CustomerDTO {
   @JsonProperty(value ="id")
   private String id;
   @JsonProperty(value ="firstName")
-  private String firstName;
+  @Size(min =3, max =250)
+  @NotNull
+private final String firstName;
   @JsonProperty(value ="lastName")
-  private String lastName;
+  @Size(min =3, max =250)
+  @NotNull
+private final String lastName;
   @JsonProperty(value ="password")
-  private String password;
+  @Size(min =3, max =250)
+  @NotNull
+private final String password;
   @JsonProperty(value ="email")
-  private String email;
+  @Size(min =3, max =250)
+  @NotNull
+private final String email;
   @JsonProperty(value ="username")
-  private String username;
+  @Size(min =3, max =250)
+  @NotNull
+private final String username;
 
   private CustomerDTO(String id, String firstName, String lastName, String password, String email, String username) {
     this.id = id;
@@ -31,6 +44,7 @@ public class CustomerDTO {
     this.email = email;
     this.username = username;
 
+    validateRequiredAttributes();
   }
 
   private CustomerDTO(CustomerDTOBuilder builder) {
@@ -41,6 +55,7 @@ public class CustomerDTO {
     this.email = builder.email;
     this.username = builder.username;
 
+    validateRequiredAttributes();
   }
 
   public static CustomerDTO.CustomerDTOBuilder builder() {
@@ -109,60 +124,45 @@ public class CustomerDTO {
   * Get firstName
   * @return firstName
   */
-  @Schema(name = "firstName", required = false)
+  @Schema(name = "firstName", required = true)
   public String getFirstName() {
     return firstName;
-  }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
   }
 
   /**
   * Get lastName
   * @return lastName
   */
-  @Schema(name = "lastName", required = false)
+  @Schema(name = "lastName", required = true)
   public String getLastName() {
     return lastName;
-  }
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
   }
 
   /**
   * Get password
   * @return password
   */
-  @Schema(name = "password", required = false)
+  @Schema(name = "password", required = true)
   public String getPassword() {
     return password;
-  }
-  public void setPassword(String password) {
-    this.password = password;
   }
 
   /**
   * Get email
   * @return email
   */
-  @Schema(name = "email", required = false)
+  @Schema(name = "email", required = true)
   public String getEmail() {
     return email;
-  }
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   /**
   * Get username
   * @return username
   */
-  @Schema(name = "username", required = false)
+  @Schema(name = "username", required = true)
   public String getUsername() {
     return username;
-  }
-  public void setUsername(String username) {
-    this.username = username;
   }
 
   @Override
@@ -208,5 +208,24 @@ public class CustomerDTO {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.firstName)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.lastName)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.password)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.email)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.username)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("CustomerDTO");
+    }
+  }
 
 }

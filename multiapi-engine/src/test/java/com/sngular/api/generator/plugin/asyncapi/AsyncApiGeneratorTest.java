@@ -50,7 +50,8 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestIssueGenerateSupplier", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
                      AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
         Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
-                     AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop())
+                     AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
+        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators())
     );
   }
 

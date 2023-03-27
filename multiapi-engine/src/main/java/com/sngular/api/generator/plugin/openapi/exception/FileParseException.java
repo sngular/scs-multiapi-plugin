@@ -7,6 +7,7 @@
 package com.sngular.api.generator.plugin.openapi.exception;
 
 public class FileParseException extends RuntimeException {
+
   private static final String MESSAGE = "Code generation failed";
 
   public FileParseException(final String message) {

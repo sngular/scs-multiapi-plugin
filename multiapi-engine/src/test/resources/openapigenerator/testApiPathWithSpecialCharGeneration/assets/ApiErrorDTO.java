@@ -7,13 +7,16 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.pathwithspecialchar.model.exception.ModelClassException;
+import com.sngular.multifileplugin.pathwithspecialchar.model.customvalidator.NotNull;
 
 @JsonDeserialize(builder = ApiErrorDTO.ApiErrorDTOBuilder.class)
 public class ApiErrorDTO {
 
   @JsonProperty(value ="code")
+  @NotNull
   private final Integer code;
   @JsonProperty(value ="message")
+  @NotNull
   private final String message;
 
   private ApiErrorDTO(Integer code, String message) {

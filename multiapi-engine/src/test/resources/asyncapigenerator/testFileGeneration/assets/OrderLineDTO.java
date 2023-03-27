@@ -8,25 +8,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
+import com.sngular.scsplugin.filegeneration.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
 
   @JsonProperty(value ="ref")
-  private String ref;
+  @NotNull
+private final String ref;
   @JsonProperty(value ="products")
-  private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO>();
+  @NotNull
+  private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products;
 
   private OrderLineDTO(String ref, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products) {
     this.ref = ref;
     this.products = products;
 
+    validateRequiredAttributes();
   }
 
   private OrderLineDTO(OrderLineDTOBuilder builder) {
     this.ref = builder.ref;
     this.products = builder.products;
 
+    validateRequiredAttributes();
   }
 
   public static OrderLineDTO.OrderLineDTOBuilder builder() {
@@ -67,24 +73,18 @@ public class OrderLineDTO {
   * Get ref
   * @return ref
   */
-  @Schema(name = "ref", required = false)
+  @Schema(name = "ref", required = true)
   public String getRef() {
     return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
   }
 
   /**
   * Get products
   * @return products
   */
-  @Schema(name = "products", required = false)
+  @Schema(name = "products", required = true)
   public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> getProducts() {
     return products;
-  }
-  public void setProducts(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products) {
-    this.products = products;
   }
 
   @Override
@@ -126,5 +126,18 @@ public class OrderLineDTO {
   }
 
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.ref)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.products)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("OrderLineDTO");
+    }
+  }
 
 }

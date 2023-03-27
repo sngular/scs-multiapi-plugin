@@ -270,8 +270,8 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-          final OperationParameterObject operation, final String operationId,
-          final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+      final OperationParameterObject operation, final String operationId,
+      final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
       final List<String> operationIds = operation.getOperationIds();
@@ -548,7 +548,7 @@ public class AsyncApiGenerator {
       final var splitPackage = MapperUtil.splitName(extractedPackage);
       final var className = splitPackage[splitPackage.length - 1];
       processedPackage =
-        StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
+          StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
     } else {
       processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + capitalizeWithPrefix(extractedPackage);
     }

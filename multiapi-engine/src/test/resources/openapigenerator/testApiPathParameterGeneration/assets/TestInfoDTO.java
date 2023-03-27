@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.pathparameter.model.exception.ModelClassException;
+import com.sngular.multifileplugin.pathparameter.model.customvalidator.NotNull;
 
 @JsonDeserialize(builder = TestInfoDTO.TestInfoDTOBuilder.class)
 public class TestInfoDTO {
@@ -16,6 +17,7 @@ public class TestInfoDTO {
   @JsonProperty(value ="testers")
   private List<String> testers = new ArrayList<String>();
   @JsonProperty(value ="testName")
+  @NotNull
   private final String testName;
 
   private TestInfoDTO(List<String> testers, String testName) {
