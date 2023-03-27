@@ -442,14 +442,14 @@ public class AsyncApiGenerator {
     final var parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final var className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
     final var schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
-    Path filePath;
+    Path filePath = null;
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
     for (SchemaObject schemaObject : schemaObjectList) {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
       templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, usingLombok, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     }
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
+    if (filePath != null && Boolean.TRUE.equals(generateExceptionTemplate)) {
       templateFactory.fillTemplateModelClassException(filePath, modelPackage);
     }
   }
