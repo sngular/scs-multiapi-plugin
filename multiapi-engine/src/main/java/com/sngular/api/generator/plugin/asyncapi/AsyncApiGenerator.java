@@ -49,6 +49,10 @@ import org.apache.commons.lang3.tuple.Pair;
 @Slf4j
 public class AsyncApiGenerator {
 
+  private static final String YML = "yml";
+
+  private static final String SLASH = "/";
+
   private static final String DEFAULT_ASYNCAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".asyncapi";
 
   private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_API_PACKAGE + ".model";
@@ -69,9 +73,17 @@ public class AsyncApiGenerator {
 
   public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
+  private static final String AVSC = "avsc";
+
   private static final String PAYLOAD = "payload";
 
   private static final String REF = "$ref";
+
+  private static final String MESSAGES = "messages";
+
+  private static final String SCHEMAS = "schemas";
+
+  private static final String JSON = "json";
 
   private final List<String> processedOperationIds = new ArrayList<>();
 
@@ -170,18 +182,18 @@ public class AsyncApiGenerator {
     referenceList.forEach(reference ->
         processReference(node, reference, ymlParentPath, totalSchemas, referenceList)
     );
-    final List<JsonNode> messagesList = node.findValues("messages");
-    final List<JsonNode> schemasList = node.findValues("schemas");
-    schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent(("schemas/" + fieldSchema.getKey()).toUpperCase(),
+    final List<JsonNode> messagesList = node.findValues(MESSAGES);
+    final List<JsonNode> schemasList = node.findValues(SCHEMAS);
+    schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + fieldSchema.getKey()).toUpperCase(),
                                                                    fieldSchema.getValue())));
     messagesList.forEach(message ->
                            message.fields().forEachRemaining(fieldSchema -> {
                              if (fieldSchema.getValue().has(PAYLOAD)) {
                                final var payload = fieldSchema.getValue().get(PAYLOAD);
                                if (!payload.has(REF)) {
-                                 totalSchemas.put(("messages/" + fieldSchema.getKey()).toUpperCase(), payload);
+                                 totalSchemas.put((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload);
                                } else {
-                                 totalSchemas.putIfAbsent(("messages/" + fieldSchema.getKey()).toUpperCase(), payload.get(REF));
+                                 totalSchemas.putIfAbsent((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload.get(REF));
                                }
                              }
                            })
@@ -198,7 +210,7 @@ public class AsyncApiGenerator {
     if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
       file = ymlParentPath.resolve(file.toPath()).toFile();
     }
-    if (filePath.endsWith("yml") || filePath.endsWith("json")) {
+    if (filePath.endsWith(YML) || filePath.endsWith(JSON)) {
       final ObjectMapper om = new ObjectMapper(new YAMLFactory());
       final var node = om.readTree(file);
       if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
@@ -217,10 +229,10 @@ public class AsyncApiGenerator {
     final String[] path = MapperUtil.splitName(referenceLink);
     final JsonNode component;
     try {
-      if (referenceLink.toLowerCase().contains("yml") || referenceLink.toLowerCase().contains("json")) {
+      if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(JSON)) {
         component = solveRef(ymlParentPath, path, reference, totalSchemas);
       } else {
-        if (referenceLink.toLowerCase().contains("avsc")) {
+        if (referenceLink.toLowerCase().contains(AVSC)) {
           component = node.findValue(path[path.length - 1]);
         } else {
           component = (node.findValue(path[path.length - 2])).get(path[path.length - 1]);
@@ -233,7 +245,7 @@ public class AsyncApiGenerator {
       throw new FileSystemException(e);
     }
     if (Objects.nonNull(component)) {
-      totalSchemas.put((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase(), component);
+      totalSchemas.put((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase(), component);
     }
   }
 
@@ -379,7 +391,7 @@ public class AsyncApiGenerator {
   }
 
   private String getPath(final String pathName) {
-    return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, "/");
+    return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
   }
 
   private void processPackage(final SpecFile fileParameter) {
@@ -429,16 +441,16 @@ public class AsyncApiGenerator {
     final var modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final var parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final var className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
-    final var schemaToBuild = totalSchemas.get((parentPackage + "/" + className).toUpperCase());
-    final Path[] filePath = new Path[1];
+    final var schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
+    Path filePath;
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
-    schemaObjectList.forEach(schemaObject -> {
-      filePath[0] = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + "/" + schemaObject.getParentPackage()));
-      templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, usingLombok, filePath[0]);
+    for (SchemaObject schemaObject : schemaObjectList) {
+      filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
+      templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, usingLombok, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
-    });
+    }
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(filePath[0], modelPackage);
+      templateFactory.fillTemplateModelClassException(filePath, modelPackage);
     }
   }
 
@@ -478,8 +490,8 @@ public class AsyncApiGenerator {
   private String processExternalAvro(final String modelPackage, final Path ymlParentPath, final String messageContent) {
     String avroFilePath = messageContent;
     String namespace = "";
-    if (messageContent.startsWith("/")) {
-      avroFilePath = avroFilePath.replaceFirst("/", "");
+    if (messageContent.startsWith(SLASH)) {
+      avroFilePath = avroFilePath.replaceFirst(SLASH, "");
     } else if (messageContent.startsWith(".")) {
       avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
     }
@@ -501,7 +513,7 @@ public class AsyncApiGenerator {
     final String componentPath = pathToFile[1];
     final String component;
     final String[] path = MapperUtil.splitName(componentPath);
-    component = path[path.length - 2] + "/" + path[path.length - 1];
+    component = path[path.length - 2] + SLASH + path[path.length - 1];
     File file = new File(filePath);
     if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
       file = ymlParentPath.resolve(file.toPath()).toFile();
@@ -522,7 +534,7 @@ public class AsyncApiGenerator {
 
   private String capitalizeWithPrefix(final String name) {
     String response = "";
-    if (name.contains("/")) {
+    if (name.contains(SLASH)) {
       final var splitPackage = MapperUtil.splitName(name);
       for (int i = 0; i < splitPackage.length; i++) {
         response += PACKAGE_SEPARATOR_STR + (i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));

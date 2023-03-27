@@ -29,6 +29,8 @@ public class MapperUtil {
 
   public static final String REF = "$ref";
 
+  private static final String DIVISOR = "(\\.|\\/)";
+
   private MapperUtil() {}
 
   public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix) {
@@ -68,12 +70,16 @@ public class MapperUtil {
   }
 
   public static String getLongRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = splitName(schema.get(REF).textValue());
+    final String[] pathObjectRef = getStrings(schema);
     return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
   }
 
+  private static String[] getStrings(final JsonNode schema) {
+    return splitName(schema.get(REF).textValue());
+  }
+
   public static String getRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = splitName(schema.get(REF).textValue());
+    final String[] pathObjectRef = getStrings(schema);
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
@@ -124,7 +130,7 @@ public class MapperUtil {
   }
 
   public static String[] splitName(final String name) {
-    return name.split("(\\.|\\/)");
+    return name.split(DIVISOR);
   }
 
 }
