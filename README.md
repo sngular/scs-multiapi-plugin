@@ -29,7 +29,7 @@ Maven and Gradle
     - [Getting Started](#getting-started)
     - [Initial Considerations](#initial-considerations)
     - [Usage](#usage)
-
+- [Properties Validation](#properties-validation)
 ## Main Configuration
 
 This plugin allows developers to automatize the creation of code classes for
