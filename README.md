@@ -29,6 +29,7 @@ Maven and Gradle
     - [Getting Started](#getting-started)
     - [Initial Considerations](#initial-considerations)
     - [Usage](#usage)
+- [Properties Validation](#properties-validation)
 
 ## Main Configuration
 
@@ -721,3 +722,11 @@ the restrictions he needs for the entity.
 
 **IMPORTANT NOTE**: As previously stated, OneOf and AnyOf will behave the same,
 this means that OneOf will work the same way as an AnyOf.
+
+## Properties validation
+Both AsyncAPI and OpenAPI offer the possibility to add properties to limit the
+values that a certain object can take. To validate these properties we annotate
+the pertaining fields and generate the corresponding validators so that the user
+can later use a framework such as Hibernate to check for correctness.
+
+
