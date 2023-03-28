@@ -16,7 +16,7 @@ public class OrderLineMapper {
 
   @JsonProperty(value ="ref")
   @NotNull
-private final String ref;
+  private final String ref;
   @JsonProperty(value ="products")
   @NotNull
   private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products;

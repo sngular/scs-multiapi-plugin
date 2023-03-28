@@ -160,9 +160,9 @@ public class ${schema.className} {
   <#elseif field.dataTypeSimple?has_content>
     <#if field.required>
       <#if field.parentPackage??>
-private final ${packageModel}.${field.parentPackage}.${field.dataTypeSimple} ${field.baseName?uncap_first};
+  private final ${packageModel}.${field.parentPackage}.${field.dataTypeSimple} ${field.baseName?uncap_first};
       <#else>
-private final ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
+  private final ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
       </#if>
       <#elseif field.parentPackage??>
   private ${packageModel}.${field.parentPackage}.${field.dataTypeSimple} ${field.baseName?uncap_first};

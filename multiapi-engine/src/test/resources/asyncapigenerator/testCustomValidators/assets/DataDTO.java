@@ -27,15 +27,15 @@ public class DataDTO {
   @Max(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10")
   @NotNull
-private final Integer clientId;
+  private final Integer clientId;
   @JsonProperty(value ="clientName")
   @Size(min =50, max =200)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
   @NotNull
-private final String clientName;
+  private final String clientName;
   @JsonProperty(value ="flightNumber")
   @NotNull
-private final String flightNumber;
+  private final String flightNumber;
   @JsonProperty(value ="test")
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)

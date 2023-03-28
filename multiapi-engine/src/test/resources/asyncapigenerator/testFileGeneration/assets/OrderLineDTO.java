@@ -16,7 +16,7 @@ public class OrderLineDTO {
 
   @JsonProperty(value ="ref")
   @NotNull
-private final String ref;
+  private final String ref;
   @JsonProperty(value ="products")
   @NotNull
   private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products;

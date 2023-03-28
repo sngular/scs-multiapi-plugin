@@ -14,16 +14,16 @@ public class OrderProductDTO {
 
   @JsonProperty(value ="ref")
   @NotNull
-private final String ref;
+  private final String ref;
   @JsonProperty(value ="productRef")
   @NotNull
-private final String productRef;
+  private final String productRef;
   @JsonProperty(value ="price")
   @NotNull
-private final String price;
+  private final String price;
   @JsonProperty(value ="quantity")
   @NotNull
-private final String quantity;
+  private final String quantity;
 
   private OrderProductDTO(String ref, String productRef, String price, String quantity) {
     this.ref = ref;

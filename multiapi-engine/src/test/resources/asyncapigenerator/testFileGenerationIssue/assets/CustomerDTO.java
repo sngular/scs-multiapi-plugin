@@ -18,23 +18,23 @@ public class CustomerDTO {
   @JsonProperty(value ="firstName")
   @Size(min =3, max =250)
   @NotNull
-private final String firstName;
+  private final String firstName;
   @JsonProperty(value ="lastName")
   @Size(min =3, max =250)
   @NotNull
-private final String lastName;
+  private final String lastName;
   @JsonProperty(value ="password")
   @Size(min =3, max =250)
   @NotNull
-private final String password;
+  private final String password;
   @JsonProperty(value ="email")
   @Size(min =3, max =250)
   @NotNull
-private final String email;
+  private final String email;
   @JsonProperty(value ="username")
   @Size(min =3, max =250)
   @NotNull
-private final String username;
+  private final String username;
 
   private CustomerDTO(String id, String firstName, String lastName, String password, String email, String username) {
     this.id = id;

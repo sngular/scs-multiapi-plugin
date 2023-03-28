@@ -18,12 +18,12 @@ public class OrderedItemDTO {
   @JsonProperty(value ="name")
   @Size(min =3, max =250)
   @NotNull
-private final String name;
+  private final String name;
   @JsonProperty(value ="quantity")
   private Integer quantity;
   @JsonProperty(value ="price")
   @NotNull
-private final Double price;
+  private final Double price;
 
   private OrderedItemDTO(Long catalogItemId, String name, Integer quantity, Double price) {
     this.catalogItemId = catalogItemId;
