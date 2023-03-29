@@ -724,8 +724,8 @@ the restrictions he needs for the entity.
 this means that OneOf will work the same way as an AnyOf.
 
 ## Property validation
-Both AsyncAPI and OpenAPI offer the possibility to add properties apply constraints 
-to the values that a certain object can take. To validate these properties 
+Both AsyncAPI and OpenAPI offer the possibility to add properties and apply constraints 
+to the values a certain object can take. To validate these properties, 
 we annotate the pertaining fields and generate the corresponding validators so that the user
 can later use a framework such as Hibernate to check for correctness.
 
