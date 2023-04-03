@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize, ready_for_review, review_requested, labeled]
 
+concurrency: pr-${{ github.event.pull_request.id }}
+
 jobs:
   check-version:
     runs-on: ubuntu-latest
