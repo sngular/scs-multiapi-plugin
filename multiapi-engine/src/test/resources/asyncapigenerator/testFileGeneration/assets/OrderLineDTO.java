@@ -1,15 +1,17 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.filegeneration.model.event.OrderProductDTO;
 import com.sngular.scsplugin.filegeneration.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 
+@JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
 
   @JsonProperty(value ="ref")
@@ -17,9 +19,9 @@ public class OrderLineDTO {
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<OrderProductDTO> products;
+  private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products;
 
-  private OrderLineDTO(String ref, List<OrderProductDTO> products) {
+  private OrderLineDTO(String ref, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products) {
     this.ref = ref;
     this.products = products;
 
@@ -37,23 +39,24 @@ public class OrderLineDTO {
     return new OrderLineDTO.OrderLineDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderLineDTOBuilder {
 
     private String ref;
-    private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
+    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO>();
 
     public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;
     }
-    public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
+    public OrderLineDTO.OrderLineDTOBuilder products(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;
     }
 
-    public OrderLineDTO.OrderLineDTOBuilder product(OrderProductDTO product) {
+    public OrderLineDTO.OrderLineDTOBuilder product(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO product) {
       if (product != null) {
         this.products.add(product);
       }
@@ -80,7 +83,7 @@ public class OrderLineDTO {
   * @return products
   */
   @Schema(name = "products", required = true)
-  public List<OrderProductDTO> getProducts() {
+  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductDTO> getProducts() {
     return products;
   }
 

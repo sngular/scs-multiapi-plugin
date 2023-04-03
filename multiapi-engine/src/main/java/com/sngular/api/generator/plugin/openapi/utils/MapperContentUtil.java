@@ -335,10 +335,10 @@ public class MapperContentUtil {
     final SchemaFieldObject field;
     if (Objects.nonNull(value.get$ref())) {
       final var typeName = cleanRefName(value);
-      if (!antiLoopList.contains(typeName) &&
-          ((totalSchemas.containsKey(typeName) && Objects.nonNull(
-              totalSchemas.get(typeName).getType()) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)) ||
-           value.get$ref().contains(key))) {
+      if (!antiLoopList.contains(typeName)
+          && (totalSchemas.containsKey(typeName) && Objects.nonNull(
+              totalSchemas.get(typeName).getType()) && totalSchemas.get(typeName).getType().equalsIgnoreCase(ARRAY)
+              || value.get$ref().contains(key))) {
         antiLoopList.add(typeName);
         fieldObjectArrayList.addAll(
             processFieldObjectList(key, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas,
@@ -438,7 +438,7 @@ public class MapperContentUtil {
                                      .dataType(SchemaFieldObjectType.fromTypeList(ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
                                      .build());
       } else {
-        SchemaFieldObject field = SchemaFieldObject
+        final SchemaFieldObject field = SchemaFieldObject
                                       .builder()
                                       .restrictionProperties(new SchemaFieldObjectProperties())
                                       .baseName(fieldName)
@@ -457,7 +457,7 @@ public class MapperContentUtil {
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
-    Object addPropObj = schema.getAdditionalProperties();
+    final Object addPropObj = schema.getAdditionalProperties();
     if (addPropObj instanceof Boolean) {
       fieldObjectArrayList
           .add(SchemaFieldObject
@@ -589,7 +589,7 @@ public class MapperContentUtil {
 
   private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
     final String fieldType = schemaFieldObject.getDataType().toString();
-    String type;
+    final String type;
     switch (fieldType) {
       case BIG_DECIMAL:
       case INTEGER:

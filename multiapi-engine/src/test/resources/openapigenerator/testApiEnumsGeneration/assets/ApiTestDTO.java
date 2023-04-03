@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.enumgeneration.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +11,7 @@ import java.math.BigDecimal;
 import com.sngular.multifileplugin.enumgeneration.model.exception.ModelClassException;
 import com.sngular.multifileplugin.enumgeneration.model.customvalidator.NotNull;
 
+@JsonDeserialize(builder = ApiTestDTO.ApiTestDTOBuilder.class)
 public class ApiTestDTO {
 
   @JsonProperty(value ="unionEnum")
@@ -112,6 +115,7 @@ public class ApiTestDTO {
     return new ApiTestDTO.ApiTestDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTestDTOBuilder {
 
     private UnionEnum unionEnum;

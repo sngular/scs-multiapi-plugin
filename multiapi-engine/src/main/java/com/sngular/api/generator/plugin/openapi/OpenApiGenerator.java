@@ -306,7 +306,7 @@ public class OpenApiGenerator {
   private void writeModel(
       final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
-    Set<String> propertiesSet = new HashSet<>();
+    final Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
@@ -334,7 +334,7 @@ public class OpenApiGenerator {
   private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {
     final Iterator<String> iterator = fieldProperties.iterator();
     while (iterator.hasNext()) {
-      String current = iterator.next();
+      final String current = iterator.next();
       switch (current) {
         case "Size":
           templateFactory.fillTemplateCustom(filePathToSave, "Size.java", "SizeValidator.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION,

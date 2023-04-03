@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.issuegeneration.model.event.consumer;
 
-import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.messages.StatusDTO;
 
 public interface IResponse {
 

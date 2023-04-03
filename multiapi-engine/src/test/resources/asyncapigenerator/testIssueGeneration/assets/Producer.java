@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.issuegeneration.model.event.DataClientDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.messages.DataClientDTO;
 
 @Configuration
 public class Producer {

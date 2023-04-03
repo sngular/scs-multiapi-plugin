@@ -1,17 +1,19 @@
-package com.sngular.scsplugin.arraywithstring.model.event;
+package com.sngular.scsplugin.arraywithstring.model.event.messages;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.arraywithstring.model.event.ObjectArrayDTO;
 
+@JsonDeserialize(builder = ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder.class)
 public class ObjectArrayMessageDTO {
 
   @JsonProperty(value ="payload")
-  private ObjectArrayDTO payload;
+  private com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO payload;
 
-  private ObjectArrayMessageDTO(ObjectArrayDTO payload) {
+  private ObjectArrayMessageDTO(com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO payload) {
     this.payload = payload;
 
   }
@@ -25,11 +27,12 @@ public class ObjectArrayMessageDTO {
     return new ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ObjectArrayMessageDTOBuilder {
 
-    private ObjectArrayDTO payload;
+    private com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO payload;
 
-    public ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder payload(ObjectArrayDTO payload) {
+    public ObjectArrayMessageDTO.ObjectArrayMessageDTOBuilder payload(com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -45,10 +48,10 @@ public class ObjectArrayMessageDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public ObjectArrayDTO getPayload() {
+  public com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO getPayload() {
     return payload;
   }
-  public void setPayload(ObjectArrayDTO payload) {
+  public void setPayload(com.sngular.scsplugin.arraywithstring.model.event.schemas.ObjectArrayDTO payload) {
     this.payload = payload;
   }
 

@@ -2,10 +2,13 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 
+@JsonDeserialize(builder = ApiDefaultItemDTO.ApiDefaultItemDTOBuilder.class)
 public class ApiDefaultItemDTO {
 
   @JsonProperty(value ="stringField")
@@ -63,6 +66,7 @@ public class ApiDefaultItemDTO {
     return new ApiDefaultItemDTO.ApiDefaultItemDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiDefaultItemDTOBuilder {
 
     private StringField stringField;

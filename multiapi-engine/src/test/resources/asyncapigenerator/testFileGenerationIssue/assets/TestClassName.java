@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegenerationissue.model.event.CustomerEventMessageDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.messages.CustomerEventMessageDTO;
 
 @Configuration
 public class TestClassName {

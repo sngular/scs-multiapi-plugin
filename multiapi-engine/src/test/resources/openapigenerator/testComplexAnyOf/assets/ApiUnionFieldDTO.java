@@ -2,12 +2,15 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiUnionFieldDTO.ApiUnionFieldDTOBuilder.class)
 public class ApiUnionFieldDTO {
 
   @JsonProperty(value ="defaultItem")
@@ -72,6 +75,7 @@ public class ApiUnionFieldDTO {
     return new ApiUnionFieldDTO.ApiUnionFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiUnionFieldDTOBuilder {
 
     private ApiDefaultItemDTO defaultItem;

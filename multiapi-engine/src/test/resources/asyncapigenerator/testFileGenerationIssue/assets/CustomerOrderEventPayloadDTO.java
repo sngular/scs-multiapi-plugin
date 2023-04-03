@@ -1,11 +1,14 @@
-package com.sngular.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder.class)
 public class CustomerOrderEventPayloadDTO {
 
   @JsonProperty(value ="customerOrderId")
@@ -34,9 +37,9 @@ public class CustomerOrderEventPayloadDTO {
     }
   }
   @JsonProperty(value ="customerOrderDTO")
-  private CustomerOrderDTO customerOrderDTO;
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO;
 
-  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, CustomerOrderDTO customerOrderDTO) {
+  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
     this.customerOrderId = customerOrderId;
     this.eventType = eventType;
     this.customerOrderDTO = customerOrderDTO;
@@ -54,11 +57,12 @@ public class CustomerOrderEventPayloadDTO {
     return new CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerOrderEventPayloadDTOBuilder {
 
     private String customerOrderId;
     private EventType eventType;
-    private CustomerOrderDTO customerOrderDTO;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
       this.customerOrderId = customerOrderId;
@@ -69,7 +73,7 @@ public class CustomerOrderEventPayloadDTO {
       return this;
     }
 
-    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderDTO(CustomerOrderDTO customerOrderDTO) {
+    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
       this.customerOrderDTO = customerOrderDTO;
       return this;
     }
@@ -109,10 +113,10 @@ public class CustomerOrderEventPayloadDTO {
   * @return customerOrderDTO
   */
   @Schema(name = "customerOrderDTO", required = false)
-  public CustomerOrderDTO getCustomerOrderDTO() {
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO getCustomerOrderDTO() {
     return customerOrderDTO;
   }
-  public void setCustomerOrderDTO(CustomerOrderDTO customerOrderDTO) {
+  public void setCustomerOrderDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
     this.customerOrderDTO = customerOrderDTO;
   }
 

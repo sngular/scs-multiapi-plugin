@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.externalavro.model.event.CreateOrder;
+import com.sngular.scsplugin.externalavro.model.event.messages.CreateOrder;
 
 @Configuration
 public class Subscriber {

@@ -1,14 +1,16 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
-import com.sngular.scsplugin.filegeneration.model.event.OrderLineMapper;
 
+@JsonDeserialize(builder = OrderMapper.OrderMapperBuilder.class)
 public class OrderMapper {
 
   @JsonProperty(value ="ref")
@@ -18,9 +20,9 @@ public class OrderMapper {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
+  private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper>();
 
-  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<OrderLineMapper> lines) {
+  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
@@ -40,12 +42,13 @@ public class OrderMapper {
     return new OrderMapper.OrderMapperBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderMapperBuilder {
 
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
+    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper>();
 
     public OrderMapper.OrderMapperBuilder ref(String ref) {
       this.ref = ref;
@@ -61,14 +64,14 @@ public class OrderMapper {
       this.amount = amount;
       return this;
     }
-    public OrderMapper.OrderMapperBuilder lines(List<OrderLineMapper> lines) {
+    public OrderMapper.OrderMapperBuilder lines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;
     }
 
-    public OrderMapper.OrderMapperBuilder line(OrderLineMapper line) {
+    public OrderMapper.OrderMapperBuilder line(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper line) {
       if (line != null) {
         this.lines.add(line);
       }
@@ -122,10 +125,10 @@ public class OrderMapper {
   * @return lines
   */
   @Schema(name = "lines", required = false)
-  public List<OrderLineMapper> getLines() {
+  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> getLines() {
     return lines;
   }
-  public void setLines(List<OrderLineMapper> lines) {
+  public void setLines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
     this.lines = lines;
   }
 

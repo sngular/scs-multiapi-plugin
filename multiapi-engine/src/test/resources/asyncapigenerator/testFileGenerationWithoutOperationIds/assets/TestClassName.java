@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.withoutids.model.event.CreateOrderDTO;
+import com.sngular.scsplugin.withoutids.model.event.messages.CreateOrderDTO;
 
 @Configuration
 public class TestClassName {

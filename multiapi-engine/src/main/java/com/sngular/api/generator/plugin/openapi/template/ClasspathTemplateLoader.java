@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import freemarker.cache.TemplateLoader;
-import freemarker.template.Template;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 

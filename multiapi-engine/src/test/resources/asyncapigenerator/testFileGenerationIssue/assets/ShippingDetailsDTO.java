@@ -1,10 +1,13 @@
-package com.sngular.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ShippingDetailsDTO.ShippingDetailsDTOBuilder.class)
 public class ShippingDetailsDTO {
 
   @JsonProperty(value ="address")
@@ -24,6 +27,7 @@ public class ShippingDetailsDTO {
     return new ShippingDetailsDTO.ShippingDetailsDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ShippingDetailsDTOBuilder {
 
     private String address;
