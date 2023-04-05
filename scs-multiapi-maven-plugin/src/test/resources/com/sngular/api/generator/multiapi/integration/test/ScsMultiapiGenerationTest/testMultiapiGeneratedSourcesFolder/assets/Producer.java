@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.generator.multiapi.model.event.CreateOrderMapper;
+import com.sngular.generator.multiapi.model.event.messages.CreateOrderMapper;
 
 @Configuration
 public class Producer {
