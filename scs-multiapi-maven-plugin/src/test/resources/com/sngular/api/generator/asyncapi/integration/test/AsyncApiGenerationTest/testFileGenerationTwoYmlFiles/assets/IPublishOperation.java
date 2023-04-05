@@ -1,6 +1,6 @@
 package com.sngular;
 
-import com.sngular.apigenerator.asyncapi.OrderCreated;
+import com.sngular.apigenerator.asyncapi.messages.OrderCreated;
 
 public interface IPublishOperation {
 

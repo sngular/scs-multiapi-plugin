@@ -29,7 +29,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class AsyncApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
