@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegenerationissue.model.event.CustomerOrderEventMessageDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.messages.CustomerOrderEventMessageDTO;
 
 @Configuration
 public class Producer {

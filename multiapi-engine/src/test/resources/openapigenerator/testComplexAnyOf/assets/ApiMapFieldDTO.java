@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiMapFieldDTO.ApiMapFieldDTOBuilder.class)
 public class ApiMapFieldDTO {
 
   @JsonProperty(value ="keyType")
@@ -46,6 +49,7 @@ public class ApiMapFieldDTO {
     return new ApiMapFieldDTO.ApiMapFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiMapFieldDTOBuilder {
 
     private String keyType;

@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.parameterwithcontent.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ApiInlineParameterShowTestByIdTestIdDTO.ApiInlineParameterShowTestByIdTestIdDTOBuilder.class)
 public class ApiInlineParameterShowTestByIdTestIdDTO {
 
   @JsonProperty(value ="email")
@@ -24,6 +27,7 @@ public class ApiInlineParameterShowTestByIdTestIdDTO {
     return new ApiInlineParameterShowTestByIdTestIdDTO.ApiInlineParameterShowTestByIdTestIdDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiInlineParameterShowTestByIdTestIdDTOBuilder {
 
     private String email;

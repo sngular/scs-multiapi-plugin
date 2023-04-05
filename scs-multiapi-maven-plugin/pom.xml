@@ -133,6 +133,17 @@
       <timezone>Europe/Madrid</timezone>
     </developer>
     <developer>
+      <id>josemenvegsngular</id>
+      <name>Jose Maria Mendez Vega</name>
+      <email>ajosemaria.mendez@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Senior Backend Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
       <id>5uso-sng</id>
       <name>Jesús Mosteiro García</name>
       <email>jesus.mosteiro@sngular.com</email>

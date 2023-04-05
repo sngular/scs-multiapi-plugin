@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.filegeneration.model.event.consumer;
 
-import com.sngular.scsplugin.filegeneration.model.event.OrderCreatedDTO;
+import com.sngular.scsplugin.filegeneration.model.event.messages.OrderCreatedDTO;
 
 public interface IPublishOperationFileGeneration {
 

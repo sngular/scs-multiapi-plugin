@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.testapi.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiTestAllOfDTO.ApiTestAllOfDTOBuilder.class)
 public class ApiTestAllOfDTO {
 
   @JsonProperty(value ="testers")
@@ -30,6 +33,7 @@ public class ApiTestAllOfDTO {
     return new ApiTestAllOfDTO.ApiTestAllOfDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTestAllOfDTOBuilder {
 
     private List<String> testers = new ArrayList<String>();

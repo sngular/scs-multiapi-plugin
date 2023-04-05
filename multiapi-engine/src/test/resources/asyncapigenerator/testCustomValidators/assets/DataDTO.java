@@ -1,10 +1,11 @@
-package com.sngular.scsplugin.customvalidator.model.event;
+package com.sngular.scsplugin.customvalidator.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.customvalidator.model.event.Integer;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Size;
@@ -18,6 +19,7 @@ import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Multipl
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.NotNull;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.UniqueItems;
 
+@JsonDeserialize(builder = DataDTO.DataDTOBuilder.class)
 public class DataDTO {
 
   @JsonProperty(value ="clientId")
@@ -63,6 +65,7 @@ public class DataDTO {
     return new DataDTO.DataDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class DataDTOBuilder {
 
     private Integer clientId;

@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.tagsgeneration.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.tagsgeneration.model.exception.ModelClassException;
 import com.sngular.multifileplugin.tagsgeneration.model.customvalidator.NotNull;
 
+@JsonDeserialize(builder = ErrorDTO.ErrorDTOBuilder.class)
 public class ErrorDTO {
 
   @JsonProperty(value ="code")
@@ -34,6 +37,7 @@ public class ErrorDTO {
     return new ErrorDTO.ErrorDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ErrorDTOBuilder {
 
     private Integer code;

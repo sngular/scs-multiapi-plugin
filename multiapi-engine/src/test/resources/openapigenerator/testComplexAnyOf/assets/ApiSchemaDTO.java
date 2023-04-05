@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassException;
 import com.sngular.multifileplugin.testcomplexanyof.model.customvalidator.NotNull;
 
+@JsonDeserialize(builder = ApiSchemaDTO.ApiSchemaDTOBuilder.class)
 public class ApiSchemaDTO {
 
   @JsonProperty(value ="type")
@@ -55,6 +58,7 @@ public class ApiSchemaDTO {
     return new ApiSchemaDTO.ApiSchemaDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiSchemaDTOBuilder {
 
     private String type;

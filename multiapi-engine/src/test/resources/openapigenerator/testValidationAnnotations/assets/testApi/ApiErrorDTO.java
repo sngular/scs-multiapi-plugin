@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.testapi.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -17,6 +19,7 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
 
+@JsonDeserialize(builder = ApiErrorDTO.ApiErrorDTOBuilder.class)
 public class ApiErrorDTO {
 
   @JsonProperty(value ="code")
@@ -56,6 +59,7 @@ public class ApiErrorDTO {
     return new ApiErrorDTO.ApiErrorDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiErrorDTOBuilder {
 
     private Integer code;

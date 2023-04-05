@@ -2,12 +2,15 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiNumberFieldDTO.ApiNumberFieldDTOBuilder.class)
 public class ApiNumberFieldDTO {
 
   @JsonProperty(value ="precision")
@@ -91,6 +94,7 @@ public class ApiNumberFieldDTO {
     return new ApiNumberFieldDTO.ApiNumberFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiNumberFieldDTOBuilder {
 
     private Integer precision;

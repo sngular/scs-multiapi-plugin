@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.issuegeneration.model.event.StatusDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.messages.StatusDTO;
 
 @Configuration
 public class Subscriber {

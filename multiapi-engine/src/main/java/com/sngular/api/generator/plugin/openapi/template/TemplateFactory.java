@@ -47,8 +47,8 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, final Set<String> propertiesSet)
-      throws IOException, TemplateException {
+  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, final Set<String> propertiesSet) throws IOException,
+                                                                                                                                                                TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);

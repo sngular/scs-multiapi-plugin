@@ -105,7 +105,7 @@ public class TemplateFactory {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
     }
 
-    final Set<String> propertiesSet = new HashSet<>();
+    final HashSet<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
         fillTemplateSchema(classTemplate, false, propertiesSet);

@@ -1,14 +1,16 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
-import com.sngular.scsplugin.filegeneration.model.event.OrderLineDTO;
 
+@JsonDeserialize(builder = OrderDTO.OrderDTOBuilder.class)
 public class OrderDTO {
 
   @JsonProperty(value ="ref")
@@ -18,9 +20,9 @@ public class OrderDTO {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+  private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO>();
 
-  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<OrderLineDTO> lines) {
+  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
@@ -40,12 +42,13 @@ public class OrderDTO {
     return new OrderDTO.OrderDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderDTOBuilder {
 
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {
       this.ref = ref;
@@ -61,14 +64,14 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
-    public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
+    public OrderDTO.OrderDTOBuilder lines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder line(OrderLineDTO line) {
+    public OrderDTO.OrderDTOBuilder line(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO line) {
       if (line != null) {
         this.lines.add(line);
       }
@@ -122,10 +125,10 @@ public class OrderDTO {
   * @return lines
   */
   @Schema(name = "lines", required = false)
-  public List<OrderLineDTO> getLines() {
+  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> getLines() {
     return lines;
   }
-  public void setLines(List<OrderLineDTO> lines) {
+  public void setLines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
     this.lines = lines;
   }
 

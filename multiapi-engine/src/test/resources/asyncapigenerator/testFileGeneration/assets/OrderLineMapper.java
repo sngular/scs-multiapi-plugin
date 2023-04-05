@@ -1,15 +1,17 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.filegeneration.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.filegeneration.model.event.OrderProductMapper;
 import com.sngular.scsplugin.filegeneration.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 
+@JsonDeserialize(builder = OrderLineMapper.OrderLineMapperBuilder.class)
 public class OrderLineMapper {
 
   @JsonProperty(value ="ref")
@@ -17,9 +19,9 @@ public class OrderLineMapper {
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<OrderProductMapper> products;
+  private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products;
 
-  private OrderLineMapper(String ref, List<OrderProductMapper> products) {
+  private OrderLineMapper(String ref, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products) {
     this.ref = ref;
     this.products = products;
 
@@ -37,23 +39,24 @@ public class OrderLineMapper {
     return new OrderLineMapper.OrderLineMapperBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderLineMapperBuilder {
 
     private String ref;
-    private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
+    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper>();
 
     public OrderLineMapper.OrderLineMapperBuilder ref(String ref) {
       this.ref = ref;
       return this;
     }
-    public OrderLineMapper.OrderLineMapperBuilder products(List<OrderProductMapper> products) {
+    public OrderLineMapper.OrderLineMapperBuilder products(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;
     }
 
-    public OrderLineMapper.OrderLineMapperBuilder product(OrderProductMapper product) {
+    public OrderLineMapper.OrderLineMapperBuilder product(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper product) {
       if (product != null) {
         this.products.add(product);
       }
@@ -80,7 +83,7 @@ public class OrderLineMapper {
   * @return products
   */
   @Schema(name = "products", required = true)
-  public List<OrderProductMapper> getProducts() {
+  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> getProducts() {
     return products;
   }
 

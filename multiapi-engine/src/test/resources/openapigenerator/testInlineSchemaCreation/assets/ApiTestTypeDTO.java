@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.inlineschemacreation.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ApiTestTypeDTO.ApiTestTypeDTOBuilder.class)
 public class ApiTestTypeDTO {
 
   @JsonProperty(value ="name")
@@ -28,6 +31,7 @@ public class ApiTestTypeDTO {
     return new ApiTestTypeDTO.ApiTestTypeDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTestTypeDTOBuilder {
 
     private String name;

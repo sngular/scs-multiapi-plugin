@@ -2,7 +2,7 @@ package com.sngular.scsplugin.withoutids.model.event.producer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
-import com.sngular.scsplugin.withoutids.model.event.OrderCreatedMapper;
+import com.sngular.scsplugin.withoutids.model.event.messages.OrderCreatedMapper;
 
 @Component
 public class StreamBridgeProducer {

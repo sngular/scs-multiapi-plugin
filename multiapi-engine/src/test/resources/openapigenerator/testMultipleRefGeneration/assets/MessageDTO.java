@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.multipleref.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = MessageDTO.MessageDTOBuilder.class)
 public class MessageDTO {
 
   @JsonProperty(value ="description")
@@ -28,6 +31,7 @@ public class MessageDTO {
     return new MessageDTO.MessageDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class MessageDTOBuilder {
 
     private String description;

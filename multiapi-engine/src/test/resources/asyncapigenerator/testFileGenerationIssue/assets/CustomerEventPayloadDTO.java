@@ -1,11 +1,14 @@
-package com.sngular.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder.class)
 public class CustomerEventPayloadDTO {
 
   @JsonProperty(value ="customerId")
@@ -34,9 +37,9 @@ public class CustomerEventPayloadDTO {
     }
   }
   @JsonProperty(value ="customerDTO")
-  private CustomerDTO customerDTO;
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
 
-  private CustomerEventPayloadDTO(String customerId, EventType eventType, CustomerDTO customerDTO) {
+  private CustomerEventPayloadDTO(String customerId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
     this.customerId = customerId;
     this.eventType = eventType;
     this.customerDTO = customerDTO;
@@ -54,11 +57,12 @@ public class CustomerEventPayloadDTO {
     return new CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerEventPayloadDTOBuilder {
 
     private String customerId;
     private EventType eventType;
-    private CustomerDTO customerDTO;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
 
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerId(String customerId) {
       this.customerId = customerId;
@@ -69,7 +73,7 @@ public class CustomerEventPayloadDTO {
       return this;
     }
 
-    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerDTO(CustomerDTO customerDTO) {
+    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
       this.customerDTO = customerDTO;
       return this;
     }
@@ -109,10 +113,10 @@ public class CustomerEventPayloadDTO {
   * @return customerDTO
   */
   @Schema(name = "customerDTO", required = false)
-  public CustomerDTO getCustomerDTO() {
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomerDTO() {
     return customerDTO;
   }
-  public void setCustomerDTO(CustomerDTO customerDTO) {
+  public void setCustomerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
     this.customerDTO = customerDTO;
   }
 

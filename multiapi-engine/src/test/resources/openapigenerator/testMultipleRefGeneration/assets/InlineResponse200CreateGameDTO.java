@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.multipleref.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder.class)
 public class InlineResponse200CreateGameDTO {
 
   @JsonProperty(value ="description")
@@ -32,6 +35,7 @@ public class InlineResponse200CreateGameDTO {
     return new InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class InlineResponse200CreateGameDTOBuilder {
 
     private String description;

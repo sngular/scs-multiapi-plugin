@@ -1,17 +1,19 @@
-package com.sngular.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event.messages;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegenerationissue.model.event.CustomerOrderEventPayloadDTO;
 
+@JsonDeserialize(builder = CustomerOrderEventMessageDTO.CustomerOrderEventMessageDTOBuilder.class)
 public class CustomerOrderEventMessageDTO {
 
   @JsonProperty(value ="payload")
-  private CustomerOrderEventPayloadDTO payload;
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO payload;
 
-  private CustomerOrderEventMessageDTO(CustomerOrderEventPayloadDTO payload) {
+  private CustomerOrderEventMessageDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO payload) {
     this.payload = payload;
 
   }
@@ -25,11 +27,12 @@ public class CustomerOrderEventMessageDTO {
     return new CustomerOrderEventMessageDTO.CustomerOrderEventMessageDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerOrderEventMessageDTOBuilder {
 
-    private CustomerOrderEventPayloadDTO payload;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO payload;
 
-    public CustomerOrderEventMessageDTO.CustomerOrderEventMessageDTOBuilder payload(CustomerOrderEventPayloadDTO payload) {
+    public CustomerOrderEventMessageDTO.CustomerOrderEventMessageDTOBuilder payload(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -45,10 +48,10 @@ public class CustomerOrderEventMessageDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public CustomerOrderEventPayloadDTO getPayload() {
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO getPayload() {
     return payload;
   }
-  public void setPayload(CustomerOrderEventPayloadDTO payload) {
+  public void setPayload(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO payload) {
     this.payload = payload;
   }
 

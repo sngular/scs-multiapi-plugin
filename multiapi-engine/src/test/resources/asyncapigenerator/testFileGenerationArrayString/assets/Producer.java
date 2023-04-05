@@ -2,7 +2,7 @@ package com.sngular.scsplugin.arraywithstring.supplier;
 
 import java.util.function.Supplier;
 
-import com.sngular.scsplugin.arraywithstring.asyncapi.model.ObjectArrayMessageDTO;
+import com.sngular.scsplugin.arraywithstring.asyncapi.model.messages.ObjectArrayMessageDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

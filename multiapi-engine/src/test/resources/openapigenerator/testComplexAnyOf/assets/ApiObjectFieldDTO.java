@@ -2,11 +2,14 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 
+@JsonDeserialize(builder = ApiObjectFieldDTO.ApiObjectFieldDTOBuilder.class)
 public class ApiObjectFieldDTO {
 
   @JsonProperty(value ="requiredValues")
@@ -42,6 +45,7 @@ public class ApiObjectFieldDTO {
     return new ApiObjectFieldDTO.ApiObjectFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiObjectFieldDTOBuilder {
 
     private List<String> requiredValues = new ArrayList<String>();

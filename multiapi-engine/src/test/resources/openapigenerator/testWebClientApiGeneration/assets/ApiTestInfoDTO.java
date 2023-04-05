@@ -2,6 +2,8 @@ package com.sngular.multifileplugin.webclientapi.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import com.sngular.multifileplugin.webclientapi.model.exception.ModelClassException;
 import com.sngular.multifileplugin.webclientapi.model.customvalidator.NotNull;
 
+@JsonDeserialize(builder = ApiTestInfoDTO.ApiTestInfoDTOBuilder.class)
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testers")
@@ -35,6 +38,7 @@ public class ApiTestInfoDTO {
     return new ApiTestInfoDTO.ApiTestInfoDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiTestInfoDTOBuilder {
 
     private List<String> testers = new ArrayList<String>();

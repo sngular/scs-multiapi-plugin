@@ -1,13 +1,16 @@
-package com.sngular.scsplugin.filegenerationissue.model.event;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.Size;
 import com.sngular.scsplugin.filegenerationissue.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.filegenerationissue.model.event.customvalidator.NotNull;
 
+@JsonDeserialize(builder = CustomerDTO.CustomerDTOBuilder.class)
 public class CustomerDTO {
 
   @JsonProperty(value ="id")
@@ -59,6 +62,7 @@ public class CustomerDTO {
     return new CustomerDTO.CustomerDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerDTOBuilder {
 
     private String id;

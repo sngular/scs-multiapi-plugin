@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ApiBooleanFieldDTO.ApiBooleanFieldDTOBuilder.class)
 public class ApiBooleanFieldDTO {
 
   @JsonProperty(value ="type")
@@ -32,6 +35,7 @@ public class ApiBooleanFieldDTO {
     return new ApiBooleanFieldDTO.ApiBooleanFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiBooleanFieldDTOBuilder {
 
     private String type;

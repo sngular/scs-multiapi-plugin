@@ -1,17 +1,19 @@
-package com.sngular.scsplugin.customvalidator.model.event;
+package com.sngular.scsplugin.customvalidator.model.event.messages;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.customvalidator.model.event.DataDTO;
 
+@JsonDeserialize(builder = DataClientDTO.DataClientDTOBuilder.class)
 public class DataClientDTO {
 
   @JsonProperty(value ="payload")
-  private DataDTO payload;
+  private com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO payload;
 
-  private DataClientDTO(DataDTO payload) {
+  private DataClientDTO(com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO payload) {
     this.payload = payload;
 
   }
@@ -25,11 +27,12 @@ public class DataClientDTO {
     return new DataClientDTO.DataClientDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class DataClientDTOBuilder {
 
-    private DataDTO payload;
+    private com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO payload;
 
-    public DataClientDTO.DataClientDTOBuilder payload(DataDTO payload) {
+    public DataClientDTO.DataClientDTOBuilder payload(com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -45,10 +48,10 @@ public class DataClientDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public DataDTO getPayload() {
+  public com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO getPayload() {
     return payload;
   }
-  public void setPayload(DataDTO payload) {
+  public void setPayload(com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO payload) {
     this.payload = payload;
   }
 

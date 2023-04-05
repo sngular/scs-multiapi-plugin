@@ -1,7 +1,9 @@
-package ${packageModel};
+package ${packageModel}.${schema.parentPackage};
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "enum">
@@ -74,6 +76,7 @@ import ${packageModel}.customvalidator.UniqueItems;
     </#if>
 </#list>
 
+@JsonDeserialize(builder = ${schema.className}.${schema.className}Builder.class)
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
@@ -117,15 +120,15 @@ public class ${schema.className} {
 </#if>
   <#if field.dataType?has_content && (field.dataTypeSimple == "array" || field.dataTypeSimple == "Array")>
     <#if field.required>
-  private final List<${field.dataType}> ${field.baseName?uncap_first};
+  private final List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first};
     <#else>
-  private List<${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<${field.dataType}>();
+  private List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}>();
     </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
     <#if field.required>
   private final Map<String, ${field.dataType}> ${field.baseName?uncap_first};
     <#else>
-  private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String, ${field.dataType}>();
+  private Map<String, <#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String, <#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}>();
     </#if>
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
     <#if field.required>
@@ -156,15 +159,21 @@ public class ${schema.className} {
   }
   <#elseif field.dataTypeSimple?has_content>
     <#if field.required>
+      <#if field.parentPackage??>
+  private final ${packageModel}.${field.parentPackage}.${field.dataTypeSimple} ${field.baseName?uncap_first};
+      <#else>
   private final ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
-    <#else>
+      </#if>
+      <#elseif field.parentPackage??>
+  private ${packageModel}.${field.parentPackage}.${field.dataTypeSimple} ${field.baseName?uncap_first};
+      <#else>
   private ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
     </#if>
   </#if>
 </#list>
 
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName?uncap_first}<#else>${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    <#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName?uncap_first}<#else><#if field.parentPackage??>${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first}<#else>${field.dataTypeSimple?cap_first}</#if> ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
     </#list>
@@ -200,29 +209,30 @@ public class ${schema.className} {
     return new ${schema.className}.${schema.className}Builder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ${schema.className}Builder {
 
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
-    private List<${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<${field.dataType}>();
+    private List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
-    private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String,${field.dataType}>();
+    private Map<String, <#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String,<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
     private ${field.baseName?cap_first} ${field.baseName?uncap_first};
   <#else>
-    private ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
+    private <#if field.parentPackage??>${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first}<#else>${field.dataTypeSimple?cap_first}</#if> ${field.baseName?uncap_first};
   </#if>
 </#list>
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
-    public ${schema.className}.${schema.className}Builder ${field.baseName}(List<${field.dataType}> ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName}(List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName}) {
       if (!${field.baseName?uncap_first}.isEmpty()) {
         this.${field.baseName?uncap_first}.addAll(${field.baseName});
       }
       return this;
     }
 
-    public ${schema.className}.${schema.className}Builder ${field.baseName?substring(0, field.baseName?length - 1)}(${field.dataType} ${field.baseName?substring(0, field.baseName?length - 1)}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?substring(0, field.baseName?length - 1)}(<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType} ${field.baseName?substring(0, field.baseName?length - 1)}) {
       if (${field.baseName?substring(0, field.baseName?length - 1)} != null) {
         this.${field.baseName?uncap_first}.add(${field.baseName?substring(0, field.baseName?length - 1)});
       }
@@ -245,7 +255,11 @@ public class ${schema.className} {
     }
   <#else>
 
+    <#if field.parentPackage??>
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}) {
+    <#else>
     public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}) {
+    </#if>
       this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
       return this;
     }
@@ -265,11 +279,11 @@ public class ${schema.className} {
   */
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
-  public List<${field.dataType}> get${field.baseName?cap_first}() {
+  public List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> get${field.baseName?cap_first}() {
     return ${field.baseName?uncap_first};
   }
   <#if field.required == false>
-  public void set${field.baseName?cap_first}(List<${field.dataType}> ${field.baseName?uncap_first}) {
+  public void set${field.baseName?cap_first}(List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${field.baseName?uncap_first}) {
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
   }
   </#if>
@@ -292,11 +306,19 @@ public class ${schema.className} {
   }
   </#if>
   <#elseif field.dataTypeSimple?has_content>
+  <#if field.parentPackage??>
+  public ${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first} get${field.baseName?cap_first}() {
+  <#else>
   public ${field.dataTypeSimple?cap_first} get${field.baseName?cap_first}() {
+  </#if>
     return ${field.baseName?uncap_first};
   }
   <#if field.required == false>
+    <#if field.parentPackage??>
+  public void set${field.baseName?cap_first}(${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}) {
+    <#else>
   public void set${field.baseName?cap_first}(${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}) {
+    </#if>
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
   }
   </#if>

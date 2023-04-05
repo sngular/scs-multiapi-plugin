@@ -2,9 +2,12 @@ package com.sngular.multifileplugin.testcomplexanyof.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonDeserialize(builder = ApiDateFieldDTO.ApiDateFieldDTOBuilder.class)
 public class ApiDateFieldDTO {
 
   @JsonProperty(value ="type")
@@ -36,6 +39,7 @@ public class ApiDateFieldDTO {
     return new ApiDateFieldDTO.ApiDateFieldDTOBuilder();
   }
 
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiDateFieldDTOBuilder {
 
     private String type;

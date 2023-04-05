@@ -27,6 +27,10 @@ public class MapperUtil {
 
   public static final String BIG_DECIMAL = "bigDecimal";
 
+  public static final String REF = "$ref";
+
+  private static final String DIVISOR = "([./])";
+
   private MapperUtil() {}
 
   public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix) {
@@ -55,7 +59,7 @@ public class MapperUtil {
           type = INTEGER;
         }
       }
-    } else if (schema.has("$ref")) {
+    } else if (schema.has(REF)) {
       type = getRef(schema, prefix, suffix);
     }
     return type;
@@ -65,8 +69,17 @@ public class MapperUtil {
     return getPojoName(getRefClass(schema), prefix, suffix);
   }
 
+  public static String getLongRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = getStrings(schema);
+    return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
+  }
+
+  private static String[] getStrings(final JsonNode schema) {
+    return splitName(schema.get(REF).textValue());
+  }
+
   public static String getRefClass(final JsonNode schema) {
-    final String[] pathObjectRef = schema.get("$ref").textValue().split("/");
+    final String[] pathObjectRef = getStrings(schema);
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
@@ -85,7 +98,7 @@ public class MapperUtil {
     if (arrayNode.has("type")) {
       mapValueType = arrayNode.get("type");
     } else {
-      mapValueType = arrayNode.get("$ref");
+      mapValueType = arrayNode.get(REF);
     }
     typeArray = getCollectionType(arrayNode, mapValueType, prefix, suffix);
     return typeArray;
@@ -96,13 +109,13 @@ public class MapperUtil {
     if (!typeMap.contains("#")) {
       if ("string".equalsIgnoreCase(mapValueType.textValue())) {
         typeMap = "String";
-      } else if ("integer".equalsIgnoreCase(mapValueType.textValue())) {
+      } else if (INTEGER.equalsIgnoreCase(mapValueType.textValue())) {
         typeMap = "Integer";
       } else {
         typeMap = mapValueType.textValue();
       }
     } else {
-      final var valueSchema = mapNode.findPath("$ref");
+      final var valueSchema = mapNode.findPath(REF);
       if (Objects.nonNull(valueSchema)) {
         getRef(valueSchema, prefix, suffix);
       }
@@ -114,6 +127,10 @@ public class MapperUtil {
     return StringUtils.defaultIfBlank(prefix, "")
            + StringUtils.capitalize(namePojo)
            + StringUtils.defaultIfBlank(suffix, "");
+  }
+
+  public static String[] splitName(final String name) {
+    return name.split(DIVISOR);
   }
 
 }
