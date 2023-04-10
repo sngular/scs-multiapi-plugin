@@ -1,6 +1,6 @@
-package com.sngular.generator.multiapi.model.event.producer2;
+package com.sngular.apigenerator.asyncapi.producer2;
 
-import com.sngular.generator.multiapi.model.event.messages.OrderCreatedDTO;
+import com.sngular.apigenerator.asyncapi.model.messages.OrderCreatedDTO;
 
 public interface IPublishOperation2 {
 

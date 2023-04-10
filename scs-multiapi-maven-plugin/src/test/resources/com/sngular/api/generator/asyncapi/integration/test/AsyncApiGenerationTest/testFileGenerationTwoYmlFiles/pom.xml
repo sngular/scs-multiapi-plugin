@@ -41,24 +41,14 @@
               <specFiles>
                 <specFile>
                   <filePath>event-api.yml</filePath>
-                  <consumer>
-                    <ids>subscribeOperation</ids>
-                    <apiPackage>com.sngular</apiPackage>
-                    <modelPackage>com.sngular.apigenerator.asyncapi</modelPackage>
-                  </consumer>
-                  <supplier>
-                    <ids>publishOperation</ids>
-                    <apiPackage>com.sngular</apiPackage>
-                    <modelPackage>com.sngular.apigenerator.asyncapi</modelPackage>
-                  </supplier>
                 </specFile>
                 <specFile>
                   <filePath>event-api2.yml</filePath>
                   <supplier>
                     <ids>publishOperation2</ids>
                     <modelNameSuffix>DTO</modelNameSuffix>
-                    <apiPackage>com.sngular.generator.multiapi.model.event.producer2</apiPackage>
-                    <modelPackage>com.sngular.generator.multiapi.model.event</modelPackage>
+                    <apiPackage>com.sngular.apigenerator.asyncapi.producer2</apiPackage>
+                    <modelPackage>com.sngular.apigenerator.asyncapi.model</modelPackage>
                   </supplier>
                 </specFile>
               </specFiles>

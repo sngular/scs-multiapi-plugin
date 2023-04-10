@@ -1,10 +1,10 @@
-package com.sngular;
+package com.sngular.apigenerator.asyncapi;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.apigenerator.asyncapi.messages.CreateOrder;
+import com.sngular.apigenerator.asyncapi.model.messages.CreateOrder;
 
 @Configuration
 public class Subscriber {
