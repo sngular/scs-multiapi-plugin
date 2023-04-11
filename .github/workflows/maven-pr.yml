@@ -62,7 +62,7 @@ jobs:
         # Uses production profile to sign with gpg plugin
         run: |
           cd scs-multiapi-maven-plugin
-          mvn -P production -B test
+          mvn -B install
       - name: Build Gradle Plugin
         run: |
           cd scs-multiapi-gradle-plugin
