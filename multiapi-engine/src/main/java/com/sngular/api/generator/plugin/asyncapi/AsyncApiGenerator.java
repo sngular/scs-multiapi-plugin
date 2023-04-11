@@ -211,7 +211,7 @@ public class AsyncApiGenerator {
                                  if (payload.has(REF)) {
                                    payload = payload.get(REF);
                                  }
-                                 totalSchemas.put(key, payload);
+                                 totalSchemas.putIfAbsent(key, payload);
                                }
                              })
     );
