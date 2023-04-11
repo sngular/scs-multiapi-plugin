@@ -154,15 +154,16 @@ public class AsyncApiGenerator {
   }
 
   private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
+    final OperationParameterObject operationParameter = OperationParameterObject
+                                                            .builder()
+                                                            .ids(operationId)
+                                                            .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
+                                                            .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
+                                                            .build();
     if (channel.has(SUBSCRIBE) && ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getStreamBridge())) {
       try {
         checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
-        fileParameter.setConsumer(
-            OperationParameterObject.builder()
-                                    .ids(operationId)
-                                    .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
-                                    .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
-                                    .build());
+        fileParameter.setConsumer(operationParameter);
       } catch (final DuplicateClassException ignored) {
         // Don't set consumer
       }
@@ -171,12 +172,7 @@ public class AsyncApiGenerator {
     if (channel.has(PUBLISH) && ObjectUtils.allNull(fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
       try {
         checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
-        fileParameter.setSupplier(
-            OperationParameterObject.builder()
-                                    .ids(operationId)
-                                    .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
-                                    .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
-                                    .build());
+        fileParameter.setSupplier(operationParameter);
       } catch (final DuplicateClassException ignored) {
         // Don't set supplier
       }
@@ -210,12 +206,12 @@ public class AsyncApiGenerator {
     messagesList.forEach(message ->
                              message.fields().forEachRemaining(fieldSchema -> {
                                if (fieldSchema.getValue().has(PAYLOAD)) {
-                                 final var payload = fieldSchema.getValue().get(PAYLOAD);
-                                 if (!payload.has(REF)) {
-                                   totalSchemas.put((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload);
-                                 } else {
-                                   totalSchemas.putIfAbsent((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload.get(REF));
+                                 JsonNode payload = fieldSchema.getValue().get(PAYLOAD);
+                                 final String key = (MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase();
+                                 if (payload.has(REF)) {
+                                   payload = payload.get(REF);
                                  }
+                                 totalSchemas.put(key, payload);
                                }
                              })
     );
