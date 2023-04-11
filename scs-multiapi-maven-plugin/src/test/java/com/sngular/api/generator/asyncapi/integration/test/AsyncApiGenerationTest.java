@@ -15,8 +15,10 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
+import com.soebes.itf.jupiter.extension.MavenDebug;
 import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
+import com.soebes.itf.jupiter.extension.MavenOptions;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
@@ -29,7 +31,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class AsyncApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:asyncapi-generation")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
@@ -48,8 +49,8 @@ public class AsyncApiGenerationTest {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toPath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular");
-    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/generator/multiapi/model/event/producer2");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi");
+    Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
     File targetSecondYmlDirectory = pathToTargetSecondYml.toFile();

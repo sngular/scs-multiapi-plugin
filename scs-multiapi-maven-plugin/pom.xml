@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.5.1</version>
+  <version>4.5.2</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -165,6 +165,17 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>5uso-sng</id>
+      <name>Jesús Mosteiro García</name>
+      <email>jesus.mosteiro@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Software Developer - Trainee</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>
@@ -212,7 +223,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.5.1</version>
+      <version>4.5.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
