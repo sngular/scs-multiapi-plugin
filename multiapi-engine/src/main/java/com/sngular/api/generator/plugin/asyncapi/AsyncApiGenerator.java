@@ -116,11 +116,9 @@ public class AsyncApiGenerator {
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
-
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     generateExceptionTemplate = false;
     for (SpecFile fileParameter : specsListFile) {
-      setUpTemplate(fileParameter);
       String avroFilePath = fileParameter.getFilePath();
       if (avroFilePath.startsWith(".")) {
         avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
@@ -134,7 +132,6 @@ public class AsyncApiGenerator {
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParentPath, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
-
           final Map.Entry<String, JsonNode> entry = iter.next();
 
           final JsonNode channel = entry.getValue();
@@ -142,20 +139,42 @@ public class AsyncApiGenerator {
           final String operationId = getOperationId(channel);
           final JsonNode channelPayload = getChannelPayload(channel);
 
+          handleMissingPublisherConsumer(fileParameter, channel, operationId);
+
           processOperation(fileParameter, ymlParentPath, entry, channel, operationId, channelPayload, totalSchemas);
-
-          if (ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
-            final String className = channel.has(SUBSCRIBE) ? CONSUMER_CLASS_NAME : SUPPLIER_CLASS_NAME;
-            checkClassPackageDuplicate(className, DEFAULT_ASYNCAPI_API_PACKAGE);
-            processSupplierMethod(channelPayload, null, ymlParentPath, totalSchemas, false, "", "DTO");
-            addProcessedClassesAndPackagesToGlobalVariables(null, DEFAULT_ASYNCAPI_API_PACKAGE, className);
-          }
-
         }
+
+        setUpTemplate(fileParameter);
         templateFactory.fillTemplates();
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
         e.printStackTrace();
+      }
+    }
+  }
+
+  private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
+    final OperationParameterObject operationParameter = OperationParameterObject
+                                                            .builder()
+                                                            .ids(operationId)
+                                                            .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
+                                                            .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
+                                                            .build();
+    if (channel.has(SUBSCRIBE) && ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getStreamBridge())) {
+      try {
+        checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
+        fileParameter.setConsumer(operationParameter);
+      } catch (final DuplicateClassException ignored) {
+        // Don't set consumer
+      }
+    }
+
+    if (channel.has(PUBLISH) && ObjectUtils.allNull(fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
+      try {
+        checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
+        fileParameter.setSupplier(operationParameter);
+      } catch (final DuplicateClassException ignored) {
+        // Don't set supplier
       }
     }
   }
@@ -179,24 +198,22 @@ public class AsyncApiGenerator {
   private Map<String, JsonNode> getAllSchemas(final Path ymlParentPath, final JsonNode node) {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
     final List<JsonNode> referenceList = node.findValues(REF);
-    referenceList.forEach(reference ->
-        processReference(node, reference, ymlParentPath, totalSchemas, referenceList)
-    );
+    referenceList.forEach(reference -> processReference(node, reference, ymlParentPath, totalSchemas, referenceList));
     final List<JsonNode> messagesList = node.findValues(MESSAGES);
     final List<JsonNode> schemasList = node.findValues(SCHEMAS);
-    schemasList.forEach(schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + fieldSchema.getKey()).toUpperCase(),
-                                                                   fieldSchema.getValue())));
+    schemasList.forEach(
+        schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + fieldSchema.getKey()).toUpperCase(), fieldSchema.getValue())));
     messagesList.forEach(message ->
-                           message.fields().forEachRemaining(fieldSchema -> {
-                             if (fieldSchema.getValue().has(PAYLOAD)) {
-                               final var payload = fieldSchema.getValue().get(PAYLOAD);
-                               if (!payload.has(REF)) {
-                                 totalSchemas.put((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload);
-                               } else {
-                                 totalSchemas.putIfAbsent((MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase(), payload.get(REF));
+                             message.fields().forEachRemaining(fieldSchema -> {
+                               if (fieldSchema.getValue().has(PAYLOAD)) {
+                                 JsonNode payload = fieldSchema.getValue().get(PAYLOAD);
+                                 final String key = (MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase();
+                                 if (payload.has(REF)) {
+                                   payload = payload.get(REF);
+                                 }
+                                 totalSchemas.putIfAbsent(key, payload);
                                }
-                             }
-                           })
+                             })
     );
     return totalSchemas;
   }
@@ -223,7 +240,8 @@ public class AsyncApiGenerator {
     return returnNode;
   }
 
-  private void processReference(final JsonNode node, final JsonNode reference, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void processReference(
+      final JsonNode node, final JsonNode reference, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final List<JsonNode> referenceList) {
     final String referenceLink = reference.asText();
     final String[] path = MapperUtil.splitName(referenceLink);
@@ -249,7 +267,8 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void checkReference(final JsonNode mainNode, final JsonNode node, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void checkReference(
+      final JsonNode mainNode, final JsonNode node, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final List<JsonNode> referenceList) {
     final var localReferences = node.findValues(REF);
     if (!localReferences.isEmpty()) {
@@ -410,14 +429,16 @@ public class AsyncApiGenerator {
     return evaluated;
   }
 
-  private void processSupplierMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void processSupplierMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
-  private void processStreamBridgeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName,
+  private void processStreamBridgeMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final String channelName,
       final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     final String regex = "[a-zA-Z0-9.\\-]*";
@@ -428,14 +449,16 @@ public class AsyncApiGenerator {
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
   }
 
-  private void processSubscribeMethod(final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
+  private void processSubscribeMethod(
+      final JsonNode channel, final String modelPackage, final Path ymlParentPath, final Map<String, JsonNode> totalSchemas,
       final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 
-  private void fillTemplateFactory(final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix,
+  private void fillTemplateFactory(
+      final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix,
       final String modelPackageReceived)
       throws TemplateException, IOException {
     final var modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
