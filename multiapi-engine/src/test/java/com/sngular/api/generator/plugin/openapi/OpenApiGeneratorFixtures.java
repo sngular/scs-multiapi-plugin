@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -348,6 +349,44 @@ public final class OpenApiGeneratorFixtures {
           .clientPackage("com.sngular.multifileplugin.testCreateDTO.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_DATE_TIME = List.of(
+    SpecFile
+        .builder()
+        .filePath("openapigenerator/testDateTime/api-test.yml")
+        .apiPackage("com.sngular.multifileplugin.testDateTime")
+        .modelPackage("com.sngular.multifileplugin.testDateTime.model")
+        .clientPackage("com.sngular.multifileplugin.testDateTime.client")
+        .modelNameSuffix("DTO")
+        .useLombokModelAnnotation(true)
+        .build()
+  );
+
+  static final List<SpecFile> TEST_DATE_TIME_ZONED = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testDateTimeZoned/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testDateTimeZoned")
+          .modelPackage("com.sngular.multifileplugin.testDateTimeZoned.model")
+          .clientPackage("com.sngular.multifileplugin.testDateTimeZoned.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .useTimeType(TimeType.ZONED)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_DATE_TIME_OFFSET = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testDateTimeOffset/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testDateTimeOffset")
+          .modelPackage("com.sngular.multifileplugin.testDateTimeOffset.model")
+          .clientPackage("com.sngular.multifileplugin.testDateTimeOffset.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .useTimeType(TimeType.OFFSET)
           .build()
   );
 
@@ -1077,6 +1116,60 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/AddressDTO.java",
         ASSETS_PATH + "model/PropertiesDTO.java",
         ASSETS_PATH + "model/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateDateTime() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testDateTime";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testDateTime/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testDateTime/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testDateTime/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testDateTime/assets/model/TestDateDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateDateTimeZoned() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testDateTimeZoned";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testDateTimeZoned/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testDateTimeZoned/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testDateTimeZoned/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testDateTimeZoned/assets/model/TestDateDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateDateTimeOffset() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testDateTimeOffset";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testDateTimeOffset/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testDateTimeOffset/model/exception";
+
+    final List<String> expectedTestApiFile = List.of(
+        "openapigenerator/testDateTimeOffset/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testDateTimeOffset/assets/model/TestDateDTO.java"
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);

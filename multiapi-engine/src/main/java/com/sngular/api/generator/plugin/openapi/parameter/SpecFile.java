@@ -6,8 +6,10 @@
 
 package com.sngular.api.generator.plugin.openapi.parameter;
 
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +38,7 @@ public class SpecFile {
   private boolean useLombokModelAnnotation;
 
   private boolean isReactive;
+
+  @Default
+  private TimeType useTimeType = TimeType.LOCAL;
 }

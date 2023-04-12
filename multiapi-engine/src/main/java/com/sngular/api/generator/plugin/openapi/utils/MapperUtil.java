@@ -8,6 +8,7 @@ package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.util.Objects;
 
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
@@ -19,69 +20,49 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
 
-  public static final String INTEGER = "integer";
-
-  public static final String DOUBLE = "double";
-
-  public static final String FLOAT = "float";
-
-  public static final String NUMBER = "number";
-
-  public static final String INT_32 = "int32";
-
-  public static final String INT_64 = "int64";
-
-  public static final String LONG = "long";
-
-  public static final String BIG_DECIMAL = "bigDecimal";
-
-  public static final String STRING = "String";
-
-  public static final String OBJECT = "Object";
-
   private MapperUtil() {}
 
   public static String getSimpleType(final Schema<?> schema, final SpecFile specFile) {
     final String type;
-    if (NUMBER.equalsIgnoreCase(schema.getType())) {
-      if (FLOAT.equalsIgnoreCase(schema.getFormat())) {
-        type = FLOAT;
-      } else if (DOUBLE.equalsIgnoreCase(schema.getFormat())) {
-        type = DOUBLE;
+    if (TypeConstants.NUMBER.equalsIgnoreCase(schema.getType())) {
+      if (TypeConstants.FLOAT.equalsIgnoreCase(schema.getFormat())) {
+        type = TypeConstants.FLOAT;
+      } else if (TypeConstants.DOUBLE.equalsIgnoreCase(schema.getFormat())) {
+        type = TypeConstants.DOUBLE;
       } else {
-        type = BIG_DECIMAL;
+        type = TypeConstants.BIG_DECIMAL;
       }
-    } else if (INTEGER.equalsIgnoreCase(schema.getType())) {
-      if (INT_64.equalsIgnoreCase(schema.getFormat())) {
-        type = LONG;
+    } else if (TypeConstants.INTEGER.equalsIgnoreCase(schema.getType())) {
+      if (TypeConstants.INT_64.equalsIgnoreCase(schema.getFormat())) {
+        type = TypeConstants.LONG;
       } else {
-        type = INTEGER;
+        type = TypeConstants.INTEGER;
       }
     } else if (Objects.nonNull(schema.get$ref())) {
       final String[] pathObjectRef = schema.get$ref().split("/");
       type = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
-    } else if (INT_32.equalsIgnoreCase(schema.getType()) || INT_64.equalsIgnoreCase(schema.getType())) {
-      type = INTEGER;
+    } else if (TypeConstants.INT_32.equalsIgnoreCase(schema.getType()) || TypeConstants.INT_64.equalsIgnoreCase(schema.getType())) {
+      type = TypeConstants.INTEGER;
     } else if (schema instanceof ArraySchema) {
-      type = MapperPathUtil.ARRAY;
+      type = TypeConstants.ARRAY;
     } else {
-      type = ObjectUtils.defaultIfNull(StringUtils.capitalize(schema.getType()), OBJECT);
+      type = ObjectUtils.defaultIfNull(schema.getType(), TypeConstants.OBJECT);
     }
-    return StringUtils.capitalize(type);
+    return type;
   }
 
   public static String getSimpleType(final Object schema) {
     final String type;
     if (schema instanceof Boolean) {
-      type = OBJECT;
+      type = TypeConstants.OBJECT;
     } else if (schema instanceof Integer) {
-      type = INTEGER;
+      type = TypeConstants.INTEGER;
     } else if (schema instanceof Float) {
-      type = FLOAT;
+      type = TypeConstants.FLOAT;
     } else if (schema instanceof Double) {
-      type = DOUBLE;
+      type = TypeConstants.DOUBLE;
     } else {
-      type = STRING;
+      type = TypeConstants.STRING;
     }
     return type;
   }
@@ -89,9 +70,9 @@ public class MapperUtil {
   public static String getTypeMap(final MapSchema mapSchema, final SpecFile specFile) {
     var typeMap = "";
     if (mapSchema.getAdditionalProperties() instanceof StringSchema) {
-      typeMap = STRING;
+      typeMap = TypeConstants.STRING;
     } else if (mapSchema.getAdditionalProperties() instanceof IntegerSchema) {
-      typeMap = "Integer";
+      typeMap = TypeConstants.INTEGER;
     } else {
       final Schema<?> schema = (Schema<?>) mapSchema.getAdditionalProperties();
       if (StringUtils.isNotBlank(schema.get$ref())) {
@@ -105,9 +86,9 @@ public class MapperUtil {
   public static String getTypeArray(final ArraySchema array, final SpecFile specFile) {
     var typeArray = "";
     if (array.getItems() instanceof StringSchema) {
-      typeArray = STRING;
+      typeArray = TypeConstants.STRING;
     } else if (array.getItems() instanceof IntegerSchema) {
-      typeArray = "Integer";
+      typeArray = TypeConstants.INTEGER;
     } else if (StringUtils.isNotBlank(array.getItems().get$ref())) {
       final String[] pathObjectRef = array.getItems().get$ref().split("/");
       typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);

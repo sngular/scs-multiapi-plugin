@@ -323,41 +323,42 @@ public class MapperContentUtil {
   private static void setFieldProperties(final SchemaFieldObject fieldObject, final JsonNode schema) {
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
     Entry<String, JsonNode> current;
+    final SchemaFieldObjectProperties props = fieldObject.getRestrictions();
     while (iterator.hasNext()) {
       current = iterator.next();
       switch (current.getKey()) {
         case "minimum":
-          fieldObject.getRestrictions().setMinimum(current.getValue().asText());
+          props.setMinimum(current.getValue().asText());
           break;
         case "maximum":
-          fieldObject.getRestrictions().setMaximum(current.getValue().asText());
+          props.setMaximum(current.getValue().asText());
           break;
         case "exclusiveMinimum":
-          fieldObject.getRestrictions().setExclusiveMinimum(current.getValue().booleanValue());
+          props.setExclusiveMinimum(current.getValue().booleanValue());
           break;
         case "exclusiveMaximum":
-          fieldObject.getRestrictions().setExclusiveMaximum(current.getValue().booleanValue());
+          props.setExclusiveMaximum(current.getValue().booleanValue());
           break;
         case "maxItems":
-          fieldObject.getRestrictions().setMaxItems(current.getValue().intValue());
+          props.setMaxItems(current.getValue().intValue());
           break;
         case "maxLength":
-          fieldObject.getRestrictions().setMaxLength(current.getValue().intValue());
+          props.setMaxLength(current.getValue().intValue());
           break;
         case "minItems":
-          fieldObject.getRestrictions().setMinItems(current.getValue().intValue());
+          props.setMinItems(current.getValue().intValue());
           break;
         case "minLength":
-          fieldObject.getRestrictions().setMinLength(current.getValue().intValue());
+          props.setMinLength(current.getValue().intValue());
           break;
         case "pattern":
-          fieldObject.getRestrictions().setPattern(current.getValue().toString().replaceAll("\"", ""));
+          props.setPattern(current.getValue().toString().replaceAll("\"", ""));
           break;
         case "uniqueItems":
-          fieldObject.getRestrictions().setUniqueItems(current.getValue().booleanValue());
+          props.setUniqueItems(current.getValue().booleanValue());
           break;
         case "multipleOf":
-          fieldObject.getRestrictions().setMultipleOf(current.getValue().asText());
+          props.setMultipleOf(current.getValue().asText());
           break;
         default:
           break;

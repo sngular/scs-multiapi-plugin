@@ -1,140 +1,137 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import lombok.Data;
 
 @Data
 public class SchemaFieldObjectType {
 
-  public static final String OBJECT = "Object";
-
-  public static final String ARRAY = "Array";
-
-  public static final String MAP = "Map";
-
-  public static final String BIG_DECIMAL = "BigDecimal";
-
-  public static final String INTEGER = "Integer";
-
-  public static final String DOUBLE = "Double";
-
-  public static final String FLOAT = "Float";
-
-  public static final String LONG = "Long";
-
-  public static final String STRING = "String";
-
-  public static final String ENUM = "Enum";
-
-  public static final Set<String> BASIC_TYPES = Set.of(STRING, INTEGER, OBJECT);
-
-  private static final Map<String, String> typeMappings = Map.of(
-      OBJECT, "Object",
-      ARRAY, "List<?>",
-      MAP, "Map<String, ?>",
-      BIG_DECIMAL, "BigDecimal",
-      INTEGER, "Integer",
-      DOUBLE, "Double",
-      FLOAT, "Float",
-      LONG, "Long",
-      STRING, "String",
-      ENUM, "Enum"
+  private static final Map<String, String> TYPE_MAPPINGS = Map.ofEntries(
+      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
+      new SimpleImmutableEntry<>(TypeConstants.ARRAY, "List<?>"),
+      new SimpleImmutableEntry<>(TypeConstants.MAP, "Map<String, ?>"),
+      new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
+      new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
+      new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
+      new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
+      new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
+      new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
+      new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
   );
 
-  private static final Map<String, String> implTypeMappings = Map.of(
-      OBJECT, "Object",
-      ARRAY, "ArrayList<?>",
-      MAP, "HashMap<String, ?>",
-      BIG_DECIMAL, "BigDecimal",
-      INTEGER, "Integer",
-      DOUBLE, "Double",
-      FLOAT, "Float",
-      LONG, "Long",
-      STRING, "String",
-      ENUM, "Enum"
+  private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
+      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
+      new SimpleImmutableEntry<>(TypeConstants.ARRAY, "ArrayList<?>"),
+      new SimpleImmutableEntry<>(TypeConstants.MAP, "HashMap<String, ?>"),
+      new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
+      new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
+      new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
+      new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
+      new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
+      new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
+      new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
   );
 
   private SchemaFieldObjectType innerType;
 
   private final String baseType;
 
-  public SchemaFieldObjectType(String baseType, SchemaFieldObjectType innerType) {
+  public SchemaFieldObjectType(final String baseType, final SchemaFieldObjectType innerType) {
     this.innerType = innerType;
     this.baseType = baseType;
   }
 
-  public SchemaFieldObjectType(String type) {
+  public SchemaFieldObjectType(final String type) {
     this.innerType = null;
     this.baseType = type;
   }
 
-  public static SchemaFieldObjectType fromTypeList(String... types) {
-    Iterator<String> typeIterator = Arrays.stream(types).iterator();
-    return constructTypeFromList(typeIterator);
-  }
+  public static SchemaFieldObjectType fromTypeList(final String... types) {
+    final SchemaFieldObjectType result = new SchemaFieldObjectType(types[0], null);
+    SchemaFieldObjectType objectType = result;
 
-  private static SchemaFieldObjectType constructTypeFromList(Iterator<String> types) {
-    if (!types.hasNext()) {
-      return null;
+    for (int i = 1; i < types.length; i++) {
+      objectType.innerType = new SchemaFieldObjectType(types[i], null);
+      objectType = objectType.innerType;
     }
 
-    return new SchemaFieldObjectType(types.next(), constructTypeFromList(types));
+    return result;
   }
 
-  public void setDeepType(SchemaFieldObjectType type) {
-    if (Objects.isNull(innerType)) {
-      innerType = type;
-      return;
+  public void setDeepType(final SchemaFieldObjectType type) {
+    SchemaFieldObjectType parentType = this;
+    while (Objects.nonNull(parentType.innerType)) {
+      parentType = parentType.innerType;
     }
 
-    innerType.setDeepType(type);
+    parentType.innerType = type;
   }
 
-  public void setDeepType(String type) {
+  public void setDeepType(final String type) {
     setDeepType(new SchemaFieldObjectType(type));
   }
 
-  public boolean containsType(String type) {
-    return type.equals(baseType) || (Objects.nonNull(innerType) && innerType.containsType(type));
+  public boolean containsType(final String type) {
+    return type.equalsIgnoreCase(baseType) || Objects.nonNull(innerType) && innerType.containsType(type);
   }
 
-  private String mapIntoString(Map<String, String> mappings) {
-    String baseString = mappings.getOrDefault(baseType, baseType);
-    if (!baseString.contains("?")) {
-      return baseString;
-    }
+  private String mapIntoString(final Map<String, String> mappings) {
+    final String baseString = mappings.getOrDefault(baseType, baseType);
+    final boolean hasInner = baseString.contains("?");
 
-    if (Objects.isNull(innerType)) {
+    if (hasInner && Objects.isNull(innerType)) {
       throw new RuntimeException(String.format("Field object type '%s' missing an inner type", baseType));
     }
 
-    return baseString.replace("?", innerType.mapIntoString(typeMappings));
+    return hasInner ? baseString.replace("?", innerType.mapIntoString(TYPE_MAPPINGS)) : baseString;
   }
 
+  @SuppressWarnings("unused") // This method is invoked by templates
   public String getImplementationTypeString() {
-    return mapIntoString(implTypeMappings);
+    return mapIntoString(IMPL_TYPE_MAPPINGS);
   }
 
   @Override
   public String toString() {
-    return mapIntoString(typeMappings);
+    return mapIntoString(TYPE_MAPPINGS);
   }
 
   @Override
   public boolean equals(final Object obj) {
-    if (!(obj instanceof SchemaFieldObjectType)) {
-      return false;
+    boolean result = false;
+    if (obj instanceof SchemaFieldObjectType) {
+      final SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
+      final boolean baseTypeIsEqual = baseType.equals(other.baseType);
+      final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
+      result = baseTypeIsEqual && innerTypeIsEqual;
     }
 
-    SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
-    final boolean baseTypeIsEqual = baseType.equals(other.baseType);
-    final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
+    return result;
+  }
 
-    return baseTypeIsEqual && innerTypeIsEqual;
+  @Override
+  public int hashCode() {
+    return Objects.hash(Objects.isNull(innerType) ? 0 : innerType.hashCode(), baseType);
   }
 }

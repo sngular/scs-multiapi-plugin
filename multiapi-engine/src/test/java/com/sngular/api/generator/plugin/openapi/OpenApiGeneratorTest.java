@@ -83,7 +83,13 @@ class OpenApiGeneratorTest {
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
                      OpenApiGeneratorFixtures.validateValidationAnnotationsLombok()),
         Arguments.of("testCreateDTO", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
-                     OpenApiGeneratorFixtures.validateCreateDTO())
+                     OpenApiGeneratorFixtures.validateCreateDTO()),
+        Arguments.of("testDateTime", OpenApiGeneratorFixtures.TEST_DATE_TIME,
+                     OpenApiGeneratorFixtures.validateDateTime()),
+        Arguments.of("testDateTimeZoned", OpenApiGeneratorFixtures.TEST_DATE_TIME_ZONED,
+                     OpenApiGeneratorFixtures.validateDateTimeZoned()),
+        Arguments.of("testDateTimeOffset", OpenApiGeneratorFixtures.TEST_DATE_TIME_OFFSET,
+                     OpenApiGeneratorFixtures.validateDateTimeOffset())
     );
   }
 

@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>multiapi-engine</artifactId>
-  <version>4.5.2</version>
+  <version>4.6.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -241,6 +241,7 @@
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <goals>

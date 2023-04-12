@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.5.2</version>
+  <version>4.6.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -144,6 +144,17 @@
       <timezone>Europe/Madrid</timezone>
     </developer>
     <developer>
+      <id>5uso-sng</id>
+      <name>Jesús Mosteiro García</name>
+      <email>jesus.mosteiro@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Software Developer - Trainee</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
+    <developer>
       <id>davidgayoso</id>
       <name>David Gayoso Salvado</name>
       <email>david.gayoso@sngular.com</email>
@@ -158,17 +169,6 @@
       <id>janDuinRod</id>
       <name>Jan Duinkerken Rodríguez</name>
       <email>jan.duinkerken@sngular.com</email>
-      <organization>Sngular</organization>
-      <organizationUrl>https://www.sngular.com</organizationUrl>
-      <roles>
-        <role>Software Developer - Trainee</role>
-      </roles>
-      <timezone>Europe/Madrid</timezone>
-    </developer>
-    <developer>
-      <id>5uso-sng</id>
-      <name>Jesús Mosteiro García</name>
-      <email>jesus.mosteiro@sngular.com</email>
       <organization>Sngular</organization>
       <organizationUrl>https://www.sngular.com</organizationUrl>
       <roles>
@@ -223,7 +223,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.5.2</version>
+      <version>4.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -392,6 +392,7 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.4.2</version>
         <configuration>

@@ -17,8 +17,8 @@ Maven and Gradle
 - [AsyncApi Generator](#asyncapi-generator)
     - [Configuration](#configuration)
         - [Generated Sources Folder](#generated-sources-folder)
-    - [How apiPackage is setted?](#how-apipackage-is-setted)
-    - [How modelPackage is setted?](#how-modelpackage-is-setted)
+    - [How is apiPackage set?](#how-is-apipackage-set)
+    - [How is modelPackage set?](#how-is-modelpackage-set)
     - [Class Generation](#class-generation)
         - [Consumer and Supplier classes](#consumer-and-supplier-classes)
             - [Method interfaces](#method-interfaces)
@@ -216,8 +216,8 @@ YML files as you want.
    **filePath** parameter, that expects to receive the path to the file. Using
    the plugin in this way, you can't configure the model package or the api
    package in the pom file, neither other options, so they will be configured as
-   its explained in [apiPackage](#how-apipackage-is-setted) and
-   [modelPackage](#how-modelpackage-is-setted) sections.  
+   its explained in [apiPackage](#how-is-apipackage-set) and
+   [modelPackage](#how-is-modelpackage-set) sections.  
    This way it's limited to the usage of Consumer and Supplier methods.
 
     ```xml
@@ -301,7 +301,7 @@ can be configured in the plugin.
       result as `EntityClassDTO`. This parameter is optional.
     - **apiPackage**: This parameter receive a package name, where the
       generated classes will be generated. This parameter is optional.
-      Check [how the apiPackage is setted](#how-apipackage-is-setted) for
+      Check [how is the apiPackage set](#how-is-apipackage-set) for
       more information about how this parameter works, and the values it
       could have.
     - **modelPackage**: This parameter receives a package name, where the entities
@@ -311,7 +311,7 @@ can be configured in the plugin.
       **Note that the plugin doesn't create the entities neither checks their
       existence**, it takes their names from the YML file and assume that they are
       created by the user. As the previous parameter, this is also optional.
-      Check [how the modelPackage is setted](#how-modelpackage-is-setted) for more
+      Check [how is the modelPackage set](#how-is-modelpackage-set) for more
       information about how his parameter works, and the values it could have.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
@@ -330,7 +330,7 @@ By default, it's values is `generated-sources`, so the files will be in
 the pom.xml file, as in the example above, files will remain in
 `.../target/sources-generated/apigenerator/...`.
 
-### How apiPackage is setted?
+### How is apiPackage set?
 
 The api package could be set in three different ways.
 
@@ -342,7 +342,7 @@ The api package could be set in three different ways.
   plugin will use a default package name, that is stablished as
   `com.sngular.apigenerator.asyncapi`.
 
-### How modelPackage is setted?
+### How is modelPackage set?
 
 The model package could be set in four different ways.
 
@@ -666,14 +666,15 @@ that will be used. Each specFile has their own configuration:
 | Name                     | Description                                                                                                                                                                                         | Example                                           |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | filePath                 | Path where the yaml is located                                                                                                                                                                      | ${project.basedir}/src/main/resources/api/api.yml |
-| apiPackage               | Path where the api interface will be located                                                                                                                                                        | com.sngular.apigenerator.openapi                     |
-| modelPackage             | Path where the models will be located                                                                                                                                                               | com.sngular.apigenerator.openapi.model               |
+| apiPackage               | Path where the api interface will be located                                                                                                                                                        | com.sngular.apigenerator.openapi                  |
+| modelPackage             | Path where the models will be located                                                                                                                                                               | com.sngular.apigenerator.openapi.model            |
 | modelNamePrefix          | Prefix that will be used ahead of every model´s name                                                                                                                                                | Api                                               |
 | modelNameSuffix          | Suffix that will be used after every model´s name                                                                                                                                                   | DTO                                               |
 | callMode                 | Boolean value to decide if you want to generate the api for external calls. **Use RestClient by default. It´s initialized to false by default**                                                     | false                                             |
 | useTagsGroup             | Boolean value to decide if using tags instead of an URL for group the API. **It´s initialized to false by default**                                                                                 | false                                             |
 | useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
 | isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
+| useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated

@@ -1,0 +1,30 @@
+openapi: 3.0.2
+info:
+  title: Testing example file
+  version: 1.0.0
+servers:
+- url: http://localhost/v1
+paths:
+  /test:
+    get:
+      tags:
+      - test
+      operationId: testDateTime
+      responses:
+        '200':
+          description: An object with date and date-time formats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/testDate'
+components:
+  schemas:
+    testDate:
+      type: object
+      properties:
+        someDate:
+          type: string
+          format: date
+        someTime:
+          type: string
+          format: date-time

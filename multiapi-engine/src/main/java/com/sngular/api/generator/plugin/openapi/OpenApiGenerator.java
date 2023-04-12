@@ -196,7 +196,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createModelTemplate(final SpecFile specFile, final OpenAPI openAPI) throws TemplateException, IOException {
+  private void createModelTemplate(final SpecFile specFile, final OpenAPI openAPI) {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
