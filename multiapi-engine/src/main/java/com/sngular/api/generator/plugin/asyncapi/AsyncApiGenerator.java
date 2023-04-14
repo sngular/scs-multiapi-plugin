@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -119,15 +123,12 @@ public class AsyncApiGenerator {
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     generateExceptionTemplate = false;
     for (SpecFile fileParameter : specsListFile) {
-      String avroFilePath = fileParameter.getFilePath();
-      if (avroFilePath.startsWith(".")) {
-        avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
-      }
-      final Path ymlParentPath = Paths.get(avroFilePath).toAbsolutePath().getParent();
+      final Pair<File, Path> ymlFileAndPath = resolveYmlLocation(fileParameter.getFilePath());
+      final File ymlFile = ymlFileAndPath.getLeft();
+      final Path ymlParentPath = ymlFileAndPath.getRight();
 
-      final var file = new File(fileParameter.getFilePath());
       try {
-        final var node = om.readTree(file);
+        final var node = om.readTree(ymlFile);
         final var internalNode = node.get("channels");
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParentPath, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
@@ -151,6 +152,34 @@ public class AsyncApiGenerator {
         e.printStackTrace();
       }
     }
+  }
+
+  public static Pair<File, Path> resolveYmlLocation(final String ymlFilePath) {
+    final URL classPathURL = ClassLoader.getSystemResource(ymlFilePath);
+    final File ymlFile;
+    final Path ymlParentPath;
+    URI classPathURI;
+
+    try {
+      if (Objects.isNull(classPathURL)) {
+        throw new URISyntaxException("", "Null URL", 0);
+      }
+
+      classPathURI = classPathURL.toURI();
+    } catch (final URISyntaxException e) {
+      classPathURI = null;
+    }
+
+    if (Objects.nonNull(classPathURI)) {
+      final Path resourcePath = Paths.get(classPathURI);
+      ymlFile = resourcePath.toFile();
+      ymlParentPath = resourcePath.getParent().toAbsolutePath();
+    } else {
+      ymlFile = new File(ymlFilePath);
+      ymlParentPath = ymlFile.toPath().getParent().toAbsolutePath();
+    }
+
+    return new ImmutablePair<>(ymlFile, ymlParentPath);
   }
 
   private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
@@ -481,7 +510,7 @@ public class AsyncApiGenerator {
       throws IOException {
     final JsonNode message = channel.get("message");
     final String operationId = channel.get(OPERATION_ID).asText();
-    String namespace = null;
+    final String namespace;
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParentPath);
     } else if (message.has(PAYLOAD)) {
