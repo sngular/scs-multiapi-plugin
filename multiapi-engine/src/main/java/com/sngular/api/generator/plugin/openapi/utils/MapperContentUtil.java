@@ -691,7 +691,7 @@ public class MapperContentUtil {
     return StringUtils.isNotBlank(type) && !TypeConstants.NO_IMPORT_TYPE.contains(type) ? StringUtils.capitalize(type) : "";
   }
 
-  private static String getDateType(final SpecFile specFile) {
+  public static String getDateType(final SpecFile specFile) {
     final String dateType;
     switch (specFile.getUseTimeType()) {
       case ZONED:
