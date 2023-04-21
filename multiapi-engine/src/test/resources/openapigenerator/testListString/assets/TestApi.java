@@ -28,7 +28,7 @@ public interface TestApi {
      operationId = "testListString",
      tags = {"test"},
      responses = {
-       @ApiResponse(responseCode = "200", description = "An object with a list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
+       @ApiResponse(responseCode = "200", description = "An object with a list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
      }
   )
   @RequestMapping(

@@ -97,7 +97,7 @@ public class SchemaFieldObjectType {
   }
 
   private String mapIntoString(final Map<String, String> mappings) {
-    final String baseString = mappings.getOrDefault(baseType, baseType);
+    final String baseString = TypeConstants.OBJECT.equals(baseType) && Objects.nonNull(innerType) ? "?" : mappings.getOrDefault(baseType, baseType);
     final boolean hasInner = baseString.contains("?");
 
     if (hasInner && Objects.isNull(innerType)) {
@@ -110,6 +110,17 @@ public class SchemaFieldObjectType {
   @SuppressWarnings("unused") // This method is invoked by templates
   public String getImplementationTypeString() {
     return mapIntoString(IMPL_TYPE_MAPPINGS);
+  }
+
+  private String innerGetClassString() {
+    final String baseString = TypeConstants.OBJECT.equals(baseType) && Objects.nonNull(innerType) ? innerType.innerGetClassString()
+                                  : TYPE_MAPPINGS.getOrDefault(baseType, baseType);
+    return baseString.split("<")[0];
+  }
+
+  @SuppressWarnings("unused") // This method is invoked by templates
+  public String getClassString() {
+    return innerGetClassString() + ".class";
   }
 
   @Override

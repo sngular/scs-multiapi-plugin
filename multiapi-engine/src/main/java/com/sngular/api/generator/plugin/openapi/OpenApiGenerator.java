@@ -165,7 +165,7 @@ public class OpenApiGenerator {
   private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final OpenAPI openAPI) {
     final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
-    final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, specFile, authSchemaList);
+    final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
 
     for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());

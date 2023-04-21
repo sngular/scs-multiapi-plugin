@@ -27,7 +27,7 @@ public class ParameterObject {
 
   private Boolean isCollection;
 
-  private String className;
+  private SchemaFieldObjectType dataType;
 
   private String importName;
 }
