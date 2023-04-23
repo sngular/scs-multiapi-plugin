@@ -41,7 +41,7 @@ public class OpenApiGenerationTest {
     List<String> expectedExceptionFilesSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java");
 
     assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
     Path pathToTargetFirst = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/first");
     Path pathToTargetSecond = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/second");
     Path pathToExceptionFirst = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/multifileplugin/testmultifile/first/model/exception");
