@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -114,19 +114,18 @@ public class TemplateFactory {
       }
     });
 
-    try {
-      fillTemplates(schemaObjectMap.get(0).getFilePath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
-    } catch (IOException | TemplateException e) {
-      e.printStackTrace();
+    if (!schemaObjectMap.isEmpty()) {
+      try {
+        fillTemplates(schemaObjectMap.get(0).getFilePath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
+      } catch (IOException | TemplateException e) {
+        throw new GeneratorTemplateException("Generation Error", e);
+      }
     }
-
     this.generateInterfaces();
   }
 
   private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
-    final Iterator<String> iterator = fieldProperties.iterator();
-    while (iterator.hasNext()) {
-      final String current = iterator.next();
+    for (final String current : fieldProperties) {
       switch (current) {
         case "Size":
           fillTemplateCustom(filePathToSave, modelPackage, "Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
@@ -258,7 +257,7 @@ public class TemplateFactory {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
-  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final boolean usingLombok, final Path filePath) {
+  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final Path filePath) {
     schemaObjectMap.add(ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject).build());
   }
 
