@@ -56,7 +56,7 @@ public class ScsMultiapiGenerationTest {
     List<String> expectedConsumerFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
                                                         "/" + testName + "/assets/IPublishOperation.java",
                                                
-                                                   "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "" +
+                                                   "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName +
                                                    "/assets/TestClassName.java");
 
     List<String> expectedProducerFiles = List.of(
