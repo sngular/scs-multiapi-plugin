@@ -236,10 +236,8 @@ public class OpenApiGenerator {
         throw new IOException("Problem creating folders: " + path.toFile());
       }
     }
-    if (!path.toFile().isDirectory()) {
-      if (!path.toFile().mkdirs()) {
-        throw new IOException("Problem creating folders: " + path.toFile());
-      }
+    if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
+      throw new IOException("Problem creating folders: " + path.toFile());
     }
     return path.toString();
   }
@@ -268,9 +266,9 @@ public class OpenApiGenerator {
       }
 
       if (Objects.nonNull(basicSchema.get$ref())) {
-        writeModelRefSchema(specFile, openAPI, fileModelToSave, modelPackage, basicSchema);
+        writeModelRefSchema(specFile, openAPI, fileModelToSave, basicSchema);
       } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
-        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, modelPackage, schemaName, basicSchema,
+        writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, schemaName, basicSchema,
                                            schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
       } else if (!(basicSchema instanceof ArraySchema)) {
         writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
@@ -283,7 +281,7 @@ public class OpenApiGenerator {
   }
 
   private void writeModelRefSchema(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final Schema<?> basicSchema) {
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
     final Schema additionalPropertiesSchema = new ObjectSchema();
     final Map<String, Schema> properties = new HashMap<>();
     final String[] refSplit = basicSchema.get$ref().split("/");
@@ -295,7 +293,7 @@ public class OpenApiGenerator {
   }
 
   private void writeModelWithAdditionalProperties(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final String schemaName, final Schema<?> basicSchema,
+      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema,
       final Consumer<Schema<?>> addAdditionalSchema) {
 
     if (basicSchema.getAdditionalProperties() instanceof Schema<?> && !(basicSchema.getAdditionalProperties() instanceof ArraySchema)) {
