@@ -72,6 +72,7 @@ jobs:
         run: |
           cd scs-multiapi-maven-plugin
           mvn deploy -DskipLocalStaging=true -P production --file pom.xml
+          mvn -B nexus-staging:close -DautoReleaseAfterClose=true -P production --file pom.xml
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
