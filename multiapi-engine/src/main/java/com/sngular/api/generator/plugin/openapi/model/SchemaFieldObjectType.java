@@ -124,6 +124,11 @@ public class SchemaFieldObjectType {
     return innerGetClassString() + ".class";
   }
 
+  @SuppressWarnings("unused") // This method is invoked by templates
+  public String getVariableNameString() {
+    return StringUtils.uncapitalize(toString().replaceAll("[<>]", ""));
+  }
+
   @Override
   public String toString() {
     return mapIntoString(TYPE_MAPPINGS);
