@@ -146,7 +146,7 @@ public class ${schema.className} {
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
   private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
   <#else>
-  private ${field.dataType?cap_first} ${field.baseName?uncap_first};
+  private ${field.dataType} ${field.baseName?uncap_first};
   </#if>
 
 </#list>
@@ -154,7 +154,7 @@ public class ${schema.className} {
   @Builder
   @Jacksonized
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
     </#list>

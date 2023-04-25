@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class SchemaFieldObjectType {
@@ -97,7 +98,7 @@ public class SchemaFieldObjectType {
   }
 
   private String mapIntoString(final Map<String, String> mappings) {
-    final String baseString = TypeConstants.OBJECT.equals(baseType) && Objects.nonNull(innerType) ? "?" : mappings.getOrDefault(baseType, baseType);
+    final String baseString = TypeConstants.OBJECT.equals(baseType) && Objects.nonNull(innerType) ? "?" : mappings.getOrDefault(baseType, StringUtils.capitalize(baseType));
     final boolean hasInner = baseString.contains("?");
 
     if (hasInner && Objects.isNull(innerType)) {
