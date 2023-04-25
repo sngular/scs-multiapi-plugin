@@ -1,0 +1,40 @@
+name: Java CI with Gradle (PR)
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, review_requested, labeled]
+
+concurrency: pr-gradle-${{ github.event.pull_request.id }}
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'release')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+      - name: Gradle version
+        id: get-version
+        run: |
+          cd scs-multiapi-gradle-plugin
+          echo "version=$(gradle properties -q | grep "version:" | awk '{print $2}')" | tee $GITHUB_OUTPUT
+      - name: Check if plugin version has been published
+        uses: lakuapik/gh-actions-http-status@v1
+        id: plugin-version-check
+        with:
+          sites: '["https://plugins.gradle.org/plugin/com.sngular.scs-multiapi-gradle-plugin/${{ steps.get-version.outputs.version }}"]'
+          expected: '[400]'
+        continue-on-error: true
+      - name: Warn about version specification
+        if: steps.plugin-version-check.outcome != 'success'
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: Project version has not been updated in build.gradle. Please, update your version using https://semver.org specifications
+      - name: Fail
+        if: steps.plugin-version-check.outcome != 'success'
+        uses: cutenode/action-always-fail@v1
