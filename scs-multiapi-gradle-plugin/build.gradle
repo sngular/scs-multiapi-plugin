@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '4.7.0'
+version = '4.6.1'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
