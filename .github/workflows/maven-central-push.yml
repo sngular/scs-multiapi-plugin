@@ -71,8 +71,7 @@ jobs:
         # Uses production profile to sign with gpg plugin
         run: |
           cd scs-multiapi-maven-plugin
-          mvn -B deploy -DskipLocalStaging=true -P production --file pom.xml
-          mvn -B nexus-staging:close -DautoReleaseAfterClose=true -P production --file pom.xml
+          mvn -B deploy -P production --file pom.xml
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
