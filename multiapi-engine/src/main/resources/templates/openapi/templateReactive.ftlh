@@ -81,7 +81,7 @@ public interface ${className?cap_first}Api {
      summary = "${operation.summary}",</#if>
      tags = {<#list operation.tags as tag>"${tag}"</#list>}<#if operation.responseObjects?has_content>,
      responses = {
-<#list operation.responseObjects as response>       @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}", schema = @Schema(implementation = ${content.dataType?api.getClassString()}))</#list></#if>)<#if !response?is_last>,</#if>
+<#list operation.responseObjects as response>       @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}", schema = @Schema(implementation = <#if content.dataType.baseType == "array" || content.dataType.baseType == "map">${content.dataType.innerType?api.getClassString()}<#else>${content.dataType?api.getClassString()}</#if>))</#list></#if>)<#if !response?is_last>,</#if>
 </#list>
      }</#if>
   )
