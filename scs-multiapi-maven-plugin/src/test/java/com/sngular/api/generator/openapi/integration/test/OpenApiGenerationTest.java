@@ -29,7 +29,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class OpenApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
     List<String> expectedFileFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                                "/TestFirstApi.java");
