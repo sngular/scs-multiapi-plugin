@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testanyofinresponse;
+package com.sngular.multifileplugin.testListString;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,30 +16,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.testanyofinresponse.model.InlineResponse200ListGamesAnyOfDTO;
 
-public interface GamesApi {
+public interface TestInlineApi {
 
   /**
-  * GET /games : List all available games
-  * @return  A paged array of games; (status code 200)
+  * GET /test-inline 
+  * @return  A list of strings; (status code 200)
   */
 
   @Operation(
-     operationId = "listGames",
-     summary = "List all available games",
-     tags = {"games"},
+     operationId = "testListStringInline",
+     tags = {"test-inline"},
      responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesAnyOfDTO.class)))
+       @ApiResponse(responseCode = "200", description = "A list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
      }
   )
   @RequestMapping(
     method = RequestMethod.GET,
-    value = "/games",
+    value = "/test-inline",
     produces = {"application/json"}
   )
 
-  default ResponseEntity<InlineResponse200ListGamesAnyOfDTO> listGames() {
+  default ResponseEntity<List<String>> testListStringInline() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

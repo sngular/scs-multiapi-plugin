@@ -68,7 +68,7 @@ public interface SchemaApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<ApiSchemaDTO> updateSchema(@Parameter(name = "name", description = "Schema name to update", required = true, schema = @Schema(description = "")) @PathVariable("name") String name , @Parameter(name = "ApiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
+  default ResponseEntity<ApiSchemaDTO> updateSchema(@Parameter(name = "name", description = "Schema name to update", required = true, schema = @Schema(description = "")) @PathVariable("name") String name , @Parameter(name = "apiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
@@ -92,7 +92,7 @@ public interface SchemaApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<ApiSchemaDTO> createSchema(@Parameter(name = "ApiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
+  default ResponseEntity<ApiSchemaDTO> createSchema(@Parameter(name = "apiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
