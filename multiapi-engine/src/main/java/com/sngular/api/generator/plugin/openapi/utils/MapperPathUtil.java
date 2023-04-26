@@ -329,7 +329,9 @@ public class MapperPathUtil {
     final SchemaFieldObjectType type;
 
     final Object addPropObj = schema.getAdditionalProperties();
-    if (addPropObj instanceof Boolean) {
+    if (!schema.getProperties().isEmpty()) {
+      type = SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, pojoName);
+    } else if (addPropObj instanceof Boolean) {
       type = SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, TypeConstants.OBJECT);
     } else {
       type = new SchemaFieldObjectType(TypeConstants.MAP, getSchemaType((Schema<?>) addPropObj, pojoName, specFile, globalObject));
