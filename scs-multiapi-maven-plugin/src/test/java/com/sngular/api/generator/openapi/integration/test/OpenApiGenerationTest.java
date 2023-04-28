@@ -29,16 +29,17 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class OpenApiGenerationTest {
 
   @MavenTest
-  @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:openapi-generation")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileFirst = Collections.singletonList( "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                                 "/TestFirstApi.java");
+    List<String> expectedFileFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
+                                                               "/TestFirstApi.java");
     List<String> expectedFileSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                     "/TestSecondApi.java");
+                                                                "/TestSecondApi.java");
 
-    List<String> expectedExceptionFilesFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");
+    List<String> expectedExceptionFilesFirst = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");
 
-    List<String> expectedExceptionFilesSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java");
+    List<String> expectedExceptionFilesSecond = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionSecond.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();

@@ -22,20 +22,24 @@ jobs:
     if: contains(needs.check-pr-labels.outputs.labels, 'release')
     steps:
       - uses: actions/checkout@v3
-      - name: Check if version is updated
+      - name: Check if engine version is updated
         uses: avides/actions-project-version-check@v1.3
-        id: engine_version_check
+        id: engine-version-check
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           file-to-check: multiapi-engine/pom.xml
         continue-on-error: true
-      - name: Check if Package Version Published
-        id: version_check
-        uses: jyeany/version-check-gradle@1.0.4
+      - name: Gradle version
+        id: get-version
+        run: |
+          cd scs-multiapi-gradle-plugin
+          echo "version=$(gradle properties -q | grep "version:" | awk '{print $2}')" | tee $GITHUB_OUTPUT
+      - name: Check if plugin version has been published
+        uses: lakuapik/gh-actions-http-status@v1
+        id: plugin-version-check
         with:
-          organization: "com.sngular"
-          access-token: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+          sites: '["https://plugins.gradle.org/plugin/com.sngular.scs-multiapi-gradle-plugin/${{ steps.get-version.outputs.version }}"]'
+          expected: '[400]'
 
   build:
     runs-on: ubuntu-latest

@@ -30,7 +30,7 @@ public interface GamesApi {
      summary = "List all available games",
      tags = {"games"},
      responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
+       @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesOneOfDTO.class)))
      }
   )
   @RequestMapping(

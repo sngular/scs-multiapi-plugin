@@ -89,7 +89,8 @@ class OpenApiGeneratorTest {
         Arguments.of("testDateTimeZoned", OpenApiGeneratorFixtures.TEST_DATE_TIME_ZONED,
                      OpenApiGeneratorFixtures.validateDateTimeZoned()),
         Arguments.of("testDateTimeOffset", OpenApiGeneratorFixtures.TEST_DATE_TIME_OFFSET,
-                     OpenApiGeneratorFixtures.validateDateTimeOffset())
+                     OpenApiGeneratorFixtures.validateDateTimeOffset()),
+        Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING, OpenApiGeneratorFixtures.validateListString())
     );
   }
 

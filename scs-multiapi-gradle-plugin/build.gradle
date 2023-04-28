@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '4.6.2'
+version = '4.6.4'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -98,7 +98,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.6.2'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.6.4'
         implementation 'org.assertj:assertj-core:3.23.1'
       }
 

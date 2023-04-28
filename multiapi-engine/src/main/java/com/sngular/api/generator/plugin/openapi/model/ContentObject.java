@@ -19,9 +19,7 @@ public class ContentObject {
 
   private String name;
 
-  private String refName;
-
-  private String typeData;
+  private SchemaFieldObjectType dataType;
 
   private String importName;
 

@@ -353,15 +353,15 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_DATE_TIME = List.of(
-    SpecFile
-        .builder()
-        .filePath("openapigenerator/testDateTime/api-test.yml")
-        .apiPackage("com.sngular.multifileplugin.testDateTime")
-        .modelPackage("com.sngular.multifileplugin.testDateTime.model")
-        .clientPackage("com.sngular.multifileplugin.testDateTime.client")
-        .modelNameSuffix("DTO")
-        .useLombokModelAnnotation(true)
-        .build()
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testDateTime/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testDateTime")
+          .modelPackage("com.sngular.multifileplugin.testDateTime.model")
+          .clientPackage("com.sngular.multifileplugin.testDateTime.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
   );
 
   static final List<SpecFile> TEST_DATE_TIME_ZONED = List.of(
@@ -387,6 +387,18 @@ public final class OpenApiGeneratorFixtures {
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .useTimeType(TimeType.OFFSET)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_LIST_STRING = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testListString/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testListString")
+          .modelPackage("com.sngular.multifileplugin.testListString.model")
+          .clientPackage("com.sngular.multifileplugin.testListString.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
           .build()
   );
 
@@ -1173,6 +1185,24 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateListString() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testListString";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testListString/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testListString/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testListString/assets/TestApi.java",
+        "openapigenerator/testListString/assets/TestInlineApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   private static Boolean commonTest(

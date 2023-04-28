@@ -66,7 +66,7 @@ public interface SchemaMasterApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<ApiSchemaDTO> createSchemaMaster(@Parameter(name = "schemaType", description = "Schema Type to create", required = true, schema = @Schema(description = "")) @PathVariable("schemaType") String schemaType , @Parameter(name = "ApiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
+  default ResponseEntity<ApiSchemaDTO> createSchemaMaster(@Parameter(name = "schemaType", description = "Schema Type to create", required = true, schema = @Schema(description = "")) @PathVariable("schemaType") String schemaType , @Parameter(name = "apiSchemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiSchemaDTO apiSchemaDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

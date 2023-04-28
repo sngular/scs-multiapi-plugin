@@ -1,3 +1,4 @@
+<#ftl output_format="plainText">
 package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 
 import java.util.HashMap;
@@ -98,32 +99,26 @@ public class ${className?cap_first}Api {
   * <#list path.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
    </#if>
     <#if operation.requestObjects?has_content>
-  *<#list operation.requestObjects as request><#list request.contentObjects as content> @param ${content.refName?uncap_first}<#if content?has_next>, </#if></#list> ${request.description! ""} <#if request.required == true>(required)</#if></#list>
+  *<#list operation.requestObjects as request><#list request.contentObjects as content> @param ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list> ${request.description! ""} <#if request.required == true>(required)</#if></#list>
    </#if>
   * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
   * @throws RestClientException if an error occurs while attempting to invoke the API
   */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
-    <#if operation.responseObjects[0].contentObjects[0].typeData?? && (operation.responseObjects[0].contentObjects[0].typeData == "map")>
-    Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>
-    <#else>
-    ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}
-    </#if>
-    <#else>Void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first?no_esc}> <#else>${content.refName?cap_first?no_esc} </#if>${content.refName?uncap_first} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
-    return ${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
+    ${operation.responseObjects[0].contentObjects[0].dataType}
+    <#else>Void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    return ${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
-    <#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-    ResponseEntity<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>
-    <#else>ResponseEntity<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}></#if>
-    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.className?cap_first} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content><#if content.typeData?? && (content.typeData == "map")>Map<String, ${content.refName?cap_first?no_esc}> <#else>${content.refName?cap_first?no_esc} </#if> ${content.refName?uncap_first}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>
+    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
 
-    Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].refName?uncap_first}<#else>null</#if>;
+    Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
-    if (${operation.requestObjects[0].contentObjects[0].refName?uncap_first} == null) {
-      throw new RestClientException(HttpStatus.BAD_REQUEST + " Missing the required parameter ''${operation.requestObjects[0].contentObjects[0].refName?uncap_first}'' when calling ${operation.operationId}");
+    if (${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()} == null) {
+      throw new RestClientException(HttpStatus.BAD_REQUEST + " Missing the required parameter ''${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}'' when calling ${operation.operationId}");
     }
     </#if>
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
@@ -214,10 +209,8 @@ public class ${className?cap_first}Api {
         <#list operation.securities as security>"${security}"<#if security?has_next>, </#if></#list>
       </#if></#compress>};
 
-    ParameterizedTypeReference<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??><#if operation.responseObjects[0].contentObjects[0].typeData?? && operation.responseObjects[0].contentObjects[0].typeData == "map">
-    <Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>> localVarReturnType = new ParameterizedTypeReference<Map<String, ${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>>() {};
-    <#else><${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].refName?cap_first?no_esc}>() {};
-    </#if>
+    ParameterizedTypeReference<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
+    <${operation.responseObjects[0].contentObjects[0].dataType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}>() {};
     <#else>
     <Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if></@compress>

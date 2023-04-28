@@ -166,15 +166,15 @@ public class ${schema.className} {
     </#if>
   <#else>
     <#if field.required>
-  private final ${field.dataType?cap_first} ${field.baseName?uncap_first};
+  private final ${field.dataType} ${field.baseName?uncap_first};
     <#else>
-  private ${field.dataType?cap_first} ${field.baseName?uncap_first};
+  private ${field.dataType} ${field.baseName?uncap_first};
     </#if>
   </#if>
 </#list>
 
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    <#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
     </#list>
@@ -223,7 +223,7 @@ public class ${schema.className} {
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
     private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
   <#else>
-    private ${field.dataType?cap_first} ${field.baseName?uncap_first};
+    private ${field.dataType} ${field.baseName?uncap_first};
   </#if>
 </#list>
 <#list schema.fieldObjectList as field>
@@ -263,7 +263,7 @@ public class ${schema.className} {
     }
   <#else>
 
-    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataType?cap_first} ${field.baseName?uncap_first}) {
+    public ${schema.className}.${schema.className}Builder ${field.baseName?uncap_first}(${field.dataType} ${field.baseName?uncap_first}) {
       this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
       return this;
     }
@@ -319,11 +319,11 @@ public class ${schema.className} {
   }
   </#if>
   <#else>
-  public ${field.dataType?cap_first} get${field.baseName?cap_first}() {
+  public ${field.dataType} get${field.baseName?cap_first}() {
     return ${field.baseName?uncap_first};
   }
   <#if field.required == false>
-  public void set${field.baseName?cap_first}(${field.dataType?cap_first} ${field.baseName?uncap_first}) {
+  public void set${field.baseName?cap_first}(${field.dataType} ${field.baseName?uncap_first}) {
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
   }
   </#if>

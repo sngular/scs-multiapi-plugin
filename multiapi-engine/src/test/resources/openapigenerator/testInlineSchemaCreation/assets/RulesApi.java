@@ -65,7 +65,7 @@ public interface RulesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<ApiTestDTO> createRule(@Parameter(name = "ApiTestDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiTestDTO apiTestDTO) {
+  default ResponseEntity<ApiTestDTO> createRule(@Parameter(name = "apiTestDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody ApiTestDTO apiTestDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

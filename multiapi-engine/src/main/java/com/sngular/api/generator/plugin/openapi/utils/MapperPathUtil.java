@@ -9,7 +9,6 @@ package com.sngular.api.generator.plugin.openapi.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
@@ -23,14 +22,14 @@ import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.RequestObject;
 import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.DateSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
@@ -38,7 +37,6 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperPathUtil {
@@ -47,70 +45,25 @@ public class MapperPathUtil {
 
   private MapperPathUtil() {}
 
-  public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final SpecFile specFile, final List<AuthSchemaObject> authSchemaList) {
-
+  public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-
     return GlobalObject.builder()
                        .url(openAPI.getServers().get(0).getUrl())
                        .authSchemas(authSchemaList)
                        .authentications(authList)
-                       .componentsTypeMap(getMapComponentsTypes(openAPI.getComponents(), specFile))
+                       .schemaMap(openAPI.getComponents().getSchemas())
                        .build();
   }
 
   private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
     final List<String> authSecList;
-    if (null != securityRequirementList
-        && !securityRequirementList.isEmpty()) {
+    if (null != securityRequirementList && !securityRequirementList.isEmpty()) {
       authSecList = new ArrayList<>();
       securityRequirementList.forEach(securityRequirement -> securityRequirement.forEach((key, value) -> authSecList.add(key)));
     } else {
       authSecList = authentications;
     }
     return authSecList;
-  }
-
-  private static HashMap<String, String> getMapComponentsTypes(final Components components, final SpecFile specFile) {
-    final var mapComponents = new HashMap<String, String>();
-
-    if (Objects.nonNull(components) && Objects.nonNull(components.getSchemas())) {
-      components.getSchemas().forEach((key, value) -> {
-        if (!mapComponents.containsKey(key)) {
-          final var type = checkSchemaType(value, specFile);
-          mapComponents.put(key, TypeConstants.OBJECT.equalsIgnoreCase(type) ? MapperUtil.getPojoName(key, specFile) : type);
-        }
-      });
-    }
-    return mapComponents;
-  }
-
-  private static String checkSchemaType(final Schema<?> schema, final SpecFile specFile) {
-    var dataType = "";
-
-    if (schema instanceof ArraySchema) {
-      dataType = "array-" + MapperUtil.getTypeArray((ArraySchema) schema, specFile);
-    } else if (schema instanceof MapSchema) {
-      if (schema.getAdditionalProperties() != null) {
-        dataType = TypeConstants.OBJECT;
-      } else {
-        dataType = "map-" + MapperUtil.getTypeMap((MapSchema) schema, specFile);
-      }
-
-    } else if (TypeConstants.OBJECT.equals(schema.getType()) && StringUtils.isNotBlank(schema.get$ref())) {
-      final String[] pathObjectRef = schema.get$ref().split("/");
-      dataType = MapperUtil.getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
-    } else if (!Objects.nonNull(schema.getType()) && Boolean.TRUE.equals(checkSchemaCombinator(schema))) {
-      dataType = TypeConstants.OBJECT;
-    } else {
-      dataType = schema.getType();
-    }
-
-    return dataType;
-  }
-
-  public static boolean checkSchemaCombinator(final Schema<?> schema) {
-    return ObjectUtils.anyNotNull(schema.getAnyOf(), schema.getAllOf(), schema.getOneOf());
   }
 
   public static List<PathObject> mapPathObjects(
@@ -239,7 +192,7 @@ public class MapperPathUtil {
                                               .required(refParameter.getRequired())
                                               .description(refParameter.getDescription())
                                               .in(refParameter.getDescription())
-                                              .className(MapperUtil.getSimpleType(refParameter.getSchema(), specFile))
+                                              .dataType(getSchemaType(parameter.getSchema(), TypeConstants.OBJECT, specFile, globalObject))
                                               .isCollection(TypeConstants.ARRAY.equalsIgnoreCase(refParameter.getSchema().getType()))
                                               .build());
         } else if (Objects.nonNull(parameter.getContent())) {
@@ -250,7 +203,7 @@ public class MapperPathUtil {
                                               .required(parameter.getRequired())
                                               .description(parameter.getDescription())
                                               .in(parameter.getIn())
-                                              .className(MapperUtil.getSimpleType(parameter.getSchema(), specFile))
+                                              .dataType(getSchemaType(parameter.getSchema(), TypeConstants.OBJECT, specFile, globalObject))
                                               .isCollection(TypeConstants.ARRAY.equalsIgnoreCase(parameter.getSchema().getType()))
                                               .build());
         }
@@ -272,7 +225,7 @@ public class MapperPathUtil {
                                             .required(parameter.getRequired())
                                             .description(parameter.getDescription())
                                             .in(parameter.getIn())
-                                            .className(inlineParameter)
+                                            .dataType(SchemaFieldObjectType.fromTypeList(inlineParameter))
                                             .importName(inlineParameter)
                                             .build());
       } else {
@@ -281,7 +234,7 @@ public class MapperPathUtil {
                                             .required(parameter.getRequired())
                                             .description(parameter.getDescription())
                                             .in(parameter.getIn())
-                                            .className(defineTypeName(contentEntrySet.getValue().getSchema(), globalObject, inlineParameter))
+                                            .dataType(getSchemaType(contentEntrySet.getValue().getSchema(), inlineParameter, specFile, globalObject))
                                             .build());
       }
     }
@@ -305,166 +258,112 @@ public class MapperPathUtil {
 
   private static List<ContentObject> mapContentObject(final SpecFile specFile, final Content content, final String inlineObject, final GlobalObject globalObject) {
     final List<ContentObject> contentObjects = new ArrayList<>();
-    final String pojoName = getPojoName(inlineObject, specFile);
     if (Objects.nonNull(content)) {
       for (Entry<String, MediaType> mediaTypeEntry : content.entrySet()) {
-        if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getProperties())) {
-          contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(pojoName))
-                                          .refName(pojoName)
-                                          .build());
-        } else if (Objects.nonNull(mediaTypeEntry.getValue().getSchema().getType())
-                   && TypeConstants.BASIC_OBJECT_TYPE.contains(mediaTypeEntry.getValue().getSchema().getType())) {
-          contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName)))
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema(), globalObject, pojoName))
-                                          .build());
-        } else if (Boolean.TRUE.equals(checkSchemaCombinator(mediaTypeEntry.getValue().getSchema()))) {
-          final var composedSchemaPojoName = preparePojoNameForComposedSchema(inlineObject, mediaTypeEntry.getValue().getSchema(), specFile);
-          contentObjects.add(ContentObject.builder()
-                                          .typeData(TypeConstants.OBJECT)
-                                          .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(
-                                              mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), composedSchemaPojoName)))
-                                          .refName(defineTypeName(mediaTypeEntry.getValue().getSchema(), globalObject, composedSchemaPojoName))
-                                          .build());
-        } else {
-          contentObjects.add(ContentObject.builder()
-                                          .typeData(mapDataType(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap()))
-                                          .name(mediaTypeEntry.getKey())
-                                          .importName(StringUtils.capitalize(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName)))
-                                          .refName(mapRefName(mediaTypeEntry.getValue().getSchema(), globalObject.getComponentsTypeMap(), pojoName))
-                                          .build());
-        }
+        final Schema<?> schema = mediaTypeEntry.getValue().getSchema();
+        final String pojoName = preparePojoName(inlineObject, schema, specFile);
+        final SchemaFieldObjectType dataType = getSchemaType(schema, pojoName, specFile, globalObject);
+        final String importName = getImportFromType(dataType);
+        contentObjects.add(ContentObject.builder()
+                                        .dataType(dataType)
+                                        .name(mediaTypeEntry.getKey())
+                                        .importName(importName)
+                                        .build());
       }
     }
     return contentObjects;
   }
 
-  private static String preparePojoNameForComposedSchema(final String inlineObject, final Schema<?> schema, final SpecFile specFile) {
-    String composedSchemaPojoName = "";
+  private static String preparePojoName(final String inlineObject, final Schema<?> schema, final SpecFile specFile) {
+    final String pojoName;
     if (Objects.nonNull(schema.getAllOf())) {
-      composedSchemaPojoName = getPojoName(inlineObject + "AllOf", specFile);
+      pojoName = getPojoName(inlineObject + "AllOf", specFile);
     } else if (Objects.nonNull(schema.getAnyOf())) {
-      composedSchemaPojoName = getPojoName(inlineObject + "AnyOf", specFile);
+      pojoName = getPojoName(inlineObject + "AnyOf", specFile);
     } else if (Objects.nonNull(schema.getOneOf())) {
-      composedSchemaPojoName = getPojoName(inlineObject + "OneOf", specFile);
+      pojoName = getPojoName(inlineObject + "OneOf", specFile);
+    } else {
+      pojoName = getPojoName(inlineObject, specFile);
     }
-    return StringUtils.isNotBlank(composedSchemaPojoName) ? composedSchemaPojoName : "";
+
+    return pojoName;
   }
 
-  private static String defineTypeName(final Schema<?> schema, final GlobalObject globalObject, final String pojoName) {
-    final String typeName;
-    if (Objects.nonNull(schema.getType())) {
+  private static SchemaFieldObjectType getSchemaType(final Schema<?> schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject) {
+    final SchemaFieldObjectType type;
+
+    if (Objects.nonNull(schema.get$ref())) {
+      final String refSchemaName = MapperContentUtil.cleanRefName(schema);
+      final String refSchemaPojoName = MapperContentUtil.getRef(schema, specFile);
+      final Schema<?> refSchema = globalObject.getSchemaMap().get(refSchemaName);
+      type = getSchemaType(refSchema, refSchemaPojoName, specFile, globalObject);
+    } else if (schema instanceof MapSchema) {
+      type = getMapSchemaType((MapSchema) schema, pojoName, specFile, globalObject);
+    } else if (schema instanceof DateSchema) {
+      type = new SchemaFieldObjectType(MapperContentUtil.getDateType(specFile));
+    } else if (Objects.isNull(schema.getType()) || schema.getType().equalsIgnoreCase(TypeConstants.OBJECT)) {
+      type = SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, pojoName);
+    } else {
       switch (schema.getType()) {
         case TypeConstants.INTEGER:
-          typeName = getIntegerFormat(schema);
+          type = new SchemaFieldObjectType(getIntegerFormat(schema));
           break;
         case TypeConstants.NUMBER:
-          typeName = getNumberFormat(schema);
+          type = new SchemaFieldObjectType(getNumberFormat(schema));
           break;
         case TypeConstants.BOOLEAN:
-          typeName = TypeConstants.BOOLEAN;
+          type = new SchemaFieldObjectType(TypeConstants.BOOLEAN);
           break;
         case TypeConstants.ARRAY:
-          final ArraySchema arraySchema = (ArraySchema) schema;
-          typeName = getListName(globalObject, pojoName, arraySchema);
+          type = new SchemaFieldObjectType(TypeConstants.ARRAY, getSchemaType(schema.getItems(), pojoName, specFile, globalObject));
           break;
-        case TypeConstants.OBJECT:
-          typeName = pojoName;
-          break;
-        case TypeConstants.STRING:
         default:
-          typeName = TypeConstants.STRING;
-          break;
+          type = new SchemaFieldObjectType(TypeConstants.STRING);
       }
-    } else {
-      typeName = pojoName;
     }
-    return typeName;
+
+    return type;
   }
 
-  private static String getListName(final GlobalObject globalObject, final String pojoName, final ArraySchema arraySchema) {
-    final String typeName;
-    if (Objects.nonNull(arraySchema.getItems().get$ref())) {
-      typeName = "List<" + getRefSchema(arraySchema.getItems().get$ref(), globalObject.getComponentsTypeMap()) + ">";
+  private static SchemaFieldObjectType getMapSchemaType(final MapSchema schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject) {
+    final SchemaFieldObjectType type;
+
+    final Object addPropObj = schema.getAdditionalProperties();
+    if (!schema.getProperties().isEmpty()) {
+      type = SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, pojoName);
+    } else if (addPropObj instanceof Boolean) {
+      type = SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, TypeConstants.OBJECT);
     } else {
-      typeName = "List<" + defineTypeName(arraySchema.getItems(), globalObject, pojoName) + ">";
+      type = new SchemaFieldObjectType(TypeConstants.MAP, getSchemaType((Schema<?>) addPropObj, pojoName, specFile, globalObject));
     }
-    return typeName;
+
+    return type;
   }
 
   private static String getIntegerFormat(final Schema<?> schema) {
-    String typeName = "";
-    if (TypeConstants.INT_32.equalsIgnoreCase(schema.getFormat()) || !Objects.nonNull(schema.getFormat())) {
-      typeName = TypeConstants.INTEGER;
-    } else if (TypeConstants.INT_64.equalsIgnoreCase(schema.getFormat())) {
-      typeName = TypeConstants.LONG;
-    }
-    return typeName;
+    return TypeConstants.INT_64.equalsIgnoreCase(schema.getFormat()) ? TypeConstants.LONG : TypeConstants.INTEGER;
   }
 
   private static String getNumberFormat(final Schema<?> schema) {
-    String typeName = "";
+    final String typeName;
     if (TypeConstants.FLOAT.equalsIgnoreCase(schema.getFormat())) {
       typeName = TypeConstants.FLOAT;
     } else if (TypeConstants.DOUBLE.equalsIgnoreCase(schema.getFormat())) {
       typeName = TypeConstants.DOUBLE;
-    } else if (schema.getFormat().isEmpty()) {
+    } else {
       typeName = TypeConstants.INTEGER;
     }
+
     return typeName;
   }
 
-  private static String mapDataType(final Schema<?> schema, final Map<String, String> componentsTypes) {
-    final var type = getSchemaType(schema, componentsTypes);
-    return StringUtils.isNotBlank(type) ? type : "";
-  }
-
-  private static String getSchemaType(final Schema<?> schema, final Map<String, String> componentsTypes) {
-    String dataType = schema.getType();
-    if (!StringUtils.isNotBlank(dataType) && Objects.nonNull(schema.get$ref())) {
-      final String[] wholeRef = schema.get$ref().split("/");
-      dataType = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
+  private static String getImportFromType(final SchemaFieldObjectType type) {
+    SchemaFieldObjectType t = type;
+    while (Objects.nonNull(t.getInnerType())) {
+      t = t.getInnerType();
     }
 
-    return dataType.startsWith(TypeConstants.ARRAY) ? TypeConstants.ARRAY : (dataType.startsWith(TypeConstants.MAP) ? TypeConstants.MAP : dataType);
-  }
-
-  private static String mapRefName(final Schema<?> schema, final Map<String, String> componentsTypes, final String pojoName) {
-
-    var refSchema = "";
-
-    if (TypeConstants.ARRAY.equalsIgnoreCase(schema.getType())) {
-      final ArraySchema arraySchema = (ArraySchema) schema;
-      if (TypeConstants.OBJECT.equalsIgnoreCase(schema.getItems().getType())) {
-        refSchema = pojoName;
-      } else if (TypeConstants.ARRAY.equalsIgnoreCase(schema.getItems().getType())) {
-        refSchema = mapRefName(schema.getItems(), componentsTypes, pojoName);
-      } else {
-        refSchema = StringUtils.isNotBlank(arraySchema.getItems().get$ref()) ? getRefSchema(arraySchema.getItems().get$ref(), componentsTypes) : null;
-      }
-    } else if (Objects.nonNull(schema.get$ref())) {
-      refSchema = StringUtils.isNotBlank(schema.get$ref()) ? getRefSchema(schema.get$ref(), componentsTypes) : null;
-    } else if (Boolean.TRUE.equals(checkSchemaCombinator(schema))) {
-      refSchema = pojoName;
-    }
-    return StringUtils.isNotBlank(refSchema) ? refSchema : null;
-  }
-
-  private static String getRefSchema(final String refSchema, final Map<String, String> componentsTypes) {
-    final String[] wholeRef = refSchema.split("/");
-    var refName = componentsTypes.getOrDefault(wholeRef[wholeRef.length - 1], "");
-
-    if (StringUtils.isNotBlank(refName) && refName.contains("-")) {
-      final String[] wholeRefName = refName.split("-");
-      refName = wholeRefName[wholeRefName.length - 1];
-    }
-    return refName;
+    return TypeConstants.ALL_TYPES.contains(t.getBaseType()) ? null : t.getBaseType();
   }
 
   private static Boolean checkIfOperationIsNull(final Operation operation) {

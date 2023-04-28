@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.models.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class GlobalObject {
 
   private List<String> authentications = new ArrayList<>();
 
-  private Map<String, String> componentsTypeMap = new HashMap<>();
+  private Map<String, Schema> schemaMap = new HashMap<>();
 
   public static class GlobalObjectBuilder {
 
@@ -39,8 +40,6 @@ public class GlobalObject {
     private final List<AuthSchemaObject> authSchemas = new ArrayList<>();
 
     private final List<String> authentications = new ArrayList<>();
-
-    private final Map<String, String> componentsTypeMap = new HashMap<>();
 
     public final GlobalObjectBuilder serverUrl(final List<String> serverUrl) {
       this.serverUrl.addAll(serverUrl);
@@ -69,16 +68,6 @@ public class GlobalObject {
 
     public final GlobalObjectBuilder authentication(final String authentication) {
       this.authentications.add(authentication);
-      return this;
-    }
-
-    public final GlobalObjectBuilder componentsTypeMap(final Map<String, String> componentsTypeMap) {
-      this.componentsTypeMap.putAll(componentsTypeMap);
-      return this;
-    }
-
-    public final GlobalObjectBuilder componentTypeMap(final String key, final String componentsTypeMap) {
-      this.componentsTypeMap.put(key, componentsTypeMap);
       return this;
     }
   }
