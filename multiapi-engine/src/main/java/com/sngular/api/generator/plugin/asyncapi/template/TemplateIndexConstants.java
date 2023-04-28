@@ -22,6 +22,8 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_INTERFACE_SUPPLIERS = "interfaceSupplier.ftlh";
 
+  public static final String TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY = "interfaceSupplierWithKey.ftlh";
+
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";

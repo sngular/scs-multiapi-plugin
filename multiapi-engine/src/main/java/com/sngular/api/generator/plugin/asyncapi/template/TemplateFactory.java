@@ -70,6 +70,8 @@ public class TemplateFactory {
 
   private String subscribeClassName = null;
 
+  private boolean hasHeadersKey = false;
+
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
@@ -265,6 +267,10 @@ public class TemplateFactory {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
 
+  public final void setHasHeadersKey(boolean hasHeadersKey) {
+    this.hasHeadersKey = hasHeadersKey;
+  }
+
   public final void setSupplierEntitiesSuffix(final String suffix) {
     root.put(SUPPLIER_ENTITIES_SUFFIX, suffix);
   }
@@ -307,7 +313,8 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS, interfaceRoot);
+                     hasHeadersKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS,
+                     interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
                      TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS, interfaceRoot);

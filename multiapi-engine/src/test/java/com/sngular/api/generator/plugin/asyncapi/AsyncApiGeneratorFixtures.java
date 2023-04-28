@@ -188,6 +188,26 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_FILE_GENERATION_WITH_KEY = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithKey/event-api.yml")
+          .consumer(OperationParameterObject.builder()
+                                            .ids("publishOperationFileGenerationWithKey")
+                                            .classNamePostfix("TestClassName")
+                                            .modelNameSuffix("DTO")
+                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkey.model.event.consumer")
+                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkey.model.event")
+                                            .build())
+          .supplier(OperationParameterObject.builder()
+                                            .ids("subscribeOperationFileGenerationWithKey")
+                                            .modelNameSuffix("Mapper")
+                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkey.model.event.producer")
+                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkey.model.event")
+                                            .build())
+          .build()
+  );
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -514,6 +534,57 @@ public class AsyncApiGeneratorFixtures {
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                    modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestFileGenerationWithKey() {
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/consumer";
+
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/producer";
+
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/schemas";
+
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/messages";
+
+    final String DEFAULT_CUSTOMVALIDATOR_FOLDER = DEFAULT_MODEL_MESSAGE_FOLDER + "/customvalidator";
+
+    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKey/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
+
+    final List<String> expectedConsumerFiles = List.of(
+        ASSETS_PATH + "IPublishOperation.java",
+        ASSETS_PATH + "TestClassName.java");
+
+    final List<String> expectedProducerFiles = List.of(
+        ASSETS_PATH + "ISubscribeOperation.java",
+        ASSETS_PATH + "Producer.java");
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        ASSETS_PATH + "CreateOrderMapper.java",
+        ASSETS_PATH + "OrderDTO.java",
+        ASSETS_PATH + "OrderLineDTO.java",
+        ASSETS_PATH + "OrderLineMapper.java",
+        ASSETS_PATH + "OrderMapper.java",
+        ASSETS_PATH + "OrderProductDTO.java",
+        ASSETS_PATH + "OrderProductMapper.java",
+        ASSETS_PATH + "WaiterMapper.java"
+    );
+
+    final List<String> expectedValidatorFiles = List.of(
+        CUSTOM_VALIDATOR_PATH + "NotNull.java",
+        CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+        ASSETS_PATH + "OrderCreatedDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+                     modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
+                     modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER) &&
+                     customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
   private static Boolean commonTest(

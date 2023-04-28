@@ -79,6 +79,10 @@ public class AsyncApiGenerator {
 
   private static final String REF = "$ref";
 
+  private static final String HEADERS = "headers";
+
+  private static final String KEY = "key";
+
   private static final String MESSAGES = "messages";
 
   private static final String SCHEMAS = "schemas";
@@ -105,6 +109,8 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
+  private boolean hasHeadersKey;
+
   public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
 
     this.groupId = groupId;
@@ -118,6 +124,7 @@ public class AsyncApiGenerator {
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     generateExceptionTemplate = false;
+    hasHeadersKey = false;
     for (SpecFile fileParameter : specsListFile) {
       String avroFilePath = fileParameter.getFilePath();
       if (avroFilePath.startsWith(".")) {
@@ -455,6 +462,7 @@ public class AsyncApiGenerator {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParentPath, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
+    templateFactory.setHasHeadersKey(hasHeadersKey);
   }
 
   private void fillTemplateFactory(
@@ -494,6 +502,7 @@ public class AsyncApiGenerator {
     } else {
       namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
     }
+
     return new MutablePair<>(operationId, namespace);
   }
 
@@ -546,12 +555,22 @@ public class AsyncApiGenerator {
     if (file.exists()) {
       final var node = om.readTree(file);
       if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
+        findHeadersKey(node.findValue(path[path.length - 2]).get(path[path.length - 1]));
         return processModelPackage(component, modelPackage);
       } else {
         throw new ExternalRefComponentNotFoundException(component, filePath);
       }
     } else {
       throw new FileNotFoundException("File " + filePath + " defined in the YML not found");
+    }
+  }
+
+  private void findHeadersKey(final JsonNode node) {
+    if (node.has(HEADERS)) {
+      final var headers = node.findValue("properties");
+      if (headers.has(KEY)) {
+        hasHeadersKey = true;
+      }
     }
   }
 
