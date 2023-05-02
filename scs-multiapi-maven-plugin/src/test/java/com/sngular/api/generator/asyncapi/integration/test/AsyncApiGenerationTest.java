@@ -59,5 +59,9 @@ public class AsyncApiGenerationTest {
 
   }
 
+  @MavenTest
+  void testDependencyYml(MavenProjectResult result) throws IOException {
+
+  }
 
 }

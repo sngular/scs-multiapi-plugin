@@ -40,16 +40,7 @@
             <configuration>
               <specFiles>
                 <specFile>
-                  <filePath>event-api.yml</filePath>
-                </specFile>
-                <specFile>
-                  <filePath>event-api2.yml</filePath>
-                  <supplier>
-                    <ids>publishOperation2</ids>
-                    <modelNameSuffix>DTO</modelNameSuffix>
-                    <apiPackage>com.sngular.apigenerator.asyncapi.producer2</apiPackage>
-                    <modelPackage>com.sngular.apigenerator.asyncapi.model</modelPackage>
-                  </supplier>
+                  <filePath>contracts/event-api.yml</filePath>
                 </specFile>
               </specFiles>
             </configuration>
