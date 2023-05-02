@@ -628,13 +628,13 @@ public class MapperContentUtil {
     return type;
   }
 
-  private static String getRef(final Schema<?> schema, final SpecFile specFile) {
+  public static String getRef(final Schema<?> schema, final SpecFile specFile) {
     final String typeObject;
     typeObject = MapperUtil.getPojoName(cleanRefName(schema), specFile);
     return typeObject;
   }
 
-  private static String cleanRefName(final Schema<?> schema) {
+  public static String cleanRefName(final Schema<?> schema) {
     final String[] pathObjectRef = schema.get$ref().split("/");
     return pathObjectRef[pathObjectRef.length - 1];
   }
@@ -691,7 +691,7 @@ public class MapperContentUtil {
     return StringUtils.isNotBlank(type) && !TypeConstants.NO_IMPORT_TYPE.contains(type) ? StringUtils.capitalize(type) : "";
   }
 
-  private static String getDateType(final SpecFile specFile) {
+  public static String getDateType(final SpecFile specFile) {
     final String dateType;
     switch (specFile.getUseTimeType()) {
       case ZONED:

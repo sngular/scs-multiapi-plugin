@@ -498,7 +498,7 @@ public class AsyncApiGenerator {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
     for (SchemaObject schemaObject : schemaObjectList) {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
-      templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, usingLombok, filePath);
+      templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     }
     if (filePath != null && Boolean.TRUE.equals(generateExceptionTemplate)) {

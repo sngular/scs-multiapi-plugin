@@ -6,8 +6,8 @@
 
 package com.sngular.api.generator.multiapi.integration.test;
 
-import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 import static com.sngular.api.generator.test.utils.TestUtils.checkTargetFiles;
+import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class ScsMultiapiGenerationTest {
     List<String> expectedConsumerFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest" +
                                                         "/" + testName + "/assets/IPublishOperation.java",
                                                
-                                                   "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName + "" +
+                                                   "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationTest/" + testName +
                                                    "/assets/TestClassName.java");
 
     List<String> expectedProducerFiles = List.of(
@@ -81,7 +81,7 @@ public class ScsMultiapiGenerationTest {
                                                          "/ModelClassException.java");
 
     assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
 
     Path pathToTargetConsumer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/com/sngular/generator/multiapi/model/event/consumer");
     Path pathToTargetProducer = pathToTarget.resolve("target/" + generatedSourcesFolderName + "/apigenerator/com/sngular/generator/multiapi/model/event/producer");

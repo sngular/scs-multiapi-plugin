@@ -6,8 +6,8 @@
 
 package com.sngular.api.generator.asyncapi.integration.test;
 
-import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 import static com.sngular.api.generator.test.utils.TestUtils.checkTargetFiles;
+import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
-import com.soebes.itf.jupiter.extension.MavenDebug;
-import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
-import com.soebes.itf.jupiter.extension.MavenOptions;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
@@ -47,7 +44,7 @@ public class AsyncApiGenerationTest {
             "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java");
 
     assertThat(result).hasTarget();
-    Path pathToTarget = result.getTargetProjectDirectory().toPath();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
 
     Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi");
     Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/producer2");

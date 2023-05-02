@@ -29,7 +29,7 @@ public interface SchemasApi {
      operationId = "getAllSchemaNames",
      tags = {"schemas"},
      responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
        @ApiResponse(responseCode = "400", description = "Bad Request"),
        @ApiResponse(responseCode = "404", description = "Not Found"),
        @ApiResponse(responseCode = "500", description = "Server Error")
@@ -41,7 +41,7 @@ public interface SchemasApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<String> getAllSchemaNames() {
+  default ResponseEntity<List<String>> getAllSchemaNames() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**

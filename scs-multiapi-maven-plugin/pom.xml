@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.6.1</version>
+  <version>4.6.4</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -202,28 +202,28 @@
     <maven-plugin-api.version>3.8.5</maven-plugin-api.version>
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-project.version>2.2.1</maven-project.version>
-    <maven-core.version>3.8.5</maven-core.version>
-    <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
+    <maven-core.version>3.9.1</maven-core.version>
+    <maven-plugin-plugin.version>3.8.2</maven-plugin-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>
-    <itf.version>0.11.0</itf.version>
+    <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+    <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+    <sortpom-maven-plugin.version>3.2.1</sortpom-maven-plugin.version>
+    <itf.version>0.12.0</itf.version>
     <assertj-core.version>3.22.0</assertj-core.version>
-    <junit-jupiter-engine.version>5.8.2</junit-jupiter-engine.version>
+    <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.24</version>
+      <version>1.18.26</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.6.1</version>
+      <version>4.6.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -241,7 +241,6 @@
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
       <version>${maven-plugin-annotations.version}</version>
-      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.commons</groupId>
@@ -359,7 +358,6 @@
       <version>${junit-jupiter-engine.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>
@@ -394,7 +392,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>3.5.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -431,7 +429,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>${maven-plugin-plugin.version}</version>
         <configuration>
-          <goalPrefix>plugin</goalPrefix>
+          <goalPrefix>scs-multiapi</goalPrefix>
         </configuration>
       </plugin>
       <plugin>
