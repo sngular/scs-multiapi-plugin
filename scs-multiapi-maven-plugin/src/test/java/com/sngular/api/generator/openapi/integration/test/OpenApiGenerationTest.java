@@ -66,5 +66,14 @@ public class OpenApiGenerationTest {
     TestUtils.validateFiles(expectedExceptionFilesSecond, targetExceptionSecondFolder);
   }
 
+  @MavenTest
+  void testDependencyYml(MavenProjectResult result) throws IOException {
+    List<String> expectedFiles = List.of("TestApi.java", "TestObj.java");
 
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
+    File targetDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular").toFile();
+
+    TestUtils.checkTargetFiles(expectedFiles, targetDirectory);
+  }
 }

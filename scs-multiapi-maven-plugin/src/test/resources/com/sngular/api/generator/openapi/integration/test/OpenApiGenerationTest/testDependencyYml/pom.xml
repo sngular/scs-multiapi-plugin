@@ -40,7 +40,7 @@
             <configuration>
               <specFiles>
                 <specFile>
-                  <filePath>contracts/event-api.yml</filePath>
+                  <filePath>contracts/api-test.yml</filePath>
                 </specFile>
               </specFiles>
             </configuration>
