@@ -1,0 +1,19 @@
+openapi: 3.0.2
+info:
+  title: Testing example file
+  version: 1.0.0
+servers:
+- url: http://localhost/v1
+paths:
+  /test:
+    get:
+      tags:
+      - test
+      operationId: testFile
+      responses:
+        '200':
+          description: Some schema from another file
+          content:
+            application/json:
+              schema:
+                $ref: './assets/path.yml#/components/schemas/test'

@@ -1,0 +1,7 @@
+components:
+  schemas:
+    test:
+      type: object
+      properties:
+        something:
+          type: string

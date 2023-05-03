@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
-import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
