@@ -222,7 +222,7 @@ public class OpenApiGenerator {
     return modelReturnPackage;
   }
 
-  private String processPath(final String fileSpecPackage, final Boolean isModel) throws IOException {
+  private String processPath(final String fileSpecPackage, final boolean isModel) throws IOException {
     Path path;
     final File[] pathList = Objects.requireNonNull(baseDir.listFiles(targetFileFilter));
     if (pathList.length > 0) {
@@ -241,17 +241,9 @@ public class OpenApiGenerator {
     return path.toString();
   }
 
-  private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
-    final String path;
-    if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll("/"));
-    } else if (groupId != null) {
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(groupId).replaceAll("/"));
-    } else {
-      final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll("/"));
-    }
-    return path;
+  private String convertPackageToTargetPath(final String fileSpecPackage, final boolean isModel) {
+    final String toMatch = StringUtils.defaultIfBlank(fileSpecPackage, StringUtils.defaultIfBlank(groupId, isModel ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE));
+    return FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(toMatch).replaceAll("/"));
   }
 
   private void processModels(
