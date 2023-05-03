@@ -730,4 +730,42 @@ to the values a certain object can take. To validate these properties,
 we annotate the pertaining fields and generate the corresponding validators so that the user
 can later use a framework such as Hibernate to check for correctness.
 
+## Loading specifications from dependencies
+The plugin supports loading API specification YMLs from the classpath. This will be the
+location it searches for them in first, falling back to the project directories otherwise.
+
+Here's an example configuration for the maven plugin that loads an AsyncAPI specification
+from a local JAR containing `contracts/event-api.yml` in its resources:
+
+```xml
+<plugin>
+  <groupId>com.sngular</groupId>
+  <artifactId>scs-multiapi-maven-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>asyncapi</id>
+      <phase>generate-sources</phase>
+      <goals>
+        <goal>asyncapi-generation</goal>
+      </goals>
+      <configuration>
+        <specFiles>
+          <specFile>
+            <filePath>contracts/event-api.yml</filePath>
+          </specFile>
+        </specFiles>
+      </configuration>
+    </execution>
+  </executions>
+  <dependencies>
+    <dependency>
+      <groupId>com.sngular</groupId>
+      <artifactId>yml-source</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/yml-source-1.0.jar</systemPath>
+    </dependency>
+  </dependencies>
+</plugin>
+```
 
