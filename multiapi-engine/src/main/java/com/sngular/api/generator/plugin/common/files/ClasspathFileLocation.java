@@ -8,8 +8,6 @@ package com.sngular.api.generator.plugin.common.files;
 
 import java.io.InputStream;
 
-import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
-
 public class ClasspathFileLocation implements FileLocation {
 
   private final String path;
@@ -20,6 +18,6 @@ public class ClasspathFileLocation implements FileLocation {
 
   @Override
   public InputStream getFileAtLocation(final String filename) {
-    return AsyncApiGenerator.class.getClassLoader().getResourceAsStream(path + filename.replace("./", ""));
+    return ClasspathFileLocation.class.getClassLoader().getResourceAsStream(path + filename.replace("./", ""));
   }
 }

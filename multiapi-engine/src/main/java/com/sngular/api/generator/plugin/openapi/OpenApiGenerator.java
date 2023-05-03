@@ -95,7 +95,6 @@ public class OpenApiGenerator {
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
-
     for (SpecFile specFile : specsListFile) {
       generateExceptionTemplate = false;
       useLombok = Boolean.TRUE.equals(specFile.isUseLombokModelAnnotation());
@@ -104,13 +103,13 @@ public class OpenApiGenerator {
         final String filePathToSave = processPath(specFile.getApiPackage(), false);
         processFile(specFile, filePathToSave);
         createClients(specFile);
-      } catch (final TemplateException | IOException e) {
+      } catch (final IOException e) {
         throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
       }
     }
   }
 
-  private void processFile(final SpecFile specFile, final String filePathToSave) throws TemplateException, IOException {
+  private void processFile(final SpecFile specFile, final String filePathToSave) throws IOException {
 
     final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
     final String clientPackage = specFile.getClientPackage();
@@ -280,8 +279,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void writeModelRefSchema(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
+  private void writeModelRefSchema(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
     final Schema additionalPropertiesSchema = new ObjectSchema();
     final Map<String, Schema> properties = new HashMap<>();
     final String[] refSplit = basicSchema.get$ref().split("/");
@@ -305,8 +303,7 @@ public class OpenApiGenerator {
     writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
   }
 
-  private void writeModel(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
+  private void writeModel(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
     final Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);

@@ -50,7 +50,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @Slf4j
 public class AsyncApiGenerator {
 
@@ -111,7 +110,6 @@ public class AsyncApiGenerator {
   private boolean generateExceptionTemplate;
 
   public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
-
     this.groupId = groupId;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
@@ -308,8 +306,8 @@ public class AsyncApiGenerator {
   }
 
   private void processOperation(
-      final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId, final JsonNode channelPayload,
-      final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
+      final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId,
+      final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
@@ -332,8 +330,7 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-      final OperationParameterObject operation, final String operationId,
-      final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+      final OperationParameterObject operation, final String operationId, final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
       final List<String> operationIds = operation.getOperationIds();
@@ -461,16 +458,16 @@ public class AsyncApiGenerator {
   }
 
   private void processSupplierMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
-      final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
+      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
+      final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
 
   private void processStreamBridgeMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String channelName,
-      final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
+      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas,
+      final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix);
     final String regex = "[a-zA-Z0-9.\\-]*";
     if (!channelName.matches(regex)) {
@@ -481,16 +478,15 @@ public class AsyncApiGenerator {
   }
 
   private void processSubscribeMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
-      final boolean usingLombok, final String prefix, final String suffix) throws IOException, TemplateException {
+      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
+      final String suffix) throws IOException, TemplateException {
     final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
   }
 
   private void fillTemplateFactory(
-      final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix,
-      final String modelPackageReceived)
+      final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix, final String modelPackageReceived)
       throws TemplateException, IOException {
     final var modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final var parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);

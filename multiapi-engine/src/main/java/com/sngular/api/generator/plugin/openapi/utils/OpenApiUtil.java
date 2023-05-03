@@ -103,14 +103,15 @@ public class OpenApiUtil {
     final ParseOptions options = new ParseOptions();
     options.setResolve(true);
     try {
-      final SwaggerParseResult result = new OpenAPIParser().readLocation(readFile(specFile.getFilePath()), null, options);
+      final OpenAPIParser parser = new OpenAPIParser();
+      final SwaggerParseResult result = parser.readLocation(readFile(specFile.getFilePath()), null, options);
       openAPI = result.getOpenAPI();
     } catch (final ReadContentException e) {
-      throw new FileParseException("when parser the .yaml file ");
+      throw new FileParseException("whilst parsing the .yml file ");
     }
 
     if (Objects.isNull(openAPI)) {
-      throw new FileParseException("why .yaml is empty");
+      throw new FileParseException("empty .yml");
     }
 
     return openAPI;
