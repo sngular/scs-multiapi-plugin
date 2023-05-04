@@ -29,11 +29,12 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class OpenApiGenerationTest {
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                               "/TestFirstApi.java");
-    List<String> expectedFileSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                                "/TestSecondApi.java");
+    List<String> expectedFileFirst = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/TestFirstApi.java");
+    List<String> expectedFileSecond = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/TestSecondApi.java");
 
     List<String> expectedExceptionFilesFirst = Collections.singletonList(
         "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");
@@ -66,5 +67,15 @@ public class OpenApiGenerationTest {
     TestUtils.validateFiles(expectedExceptionFilesSecond, targetExceptionSecondFolder);
   }
 
+  @MavenTest
+  @MavenGoal("generate-sources")
+  void testDependencyYml(MavenProjectResult result) throws IOException {
+    List<String> expectedFiles = List.of("TestApi.java", "TestObj.java");
 
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
+    File targetDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular").toFile();
+
+    TestUtils.checkTargetFiles(expectedFiles, targetDirectory);
+  }
 }

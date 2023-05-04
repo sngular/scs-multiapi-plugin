@@ -402,6 +402,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_REFERENCE_FILE = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testReferenceFile/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testReferenceFile")
+          .modelPackage("com.sngular.multifileplugin.testReferenceFile.model")
+          .clientPackage("com.sngular.multifileplugin.testReferenceFile.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -1205,6 +1217,24 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
+  static Function<Path, Boolean> validateReferenceFile() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testReferenceFile";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testReferenceFile/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testReferenceFile/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testReferenceFile/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testReferenceFile/assets/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,
       final List<String> expectedExceptionFiles, final String targetException) {
@@ -1236,8 +1266,7 @@ public final class OpenApiGeneratorFixtures {
     return result;
   }
 
-  private static Boolean customValidatorTest(
-      final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator) {
+  private static Boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");

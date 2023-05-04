@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
+import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
@@ -28,20 +29,21 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class AsyncApiGenerationTest {
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
     List<String> expectedSecondYmlFileNames = List.of("Producer.java", "IPublishOperation2.java");
 
     List<String> expectedFirstYmlFiles = List.of(
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java",
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java",
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Producer.java",
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java");
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java",
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java",
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Producer.java",
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/Subscriber.java");
 
     List<String> expectedSecondYmlFiles = List.of(
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java",
-            "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java");
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/IPublishOperation2.java",
+        "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationTest/testFileGenerationTwoYmlFiles/assets/producer2/Producer.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
@@ -59,5 +61,21 @@ public class AsyncApiGenerationTest {
 
   }
 
+  @MavenTest
+  @MavenGoal("generate-sources")
+  void testDependencyYml(MavenProjectResult result) throws IOException {
+    List<String> expectedProducerFiles = List.of("Producer.java", "IPublishOperationFileGeneration.java");
+    List<String> expectedMessageFiles = List.of("OrderCreated.java");
+    List<String> expectedSchemaFiles = List.of("Order.java");
 
+    assertThat(result).hasTarget();
+    Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
+    File targetProducerDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi").toFile();
+    File targetMessageDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/messages").toFile();
+    File targetSchemaDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/schemas").toFile();
+
+    checkTargetFiles(expectedProducerFiles, targetProducerDirectory);
+    checkTargetFiles(expectedMessageFiles, targetMessageDirectory);
+    checkTargetFiles(expectedSchemaFiles, targetSchemaDirectory);
+  }
 }

@@ -90,7 +90,8 @@ class OpenApiGeneratorTest {
                      OpenApiGeneratorFixtures.validateDateTimeZoned()),
         Arguments.of("testDateTimeOffset", OpenApiGeneratorFixtures.TEST_DATE_TIME_OFFSET,
                      OpenApiGeneratorFixtures.validateDateTimeOffset()),
-        Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING, OpenApiGeneratorFixtures.validateListString())
+        Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING, OpenApiGeneratorFixtures.validateListString()),
+        Arguments.of("testReferenceFile", OpenApiGeneratorFixtures.TEST_REFERENCE_FILE, OpenApiGeneratorFixtures.validateReferenceFile())
     );
   }
 

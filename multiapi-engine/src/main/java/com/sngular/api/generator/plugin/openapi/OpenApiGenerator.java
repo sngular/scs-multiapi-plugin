@@ -95,7 +95,6 @@ public class OpenApiGenerator {
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
-
     for (SpecFile specFile : specsListFile) {
       generateExceptionTemplate = false;
       useLombok = Boolean.TRUE.equals(specFile.isUseLombokModelAnnotation());
@@ -104,13 +103,13 @@ public class OpenApiGenerator {
         final String filePathToSave = processPath(specFile.getApiPackage(), false);
         processFile(specFile, filePathToSave);
         createClients(specFile);
-      } catch (final TemplateException | IOException e) {
+      } catch (final IOException e) {
         throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
       }
     }
   }
 
-  private void processFile(final SpecFile specFile, final String filePathToSave) throws TemplateException, IOException {
+  private void processFile(final SpecFile specFile, final String filePathToSave) throws IOException {
 
     final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
     final String clientPackage = specFile.getClientPackage();
@@ -223,7 +222,7 @@ public class OpenApiGenerator {
     return modelReturnPackage;
   }
 
-  private String processPath(final String fileSpecPackage, final Boolean isModel) throws IOException {
+  private String processPath(final String fileSpecPackage, final boolean isModel) throws IOException {
     Path path;
     final File[] pathList = Objects.requireNonNull(baseDir.listFiles(targetFileFilter));
     if (pathList.length > 0) {
@@ -242,17 +241,9 @@ public class OpenApiGenerator {
     return path.toString();
   }
 
-  private String convertPackageToTargetPath(final String fileSpecPackage, final Boolean isModel) {
-    final String path;
-    if (StringUtils.isNotBlank(fileSpecPackage)) {
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(fileSpecPackage.trim()).replaceAll("/"));
-    } else if (groupId != null) {
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(groupId).replaceAll(File.separator));
-    } else {
-      final String pathDefault = Boolean.TRUE.equals(isModel) ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE;
-      path = FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(pathDefault).replaceAll(File.separator));
-    }
-    return path;
+  private String convertPackageToTargetPath(final String fileSpecPackage, final boolean isModel) {
+    final String toMatch = StringUtils.defaultIfBlank(fileSpecPackage, StringUtils.defaultIfBlank(groupId, isModel ? DEFAULT_OPENAPI_MODEL_PACKAGE : DEFAULT_OPENAPI_API_PACKAGE));
+    return FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(toMatch).replaceAll("/"));
   }
 
   private void processModels(
@@ -280,8 +271,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void writeModelRefSchema(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
+  private void writeModelRefSchema(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
     final Schema additionalPropertiesSchema = new ObjectSchema();
     final Map<String, Schema> properties = new HashMap<>();
     final String[] refSplit = basicSchema.get$ref().split("/");
@@ -305,8 +295,7 @@ public class OpenApiGenerator {
     writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
   }
 
-  private void writeModel(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
+  private void writeModel(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
     final Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);
