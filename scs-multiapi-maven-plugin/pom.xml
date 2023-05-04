@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.7.0</version>
+  <version>4.7.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -223,7 +223,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.7.0</version>
+      <version>4.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -391,19 +391,23 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.5.0</version>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
           <appendAssemblyId>false</appendAssemblyId>
+          <minimizeJar>true</minimizeJar>
+          <createDependencyReducedPom>true</createDependencyReducedPom>
+          <dependencyReducedPomLocation>${project.build.directory}/pom.xml</dependencyReducedPomLocation>
+          <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
         </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
+            <id>make-shadow</id>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
             <phase>package</phase>
           </execution>
