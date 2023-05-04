@@ -31,10 +31,10 @@ public class OpenApiGenerationTest {
   @MavenTest
   @MavenGoal("generate-sources")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
-    List<String> expectedFileFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                               "/TestFirstApi.java");
-    List<String> expectedFileSecond = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
-                                                                "/TestSecondApi.java");
+    List<String> expectedFileFirst = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/TestFirstApi.java");
+    List<String> expectedFileSecond = Collections.singletonList(
+        "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/TestSecondApi.java");
 
     List<String> expectedExceptionFilesFirst = Collections.singletonList(
         "com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets/ModelClassExceptionFirst.java");

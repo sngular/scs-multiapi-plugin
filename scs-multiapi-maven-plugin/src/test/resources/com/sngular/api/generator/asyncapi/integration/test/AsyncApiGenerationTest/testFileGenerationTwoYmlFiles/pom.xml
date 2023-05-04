@@ -55,15 +55,6 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.sngular</groupId>
-            <artifactId>yml-source</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/yml-source-1.0.jar</systemPath>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
