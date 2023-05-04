@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
+import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class OpenApiGenerationTest {
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testApiMultiGeneration(MavenProjectResult result) throws IOException {
     List<String> expectedFileFirst = Collections.singletonList("com/sngular/api/generator/openapi/integration/test/OpenApiGenerationTest/testApiMultiGeneration/assets" +
                                                                "/TestFirstApi.java");
@@ -66,6 +68,7 @@ public class OpenApiGenerationTest {
   }
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testDependencyYml(MavenProjectResult result) throws IOException {
     List<String> expectedFiles = List.of("TestApi.java", "TestObj.java");
 

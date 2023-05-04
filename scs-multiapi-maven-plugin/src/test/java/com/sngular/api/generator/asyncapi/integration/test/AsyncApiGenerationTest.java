@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.sngular.api.generator.test.utils.TestUtils;
+import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 public class AsyncApiGenerationTest {
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
     List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
@@ -60,6 +62,7 @@ public class AsyncApiGenerationTest {
   }
 
   @MavenTest
+  @MavenGoal("generate-sources")
   void testDependencyYml(MavenProjectResult result) throws IOException {
     List<String> expectedProducerFiles = List.of("Producer.java", "IPublishOperationFileGeneration.java");
     List<String> expectedMessageFiles = List.of("OrderCreated.java");
