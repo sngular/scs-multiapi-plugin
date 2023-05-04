@@ -305,52 +305,16 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.soebes.itf.jupiter.extension</groupId>
-      <artifactId>itf-jupiter-extension</artifactId>
-      <version>${itf.version}</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apiguardian</groupId>
-          <artifactId>apiguardian-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.junit.jupiter</groupId>
-          <artifactId>junit-jupiter-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.junit.platform</groupId>
-          <artifactId>junit-platform-commons</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-model</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.soebes.itf.jupiter.extension</groupId>
       <artifactId>itf-assertj</artifactId>
       <version>${itf.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.assertj</groupId>
-          <artifactId>assertj-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>${assertj-core.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.assertj</groupId>
-          <artifactId>assertj-core</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -358,6 +322,13 @@
       <version>${junit-jupiter-engine.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.soebes.itf.jupiter.extension</groupId>
+      <artifactId>itf-jupiter-extension</artifactId>
+      <version>${itf.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -394,10 +365,6 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.4.1</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <appendAssemblyId>false</appendAssemblyId>
           <minimizeJar>true</minimizeJar>
           <createDependencyReducedPom>true</createDependencyReducedPom>
           <dependencyReducedPomLocation>${project.build.directory}/pom.xml</dependencyReducedPomLocation>
@@ -430,28 +397,39 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <systemProperties>
+            <maven.version>${maven.version}</maven.version>
+            <maven.home>${maven.home}</maven.home>
+          </systemProperties>
+          <properties>
+            <configurationParameters>
+              junit.jupiter.execution.parallel.enabled=true
+              junit.jupiter.execution.parallel.mode.default=concurrent
+              junit.jupiter.execution.parallel.mode.classes.default=same_thread
+              junit.jupiter.execution.parallel.config.strategy=fixed
+              junit.jupiter.execution.parallel.config.fixed.parallelism=6
+            </configurationParameters>
+          </properties>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>${maven-plugin-plugin.version}</version>
         <configuration>
           <goalPrefix>scs-multiapi</goalPrefix>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default-test</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <phase>integration-test</phase>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
