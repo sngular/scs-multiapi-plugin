@@ -410,11 +410,6 @@
           <createDependencyReducedPom>true</createDependencyReducedPom>
           <dependencyReducedPomLocation>${project.build.directory}/pom.xml</dependencyReducedPomLocation>
           <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
-          <artifactSet>
-            <includes>
-              <include>com.sngular:multiapi-engine</include>
-            </includes>
-          </artifactSet>
         </configuration>
         <executions>
           <execution>
