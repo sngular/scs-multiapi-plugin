@@ -36,3 +36,6 @@ pom.xml.bak
 
 # Visual Code
 .DS_Store
+
+**/bin/
+.vscode/
