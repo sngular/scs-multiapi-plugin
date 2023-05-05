@@ -71,6 +71,7 @@ jobs:
         # Uses production profile to sign with gpg plugin
         run: |
           cd scs-multiapi-maven-plugin
+          mvn -B install
           mvn -B deploy -P production
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
