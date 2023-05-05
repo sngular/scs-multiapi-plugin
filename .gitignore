@@ -39,3 +39,4 @@ pom.xml.bak
 
 **/bin/
 .vscode/
+**/.java-version
