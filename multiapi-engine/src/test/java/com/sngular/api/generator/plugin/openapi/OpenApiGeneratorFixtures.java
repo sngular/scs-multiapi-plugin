@@ -414,6 +414,15 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_QUERY_PARAM = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testQueryParam/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testQueryParam")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -1230,6 +1239,23 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedTestApiModelFiles = List.of(
         "openapigenerator/testReferenceFile/assets/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateQueryParam() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testQueryParam";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testQueryParam/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testQueryParam/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testQueryParam/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
     );
 
     return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
