@@ -1,0 +1,35 @@
+openapi: 3.0.2
+info:
+  title: Testing example file
+  version: 1.0.0
+servers:
+- url: http://localhost/v1
+paths:
+  /test:
+    get:
+      tags:
+      - test
+      operationId: testReactiveQueryParam
+      parameters:
+      - name: param1
+        in: query
+        description: First test parameter
+        schema:
+          type: string
+      - name: param2
+        in: query
+        description: Second test parameter
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: An object with a list of strings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/test"
+components:
+  schemas:
+    test:
+      type: string
