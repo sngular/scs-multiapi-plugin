@@ -408,7 +408,6 @@
         <configuration>
           <minimizeJar>true</minimizeJar>
           <createDependencyReducedPom>true</createDependencyReducedPom>
-          <dependencyReducedPomLocation>${project.build.directory}/pom.xml</dependencyReducedPomLocation>
           <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
         </configuration>
         <executions>
