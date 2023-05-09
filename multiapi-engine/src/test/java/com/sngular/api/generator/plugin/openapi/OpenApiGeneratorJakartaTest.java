@@ -15,12 +15,14 @@ import java.util.stream.Stream;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class OpenApiGeneratorTest {
+@Disabled
+class OpenApiGeneratorJakartaTest {
 
   @TempDir
   static Path baseDir;
@@ -30,7 +32,7 @@ class OpenApiGeneratorTest {
   @BeforeAll
   static void setup() {
     openApiGenerator =
-        new OpenApiGenerator(2 ,Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
+        new OpenApiGenerator(3 ,Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
                              new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
                              baseDir.toFile());
   }

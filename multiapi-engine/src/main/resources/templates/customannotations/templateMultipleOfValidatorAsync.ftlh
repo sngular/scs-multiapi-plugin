@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 </#list>
 import java.util.Objects;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import ${javaEEPackage}.validation.ConstraintValidator;
+import ${javaEEPackage}.validation.ConstraintValidatorContext;
 
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && (field.dataTypeSimple == "BigDecimal" || field.dataTypeSimple == "bigDecimal")>

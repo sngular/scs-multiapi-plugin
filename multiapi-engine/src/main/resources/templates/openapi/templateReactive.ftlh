@@ -4,7 +4,7 @@ package <#if packageApi??>${packageApi}<#elseif package??>${package}</#if>;
 import java.util.List;
 import java.util.Map;
 import java.nio.charset.StandardCharsets;
-import javax.validation.Valid;
+import ${javaEEPackage}.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

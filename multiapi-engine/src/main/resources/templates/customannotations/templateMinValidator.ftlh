@@ -7,8 +7,8 @@ package ${packageModel}.customvalidator;
 </#list>
 import java.util.Objects;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import ${javaEEPackage}.validation.ConstraintValidator;
+import ${javaEEPackage}.validation.ConstraintValidatorContext;
 
 <#list schema.fieldObjectList as field>
     <#if field.dataType.baseType?has_content && (field.dataType.baseType == "BigDecimal" || field.dataType.baseType == "bigDecimal")>

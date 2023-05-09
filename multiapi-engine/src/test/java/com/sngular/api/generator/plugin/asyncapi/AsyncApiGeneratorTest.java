@@ -31,7 +31,7 @@ class AsyncApiGeneratorTest {
   static void setup() {
     asyncApiGenerator =
         new AsyncApiGenerator(new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED, "groupId",
-                              baseDir.toFile());
+                              baseDir.toFile(), 2);
   }
 
   static Stream<Arguments> fileSpecToProcess() {

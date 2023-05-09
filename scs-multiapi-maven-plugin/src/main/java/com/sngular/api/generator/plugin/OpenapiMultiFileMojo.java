@@ -41,14 +41,17 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
 
+  @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
+  private Integer springBootVersion;
+
   private String processedGeneratedSourcesFolder;
 
   @Override
   public void execute() throws MojoExecutionException {
     processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
-    final OpenApiGenerator openApiGenerator = new OpenApiGenerator(overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
-                                                                                           targetFolder, project.getBasedir());
+    final OpenApiGenerator openApiGenerator = new OpenApiGenerator(springBootVersion, overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
+                                                                   targetFolder, project.getBasedir());
     if (null != specFiles && !specFiles.isEmpty()) {
       openApiGenerator.processFileSpec(specFiles);
     } else {
@@ -69,7 +72,6 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     final Path projectPath = targetFolder.toPath().resolve(processedGeneratedSourcesFolder);
     project.addCompileSourceRoot(projectPath.toString());
   }
-
 
 
 }

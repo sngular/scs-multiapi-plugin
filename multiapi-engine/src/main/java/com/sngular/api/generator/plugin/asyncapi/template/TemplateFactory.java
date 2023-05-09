@@ -277,6 +277,14 @@ public class TemplateFactory {
     root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
+  public void calculateJavaEEPackage(final Integer springBootVersion) {
+    if (3 <= springBootVersion) {
+      root.put("javaEEPackage", "jakarta");
+    } else {
+      root.put("javaEEPackage", "javax");
+    }
+  }
+
   public final void clearData() {
     root.clear();
     publishMethods.clear();

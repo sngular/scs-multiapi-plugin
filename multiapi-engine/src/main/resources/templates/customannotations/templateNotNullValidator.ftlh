@@ -1,7 +1,7 @@
 package ${packageModel}.customvalidator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import ${javaEEPackage}.validation.ConstraintValidator;
+import ${javaEEPackage}.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 public class NotNullValidator implements ConstraintValidator<NotNull, Object> {

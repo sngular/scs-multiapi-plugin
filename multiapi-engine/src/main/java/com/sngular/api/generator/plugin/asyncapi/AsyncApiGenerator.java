@@ -43,6 +43,7 @@ import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import freemarker.template.TemplateException;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -109,13 +110,16 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
+  private Integer springBootVersion;
+
+  public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir, final Integer springBootVersion) {
     this.groupId = groupId;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
     this.baseDir = baseDir;
     templateFactory = new TemplateFactory();
     targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
+    this.springBootVersion = springBootVersion;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
@@ -149,7 +153,7 @@ public class AsyncApiGenerator {
           processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas);
         }
 
-        setUpTemplate(fileParameter);
+        setUpTemplate(fileParameter, springBootVersion);
         templateFactory.fillTemplates();
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
@@ -362,12 +366,15 @@ public class AsyncApiGenerator {
     return operationId;
   }
 
-  private void setUpTemplate(final SpecFile fileParameter) {
+  private void setUpTemplate(final SpecFile fileParameter, final Integer springBootVersion) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
+    processJavaEEPackage(springBootVersion);
   }
+
+
 
   private void processFilePaths(final SpecFile fileParameter) {
     templateFactory.setSupplierFilePath(processPath(convertPackageToTargetPath(fileParameter.getSupplier())));
@@ -439,6 +446,10 @@ public class AsyncApiGenerator {
 
   private String getPath(final String pathName) {
     return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
+  }
+
+  private void processJavaEEPackage(final Integer springBootVersion) {
+    templateFactory.calculateJavaEEPackage(springBootVersion);
   }
 
   private void processPackage(final SpecFile fileParameter) {

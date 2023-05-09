@@ -2,8 +2,8 @@ package ${packageModel}.customvalidator;
 
 import java.util.Objects;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import ${javaEEPackage}.validation.ConstraintValidator;
+import ${javaEEPackage}.validation.ConstraintValidatorContext;
 
 public class SizeValidator implements ConstraintValidator<Size, String> {
 
