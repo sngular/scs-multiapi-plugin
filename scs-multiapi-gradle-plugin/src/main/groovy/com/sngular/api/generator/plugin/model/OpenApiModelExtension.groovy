@@ -15,6 +15,8 @@ class OpenApiModelExtension {
 
   Boolean overWriteModel = Boolean.FALSE
 
+  Integer springBootVersion = 2
+
   List<OpenApiSpecFile> getSpecFile() {
     return specFiles
   }
