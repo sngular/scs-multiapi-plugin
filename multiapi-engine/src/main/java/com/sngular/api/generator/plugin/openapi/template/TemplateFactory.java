@@ -32,7 +32,7 @@ public class TemplateFactory {
 
   public static final String JAVA_EXTENSION = ".java";
 
-  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_27);
+  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
   private final Map<String, Object> root = new HashMap<>();
 
