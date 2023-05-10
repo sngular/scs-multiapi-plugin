@@ -43,7 +43,6 @@ import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -112,7 +111,7 @@ public class AsyncApiGenerator {
 
   private Integer springBootVersion;
 
-  public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir, final Integer springBootVersion) {
+  public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
     this.groupId = groupId;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
@@ -181,11 +180,11 @@ public class AsyncApiGenerator {
 
   private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
     final OperationParameterObject operationParameter = OperationParameterObject
-                                                            .builder()
-                                                            .ids(operationId)
-                                                            .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
-                                                            .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
-                                                            .build();
+        .builder()
+        .ids(operationId)
+        .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
+        .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
+        .build();
     if (channel.has(SUBSCRIBE) && ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getStreamBridge())) {
       try {
         checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
@@ -373,8 +372,6 @@ public class AsyncApiGenerator {
     processEntitiesSuffix(fileParameter);
     processJavaEEPackage(springBootVersion);
   }
-
-
 
   private void processFilePaths(final SpecFile fileParameter) {
     templateFactory.setSupplierFilePath(processPath(convertPackageToTargetPath(fileParameter.getSupplier())));

@@ -27,10 +27,12 @@ class OpenApiGeneratorTest {
 
   private static OpenApiGenerator openApiGenerator;
 
+  private static int SPRING_BOOT_VERSION = 2;
+
   @BeforeAll
   static void setup() {
     openApiGenerator =
-        new OpenApiGenerator(2 ,Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
+        new OpenApiGenerator(SPRING_BOOT_VERSION ,Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
                              new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
                              baseDir.toFile());
   }
@@ -48,7 +50,7 @@ class OpenApiGeneratorTest {
         Arguments.of("testApiPathWithSpecialCharGeneration", OpenApiGeneratorFixtures.TEST_PATH_WITH_SLASH_GENERATION,
                      OpenApiGeneratorFixtures.validatePathWithSpecialCharGeneration()),
         Arguments.of("testApiReactiveGeneration", OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
-                     OpenApiGeneratorFixtures.validateApiReactiveGeneration()),
+                     OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
         Arguments.of("testApiTagsGeneration", OpenApiGeneratorFixtures.TEST_API_TAGS_GENERATION,
                      OpenApiGeneratorFixtures.validateTagsGeneration()),
         Arguments.of("testMultipleRefGeneration", OpenApiGeneratorFixtures.TEST_MULTIPLE_REF_GENERATION,
@@ -80,9 +82,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
                      OpenApiGeneratorFixtures.validateCoconutSchema()),
         Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                     OpenApiGeneratorFixtures.validateValidationAnnotations()),
+                     OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok()),
+                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)),
         Arguments.of("testCreateDTO", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
                      OpenApiGeneratorFixtures.validateCreateDTO()),
         Arguments.of("testDateTime", OpenApiGeneratorFixtures.TEST_DATE_TIME,

@@ -279,7 +279,7 @@ public class AsyncApiGeneratorFixtures {
                      modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
   }
 
-  static Function<Path, Boolean> validateCustomValidators() {
+  static Function<Path, Boolean> validateCustomValidators(int springBootVersion) {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/producer";
@@ -294,7 +294,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/"+calculateJavaEEPackage(springBootVersion);
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ICustomValidatorResponse.java",
@@ -448,7 +448,7 @@ public class AsyncApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final List<String> expectedConsumerFiles = List.of(
-    ASSETS_PATH + "ISubscribeOperation.java",
+        ASSETS_PATH + "ISubscribeOperation.java",
         ASSETS_PATH + "TestClassName.java"
     );
 
@@ -571,5 +571,13 @@ public class AsyncApiGeneratorFixtures {
       result = Boolean.FALSE;
     }
     return result;
+  }
+
+  private static String calculateJavaEEPackage(int springBootVersion) {
+    if (3 <= springBootVersion) {
+      return "jakarta/";
+    } else {
+      return "javax/";
+    }
   }
 }
