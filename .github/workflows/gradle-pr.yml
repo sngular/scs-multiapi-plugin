@@ -9,7 +9,7 @@ concurrency: pr-gradle-${{ github.event.pull_request.id }}
 jobs:
   check-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-gradle')}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-gradle') }}
     steps:
       - uses: actions/checkout@v3
       - name: Gradle version
