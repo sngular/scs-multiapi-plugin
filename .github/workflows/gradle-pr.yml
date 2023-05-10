@@ -2,14 +2,14 @@ name: Java CI with Gradle (PR)
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, review_requested, labeled]
+    types: [opened, synchronize, ready_for_review, labeled]
 
 concurrency: pr-gradle-${{ github.event.pull_request.id }}
 
 jobs:
   check-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'release')
+    if: contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-gradle')}
     steps:
       - uses: actions/checkout@v3
       - name: Gradle version
