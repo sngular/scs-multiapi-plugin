@@ -2,14 +2,14 @@ name: Java CI with Maven (PR)
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, review_requested, labeled]
+    types: [opened, synchronize, ready_for_review, labeled]
 
 concurrency: pr-${{ github.event.pull_request.id }}
 
 jobs:
   check-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'release')
+    if: contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-maven')
     steps:
       - uses: actions/checkout@v3
       - name: Check if version is updated
@@ -75,9 +75,9 @@ jobs:
     if: github.event.pull_request.mergeable == true
     steps:
       - name: Warn about missing labels
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'release') && !contains(github.event.pull_request.labels.*.name, 'documentation') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'release') && !contains(github.event.pull_request.labels.*.name, 'documentation') && !contains(github.event.pull_request.labels.*.name, 'release-maven') && !contains(github.event.pull_request.labels.*.name, 'release-gradle')}}}
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: "This pull request hasn't been labeled as `release` nor `documentation`. Please ensure this is intentional before merging."
+          message: "This pull request hasn't been labeled as `release`, `release-gradle`, `release-maven` or `documentation`. Please ensure this is intentional before merging."
           comment_tag: label-warn
