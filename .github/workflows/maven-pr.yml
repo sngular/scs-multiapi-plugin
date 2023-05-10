@@ -79,5 +79,5 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: "This pull request hasn't been labeled as `release`, `release-gradle`, `release-maven` or `documentation`. Please ensure this is intentional before merging."
+          message: "This pull request hasn't been labeled as `release`, `release-gradle`, `release-maven` nor `documentation`. Please ensure this is intentional before merging."
           comment_tag: label-warn
