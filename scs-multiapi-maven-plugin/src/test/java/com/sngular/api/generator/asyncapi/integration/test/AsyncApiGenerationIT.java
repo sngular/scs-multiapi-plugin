@@ -20,14 +20,12 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenRepository;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenProjectResult;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @MavenRepository
 @MavenJupiterExtension
 @Execution(ExecutionMode.SAME_THREAD)
-@Disabled("TODO: IFS Target folder problem")
 public class AsyncApiGenerationIT {
 
   @MavenTest
