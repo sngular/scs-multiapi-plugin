@@ -294,7 +294,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/"+calculateJavaEEPackage(springBootVersion);
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/" + calculateJavaEEPackage(springBootVersion);
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ICustomValidatorResponse.java",

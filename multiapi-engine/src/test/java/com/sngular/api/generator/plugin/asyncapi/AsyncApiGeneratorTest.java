@@ -32,7 +32,8 @@ class AsyncApiGeneratorTest {
   @BeforeAll
   static void setup() {
     asyncApiGenerator =
-        new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED, "groupId",
+        new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED,
+                              "groupId",
                               baseDir.toFile());
   }
 

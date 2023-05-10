@@ -32,7 +32,7 @@ class OpenApiGeneratorTest {
   @BeforeAll
   static void setup() {
     openApiGenerator =
-        new OpenApiGenerator(SPRING_BOOT_VERSION ,Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
+        new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
                              new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
                              baseDir.toFile());
   }

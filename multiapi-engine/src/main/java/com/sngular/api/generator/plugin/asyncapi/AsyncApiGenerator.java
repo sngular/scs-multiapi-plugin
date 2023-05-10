@@ -180,11 +180,11 @@ public class AsyncApiGenerator {
 
   private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
     final OperationParameterObject operationParameter = OperationParameterObject
-        .builder()
-        .ids(operationId)
-        .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
-        .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
-        .build();
+                                                            .builder()
+                                                            .ids(operationId)
+                                                            .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
+                                                            .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
+                                                            .build();
     if (channel.has(SUBSCRIBE) && ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getStreamBridge())) {
       try {
         checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
