@@ -423,6 +423,15 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_API_WITH_NO_COMPONENTS = List.of(
+    SpecFile
+      .builder()
+      .filePath("openapigenerator/testApiWithNoComponents/api-test.yml")
+      .apiPackage("com.sngular.multifileplugin.testApiWithNoComponents")
+      .useLombokModelAnnotation(true)
+      .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -1259,6 +1268,24 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateApiWithNoComponents() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+      "openapigenerator/testApiWithNoComponents/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+
   }
 
   private static Boolean commonTest(
