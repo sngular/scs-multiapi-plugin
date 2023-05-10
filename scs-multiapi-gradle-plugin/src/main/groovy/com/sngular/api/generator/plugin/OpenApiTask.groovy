@@ -27,7 +27,7 @@ abstract class OpenApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
     if (null != openApiExtension && !openApiExtension.getSpecFile().isEmpty()) {
-      def openApiGen = new com.sngular.api.generator.plugin.openapi.OpenApiGenerator(openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
+      def openApiGen = new com.sngular.api.generator.plugin.openapi.OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
       List<com.sngular.api.generator.plugin.openapi.parameter.SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
         openApiSpecFiles.add(toFileSpec(apiSpec))

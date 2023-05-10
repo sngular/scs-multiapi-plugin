@@ -109,13 +109,16 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  public AsyncApiGenerator(final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
+  private Integer springBootVersion;
+
+  public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
     this.groupId = groupId;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
     this.baseDir = baseDir;
     templateFactory = new TemplateFactory();
     targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
+    this.springBootVersion = springBootVersion;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
@@ -149,7 +152,7 @@ public class AsyncApiGenerator {
           processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas);
         }
 
-        setUpTemplate(fileParameter);
+        setUpTemplate(fileParameter, springBootVersion);
         templateFactory.fillTemplates();
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
@@ -362,11 +365,12 @@ public class AsyncApiGenerator {
     return operationId;
   }
 
-  private void setUpTemplate(final SpecFile fileParameter) {
+  private void setUpTemplate(final SpecFile fileParameter, final Integer springBootVersion) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
+    processJavaEEPackage(springBootVersion);
   }
 
   private void processFilePaths(final SpecFile fileParameter) {
@@ -439,6 +443,10 @@ public class AsyncApiGenerator {
 
   private String getPath(final String pathName) {
     return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
+  }
+
+  private void processJavaEEPackage(final Integer springBootVersion) {
+    templateFactory.calculateJavaEEPackage(springBootVersion);
   }
 
   private void processPackage(final SpecFile fileParameter) {

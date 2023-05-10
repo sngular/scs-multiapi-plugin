@@ -84,7 +84,12 @@ public class OpenApiGenerator {
 
   private boolean useLombok;
 
-  public OpenApiGenerator(final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId, final File targetFolder, final File basedir) {
+  private Integer springBootVersion;
+
+  public OpenApiGenerator(
+      final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
+      final File targetFolder,
+      final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
@@ -92,6 +97,7 @@ public class OpenApiGenerator {
     this.targetFolder = targetFolder;
     this.baseDir = basedir;
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
+    this.springBootVersion = springBootVersion;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
@@ -121,6 +127,7 @@ public class OpenApiGenerator {
       isRestClient = !specFile.isReactive();
     }
 
+    templateFactory.calculateJavaEEPackage(springBootVersion);
     createApiTemplate(specFile, filePathToSave, openAPI);
 
     createModelTemplate(specFile, openAPI);

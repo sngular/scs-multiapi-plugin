@@ -27,10 +27,13 @@ class AsyncApiGeneratorTest {
 
   private static AsyncApiGenerator asyncApiGenerator;
 
+  private static int SPRING_BOOT_VERSION = 2;
+
   @BeforeAll
   static void setup() {
     asyncApiGenerator =
-        new AsyncApiGenerator(new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED, "groupId",
+        new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED,
+                              "groupId",
                               baseDir.toFile());
   }
 
@@ -51,7 +54,7 @@ class AsyncApiGeneratorTest {
                      AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
         Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
                      AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
-        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators())
+        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION))
     );
   }
 

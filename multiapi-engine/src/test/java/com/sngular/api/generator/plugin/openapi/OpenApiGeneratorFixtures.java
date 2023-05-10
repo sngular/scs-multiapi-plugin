@@ -424,12 +424,12 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_API_WITH_NO_COMPONENTS = List.of(
-    SpecFile
-      .builder()
-      .filePath("openapigenerator/testApiWithNoComponents/api-test.yml")
-      .apiPackage("com.sngular.multifileplugin.testApiWithNoComponents")
-      .useLombokModelAnnotation(true)
-      .build()
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testApiWithNoComponents/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testApiWithNoComponents")
+          .useLombokModelAnnotation(true)
+          .build()
   );
 
   static Function<Path, Boolean> validateOneOfInResponse() {
@@ -676,7 +676,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> validateApiReactiveGeneration() {
+  static Function<Path, Boolean> validateApiReactiveGeneration(int springBootVersion) {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/reactivegeneration";
 
@@ -687,7 +687,7 @@ public final class OpenApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "TestApi.java"
+        ASSETS_PATH + calculateJavaEEPackage(springBootVersion) + "TestApi.java"
     );
 
     List<String> expectedTestApiModelFiles = List.of(
@@ -1059,7 +1059,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotations() {
+  static Function<Path, Boolean> validateValidationAnnotations(int springBootVersion) {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
@@ -1073,10 +1073,10 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/" + calculateJavaEEPackage(springBootVersion);
 
     final List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "testApi/TestApi.java");
+        ASSETS_PATH + "testApi/" + calculateJavaEEPackage(springBootVersion) + "TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "testApi/ApiErrorDTO.java",
@@ -1114,7 +1114,7 @@ public final class OpenApiGeneratorFixtures {
                      && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotationsLombok() {
+  static Function<Path, Boolean> validateValidationAnnotationsLombok(int springBootTest) {
 
     final String DEFAULT_LOMBOK_TARGET_API = "generated/com/sngular/multifileplugin/lombok/testapi";
 
@@ -1125,7 +1125,7 @@ public final class OpenApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "lombok/TestApi.java");
+        ASSETS_PATH + "lombok/" + calculateJavaEEPackage(springBootTest) + "TestApi.java");
 
     List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "lombok/ApiErrorDTO.java",
@@ -1278,7 +1278,7 @@ public final class OpenApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model/exception";
 
     final List<String> expectedTestApiFiles = List.of(
-      "openapigenerator/testApiWithNoComponents/assets/TestApi.java"
+        "openapigenerator/testApiWithNoComponents/assets/TestApi.java"
     );
 
     final List<String> expectedTestApiModelFiles = List.of(
@@ -1337,5 +1337,13 @@ public final class OpenApiGeneratorFixtures {
   }
 
   private OpenApiGeneratorFixtures() {
+  }
+
+  private static String calculateJavaEEPackage(int springBootVersion) {
+    if (3 <= springBootVersion) {
+      return "jakarta/";
+    } else {
+      return "javax/";
+    }
   }
 }

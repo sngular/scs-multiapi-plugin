@@ -27,7 +27,7 @@ abstract class AsyncApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
     if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFiles().isEmpty()) {
-      def asyncApiGen = new com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator(targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
+      def asyncApiGen = new com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator(targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir(), asyncApiModelExtension.getSpringBootVersion())
       List<com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile> asyncApiSpecFiles = []
       asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {
         asyncApiSpecFiles.add(toFileSpec(apiSpec))
