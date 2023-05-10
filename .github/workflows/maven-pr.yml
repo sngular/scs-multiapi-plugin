@@ -9,7 +9,7 @@ concurrency: pr-${{ github.event.pull_request.id }}
 jobs:
   check-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-maven')
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'release-maven') }}
     steps:
       - uses: actions/checkout@v3
       - name: Check if version is updated
@@ -27,16 +27,16 @@ jobs:
           file-to-check: scs-multiapi-maven-plugin/pom.xml
         continue-on-error: true
       - name: Warn about version specification
-        if: steps.engine_version_check.outcome != 'success' || steps.maven_plugin_version_check.outcome != 'success'
+        if: ${{ steps.engine_version_check.outcome != 'success' || steps.maven_plugin_version_check.outcome != 'success' }}
         uses: thollander/actions-comment-pull-request@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: Project version has not been updated in pom.xml. Please, update your version using https://semver.org specifications
       - name: Fail
-        if: steps.engine_version_check.outcome != 'success' || steps.maven_plugin_version_check.outcome != 'success'
+        if: ${{ steps.engine_version_check.outcome != 'success' || steps.maven_plugin_version_check.outcome != 'success' }}
         uses: cutenode/action-always-fail@v1
       - name: New software version
-        if: steps.engine_version_check.outcome == 'success' && steps.maven_plugin_version_check.outcome == 'success'
+        if: ${{ steps.engine_version_check.outcome == 'success' && steps.maven_plugin_version_check.outcome == 'success' }}
         run: echo "New multiapi engine version is " ${{ steps.engine_version_check.outputs.version }}
 
   build:
