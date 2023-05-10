@@ -406,9 +406,8 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.4.1</version>
         <configuration>
-          <minimizeJar>true</minimizeJar>
+          <minimizeJar>false</minimizeJar>
           <createDependencyReducedPom>true</createDependencyReducedPom>
-          <dependencyReducedPomLocation>${project.build.directory}/pom.xml</dependencyReducedPomLocation>
           <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
         </configuration>
         <executions>
