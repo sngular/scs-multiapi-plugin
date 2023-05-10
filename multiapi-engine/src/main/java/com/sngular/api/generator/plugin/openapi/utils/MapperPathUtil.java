@@ -7,6 +7,7 @@
 package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -47,12 +48,21 @@ public class MapperPathUtil {
 
   public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-    return GlobalObject.builder()
-                       .url(openAPI.getServers().get(0).getUrl())
-                       .authSchemas(authSchemaList)
-                       .authentications(authList)
-                       .schemaMap(openAPI.getComponents().getSchemas())
-                       .build();
+    if (Objects.nonNull(openAPI.getComponents())){
+      return GlobalObject.builder()
+                         .url(openAPI.getServers().get(0).getUrl())
+                         .authSchemas(authSchemaList)
+                         .authentications(authList)
+                         .schemaMap(openAPI.getComponents().getSchemas())
+                         .build();
+    }else{
+      return GlobalObject.builder()
+                         .url(openAPI.getServers().get(0).getUrl())
+                         .authSchemas(authSchemaList)
+                         .authentications(authList)
+                         .schemaMap(Collections.emptyMap())
+                         .build();
+    }
   }
 
   private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
