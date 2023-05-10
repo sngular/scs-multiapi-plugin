@@ -8,6 +8,7 @@ package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -128,7 +129,10 @@ public class OpenApiUtil {
 
   public static Map<String, Schema<?>> processBasicSchemas(final OpenAPI openApi) {
     final var basicSchemaMap = new HashMap<String, Schema<?>>();
-    final Map<String, Schema> componentsSchemasMap = openApi.getComponents().getSchemas();
+    Map<String, Schema> componentsSchemasMap = Collections.emptyMap();
+    if (Objects.nonNull(openApi.getComponents())) {
+      componentsSchemasMap = openApi.getComponents().getSchemas();
+    }
     componentsSchemasMap.forEach(basicSchemaMap::put);
 
     for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {

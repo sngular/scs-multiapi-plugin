@@ -19,7 +19,7 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     needs: [check-pr-labels]
-    if: contains(needs.check-pr-labels.outputs.labels, 'release') || contains(needs.check-pr-labels.outputs.labels, 'release-maven')
+    if: ${{ contains(needs.check-pr-labels.outputs.labels, 'release') || contains(needs.check-pr-labels.outputs.labels, 'release-maven') }}
     steps:
       - uses: actions/checkout@v3
       - name: Check if version is updated
