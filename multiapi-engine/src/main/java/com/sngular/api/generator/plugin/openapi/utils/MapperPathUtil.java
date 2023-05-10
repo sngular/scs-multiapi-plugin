@@ -47,13 +47,9 @@ public class MapperPathUtil {
 
   public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-    final GlobalObject globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList).build();
-    if (Objects.nonNull(openAPI.getComponents())) {
-      globalObject.setSchemaMap(openAPI.getComponents().getSchemas());
-    } else {
-      globalObject.setSchemaMap(Collections.emptyMap());
-    }
-    return globalObject;
+    final GlobalObject globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList);
+    globalObject.schemaMap(Objects.nonNull(openAPI.getComponents()) ? openAPI.getComponents().getSchemas() : Collections.emptyMap());
+    return globalObject.build();
   }
 
   private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
