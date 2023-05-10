@@ -40,3 +40,7 @@ pom.xml.bak
 **/bin/
 .vscode/
 **/.java-version
+
+*.bak
+
+scs-multiapi-maven-plugin/dependency-reduced-pom.xml
