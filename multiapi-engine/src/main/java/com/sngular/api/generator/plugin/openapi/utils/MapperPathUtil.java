@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.ContentObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -47,7 +49,7 @@ public class MapperPathUtil {
 
   public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-    final GlobalObject globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList);
+    final GlobalObjectBuilder globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList);
     globalObject.schemaMap(Objects.nonNull(openAPI.getComponents()) ? openAPI.getComponents().getSchemas() : Collections.emptyMap());
     return globalObject.build();
   }
@@ -64,8 +66,7 @@ public class MapperPathUtil {
   }
 
   public static List<PathObject> mapPathObjects(
-    final OpenAPI openAPI, final SpecFile specFile, final Entry<String, HashMap<String, PathItem>> path,
-    final GlobalObject globalObject) {
+      final OpenAPI openAPI, final SpecFile specFile, final Entry<String, HashMap<String, PathItem>> path, final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()
@@ -102,8 +103,8 @@ public class MapperPathUtil {
   }
 
   private static OperationObject createOperation(
-    final OpenAPI openAPI, final Operation operation, final String operationType,
-    final SpecFile specFile, final GlobalObject globalObject, final List<String> operationIdList) {
+      final OpenAPI openAPI, final Operation operation, final String operationType,
+      final SpecFile specFile, final GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
                           .operationId(mapOperationId(operation.getOperationId(), operationIdList))
                           .operationType(operationType)
@@ -175,8 +176,8 @@ public class MapperPathUtil {
   }
 
   private static List<ParameterObject> mapParameterObjects(
-    final OpenAPI openAPI, final List<Parameter> parameters, final SpecFile specFile, final String contentClassName,
-    final GlobalObject globalObject) {
+      final OpenAPI openAPI, final List<Parameter> parameters, final SpecFile specFile, final String contentClassName,
+      final GlobalObject globalObject) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (Parameter parameter : parameters) {
@@ -210,8 +211,8 @@ public class MapperPathUtil {
   }
 
   private static void addInlineParametersToList(
-    final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final SpecFile specFile,
-    final GlobalObject globalObject) {
+      final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final SpecFile specFile,
+      final GlobalObject globalObject) {
     final Content content = parameter.getContent();
     for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
       final String inlineParameter = getPojoName(INLINE_PARAMETER + StringUtils.capitalize(contentClassName)
