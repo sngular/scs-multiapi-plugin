@@ -84,7 +84,7 @@ public class OpenApiGenerator {
 
   private boolean useLombok;
 
-  private Integer springBootVersion;
+  private final Integer springBootVersion;
 
   public OpenApiGenerator(
       final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
