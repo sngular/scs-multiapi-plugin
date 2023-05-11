@@ -19,3 +19,18 @@ channels:
           properties:
             id:
               type: integer
+  test2:
+    publish:
+      summary: This is just a test2.
+      operationId: onTest2
+      message:
+        name: TestMsg2
+        payload:
+          $ref: "#/components/schemas/thing"
+components:
+  schemas:
+    thing:
+      type: object
+      properties:
+        id:
+          type: integer

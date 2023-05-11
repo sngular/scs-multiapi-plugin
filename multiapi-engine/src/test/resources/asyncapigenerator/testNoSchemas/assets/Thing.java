@@ -1,4 +1,4 @@
-package com.sngular.apigenerator.asyncapi.model.schemas;
+package com.sngular.scsplugin.noschemas.model.schemas;
 
 import java.util.Objects;
 
@@ -7,39 +7,39 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonDeserialize(builder = TestMsgPayload.TestMsgPayloadBuilder.class)
-public class TestMsgPayload {
+@JsonDeserialize(builder = Thing.ThingBuilder.class)
+public class Thing {
 
   @JsonProperty(value ="id")
   private Integer id;
 
-  private TestMsgPayload(Integer id) {
+  private Thing(Integer id) {
     this.id = id;
 
   }
 
-  private TestMsgPayload(TestMsgPayloadBuilder builder) {
+  private Thing(ThingBuilder builder) {
     this.id = builder.id;
 
   }
 
-  public static TestMsgPayload.TestMsgPayloadBuilder builder() {
-    return new TestMsgPayload.TestMsgPayloadBuilder();
+  public static Thing.ThingBuilder builder() {
+    return new Thing.ThingBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class TestMsgPayloadBuilder {
+  public static class ThingBuilder {
 
     private Integer id;
 
-    public TestMsgPayload.TestMsgPayloadBuilder id(Integer id) {
+    public Thing.ThingBuilder id(Integer id) {
       this.id = id;
       return this;
     }
 
-    public TestMsgPayload build() {
-      TestMsgPayload testMsgPayload = new TestMsgPayload(this);
-      return testMsgPayload;
+    public Thing build() {
+      Thing thing = new Thing(this);
+      return thing;
     }
   }
 
@@ -63,8 +63,8 @@ public class TestMsgPayload {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TestMsgPayload testMsgPayload = (TestMsgPayload) o;
-    return Objects.equals(this.id, testMsgPayload.id);
+    Thing thing = (Thing) o;
+    return Objects.equals(this.id, thing.id);
   }
 
   @Override
@@ -75,7 +75,7 @@ public class TestMsgPayload {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TestMsgPayload {\n");
+    sb.append("class Thing {\n");
     sb.append(" id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();

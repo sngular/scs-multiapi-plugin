@@ -1,4 +1,4 @@
-package com.sngular.apigenerator.asyncapi.model.messages;
+package com.sngular.scsplugin.noschemas.model.messages;
 
 import java.util.Objects;
 
@@ -10,16 +10,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = TestMsg.TestMsgBuilder.class)
 public class TestMsg {
 
-  @JsonProperty(value ="payload")
-  private com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload payload;
+  @JsonProperty(value ="id")
+  private Integer id;
 
-  private TestMsg(com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload payload) {
-    this.payload = payload;
+  private TestMsg(Integer id) {
+    this.id = id;
 
   }
 
   private TestMsg(TestMsgBuilder builder) {
-    this.payload = builder.payload;
+    this.id = builder.id;
 
   }
 
@@ -30,10 +30,10 @@ public class TestMsg {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class TestMsgBuilder {
 
-    private com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload payload;
+    private Integer id;
 
-    public TestMsg.TestMsgBuilder payload(com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload payload) {
-      this.payload = payload;
+    public TestMsg.TestMsgBuilder id(Integer id) {
+      this.id = id;
       return this;
     }
 
@@ -44,15 +44,15 @@ public class TestMsg {
   }
 
   /**
-  * Get payload
-  * @return payload
+  * Get id
+  * @return id
   */
-  @Schema(name = "payload", required = false)
-  public com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload getPayload() {
-    return payload;
+  @Schema(name = "id", required = false)
+  public Integer getId() {
+    return id;
   }
-  public void setPayload(com.sngular.apigenerator.asyncapi.model.schemas.TestMsgPayload payload) {
-    this.payload = payload;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   @Override
@@ -64,19 +64,19 @@ public class TestMsg {
       return false;
     }
     TestMsg testMsg = (TestMsg) o;
-    return Objects.equals(this.payload, testMsg.payload);
+    return Objects.equals(this.id, testMsg.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(payload);
+    return Objects.hash(id);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TestMsg {\n");
-    sb.append(" payload: ").append(toIndentedString(payload)).append("\n");
+    sb.append(" id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();
   }
