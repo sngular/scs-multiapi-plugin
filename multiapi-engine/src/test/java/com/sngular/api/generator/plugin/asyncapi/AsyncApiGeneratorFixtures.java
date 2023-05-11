@@ -188,6 +188,12 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
+          .build());
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -510,6 +516,23 @@ public class AsyncApiGeneratorFixtures {
 
     final List<String> expectedModelMessageFiles = List.of(
         "asyncapigenerator/testIssueInfiniteLoop/assets/duplicateNameMessage/MailRequestInfiniteDTO.java"
+    );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateNoSchemas() {
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/apigenerator/asyncapi/model/schemas";
+
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/apigenerator/asyncapi/model/messages";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/TestMsgPayload.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/TestMsg.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
