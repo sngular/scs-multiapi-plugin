@@ -258,12 +258,9 @@ public class AsyncApiGenerator {
 
   private void getMessageSchemas(final JsonNode message, final Map<String, JsonNode> totalSchemas) {
     if (message.has(PAYLOAD)) {
-      JsonNode payload = message.get(PAYLOAD);
+      final JsonNode payload = message.get(PAYLOAD);
       if (!payload.has(REF)) {
         final String key = (MESSAGES + SLASH + message.get(NAME).textValue()).toUpperCase();
-        if (payload.has(REF)) {
-          payload = payload.get(REF);
-        }
         totalSchemas.putIfAbsent(key, payload);
       }
     }
