@@ -270,13 +270,12 @@ public class AsyncApiGenerator {
   }
 
   private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas) {
-    if (channel.has(PUBLISH) && channel.get(PUBLISH).has(MESSAGE)) {
-      getMessageSchemas(channel.get(PUBLISH).get(MESSAGE), totalSchemas);
-    }
-
-    if (channel.has(SUBSCRIBE) && channel.get(SUBSCRIBE).has(MESSAGE)) {
-      getMessageSchemas(channel.get(SUBSCRIBE).get(MESSAGE), totalSchemas);
-    }
+    final List<String> options = List.of(PUBLISH, SUBSCRIBE);
+    options.forEach(option -> {
+      if (channel.has(option) && channel.get(option).has(MESSAGE)) {
+        getMessageSchemas(channel.get(option).get(MESSAGE), totalSchemas);
+      }
+    });
   }
 
   private JsonNode solveRef(final FileLocation ymlParent, final String[] path, final JsonNode reference, final Map<String, JsonNode> totalSchemas) throws IOException {
