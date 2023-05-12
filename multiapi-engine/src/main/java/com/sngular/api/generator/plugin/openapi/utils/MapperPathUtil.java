@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.openapi.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.ContentObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
@@ -165,6 +166,9 @@ public class MapperPathUtil {
 
   private static List<RequestObject> mapRequestObject(final SpecFile specFile, final Operation operation, final GlobalObject globalObject) {
     final List<RequestObject> requestObjects = new ArrayList<>();
+    if (Objects.isNull(operation.getOperationId())) {
+      throw new InvalidAPIException();
+    }
     final String operationIdWithCap = operation.getOperationId().substring(0, 1).toUpperCase() + operation.getOperationId().substring(1);
     if (Objects.nonNull(operation.getRequestBody())) {
       requestObjects.add(RequestObject.builder()
