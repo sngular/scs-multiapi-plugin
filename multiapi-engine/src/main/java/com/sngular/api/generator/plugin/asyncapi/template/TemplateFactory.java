@@ -70,7 +70,7 @@ public class TemplateFactory {
 
   private String subscribeClassName = null;
 
-  private boolean hasHeadersKey = false;
+  private boolean hasKafkaKey = false;
 
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
@@ -96,11 +96,11 @@ public class TemplateFactory {
     root.put("streamBridgeMethods", streamBridgeMethods);
 
     if (!publishMethods.isEmpty()) {
-      fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
+      fillTemplate(supplierFilePath, supplierClassName, hasKafkaKey ? TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
     }
 
     if (!subscribeMethods.isEmpty()) {
-      fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
+      fillTemplate(subscribeFilePath, subscribeClassName, hasKafkaKey ? TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
     }
 
     if (!streamBridgeMethods.isEmpty()) {
@@ -267,8 +267,8 @@ public class TemplateFactory {
     subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
   }
 
-  public final void setHasHeadersKey(boolean hasHeadersKey) {
-    this.hasHeadersKey = hasHeadersKey;
+  public final void setHasKafkaKey(boolean hasKafkaKey) {
+    this.hasKafkaKey = hasKafkaKey;
   }
 
   public final void setSupplierEntitiesSuffix(final String suffix) {
@@ -313,11 +313,12 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     hasHeadersKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS,
+                     hasKafkaKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS,
                      interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS, interfaceRoot);
+                     hasKafkaKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS,
+                     interfaceRoot);
       }
     }
   }

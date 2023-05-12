@@ -16,7 +16,11 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_API_SUPPLIERS = "templateSuppliers.ftlh";
 
+  public static final String TEMPLATE_API_SUPPLIERS_WITH_KEY = "templateSuppliersWithKey.ftlh";
+
   public static final String TEMPLATE_API_CONSUMERS = "templateConsumers.ftlh";
+
+  public static final String TEMPLATE_API_CONSUMERS_WITH_KEY = "templateConsumersWithKey.ftlh";
 
   public static final String TEMPLATE_API_STREAM_BRIDGE = "templateStreamBridge.ftlh";
 
@@ -25,6 +29,8 @@ public class TemplateIndexConstants {
   public static final String TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY = "interfaceSupplierWithKey.ftlh";
 
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
+
+  public static final String TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY = "interfaceConsumerWithKey.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
 

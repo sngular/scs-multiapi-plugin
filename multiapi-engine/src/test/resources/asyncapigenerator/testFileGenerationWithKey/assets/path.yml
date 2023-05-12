@@ -3,12 +3,10 @@ components:
     OrderCreated:
       payload:
         $ref: '#/components/schemas/Order'
-      headers:
-        type: object
-        properties:
+      bindings:
+        kafka:
           key:
             type: string
-            description: Publisher key
   schemas:
     CreateOrder:
       order:
