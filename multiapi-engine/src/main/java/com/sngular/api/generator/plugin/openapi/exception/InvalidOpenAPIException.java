@@ -6,11 +6,13 @@
 
 package com.sngular.api.generator.plugin.openapi.exception;
 
-public class InvalidAPIException extends RuntimeException {
+import com.sngular.api.generator.plugin.exception.InvalidAPIException;
+
+public class InvalidOpenAPIException extends InvalidAPIException {
 
   private static final String ERROR_MESSAGE = "OpenApi -> There is at least one operation without operationId";
 
-  public InvalidAPIException() {
+  public InvalidOpenAPIException() {
     super(ERROR_MESSAGE);
   }
 

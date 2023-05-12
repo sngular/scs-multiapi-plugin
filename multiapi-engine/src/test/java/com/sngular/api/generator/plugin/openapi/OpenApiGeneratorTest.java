@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import com.sngular.api.generator.plugin.openapi.exception.InvalidAPIException;
+import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
