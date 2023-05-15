@@ -22,215 +22,214 @@ import org.apache.commons.collections4.CollectionUtils;
 public class AsyncApiGeneratorFixtures {
 
   final static List<SpecFile> TEST_FILE_GENERATION = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGeneration/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("publishOperationFileGeneration")
-                                            .classNamePostfix("TestClassName")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.filegeneration.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.filegeneration.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("subscribeOperationFileGeneration")
-                                            .modelNameSuffix("Mapper")
-                                            .apiPackage("com.sngular.scsplugin.filegeneration.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.filegeneration.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGeneration/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("publishOperationFileGeneration")
+                                        .classNamePostfix("TestClassName")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.filegeneration.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.filegeneration.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("subscribeOperationFileGeneration")
+                                        .modelNameSuffix("Mapper")
+                                        .apiPackage("com.sngular.scsplugin.filegeneration.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.filegeneration.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_ISSUE_GENERATION = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testIssueGeneration/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("response")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.issuegeneration.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.issuegeneration.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("clients")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.issuegeneration.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.issuegeneration.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testIssueGeneration/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("response")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.issuegeneration.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.issuegeneration.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("clients")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.issuegeneration.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.issuegeneration.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_CUSTOM_VALIDATORS = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testCustomValidators/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("customValidatorResponse")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.customvalidator.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("customValidatorClients")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.customvalidator.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testCustomValidators/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("customValidatorResponse")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.customvalidator.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("customValidatorClients")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.customvalidator.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.customvalidator.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_ISSUE = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationIssue/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("onCustomerEvent")
-                                            .classNamePostfix("TestClassName")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.filegenerationissue.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.filegenerationissue.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("onCustomerOrderEvent")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.filegenerationissue.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.filegenerationissue.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGenerationIssue/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("onCustomerEvent")
+                                        .classNamePostfix("TestClassName")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.filegenerationissue.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.filegenerationissue.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("onCustomerOrderEvent")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.filegenerationissue.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.filegenerationissue.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("subscribeOperationExternalAvro")
-                                            .apiPackage("com.sngular.scsplugin.externalavro.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.externalavro.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("publishOperationExternalAvro")
-                                            .apiPackage("com.sngular.scsplugin.externalavro.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.externalavro.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("subscribeOperationExternalAvro")
+                                        .apiPackage("com.sngular.scsplugin.externalavro.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.externalavro.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("publishOperationExternalAvro")
+                                        .apiPackage("com.sngular.scsplugin.externalavro.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.externalavro.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationStreamBridge/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("subscribeOperationStreamBridge")
-                                            .classNamePostfix("TestClassName")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.streambridge.model.event.consumer")
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGenerationStreamBridge/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("subscribeOperationStreamBridge")
+                                        .classNamePostfix("TestClassName")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.streambridge.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.streambridge.model.event")
+                                        .build())
+      .streamBridge(OperationParameterObject.builder()
+                                            .ids("publishOperationStreamBridge")
+                                            .apiPackage("com.sngular.scsplugin.streambridge.model.event.producer")
                                             .modelPackage("com.sngular.scsplugin.streambridge.model.event")
                                             .build())
-          .streamBridge(OperationParameterObject.builder()
-                                                .ids("publishOperationStreamBridge")
-                                                .apiPackage("com.sngular.scsplugin.streambridge.model.event.producer")
-                                                .modelPackage("com.sngular.scsplugin.streambridge.model.event")
-                                                .build())
-          .build()
+      .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithoutOperationIds/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .classNamePostfix("TestClassName")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.withoutids.model.event.consumer")
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithoutOperationIds/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .classNamePostfix("TestClassName")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.withoutids.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.withoutids.model.event")
+                                        .build())
+      .streamBridge(OperationParameterObject.builder()
+                                            .apiPackage("com.sngular.scsplugin.withoutids.model.event.producer")
                                             .modelPackage("com.sngular.scsplugin.withoutids.model.event")
+                                            .modelNameSuffix("Mapper")
                                             .build())
-          .streamBridge(OperationParameterObject.builder()
-                                                .apiPackage("com.sngular.scsplugin.withoutids.model.event.producer")
-                                                .modelPackage("com.sngular.scsplugin.withoutids.model.event")
-                                                .modelNameSuffix("Mapper")
-                                                .build())
-          .build()
+      .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_WITH_ARRAY_STRING = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationArrayString/event-api.yml")
-          .supplier(OperationParameterObject.builder()
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.arraywithstring.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.arraywithstring.model.event")
-                                            .useLombokModelAnnotation(true)
-                                            .build())
-          .build());
-
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testFileGenerationArrayString/event-api.yml")
+      .supplier(OperationParameterObject.builder()
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.arraywithstring.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.arraywithstring.model.event")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
   final static List<SpecFile> TEST_ISSUE_GENERATE_SUPPLIER = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testIssueGenerateSupplier/async-api.yml")
-          .supplier(OperationParameterObject.builder()
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("company.mail.messaging")
-                                            .modelPackage("company.mail.model")
-                                            .useLombokModelAnnotation(true)
-                                            .build())
-          .build());
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testIssueGenerateSupplier/async-api.yml")
+      .supplier(OperationParameterObject.builder()
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("company.mail.messaging")
+                                        .modelPackage("company.mail.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
 
   final static List<SpecFile> TEST_ISSUE_INFINITE_LOOP = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testIssueInfiniteLoop/async-api.yml")
-          .supplier(OperationParameterObject.builder()
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.infiniteLoop.messaging")
-                                            .modelPackage("com.sngular.scsplugin.infiniteLoop.model")
-                                            .useLombokModelAnnotation(true)
-                                            .build())
-          .build());
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testIssueInfiniteLoop/async-api.yml")
+      .supplier(OperationParameterObject.builder()
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.infiniteLoop.messaging")
+                                        .modelPackage("com.sngular.scsplugin.infiniteLoop.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
 
   final static List<SpecFile> TEST_MODEL_CLASS_EXCEPTION_GENERATION = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testModelClassExceptionGeneration/event-api.yml")
-          .consumer(OperationParameterObject.builder()
-                                            .ids("subscribeOrder")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.modelclass.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.modelclass.model.event")
-                                            .build())
-          .supplier(OperationParameterObject.builder()
-                                            .ids("publishOrder")
-                                            .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.modelclass.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.modelclass.model.event")
-                                            .build())
-          .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testModelClassExceptionGeneration/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("subscribeOrder")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("publishOrder")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
-      SpecFile
-        .builder()
-        .filePath("src/test/resources/asyncapigenerator/testGenerationWithNoOperationId/event-api.yml")
-        .consumer(OperationParameterObject.builder()
-                                          .modelNameSuffix("DTO")
-                                          .apiPackage("com.sngular.scsplugin.withoutoperationid.model.event.consumer")
-                                          .modelPackage("com.sngular.scsplugin.withoutoperationid.model.event")
-                                          .build())
-        .build()
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testGenerationWithNoOperationId/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.withoutoperationid.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.withoutoperationid.model.event")
+                                        .build())
+      .build()
   );
 
   final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
-      SpecFile
-          .builder()
-          .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
-          .supplier(OperationParameterObject.builder()
-                                            .modelNameSuffix("")
-                                            .apiPackage("com.sngular.scsplugin.noschemas")
-                                            .modelPackage("com.sngular.scsplugin.noschemas.model")
-                                            .useLombokModelAnnotation(true)
-                                            .build())
-          .build());
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
+      .supplier(OperationParameterObject.builder()
+                                        .modelNameSuffix("")
+                                        .apiPackage("com.sngular.scsplugin.noschemas")
+                                        .modelPackage("com.sngular.scsplugin.noschemas.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
 
   final static String TARGET = "target";
 
@@ -256,31 +255,31 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/filegeneration/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "IPublishOperation.java",
-        ASSETS_PATH + "TestClassName.java");
+      ASSETS_PATH + "IPublishOperation.java",
+      ASSETS_PATH + "TestClassName.java");
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "ISubscribeOperation.java",
-        ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "ISubscribeOperation.java",
+      ASSETS_PATH + "Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
-        ASSETS_PATH + "CreateOrderMapper.java",
-        ASSETS_PATH + "OrderDTO.java",
-        ASSETS_PATH + "OrderLineDTO.java",
-        ASSETS_PATH + "OrderLineMapper.java",
-        ASSETS_PATH + "OrderMapper.java",
-        ASSETS_PATH + "OrderProductDTO.java",
-        ASSETS_PATH + "OrderProductMapper.java",
-        ASSETS_PATH + "WaiterMapper.java"
+      ASSETS_PATH + "CreateOrderMapper.java",
+      ASSETS_PATH + "OrderDTO.java",
+      ASSETS_PATH + "OrderLineDTO.java",
+      ASSETS_PATH + "OrderLineMapper.java",
+      ASSETS_PATH + "OrderMapper.java",
+      ASSETS_PATH + "OrderProductDTO.java",
+      ASSETS_PATH + "OrderProductMapper.java",
+      ASSETS_PATH + "WaiterMapper.java"
     );
 
     final List<String> expectedValidatorFiles = List.of(
-        CUSTOM_VALIDATOR_PATH + "NotNull.java",
-        CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
+      CUSTOM_VALIDATOR_PATH + "NotNull.java",
+      CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "OrderCreatedDTO.java"
+      ASSETS_PATH + "OrderCreatedDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -307,21 +306,21 @@ public class AsyncApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "IResponse.java",
-        ASSETS_PATH + "Subscriber.java");
+      ASSETS_PATH + "IResponse.java",
+      ASSETS_PATH + "Subscriber.java");
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "IClients.java",
-        ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "IClients.java",
+      ASSETS_PATH + "Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
-        ASSETS_PATH + "DataDTO.java",
-        ASSETS_PATH + "StatusMsgDTO.java"
+      ASSETS_PATH + "DataDTO.java",
+      ASSETS_PATH + "StatusMsgDTO.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "DataClientDTO.java",
-        ASSETS_PATH + "StatusDTO.java"
+      ASSETS_PATH + "DataClientDTO.java",
+      ASSETS_PATH + "StatusDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of();
@@ -352,42 +351,42 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/customvalidator/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "ICustomValidatorResponse.java",
-        ASSETS_PATH + "Subscriber.java");
+      ASSETS_PATH + "ICustomValidatorResponse.java",
+      ASSETS_PATH + "Subscriber.java");
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "ICustomValidatorClients.java",
-        ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "ICustomValidatorClients.java",
+      ASSETS_PATH + "Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
-        ASSETS_PATH + "DataDTO.java",
-        ASSETS_PATH + "StatusMsgDTO.java"
+      ASSETS_PATH + "DataDTO.java",
+      ASSETS_PATH + "StatusMsgDTO.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "DataClientDTO.java",
-        ASSETS_PATH + "StatusDTO.java"
+      ASSETS_PATH + "DataClientDTO.java",
+      ASSETS_PATH + "StatusDTO.java"
     );
 
     final List<String> expectedValidatorFiles = List.of(
-        CUSTOM_VALIDATOR_PATH + "Max.java",
-        CUSTOM_VALIDATOR_PATH + "MaxItems.java",
-        CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
-        CUSTOM_VALIDATOR_PATH + "MaxValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Min.java",
-        CUSTOM_VALIDATOR_PATH + "MinItems.java",
-        CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
-        CUSTOM_VALIDATOR_PATH + "MinValidator.java",
-        CUSTOM_VALIDATOR_PATH + "MultipleOf.java",
-        CUSTOM_VALIDATOR_PATH + "MultipleOfValidator.java",
-        CUSTOM_VALIDATOR_PATH + "NotNull.java",
-        CUSTOM_VALIDATOR_PATH + "NotNullValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Pattern.java",
-        CUSTOM_VALIDATOR_PATH + "PatternValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Size.java",
-        CUSTOM_VALIDATOR_PATH + "SizeValidator.java",
-        CUSTOM_VALIDATOR_PATH + "UniqueItems.java",
-        CUSTOM_VALIDATOR_PATH + "UniqueItemsValidator.java"
+      CUSTOM_VALIDATOR_PATH + "Max.java",
+      CUSTOM_VALIDATOR_PATH + "MaxItems.java",
+      CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MaxValidator.java",
+      CUSTOM_VALIDATOR_PATH + "Min.java",
+      CUSTOM_VALIDATOR_PATH + "MinItems.java",
+      CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MinValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MultipleOf.java",
+      CUSTOM_VALIDATOR_PATH + "MultipleOfValidator.java",
+      CUSTOM_VALIDATOR_PATH + "NotNull.java",
+      CUSTOM_VALIDATOR_PATH + "NotNullValidator.java",
+      CUSTOM_VALIDATOR_PATH + "Pattern.java",
+      CUSTOM_VALIDATOR_PATH + "PatternValidator.java",
+      CUSTOM_VALIDATOR_PATH + "Size.java",
+      CUSTOM_VALIDATOR_PATH + "SizeValidator.java",
+      CUSTOM_VALIDATOR_PATH + "UniqueItems.java",
+      CUSTOM_VALIDATOR_PATH + "UniqueItemsValidator.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -421,33 +420,33 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/filegenerationissue/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "IOnCustomerEvent.java",
-        ASSETS_PATH + "TestClassName.java");
+      ASSETS_PATH + "IOnCustomerEvent.java",
+      ASSETS_PATH + "TestClassName.java");
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "IOnCustomerOrderEvent.java",
-        ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "IOnCustomerOrderEvent.java",
+      ASSETS_PATH + "Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
-        ASSETS_PATH + "CustomerDTO.java",
-        ASSETS_PATH + "CustomerEventPayloadDTO.java",
-        ASSETS_PATH + "CustomerOrderDTO.java",
-        ASSETS_PATH + "CustomerOrderEventPayloadDTO.java",
-        ASSETS_PATH + "OrderedItemDTO.java",
-        ASSETS_PATH + "PaymentDetailsDTO.java",
-        ASSETS_PATH + "ShippingDetailsDTO.java"
+      ASSETS_PATH + "CustomerDTO.java",
+      ASSETS_PATH + "CustomerEventPayloadDTO.java",
+      ASSETS_PATH + "CustomerOrderDTO.java",
+      ASSETS_PATH + "CustomerOrderEventPayloadDTO.java",
+      ASSETS_PATH + "OrderedItemDTO.java",
+      ASSETS_PATH + "PaymentDetailsDTO.java",
+      ASSETS_PATH + "ShippingDetailsDTO.java"
     );
 
     final List<String> expectedValidatorFiles = List.of(
-        CUSTOM_VALIDATOR_PATH + "NotNull.java",
-        CUSTOM_VALIDATOR_PATH + "NotNullValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Size.java",
-        CUSTOM_VALIDATOR_PATH + "SizeValidator.java"
+      CUSTOM_VALIDATOR_PATH + "NotNull.java",
+      CUSTOM_VALIDATOR_PATH + "NotNullValidator.java",
+      CUSTOM_VALIDATOR_PATH + "Size.java",
+      CUSTOM_VALIDATOR_PATH + "SizeValidator.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "CustomerEventMessageDTO.java",
-        ASSETS_PATH + "CustomerOrderEventMessageDTO.java"
+      ASSETS_PATH + "CustomerEventMessageDTO.java",
+      ASSETS_PATH + "CustomerOrderEventMessageDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -472,13 +471,13 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/externalavro/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "ISubscribeOperation.java",
-        ASSETS_PATH + "Subscriber.java"
+      ASSETS_PATH + "ISubscribeOperation.java",
+      ASSETS_PATH + "Subscriber.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "IPublishOperation.java",
-        ASSETS_PATH + "Producer.java"
+      ASSETS_PATH + "IPublishOperation.java",
+      ASSETS_PATH + "Producer.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -500,12 +499,12 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/streambridge/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "ISubscribeOperation.java",
-        ASSETS_PATH + "TestClassName.java"
+      ASSETS_PATH + "ISubscribeOperation.java",
+      ASSETS_PATH + "TestClassName.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "StreamBridgeProducer.java"
+      ASSETS_PATH + "StreamBridgeProducer.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -527,12 +526,12 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/withoutids/model/event/schemas/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-        ASSETS_PATH + "ISubscribeOperation.java",
-        ASSETS_PATH + "TestClassName.java"
+      ASSETS_PATH + "ISubscribeOperation.java",
+      ASSETS_PATH + "TestClassName.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-        ASSETS_PATH + "StreamBridgeProducer.java"
+      ASSETS_PATH + "StreamBridgeProducer.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
@@ -552,11 +551,11 @@ public class AsyncApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final List<String> expectedModelSchemaFiles = List.of(
-        ASSETS_PATH + "ObjectArrayDTO.java"
+      ASSETS_PATH + "ObjectArrayDTO.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "ObjectArrayMessageDTO.java"
+      ASSETS_PATH + "ObjectArrayMessageDTO.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
@@ -569,12 +568,12 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/company/mail/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
-        "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
-        "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java"
+      "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
+      "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestMessageDTO.java"
+      "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestMessageDTO.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
@@ -587,12 +586,12 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
-        "asyncapigenerator/testIssueInfiniteLoop/assets/ConfigDTO.java",
-        "asyncapigenerator/testIssueInfiniteLoop/assets/MailRequestInfiniteDTO.java"
+      "asyncapigenerator/testIssueInfiniteLoop/assets/ConfigDTO.java",
+      "asyncapigenerator/testIssueInfiniteLoop/assets/MailRequestInfiniteDTO.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        "asyncapigenerator/testIssueInfiniteLoop/assets/duplicateNameMessage/MailRequestInfiniteDTO.java"
+      "asyncapigenerator/testIssueInfiniteLoop/assets/duplicateNameMessage/MailRequestInfiniteDTO.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
@@ -651,8 +650,9 @@ public class AsyncApiGeneratorFixtures {
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                      modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
-    
-  static Function<Path, Boolean> validateNoSchemas() {
+  }
+
+  static Function<Path, Boolean> validateNoSchemas () {
     final String API_FOLDER = "generated/com/sngular/scsplugin/noschemas";
 
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/schemas";
@@ -660,20 +660,20 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
-        "asyncapigenerator/testNoSchemas/assets/Thing.java"
+      "asyncapigenerator/testNoSchemas/assets/Thing.java"
     );
 
     final List<String> expectedModelMessageFiles = List.of(
-        "asyncapigenerator/testNoSchemas/assets/TestMsg.java"
+      "asyncapigenerator/testNoSchemas/assets/TestMsg.java"
     );
 
     final List<String> expectedConsumerFiles = List.of(
     );
 
     final List<String> expectedProducerFiles = List.of(
-        "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
-        "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
-        "asyncapigenerator/testNoSchemas/assets/Producer.java"
+      "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
+      "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
+      "asyncapigenerator/testNoSchemas/assets/Producer.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
@@ -681,9 +681,9 @@ public class AsyncApiGeneratorFixtures {
                    modelTest(path, expectedProducerFiles, API_FOLDER);
   }
 
-  private static Boolean commonTest(
-      final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
-      final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
+  private static Boolean commonTest (
+  final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
+  final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
@@ -712,7 +712,7 @@ public class AsyncApiGeneratorFixtures {
     return result;
   }
 
-  private static boolean modelTest(final Path resultPath, final List<String> expectedModelFiles, final String default_model_folder) {
+  private static boolean modelTest ( final Path resultPath, final List<String> expectedModelFiles, final String default_model_folder) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
@@ -729,7 +729,7 @@ public class AsyncApiGeneratorFixtures {
     return result;
   }
 
-  private static boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
+  private static boolean customValidatorTest ( final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
