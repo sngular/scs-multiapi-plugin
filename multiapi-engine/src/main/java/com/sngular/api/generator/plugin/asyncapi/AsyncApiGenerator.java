@@ -82,11 +82,19 @@ public class AsyncApiGenerator {
 
   private static final String PAYLOAD = "payload";
 
+  private static final String NAME = "name";
+
   private static final String REF = "$ref";
 
   private static final String MESSAGES = "messages";
 
+  private static final String MESSAGE = "message";
+
   private static final String SCHEMAS = "schemas";
+
+  private static final String COMPONENTS = "components";
+
+  private static final String CHANNELS = "channels";
 
   private static final String JSON = "json";
 
@@ -110,7 +118,7 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  private Integer springBootVersion;
+  private final Integer springBootVersion;
 
   public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
     this.groupId = groupId;
@@ -136,8 +144,8 @@ public class AsyncApiGenerator {
       final FileLocation ymlParent = ymlFileAndPath.getRight();
 
       try {
-        final var node = om.readTree(ymlFile);
-        final var internalNode = node.get("channels");
+        final JsonNode node = om.readTree(ymlFile);
+        final JsonNode internalNode = node.get(CHANNELS);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
@@ -225,23 +233,47 @@ public class AsyncApiGenerator {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
     final List<JsonNode> referenceList = node.findValues(REF);
     referenceList.forEach(reference -> processReference(node, reference, ymlParent, totalSchemas, referenceList));
-    final List<JsonNode> messagesList = node.findValues(MESSAGES);
-    final List<JsonNode> schemasList = node.findValues(SCHEMAS);
-    schemasList.forEach(
-        schema -> schema.fields().forEachRemaining(fieldSchema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + fieldSchema.getKey()).toUpperCase(), fieldSchema.getValue())));
-    messagesList.forEach(message ->
-                             message.fields().forEachRemaining(fieldSchema -> {
-                               if (fieldSchema.getValue().has(PAYLOAD)) {
-                                 JsonNode payload = fieldSchema.getValue().get(PAYLOAD);
-                                 final String key = (MESSAGES + SLASH + fieldSchema.getKey()).toUpperCase();
-                                 if (payload.has(REF)) {
-                                   payload = payload.get(REF);
-                                 }
-                                 totalSchemas.putIfAbsent(key, payload);
-                               }
-                             })
-    );
+
+    if (node.has(COMPONENTS)) {
+      final List<JsonNode> schemasList = node.get(COMPONENTS).findValues(SCHEMAS);
+      schemasList.forEach(
+          schema -> schema.fields().forEachRemaining(
+              fieldSchema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + fieldSchema.getKey()).toUpperCase(), fieldSchema.getValue())
+          )
+      );
+
+      final List<JsonNode> messagesList = node.get(COMPONENTS).findValues(MESSAGES);
+      messagesList.forEach(
+          message -> getMessageSchemas(message, totalSchemas)
+      );
+    }
+
+    if (node.has(CHANNELS)) {
+      node.get(CHANNELS).forEach(
+          channel -> getChannelSchemas(channel, totalSchemas)
+      );
+    }
+
     return totalSchemas;
+  }
+
+  private void getMessageSchemas(final JsonNode message, final Map<String, JsonNode> totalSchemas) {
+    if (message.has(PAYLOAD)) {
+      final JsonNode payload = message.get(PAYLOAD);
+      if (!payload.has(REF)) {
+        final String key = (MESSAGES + SLASH + message.get(NAME).textValue()).toUpperCase();
+        totalSchemas.putIfAbsent(key, payload);
+      }
+    }
+  }
+
+  private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas) {
+    final List<String> options = List.of(PUBLISH, SUBSCRIBE);
+    options.forEach(option -> {
+      if (channel.has(option) && channel.get(option).has(MESSAGE)) {
+        getMessageSchemas(channel.get(option).get(MESSAGE), totalSchemas);
+      }
+    });
   }
 
   private JsonNode solveRef(final FileLocation ymlParent, final String[] path, final JsonNode reference, final Map<String, JsonNode> totalSchemas) throws IOException {
@@ -473,7 +505,7 @@ public class AsyncApiGenerator {
   private void processSupplierMethod(
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
       final String suffix) throws IOException, TemplateException {
-    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix);
+    final Pair<String, String> result = processMethod(channel, modelPackage, ymlParent, prefix, suffix);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
   }
@@ -501,17 +533,20 @@ public class AsyncApiGenerator {
   private void fillTemplateFactory(
       final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix, final String modelPackageReceived)
       throws TemplateException, IOException {
-    final var modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
-    final var parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
-    final var className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
-    final var schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
+    final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
+    final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
+    final String className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
+    final JsonNode schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
+
+    final List<SchemaObject> schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
+
     Path filePath = null;
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
     for (SchemaObject schemaObject : schemaObjectList) {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
       templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     }
+
     if (filePath != null && Boolean.TRUE.equals(generateExceptionTemplate)) {
       templateFactory.fillTemplateModelClassException(filePath, modelPackage);
     }
@@ -519,17 +554,17 @@ public class AsyncApiGenerator {
 
   private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String prefix, final String suffix)
       throws IOException {
-    final JsonNode message = channel.get("message");
+    final JsonNode message = channel.get(MESSAGE);
     final String operationId = channel.get(OPERATION_ID).asText();
     final String namespace;
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParent);
     } else if (message.has(PAYLOAD)) {
-      final var payload = message.get(PAYLOAD);
+      final JsonNode payload = message.get(PAYLOAD);
       if (payload.has(REF)) {
         namespace = processMethodRef(payload, modelPackage, ymlParent);
       } else {
-        namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
+        namespace = modelPackage + PACKAGE_SEPARATOR_STR + MESSAGES + PACKAGE_SEPARATOR_STR + message.get(NAME).textValue();
       }
     } else {
       namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);

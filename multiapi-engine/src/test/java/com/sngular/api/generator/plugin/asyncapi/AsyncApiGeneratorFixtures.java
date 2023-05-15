@@ -200,6 +200,18 @@ public class AsyncApiGeneratorFixtures {
         .build()
   );
 
+  final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
+          .supplier(OperationParameterObject.builder()
+                                            .modelNameSuffix("")
+                                            .apiPackage("com.sngular.scsplugin.noschemas")
+                                            .modelPackage("com.sngular.scsplugin.noschemas.model")
+                                            .useLombokModelAnnotation(true)
+                                            .build())
+          .build());
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -526,6 +538,35 @@ public class AsyncApiGeneratorFixtures {
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                    modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateNoSchemas() {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/noschemas";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/schemas";
+
+    final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/messages";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/Thing.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/TestMsg.java"
+    );
+
+    final List<String> expectedConsumerFiles = List.of(
+    );
+
+    final List<String> expectedProducerFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
+        "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
+        "asyncapigenerator/testNoSchemas/assets/Producer.java"
+    );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
+                   modelTest(path, expectedProducerFiles, API_FOLDER);
   }
 
   private static Boolean commonTest(
