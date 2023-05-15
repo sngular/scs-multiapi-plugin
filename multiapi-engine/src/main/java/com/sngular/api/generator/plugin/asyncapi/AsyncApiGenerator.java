@@ -36,6 +36,7 @@ import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingEx
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
@@ -398,13 +399,17 @@ public class AsyncApiGenerator {
   }
 
   private String getOperationId(final JsonNode channel) {
-    final String operationId = getChannelPayload(channel).get(OPERATION_ID).asText();
-    if (processedOperationIds.contains(operationId)) {
-      throw new DuplicatedOperationException(operationId);
+    if (Objects.isNull(getChannelPayload(channel).get(OPERATION_ID))) {
+      throw new InvalidAsyncAPIException();
     } else {
-      processedOperationIds.add(operationId);
+      final String operationId = getChannelPayload(channel).get(OPERATION_ID).asText();
+      if (processedOperationIds.contains(operationId)) {
+        throw new DuplicatedOperationException(operationId);
+      } else {
+        processedOperationIds.add(operationId);
+      }
+      return operationId;
     }
-    return operationId;
   }
 
   private void setUpTemplate(final SpecFile fileParameter, final Integer springBootVersion) {

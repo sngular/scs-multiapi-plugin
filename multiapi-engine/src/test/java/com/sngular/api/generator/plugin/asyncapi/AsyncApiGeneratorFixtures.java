@@ -188,6 +188,18 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
+      SpecFile
+        .builder()
+        .filePath("src/test/resources/asyncapigenerator/testGenerationWithNoOperationId/event-api.yml")
+        .consumer(OperationParameterObject.builder()
+                                          .modelNameSuffix("DTO")
+                                          .apiPackage("com.sngular.scsplugin.withoutoperationid.model.event.consumer")
+                                          .modelPackage("com.sngular.scsplugin.withoutoperationid.model.event")
+                                          .build())
+        .build()
+  );
+
   final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
       SpecFile
           .builder()

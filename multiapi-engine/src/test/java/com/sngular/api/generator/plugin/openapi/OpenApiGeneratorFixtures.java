@@ -432,6 +432,15 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testGenerationWithNoOperationId/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testGenerationWithNoOperationId")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
