@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schemas;
+package com.sngular.scsplugin.modelclass.model.event.schemas;
 
 import java.util.Objects;
 
@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegeneration.model.event.schemas.exception.ModelClassException;
-import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
+import com.sngular.scsplugin.modelclass.model.event.schemas.exception.ModelClassException;
+import com.sngular.scsplugin.modelclass.model.event.customvalidator.NotNull;
 
-@JsonDeserialize(builder = OrderProductMapper.OrderProductMapperBuilder.class)
-public class OrderProductMapper {
+@JsonDeserialize(builder = OrderProductDTO.OrderProductDTOBuilder.class)
+public class OrderProductDTO {
 
   @JsonProperty(value ="ref")
   @NotNull
@@ -25,7 +25,7 @@ public class OrderProductMapper {
   @NotNull
   private final String quantity;
 
-  private OrderProductMapper(String ref, String productRef, String price, String quantity) {
+  private OrderProductDTO(String ref, String productRef, String price, String quantity) {
     this.ref = ref;
     this.productRef = productRef;
     this.price = price;
@@ -34,7 +34,7 @@ public class OrderProductMapper {
     validateRequiredAttributes();
   }
 
-  private OrderProductMapper(OrderProductMapperBuilder builder) {
+  private OrderProductDTO(OrderProductDTOBuilder builder) {
     this.ref = builder.ref;
     this.productRef = builder.productRef;
     this.price = builder.price;
@@ -43,41 +43,41 @@ public class OrderProductMapper {
     validateRequiredAttributes();
   }
 
-  public static OrderProductMapper.OrderProductMapperBuilder builder() {
-    return new OrderProductMapper.OrderProductMapperBuilder();
+  public static OrderProductDTO.OrderProductDTOBuilder builder() {
+    return new OrderProductDTO.OrderProductDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class OrderProductMapperBuilder {
+  public static class OrderProductDTOBuilder {
 
     private String ref;
     private String productRef;
     private String price;
     private String quantity;
 
-    public OrderProductMapper.OrderProductMapperBuilder ref(String ref) {
+    public OrderProductDTO.OrderProductDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;
     }
 
-    public OrderProductMapper.OrderProductMapperBuilder productRef(String productRef) {
+    public OrderProductDTO.OrderProductDTOBuilder productRef(String productRef) {
       this.productRef = productRef;
       return this;
     }
 
-    public OrderProductMapper.OrderProductMapperBuilder price(String price) {
+    public OrderProductDTO.OrderProductDTOBuilder price(String price) {
       this.price = price;
       return this;
     }
 
-    public OrderProductMapper.OrderProductMapperBuilder quantity(String quantity) {
+    public OrderProductDTO.OrderProductDTOBuilder quantity(String quantity) {
       this.quantity = quantity;
       return this;
     }
 
-    public OrderProductMapper build() {
-      OrderProductMapper orderProductMapper = new OrderProductMapper(this);
-      return orderProductMapper;
+    public OrderProductDTO build() {
+      OrderProductDTO orderProductDTO = new OrderProductDTO(this);
+      return orderProductDTO;
     }
   }
 
@@ -125,8 +125,8 @@ public class OrderProductMapper {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderProductMapper orderProductMapper = (OrderProductMapper) o;
-    return Objects.equals(this.ref, orderProductMapper.ref) && Objects.equals(this.productRef, orderProductMapper.productRef) && Objects.equals(this.price, orderProductMapper.price) && Objects.equals(this.quantity, orderProductMapper.quantity);
+    OrderProductDTO orderProductDTO = (OrderProductDTO) o;
+    return Objects.equals(this.ref, orderProductDTO.ref) && Objects.equals(this.productRef, orderProductDTO.productRef) && Objects.equals(this.price, orderProductDTO.price) && Objects.equals(this.quantity, orderProductDTO.quantity);
   }
 
   @Override
@@ -137,7 +137,7 @@ public class OrderProductMapper {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderProductMapper {\n");
+    sb.append("class OrderProductDTO {\n");
     sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
     sb.append(" productRef: ").append(toIndentedString(productRef)).append("\n");
     sb.append(" price: ").append(toIndentedString(price)).append("\n");
@@ -172,7 +172,7 @@ public class OrderProductMapper {
     }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("OrderProductMapper");
+      throw new ModelClassException("OrderProductDTO");
     }
   }
 

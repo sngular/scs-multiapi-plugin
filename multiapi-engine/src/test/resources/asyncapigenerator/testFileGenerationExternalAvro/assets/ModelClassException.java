@@ -1,4 +1,4 @@
-package ${exceptionPackage}.exception;
+package com.sngular.scsplugin.externalavro.model.event.schemas.exception;
 
 public class ModelClassException extends RuntimeException {
 

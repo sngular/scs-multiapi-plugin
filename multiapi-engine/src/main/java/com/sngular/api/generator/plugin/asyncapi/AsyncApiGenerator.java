@@ -162,7 +162,7 @@ public class AsyncApiGenerator {
         }
 
         setUpTemplate(fileParameter, springBootVersion);
-        templateFactory.fillTemplates();
+        templateFactory.fillTemplates(generateExceptionTemplate);
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
         e.printStackTrace();
@@ -545,10 +545,6 @@ public class AsyncApiGenerator {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
       templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
-    }
-
-    if (filePath != null && Boolean.TRUE.equals(generateExceptionTemplate)) {
-      templateFactory.fillTemplateModelClassException(filePath, modelPackage);
     }
   }
 
