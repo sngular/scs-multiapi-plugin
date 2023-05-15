@@ -4,7 +4,7 @@ package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Valid;
+import ${javaEEPackage}.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -86,8 +86,8 @@ public interface ${className?cap_first}Api {
 
   default ResponseEntity<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     <${operation.responseObjects[0].contentObjects[0].dataType}<#else><Void</#if>></@compress> ${operation.operationId}(<@compress single_line=true>
-    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.dataType} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
-    <#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam </#if> ${parameter.dataType} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
+    <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam(required = ${parameter.required?c}) </#if> ${parameter.dataType} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
+    <#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> @Parameter(name = "${parameter.name}", description = "${parameter.description}", required = ${parameter.required?c}, schema = @Schema(description = "")) <#if parameter.in == "path"> @PathVariable("${parameter.name}") <#elseif parameter.in == "query"> @RequestParam(required = ${parameter.required?c}) </#if> ${parameter.dataType} ${parameter.name} <#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
     <#if operation.requestObjects?has_content><#list operation.requestObjects as request> @Parameter(name = "${request.contentObjects[0].dataType?api.getVariableNameString()}", description = "${request.description! ""}", required = ${request.required?c}, schema = @Schema(description = "${request.contentObjects[0].description! ""}")) @Valid @RequestBody
     ${request.contentObjects[0].dataType} ${request.contentObjects[0].dataType?api.getVariableNameString()} <#if request?has_next>, </#if></#list></#if></@compress>) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

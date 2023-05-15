@@ -32,7 +32,7 @@ public class TemplateFactory {
 
   public static final String JAVA_EXTENSION = ".java";
 
-  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_27);
+  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
   private final Map<String, Object> root = new HashMap<>();
 
@@ -48,7 +48,7 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, final Set<String> propertiesSet) throws IOException,
-                                                                                                                                                                TemplateException {
+                                                                                                                                                                      TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
@@ -131,6 +131,14 @@ public class TemplateFactory {
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + JAVA_EXTENSION).toString();
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), root, pathToSaveMainClass);
 
+  }
+
+  public void calculateJavaEEPackage(final Integer springBootVersion) {
+    if (3 <= springBootVersion) {
+      root.put("javaEEPackage", "jakarta");
+    } else {
+      root.put("javaEEPackage", "javax");
+    }
   }
 
   private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {

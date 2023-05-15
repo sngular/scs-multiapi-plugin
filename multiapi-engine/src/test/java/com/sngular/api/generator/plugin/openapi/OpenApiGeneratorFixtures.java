@@ -402,6 +402,36 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_REFERENCE_FILE = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testReferenceFile/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testReferenceFile")
+          .modelPackage("com.sngular.multifileplugin.testReferenceFile.model")
+          .clientPackage("com.sngular.multifileplugin.testReferenceFile.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_QUERY_PARAM = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testQueryParam/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testQueryParam")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_API_WITH_NO_COMPONENTS = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testApiWithNoComponents/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testApiWithNoComponents")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static Function<Path, Boolean> validateOneOfInResponse() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testoneofinresponse";
@@ -646,7 +676,7 @@ public final class OpenApiGeneratorFixtures {
 
   }
 
-  static Function<Path, Boolean> validateApiReactiveGeneration() {
+  static Function<Path, Boolean> validateApiReactiveGeneration(int springBootVersion) {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/reactivegeneration";
 
@@ -657,7 +687,7 @@ public final class OpenApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "TestApi.java"
+        ASSETS_PATH + calculateJavaEEPackage(springBootVersion) + "TestApi.java"
     );
 
     List<String> expectedTestApiModelFiles = List.of(
@@ -1029,7 +1059,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotations() {
+  static Function<Path, Boolean> validateValidationAnnotations(int springBootVersion) {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
 
@@ -1043,10 +1073,10 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/" + calculateJavaEEPackage(springBootVersion);
 
     final List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "testApi/TestApi.java");
+        ASSETS_PATH + "testApi/" + calculateJavaEEPackage(springBootVersion) + "TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "testApi/ApiErrorDTO.java",
@@ -1084,7 +1114,7 @@ public final class OpenApiGeneratorFixtures {
                      && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_API);
   }
 
-  static Function<Path, Boolean> validateValidationAnnotationsLombok() {
+  static Function<Path, Boolean> validateValidationAnnotationsLombok(int springBootTest) {
 
     final String DEFAULT_LOMBOK_TARGET_API = "generated/com/sngular/multifileplugin/lombok/testapi";
 
@@ -1095,7 +1125,7 @@ public final class OpenApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "lombok/TestApi.java");
+        ASSETS_PATH + "lombok/" + calculateJavaEEPackage(springBootTest) + "TestApi.java");
 
     List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "lombok/ApiErrorDTO.java",
@@ -1205,6 +1235,59 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
+  static Function<Path, Boolean> validateReferenceFile() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testReferenceFile";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testReferenceFile/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testReferenceFile/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testReferenceFile/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testReferenceFile/assets/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateQueryParam() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testQueryParam";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testQueryParam/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testQueryParam/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testQueryParam/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateApiWithNoComponents() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testApiWithNoComponents/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+
+  }
+
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetApi, final String targetModel,
       final List<String> expectedExceptionFiles, final String targetException) {
@@ -1236,8 +1319,7 @@ public final class OpenApiGeneratorFixtures {
     return result;
   }
 
-  private static Boolean customValidatorTest(
-      final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator) {
+  private static Boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
@@ -1255,5 +1337,13 @@ public final class OpenApiGeneratorFixtures {
   }
 
   private OpenApiGeneratorFixtures() {
+  }
+
+  private static String calculateJavaEEPackage(int springBootVersion) {
+    if (3 <= springBootVersion) {
+      return "jakarta/";
+    } else {
+      return "javax/";
+    }
   }
 }

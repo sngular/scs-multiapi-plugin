@@ -7,6 +7,7 @@
 package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationExc
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.ContentObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -47,12 +49,9 @@ public class MapperPathUtil {
 
   public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-    return GlobalObject.builder()
-                       .url(openAPI.getServers().get(0).getUrl())
-                       .authSchemas(authSchemaList)
-                       .authentications(authList)
-                       .schemaMap(openAPI.getComponents().getSchemas())
-                       .build();
+    final GlobalObjectBuilder globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList);
+    globalObject.schemaMap(Objects.nonNull(openAPI.getComponents()) ? openAPI.getComponents().getSchemas() : Collections.emptyMap());
+    return globalObject.build();
   }
 
   private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
@@ -67,8 +66,7 @@ public class MapperPathUtil {
   }
 
   public static List<PathObject> mapPathObjects(
-      final OpenAPI openAPI, final SpecFile specFile, final Entry<String, HashMap<String, PathItem>> path,
-      final GlobalObject globalObject) {
+      final OpenAPI openAPI, final SpecFile specFile, final Entry<String, HashMap<String, PathItem>> path, final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()

@@ -33,9 +33,11 @@ project. We encourage you to follow them and help us create a better product!
 3. Increase the version number in any examples files and in README.md to the new
    version that this pull request would represent. The versioning scheme we
    follow is [SemVer](http://semver.org/).
-4. If your Pull Request corresponds to a new release, label it as `release`. If
-   it updates the documentation, label it as `documentation`. You can add both
-   labels simultaneously if that is the case.
+4. If your Pull Request corresponds to a new release, label it as `release` to
+   create a new version of both the maven and gradle plugins. To create a new
+   release for either of them individually you can use the tags `maven`
+   or `gradle`. If it updates the documentation, label it as `documentation`.
+   You can add both a release and a documentation label if needed.
 5. You may squash and merge the pull request once you have the sign-off of two
    other developers. If you do not have permission to merge, you may request the
    second reviewer to merge the pull request for you.

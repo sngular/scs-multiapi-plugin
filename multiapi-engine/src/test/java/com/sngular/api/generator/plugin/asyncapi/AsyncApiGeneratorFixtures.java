@@ -188,6 +188,18 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
+  final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
+      SpecFile
+          .builder()
+          .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
+          .supplier(OperationParameterObject.builder()
+                                            .modelNameSuffix("")
+                                            .apiPackage("com.sngular.scsplugin.noschemas")
+                                            .modelPackage("com.sngular.scsplugin.noschemas.model")
+                                            .useLombokModelAnnotation(true)
+                                            .build())
+          .build());
+
   final static List<SpecFile> TEST_FILE_GENERATION_WITH_KEY = List.of(
       SpecFile
           .builder()
@@ -299,7 +311,7 @@ public class AsyncApiGeneratorFixtures {
                      modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
   }
 
-  static Function<Path, Boolean> validateCustomValidators() {
+  static Function<Path, Boolean> validateCustomValidators(int springBootVersion) {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/producer";
@@ -314,7 +326,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
+    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/" + calculateJavaEEPackage(springBootVersion);
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ICustomValidatorResponse.java",
@@ -468,7 +480,7 @@ public class AsyncApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final List<String> expectedConsumerFiles = List.of(
-    ASSETS_PATH + "ISubscribeOperation.java",
+        ASSETS_PATH + "ISubscribeOperation.java",
         ASSETS_PATH + "TestClassName.java"
     );
 
@@ -534,6 +546,35 @@ public class AsyncApiGeneratorFixtures {
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                    modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateNoSchemas() {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/noschemas";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/schemas";
+
+    final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/noschemas/model/messages";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/Thing.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/TestMsg.java"
+    );
+
+    final List<String> expectedConsumerFiles = List.of(
+    );
+
+    final List<String> expectedProducerFiles = List.of(
+        "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
+        "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
+        "asyncapigenerator/testNoSchemas/assets/Producer.java"
+    );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
+                   modelTest(path, expectedProducerFiles, API_FOLDER);
   }
 
   static Function<Path, Boolean> validateTestFileGenerationWithKey() {
@@ -642,5 +683,13 @@ public class AsyncApiGeneratorFixtures {
       result = Boolean.FALSE;
     }
     return result;
+  }
+
+  private static String calculateJavaEEPackage(int springBootVersion) {
+    if (3 <= springBootVersion) {
+      return "jakarta/";
+    } else {
+      return "javax/";
+    }
   }
 }

@@ -1,7 +1,7 @@
 package ${packageModel}.customvalidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import ${javaEEPackage}.validation.Constraint;
+import ${javaEEPackage}.validation.Payload;
 import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,

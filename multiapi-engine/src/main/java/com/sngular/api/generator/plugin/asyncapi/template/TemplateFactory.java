@@ -46,7 +46,7 @@ public class TemplateFactory {
 
   public static final String FILE_TYPE_JAVA = ".java";
 
-  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_27);
+  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
   private final Map<String, Object> root = new HashMap<>();
 
@@ -281,6 +281,14 @@ public class TemplateFactory {
 
   public final void setSubscribeEntitiesSuffix(final String suffix) {
     root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
+  }
+
+  public void calculateJavaEEPackage(final Integer springBootVersion) {
+    if (3 <= springBootVersion) {
+      root.put("javaEEPackage", "jakarta");
+    } else {
+      root.put("javaEEPackage", "javax");
+    }
   }
 
   public final void clearData() {
