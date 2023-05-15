@@ -91,7 +91,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateName, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplates() throws IOException, TemplateException {
+  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
     root.put("publishMethods", publishMethods);
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
@@ -108,10 +108,24 @@ public class TemplateFactory {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE), root);
     }
 
+    final String exceptionPackage;
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
+      final ClassTemplate finalClassTemplate = getClassTemplate();
+      if (finalClassTemplate.getFilePath().endsWith("schemas")) {
+        fillTemplateModelClassException(finalClassTemplate.getFilePath(), finalClassTemplate.getModelPackage() + ".schemas");
+        exceptionPackage = finalClassTemplate.getModelPackage() + ".schemas";
+      } else {
+        fillTemplateModelClassException(finalClassTemplate.getFilePath(), finalClassTemplate.getModelPackage() + ".messages");
+        exceptionPackage = finalClassTemplate.getModelPackage() + ".messages";
+      }
+    } else {
+      exceptionPackage = null;
+    }
+
     final HashSet<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
-        fillTemplateSchema(classTemplate, false, propertiesSet);
+        fillTemplateSchema(classTemplate, false, propertiesSet, exceptionPackage);
       } catch (final IOException | TemplateException exception) {
         throw new FileSystemException(exception);
       }
@@ -125,6 +139,21 @@ public class TemplateFactory {
       }
     }
     this.generateInterfaces();
+  }
+
+  private ClassTemplate getClassTemplate(){
+    ClassTemplate ourClassTemplate = null;
+    for (ClassTemplate classTemplate : schemaObjectMap) {
+      if (classTemplate.getFilePath().endsWith("schemas")) {
+        ourClassTemplate = classTemplate;
+        break;
+      }
+    }
+    if (ourClassTemplate == null) {
+      ourClassTemplate = schemaObjectMap.get(0);
+    }
+
+    return ourClassTemplate;
   }
 
   private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
@@ -175,7 +204,7 @@ public class TemplateFactory {
   public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
     final Path pathToExceptionPackage = filePathToSave.resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
-    root.put("packageModel", modelPackage);
+    root.put("exceptionPackage", modelPackage);
     final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
   }
@@ -192,7 +221,9 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet) throws IOException, TemplateException {
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
+      final String exceptionPackage)
+    throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -202,6 +233,10 @@ public class TemplateFactory {
       final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
+      }
+      if (Objects.nonNull(exceptionPackage)){
+        rootSchema.put("exceptionPackage", exceptionPackage);
+        root.put("exceptionPackage", exceptionPackage);
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {

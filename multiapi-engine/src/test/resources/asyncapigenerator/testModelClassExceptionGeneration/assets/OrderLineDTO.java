@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schemas;
+package com.sngular.scsplugin.modelclass.model.event.schemas;
 
 import java.util.Objects;
 
@@ -8,64 +8,64 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.filegeneration.model.event.schemas.exception.ModelClassException;
-import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
+import com.sngular.scsplugin.modelclass.model.event.schemas.exception.ModelClassException;
+import com.sngular.scsplugin.modelclass.model.event.customvalidator.NotNull;
 
-@JsonDeserialize(builder = OrderLineMapper.OrderLineMapperBuilder.class)
-public class OrderLineMapper {
+@JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
+public class OrderLineDTO {
 
   @JsonProperty(value ="ref")
   @NotNull
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products;
+  private final List<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO> products;
 
-  private OrderLineMapper(String ref, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products) {
+  private OrderLineDTO(String ref, List<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO> products) {
     this.ref = ref;
     this.products = products;
 
     validateRequiredAttributes();
   }
 
-  private OrderLineMapper(OrderLineMapperBuilder builder) {
+  private OrderLineDTO(OrderLineDTOBuilder builder) {
     this.ref = builder.ref;
     this.products = builder.products;
 
     validateRequiredAttributes();
   }
 
-  public static OrderLineMapper.OrderLineMapperBuilder builder() {
-    return new OrderLineMapper.OrderLineMapperBuilder();
+  public static OrderLineDTO.OrderLineDTOBuilder builder() {
+    return new OrderLineDTO.OrderLineDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class OrderLineMapperBuilder {
+  public static class OrderLineDTOBuilder {
 
     private String ref;
-    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper>();
+    private List<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO> products = new ArrayList<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO>();
 
-    public OrderLineMapper.OrderLineMapperBuilder ref(String ref) {
+    public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;
     }
-    public OrderLineMapper.OrderLineMapperBuilder products(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> products) {
+    public OrderLineDTO.OrderLineDTOBuilder products(List<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;
     }
 
-    public OrderLineMapper.OrderLineMapperBuilder product(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper product) {
+    public OrderLineDTO.OrderLineDTOBuilder product(com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO product) {
       if (product != null) {
         this.products.add(product);
       }
       return this;
     }
 
-    public OrderLineMapper build() {
-      OrderLineMapper orderLineMapper = new OrderLineMapper(this);
-      return orderLineMapper;
+    public OrderLineDTO build() {
+      OrderLineDTO orderLineDTO = new OrderLineDTO(this);
+      return orderLineDTO;
     }
   }
 
@@ -83,7 +83,7 @@ public class OrderLineMapper {
   * @return products
   */
   @Schema(name = "products", required = true)
-  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderProductMapper> getProducts() {
+  public List<com.sngular.scsplugin.modelclass.model.event.schemas.OrderProductDTO> getProducts() {
     return products;
   }
 
@@ -95,8 +95,8 @@ public class OrderLineMapper {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderLineMapper orderLineMapper = (OrderLineMapper) o;
-    return Objects.equals(this.ref, orderLineMapper.ref) && Objects.equals(this.products, orderLineMapper.products);
+    OrderLineDTO orderLineDTO = (OrderLineDTO) o;
+    return Objects.equals(this.ref, orderLineDTO.ref) && Objects.equals(this.products, orderLineDTO.products);
   }
 
   @Override
@@ -107,7 +107,7 @@ public class OrderLineMapper {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderLineMapper {\n");
+    sb.append("class OrderLineDTO {\n");
     sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
     sb.append(" products: ").append(toIndentedString(products)).append("\n");
     sb.append("}");
@@ -136,7 +136,7 @@ public class OrderLineMapper {
     }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("OrderLineMapper");
+      throw new ModelClassException("OrderLineDTO");
     }
   }
 

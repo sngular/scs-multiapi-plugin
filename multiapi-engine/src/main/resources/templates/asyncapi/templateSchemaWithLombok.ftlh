@@ -68,7 +68,7 @@ import lombok.NonNull;
   </#if>
 </#list>
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
-import ${packageModel}.exception.ModelClassException;
+import ${exceptionPackage}.exception.ModelClassException;
 </#if>
 
 @Data

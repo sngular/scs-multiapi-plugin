@@ -13,7 +13,7 @@ import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Max;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Min;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxItems;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinItems;
-import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.customvalidator.model.event.schemas.exception.ModelClassException;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MultipleOf;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.NotNull;
