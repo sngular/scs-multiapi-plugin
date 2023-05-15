@@ -1,4 +1,4 @@
-package ${packageModel}.exception;
+package ${exceptionPackage}.exception;
 
 public class ModelClassException extends RuntimeException {
 

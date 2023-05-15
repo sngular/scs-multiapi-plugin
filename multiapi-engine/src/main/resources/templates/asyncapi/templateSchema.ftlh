@@ -47,7 +47,7 @@ import ${packageModel}.customvalidator.MinItems;
 </#list>
 <#list schema.fieldObjectList as field>
     <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
-import ${packageModel}.exception.ModelClassException;
+import ${exceptionPackage}.exception.ModelClassException;
         <#break>
     </#if>
 </#list>

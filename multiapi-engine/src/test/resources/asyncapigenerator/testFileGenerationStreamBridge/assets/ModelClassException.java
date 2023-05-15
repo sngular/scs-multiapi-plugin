@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.streambridge.model.event.messages.exception;
+package com.sngular.scsplugin.streambridge.model.event.schemas.exception;
 
 public class ModelClassException extends RuntimeException {
 

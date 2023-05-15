@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.withoutids.model.event.messages.exception;
+package com.sngular.scsplugin.withoutids.model.event.schemas.exception;
 
 public class ModelClassException extends RuntimeException {
 
