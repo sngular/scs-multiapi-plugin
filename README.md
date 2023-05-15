@@ -691,6 +691,7 @@ be saved in the api of the project.
 | clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | com.sngular.apigenerator.openapi.client |
 | [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                    |
 | overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                |
+| springBootVersion                                   | The version of spring to target during generation. It's default value is `2`. | 3
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
