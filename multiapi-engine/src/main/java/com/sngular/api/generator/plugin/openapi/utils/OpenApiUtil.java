@@ -6,6 +6,17 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -14,35 +25,31 @@ import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIExceptio
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class OpenApiUtil {
 
   private OpenApiUtil() {}
 
-  public static Map<String, HashMap<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
-    var mapApis = new HashMap<String, HashMap<String, JsonNode>>();
+  public static Map<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
+    final Map<String, Map<String, JsonNode>> mapApis = new HashMap();
     final var pathList = openAPI.findValue("paths").elements();
     if (pathList.hasNext()) {
-      mapApis = groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI);
+      mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI));
     }
 
     return mapApis;
   }
 
-  private static HashMap<String, HashMap<String, JsonNode>> mapApiGroupsByTags(final Iterator<JsonNode> pathList) {
+  private static Map<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<JsonNode> pathList) {
 
-    final var mapApis = new HashMap<String, HashMap<String, JsonNode>>();
+    final Map<String, Map<String, JsonNode>> mapApis = new HashMap<>();
     while (pathList.hasNext()) {
       final JsonNode openAPIPath = pathList.next();
       final var mapMethodsByTag = getMapMethodsByTag(openAPIPath);
       for (Entry<String, JsonNode> tagMethodEntry : mapMethodsByTag.entries()) {
-        mapApis.compute(tagMethodEntry.getKey(), (key, value) -> initOrInsert(openAPIPath, tagMethodEntry, value));
+        mapApis.compute(tagMethodEntry.getKey(), (key, value) -> initOrInsert(tagMethodEntry, tagMethodEntry, value));
       }
     }
 
@@ -50,9 +57,9 @@ public class OpenApiUtil {
 
   }
 
-  private static HashMap<String, JsonNode> initOrInsert(
+  private static Map<String, JsonNode> initOrInsert(
       final Entry<String, JsonNode> openAPIGetPathsEntry, final Entry<String, JsonNode> mapJsonNodes,
-      final HashMap<String, JsonNode> value) {
+      final Map<String, JsonNode> value) {
     var newValue = value;
     if (Objects.isNull(newValue)) {
       newValue = new HashMap<>();
@@ -73,14 +80,14 @@ public class OpenApiUtil {
     return mapByTag;
   }
 
-  private static HashMap<String, Map<String, Iterator<JsonNode>>> mapApiGroupsByUrl(final JsonNode openAPI) {
-    final var mapByUrl = new HashMap<String, Map<String, Iterator<JsonNode>>>();
+  private static Map<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
+    final var mapByUrl = new HashMap<String, Map<String, JsonNode>>();
 
     for (var openAPIPaths : openAPI.findValues("paths")) {
       final var pathUrl = openAPIPaths.textValue();
       final String[] pathName = pathUrl.split("/");
       mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
-      mapByUrl.get(pathName[1]).put(pathUrl, openAPIPaths.elements());
+      mapByUrl.get(pathName[1]).put(pathUrl, openAPIPaths.elements().next());
     }
 
     return mapByUrl;
@@ -148,7 +155,7 @@ public class OpenApiUtil {
       final var content = operation.at("requestBody/content");
       final var schema = content.findValue("schema");
       if (schema.has("$ref")) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(operation.get("operationId").asText()), schema);
+        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
       } else if (schema.has("items")) {
         basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(operation.get("operationId").asText()),
                 schema.get("items"));
@@ -160,42 +167,45 @@ public class OpenApiUtil {
     if (operation.has("responses")) {
       final var responses = operation.path("responses");
       for (Iterator<JsonNode> it = responses.elements(); it.hasNext(); ) {
-        var response = it.next();
+        final var response = it.next();
         if (response.has("content")) {
-          response.getValue().getContent().forEach((key, value) -> {
-            if (Objects.isNull(value.getJsonNode().get$ref()) && "object".equalsIgnoreCase(value.getJsonNode().getType())) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getJsonNodeId()),
-                      value.getJsonNode());
-            } else if (value.getJsonNode() instanceof ComposedJsonNode) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getJsonNodeId()) + getComposedJsonNodeName(value.getJsonNode()),
-                      value.getJsonNode());
-            }
-          });
-        }
-      }
-    }
-  }
-  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
-        if (Objects.nonNull(operation.getParameters())) {
-          for (Parameter parameter : operation.getParameters()) {
-            if (Objects.nonNull(parameter.getContent())) {
-              parameter.getContent()
-                      .forEach((name, mediaType) -> basicJsonNodeMap.putIfAbsent(
-                              "InlineParameter" + StringUtils.capitalize(operation.getJsonNodeId()) + StringUtils.capitalize(parameter.getName()),
-                              mediaType.getJsonNode()));
+          final var schemaList = response.findValues("schema");
+          for (var schema : schemaList) {
+            if (!schema.has("$ref") && "object".equalsIgnoreCase(schema.get("type").asText())) {
+              basicJsonNodeMap.put("InlineResponse" + response.textValue() + StringUtils.capitalize(getOperationId(operation)), schema);
+            } else if (ObjectUtils.anyNotNull(schema.findValue("anyOf"), schema.findValue("ofOf"), schema.findValue("allOf"))) {
+              basicJsonNodeMap.put("InlineResponse" + response.textValue() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), schema);
             }
           }
         }
       }
+    }
+  }
+
+  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+    if (operation.has("parameters")) {
+      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext();) {
+        final var parameter = it.next();
+        if (parameter.has("schema")) {
+          basicJsonNodeMap.putIfAbsent(
+                          "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(parameter.at("name").textValue()),
+                          parameter.get("schema"));
+        }
+      }
+    }
+  }
+
+  private static String getOperationId(final JsonNode operation) {
+    return operation.get("operationId").asText();
   }
 
   private static String getComposedJsonNodeName(final JsonNode schema) {
     String composedJsonNodeName = "";
-    if (Objects.nonNull(schema.getAllOf())) {
+    if (Objects.nonNull(schema.findValue("allOf"))) {
       composedJsonNodeName = "AllOf";
-    } else if (Objects.nonNull(schema.getAnyOf())) {
+    } else if (Objects.nonNull(schema.findValue("anyOf"))) {
       composedJsonNodeName = "AnyOf";
-    } else if (Objects.nonNull(schema.getOneOf())) {
+    } else if (Objects.nonNull(schema.findValue("oneOf"))) {
       composedJsonNodeName = "OneOf";
     }
     return composedJsonNodeName;
