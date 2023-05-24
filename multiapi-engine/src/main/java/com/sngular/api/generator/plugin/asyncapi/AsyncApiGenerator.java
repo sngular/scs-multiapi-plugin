@@ -32,6 +32,7 @@ import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassExcepti
 import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
@@ -513,6 +514,7 @@ public class AsyncApiGenerator {
     final Pair<String, String> result = processMethod(channel, modelPackage, ymlParent, prefix, suffix, node);
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addSupplierMethod(result.getKey(), result.getValue());
+    templateFactory.setHasKafkaKey(hasKafkaKey);
   }
 
   private void processStreamBridgeMethod(
@@ -566,7 +568,7 @@ public class AsyncApiGenerator {
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParent, node);
     } else if (message.has(BINDINGS)) {
-      // return wrapper key - payload
+      namespace = processBindings(modelPackage, message);
     } else if (message.has(PAYLOAD) && !message.has(BINDINGS)) {
       final JsonNode payload = message.get(PAYLOAD);
       if (payload.has(REF)) {
@@ -629,29 +631,27 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processReferenceBindings(final JsonNode node, final JsonNode reference) {
-    final String referenceLink = reference.asText();
-    final String[] path = MapperUtil.splitName(referenceLink);
-    final JsonNode component = (node.findValue(path[path.length - 2])).get(path[path.length - 1]);
-    processBindings(component);
-  }
-
-  private void processBindings(final JsonNode node) {
+  private String processBindings(final String modelPackage, final JsonNode node) {
+    String namespace = null;
     if (node.has(BINDINGS)) {
       final var bindings = node.get(BINDINGS);
       if (bindings.has(KAFKA)) {
-        processKafkaBindings(bindings.get(KAFKA));
+        namespace = processKafkaBindings(modelPackage, bindings.get(KAFKA));
+      } else {
+        throw new NonSupportedBindingException(bindings.textValue());
       }
-      // add else "warning: binding not supported"
     }
+    return namespace;
   }
 
-  private void processKafkaBindings(final JsonNode kafkaBindings) {
+  private String processKafkaBindings(final String modelPackage, final JsonNode kafkaBindings) {
+    String namespace = null;
     if (kafkaBindings.has(KEY)) {
       hasKafkaKey = true;
       // crear el objeto del mensaje con la key
-//      processMethod();
+      namespace = processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage);
     }
+    return namespace;
   }
 
   private String capitalizeWithPrefix(final String name) {

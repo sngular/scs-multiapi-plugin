@@ -96,11 +96,19 @@ public class TemplateFactory {
     root.put("streamBridgeMethods", streamBridgeMethods);
 
     if (!publishMethods.isEmpty()) {
-      fillTemplate(supplierFilePath, supplierClassName, hasKafkaKey ? TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
+      if (hasKafkaKey) {
+        fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY, root);
+      } else {
+        fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
+      }
     }
 
     if (!subscribeMethods.isEmpty()) {
-      fillTemplate(subscribeFilePath, subscribeClassName, hasKafkaKey ? TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
+      if (hasKafkaKey) {
+        fillTemplate(supplierFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY, root);
+      } else {
+        fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
+      }
     }
 
     if (!streamBridgeMethods.isEmpty()) {
