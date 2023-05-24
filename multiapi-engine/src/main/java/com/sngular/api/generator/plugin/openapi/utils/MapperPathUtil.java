@@ -6,16 +6,34 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import static org.codehaus.plexus.util.CollectionUtils.iteratorToList;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.*;
+import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
+import com.sngular.api.generator.plugin.openapi.model.ContentObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
+import com.sngular.api.generator.plugin.openapi.model.OperationObject;
+import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.RequestObject;
+import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public class MapperPathUtil {
 
@@ -48,7 +66,7 @@ public class MapperPathUtil {
   }
 
   public static List<PathObject> mapPathObjects(
-      final JsonNode openAPI, final SpecFile specFile, final Entry<String, HashMap<String, JsonNode>> path, final GlobalObject globalObject) {
+      final JsonNode openAPI, final SpecFile specFile, final Entry<String, Map<String, JsonNode>> path, final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, JsonNode> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()
@@ -65,40 +83,51 @@ public class MapperPathUtil {
   private static List<OperationObject> mapOperationObject(final JsonNode openAPI, final SpecFile specFile, final Entry<String, JsonNode> path, final GlobalObject globalObject) {
     final List<OperationObject> operationObjects = new ArrayList<>();
     final List<String> operationIdList = new ArrayList<>();
-    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {
-      operationObjects.add(createOperation(openAPI, path.getValue().getGet(), "GET", specFile, globalObject, operationIdList));
+    final var pathNode = path.getValue();
+    if (Boolean.TRUE.equals(pathNode.has("get"))) {
+      operationObjects.add(createOperation(openAPI, pathNode.at("get"), "GET", specFile, globalObject, operationIdList));
     }
-    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPost()))) {
-      operationObjects.add(createOperation(openAPI, path.getValue().getPost(), "POST", specFile, globalObject, operationIdList));
+    if (Boolean.TRUE.equals(pathNode.has("post"))) {
+      operationObjects.add(createOperation(openAPI, pathNode.at("post"), "POST", specFile, globalObject, operationIdList));
     }
-    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getDelete()))) {
-      operationObjects.add(createOperation(openAPI, path.getValue().getDelete(), "DELETE", specFile, globalObject, operationIdList));
+    if (Boolean.TRUE.equals(pathNode.has("delete"))) {
+      operationObjects.add(createOperation(openAPI, pathNode.at("delete"), "DELETE", specFile, globalObject, operationIdList));
     }
-    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPut()))) {
-      operationObjects.add(createOperation(openAPI, path.getValue().getPut(), "PUT", specFile, globalObject, operationIdList));
+    if (Boolean.TRUE.equals(pathNode.has("put"))) {
+      operationObjects.add(createOperation(openAPI, pathNode.at("put"), "PUT", specFile, globalObject, operationIdList));
     }
-    if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getPatch()))) {
-      operationObjects.add(createOperation(openAPI, path.getValue().getPatch(), "PATCH", specFile, globalObject, operationIdList));
+    if (Boolean.TRUE.equals(pathNode.has("patch"))) {
+      operationObjects.add(createOperation(openAPI, pathNode.at("patch"), "PATCH", specFile, globalObject, operationIdList));
     }
 
     return operationObjects;
   }
 
   private static OperationObject createOperation(
-      final OpenAPI openAPI, final Operation operation, final String operationType,
+      final JsonNode openAPI, final JsonNode operation, final String operationType,
       final SpecFile specFile, final GlobalObject globalObject, final List<String> operationIdList) {
     return OperationObject.builder()
-                          .operationId(mapOperationId(operation.getOperationId(), operationIdList))
+                          .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
-                          .summary(operation.getSummary())
-                          .tags(operation.getTags())
+                          .summary(operation.get("summary").textValue())
+                          .tags(elementsToStrList(operation.get("tags").elements()))
                           .requestObjects(mapRequestObject(specFile, operation, globalObject))
                           .responseObjects(mapResponseObject(specFile, operation, globalObject))
-                          .parameterObjects(mapParameterObjects(openAPI, operation.getParameters(), specFile, operation.getOperationId(), globalObject))
-                          .securities(getSecurityRequirementList(operation.getSecurity(), globalObject.getAuthentications()))
-                          .consumes(getConsumesList(operation.getRequestBody()))
-                          .produces(getProducesList(operation.getResponses()))
+                          .parameterObjects(mapParameterObjects(openAPI, iteratorToList(operation.at("parameters").elements()), specFile, getOperationId(operation), globalObject))
+                          .securities(getSecurityRequirementList(operation.at("security"), globalObject.getAuthentications()))
+                          .consumes(getConsumesList(operation.at("requestBody")))
+                          .produces(getProducesList(operation.at("responses")))
                           .build();
+  }
+
+  private static String getOperationId(final JsonNode operation) {
+    return operation.get("operationId").asText();
+  }
+
+  private static List<String> elementsToStrList(final Iterator<JsonNode> tags) {
+    final List<String> stringList = new ArrayList<>();
+    tags.forEachRemaining(tag -> stringList.add(tag.asText()));
+    return stringList;
   }
 
   private static String mapOperationId(final String operationId, final List<String> operationIdList) {
@@ -111,13 +140,12 @@ public class MapperPathUtil {
 
   }
 
-  private static List<String> getConsumesList(final RequestBody requestBody) {
+  private static List<String> getConsumesList(final JsonNode requestBody) {
     final var consumesList = new ArrayList<String>();
-    if (Objects.nonNull(requestBody) && Objects.nonNull(requestBody.getContent())
-        && !requestBody.getContent().isEmpty()) {
+    if (Objects.nonNull(requestBody) && requestBody.has("content")) {
 
-      final Set<String> consumes = requestBody.getContent().keySet();
-      consumes.forEach(key -> {
+      final var consumes = requestBody.get("content").fieldNames();
+      consumes.forEachRemaining(key -> {
         if (!key.equalsIgnoreCase("*/*")) {
           consumesList.add(key.replace("\"", "\\\""));
         }
@@ -127,7 +155,7 @@ public class MapperPathUtil {
     return consumesList;
   }
 
-  private static List<String> getProducesList(final ApiResponses responses) {
+  private static List<String> getProducesList(final JsonNode responses) {
     final var producesList = new ArrayList<String>();
 
     if (Objects.nonNull(responses) && !responses.isEmpty()) {
@@ -145,7 +173,7 @@ public class MapperPathUtil {
     return producesList;
   }
 
-  private static List<RequestObject> mapRequestObject(final SpecFile specFile, final Operation operation, final GlobalObject globalObject) {
+  private static List<RequestObject> mapRequestObject(final SpecFile specFile, final JsonNode operation, final GlobalObject globalObject) {
     final List<RequestObject> requestObjects = new ArrayList<>();
     if (Objects.isNull(operation.getOperationId())) {
       throw new InvalidOpenAPIException();
@@ -161,11 +189,11 @@ public class MapperPathUtil {
   }
 
   private static List<ParameterObject> mapParameterObjects(
-      final OpenAPI openAPI, final List<Parameter> parameters, final SpecFile specFile, final String contentClassName,
+      final JsonNode openAPI, final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
       final GlobalObject globalObject) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
-      for (Parameter parameter : parameters) {
+      for (JsonNode parameter : parameters) {
         if (Objects.nonNull(parameter.get$ref())) {
           final String[] wholeRef = parameter.get$ref().split("/");
           final String ref = wholeRef[wholeRef.length - 1];
@@ -196,7 +224,7 @@ public class MapperPathUtil {
   }
 
   private static void addInlineParametersToList(
-      final String contentClassName, final List<ParameterObject> parameterObjects, final Parameter parameter, final SpecFile specFile,
+      final String contentClassName, final List<ParameterObject> parameterObjects, final JsonNode parameter, final SpecFile specFile,
       final GlobalObject globalObject) {
     final Content content = parameter.getContent();
     for (Entry<String, MediaType> contentEntrySet : content.entrySet()) {
@@ -223,7 +251,7 @@ public class MapperPathUtil {
     }
   }
 
-  private static List<ResponseObject> mapResponseObject(final SpecFile specFile, final Operation operation, final GlobalObject globalObject) {
+  private static List<ResponseObject> mapResponseObject(final SpecFile specFile, final JsonNode operation, final GlobalObject globalObject) {
     final List<ResponseObject> responseObjects = new ArrayList<>();
     final ApiResponses responses = operation.getResponses();
     if (Objects.nonNull(responses)) {

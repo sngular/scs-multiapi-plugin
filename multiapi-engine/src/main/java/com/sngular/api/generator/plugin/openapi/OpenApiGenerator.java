@@ -6,6 +6,20 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
@@ -26,14 +40,6 @@ import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 public class OpenApiGenerator {
 
@@ -158,11 +164,11 @@ public class OpenApiGenerator {
   }
 
   private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
-    final Map<String, HashMap<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
+    final Map<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
 
-    for (Map.Entry<String, HashMap<String, JsonNode>> apisEntry : apis.entrySet()) {
+    for (Map.Entry<String, Map<String, JsonNode>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
       final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
@@ -193,7 +199,7 @@ public class OpenApiGenerator {
   private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI) throws IOException {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
-    final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
+    final var basicSchemaMap = OpenApiUtil.processBasicJsonNodes(openAPI);
     templateFactory.setModelPackageName(modelPackage);
     processModels(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
   }
