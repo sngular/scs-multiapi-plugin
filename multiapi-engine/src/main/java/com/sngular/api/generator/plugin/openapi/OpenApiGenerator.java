@@ -6,20 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
@@ -37,14 +24,16 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.ObjectSchema;
-import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class OpenApiGenerator {
 
@@ -117,7 +106,7 @@ public class OpenApiGenerator {
 
   private void processFile(final SpecFile specFile, final String filePathToSave) throws IOException {
 
-    final OpenAPI openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
+    final JsonNode openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
     final String clientPackage = specFile.getClientPackage();
 
     if (specFile.isCallMode()) {
@@ -168,12 +157,12 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final OpenAPI openAPI) {
-    final Map<String, HashMap<String, PathItem>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
+  private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
+    final Map<String, HashMap<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
 
-    for (Map.Entry<String, HashMap<String, PathItem>> apisEntry : apis.entrySet()) {
+    for (Map.Entry<String, HashMap<String, JsonNode>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
       final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
@@ -201,7 +190,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createModelTemplate(final SpecFile specFile, final OpenAPI openAPI) throws IOException {
+  private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI) throws IOException {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicSchemas(openAPI);
@@ -254,7 +243,7 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
+      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
       final boolean overwrite) {
     final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
 
@@ -278,7 +267,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void writeModelRefSchema(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
+  private void writeModelRefSchema(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
     final Schema additionalPropertiesSchema = new ObjectSchema();
     final Map<String, Schema> properties = new HashMap<>();
     final String[] refSplit = basicSchema.get$ref().split("/");
@@ -290,7 +279,7 @@ public class OpenApiGenerator {
   }
 
   private void writeModelWithAdditionalProperties(
-      final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema,
+      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema,
       final Consumer<Schema<?>> addAdditionalSchema) {
 
     if (basicSchema.getAdditionalProperties() instanceof Schema<?> && !(basicSchema.getAdditionalProperties() instanceof ArraySchema)) {
@@ -302,7 +291,7 @@ public class OpenApiGenerator {
     writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
   }
 
-  private void writeModel(final SpecFile specFile, final OpenAPI openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
+  private void writeModel(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
     final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
     final Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);

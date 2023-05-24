@@ -6,41 +6,16 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.ContentObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.*;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
-import com.sngular.api.generator.plugin.openapi.model.OperationObject;
-import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.RequestObject;
-import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.DateSchema;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.parameters.RequestBody;
-import io.swagger.v3.oas.models.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class MapperPathUtil {
 
@@ -48,18 +23,24 @@ public class MapperPathUtil {
 
   private MapperPathUtil() {}
 
-  public static GlobalObject mapOpenApiObjectToOurModels(final OpenAPI openAPI, final List<AuthSchemaObject> authSchemaList) {
-    final var authList = getSecurityRequirementList(openAPI.getSecurity(), new ArrayList<>());
-    final GlobalObjectBuilder globalObject = GlobalObject.builder().url(openAPI.getServers().get(0).getUrl()).authSchemas(authSchemaList).authentications(authList);
-    globalObject.schemaMap(Objects.nonNull(openAPI.getComponents()) ? openAPI.getComponents().getSchemas() : Collections.emptyMap());
+  public static GlobalObject mapOpenApiObjectToOurModels(final JsonNode openAPI, final List<AuthSchemaObject> authSchemaList) {
+    final var authList = getSecurityRequirementList(openAPI.get("security"), new ArrayList<>());
+    final GlobalObjectBuilder globalObject = GlobalObject.builder().url(openAPI.get("servers").findValue("url").asText()).authSchemas(authSchemaList).authentications(authList);
+    globalObject.schemaMap(openAPI.has("components") ? fieldsToMap(openAPI.get("components").get("schemas").fields()) : Collections.emptyMap());
     return globalObject.build();
   }
 
-  private static List<String> getSecurityRequirementList(final List<SecurityRequirement> securityRequirementList, final List<String> authentications) {
+  private static Map<String, JsonNode> fieldsToMap(final Iterator<Entry<String, JsonNode>> fields) {
+    final var fieldMap = new HashMap<String, JsonNode>();
+    fields.forEachRemaining(entry -> fieldMap.put(entry.getKey(), entry.getValue()));
+    return fieldMap;
+  }
+
+  private static List<String> getSecurityRequirementList(final JsonNode securityNode, final List<String> authentications) {
     final List<String> authSecList;
-    if (null != securityRequirementList && !securityRequirementList.isEmpty()) {
+    if (Objects.nonNull(securityNode)) {
       authSecList = new ArrayList<>();
-      securityRequirementList.forEach(securityRequirement -> securityRequirement.forEach((key, value) -> authSecList.add(key)));
+      securityNode.elements().forEachRemaining(securityRequirement -> authSecList.add(securityRequirement.asText()));
     } else {
       authSecList = authentications;
     }
@@ -67,9 +48,9 @@ public class MapperPathUtil {
   }
 
   public static List<PathObject> mapPathObjects(
-      final OpenAPI openAPI, final SpecFile specFile, final Entry<String, HashMap<String, PathItem>> path, final GlobalObject globalObject) {
+      final JsonNode openAPI, final SpecFile specFile, final Entry<String, HashMap<String, JsonNode>> path, final GlobalObject globalObject) {
     final List<PathObject> pathObjects = new ArrayList<>();
-    for (Entry<String, PathItem> pathItem : path.getValue().entrySet()) {
+    for (Entry<String, JsonNode> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()
                                               .pathName(pathItem.getKey())
                                               .globalObject(globalObject)
@@ -81,7 +62,7 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(final OpenAPI openAPI, final SpecFile specFile, final Entry<String, PathItem> path, final GlobalObject globalObject) {
+  private static List<OperationObject> mapOperationObject(final JsonNode openAPI, final SpecFile specFile, final Entry<String, JsonNode> path, final GlobalObject globalObject) {
     final List<OperationObject> operationObjects = new ArrayList<>();
     final List<String> operationIdList = new ArrayList<>();
     if (Boolean.TRUE.equals(checkIfOperationIsNull(path.getValue().getGet()))) {

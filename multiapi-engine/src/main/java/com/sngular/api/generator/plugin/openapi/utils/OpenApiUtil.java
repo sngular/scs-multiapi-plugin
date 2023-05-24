@@ -6,56 +6,43 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
+import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import io.swagger.parser.OpenAPIParser;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
-import io.swagger.v3.oas.models.media.ComposedSchema;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.responses.ApiResponse;
-import io.swagger.v3.parser.core.models.ParseOptions;
-import io.swagger.v3.parser.core.models.SwaggerParseResult;
-import io.swagger.v3.parser.exception.ReadContentException;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class OpenApiUtil {
 
   private OpenApiUtil() {}
 
-  public static Map<String, HashMap<String, PathItem>> mapApiGroups(final OpenAPI openAPI, final boolean groupByTags) {
-    var mapApis = new HashMap<String, HashMap<String, PathItem>>();
-
-    if (!openAPI.getPaths().isEmpty()) {
-      mapApis = groupByTags ? mapApiGroupsByTags(openAPI) : mapApiGroupsByUrl(openAPI);
+  public static Map<String, HashMap<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
+    var mapApis = new HashMap<String, HashMap<String, JsonNode>>();
+    final var pathList = openAPI.findValue("paths").elements();
+    if (pathList.hasNext()) {
+      mapApis = groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI);
     }
 
     return mapApis;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByTags(final OpenAPI openAPI) {
+  private static HashMap<String, HashMap<String, JsonNode>> mapApiGroupsByTags(final Iterator<JsonNode> pathList) {
 
-    final var mapApis = new HashMap<String, HashMap<String, PathItem>>();
-    for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
-      final var mapPathItemsByTag = getMapPathItemsByTag(openAPIGetPathsEntry.getValue());
-      for (Entry<String, PathItem> mapPathItems : mapPathItemsByTag.entries()) {
-        mapApis.compute(mapPathItems.getKey(), (key, value) -> initOrInsert(openAPIGetPathsEntry, mapPathItems, value));
+    final var mapApis = new HashMap<String, HashMap<String, JsonNode>>();
+    while (pathList.hasNext()) {
+      final JsonNode openAPIPath = pathList.next();
+      final var mapMethodsByTag = getMapMethodsByTag(openAPIPath);
+      for (Entry<String, JsonNode> tagMethodEntry : mapMethodsByTag.entries()) {
+        mapApis.compute(tagMethodEntry.getKey(), (key, value) -> initOrInsert(openAPIPath, tagMethodEntry, value));
       }
     }
 
@@ -63,52 +50,49 @@ public class OpenApiUtil {
 
   }
 
-  private static HashMap<String, PathItem> initOrInsert(
-      final Entry<String, PathItem> openAPIGetPathsEntry, final Entry<String, PathItem> mapPathItems,
-      final HashMap<String, PathItem> value) {
+  private static HashMap<String, JsonNode> initOrInsert(
+      final Entry<String, JsonNode> openAPIGetPathsEntry, final Entry<String, JsonNode> mapJsonNodes,
+      final HashMap<String, JsonNode> value) {
     var newValue = value;
     if (Objects.isNull(newValue)) {
       newValue = new HashMap<>();
     }
-    newValue.put(openAPIGetPathsEntry.getKey(), mapPathItems.getValue());
+    newValue.put(openAPIGetPathsEntry.getKey(), mapJsonNodes.getValue());
 
     return newValue;
   }
 
-  private static MultiValuedMap<String, PathItem> getMapPathItemsByTag(final PathItem pathItem) {
-    final MultiValuedMap<String, PathItem> mapByTag = new ArrayListValuedHashMap<>();
-
-    for (Entry<HttpMethod, Operation> operation : pathItem.readOperationsMap().entrySet()) {
-      if (CollectionUtils.isNotEmpty(operation.getValue().getTags())) {
-        final var tag = operation.getValue().getTags().get(0);
-        mapByTag.put(tag, pathItem);
-      }
+  private static MultiValuedMap<String, JsonNode> getMapMethodsByTag(final JsonNode pathItem) {
+    final MultiValuedMap<String, JsonNode> mapByTag = new ArrayListValuedHashMap<>();
+    final var operations = pathItem.elements();
+    while (operations.hasNext()) {
+      final JsonNode method = operations.next();
+      final var tag = method.findValue("tags").elements().next();
+      mapByTag.put(tag.asText(), method);
     }
     return mapByTag;
   }
 
-  private static HashMap<String, HashMap<String, PathItem>> mapApiGroupsByUrl(final OpenAPI openAPI) {
-    final var mapByUrl = new HashMap<String, HashMap<String, PathItem>>();
+  private static HashMap<String, Map<String, Iterator<JsonNode>>> mapApiGroupsByUrl(final JsonNode openAPI) {
+    final var mapByUrl = new HashMap<String, Map<String, Iterator<JsonNode>>>();
 
-    for (Entry<String, PathItem> openAPIGetPathsEntry : openAPI.getPaths().entrySet()) {
-      final String[] pathName = openAPIGetPathsEntry.getKey().split("/");
+    for (var openAPIPaths : openAPI.findValues("paths")) {
+      final var pathUrl = openAPIPaths.textValue();
+      final String[] pathName = pathUrl.split("/");
       mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
-      mapByUrl.get(pathName[1]).put(openAPIGetPathsEntry.getKey(), openAPIGetPathsEntry.getValue());
+      mapByUrl.get(pathName[1]).put(pathUrl, openAPIPaths.elements());
     }
 
     return mapByUrl;
   }
 
-  public static OpenAPI getPojoFromSwagger(final SpecFile specFile) {
-    final OpenAPI openAPI;
-    final ParseOptions options = new ParseOptions();
-    options.setResolve(true);
+  public static JsonNode getPojoFromSwagger(final SpecFile specFile) {
+    final JsonNode openAPI;
+    final ObjectMapper parser = new ObjectMapper(new YAMLFactory());
     try {
-      final OpenAPIParser parser = new OpenAPIParser();
-      final SwaggerParseResult result = parser.readLocation(readFile(specFile.getFilePath()), null, options);
-      openAPI = result.getOpenAPI();
-    } catch (final ReadContentException e) {
-      throw new FileParseException("whilst parsing the .yml file ");
+      openAPI = parser.readTree(readFile(specFile.getFilePath()));
+    } catch (final IOException e) {
+      throw new FileParseException(specFile.getFilePath(), e);
     }
 
     if (Objects.isNull(openAPI)) {
@@ -127,92 +111,94 @@ public class OpenApiUtil {
     return result;
   }
 
-  public static Map<String, Schema<?>> processBasicSchemas(final OpenAPI openApi) {
-    final var basicSchemaMap = new HashMap<String, Schema<?>>();
-    Map<String, Schema> componentsSchemasMap = Collections.emptyMap();
-    if (Objects.nonNull(openApi.getComponents())) {
-      componentsSchemasMap = openApi.getComponents().getSchemas();
+  public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi) {
+    final var basicJsonNodeMap = new HashMap<String, JsonNode>();
+    final var componentsSchemasList = new ArrayList<JsonNode>();
+    if (openApi.has("components")) {
+      openApi.get("components").findValue("schemas").elements().forEachRemaining(componentsSchemasList::add);
     }
-    componentsSchemasMap.forEach(basicSchemaMap::put);
 
-    for (Entry<String, PathItem> pathItem : openApi.getPaths().entrySet()) {
-      final PathItem path = pathItem.getValue();
-      if (Objects.nonNull(path.getGet())) {
-        processContentForBasicSchemas(basicSchemaMap, path.getGet());
-      }
-      if (Objects.nonNull(path.getPost())) {
-        processContentForBasicSchemas(basicSchemaMap, path.getPost());
-      }
-      if (Objects.nonNull(path.getPut())) {
-        processContentForBasicSchemas(basicSchemaMap, path.getPut());
-      }
-      if (Objects.nonNull(path.getDelete())) {
-        processContentForBasicSchemas(basicSchemaMap, path.getDelete());
-      }
-      if (Objects.nonNull(path.getPatch())) {
-        processContentForBasicSchemas(basicSchemaMap, path.getPatch());
+    for (Iterator<JsonNode> pathElement = openApi.findValue("path").elements(); pathElement.hasNext();) {
+      final var path = pathElement.next();
+      switch (path.textValue()) {
+        case "get":
+        case "post":
+        case "put":
+        case "delete":
+        case "patch":
+          processContentForBasicJsonNodes(basicJsonNodeMap, path);
+          break;
+        default:
+          throw new InvalidOpenAPIException();
       }
     }
 
-    return basicSchemaMap;
+    return basicJsonNodeMap;
   }
 
-  private static void processContentForBasicSchemas(final HashMap<String, Schema<?>> basicSchemaMap, final Operation operation) {
+  private static void processContentForBasicJsonNodes(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
 
-    processOperationRequestBody(basicSchemaMap, operation);
-    processOperationResponses(basicSchemaMap, operation);
+    processParameters(basicJsonNodeMap, operation);
+    processRequestBody(basicJsonNodeMap, operation);
+    processResponses(basicJsonNodeMap, operation);
   }
 
-  private static void processOperationRequestBody(final HashMap<String, Schema<?>> basicSchemaMap, final Operation operation) {
-    if (Objects.nonNull(operation.getRequestBody()) && Objects.nonNull(operation.getRequestBody().getContent())) {
-      operation.getRequestBody().getContent().forEach((key, value) -> {
-        if (Objects.isNull(value.getSchema().get$ref())) {
-          basicSchemaMap.put("InlineObject" + StringUtils.capitalize(operation.getOperationId()),
-                             value.getSchema());
-        } else if (Objects.nonNull(value.getSchema().getItems())) {
-          basicSchemaMap.put("InlineObject" + StringUtils.capitalize(operation.getOperationId()),
-                             value.getSchema().getItems());
-        }
-      });
+  private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+    if (operation.has("requestBody") && Objects.nonNull(operation.at("requestBody/content"))) {
+      final var content = operation.at("requestBody/content");
+      final var schema = content.findValue("schema");
+      if (schema.has("$ref")) {
+        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(operation.get("operationId").asText()), schema);
+      } else if (schema.has("items")) {
+        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(operation.get("operationId").asText()),
+                schema.get("items"));
+      }
     }
   }
 
-  private static void processOperationResponses(final HashMap<String, Schema<?>> basicSchemaMap, final Operation operation) {
-    for (Entry<String, ApiResponse> response : operation.getResponses().entrySet()) {
-      if (Objects.nonNull(response.getValue().getContent())) {
-        response.getValue().getContent().forEach((key, value) -> {
-          if (Objects.isNull(value.getSchema().get$ref()) && "object".equalsIgnoreCase(value.getSchema().getType())) {
-            basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()),
-                               value.getSchema());
-          } else if (value.getSchema() instanceof ComposedSchema) {
-            basicSchemaMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getOperationId()) + getComposedSchemaName(value.getSchema()),
-                               value.getSchema());
-          }
-        });
-      }
-      if (Objects.nonNull(operation.getParameters())) {
-        for (Parameter parameter : operation.getParameters()) {
-          if (Objects.nonNull(parameter.getContent())) {
-            parameter.getContent()
-                     .forEach((name, mediaType) -> basicSchemaMap.putIfAbsent(
-                         "InlineParameter" + StringUtils.capitalize(operation.getOperationId()) + StringUtils.capitalize(parameter.getName()),
-                         mediaType.getSchema()));
-          }
+  private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+    if (operation.has("responses")) {
+      final var responses = operation.path("responses");
+      for (Iterator<JsonNode> it = responses.elements(); it.hasNext(); ) {
+        var response = it.next();
+        if (response.has("content")) {
+          response.getValue().getContent().forEach((key, value) -> {
+            if (Objects.isNull(value.getJsonNode().get$ref()) && "object".equalsIgnoreCase(value.getJsonNode().getType())) {
+              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getJsonNodeId()),
+                      value.getJsonNode());
+            } else if (value.getJsonNode() instanceof ComposedJsonNode) {
+              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(operation.getJsonNodeId()) + getComposedJsonNodeName(value.getJsonNode()),
+                      value.getJsonNode());
+            }
+          });
         }
       }
     }
   }
+  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+        if (Objects.nonNull(operation.getParameters())) {
+          for (Parameter parameter : operation.getParameters()) {
+            if (Objects.nonNull(parameter.getContent())) {
+              parameter.getContent()
+                      .forEach((name, mediaType) -> basicJsonNodeMap.putIfAbsent(
+                              "InlineParameter" + StringUtils.capitalize(operation.getJsonNodeId()) + StringUtils.capitalize(parameter.getName()),
+                              mediaType.getJsonNode()));
+            }
+          }
+        }
+      }
+  }
 
-  private static String getComposedSchemaName(final Schema schema) {
-    String composedSchemaName = "";
+  private static String getComposedJsonNodeName(final JsonNode schema) {
+    String composedJsonNodeName = "";
     if (Objects.nonNull(schema.getAllOf())) {
-      composedSchemaName = "AllOf";
+      composedJsonNodeName = "AllOf";
     } else if (Objects.nonNull(schema.getAnyOf())) {
-      composedSchemaName = "AnyOf";
+      composedJsonNodeName = "AnyOf";
     } else if (Objects.nonNull(schema.getOneOf())) {
-      composedSchemaName = "OneOf";
+      composedJsonNodeName = "OneOf";
     }
-    return composedSchemaName;
+    return composedJsonNodeName;
   }
 
   public static String processJavaFileName(final String apisEntry) {
