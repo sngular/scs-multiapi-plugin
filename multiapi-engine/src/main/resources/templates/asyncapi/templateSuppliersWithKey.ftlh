@@ -11,6 +11,7 @@ import ${method.classNamespace}${supplierEntitiesSuffix};
 import ${method.classNamespace};
 </#if>
 </#list>
+import ${supplierPackage}.MessageWrapper<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
 
 @Configuration
 public class ${supplierClassName?cap_first} {
@@ -19,7 +20,7 @@ public class ${supplierClassName?cap_first} {
   private final I${method.operationId?cap_first} ${method.operationId?uncap_first};
 
   </#list>
-  private final String key;
+  private final ${method.keyClassName} key;
 
   protected ${supplierClassName?cap_first}(<#list publishMethods as method>final I${method.operationId?cap_first} ${method.operationId?uncap_first}<#sep>, </#list>) {
     <#list publishMethods as method>
@@ -29,9 +30,9 @@ public class ${supplierClassName?cap_first} {
 
   <#list publishMethods as method>
   @Bean
-  public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}(final String key) {
-    return () -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}()
-                  setHeader(key, "");
+  public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
+    final var messageWrapper =  ${method.operationId?uncap_first}.${method.operationId?uncap_first}();
+    return () -> Message.build().payload((${method.className}) messageWrapper.getPayload()).setHeader("key", (${method.keyClassName}) messageWrapper.getKey()).build();
   }
 
   </#list>

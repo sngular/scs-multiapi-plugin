@@ -22,6 +22,8 @@ public class ClassTemplate {
 
   String className;
 
+  String keyClassName;
+
   SchemaObject classSchema;
 
 }

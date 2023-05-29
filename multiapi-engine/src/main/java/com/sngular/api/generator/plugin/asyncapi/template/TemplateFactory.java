@@ -96,19 +96,11 @@ public class TemplateFactory {
     root.put("streamBridgeMethods", streamBridgeMethods);
 
     if (!publishMethods.isEmpty()) {
-      if (hasKafkaKey) {
-        fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY, root);
-      } else {
-        fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
-      }
+      fillTemplate(supplierFilePath, supplierClassName, checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS), root);
     }
 
     if (!subscribeMethods.isEmpty()) {
-      if (hasKafkaKey) {
-        fillTemplate(supplierFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY, root);
-      } else {
-        fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
-      }
+      fillTemplate(supplierFilePath, subscribeClassName, checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
     }
 
     if (!streamBridgeMethods.isEmpty()) {
@@ -267,8 +259,12 @@ public class TemplateFactory {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
   }
 
-  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final Path filePath) {
-    schemaObjectMap.add(ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject).build());
+  public final void addSchemaObject(final String modelPackage, final String className, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
+    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject);
+    if (Objects.nonNull(keyClassName)) {
+      builder.keyClassName(keyClassName);
+    }
+    schemaObjectMap.add(builder.build());
   }
 
   public final void addSubscribeMethod(final String operationId, final String classNamespace) {
@@ -329,11 +325,11 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     hasKafkaKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS,
+                     checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS),
                      interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     hasKafkaKey ? TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY : TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS,
+                     checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS),
                      interfaceRoot);
       }
     }
@@ -345,5 +341,9 @@ public class TemplateFactory {
     final FileWriter writer = new FileWriter(path);
     template.process(root, writer);
     writer.close();
+  }
+
+  private String checkTemplateWithKey(String templateWithKey, String templateWithoutKey) {
+    return hasKafkaKey ? templateWithKey : templateWithoutKey;
   }
 }

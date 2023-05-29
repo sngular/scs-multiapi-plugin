@@ -527,6 +527,7 @@ public class AsyncApiGenerator {
     }
     fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
     templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
+    templateFactory.setHasKafkaKey(hasKafkaKey);
   }
 
   private void processSubscribeMethod(
@@ -544,6 +545,7 @@ public class AsyncApiGenerator {
     final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final String className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
+    final String keyClassName = classFullName.substring(classFullName.lastIndexOf(".") + 1);
     final JsonNode schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
 
     final List<SchemaObject> schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
@@ -551,7 +553,7 @@ public class AsyncApiGenerator {
     Path filePath = null;
     for (SchemaObject schemaObject : schemaObjectList) {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
-      templateFactory.addSchemaObject(modelPackageReceived, className, schemaObject, filePath);
+      templateFactory.addSchemaObject(modelPackageReceived, className, keyClassName, schemaObject, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     }
 
@@ -565,16 +567,18 @@ public class AsyncApiGenerator {
     final JsonNode message = channel.get(MESSAGE);
     final String operationId = channel.get(OPERATION_ID).asText();
     final String namespace;
+    final String bindings;
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParent, node);
-    } else if (message.has(BINDINGS)) {
-      namespace = processBindings(modelPackage, message);
-    } else if (message.has(PAYLOAD) && !message.has(BINDINGS)) {
+    } else if (message.has(PAYLOAD)) {
       final JsonNode payload = message.get(PAYLOAD);
       if (payload.has(REF)) {
         namespace = processMethodRef(payload, modelPackage, ymlParent, node);
       } else {
         namespace = modelPackage + PACKAGE_SEPARATOR_STR + MESSAGES + PACKAGE_SEPARATOR_STR + message.get(NAME).textValue();
+      }
+      if (message.has(BINDINGS)) {
+        bindings = processBindings(modelPackage, message);
       }
     } else {
       namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
@@ -632,26 +636,26 @@ public class AsyncApiGenerator {
   }
 
   private String processBindings(final String modelPackage, final JsonNode node) {
-    String namespace = null;
+    String bindings = null;
     if (node.has(BINDINGS)) {
-      final var bindings = node.get(BINDINGS);
-      if (bindings.has(KAFKA)) {
-        namespace = processKafkaBindings(modelPackage, bindings.get(KAFKA));
+      final var bindingsNode = node.get(BINDINGS);
+      if (bindingsNode.has(KAFKA)) {
+        bindings = processKafkaBindings(modelPackage, bindingsNode.get(KAFKA));
       } else {
-        throw new NonSupportedBindingException(bindings.textValue());
+        throw new NonSupportedBindingException(bindingsNode.textValue());
       }
     }
-    return namespace;
+    return bindings;
   }
 
   private String processKafkaBindings(final String modelPackage, final JsonNode kafkaBindings) {
-    String namespace = null;
+    String bindings = null;
     if (kafkaBindings.has(KEY)) {
       hasKafkaKey = true;
       // crear el objeto del mensaje con la key
-      namespace = processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage);
+      bindings = processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage);
     }
-    return namespace;
+    return bindings;
   }
 
   private String capitalizeWithPrefix(final String name) {
