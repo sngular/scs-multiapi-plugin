@@ -6,13 +6,13 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,7 +24,7 @@ public class PathObject {
 
   private GlobalObject globalObject;
 
-  private List<OperationObject> operationObjects = new ArrayList<>();
+  private List<OperationObject> operationObjects;
 
   public static final class PathObjectBuilder {
 

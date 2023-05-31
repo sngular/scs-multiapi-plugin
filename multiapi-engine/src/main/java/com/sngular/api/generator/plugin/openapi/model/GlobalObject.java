@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +27,11 @@ public class GlobalObject {
 
   private List<String> serverUrl;
 
-  private List<AuthSchemaObject> authSchemas = new ArrayList<>();
+  private List<AuthSchemaObject> authSchemas;
 
-  private List<String> authentications = new ArrayList<>();
+  private List<String> authentications;
 
-  private Map<String, JsonNode> schemaMap = new HashMap<>();
+  private Map<String, JsonNode> schemaMap;
 
   public static class GlobalObjectBuilder {
 
