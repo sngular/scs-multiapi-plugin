@@ -22,9 +22,9 @@ import com.sngular.multifileplugin.inlineschemacreation.model.ApiErrorDTO;
 public interface RulesApi {
 
   /**
-  * GET /rules 
-  * @return  OK; (status code 200)  Internal Server Error; (status code 500)
-  */
+   * GET /rules
+   * @return  OK; (status code 200)  Internal Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getAllRules",
@@ -45,10 +45,10 @@ public interface RulesApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * POST /rules 
-  * @param apiTestDTO (required)
-  * @return  OK; (status code 200)  Internal Server Error; (status code 500)
-  */
+   * POST /rules
+   * @param apiTestDTO (required)
+   * @return  OK; (status code 200)  Internal Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "createRule",

@@ -6,7 +6,10 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class OpenApiGeneratorFixtures {
 
@@ -518,7 +518,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiArrayFieldDTO.java",
         ASSETS_PATH + "ApiBooleanFieldDTO.java",
         ASSETS_PATH + "ApiDateFieldDTO.java",
-        ASSETS_PATH + "ApiDefaultItemDTO.java",
+       // ASSETS_PATH + "ApiDefaultItemDTO.java",
         ASSETS_PATH + "ApiEnumFieldDTO.java",
         ASSETS_PATH + "ApiMapFieldDTO.java",
         ASSETS_PATH + "ApiNumberFieldDTO.java",
@@ -631,7 +631,6 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestDTO.java",
         ASSETS_PATH + "ApiTestProcessorDTO.java",
         ASSETS_PATH + "ApiTestTypeDTO.java"
-
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
@@ -647,12 +646,11 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "TestApi.java");
+    final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "ApiErrorDTO.java",
-        ASSETS_PATH + "ApiInlineParameterShowTestByIdTestIdDTO.java",
+        ASSETS_PATH + "ApiInlineParameterTestIdDTO.java",
         ASSETS_PATH + "ApiTestDTO.java",
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );

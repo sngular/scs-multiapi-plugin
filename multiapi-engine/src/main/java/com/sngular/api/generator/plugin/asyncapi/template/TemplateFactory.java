@@ -6,20 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
@@ -29,7 +15,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.commons.collections4.CollectionUtils;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class TemplateFactory {
 
@@ -139,7 +131,7 @@ public class TemplateFactory {
     this.generateInterfaces();
   }
 
-  private ClassTemplate getClassTemplate(){
+  private ClassTemplate getClassTemplate() {
     ClassTemplate ourClassTemplate = null;
     for (ClassTemplate classTemplate : schemaObjectMap) {
       if (classTemplate.getFilePath().endsWith("schemas")) {
@@ -219,9 +211,10 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
+  private void fillTemplateSchema(
+      final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
       final String exceptionPackage)
-    throws IOException, TemplateException {
+      throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -232,7 +225,7 @@ public class TemplateFactory {
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
       }
-      if (Objects.nonNull(exceptionPackage)){
+      if (Objects.nonNull(exceptionPackage)) {
         rootSchema.put("exceptionPackage", exceptionPackage);
         root.put("exceptionPackage", exceptionPackage);
       }

@@ -6,40 +6,31 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassException;
-import com.sngular.api.generator.plugin.openapi.model.AuthObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.model.*;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
-import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
-import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
-import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
-import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
+import com.sngular.api.generator.plugin.openapi.utils.*;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class OpenApiGenerator {
 
@@ -112,7 +103,7 @@ public class OpenApiGenerator {
 
   private void processFile(final SpecFile specFile, final String filePathToSave) throws IOException {
 
-    final JsonNode openAPI = OpenApiUtil.getPojoFromSwagger(specFile);
+    final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(specFile);
     final String clientPackage = specFile.getClientPackage();
 
     if (specFile.isCallMode()) {
@@ -123,9 +114,9 @@ public class OpenApiGenerator {
     }
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
-    createApiTemplate(specFile, filePathToSave, openAPI);
+    final var globalObject = createApiTemplate(specFile, filePathToSave, openAPI);
 
-    createModelTemplate(specFile, openAPI);
+    createModelTemplate(specFile, openAPI, globalObject);
 
   }
 
@@ -163,7 +154,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createApiTemplate(final SpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
+  private GlobalObject createApiTemplate(final SpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
     final Map<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
@@ -183,6 +174,8 @@ public class OpenApiGenerator {
         addAuthentications(authObject);
       }
     }
+
+    return globalObject;
   }
 
   private void addAuthentications(final AuthObject authObject) {
@@ -196,10 +189,10 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI) throws IOException {
+  private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) throws IOException {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
-    final var basicSchemaMap = OpenApiUtil.processBasicJsonNodes(openAPI);
+    final var basicSchemaMap = OpenApiUtil.processBasicJsonNodes(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
     processModels(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
   }
@@ -249,21 +242,22 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String modelPackage, final Map<String, Schema<?>> basicSchemaMap,
+      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
       final boolean overwrite) {
-    final Map<String, Schema<?>> additionalPropertiesSchemas = new HashMap<>();
+    final Map<String, JsonNode> additionalPropertiesSchemas = new HashMap<>();
 
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
         throw new DuplicateModelClassException(schemaName, modelPackage);
       }
 
-      if (Objects.nonNull(basicSchema.get$ref())) {
-        writeModelRefSchema(specFile, openAPI, fileModelToSave, basicSchema);
-      } else if (basicSchema instanceof MapSchema && Objects.nonNull(basicSchema.getAdditionalProperties())) {
+      if (ApiTool.hasRef(basicSchema)) {
+        final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
+        writeModel(specFile, openAPI, fileModelToSave, refSchema, basicSchemaMap.get(refSchema));
+      } else if (ApiTool.hasAdditionalProperties(basicSchema)) {
         writeModelWithAdditionalProperties(specFile, openAPI, fileModelToSave, schemaName, basicSchema,
                                            schema -> additionalPropertiesSchemas.put(schemaName + ADDITIONAL_PROPERTY_NAME, schema));
-      } else if (!(basicSchema instanceof ArraySchema)) {
+      } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
         writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
       }
     });
@@ -273,46 +267,44 @@ public class OpenApiGenerator {
     }
   }
 
-  private void writeModelRefSchema(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final Schema<?> basicSchema) {
-    final Schema additionalPropertiesSchema = new ObjectSchema();
-    final Map<String, Schema> properties = new HashMap<>();
-    final String[] refSplit = basicSchema.get$ref().split("/");
+  private void writeModelRefSchema(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final JsonNode basicSchema) {
+    final Map<String, JsonNode> properties = new HashMap<>();
+    final String[] refSplit = ApiTool.getRefValue(basicSchema).split("/");
     final String refSchemaName = refSplit[refSplit.length - 1];
-    properties.put(refSchemaName, basicSchema);
-    additionalPropertiesSchema.properties(properties);
-    additionalPropertiesSchema.name(refSchemaName);
+    properties.put("properties", basicSchema);
+    final ObjectNode additionalPropertiesSchema = new ObjectNode(JsonNodeFactory.instance, properties);
+    additionalPropertiesSchema.put("name", StringUtils.uncapitalize(refSchemaName));
+    additionalPropertiesSchema.put("type", TypeConstants.OBJECT);
     writeModel(specFile, openAPI, fileModelToSave, refSchemaName, additionalPropertiesSchema);
   }
 
   private void writeModelWithAdditionalProperties(
-      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema,
-      final Consumer<Schema<?>> addAdditionalSchema) {
+      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final JsonNode basicSchema,
+      final Consumer<JsonNode> addAdditionalSchema) {
 
-    if (basicSchema.getAdditionalProperties() instanceof Schema<?> && !(basicSchema.getAdditionalProperties() instanceof ArraySchema)) {
-      final Schema<?> additionalPropertiesSchema = (Schema<?>) basicSchema.getAdditionalProperties();
-      if (Objects.isNull(additionalPropertiesSchema.get$ref())) {
-        addAdditionalSchema.accept(additionalPropertiesSchema);
-      }
+    final var embeddedNode = ApiTool.getAdditionalProperties(basicSchema);
+    if (ApiTool.isObject(embeddedNode) && !ApiTool.isArray(basicSchema) && (ApiTool.hasRef(embeddedNode))) {
+      addAdditionalSchema.accept(embeddedNode);
     }
     writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
   }
 
-  private void writeModel(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final Schema<?> basicSchema) {
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(openAPI.getComponents().getSchemas(), basicSchema, schemaName, specFile);
+  private void writeModel(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final JsonNode basicSchema) {
+    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(ApiTool.getComponentSchemas(openAPI), basicSchema, schemaName, specFile);
     final Set<String> propertiesSet = new HashSet<>();
     checkRequiredOrCombinatorExists(schemaObjectList);
     schemaObjectList.values().forEach(schemaObject -> {
       try {
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
       } catch (IOException | TemplateException e) {
-        e.printStackTrace();
+        throw new GeneratedSourcesException(fileModelToSave, e);
       }
     });
 
     try {
       fillTemplates(fileModelToSave, propertiesSet);
     } catch (IOException | TemplateException e) {
-      e.printStackTrace();
+      throw new GeneratedSourcesException(fileModelToSave, e);
     }
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {

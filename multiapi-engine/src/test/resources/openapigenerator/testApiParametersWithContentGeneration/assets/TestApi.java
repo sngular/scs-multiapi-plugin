@@ -18,7 +18,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import com.sngular.multifileplugin.parameterwithcontent.model.ApiTestInfoDTO;
 import com.sngular.multifileplugin.parameterwithcontent.model.ApiErrorDTO;
-import com.sngular.multifileplugin.parameterwithcontent.model.ApiInlineParameterShowTestByIdTestIdDTO;
+import com.sngular.multifileplugin.parameterwithcontent.model.ApiInlineParameterTestIdDTO;
 import com.sngular.multifileplugin.parameterwithcontent.model.ApiTestDTO;
 
 public interface TestApi {
@@ -44,7 +44,7 @@ public interface TestApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<ApiTestInfoDTO> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") ApiInlineParameterShowTestByIdTestIdDTO testId) {
+  default ResponseEntity<ApiTestInfoDTO> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") ApiInlineParameterTestIdDTO testId) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**

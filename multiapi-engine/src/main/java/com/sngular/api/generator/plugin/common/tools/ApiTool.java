@@ -1,0 +1,245 @@
+package com.sngular.api.generator.plugin.common.tools;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.Transformer;
+import org.codehaus.plexus.util.StringUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
+
+public final class ApiTool {
+
+  private ApiTool() {
+  }
+
+  public static String getType(final JsonNode schema) {
+    return hasType(schema) ? getNodeAsString(schema, "type") : "";
+  }
+
+  public static Iterator<Entry<String, JsonNode>> getProperties(final JsonNode schema) {
+    return getNode(schema, "properties").fields();
+  }
+
+  public static String getRefValue(final JsonNode schema) {
+    return getNode(schema, "$ref").textValue();
+  }
+
+  public static JsonNode getAdditionalProperties(final JsonNode schema) {
+    return getNode(schema, "additionalProperties");
+  }
+
+  public static String getFormat(final JsonNode schema) {
+    return getNodeAsString(schema, "format");
+  }
+
+  public static JsonNode getAllOf(final JsonNode schema) {
+    return getNode(schema, "allOf");
+  }
+
+  public static JsonNode getAnyOf(final JsonNode schema) {
+    return getNode(schema, "anyOf");
+  }
+
+  public static JsonNode getOneOf(final JsonNode schema) {
+    return getNode(schema, "oneOf");
+  }
+
+  public static JsonNode getNode(final JsonNode schema, final String nodeName) {
+    return schema.get(nodeName);
+  }
+
+  public static String getNodeAsString(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
+  }
+
+  public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
+  }
+
+  public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema) {
+    return Objects.nonNull(schema) ? schema.fields() : IteratorUtils.emptyIterator();
+  }
+
+  public static String getName(final JsonNode node) {
+    return hasNode(node, "name") ? getNodeAsString(node, "name") : node.textValue();
+  }
+
+  public static List<String> getEnumValues(final JsonNode schema) {
+    return new ArrayList<>(CollectionUtils.collect(
+      IteratorUtils.toList(schema.get("enum").elements()),
+      getTextValue()));
+  }
+
+  public static JsonNode getItems(final JsonNode schema) {
+    return getNode(schema, "items");
+  }
+
+  public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
+    final var schemasMap = new HashMap<String, JsonNode>();
+
+    if (hasNode(openApi, "components")) {
+      final var components = getNode(openApi, "components");
+      if (hasNode(components, "schemas")) {
+        final var schemas = getNode(components, "schemas");
+        final var schemasIt = schemas.fieldNames();
+        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
+      }
+    }
+
+    return schemasMap;
+  }
+
+  public static Map<String, JsonNode> getComponentSecuritySchemes(final JsonNode openApi) {
+    final var schemasMap = new HashMap<String, JsonNode>();
+
+    if (hasNode(openApi, "components")) {
+      final var components = getNode(openApi, "components");
+      if (hasNode(components, "securitySchemes")) {
+        getNode(components, "securitySchemes").fields().forEachRemaining(schema -> schemasMap.put(schema.getKey(), schema.getValue()));
+      }
+    }
+
+    return schemasMap;
+  }
+
+  public static String getNumberType(final JsonNode schema) {
+    final String type;
+    if (hasType(schema)) {
+      switch (getType(schema)) {
+        case TypeConstants.DOUBLE: type = TypeConstants.DOUBLE;
+                                      break;
+        case TypeConstants.FLOAT: type = TypeConstants.FLOAT;
+                                      break;
+        case TypeConstants.NUMBER: type = TypeConstants.NUMBER;
+                                      break;
+        case TypeConstants.INT_64: type = TypeConstants.INT_64;
+                                      break;
+        case TypeConstants.INT_32: type = TypeConstants.INT_32;
+                                      break;
+        default: type = TypeConstants.INTEGER;
+          break;
+      }
+    } else {
+      type = TypeConstants.INTEGER;
+    }
+    return type;
+  }
+
+  public static boolean hasItems(final JsonNode schema) {
+    return hasNode(schema, "items");
+  }
+
+  public static boolean hasNode(final JsonNode schema, final String nodeName) {
+    return Objects.nonNull(schema) && schema.has(nodeName);
+  }
+
+  public static boolean hasField(final JsonNode schema, final String... fieldNameArray) {
+    final var nodeNamesList = Arrays.asList(fieldNameArray);
+    return StringUtils.isNotEmpty(IteratorUtils.find(schema.fieldNames(), nodeNamesList::contains));
+  }
+
+  public static boolean hasRequired(final JsonNode schema) {
+    return hasNode(schema, "required");
+  }
+
+  public static boolean hasType(final JsonNode schema) {
+    return hasNode(schema, "type");
+  }
+
+  public static boolean hasRef(final JsonNode schema) {
+    return hasNode(schema, "$ref");
+  }
+
+  public static boolean hasProperties(final JsonNode schema) {
+    return hasNode(schema, "properties");
+  }
+
+  public static boolean hasContent(final JsonNode schema) {
+    return hasNode(schema, "content");
+  }
+
+  public static boolean hasAdditionalProperties(final JsonNode schema) {
+    return hasNode(schema, "additionalProperties");
+  }
+
+  public static boolean isObject(final JsonNode schema) {
+    return hasType(schema) && TypeConstants.OBJECT.equalsIgnoreCase(getType(schema));
+  }
+
+  public static boolean isArray(final JsonNode schema) {
+    return hasType(schema) && TypeConstants.ARRAY.equalsIgnoreCase(getType(schema));
+  }
+
+  public static boolean isComposed(final JsonNode schema) {
+    return ApiTool.hasField(schema, "anyOf", "allOf", "oneOf");
+  }
+
+  public static boolean isString(final JsonNode schema) {
+    return hasType(schema) && TypeConstants.STRING.equalsIgnoreCase(getType(schema));
+  }
+
+  public static boolean isBoolean(final JsonNode schema) {
+    return hasType(schema) && TypeConstants.BOOLEAN.equalsIgnoreCase(getType(schema));
+  }
+
+  public static boolean isNumber(final JsonNode schema) {
+    return hasType(schema)
+           && (TypeConstants.INTEGER.equalsIgnoreCase(getType(schema))
+            || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
+            || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
+            || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
+  }
+
+  public static boolean isEnum(final JsonNode schema) {
+    return schema.has("enum");
+  }
+
+  public static boolean isAllOf(final JsonNode schema) {
+    return hasNode(schema, "allOf");
+  }
+
+  public static boolean isAnyOf(final JsonNode schema) {
+    return hasNode(schema, "anyOf");
+  }
+
+  public static boolean isOneOf(final JsonNode schema) {
+    return hasNode(schema, "oneOf");
+  }
+
+  public static boolean isDateTime(final JsonNode schema) {
+    final boolean isDateTime;
+    if (hasType(schema) && TypeConstants.STRING.equalsIgnoreCase(getType(schema))) {
+      if (hasNode(schema, "format")) {
+        isDateTime = "date".equalsIgnoreCase(getNode(schema, "format").textValue())
+                     || "date-time".equalsIgnoreCase(getNode(schema, "format").textValue());
+      } else {
+        isDateTime = false;
+      }
+    } else {
+      isDateTime = false;
+    }
+    return isDateTime;
+  }
+
+  public static List<JsonNode> findContentSchemas(final JsonNode schema) {
+    return hasNode(schema, "content") ? schema.findValues("schema") : Collections.emptyList();
+  }
+
+  public static boolean checkIfRequired(final JsonNode schema, final String fieldName) {
+    boolean isRequired = false;
+    if (hasNode(schema, "required")) {
+      final var fieldIt = getNode(schema, "required").elements();
+      while (fieldIt.hasNext() && !isRequired) {
+        isRequired = fieldName.equalsIgnoreCase(fieldIt.next().textValue());
+      }
+    }
+    return isRequired;
+  }
+
+  private static Transformer<JsonNode, String> getTextValue() {
+    return JsonNode::asText;
+  }
+}
