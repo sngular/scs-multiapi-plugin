@@ -20,9 +20,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface TestApi {
 
   /**
-  * GET /test 
-  * @return  A string; (status code 200)
-  */
+   * GET /test
+   * @return  A string; (status code 200)
+   */
 
   @Operation(
      operationId = "testNoComponents",

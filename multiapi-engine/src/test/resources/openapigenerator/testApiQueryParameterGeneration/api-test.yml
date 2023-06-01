@@ -42,7 +42,7 @@ paths:
       schema:
         type: integer
         format: int32
-    summary:  other available test
+    summary: other available test
     get:
       summary: Info for a specific test
       operationId: showTestById
