@@ -134,10 +134,7 @@ public class ApiDefaultItemDTO {
     }
   }
 
-  /**
-  * Get stringField
-  * @return stringField
-  */
+
   @Schema(name = "stringField", required = false)
   public StringField getStringField() {
     return stringField;
@@ -146,10 +143,7 @@ public class ApiDefaultItemDTO {
     this.stringField = stringField;
   }
 
-  /**
-  * Get sequenceField
-  * @return sequenceField
-  */
+
   @Schema(name = "sequenceField", required = false)
   public ApiSequenceFieldDTO getSequenceField() {
     return sequenceField;
@@ -158,10 +152,7 @@ public class ApiDefaultItemDTO {
     this.sequenceField = sequenceField;
   }
 
-  /**
-  * Get dateField
-  * @return dateField
-  */
+
   @Schema(name = "dateField", required = false)
   public DateField getDateField() {
     return dateField;
@@ -170,10 +161,7 @@ public class ApiDefaultItemDTO {
     this.dateField = dateField;
   }
 
-  /**
-  * Get enumField
-  * @return enumField
-  */
+
   @Schema(name = "enumField", required = false)
   public EnumField getEnumField() {
     return enumField;
@@ -182,10 +170,7 @@ public class ApiDefaultItemDTO {
     this.enumField = enumField;
   }
 
-  /**
-  * Get booleanField
-  * @return booleanField
-  */
+
   @Schema(name = "booleanField", required = false)
   public BooleanField getBooleanField() {
     return booleanField;
@@ -194,10 +179,7 @@ public class ApiDefaultItemDTO {
     this.booleanField = booleanField;
   }
 
-  /**
-  * Get arrayField
-  * @return arrayField
-  */
+
   @Schema(name = "arrayField", required = false)
   public ArrayField getArrayField() {
     return arrayField;
@@ -206,10 +188,7 @@ public class ApiDefaultItemDTO {
     this.arrayField = arrayField;
   }
 
-  /**
-  * Get numberField
-  * @return numberField
-  */
+
   @Schema(name = "numberField", required = false)
   public NumberField getNumberField() {
     return numberField;
@@ -218,10 +197,7 @@ public class ApiDefaultItemDTO {
     this.numberField = numberField;
   }
 
-  /**
-  * Get objectField
-  * @return objectField
-  */
+
   @Schema(name = "objectField", required = false)
   public ObjectField getObjectField() {
     return objectField;
@@ -230,10 +206,7 @@ public class ApiDefaultItemDTO {
     this.objectField = objectField;
   }
 
-  /**
-  * Get mapField
-  * @return mapField
-  */
+
   @Schema(name = "mapField", required = false)
   public MapField getMapField() {
     return mapField;
@@ -242,10 +215,7 @@ public class ApiDefaultItemDTO {
     this.mapField = mapField;
   }
 
-  /**
-  * Get unionField
-  * @return unionField
-  */
+
   @Schema(name = "unionField", required = false)
   public ApiUnionFieldDTO getUnionField() {
     return unionField;
@@ -289,10 +259,7 @@ public class ApiDefaultItemDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
@@ -329,6 +296,5 @@ public class ApiDefaultItemDTO {
       throw new ModelClassException("ApiDefaultItemDTO");
     }
   }
-
 
 }

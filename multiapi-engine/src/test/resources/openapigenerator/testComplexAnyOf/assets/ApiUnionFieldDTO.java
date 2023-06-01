@@ -134,10 +134,7 @@ public class ApiUnionFieldDTO {
     }
   }
 
-  /**
-  * Get defaultItem
-  * @return defaultItem
-  */
+
   @Schema(name = "defaultItem", required = false)
   public ApiDefaultItemDTO getDefaultItem() {
     return defaultItem;
@@ -146,10 +143,7 @@ public class ApiUnionFieldDTO {
     this.defaultItem = defaultItem;
   }
 
-  /**
-  * Get generatedFlag
-  * @return generatedFlag
-  */
+
   @Schema(name = "generatedFlag", required = false)
   public Boolean getGeneratedFlag() {
     return generatedFlag;
@@ -158,10 +152,7 @@ public class ApiUnionFieldDTO {
     this.generatedFlag = generatedFlag;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -170,10 +161,7 @@ public class ApiUnionFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get unionEnum
-  * @return unionEnum
-  */
+
   @Schema(name = "unionEnum", required = false)
   public UnionEnum getUnionEnum() {
     return unionEnum;
@@ -182,10 +170,7 @@ public class ApiUnionFieldDTO {
     this.unionEnum = unionEnum;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -194,10 +179,7 @@ public class ApiUnionFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get optionalUnion
-  * @return optionalUnion
-  */
+
   @Schema(name = "optionalUnion", required = false)
   public Boolean getOptionalUnion() {
     return optionalUnion;
@@ -206,10 +188,7 @@ public class ApiUnionFieldDTO {
     this.optionalUnion = optionalUnion;
   }
 
-  /**
-  * Get values
-  * @return values
-  */
+
   @Schema(name = "values", required = false)
   public List<ApiTypeArrayDTO> getValues() {
     return values;
@@ -250,17 +229,13 @@ public class ApiUnionFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

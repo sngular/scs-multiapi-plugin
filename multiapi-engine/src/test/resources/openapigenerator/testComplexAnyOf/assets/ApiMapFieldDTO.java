@@ -111,10 +111,7 @@ public class ApiMapFieldDTO {
     }
   }
 
-  /**
-  * Get keyType
-  * @return keyType
-  */
+
   @Schema(name = "keyType", required = false)
   public String getKeyType() {
     return keyType;
@@ -123,10 +120,7 @@ public class ApiMapFieldDTO {
     this.keyType = keyType;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -135,10 +129,7 @@ public class ApiMapFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
+
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -147,10 +138,7 @@ public class ApiMapFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -159,10 +147,7 @@ public class ApiMapFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get mapSize
-  * @return mapSize
-  */
+
   @Schema(name = "mapSize", required = false)
   public Integer getMapSize() {
     return mapSize;
@@ -171,10 +156,7 @@ public class ApiMapFieldDTO {
     this.mapSize = mapSize;
   }
 
-  /**
-  * Get mapTypes
-  * @return mapTypes
-  */
+
   @Schema(name = "mapTypes", required = false)
   public List<ApiTypeArrayDTO> getMapTypes() {
     return mapTypes;
@@ -214,17 +196,13 @@ public class ApiMapFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

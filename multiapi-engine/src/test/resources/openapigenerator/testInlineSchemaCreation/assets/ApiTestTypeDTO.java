@@ -53,10 +53,7 @@ public class ApiTestTypeDTO {
     }
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -65,10 +62,7 @@ public class ApiTestTypeDTO {
     this.name = name;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
+
   @Schema(name = "id", required = false)
   public String getId() {
     return id;
@@ -104,17 +98,13 @@ public class ApiTestTypeDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

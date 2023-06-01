@@ -101,10 +101,7 @@ public class ApiEnumFieldDTO {
     }
   }
 
-  /**
-  * Get enumValues
-  * @return enumValues
-  */
+
   @Schema(name = "enumValues", required = false)
   public List<String> getEnumValues() {
     return enumValues;
@@ -113,10 +110,7 @@ public class ApiEnumFieldDTO {
     this.enumValues = enumValues;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -125,10 +119,7 @@ public class ApiEnumFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
+
   @Schema(name = "defaultValues", required = false)
   public List<String> getDefaultValues() {
     return defaultValues;
@@ -137,10 +128,7 @@ public class ApiEnumFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -149,10 +137,7 @@ public class ApiEnumFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get defaultValue
-  * @return defaultValue
-  */
+
   @Schema(name = "defaultValue", required = false)
   public String getDefaultValue() {
     return defaultValue;
@@ -191,17 +176,13 @@ public class ApiEnumFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

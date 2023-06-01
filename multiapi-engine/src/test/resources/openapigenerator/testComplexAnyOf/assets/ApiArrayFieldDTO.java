@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -131,10 +132,6 @@ public class ApiArrayFieldDTO {
     }
   }
 
-  /**
-  * Get uniqueItems
-  * @return uniqueItems
-  */
   @Schema(name = "uniqueItems", required = false)
   public Boolean getUniqueItems() {
     return uniqueItems;
@@ -143,10 +140,6 @@ public class ApiArrayFieldDTO {
     this.uniqueItems = uniqueItems;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -155,10 +148,6 @@ public class ApiArrayFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
   @Schema(name = "defaultValues", required = false)
   public List<ApiTypeArrayDTO> getDefaultValues() {
     return defaultValues;
@@ -167,10 +156,6 @@ public class ApiArrayFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -179,10 +164,6 @@ public class ApiArrayFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get arraySize
-  * @return arraySize
-  */
   @Schema(name = "arraySize", required = false)
   public Integer getArraySize() {
     return arraySize;
@@ -191,10 +172,6 @@ public class ApiArrayFieldDTO {
     this.arraySize = arraySize;
   }
 
-  /**
-  * Get regex
-  * @return regex
-  */
   @Schema(name = "regex", required = false)
   public String getRegex() {
     return regex;
@@ -203,10 +180,6 @@ public class ApiArrayFieldDTO {
     this.regex = regex;
   }
 
-  /**
-  * Get minItems
-  * @return minItems
-  */
   @Schema(name = "minItems", required = false)
   public Integer getMinItems() {
     return minItems;
@@ -215,10 +188,6 @@ public class ApiArrayFieldDTO {
     this.minItems = minItems;
   }
 
-  /**
-  * Get values
-  * @return values
-  */
   @Schema(name = "values", required = false)
   public List<ApiTypeArrayDTO> getValues() {
     return values;
@@ -260,17 +229,12 @@ public class ApiArrayFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

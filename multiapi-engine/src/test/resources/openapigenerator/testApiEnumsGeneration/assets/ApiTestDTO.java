@@ -152,37 +152,24 @@ public class ApiTestDTO {
     }
   }
 
-  /**
-  * Get unionEnum
-  * @return unionEnum
-  */
+
   @Schema(name = "unionEnum", required = true)
   public UnionEnum getUnionEnum() {
     return unionEnum;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
+
   @Schema(name = "id", required = true)
   public Integer getId() {
     return id;
   }
 
-  /**
-  * Get unionIntegerEnum
-  * @return unionIntegerEnum
-  */
   @Schema(name = "unionIntegerEnum", required = false)
   public UnionIntegerEnum getUnionIntegerEnum() {
     return unionIntegerEnum;
@@ -191,10 +178,7 @@ public class ApiTestDTO {
     this.unionIntegerEnum = unionIntegerEnum;
   }
 
-  /**
-  * Get unionNumberEnum
-  * @return unionNumberEnum
-  */
+
   @Schema(name = "unionNumberEnum", required = false)
   public UnionNumberEnum getUnionNumberEnum() {
     return unionNumberEnum;
@@ -233,17 +217,13 @@ public class ApiTestDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;

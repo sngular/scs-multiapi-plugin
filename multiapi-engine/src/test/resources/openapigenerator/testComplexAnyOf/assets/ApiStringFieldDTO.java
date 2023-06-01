@@ -141,10 +141,7 @@ public class ApiStringFieldDTO {
     }
   }
 
-  /**
-  * Get maxLength
-  * @return maxLength
-  */
+
   @Schema(name = "maxLength", required = false)
   public Integer getMaxLength() {
     return maxLength;
@@ -153,10 +150,7 @@ public class ApiStringFieldDTO {
     this.maxLength = maxLength;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -165,10 +159,7 @@ public class ApiStringFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get properties
-  * @return properties
-  */
+
   @Schema(name = "properties", required = false)
   public List<String> getProperties() {
     return properties;
@@ -177,10 +168,7 @@ public class ApiStringFieldDTO {
     this.properties = properties;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
+
   @Schema(name = "defaultValues", required = false)
   public List<String> getDefaultValues() {
     return defaultValues;
@@ -189,10 +177,7 @@ public class ApiStringFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -201,10 +186,7 @@ public class ApiStringFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get regex
-  * @return regex
-  */
+
   @Schema(name = "regex", required = false)
   public String getRegex() {
     return regex;
@@ -213,10 +195,7 @@ public class ApiStringFieldDTO {
     this.regex = regex;
   }
 
-  /**
-  * Get minLength
-  * @return minLength
-  */
+
   @Schema(name = "minLength", required = false)
   public Integer getMinLength() {
     return minLength;
@@ -225,10 +204,7 @@ public class ApiStringFieldDTO {
     this.minLength = minLength;
   }
 
-  /**
-  * Get format
-  * @return format
-  */
+
   @Schema(name = "format", required = false)
   public Integer getFormat() {
     return format;
@@ -237,10 +213,7 @@ public class ApiStringFieldDTO {
     this.format = format;
   }
 
-  /**
-  * Get valueLength
-  * @return valueLength
-  */
+
   @Schema(name = "valueLength", required = false)
   public Integer getValueLength() {
     return valueLength;
@@ -283,17 +256,13 @@ public class ApiStringFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }
