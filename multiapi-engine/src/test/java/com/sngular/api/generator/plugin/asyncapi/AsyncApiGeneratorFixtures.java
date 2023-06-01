@@ -200,22 +200,22 @@ public class AsyncApiGeneratorFixtures {
                                             .build())
           .build());
 
-  final static List<SpecFile> TEST_FILE_GENERATION_WITH_KEY = List.of(
+  final static List<SpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(
       SpecFile
           .builder()
-          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithKey/event-api.yml")
+          .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithKafkaBindings/event-api.yml")
           .consumer(OperationParameterObject.builder()
-                                            .ids("publishOperationFileGenerationWithKey")
+                                            .ids("publishOperationFileGenerationWithKafkaBindings")
                                             .classNamePostfix("TestClassName")
                                             .modelNameSuffix("DTO")
-                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkey.model.event.consumer")
-                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkey.model.event")
+                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer")
+                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkafkabindings.model.event")
                                             .build())
           .supplier(OperationParameterObject.builder()
-                                            .ids("subscribeOperationFileGenerationWithKey")
+                                            .ids("subscribeOperationFileGenerationWithKafkaBindings")
                                             .modelNameSuffix("Mapper")
-                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkey.model.event.producer")
-                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkey.model.event")
+                                            .apiPackage("com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.producer")
+                                            .modelPackage("com.sngular.scsplugin.filegenerationwithkafkabindings.model.event")
                                             .build())
           .build()
   );
@@ -577,18 +577,18 @@ public class AsyncApiGeneratorFixtures {
                    modelTest(path, expectedProducerFiles, API_FOLDER);
   }
 
-  static Function<Path, Boolean> validateTestFileGenerationWithKey() {
-    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/consumer";
+  static Function<Path, Boolean> validateTestFileGenerationWithKafkaBindings() {
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/consumer";
 
-    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/producer";
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/producer";
 
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/schemas";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/messages";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/messages";
 
     final String DEFAULT_CUSTOMVALIDATOR_FOLDER = DEFAULT_MODEL_MESSAGE_FOLDER + "/customvalidator";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKey/";
+    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKafkaBindings/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 

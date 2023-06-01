@@ -22,8 +22,11 @@ import java.util.Set;
 
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -70,8 +73,6 @@ public class TemplateFactory {
 
   private String subscribeClassName = null;
 
-  private boolean hasKafkaKey = false;
-
   public TemplateFactory() {
     cfg.setTemplateLoader(new ClasspathTemplateLoader());
     cfg.setDefaultEncoding("UTF-8");
@@ -95,16 +96,16 @@ public class TemplateFactory {
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
 
-    if (!publishMethods.isEmpty()) {
-      fillTemplate(supplierFilePath, supplierClassName, checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_API_SUPPLIERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS), root);
+    for (final var method : publishMethods) {
+      fillTemplate(supplierFilePath, supplierClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_SUPPLIERS), root);
     }
 
-    if (!subscribeMethods.isEmpty()) {
-      fillTemplate(supplierFilePath, subscribeClassName, checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_API_CONSUMERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
+    for (final var method : subscribeMethods) {
+      fillTemplate(supplierFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
     }
 
-    if (!streamBridgeMethods.isEmpty()) {
-      fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
+    for (final var method : streamBridgeMethods) {
+      fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE), root);
     }
 
     final HashSet<String> propertiesSet = new HashSet<>();
@@ -251,12 +252,12 @@ public class TemplateFactory {
     this.streamBridgeFilePath = path.toString();
   }
 
-  public final void addSupplierMethod(final String operationId, final String classNamespace) {
-    publishMethods.add(new MethodObject(operationId, classNamespace, "publish"));
+  public final void addSupplierMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
+    publishMethods.add(new MethodObject(operationId, classNamespace, "publish", bindings, bindingType));
   }
 
-  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName) {
-    streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
+  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName, final String bindings, final String bindingType) {
+    streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName, bindings, bindingType));
   }
 
   public final void addSchemaObject(final String modelPackage, final String className, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
@@ -267,12 +268,8 @@ public class TemplateFactory {
     schemaObjectMap.add(builder.build());
   }
 
-  public final void addSubscribeMethod(final String operationId, final String classNamespace) {
-    subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
-  }
-
-  public final void setHasKafkaKey(boolean hasKafkaKey) {
-    this.hasKafkaKey = hasKafkaKey;
+  public final void addSubscribeMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
+    subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe", bindings, bindingType));
   }
 
   public final void setSupplierEntitiesSuffix(final String suffix) {
@@ -325,12 +322,10 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS),
-                     interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS), interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     checkTemplateWithKey(TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY, TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS),
-                     interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS), interfaceRoot);
       }
     }
   }
@@ -343,7 +338,14 @@ public class TemplateFactory {
     writer.close();
   }
 
-  private String checkTemplateWithKey(String templateWithKey, String templateWithoutKey) {
-    return hasKafkaKey ? templateWithKey : templateWithoutKey;
+  private String checkTemplate(final String bindingType, final String defaultTemplate) {
+    switch (BindingTypeEnum.valueOf(bindingType)) {
+      case NONBINDING:
+        return defaultTemplate;
+      case KAFKA:
+        return MapperUtil.splitName(defaultTemplate)[0] + "WithKafkaBindings.ftlh";
+      default:
+        throw new NonSupportedBindingException(bindingType);
+    }
   }
 }

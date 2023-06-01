@@ -22,15 +22,20 @@ public class MethodObject {
 
   private SchemaObject schemaObject;
 
-  public MethodObject(final String operationId, final String classNamespace, final String type) {
-    this(operationId, classNamespace, type, null);
+  private String bindings;
+
+  private String bindingType;
+
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String bindings, final String bindingType) {
+    this(operationId, classNamespace, type, null, bindings, bindingType);
   }
 
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName) {
-    this(operationId, classNamespace, type, channelName, null);
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final String bindings, final String bindingType) {
+    this(operationId, classNamespace, type, channelName, null, bindings, bindingType);
   }
 
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject) {
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
+      final String bindings, final String bindingType) {
     this.operationId = operationId;
     this.classNamespace = classNamespace;
     final var splitNamespace = classNamespace.split("\\.");
@@ -38,6 +43,8 @@ public class MethodObject {
     this.type = type;
     this.channelName = channelName;
     this.schemaObject = schemaObject;
+    this.bindings = bindings;
+    this.bindingType = bindingType;
   }
 
   protected final void setOperationId(final String operationId) {
@@ -87,4 +94,6 @@ public class MethodObject {
   public final SchemaObject getSchemaObject() {
     return schemaObject;
   }
+
+  public final String getBindingType() { return bindingType; }
 }

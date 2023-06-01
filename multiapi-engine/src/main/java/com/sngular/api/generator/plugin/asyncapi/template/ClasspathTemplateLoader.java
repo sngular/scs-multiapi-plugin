@@ -22,8 +22,9 @@ public class ClasspathTemplateLoader implements TemplateLoader {
   private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
                                                              "interfaceSupplier.ftlh", "templateStreamBridge.ftlh", "templateSchema.ftlh",
                                                              "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh",
-                                                             "interfaceSupplierWithKey.ftlh", "templateSuppliersWithKey.ftlh",
-                                                             "interfaceConsumerWithKey.ftlh", "templateConsumersWithKey.ftlh");
+                                                             "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
+                                                             "interfaceConsumerWithKafkaBindings.ftlh", "templateConsumersWithKafkaBindings.ftlh",
+                                                             "templateStreamBridgeWithKafkaBindings.ftlh");
 
   private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,

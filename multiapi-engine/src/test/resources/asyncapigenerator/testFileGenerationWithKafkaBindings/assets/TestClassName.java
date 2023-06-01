@@ -16,8 +16,11 @@ public class TestClassName {
   }
 
   @Bean
-  public Consumer<OrderCreatedDTO> publishOperationFileGenerationWithKey() {
-    return value -> publishOperationFileGenerationWithKey.publishOperationFileGenerationWithKey(value);
+  public Consumer<Message<OrderCreatedDTO>> publishOperationFileGenerationWithKey() {
+    return value -> {
+      final var messageWrapper = MessageWrapper.builder().payload(value.getPayload()).key(value.getKey()).build();
+      publishOperationFileGenerationWithKey.publishOperationFileGenerationWithKey(messageWrapper);
+    }
   }
 
 

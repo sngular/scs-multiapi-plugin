@@ -16,21 +16,23 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_API_SUPPLIERS = "templateSuppliers.ftlh";
 
-  public static final String TEMPLATE_API_SUPPLIERS_WITH_KEY = "templateSuppliersWithKey.ftlh";
+  public static final String TEMPLATE_API_SUPPLIERS_WITH_KAFKA_BINDINGS = "templateSuppliersWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_API_CONSUMERS = "templateConsumers.ftlh";
 
-  public static final String TEMPLATE_API_CONSUMERS_WITH_KEY = "templateConsumersWithKey.ftlh";
+  public static final String TEMPLATE_API_CONSUMERS_WITH_KAFKA_BINDINGS = "templateConsumersWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_API_STREAM_BRIDGE = "templateStreamBridge.ftlh";
 
+  public static final String TEMPLATE_API_STREAM_BRIDGE_WITH_KAFKA_BINDINGS = "templateStreamBridgeWithKafkaBindings.ftlh";
+
   public static final String TEMPLATE_INTERFACE_SUPPLIERS = "interfaceSupplier.ftlh";
 
-  public static final String TEMPLATE_INTERFACE_SUPPLIERS_WITH_KEY = "interfaceSupplierWithKey.ftlh";
+  public static final String TEMPLATE_INTERFACE_SUPPLIERS_WITH_KAFKA_BINDINGS = "interfaceSupplierWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
 
-  public static final String TEMPLATE_INTERFACE_CONSUMERS_WITH_KEY = "interfaceConsumerWithKey.ftlh";
+  public static final String TEMPLATE_INTERFACE_CONSUMERS_WITH_KAFKA_BINDINGS = "interfaceConsumerWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
 

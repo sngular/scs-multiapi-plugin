@@ -39,7 +39,7 @@ class AsyncApiGeneratorTest {
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-//        Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
+        Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
 //        Arguments.of("TestIssueGeneration", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION, AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
 //        Arguments.of("TestFileGenerationIssue", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE, AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
 //        Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
@@ -56,7 +56,8 @@ class AsyncApiGeneratorTest {
 //                     AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
 //        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),
 //        Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
-        Arguments.of("TestFileGenerationWithKey", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KEY, AsyncApiGeneratorFixtures.validateTestFileGenerationWithKey())
+        Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
     );
   }
 

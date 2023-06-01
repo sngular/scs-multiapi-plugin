@@ -34,10 +34,12 @@ import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentN
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
+import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
@@ -48,7 +50,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
@@ -124,7 +125,8 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  private boolean hasKafkaKey;
+  private String bindingType;
+
 
   private final Integer springBootVersion;
 
@@ -157,8 +159,6 @@ public class AsyncApiGenerator {
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
-          hasKafkaKey = false;
-
           final Map.Entry<String, JsonNode> entry = iter.next();
 
           final JsonNode channel = entry.getValue();
@@ -511,32 +511,29 @@ public class AsyncApiGenerator {
   private void processSupplierMethod(
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
       final String suffix, final JsonNode node) throws IOException, TemplateException {
-    final Pair<String, String> result = processMethod(channel, modelPackage, ymlParent, prefix, suffix, node);
-    fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addSupplierMethod(result.getKey(), result.getValue());
-    templateFactory.setHasKafkaKey(hasKafkaKey);
+    final ProcessMethodResult result = processMethod(channel, modelPackage, ymlParent, prefix, suffix, node);
+    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), bindingType);
   }
 
   private void processStreamBridgeMethod(
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas,
       final boolean usingLombok, final String prefix, final String suffix, final JsonNode node) throws IOException, TemplateException {
-    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node);
+    final ProcessMethodResult result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node);
     final String regex = "[a-zA-Z0-9.\\-]*";
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
-    fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addStreamBridgeMethod(result.getKey(), result.getValue(), channelName);
-    templateFactory.setHasKafkaKey(hasKafkaKey);
+    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), bindingType);
   }
 
   private void processSubscribeMethod(
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
       final String suffix, final JsonNode node) throws IOException, TemplateException {
-    final Pair<String, String> result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node);
-    fillTemplateFactory(result.getValue(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addSubscribeMethod(result.getKey(), result.getValue());
-    templateFactory.setHasKafkaKey(hasKafkaKey);
+    final ProcessMethodResult result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node);
+    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), bindingType);
   }
 
   private void fillTemplateFactory(
@@ -562,12 +559,13 @@ public class AsyncApiGenerator {
     }
   }
 
-  private Pair<String, String> processMethod(final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String prefix, final String suffix, final JsonNode node)
+  private ProcessMethodResult processMethod(final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String prefix,
+      final String suffix, final JsonNode node)
       throws IOException {
     final JsonNode message = channel.get(MESSAGE);
     final String operationId = channel.get(OPERATION_ID).asText();
     final String namespace;
-    final String bindings;
+    String bindings = null;
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParent, node);
     } else if (message.has(PAYLOAD)) {
@@ -583,7 +581,7 @@ public class AsyncApiGenerator {
     } else {
       namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
     }
-    return new MutablePair<>(operationId, namespace);
+    return ProcessMethodResult.builder().operationId(operationId).namespace(namespace).bindings(bindings).build();
   }
 
   private String processMethodRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent, final JsonNode node) throws IOException {
@@ -651,9 +649,8 @@ public class AsyncApiGenerator {
   private String processKafkaBindings(final String modelPackage, final JsonNode kafkaBindings) {
     String bindings = null;
     if (kafkaBindings.has(KEY)) {
-      hasKafkaKey = true;
-      // crear el objeto del mensaje con la key
       bindings = processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage);
+      bindingType = BindingTypeEnum.KAFKA.getValue();
     }
     return bindings;
   }
