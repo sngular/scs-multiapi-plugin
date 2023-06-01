@@ -43,10 +43,7 @@ public class ApiInlineParameterTestIdDTO {
     }
   }
 
-  /**
-  * Get email
-  * @return email
-  */
+
   @Schema(name = "email", required = false)
   public String getEmail() {
     return email;
@@ -81,17 +78,13 @@ public class ApiInlineParameterTestIdDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

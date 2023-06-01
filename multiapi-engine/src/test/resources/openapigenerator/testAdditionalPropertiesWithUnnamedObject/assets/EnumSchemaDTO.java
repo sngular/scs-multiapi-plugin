@@ -35,7 +35,6 @@ public class EnumSchemaDTO {
     }
   }
 
-
   @Builder
   @Jacksonized
   private EnumSchemaDTO(EnumSchema enumSchema) {

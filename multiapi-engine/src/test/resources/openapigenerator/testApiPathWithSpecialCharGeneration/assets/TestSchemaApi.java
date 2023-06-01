@@ -21,10 +21,7 @@ import com.sngular.multifileplugin.pathwithspecialchar.model.ApiErrorDTO;
 
 public interface TestSchemaApi {
 
-  /**
-  * GET /test_schema: List all available test
-  * @return  A paged array of tests; (status code 200)
-  */
+  
 
   @Operation(
      operationId = "listTest",

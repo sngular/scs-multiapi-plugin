@@ -120,19 +120,13 @@ public class ApiSchemaDTO {
     }
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = true)
   public String getType() {
     return type;
   }
 
-  /**
-  * Get properties
-  * @return properties
-  */
+
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
@@ -141,37 +135,25 @@ public class ApiSchemaDTO {
     this.properties = properties;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
+
   @Schema(name = "id", required = true)
   public String getId() {
     return id;
   }
 
-  /**
-  * Get subjectName
-  * @return subjectName
-  */
+
   @Schema(name = "subjectName", required = true)
   public String getSubjectName() {
     return subjectName;
   }
 
-  /**
-  * Get requiredFields
-  * @return requiredFields
-  */
+
   @Schema(name = "requiredFields", required = false)
   public List<ApiTypeArrayDTO> getRequiredFields() {
     return requiredFields;
@@ -211,17 +193,13 @@ public class ApiSchemaDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;

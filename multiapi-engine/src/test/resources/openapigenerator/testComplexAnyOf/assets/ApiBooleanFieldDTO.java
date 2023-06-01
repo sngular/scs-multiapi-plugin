@@ -63,10 +63,6 @@ public class ApiBooleanFieldDTO {
     }
   }
 
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -75,10 +71,6 @@ public class ApiBooleanFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -87,10 +79,6 @@ public class ApiBooleanFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get defaultValue
-  * @return defaultValue
-  */
   @Schema(name = "defaultValue", required = false)
   public Boolean getDefaultValue() {
     return defaultValue;
@@ -127,17 +115,12 @@ public class ApiBooleanFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

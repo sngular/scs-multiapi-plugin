@@ -183,10 +183,7 @@ public class ApiNumberFieldDTO {
     }
   }
 
-  /**
-  * Get precision
-  * @return precision
-  */
+
   @Schema(name = "precision", required = false)
   public Integer getPrecision() {
     return precision;
@@ -195,10 +192,7 @@ public class ApiNumberFieldDTO {
     this.precision = precision;
   }
 
-  /**
-  * Get maximum
-  * @return maximum
-  */
+
   @Schema(name = "maximum", required = false)
   public Integer getMaximum() {
     return maximum;
@@ -207,10 +201,7 @@ public class ApiNumberFieldDTO {
     this.maximum = maximum;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
+
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -219,10 +210,7 @@ public class ApiNumberFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
+
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -231,10 +219,7 @@ public class ApiNumberFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -243,10 +228,7 @@ public class ApiNumberFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get multipleOf
-  * @return multipleOf
-  */
+
   @Schema(name = "multipleOf", required = false)
   public Integer getMultipleOf() {
     return multipleOf;
@@ -255,10 +237,7 @@ public class ApiNumberFieldDTO {
     this.multipleOf = multipleOf;
   }
 
-  /**
-  * Get scale
-  * @return scale
-  */
+
   @Schema(name = "scale", required = false)
   public Integer getScale() {
     return scale;
@@ -267,10 +246,7 @@ public class ApiNumberFieldDTO {
     this.scale = scale;
   }
 
-  /**
-  * Get minimum
-  * @return minimum
-  */
+
   @Schema(name = "minimum", required = false)
   public Integer getMinimum() {
     return minimum;
@@ -279,10 +255,7 @@ public class ApiNumberFieldDTO {
     this.minimum = minimum;
   }
 
-  /**
-  * Get flagExclusiveMinimum
-  * @return flagExclusiveMinimum
-  */
+
   @Schema(name = "flagExclusiveMinimum", required = false)
   public Boolean getFlagExclusiveMinimum() {
     return flagExclusiveMinimum;
@@ -291,10 +264,7 @@ public class ApiNumberFieldDTO {
     this.flagExclusiveMinimum = flagExclusiveMinimum;
   }
 
-  /**
-  * Get flagExclusiveMaximum
-  * @return flagExclusiveMaximum
-  */
+
   @Schema(name = "flagExclusiveMaximum", required = false)
   public Boolean getFlagExclusiveMaximum() {
     return flagExclusiveMaximum;
@@ -303,10 +273,7 @@ public class ApiNumberFieldDTO {
     this.flagExclusiveMaximum = flagExclusiveMaximum;
   }
 
-  /**
-  * Get numberEnum
-  * @return numberEnum
-  */
+
   @Schema(name = "numberEnum", required = false)
   public NumberEnum getNumberEnum() {
     return numberEnum;
@@ -315,10 +282,7 @@ public class ApiNumberFieldDTO {
     this.numberEnum = numberEnum;
   }
 
-  /**
-  * Get defaultValue
-  * @return defaultValue
-  */
+
   @Schema(name = "defaultValue", required = false)
   public Long getDefaultValue() {
     return defaultValue;
@@ -364,17 +328,13 @@ public class ApiNumberFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

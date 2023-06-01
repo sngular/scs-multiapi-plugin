@@ -21,10 +21,7 @@ import com.sngular.multifileplugin.tagsgeneration.model.ErrorDTO;
 
 public interface TestTagFirstApi {
 
-  /**
-  * GET /test: List all available testServer
-  * @return  A paged array of tests; (status code 200)
-  */
+  
 
   @Operation(
      operationId = "listTestServer",

@@ -120,10 +120,7 @@ public class ApiTestDTO {
     }
   }
 
-  /**
-  * Get testProcessor
-  * @return testProcessor
-  */
+
   @Schema(name = "testProcessor", required = false)
   public ApiTestProcessorDTO getTestProcessor() {
     return testProcessor;
@@ -132,10 +129,7 @@ public class ApiTestDTO {
     this.testProcessor = testProcessor;
   }
 
-  /**
-  * Get description
-  * @return description
-  */
+
   @Schema(name = "description", required = false)
   public String getDescription() {
     return description;
@@ -144,10 +138,7 @@ public class ApiTestDTO {
     this.description = description;
   }
 
-  /**
-  * Get tags
-  * @return tags
-  */
+
   @Schema(name = "tags", required = false)
   public List<String> getTags() {
     return tags;
@@ -156,10 +147,7 @@ public class ApiTestDTO {
     this.tags = tags;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -168,10 +156,7 @@ public class ApiTestDTO {
     this.name = name;
   }
 
-  /**
-  * Get testTypeList
-  * @return testTypeList
-  */
+
   @Schema(name = "testTypeList", required = false)
   public List<ApiTestTypeDTO> getTestTypeList() {
     return testTypeList;
@@ -180,10 +165,7 @@ public class ApiTestDTO {
     this.testTypeList = testTypeList;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
+
   @Schema(name = "id", required = false)
   public Integer getId() {
     return id;
@@ -192,10 +174,7 @@ public class ApiTestDTO {
     this.id = id;
   }
 
-  /**
-  * Get priority
-  * @return priority
-  */
+
   @Schema(name = "priority", required = false)
   public Integer getPriority() {
     return priority;
@@ -236,17 +215,13 @@ public class ApiTestDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

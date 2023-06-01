@@ -125,5 +125,4 @@ public class TestApi {
     return listTestRequestCreation().toEntity(localVarReturnType);
   }
 
-
 }

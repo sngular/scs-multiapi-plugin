@@ -62,10 +62,7 @@ public class InlineResponse200CreateGameDTO {
     }
   }
 
-  /**
-  * Get description
-  * @return description
-  */
+
   @Schema(name = "description", required = false)
   public String getDescription() {
     return description;
@@ -74,10 +71,7 @@ public class InlineResponse200CreateGameDTO {
     this.description = description;
   }
 
-  /**
-  * Get code
-  * @return code
-  */
+
   @Schema(name = "code", required = false)
   public Integer getCode() {
     return code;
@@ -86,10 +80,7 @@ public class InlineResponse200CreateGameDTO {
     this.code = code;
   }
 
-  /**
-  * Get message
-  * @return message
-  */
+
   @Schema(name = "message", required = false)
   public MessageDTO getMessage() {
     return message;
@@ -126,17 +117,13 @@ public class InlineResponse200CreateGameDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

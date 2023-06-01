@@ -59,19 +59,13 @@ public class ApiTestDTO {
     }
   }
 
-  /**
-  * Get name
-  * @return name
-  */
+
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
 
-  /**
-  * Get id
-  * @return id
-  */
+
   @Schema(name = "id", required = true)
   public Integer getId() {
     return id;
@@ -104,17 +98,13 @@ public class ApiTestDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
+
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
