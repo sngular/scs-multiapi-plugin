@@ -120,7 +120,6 @@ public class ApiTestDTO {
     }
   }
 
-
   @Schema(name = "testProcessor", required = false)
   public ApiTestProcessorDTO getTestProcessor() {
     return testProcessor;
@@ -128,7 +127,6 @@ public class ApiTestDTO {
   public void setTestProcessor(ApiTestProcessorDTO testProcessor) {
     this.testProcessor = testProcessor;
   }
-
 
   @Schema(name = "description", required = false)
   public String getDescription() {
@@ -138,7 +136,6 @@ public class ApiTestDTO {
     this.description = description;
   }
 
-
   @Schema(name = "tags", required = false)
   public List<String> getTags() {
     return tags;
@@ -146,7 +143,6 @@ public class ApiTestDTO {
   public void setTags(List<String> tags) {
     this.tags = tags;
   }
-
 
   @Schema(name = "name", required = false)
   public String getName() {
@@ -156,7 +152,6 @@ public class ApiTestDTO {
     this.name = name;
   }
 
-
   @Schema(name = "testTypeList", required = false)
   public List<ApiTestTypeDTO> getTestTypeList() {
     return testTypeList;
@@ -165,7 +160,6 @@ public class ApiTestDTO {
     this.testTypeList = testTypeList;
   }
 
-
   @Schema(name = "id", required = false)
   public Integer getId() {
     return id;
@@ -173,7 +167,6 @@ public class ApiTestDTO {
   public void setId(Integer id) {
     this.id = id;
   }
-
 
   @Schema(name = "priority", required = false)
   public Integer getPriority() {
@@ -214,7 +207,6 @@ public class ApiTestDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

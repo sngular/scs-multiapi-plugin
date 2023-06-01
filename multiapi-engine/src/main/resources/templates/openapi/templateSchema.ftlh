@@ -282,7 +282,6 @@ public class ${schema.className} {
   public ${field.dataType} get${field.baseName?cap_first}() {
     return ${field.baseName?uncap_first};
   }
-
   <#if field.required == false>
   public void set${field.baseName?cap_first}(${field.dataType} ${field.baseName?uncap_first}) {
     this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};

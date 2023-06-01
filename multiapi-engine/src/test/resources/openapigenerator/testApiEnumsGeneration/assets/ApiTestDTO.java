@@ -152,18 +152,15 @@ public class ApiTestDTO {
     }
   }
 
-
   @Schema(name = "unionEnum", required = true)
   public UnionEnum getUnionEnum() {
     return unionEnum;
   }
 
-
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
-
 
   @Schema(name = "id", required = true)
   public Integer getId() {
@@ -177,7 +174,6 @@ public class ApiTestDTO {
   public void setUnionIntegerEnum(UnionIntegerEnum unionIntegerEnum) {
     this.unionIntegerEnum = unionIntegerEnum;
   }
-
 
   @Schema(name = "unionNumberEnum", required = false)
   public UnionNumberEnum getUnionNumberEnum() {
@@ -216,7 +212,6 @@ public class ApiTestDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

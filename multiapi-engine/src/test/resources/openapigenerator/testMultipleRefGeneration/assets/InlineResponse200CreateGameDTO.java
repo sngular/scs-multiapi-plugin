@@ -15,9 +15,9 @@ public class InlineResponse200CreateGameDTO {
   @JsonProperty(value ="code")
   private Integer code;
   @JsonProperty(value ="message")
-  private MessageDTO message;
+  private  message;
 
-  private InlineResponse200CreateGameDTO(String description, Integer code, MessageDTO message) {
+  private InlineResponse200CreateGameDTO(String description, Integer code, message) {
     this.description = description;
     this.code = code;
     this.message = message;
@@ -40,7 +40,7 @@ public class InlineResponse200CreateGameDTO {
 
     private String description;
     private Integer code;
-    private MessageDTO message;
+    private  message;
 
     public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder description(String description) {
       this.description = description;
@@ -51,7 +51,7 @@ public class InlineResponse200CreateGameDTO {
       this.code = code;
       return this;
     }
-    public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message(MessageDTO message) {
+    public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message( message) {
       this.message = message;
       return this;
     }
@@ -62,7 +62,6 @@ public class InlineResponse200CreateGameDTO {
     }
   }
 
-
   @Schema(name = "description", required = false)
   public String getDescription() {
     return description;
@@ -70,7 +69,6 @@ public class InlineResponse200CreateGameDTO {
   public void setDescription(String description) {
     this.description = description;
   }
-
 
   @Schema(name = "code", required = false)
   public Integer getCode() {
@@ -80,12 +78,11 @@ public class InlineResponse200CreateGameDTO {
     this.code = code;
   }
 
-
   @Schema(name = "message", required = false)
-  public MessageDTO getMessage() {
+  public  getMessage() {
     return message;
   }
-  public void setMessage(MessageDTO message) {
+  public void setMessage( message) {
     this.message = message;
   }
 
@@ -116,7 +113,6 @@ public class InlineResponse200CreateGameDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

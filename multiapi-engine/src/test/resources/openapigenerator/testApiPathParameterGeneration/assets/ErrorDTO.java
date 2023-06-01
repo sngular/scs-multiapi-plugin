@@ -59,12 +59,10 @@ public class ErrorDTO {
     }
   }
 
-
   @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
   }
-
 
   @Schema(name = "message", required = true)
   public String getMessage() {
@@ -97,7 +95,6 @@ public class ErrorDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

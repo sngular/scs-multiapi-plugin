@@ -499,10 +499,6 @@ public class ApiTypeArrayDTO {
     }
   }
 
-  /**
-   * Get precision
-   * @return precision
-   */
   @Schema(name = "precision", required = false)
   public Integer getPrecision() {
     return precision;
@@ -511,10 +507,6 @@ public class ApiTypeArrayDTO {
     this.precision = precision;
   }
 
-  /**
-   * Get defaultItem
-   * @return defaultItem
-   */
   @Schema(name = "defaultItem", required = false)
   public  getDefaultItem() {
     return defaultItem;
@@ -523,10 +515,6 @@ public class ApiTypeArrayDTO {
     this.defaultItem = defaultItem;
   }
 
-  /**
-   * Get maximum
-   * @return maximum
-   */
   @Schema(name = "maximum", required = false)
   public Integer getMaximum() {
     return maximum;
@@ -535,10 +523,6 @@ public class ApiTypeArrayDTO {
     this.maximum = maximum;
   }
 
-  /**
-   * Get type
-   * @return type
-   */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -547,10 +531,6 @@ public class ApiTypeArrayDTO {
     this.type = type;
   }
 
-  /**
-   * Get scale
-   * @return scale
-   */
   @Schema(name = "scale", required = false)
   public Integer getScale() {
     return scale;
@@ -559,10 +539,6 @@ public class ApiTypeArrayDTO {
     this.scale = scale;
   }
 
-  /**
-   * Get minLength
-   * @return minLength
-   */
   @Schema(name = "minLength", required = false)
   public Integer getMinLength() {
     return minLength;
@@ -571,10 +547,6 @@ public class ApiTypeArrayDTO {
     this.minLength = minLength;
   }
 
-  /**
-   * Get increment
-   * @return increment
-   */
   @Schema(name = "increment", required = false)
   public Integer getIncrement() {
     return increment;
@@ -583,10 +555,6 @@ public class ApiTypeArrayDTO {
     this.increment = increment;
   }
 
-  /**
-   * Get keyType
-   * @return keyType
-   */
   @Schema(name = "keyType", required = false)
   public String getKeyType() {
     return keyType;
@@ -595,10 +563,6 @@ public class ApiTypeArrayDTO {
     this.keyType = keyType;
   }
 
-  /**
-   * Get requiredValues
-   * @return requiredValues
-   */
   @Schema(name = "requiredValues", required = false)
   public List<String> getRequiredValues() {
     return requiredValues;
@@ -607,10 +571,6 @@ public class ApiTypeArrayDTO {
     this.requiredValues = requiredValues;
   }
 
-  /**
-   * Get optionalUnion
-   * @return optionalUnion
-   */
   @Schema(name = "optionalUnion", required = false)
   public Boolean getOptionalUnion() {
     return optionalUnion;
@@ -619,10 +579,6 @@ public class ApiTypeArrayDTO {
     this.optionalUnion = optionalUnion;
   }
 
-  /**
-   * Get initialValue
-   * @return initialValue
-   */
   @Schema(name = "initialValue", required = false)
   public String getInitialValue() {
     return initialValue;
@@ -631,10 +587,6 @@ public class ApiTypeArrayDTO {
     this.initialValue = initialValue;
   }
 
-  /**
-   * Get flagExclusiveMinimum
-   * @return flagExclusiveMinimum
-   */
   @Schema(name = "flagExclusiveMinimum", required = false)
   public Boolean getFlagExclusiveMinimum() {
     return flagExclusiveMinimum;
@@ -643,10 +595,6 @@ public class ApiTypeArrayDTO {
     this.flagExclusiveMinimum = flagExclusiveMinimum;
   }
 
-  /**
-   * Get flagExclusiveMaximum
-   * @return flagExclusiveMaximum
-   */
   @Schema(name = "flagExclusiveMaximum", required = false)
   public Boolean getFlagExclusiveMaximum() {
     return flagExclusiveMaximum;
@@ -655,10 +603,6 @@ public class ApiTypeArrayDTO {
     this.flagExclusiveMaximum = flagExclusiveMaximum;
   }
 
-  /**
-   * Get defaultValue
-   * @return defaultValue
-   */
   @Schema(name = "defaultValue", required = false)
   public Boolean getDefaultValue() {
     return defaultValue;
@@ -667,10 +611,6 @@ public class ApiTypeArrayDTO {
     this.defaultValue = defaultValue;
   }
 
-  /**
-   * Get enumValues
-   * @return enumValues
-   */
   @Schema(name = "enumValues", required = false)
   public List<String> getEnumValues() {
     return enumValues;
@@ -679,10 +619,6 @@ public class ApiTypeArrayDTO {
     this.enumValues = enumValues;
   }
 
-  /**
-   * Get properties
-   * @return properties
-   */
   @Schema(name = "properties", required = false)
   public List<String> getProperties() {
     return properties;
@@ -691,10 +627,6 @@ public class ApiTypeArrayDTO {
     this.properties = properties;
   }
 
-  /**
-   * Get defaultValues
-   * @return defaultValues
-   */
   @Schema(name = "defaultValues", required = false)
   public List<String> getDefaultValues() {
     return defaultValues;
@@ -703,10 +635,6 @@ public class ApiTypeArrayDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-   * Get unionEnum
-   * @return unionEnum
-   */
   @Schema(name = "unionEnum", required = false)
   public UnionEnum getUnionEnum() {
     return unionEnum;
@@ -715,10 +643,6 @@ public class ApiTypeArrayDTO {
     this.unionEnum = unionEnum;
   }
 
-  /**
-   * Get seqEnum
-   * @return seqEnum
-   */
   @Schema(name = "seqEnum", required = false)
   public SeqEnum getSeqEnum() {
     return seqEnum;
@@ -727,10 +651,6 @@ public class ApiTypeArrayDTO {
     this.seqEnum = seqEnum;
   }
 
-  /**
-   * Get arraySize
-   * @return arraySize
-   */
   @Schema(name = "arraySize", required = false)
   public Integer getArraySize() {
     return arraySize;
@@ -739,10 +659,6 @@ public class ApiTypeArrayDTO {
     this.arraySize = arraySize;
   }
 
-  /**
-   * Get multipleOf
-   * @return multipleOf
-   */
   @Schema(name = "multipleOf", required = false)
   public Integer getMultipleOf() {
     return multipleOf;
@@ -751,10 +667,6 @@ public class ApiTypeArrayDTO {
     this.multipleOf = multipleOf;
   }
 
-  /**
-   * Get mapSize
-   * @return mapSize
-   */
   @Schema(name = "mapSize", required = false)
   public Integer getMapSize() {
     return mapSize;
@@ -763,10 +675,6 @@ public class ApiTypeArrayDTO {
     this.mapSize = mapSize;
   }
 
-  /**
-   * Get mapTypes
-   * @return mapTypes
-   */
   @Schema(name = "mapTypes", required = false)
   public List<ApiTypeArrayDTO> getMapTypes() {
     return mapTypes;
@@ -775,10 +683,6 @@ public class ApiTypeArrayDTO {
     this.mapTypes = mapTypes;
   }
 
-  /**
-   * Get format
-   * @return format
-   */
   @Schema(name = "format", required = false)
   public Integer getFormat() {
     return format;
@@ -787,10 +691,6 @@ public class ApiTypeArrayDTO {
     this.format = format;
   }
 
-  /**
-   * Get generatedFlag
-   * @return generatedFlag
-   */
   @Schema(name = "generatedFlag", required = false)
   public Boolean getGeneratedFlag() {
     return generatedFlag;
@@ -799,10 +699,6 @@ public class ApiTypeArrayDTO {
     this.generatedFlag = generatedFlag;
   }
 
-  /**
-   * Get maxLength
-   * @return maxLength
-   */
   @Schema(name = "maxLength", required = false)
   public Integer getMaxLength() {
     return maxLength;
@@ -811,10 +707,6 @@ public class ApiTypeArrayDTO {
     this.maxLength = maxLength;
   }
 
-  /**
-   * Get uniqueItems
-   * @return uniqueItems
-   */
   @Schema(name = "uniqueItems", required = false)
   public Boolean getUniqueItems() {
     return uniqueItems;
@@ -823,10 +715,6 @@ public class ApiTypeArrayDTO {
     this.uniqueItems = uniqueItems;
   }
 
-  /**
-   * Get elements
-   * @return elements
-   */
   @Schema(name = "elements", required = false)
   public Integer getElements() {
     return elements;
@@ -835,10 +723,6 @@ public class ApiTypeArrayDTO {
     this.elements = elements;
   }
 
-  /**
-   * Get name
-   * @return name
-   */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -847,10 +731,6 @@ public class ApiTypeArrayDTO {
     this.name = name;
   }
 
-  /**
-   * Get regex
-   * @return regex
-   */
   @Schema(name = "regex", required = false)
   public String getRegex() {
     return regex;
@@ -859,10 +739,6 @@ public class ApiTypeArrayDTO {
     this.regex = regex;
   }
 
-  /**
-   * Get minItems
-   * @return minItems
-   */
   @Schema(name = "minItems", required = false)
   public Integer getMinItems() {
     return minItems;
@@ -871,10 +747,6 @@ public class ApiTypeArrayDTO {
     this.minItems = minItems;
   }
 
-  /**
-   * Get values
-   * @return values
-   */
   @Schema(name = "values", required = false)
   public List<ApiTypeArrayDTO> getValues() {
     return values;
@@ -883,10 +755,6 @@ public class ApiTypeArrayDTO {
     this.values = values;
   }
 
-  /**
-   * Get minimum
-   * @return minimum
-   */
   @Schema(name = "minimum", required = false)
   public Integer getMinimum() {
     return minimum;
@@ -895,10 +763,6 @@ public class ApiTypeArrayDTO {
     this.minimum = minimum;
   }
 
-  /**
-   * Get numberEnum
-   * @return numberEnum
-   */
   @Schema(name = "numberEnum", required = false)
   public NumberEnum getNumberEnum() {
     return numberEnum;
@@ -907,10 +771,6 @@ public class ApiTypeArrayDTO {
     this.numberEnum = numberEnum;
   }
 
-  /**
-   * Get valueLength
-   * @return valueLength
-   */
   @Schema(name = "valueLength", required = false)
   public Integer getValueLength() {
     return valueLength;

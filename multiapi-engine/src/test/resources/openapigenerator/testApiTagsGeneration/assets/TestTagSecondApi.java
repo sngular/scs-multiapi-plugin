@@ -21,7 +21,11 @@ import com.sngular.multifileplugin.tagsgeneration.model.ErrorDTO;
 
 public interface TestTagSecondApi {
 
-  
+  /**
+   * GET /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return  Expected response to a valid request; (status code 200)
+   */
 
   @Operation(
      operationId = "showTestById",

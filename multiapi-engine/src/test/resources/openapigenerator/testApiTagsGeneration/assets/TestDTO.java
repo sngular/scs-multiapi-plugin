@@ -59,12 +59,10 @@ public class TestDTO {
     }
   }
 
-
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
-
 
   @Schema(name = "id", required = true)
   public Integer getId() {
@@ -97,7 +95,6 @@ public class TestDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

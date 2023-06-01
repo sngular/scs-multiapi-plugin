@@ -141,7 +141,6 @@ public class ApiStringFieldDTO {
     }
   }
 
-
   @Schema(name = "maxLength", required = false)
   public Integer getMaxLength() {
     return maxLength;
@@ -149,7 +148,6 @@ public class ApiStringFieldDTO {
   public void setMaxLength(Integer maxLength) {
     this.maxLength = maxLength;
   }
-
 
   @Schema(name = "type", required = false)
   public String getType() {
@@ -159,7 +157,6 @@ public class ApiStringFieldDTO {
     this.type = type;
   }
 
-
   @Schema(name = "properties", required = false)
   public List<String> getProperties() {
     return properties;
@@ -167,7 +164,6 @@ public class ApiStringFieldDTO {
   public void setProperties(List<String> properties) {
     this.properties = properties;
   }
-
 
   @Schema(name = "defaultValues", required = false)
   public List<String> getDefaultValues() {
@@ -177,7 +173,6 @@ public class ApiStringFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -185,7 +180,6 @@ public class ApiStringFieldDTO {
   public void setName(String name) {
     this.name = name;
   }
-
 
   @Schema(name = "regex", required = false)
   public String getRegex() {
@@ -195,7 +189,6 @@ public class ApiStringFieldDTO {
     this.regex = regex;
   }
 
-
   @Schema(name = "minLength", required = false)
   public Integer getMinLength() {
     return minLength;
@@ -204,7 +197,6 @@ public class ApiStringFieldDTO {
     this.minLength = minLength;
   }
 
-
   @Schema(name = "format", required = false)
   public Integer getFormat() {
     return format;
@@ -212,7 +204,6 @@ public class ApiStringFieldDTO {
   public void setFormat(Integer format) {
     this.format = format;
   }
-
 
   @Schema(name = "valueLength", required = false)
   public Integer getValueLength() {
@@ -255,7 +246,6 @@ public class ApiStringFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -108,7 +108,6 @@ public class ApiTestInfoDTO {
     return sb.toString();
   }
 
-
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";

@@ -68,7 +68,6 @@ public class TestInfoDTO {
     }
   }
 
-
   @Schema(name = "testers", required = false)
   public List<String> getTesters() {
     return testers;
@@ -76,7 +75,6 @@ public class TestInfoDTO {
   public void setTesters(List<String> testers) {
     this.testers = testers;
   }
-
 
   @Schema(name = "testName", required = true)
   public String getTestName() {
@@ -109,7 +107,6 @@ public class TestInfoDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -95,18 +95,15 @@ public class ApiErrorDTO {
     }
   }
 
-
   @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
   }
 
-
   @Schema(name = "message", required = true)
   public String getMessage() {
     return message;
   }
-
 
   @Schema(name = "test", required = false)
   public List<Integer> getTest() {
@@ -143,7 +140,6 @@ public class ApiErrorDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

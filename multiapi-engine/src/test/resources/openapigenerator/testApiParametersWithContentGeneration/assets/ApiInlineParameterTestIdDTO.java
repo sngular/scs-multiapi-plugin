@@ -43,7 +43,6 @@ public class ApiInlineParameterTestIdDTO {
     }
   }
 
-
   @Schema(name = "email", required = false)
   public String getEmail() {
     return email;
@@ -77,7 +76,6 @@ public class ApiInlineParameterTestIdDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

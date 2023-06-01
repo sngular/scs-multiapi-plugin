@@ -156,7 +156,6 @@ public class ApiSequenceFieldDTO {
     }
   }
 
-
   @Schema(name = "elements", required = false)
   public Integer getElements() {
     return elements;
@@ -164,7 +163,6 @@ public class ApiSequenceFieldDTO {
   public void setElements(Integer elements) {
     this.elements = elements;
   }
-
 
   @Schema(name = "type", required = false)
   public String getType() {
@@ -174,7 +172,6 @@ public class ApiSequenceFieldDTO {
     this.type = type;
   }
 
-
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
@@ -182,7 +179,6 @@ public class ApiSequenceFieldDTO {
   public void setProperties(List<ApiTypeArrayDTO> properties) {
     this.properties = properties;
   }
-
 
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
@@ -192,7 +188,6 @@ public class ApiSequenceFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-
   @Schema(name = "seqEnum", required = false)
   public SeqEnum getSeqEnum() {
     return seqEnum;
@@ -200,7 +195,6 @@ public class ApiSequenceFieldDTO {
   public void setSeqEnum(SeqEnum seqEnum) {
     this.seqEnum = seqEnum;
   }
-
 
   @Schema(name = "name", required = false)
   public String getName() {
@@ -210,7 +204,6 @@ public class ApiSequenceFieldDTO {
     this.name = name;
   }
 
-
   @Schema(name = "initialValue", required = false)
   public String getInitialValue() {
     return initialValue;
@@ -218,7 +211,6 @@ public class ApiSequenceFieldDTO {
   public void setInitialValue(String initialValue) {
     this.initialValue = initialValue;
   }
-
 
   @Schema(name = "increment", required = false)
   public Integer getIncrement() {
@@ -260,7 +252,6 @@ public class ApiSequenceFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {
