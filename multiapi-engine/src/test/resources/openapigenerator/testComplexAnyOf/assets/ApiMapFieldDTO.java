@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -111,7 +112,6 @@ public class ApiMapFieldDTO {
     }
   }
 
-
   @Schema(name = "keyType", required = false)
   public String getKeyType() {
     return keyType;
@@ -119,7 +119,6 @@ public class ApiMapFieldDTO {
   public void setKeyType(String keyType) {
     this.keyType = keyType;
   }
-
 
   @Schema(name = "type", required = false)
   public String getType() {
@@ -129,7 +128,6 @@ public class ApiMapFieldDTO {
     this.type = type;
   }
 
-
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -137,7 +135,6 @@ public class ApiMapFieldDTO {
   public void setDefaultValues(List<Object> defaultValues) {
     this.defaultValues = defaultValues;
   }
-
 
   @Schema(name = "name", required = false)
   public String getName() {
@@ -147,7 +144,6 @@ public class ApiMapFieldDTO {
     this.name = name;
   }
 
-
   @Schema(name = "mapSize", required = false)
   public Integer getMapSize() {
     return mapSize;
@@ -155,7 +151,6 @@ public class ApiMapFieldDTO {
   public void setMapSize(Integer mapSize) {
     this.mapSize = mapSize;
   }
-
 
   @Schema(name = "mapTypes", required = false)
   public List<ApiTypeArrayDTO> getMapTypes() {
@@ -195,7 +190,6 @@ public class ApiMapFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -63,7 +63,6 @@ public class ApiTestAllOfDTO {
     }
   }
 
-
   @Schema(name = "testers", required = false)
   public List<String> getTesters() {
     return testers;
@@ -71,7 +70,6 @@ public class ApiTestAllOfDTO {
   public void setTesters(List<String> testers) {
     this.testers = testers;
   }
-
 
   @Schema(name = "testName", required = false)
   public String getTestName() {
@@ -107,7 +105,6 @@ public class ApiTestAllOfDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -96,6 +96,7 @@ public class ApiTestDTO {
     }
   }
 
+
   @Builder
   @Jacksonized
   private ApiTestDTO(UnionEnum unionEnum, @NonNull String name, @NonNull Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {

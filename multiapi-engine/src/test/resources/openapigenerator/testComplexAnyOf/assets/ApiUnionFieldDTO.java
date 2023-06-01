@@ -78,7 +78,7 @@ public class ApiUnionFieldDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiUnionFieldDTOBuilder {
 
-    private ApiDefaultItemDTO defaultItem;
+    private  defaultItem;
     private Boolean generatedFlag;
     private String type;
     private UnionEnum unionEnum;
@@ -134,7 +134,6 @@ public class ApiUnionFieldDTO {
     }
   }
 
-
   @Schema(name = "defaultItem", required = false)
   public ApiDefaultItemDTO getDefaultItem() {
     return defaultItem;
@@ -142,7 +141,6 @@ public class ApiUnionFieldDTO {
   public void setDefaultItem(ApiDefaultItemDTO defaultItem) {
     this.defaultItem = defaultItem;
   }
-
 
   @Schema(name = "generatedFlag", required = false)
   public Boolean getGeneratedFlag() {
@@ -152,7 +150,6 @@ public class ApiUnionFieldDTO {
     this.generatedFlag = generatedFlag;
   }
 
-
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -160,7 +157,6 @@ public class ApiUnionFieldDTO {
   public void setType(String type) {
     this.type = type;
   }
-
 
   @Schema(name = "unionEnum", required = false)
   public UnionEnum getUnionEnum() {
@@ -170,7 +166,6 @@ public class ApiUnionFieldDTO {
     this.unionEnum = unionEnum;
   }
 
-
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -179,7 +174,6 @@ public class ApiUnionFieldDTO {
     this.name = name;
   }
 
-
   @Schema(name = "optionalUnion", required = false)
   public Boolean getOptionalUnion() {
     return optionalUnion;
@@ -187,7 +181,6 @@ public class ApiUnionFieldDTO {
   public void setOptionalUnion(Boolean optionalUnion) {
     this.optionalUnion = optionalUnion;
   }
-
 
   @Schema(name = "values", required = false)
   public List<ApiTypeArrayDTO> getValues() {
@@ -228,7 +221,6 @@ public class ApiUnionFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

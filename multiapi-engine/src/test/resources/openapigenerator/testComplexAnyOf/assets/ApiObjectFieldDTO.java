@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -109,7 +110,6 @@ public class ApiObjectFieldDTO {
     }
   }
 
-
   @Schema(name = "requiredValues", required = false)
   public List<String> getRequiredValues() {
     return requiredValues;
@@ -117,7 +117,6 @@ public class ApiObjectFieldDTO {
   public void setRequiredValues(List<String> requiredValues) {
     this.requiredValues = requiredValues;
   }
-
 
   @Schema(name = "type", required = false)
   public String getType() {
@@ -127,7 +126,6 @@ public class ApiObjectFieldDTO {
     this.type = type;
   }
 
-
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
@@ -136,7 +134,6 @@ public class ApiObjectFieldDTO {
     this.properties = properties;
   }
 
-
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -144,7 +141,6 @@ public class ApiObjectFieldDTO {
   public void setDefaultValues(List<Object> defaultValues) {
     this.defaultValues = defaultValues;
   }
-
 
   @Schema(name = "name", required = false)
   public String getName() {
@@ -183,7 +179,6 @@ public class ApiObjectFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

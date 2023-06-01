@@ -53,7 +53,6 @@ public class ApiErrorDTO {
     }
   }
 
-
   @Schema(name = "code", required = false)
   public Integer getCode() {
     return code;
@@ -61,7 +60,6 @@ public class ApiErrorDTO {
   public void setCode(Integer code) {
     this.code = code;
   }
-
 
   @Schema(name = "message", required = false)
   public String getMessage() {
@@ -97,7 +95,6 @@ public class ApiErrorDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

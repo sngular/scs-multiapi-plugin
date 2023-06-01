@@ -69,12 +69,10 @@ public class ApiTestDTO {
     }
   }
 
-
   @Schema(name = "testers", required = true)
   public List<String> getTesters() {
     return testers;
   }
-
 
   @Schema(name = "testName", required = true)
   public String getTestName() {
@@ -107,7 +105,6 @@ public class ApiTestDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -101,7 +101,6 @@ public class ApiEnumFieldDTO {
     }
   }
 
-
   @Schema(name = "enumValues", required = false)
   public List<String> getEnumValues() {
     return enumValues;
@@ -109,7 +108,6 @@ public class ApiEnumFieldDTO {
   public void setEnumValues(List<String> enumValues) {
     this.enumValues = enumValues;
   }
-
 
   @Schema(name = "type", required = false)
   public String getType() {
@@ -119,7 +117,6 @@ public class ApiEnumFieldDTO {
     this.type = type;
   }
 
-
   @Schema(name = "defaultValues", required = false)
   public List<String> getDefaultValues() {
     return defaultValues;
@@ -128,7 +125,6 @@ public class ApiEnumFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -136,7 +132,6 @@ public class ApiEnumFieldDTO {
   public void setName(String name) {
     this.name = name;
   }
-
 
   @Schema(name = "defaultValue", required = false)
   public String getDefaultValue() {
@@ -175,7 +170,6 @@ public class ApiEnumFieldDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

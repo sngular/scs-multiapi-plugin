@@ -120,12 +120,10 @@ public class ApiSchemaDTO {
     }
   }
 
-
   @Schema(name = "type", required = true)
   public String getType() {
     return type;
   }
-
 
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
@@ -135,24 +133,20 @@ public class ApiSchemaDTO {
     this.properties = properties;
   }
 
-
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
-
 
   @Schema(name = "id", required = true)
   public String getId() {
     return id;
   }
 
-
   @Schema(name = "subjectName", required = true)
   public String getSubjectName() {
     return subjectName;
   }
-
 
   @Schema(name = "requiredFields", required = false)
   public List<ApiTypeArrayDTO> getRequiredFields() {
@@ -192,7 +186,6 @@ public class ApiSchemaDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

@@ -13,9 +13,9 @@ public class MessageDTO {
   @JsonProperty(value ="description")
   private String description;
   @JsonProperty(value ="message")
-  private MessageDTO message;
+  private  message;
 
-  private MessageDTO(String description, MessageDTO message) {
+  private MessageDTO(String description, message) {
     this.description = description;
     this.message = message;
 
@@ -35,13 +35,13 @@ public class MessageDTO {
   public static class MessageDTOBuilder {
 
     private String description;
-    private MessageDTO message;
+    private  message;
 
     public MessageDTO.MessageDTOBuilder description(String description) {
       this.description = description;
       return this;
     }
-    public MessageDTO.MessageDTOBuilder message(MessageDTO message) {
+    public MessageDTO.MessageDTOBuilder message( message) {
       this.message = message;
       return this;
     }
@@ -52,7 +52,6 @@ public class MessageDTO {
     }
   }
 
-
   @Schema(name = "description", required = false)
   public String getDescription() {
     return description;
@@ -61,12 +60,11 @@ public class MessageDTO {
     this.description = description;
   }
 
-
   @Schema(name = "message", required = false)
-  public MessageDTO getMessage() {
+  public  getMessage() {
     return message;
   }
-  public void setMessage(MessageDTO message) {
+  public void setMessage( message) {
     this.message = message;
   }
 
@@ -96,7 +94,6 @@ public class MessageDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {

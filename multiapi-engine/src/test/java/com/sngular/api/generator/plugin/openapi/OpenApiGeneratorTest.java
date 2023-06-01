@@ -11,11 +11,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,7 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class OpenApiGeneratorTest {
 
-  @TempDir
+  @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
 
   private static OpenApiGenerator openApiGenerator;

@@ -53,7 +53,6 @@ public class ApiTestTypeDTO {
     }
   }
 
-
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -61,7 +60,6 @@ public class ApiTestTypeDTO {
   public void setName(String name) {
     this.name = name;
   }
-
 
   @Schema(name = "id", required = false)
   public String getId() {
@@ -97,7 +95,6 @@ public class ApiTestTypeDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
   private String toIndentedString(Object o) {
     if (o == null) {
