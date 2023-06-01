@@ -20,9 +20,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface TestInlineApi {
 
   /**
-  * GET /test-inline 
-  * @return  A list of strings; (status code 200)
-  */
+   * GET /test-inline
+   * @return  A list of strings; (status code 200)
+   */
 
   @Operation(
      operationId = "testListStringInline",

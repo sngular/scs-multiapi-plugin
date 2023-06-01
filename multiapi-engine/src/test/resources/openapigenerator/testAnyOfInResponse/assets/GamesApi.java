@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testanyofinresponse.model.InlineResponse200Li
 public interface GamesApi {
 
   /**
-  * GET /games : List all available games
-  * @return  A paged array of games; (status code 200)
-  */
+   * GET /games: List all available games
+   * @return  A paged array of games; (status code 200)
+   */
 
   @Operation(
      operationId = "listGames",

@@ -21,10 +21,10 @@ import com.sngular.multifileplugin.testCoconutSchema.model.SchemaDTO;
 public interface SchemaApi {
 
   /**
-  * GET /schema/{name} 
-  * @param name Schema name to get true
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * GET /schema/{name}
+   * @param name Schema name to get true
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getSchema",
@@ -46,11 +46,11 @@ public interface SchemaApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * PUT /schema/{name} 
-  * @param name Schema name to update true
-  * @param schemaDTO (required)
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * PUT /schema/{name}
+   * @param name Schema name to update true
+   * @param schemaDTO (required)
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "updateSchema",
@@ -72,10 +72,10 @@ public interface SchemaApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * POST /schema 
-  * @param schemaDTO (required)
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
-  */
+   * POST /schema
+   * @param schemaDTO (required)
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "createSchema",
@@ -96,10 +96,10 @@ public interface SchemaApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * DELETE /schema/{id} 
-  * @param id Subject name to delete true
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * DELETE /schema/{id}
+   * @param id Subject name to delete true
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "deleteSchema",

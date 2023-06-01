@@ -61,21 +61,21 @@ public interface ${className?cap_first}Api {
 <#list pathObjects as path>
 <#list path.operationObjects as operation>
   /**
-  * ${operation.operationType} ${path.pathName} <#if operation.summary?has_content>: ${operation.summary}</#if>
+   * ${operation.operationType} ${path.pathName}<#if operation.summary?has_content>: ${operation.summary}</#if>
   <#if operation.responseObjects?has_content>
    <#if operation.parameterObjects?has_content>
-  * @param <#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+   * @param <#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
    </#if>
    <#if path.parameterObjects?has_content>
-  * @param <#list path.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+   * @param <#list path.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
    </#if>
     <#if operation.requestObjects?has_content>
-  *<#list operation.requestObjects as request> @param <#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
+   *<#list operation.requestObjects as request> @param <#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
    </#if>
-  * @return<#list operation.responseObjects as response><#if response.responseName != "default">  ${response.description}; (status code ${response.responseName})</#if></#list>
+   * @return<#list operation.responseObjects as response><#if response.responseName != "default">  ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   @Operation(
      operationId = "${operation.operationId}",<#if operation.summary?has_content>
      summary = "${operation.summary}",</#if>

@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testDateTime.model.TestDateDTO;
 public interface TestApi {
 
   /**
-  * GET /test 
-  * @return  An object with date and date-time formats; (status code 200)
-  */
+   * GET /test
+   * @return  An object with date and date-time formats; (status code 200)
+   */
 
   @Operation(
      operationId = "testDateTime",

@@ -24,10 +24,10 @@ import com.sngular.multifileplugin.parameterwithcontent.model.ApiTestDTO;
 public interface TestApi {
 
   /**
-  * GET /test/{testId} : Info for a specific test
-  * @param testId The id of the test to retrieve true
-  * @return  Expected response to a valid request; (status code 200)
-  */
+   * GET /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return  Expected response to a valid request; (status code 200)
+   */
 
   @Operation(
      operationId = "showTestById",
@@ -48,9 +48,9 @@ public interface TestApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * GET /test : List all available test
-  * @return  A paged array of tests; (status code 200)
-  */
+   * GET /test: List all available test
+   * @return  A paged array of tests; (status code 200)
+   */
 
   @Operation(
      operationId = "listTest",

@@ -22,10 +22,10 @@ import com.sngular.multifileplugin.pathwithspecialchar.model.ApiErrorDTO;
 public interface TestApi {
 
   /**
-  * GET /test/{testId} : Info for a specific test
-  * @param testId The id of the test to retrieve true
-  * @return  Expected response to a valid request; (status code 200)
-  */
+   * GET /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return  Expected response to a valid request; (status code 200)
+   */
 
   @Operation(
      operationId = "showTestById",

@@ -43,11 +43,11 @@ public class TestApi {
   }
 
   /**
-  * GET /test/{testId} : Info for a specific test
-  * @param testId The id of the test to retrieve true
-  * @return Expected response to a valid request; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return Expected response to a valid request; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   private ResponseSpec showTestByIdRequestCreation(Integer testId) throws WebClientResponseException {
     Object postBody = null;
     final Map<String, Object> pathParams = new HashMap<String, Object>();
@@ -70,11 +70,11 @@ public class TestApi {
   }
 
   /**
-  * GET /test/{testId} : Info for a specific test
-  * @param testId The id of the test to retrieve true
-  * @return Expected response to a valid request; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return Expected response to a valid request; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   public Mono<ApiTestInfoDTO> showTestById(Integer testId) throws WebClientResponseException {
     ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
     return showTestByIdRequestCreation(testId).bodyToMono(localVarReturnType);
@@ -86,10 +86,10 @@ public class TestApi {
   }
 
   /**
-  * GET /test : List all available test
-  * @return A paged array of tests; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test: List all available test
+   * @return A paged array of tests; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   private ResponseSpec listTestRequestCreation() throws WebClientResponseException {
     Object postBody = null;
     final Map<String, Object> pathParams = new HashMap<String, Object>();
@@ -111,10 +111,10 @@ public class TestApi {
   }
 
   /**
-  * GET /test : List all available test
-  * @return A paged array of tests; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test: List all available test
+   * @return A paged array of tests; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   public Mono<ApiTestDTO> listTest() throws WebClientResponseException {
     ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
     return listTestRequestCreation().bodyToMono(localVarReturnType);

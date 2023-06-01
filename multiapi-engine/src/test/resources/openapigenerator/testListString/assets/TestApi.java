@@ -20,9 +20,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface TestApi {
 
   /**
-  * GET /test 
-  * @return  An object with a list of strings; (status code 200)
-  */
+   * GET /test
+   * @return  An object with a list of strings; (status code 200)
+   */
 
   @Operation(
      operationId = "testListString",

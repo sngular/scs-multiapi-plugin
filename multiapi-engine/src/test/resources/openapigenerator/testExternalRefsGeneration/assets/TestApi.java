@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.externalref.model.ApiTestDTO;
 public interface TestApi {
 
   /**
-  * GET /test : List all available test
-  * @return  A paged array of tests; (status code 200)
-  */
+   * GET /test: List all available test
+   * @return  A paged array of tests; (status code 200)
+   */
 
   @Operation(
      operationId = "listTest",
