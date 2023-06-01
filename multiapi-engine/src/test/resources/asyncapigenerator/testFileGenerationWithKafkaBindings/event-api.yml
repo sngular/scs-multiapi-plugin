@@ -22,12 +22,12 @@ servers:
 channels:
   order.created:
     publish:
-      operationId: "publishOperationFileGenerationWithKey"
+      operationId: "publishOperationFileGenerationWithKafkaBindings"
       message:
         $ref: './assets/path.yml#/components/messages/OrderCreated'
   order.createCommand:
     subscribe:
-      operationId: "subscribeOperationFileGenerationWithKey"
+      operationId: "subscribeOperationFileGenerationWithKafkaBindings"
       message:
         payload:
           $ref: './assets/path.yml#/components/schemas/CreateOrder'

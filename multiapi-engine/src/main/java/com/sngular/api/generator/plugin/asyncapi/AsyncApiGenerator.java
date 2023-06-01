@@ -159,6 +159,8 @@ public class AsyncApiGenerator {
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
+          bindingType = BindingTypeEnum.NONBINDING.getValue();
+
           final Map.Entry<String, JsonNode> entry = iter.next();
 
           final JsonNode channel = entry.getValue();
