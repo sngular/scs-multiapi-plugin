@@ -601,7 +601,7 @@ public class MapperContentUtil {
         field.setImportClass(getImportClass(typeMap));*/
 
     } else if (ApiTool.isObject(value)) {
-      var typeObject = "";
+      var typeObject = ApiTool.getType(value);
       if (ApiTool.hasRef(value)) {
         typeObject = getRef(schema, specFile);
       }
