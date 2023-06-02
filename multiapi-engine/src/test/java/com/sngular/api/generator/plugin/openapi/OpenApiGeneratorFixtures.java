@@ -6,10 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 public final class OpenApiGeneratorFixtures {
 
@@ -518,7 +518,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiArrayFieldDTO.java",
         ASSETS_PATH + "ApiBooleanFieldDTO.java",
         ASSETS_PATH + "ApiDateFieldDTO.java",
-       // ASSETS_PATH + "ApiDefaultItemDTO.java",
+        ASSETS_PATH + "ApiDefaultItemDTO.java",
         ASSETS_PATH + "ApiEnumFieldDTO.java",
         ASSETS_PATH + "ApiMapFieldDTO.java",
         ASSETS_PATH + "ApiNumberFieldDTO.java",
