@@ -65,7 +65,7 @@ public class MapperContentUtil {
         final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
                                                  prefix, suffix, modelToBuildList, path.length >= 2 ? path[path.length - 2] : "");
         if (schemasList.contains(nexElement)) {
-          modelToBuildList.remove();
+          modelToBuildList.poll();
         } else {
           schemasList.add(nexElement);
         }
