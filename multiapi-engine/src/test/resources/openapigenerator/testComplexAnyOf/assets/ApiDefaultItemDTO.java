@@ -12,27 +12,36 @@ import com.sngular.multifileplugin.testcomplexanyof.model.exception.ModelClassEx
 public class ApiDefaultItemDTO {
 
   @JsonProperty(value ="stringField")
-  private StringField stringField;
+  private ApiStringFieldDTO stringField;
+
   @JsonProperty(value ="sequenceField")
   private ApiSequenceFieldDTO sequenceField;
+
   @JsonProperty(value ="dateField")
-  private DateField dateField;
+  private ApiDateFieldDTO dateField;
+
   @JsonProperty(value ="enumField")
-  private EnumField enumField;
+  private ApiEnumFieldDTO enumField;
+
   @JsonProperty(value ="booleanField")
-  private BooleanField booleanField;
+  private ApiBooleanFieldDTO booleanField;
+
   @JsonProperty(value ="arrayField")
-  private ArrayField arrayField;
+  private ApiArrayFieldDTO arrayField;
+
   @JsonProperty(value ="numberField")
-  private NumberField numberField;
+  private ApiNumberFieldDTO numberField;
+
   @JsonProperty(value ="objectField")
-  private ObjectField objectField;
+  private ApiObjectFieldDTO objectField;
+
   @JsonProperty(value ="mapField")
-  private MapField mapField;
+  private ApiMapFieldDTO mapField;
+
   @JsonProperty(value ="unionField")
   private ApiUnionFieldDTO unionField;
 
-  private ApiDefaultItemDTO(StringField stringField, ApiSequenceFieldDTO sequenceField, DateField dateField, EnumField enumField, BooleanField booleanField, ArrayField arrayField, NumberField numberField, ObjectField objectField, MapField mapField, ApiUnionFieldDTO unionField) {
+  private ApiDefaultItemDTO(ApiStringFieldDTO stringField, ApiSequenceFieldDTO sequenceField, ApiDateFieldDTO dateField, ApiEnumFieldDTO enumField, ApiBooleanFieldDTO booleanField, ApiArrayFieldDTO arrayField, ApiNumberFieldDTO numberField, ApiObjectFieldDTO objectField, ApiMapFieldDTO mapField, ApiUnionFieldDTO unionField) {
     this.stringField = stringField;
     this.sequenceField = sequenceField;
     this.dateField = dateField;
@@ -69,18 +78,18 @@ public class ApiDefaultItemDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiDefaultItemDTOBuilder {
 
-    private StringField stringField;
+    private ApiStringFieldDTO stringField;
     private ApiSequenceFieldDTO sequenceField;
-    private DateField dateField;
-    private EnumField enumField;
-    private BooleanField booleanField;
-    private ArrayField arrayField;
-    private NumberField numberField;
-    private ObjectField objectField;
-    private MapField mapField;
+    private ApiDateFieldDTO dateField;
+    private ApiEnumFieldDTO enumField;
+    private ApiBooleanFieldDTO booleanField;
+    private ApiArrayFieldDTO arrayField;
+    private ApiNumberFieldDTO numberField;
+    private ApiObjectFieldDTO objectField;
+    private ApiMapFieldDTO mapField;
     private ApiUnionFieldDTO unionField;
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder stringField(StringField stringField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder stringField(ApiStringFieldDTO stringField) {
       this.stringField = stringField;
       return this;
     }
@@ -89,37 +98,37 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder dateField(DateField dateField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder dateField(ApiDateFieldDTO dateField) {
       this.dateField = dateField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumField(EnumField enumField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumField(ApiEnumFieldDTO enumField) {
       this.enumField = enumField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder booleanField(BooleanField booleanField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder booleanField(ApiBooleanFieldDTO booleanField) {
       this.booleanField = booleanField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder arrayField(ArrayField arrayField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder arrayField(ApiArrayFieldDTO arrayField) {
       this.arrayField = arrayField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder numberField(NumberField numberField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder numberField(ApiNumberFieldDTO numberField) {
       this.numberField = numberField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder objectField(ObjectField objectField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder objectField(ApiObjectFieldDTO objectField) {
       this.objectField = objectField;
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapField(MapField mapField) {
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapField(ApiMapFieldDTO mapField) {
       this.mapField = mapField;
       return this;
     }
@@ -136,10 +145,10 @@ public class ApiDefaultItemDTO {
 
 
   @Schema(name = "stringField", required = false)
-  public StringField getStringField() {
+  public ApiStringFieldDTO getApiStringFieldDTO() {
     return stringField;
   }
-  public void setStringField(StringField stringField) {
+  public void setApiStringFieldDTO(ApiStringFieldDTO stringField) {
     this.stringField = stringField;
   }
 
@@ -154,64 +163,64 @@ public class ApiDefaultItemDTO {
 
 
   @Schema(name = "dateField", required = false)
-  public DateField getDateField() {
+  public ApiDateFieldDTO getApiDateFieldDTO() {
     return dateField;
   }
-  public void setDateField(DateField dateField) {
+  public void setApiDateFieldDTO(ApiDateFieldDTO dateField) {
     this.dateField = dateField;
   }
 
 
   @Schema(name = "enumField", required = false)
-  public EnumField getEnumField() {
+  public ApiEnumFieldDTO getApiEnumFieldDTO() {
     return enumField;
   }
-  public void setEnumField(EnumField enumField) {
+  public void setApiEnumFieldDTO(ApiEnumFieldDTO enumField) {
     this.enumField = enumField;
   }
 
 
   @Schema(name = "booleanField", required = false)
-  public BooleanField getBooleanField() {
+  public ApiBooleanFieldDTO getApiBooleanFieldDTO() {
     return booleanField;
   }
-  public void setBooleanField(BooleanField booleanField) {
+  public void setApiBooleanFieldDTO(ApiBooleanFieldDTO booleanField) {
     this.booleanField = booleanField;
   }
 
 
   @Schema(name = "arrayField", required = false)
-  public ArrayField getArrayField() {
+  public ApiArrayFieldDTO getApiArrayFieldDTO() {
     return arrayField;
   }
-  public void setArrayField(ArrayField arrayField) {
+  public void setApiArrayFieldDTO(ApiArrayFieldDTO arrayField) {
     this.arrayField = arrayField;
   }
 
 
   @Schema(name = "numberField", required = false)
-  public NumberField getNumberField() {
+  public ApiNumberFieldDTO getApiNumberFieldDTO() {
     return numberField;
   }
-  public void setNumberField(NumberField numberField) {
+  public void setApiNumberFieldDTO(ApiNumberFieldDTO numberField) {
     this.numberField = numberField;
   }
 
 
   @Schema(name = "objectField", required = false)
-  public ObjectField getObjectField() {
+  public ApiObjectFieldDTO getApiObjectFieldDTO() {
     return objectField;
   }
-  public void setObjectField(ObjectField objectField) {
+  public void setApiObjectFieldDTO(ApiObjectFieldDTO objectField) {
     this.objectField = objectField;
   }
 
 
   @Schema(name = "mapField", required = false)
-  public MapField getMapField() {
+  public ApiMapFieldDTO getApiMapFieldDTO() {
     return mapField;
   }
-  public void setMapField(MapField mapField) {
+  public void setApiMapFieldDTO(ApiMapFieldDTO mapField) {
     this.mapField = mapField;
   }
 

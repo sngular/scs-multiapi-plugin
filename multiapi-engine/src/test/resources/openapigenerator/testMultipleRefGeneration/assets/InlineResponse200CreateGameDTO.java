@@ -15,9 +15,9 @@ public class InlineResponse200CreateGameDTO {
   @JsonProperty(value ="code")
   private Integer code;
   @JsonProperty(value ="message")
-  private  message;
+  private MessageDTO message;
 
-  private InlineResponse200CreateGameDTO(String description, Integer code, message) {
+  private InlineResponse200CreateGameDTO(String description, Integer code, MessageDTO message) {
     this.description = description;
     this.code = code;
     this.message = message;
@@ -40,7 +40,7 @@ public class InlineResponse200CreateGameDTO {
 
     private String description;
     private Integer code;
-    private  message;
+    private MessageDTO message;
 
     public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder description(String description) {
       this.description = description;
@@ -51,7 +51,7 @@ public class InlineResponse200CreateGameDTO {
       this.code = code;
       return this;
     }
-    public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message( message) {
+    public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message(MessageDTO message) {
       this.message = message;
       return this;
     }
@@ -79,10 +79,10 @@ public class InlineResponse200CreateGameDTO {
   }
 
   @Schema(name = "message", required = false)
-  public  getMessage() {
+  public MessageDTO getMessage() {
     return message;
   }
-  public void setMessage( message) {
+  public void setMessage(MessageDTO message) {
     this.message = message;
   }
 

@@ -13,9 +13,9 @@ public class MessageDTO {
   @JsonProperty(value ="description")
   private String description;
   @JsonProperty(value ="message")
-  private  message;
+  private MessageDTO message;
 
-  private MessageDTO(String description, message) {
+  private MessageDTO(String description, MessageDTO message) {
     this.description = description;
     this.message = message;
 
@@ -35,13 +35,13 @@ public class MessageDTO {
   public static class MessageDTOBuilder {
 
     private String description;
-    private  message;
+    private MessageDTO message;
 
     public MessageDTO.MessageDTOBuilder description(String description) {
       this.description = description;
       return this;
     }
-    public MessageDTO.MessageDTOBuilder message( message) {
+    public MessageDTO.MessageDTOBuilder message(MessageDTO message) {
       this.message = message;
       return this;
     }
@@ -61,10 +61,10 @@ public class MessageDTO {
   }
 
   @Schema(name = "message", required = false)
-  public  getMessage() {
+  public MessageDTO getMessage() {
     return message;
   }
-  public void setMessage( message) {
+  public void setMessage(MessageDTO message) {
     this.message = message;
   }
 
