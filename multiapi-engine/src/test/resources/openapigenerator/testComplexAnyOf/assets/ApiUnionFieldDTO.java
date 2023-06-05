@@ -79,7 +79,7 @@ public class ApiUnionFieldDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiUnionFieldDTOBuilder {
 
-    private  defaultItem;
+    private ApiDefaultItemDTO defaultItem;
     private Boolean generatedFlag;
     private String type;
     private UnionEnum unionEnum;
