@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testoneofinresponse.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;

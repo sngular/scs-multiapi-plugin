@@ -1,7 +1,6 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
 import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;

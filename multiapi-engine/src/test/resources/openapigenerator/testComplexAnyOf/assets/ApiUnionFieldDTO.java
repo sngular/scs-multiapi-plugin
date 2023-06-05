@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -78,7 +79,7 @@ public class ApiUnionFieldDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiUnionFieldDTOBuilder {
 
-    private  defaultItem;
+    private ApiDefaultItemDTO defaultItem;
     private Boolean generatedFlag;
     private String type;
     private UnionEnum unionEnum;

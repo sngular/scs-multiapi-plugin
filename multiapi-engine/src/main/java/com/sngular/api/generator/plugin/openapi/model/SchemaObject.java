@@ -6,21 +6,23 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SchemaObject {
+
+  private boolean isEnum;
 
   private String schemaName;
 
@@ -33,6 +35,8 @@ public class SchemaObject {
   private String schemaCombinator;
 
   public static final class SchemaObjectBuilder {
+
+    private boolean isEnum = false;
 
     private final List<String> importList = new ArrayList<>();
 
@@ -55,6 +59,11 @@ public class SchemaObject {
 
     public SchemaObjectBuilder fieldObject(final SchemaFieldObject fieldObject) {
       this.fieldObjectList.add(fieldObject);
+      return this;
+    }
+
+    public SchemaObjectBuilder isEnum(final boolean isEnum) {
+      this.isEnum = isEnum;
       return this;
     }
   }

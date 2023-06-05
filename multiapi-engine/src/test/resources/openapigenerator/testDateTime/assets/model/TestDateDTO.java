@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testDateTime.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -37,6 +37,11 @@ public class MapperUtil {
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
+  public static String getRefSchemaName(final String parameter) {
+    final String[] pathObjectRef = parameter.split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
   private static boolean checkIfNumber(final String nodeType) {
     return TypeConstants.NUMBER.equalsIgnoreCase(nodeType) || TypeConstants.INTEGER.equalsIgnoreCase(nodeType)
            || TypeConstants.INT_32.equalsIgnoreCase(nodeType) || TypeConstants.INT_64.equalsIgnoreCase(nodeType);
@@ -67,22 +72,6 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getSimpleType(final Object schema) {
-    final String type;
-    if (schema instanceof Boolean) {
-      type = TypeConstants.OBJECT;
-    } else if (schema instanceof Integer) {
-      type = TypeConstants.INTEGER;
-    } else if (schema instanceof Float) {
-      type = TypeConstants.FLOAT;
-    } else if (schema instanceof Double) {
-      type = TypeConstants.DOUBLE;
-    } else {
-      type = TypeConstants.STRING;
-    }
-    return type;
-  }
-
   public static String getTypeArray(final JsonNode array, final SpecFile specFile) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
@@ -100,10 +89,5 @@ public class MapperUtil {
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
            + StringUtils.capitalize(namePojo)
            + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
-  }
-
-  public static String getRefSchemaName(final String parameter) {
-    final String[] pathObjectRef = parameter.split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
   }
 }

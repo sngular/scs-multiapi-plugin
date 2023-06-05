@@ -1018,9 +1018,9 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ArraySchemaDTO.java",
         ASSETS_PATH + "EnumSchemaDTO.java",
         ASSETS_PATH + "SecondTestDTO.java",
-        ASSETS_PATH + "TestAdditionalPropertyAdditionalPropertyDTO.java",
-        ASSETS_PATH + "TestAdditionalPropertyDTO.java",
         ASSETS_PATH + "TestDTO.java",
+        ASSETS_PATH + "TestValueDTO.java",
+        ASSETS_PATH + "TestValueValueDTO.java",
         ASSETS_PATH + "ThirdTestDTO.java"
     );
 
