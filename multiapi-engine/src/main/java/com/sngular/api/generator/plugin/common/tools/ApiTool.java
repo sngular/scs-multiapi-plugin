@@ -1,16 +1,31 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
-import org.codehaus.plexus.util.StringUtils;
-
-import java.util.*;
-import java.util.Map.Entry;
+import org.apache.commons.lang3.StringUtils;
 
 public final class ApiTool {
+
+  public static final String FORMAT = "format";
+  public static final String ALL_OF = "allOf";
+  public static final String ANY_OF = "anyOf";
+  public static final String ONE_OF = "oneOf";
+  public static final String COMPONENTS = "components";
+  public static final String SCHEMAS = "schemas";
+  public static final String REQUIRED = "required";
 
   private ApiTool() {
   }
@@ -32,19 +47,19 @@ public final class ApiTool {
   }
 
   public static String getFormat(final JsonNode schema) {
-    return getNodeAsString(schema, "format");
+    return getNodeAsString(schema, FORMAT);
   }
 
   public static JsonNode getAllOf(final JsonNode schema) {
-    return getNode(schema, "allOf");
+    return getNode(schema, ALL_OF);
   }
 
   public static JsonNode getAnyOf(final JsonNode schema) {
-    return getNode(schema, "anyOf");
+    return getNode(schema, ANY_OF);
   }
 
   public static JsonNode getOneOf(final JsonNode schema) {
-    return getNode(schema, "oneOf");
+    return getNode(schema, ONE_OF);
   }
 
   public static JsonNode getNode(final JsonNode schema, final String nodeName) {
@@ -80,10 +95,10 @@ public final class ApiTool {
   public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
-    if (hasNode(openApi, "components")) {
-      final var components = getNode(openApi, "components");
-      if (hasNode(components, "schemas")) {
-        final var schemas = getNode(components, "schemas");
+    if (hasNode(openApi, COMPONENTS)) {
+      final var components = getNode(openApi, COMPONENTS);
+      if (hasNode(components, SCHEMAS)) {
+        final var schemas = getNode(components, SCHEMAS);
         final var schemasIt = schemas.fieldNames();
         schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
       }
@@ -95,8 +110,8 @@ public final class ApiTool {
   public static Map<String, JsonNode> getComponentSecuritySchemes(final JsonNode openApi) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
-    if (hasNode(openApi, "components")) {
-      final var components = getNode(openApi, "components");
+    if (hasNode(openApi, COMPONENTS)) {
+      final var components = getNode(openApi, COMPONENTS);
       if (hasNode(components, "securitySchemes")) {
         getNode(components, "securitySchemes").fields().forEachRemaining(schema -> schemasMap.put(schema.getKey(), schema.getValue()));
       }
@@ -142,7 +157,7 @@ public final class ApiTool {
   }
 
   public static boolean hasRequired(final JsonNode schema) {
-    return hasNode(schema, "required");
+    return hasNode(schema, REQUIRED);
   }
 
   public static boolean hasType(final JsonNode schema) {
@@ -174,7 +189,7 @@ public final class ApiTool {
   }
 
   public static boolean isComposed(final JsonNode schema) {
-    return ApiTool.hasField(schema, "anyOf", "allOf", "oneOf");
+    return ApiTool.hasField(schema, ANY_OF, ALL_OF, ONE_OF);
   }
 
   public static boolean isString(final JsonNode schema) {
@@ -198,23 +213,23 @@ public final class ApiTool {
   }
 
   public static boolean isAllOf(final JsonNode schema) {
-    return hasNode(schema, "allOf");
+    return hasNode(schema, ALL_OF);
   }
 
   public static boolean isAnyOf(final JsonNode schema) {
-    return hasNode(schema, "anyOf");
+    return hasNode(schema, ANY_OF);
   }
 
   public static boolean isOneOf(final JsonNode schema) {
-    return hasNode(schema, "oneOf");
+    return hasNode(schema, ONE_OF);
   }
 
   public static boolean isDateTime(final JsonNode schema) {
     final boolean isDateTime;
     if (hasType(schema) && TypeConstants.STRING.equalsIgnoreCase(getType(schema))) {
-      if (hasNode(schema, "format")) {
-        isDateTime = "date".equalsIgnoreCase(getNode(schema, "format").textValue())
-                     || "date-time".equalsIgnoreCase(getNode(schema, "format").textValue());
+      if (hasNode(schema, FORMAT)) {
+        isDateTime = "date".equalsIgnoreCase(getNode(schema, FORMAT).textValue())
+                     || "date-time".equalsIgnoreCase(getNode(schema, FORMAT).textValue());
       } else {
         isDateTime = false;
       }
@@ -230,8 +245,8 @@ public final class ApiTool {
 
   public static boolean checkIfRequired(final JsonNode schema, final String fieldName) {
     boolean isRequired = false;
-    if (hasNode(schema, "required")) {
-      final var fieldIt = getNode(schema, "required").elements();
+    if (hasNode(schema, REQUIRED)) {
+      final var fieldIt = getNode(schema, REQUIRED).elements();
       while (fieldIt.hasNext() && !isRequired) {
         isRequired = fieldName.equalsIgnoreCase(fieldIt.next().textValue());
       }

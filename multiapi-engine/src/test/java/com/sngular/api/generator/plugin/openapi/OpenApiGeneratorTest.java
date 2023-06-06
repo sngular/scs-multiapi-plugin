@@ -30,14 +30,14 @@ class OpenApiGeneratorTest {
 
   private static OpenApiGenerator openApiGenerator;
 
-  private static int SPRING_BOOT_VERSION = 2;
+  private static final int SPRING_BOOT_VERSION = 2;
 
   @BeforeAll
   static void setup() {
     openApiGenerator =
         new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
                              new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
-                             baseDir.toFile());
+                             Path.of("src","test","resources").toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {

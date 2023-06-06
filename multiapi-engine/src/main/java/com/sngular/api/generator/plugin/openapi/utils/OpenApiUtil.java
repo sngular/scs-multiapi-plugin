@@ -6,6 +6,22 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -19,16 +35,6 @@ import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.Map.Entry;
-
 public class OpenApiUtil {
 
   static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
@@ -38,7 +44,7 @@ public class OpenApiUtil {
   private OpenApiUtil() {}
 
   public static Map<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
-    final Map<String, Map<String, JsonNode>> mapApis = new HashMap();
+    final Map<String, Map<String, JsonNode>> mapApis = new HashMap<>();
     final var pathList = openAPI.findValue("paths").fields();
     if (pathList.hasNext()) {
       mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI));
@@ -98,16 +104,16 @@ public class OpenApiUtil {
     return mapByUrl;
   }
 
-  public static JsonNode getPojoFromSpecFile(final SpecFile specFile) {
+  public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
 
-    return getPojoFromRef(null, specFile.getFilePath());
+    return getPojoFromRef(baseDir, specFile.getFilePath());
   }
 
-  public static JsonNode getPojoFromRef(final String rootFilePath, final String refPath) {
+  public static JsonNode getPojoFromRef(final Path rootFilePath, final String refPath) {
     final JsonNode openAPI;
     try {
       openAPI = PARSER.readTree(readFile(rootFilePath, refPath));
-    } catch (final IOException | URISyntaxException e) {
+    } catch (final IOException e) {
       throw new FileParseException(refPath, e);
     }
 
@@ -118,10 +124,10 @@ public class OpenApiUtil {
     return openAPI;
   }
 
-  private static String readFile(final String rootFilePath, final String filePath) throws MalformedURLException, URISyntaxException {
+  private static String readFile(final Path rootFilePath, final String filePath) throws MalformedURLException {
     URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
     if (Objects.isNull(fileURL)) {
-      final var parentFolder = Paths.get(OpenApiUtil.class.getClassLoader().getResource(rootFilePath).toURI()).getParent().resolve(filePath);
+      final var parentFolder = rootFilePath.resolve(filePath);
       fileURL = parentFolder.toUri().toURL();
     }
     final var sb = new StringBuilder();
@@ -249,7 +255,7 @@ public class OpenApiUtil {
     return javaFileName;
   }
 
-  protected static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final String rootFilePath) {
+  protected static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final Path rootFilePath) {
     JsonNode solvedRef;
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
@@ -258,7 +264,7 @@ public class OpenApiUtil {
       } else {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
-        solvedRef = getPojoFromRef(rootFilePath, filePath);
+        solvedRef = getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
         final var refName = MapperUtil.getRefSchemaName(refValueArr[1]);
         solvedRef = solvedRef.findValue(refName);
         schemaMap.put(refName, solvedRef);

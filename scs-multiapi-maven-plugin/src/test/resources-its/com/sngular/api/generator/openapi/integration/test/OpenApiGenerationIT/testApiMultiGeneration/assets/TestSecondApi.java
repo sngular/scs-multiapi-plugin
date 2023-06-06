@@ -23,9 +23,9 @@ import com.sngular.multifileplugin.testmultifile.second.model.TestInfoSecondDTO;
 public interface TestSecondApi {
 
   /**
-  * GET /testSecond : List all available test
-  * @return  A paged array of tests; (status code 200)
-  */
+   * GET /testSecond: List all available test
+   * @return  A paged array of tests; (status code 200)
+   */
 
   @Operation(
      operationId = "listTest",
@@ -46,10 +46,10 @@ public interface TestSecondApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * GET /testSecond/{testId} : Info for a specific test
-  * @param testId The id of the test to retrieve true
-  * @return  Expected response to a valid request; (status code 200)
-  */
+   * GET /testSecond/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return  Expected response to a valid request; (status code 200)
+   */
 
   @Operation(
      operationId = "showTestById",

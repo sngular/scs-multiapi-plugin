@@ -68,7 +68,7 @@ public class OpenApiGenerator {
 
   private final File targetFolder;
 
-  private final File baseDir;
+  private final Path baseDir;
 
   private Boolean isWebClient = false;
 
@@ -89,7 +89,7 @@ public class OpenApiGenerator {
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.groupId = groupId;
     this.targetFolder = targetFolder;
-    this.baseDir = basedir;
+    this.baseDir = basedir.toPath().toAbsolutePath();
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
     this.springBootVersion = springBootVersion;
   }
@@ -111,7 +111,7 @@ public class OpenApiGenerator {
 
   private void processFile(final SpecFile specFile, final String filePathToSave) throws IOException {
 
-    final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(specFile);
+    final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, specFile);
     final String clientPackage = specFile.getClientPackage();
 
     if (specFile.isCallMode()) {
@@ -169,7 +169,7 @@ public class OpenApiGenerator {
 
     for (Map.Entry<String, Map<String, JsonNode>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
-      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject);
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject, baseDir);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
@@ -227,12 +227,12 @@ public class OpenApiGenerator {
 
   private String processPath(final String fileSpecPackage, final boolean isModel) throws IOException {
     Path path;
-    final File[] pathList = Objects.requireNonNull(baseDir.listFiles(targetFileFilter));
+    final File[] pathList = Objects.requireNonNull(baseDir.toFile().listFiles(targetFileFilter));
     if (pathList.length > 0) {
       path = pathList[0].toPath().resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
     } else {
       path = targetFolder.toPath();
-      if (path.toFile().mkdirs()) {
+      if (path.toFile().exists() || path.toFile().mkdirs()) {
         path = path.resolve(convertPackageToTargetPath(fileSpecPackage, isModel));
       } else {
         throw new IOException("Problem creating folders: " + path.toFile());
