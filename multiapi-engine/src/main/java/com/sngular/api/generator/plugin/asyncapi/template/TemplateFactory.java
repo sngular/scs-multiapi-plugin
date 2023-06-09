@@ -101,7 +101,7 @@ public class TemplateFactory {
     }
 
     for (final var method : subscribeMethods) {
-      fillTemplate(supplierFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
+      fillTemplate(subscribeFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
     }
 
     for (final var method : streamBridgeMethods) {

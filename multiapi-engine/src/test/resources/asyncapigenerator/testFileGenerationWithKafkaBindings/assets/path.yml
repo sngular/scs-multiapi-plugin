@@ -3,10 +3,10 @@ components:
     OrderCreated:
       payload:
         $ref: '#/components/schemas/Order'
-      bindings:
-        kafka:
-          key:
-            type: string
+#      bindings:
+#        kafka:
+#          key:
+#            type: string
   schemas:
     CreateOrder:
       order:

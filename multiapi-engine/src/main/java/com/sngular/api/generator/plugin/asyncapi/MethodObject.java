@@ -7,6 +7,8 @@
 package com.sngular.api.generator.plugin.asyncapi;
 
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import org.apache.commons.lang3.StringUtils;
 
 public class MethodObject {
 
@@ -22,20 +24,20 @@ public class MethodObject {
 
   private SchemaObject schemaObject;
 
-  private String bindings;
+  private String keyClassName;
 
   private String bindingType;
 
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String bindings, final String bindingType) {
-    this(operationId, classNamespace, type, null, bindings, bindingType);
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String keyClassName, final String bindingType) {
+    this(operationId, classNamespace, type, null, keyClassName, bindingType);
   }
 
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final String bindings, final String bindingType) {
-    this(operationId, classNamespace, type, channelName, null, bindings, bindingType);
+  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final String keyClassName, final String bindingType) {
+    this(operationId, classNamespace, type, channelName, null, keyClassName, bindingType);
   }
 
   public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
-      final String bindings, final String bindingType) {
+      final String keyClassName, final String bindingType) {
     this.operationId = operationId;
     this.classNamespace = classNamespace;
     final var splitNamespace = classNamespace.split("\\.");
@@ -43,8 +45,8 @@ public class MethodObject {
     this.type = type;
     this.channelName = channelName;
     this.schemaObject = schemaObject;
-    this.bindings = bindings;
-    this.bindingType = bindingType;
+    this.keyClassName = keyClassName;
+    this.bindingType = StringUtils.isEmpty(bindingType) ? BindingTypeEnum.NONBINDING.getValue() : bindingType;
   }
 
   protected final void setOperationId(final String operationId) {

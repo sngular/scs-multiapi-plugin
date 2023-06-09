@@ -34,6 +34,7 @@ import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentN
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
+import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
@@ -125,9 +126,6 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  private String bindingType;
-
-
   private final Integer springBootVersion;
 
   public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
@@ -159,7 +157,6 @@ public class AsyncApiGenerator {
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, node);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
         while (iter.hasNext()) {
-          bindingType = BindingTypeEnum.NONBINDING.getValue();
 
           final Map.Entry<String, JsonNode> entry = iter.next();
 
@@ -514,8 +511,8 @@ public class AsyncApiGenerator {
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
       final String suffix, final JsonNode node) throws IOException, TemplateException {
     final ProcessMethodResult result = processMethod(channel, modelPackage, ymlParent, prefix, suffix, node);
-    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), bindingType);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   private void processStreamBridgeMethod(
@@ -526,25 +523,26 @@ public class AsyncApiGenerator {
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
-    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), bindingType);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), result.getBindingType());
   }
 
   private void processSubscribeMethod(
       final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
       final String suffix, final JsonNode node) throws IOException, TemplateException {
     final ProcessMethodResult result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node);
-    fillTemplateFactory(result.getNamespace(), totalSchemas, usingLombok, suffix, modelPackage);
-    templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), bindingType);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+    templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   private void fillTemplateFactory(
-      final String classFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix, final String modelPackageReceived)
+      final String classFullName, final String keyClassFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix,
+      final String modelPackageReceived)
       throws TemplateException, IOException {
     final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final String className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
-    final String keyClassName = classFullName.substring(classFullName.lastIndexOf(".") + 1);
+    final String keyClassName = keyClassFullName != null ? keyClassFullName.substring(keyClassFullName.lastIndexOf(".") + 1) : null;
     final JsonNode schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
 
     final List<SchemaObject> schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
@@ -567,7 +565,7 @@ public class AsyncApiGenerator {
     final JsonNode message = channel.get(MESSAGE);
     final String operationId = channel.get(OPERATION_ID).asText();
     final String namespace;
-    String bindings = null;
+    ProcessBindingsResult bindingsResult = ProcessBindingsResult.builder().build();
     if (message.has(REF)) {
       namespace = processMethodRef(message, modelPackage, ymlParent, node);
     } else if (message.has(PAYLOAD)) {
@@ -578,12 +576,12 @@ public class AsyncApiGenerator {
         namespace = modelPackage + PACKAGE_SEPARATOR_STR + MESSAGES + PACKAGE_SEPARATOR_STR + message.get(NAME).textValue();
       }
       if (message.has(BINDINGS)) {
-        bindings = processBindings(modelPackage, message);
+        bindingsResult = processBindings(modelPackage, message);
       }
     } else {
       namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
     }
-    return ProcessMethodResult.builder().operationId(operationId).namespace(namespace).bindings(bindings).build();
+    return ProcessMethodResult.builder().operationId(operationId).namespace(namespace).bindings(bindingsResult.getBindings()).bindingType(bindingsResult.getBindingType()).build();
   }
 
   private String processMethodRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent, final JsonNode node) throws IOException {
@@ -635,26 +633,26 @@ public class AsyncApiGenerator {
     }
   }
 
-  private String processBindings(final String modelPackage, final JsonNode node) {
-    String bindings = null;
+  private ProcessBindingsResult processBindings(final String modelPackage, final JsonNode node) {
+    ProcessBindingsResult bindingsResult = null;
     if (node.has(BINDINGS)) {
       final var bindingsNode = node.get(BINDINGS);
       if (bindingsNode.has(KAFKA)) {
-        bindings = processKafkaBindings(modelPackage, bindingsNode.get(KAFKA));
+        bindingsResult = processKafkaBindings(modelPackage, bindingsNode.get(KAFKA));
       } else {
-        throw new NonSupportedBindingException(bindingsNode.textValue());
+        bindingsResult = ProcessBindingsResult.builder().bindingType(BindingTypeEnum.NONBINDING.getValue()).build();
       }
     }
-    return bindings;
+    return bindingsResult;
   }
 
-  private String processKafkaBindings(final String modelPackage, final JsonNode kafkaBindings) {
-    String bindings = null;
+  private ProcessBindingsResult processKafkaBindings(final String modelPackage, final JsonNode kafkaBindings) {
+    final var bindingsResult = ProcessBindingsResult.builder();
     if (kafkaBindings.has(KEY)) {
-      bindings = processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage);
-      bindingType = BindingTypeEnum.KAFKA.getValue();
+      bindingsResult.bindings(processModelPackage(MapperUtil.getPojoName("Message", null, "DTO"), modelPackage))
+          .bindingType(BindingTypeEnum.KAFKA.getValue());
     }
-    return bindings;
+    return bindingsResult.build();
   }
 
   private String capitalizeWithPrefix(final String name) {
