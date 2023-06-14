@@ -77,9 +77,9 @@ public final class TypeConstants {
   );
 
   public static boolean isBoolean(final String isBoolean) {
-    return BOOLEAN_VALUES.contains(isBoolean.toLowerCase());
+    return Boolean.parseBoolean(isBoolean);
   }
-
+  
   public enum TimeType {
     LOCAL,
     ZONED,
