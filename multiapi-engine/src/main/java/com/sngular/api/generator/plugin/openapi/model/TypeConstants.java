@@ -10,8 +10,6 @@ import java.util.Set;
 
 public final class TypeConstants {
 
-  private static final Set<String> BOOLEAN_VALUES = Set.of(Boolean.TRUE.toString(), Boolean.FALSE.toString());
-
   public static final String NUMBER = "number";
 
   public static final String BOOLEAN = "boolean";
@@ -77,9 +75,9 @@ public final class TypeConstants {
   );
 
   public static boolean isBoolean(final String isBoolean) {
-    return Boolean.parseBoolean(isBoolean);
+    return Boolean.parseBoolean(isBoolean.toLowerCase());
   }
-  
+
   public enum TimeType {
     LOCAL,
     ZONED,
@@ -87,7 +85,5 @@ public final class TypeConstants {
   }
 
   private TypeConstants() {
-
   }
-
 }
