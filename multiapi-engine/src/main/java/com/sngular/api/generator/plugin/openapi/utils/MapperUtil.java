@@ -66,8 +66,6 @@ public class MapperUtil {
       } else {
         type = TypeConstants.INTEGER;
       }
-    } else if (TypeConstants.INT_32.equalsIgnoreCase(nodeType) || TypeConstants.INT_64.equalsIgnoreCase(nodeType)) {
-      type = TypeConstants.INTEGER;
     }
     return type;
   }
@@ -79,8 +77,7 @@ public class MapperUtil {
     } else if (ApiTool.isNumber(ApiTool.getItems(array))) {
       typeArray = ApiTool.getNumberType(ApiTool.getItems(array));
     } else if (ApiTool.hasRef(ApiTool.getItems(array))) {
-      final String[] pathObjectRef = ApiTool.getRefValue(ApiTool.getItems(array)).split("/");
-      typeArray = getPojoName(pathObjectRef[pathObjectRef.length - 1], specFile);
+      typeArray = getPojoName(MapperUtil.getRefSchemaName(ApiTool.getItems(array)), specFile);
     }
     return typeArray;
   }
@@ -89,5 +86,45 @@ public class MapperUtil {
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
            + StringUtils.capitalize(namePojo)
            + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
+  }
+
+  public static String getRef(final JsonNode schema, final SpecFile specFile) {
+    final String typeObject;
+    typeObject = getPojoName(getRefSchemaName(schema), specFile);
+    return typeObject;
+  }
+
+  public static String getDateType(final JsonNode schema, final SpecFile specFile) {
+    final String dateType;
+    switch (ApiTool.getFormat(schema)) {
+
+      case "date":
+        switch (specFile.getUseTimeType()) {
+          case ZONED:
+            dateType = TypeConstants.ZONEDDATE;
+            break;
+          case OFFSET:
+            dateType = TypeConstants.OFFSETDATE;
+            break;
+          default:
+            dateType = TypeConstants.LOCALDATE;
+        }
+        break;
+      case "date-time":
+        switch (specFile.getUseTimeType()) {
+          case ZONED:
+            dateType = TypeConstants.ZONEDDATETIME;
+            break;
+          case OFFSET:
+            dateType = TypeConstants.OFFSETDATETIME;
+            break;
+          default:
+            dateType = TypeConstants.LOCALDATETIME;
+        }
+        break;
+      default:
+        dateType = TypeConstants.LOCALDATETIME;
+    }
+    return dateType;
   }
 }

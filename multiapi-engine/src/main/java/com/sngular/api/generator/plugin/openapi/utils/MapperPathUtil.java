@@ -80,7 +80,9 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(final JsonNode openAPI, final SpecFile specFile, final Entry<String, JsonNode> path, final GlobalObject globalObject, final Path baseDir) {
+  private static List<OperationObject> mapOperationObject(
+          final JsonNode openAPI, final SpecFile specFile, final Entry<String, JsonNode> path,
+          final GlobalObject globalObject, final Path baseDir) {
     final List<OperationObject> operationObjects = new ArrayList<>();
     final List<String> operationIdList = new ArrayList<>();
     final var pathNode = path.getValue();
@@ -204,7 +206,7 @@ public class MapperPathUtil {
 
   private static List<ParameterObject> mapParameterObjects(
           final JsonNode openAPI, final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
-          final GlobalObject globalObject, Path baseDir) {
+          final GlobalObject globalObject, final Path baseDir) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (JsonNode parameter : parameters) {
@@ -222,7 +224,8 @@ public class MapperPathUtil {
     return parameterObjects;
   }
 
-  private static ParameterObject buildParameterObject(final SpecFile specFile, final GlobalObject globalObject, final JsonNode refParameter, Path baseDir) {
+  private static ParameterObject buildParameterObject(
+          final SpecFile specFile, final GlobalObject globalObject, final JsonNode refParameter, final Path baseDir) {
     return ParameterObject.builder()
             .name(ApiTool.getName(refParameter))
             .required(ApiTool.getNodeAsBoolean(refParameter, REQUIRED))
@@ -355,14 +358,14 @@ public class MapperPathUtil {
     SchemaFieldObjectType type = null;
 
     if (ApiTool.hasRef(schema)) {
-      final String refSchemaPojoName = MapperContentUtil.getRef(schema, specFile);
+      final String refSchemaPojoName = MapperUtil.getRef(schema, specFile);
       final JsonNode refSchema = OpenApiUtil.solveRef(ApiTool.getRefValue(schema), globalObject.getSchemaMap(),
               baseDir.resolve(specFile.getFilePath()).getParent());
       type = getSchemaType(refSchema, refSchemaPojoName, specFile, globalObject, baseDir);
     } else if (ApiTool.hasAdditionalProperties(schema)) {
       type = getMapSchemaType(schema, pojoName, specFile, globalObject, baseDir);
     } else if (ApiTool.isDateTime(schema)) {
-      type = new SchemaFieldObjectType(MapperContentUtil.getDateType(schema, specFile));
+      type = new SchemaFieldObjectType(MapperUtil.getDateType(schema, specFile));
     } else if (ApiTool.hasType(schema)) {
       type = getObjectOrType(schema, pojoName, specFile, globalObject, baseDir);
     } else if (ApiTool.isComposed(schema)) {

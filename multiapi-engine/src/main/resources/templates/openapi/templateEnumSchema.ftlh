@@ -11,7 +11,7 @@ public enum ${schema.className} {
 
   private ${field.dataType.innerType?cap_first} value;
 
-  ${field.baseName?cap_first}(${field.dataType.innerType?cap_first} value) {
+  ${schema.className?cap_first}(${field.dataType.innerType?cap_first} value) {
     this.value = value;
   }
 

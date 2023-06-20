@@ -11,6 +11,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -202,7 +203,7 @@ public class OpenApiGenerator {
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var basicSchemaMap = OpenApiUtil.processBasicJsonNodes(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
-    processModels(specFile, openAPI, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
+    processModels(specFile, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
   }
 
   private void processPackage(final String apiPackage) {
@@ -250,9 +251,9 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
-      final boolean overwrite) {
-
+          final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
+          final boolean overwrite) {
+    final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
         throw new DuplicateModelClassException(schemaName, modelPackage);
@@ -260,31 +261,29 @@ public class OpenApiGenerator {
 
       if (ApiTool.hasRef(basicSchema)) {
         final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
-        writeModel(specFile, openAPI, fileModelToSave, refSchema, basicSchemaMap.get(refSchema));
+        builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
       } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
-        writeModel(specFile, openAPI, fileModelToSave, schemaName, basicSchema);
+        builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
       }
     });
 
   }
 
-  private void writeModel(final SpecFile specFile, final JsonNode openAPI, final String fileModelToSave, final String schemaName, final JsonNode basicSchema) {
-    final var schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(ApiTool.getComponentSchemas(openAPI), basicSchema, schemaName, specFile);
-    final Set<String> propertiesSet = new HashSet<>();
-    checkRequiredOrCombinatorExists(schemaObjectList);
-    schemaObjectList.values().forEach(schemaObject -> {
+  private Map<String, SchemaObject> writeModel(final SpecFile specFile, final String fileModelToSave,
+                                               final String schemaName, final JsonNode basicSchema,
+                                               final Map<String, JsonNode> basicSchemaMap, final Map<String, SchemaObject> builtSchemasMap) {
+    final var schemaObjectMap = MapperContentUtil
+            .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
+    checkRequiredOrCombinatorExists(schemaObjectMap);
+    schemaObjectMap.values().forEach(schemaObject -> {
       try {
+        final Set<String> propertiesSet = new HashSet<>();
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
+        fillTemplates(fileModelToSave, propertiesSet);
       } catch (IOException | TemplateException e) {
-        throw new GeneratedSourcesException(fileModelToSave, e);
+        throw new GeneratedSourcesException(schemaObject.getClassName(), e);
       }
     });
-
-    try {
-      fillTemplates(fileModelToSave, propertiesSet);
-    } catch (IOException | TemplateException e) {
-      throw new GeneratedSourcesException(fileModelToSave, e);
-    }
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
@@ -293,6 +292,7 @@ public class OpenApiGenerator {
         throw new GeneratedSourcesException(fileModelToSave, e);
       }
     }
+    return schemaObjectMap;
   }
 
   private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {

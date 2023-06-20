@@ -99,7 +99,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING, OpenApiGeneratorFixtures.validateListString()),
         Arguments.of("testReferenceFile", OpenApiGeneratorFixtures.TEST_REFERENCE_FILE, OpenApiGeneratorFixtures.validateReferenceFile()),
         Arguments.of("testQueryParam", OpenApiGeneratorFixtures.TEST_QUERY_PARAM, OpenApiGeneratorFixtures.validateQueryParam()),
-        Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS, OpenApiGeneratorFixtures.validateApiWithNoComponents())
+        Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS, OpenApiGeneratorFixtures.validateApiWithNoComponents()),
+        Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
+                    OpenApiGeneratorFixtures.validateRestrictionsSchema())
     );
   }
 

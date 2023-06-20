@@ -47,7 +47,9 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, final Set<String> propertiesSet) throws IOException,
+  public final void fillTemplateSchema(
+          final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
+          final Set<String> propertiesSet) throws IOException,
                                                                                                                                                                       TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -148,7 +150,7 @@ public class TemplateFactory {
 
   }
 
-  public void calculateJavaEEPackage(final Integer springBootVersion) {
+  public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
       root.put("javaEEPackage", "jakarta");
     } else {

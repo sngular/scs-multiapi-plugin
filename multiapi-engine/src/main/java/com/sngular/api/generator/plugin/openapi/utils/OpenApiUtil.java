@@ -40,12 +40,13 @@ public class OpenApiUtil {
   static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
 
   static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
+  public static final String PATHS = "paths";
 
   private OpenApiUtil() {}
 
   public static Map<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
     final Map<String, Map<String, JsonNode>> mapApis = new HashMap<>();
-    final var pathList = openAPI.findValue("paths").fields();
+    final var pathList = openAPI.findValue(PATHS).fields();
     if (pathList.hasNext()) {
       mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI));
     }
@@ -94,11 +95,11 @@ public class OpenApiUtil {
   private static Map<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
     final var mapByUrl = new HashMap<String, Map<String, JsonNode>>();
 
-    for (Iterator<String> it = openAPI.get("paths").fieldNames(); it.hasNext();) {
+    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext();) {
       final var pathUrl = it.next();
       final String[] pathName = pathUrl.split("/");
       mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
-      mapByUrl.get(pathName[1]).put(pathUrl, openAPI.get("paths").get(pathUrl));
+      mapByUrl.get(pathName[1]).put(pathUrl, openAPI.get(PATHS).get(pathUrl));
     }
 
     return mapByUrl;
@@ -132,9 +133,9 @@ public class OpenApiUtil {
     }
     final var sb = new StringBuilder();
     if (Objects.nonNull(fileURL)) {
-      try (BufferedReader in = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
         String inputLine;
-        while ((inputLine = in.readLine()) != null) {
+        while ((inputLine = reader.readLine()) != null) {
           sb.append(inputLine).append(System.lineSeparator());
         }
       } catch (final IOException e) {
@@ -147,7 +148,7 @@ public class OpenApiUtil {
   public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
-    for (final var pathElement = openApi.findValue("paths").elements(); pathElement.hasNext();) {
+    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
       final var pathDefinition = pathElement.next();
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
         final var pathDefElement = it.next();
@@ -259,15 +260,15 @@ public class OpenApiUtil {
     JsonNode solvedRef;
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
-        final String refSchemaName = MapperContentUtil.cleanRefName(refValue);
+        final String refSchemaName = MapperUtil.getRefSchemaName(refValue);
         solvedRef = schemaMap.get(refSchemaName);
       } else {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
         solvedRef = getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
         final var refName = MapperUtil.getRefSchemaName(refValueArr[1]);
+        schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
         solvedRef = solvedRef.findValue(refName);
-        schemaMap.put(refName, solvedRef);
       }
     } else {
       solvedRef = null;
