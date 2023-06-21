@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;

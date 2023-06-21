@@ -1,25 +1,25 @@
-package com.sngular.scsplugin.filegenerationwithkey.model.event.consumer;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegenerationwithkey.model.event.messages.OrderCreatedDTO;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.messages.OrderCreatedDTO;
 
 @Configuration
 public class TestClassName {
 
-  private final IPublishOperationFileGenerationWithKey publishOperationFileGenerationWithKey;
+  private final IPublishOperationFileGenerationWithKafkaBindings publishOperationFileGenerationWithKafkaBindings;
 
-  protected TestClassName(final IPublishOperationFileGenerationWithKey publishOperationFileGenerationWithKey) {
-    this.publishOperationFileGenerationWithKey = publishOperationFileGenerationWithKey;
+  protected TestClassName(final IPublishOperationFileGenerationWithKafkaBindings publishOperationFileGenerationWithKafkaBindings) {
+    this.publishOperationFileGenerationWithKafkaBindings = publishOperationFileGenerationWithKafkaBindings;
   }
 
   @Bean
-  public Consumer<Message<OrderCreatedDTO>> publishOperationFileGenerationWithKey() {
+  public Consumer<Message<OrderCreatedDTO>> publishOperationFileGenerationWithKafkaBindings() {
     return value -> {
       final var messageWrapper = MessageWrapper.builder().payload(value.getPayload()).key(value.getKey()).build();
-      publishOperationFileGenerationWithKey.publishOperationFileGenerationWithKey(messageWrapper);
+      publishOperationFileGenerationWithKafkaBindings.publishOperationFileGenerationWithKafkaBindings(messageWrapper);
     }
   }
 

@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationwithkey.model.event.messages;
+package com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.messages;
 
 import java.util.Objects;
 
@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class OrderCreatedDTO {
 
   @JsonProperty(value ="payload")
-  private com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO payload;
+  private com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO payload;
 
-  private OrderCreatedDTO(com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO payload) {
+  private OrderCreatedDTO(com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO payload) {
     this.payload = payload;
 
   }
@@ -30,9 +30,9 @@ public class OrderCreatedDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderCreatedDTOBuilder {
 
-    private com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO payload;
+    private com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO payload;
 
-    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO payload) {
+    public OrderCreatedDTO.OrderCreatedDTOBuilder payload(com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO payload) {
       this.payload = payload;
       return this;
     }
@@ -48,10 +48,10 @@ public class OrderCreatedDTO {
   * @return payload
   */
   @Schema(name = "payload", required = false)
-  public com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO getPayload() {
+  public com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO getPayload() {
     return payload;
   }
-  public void setPayload(com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.OrderDTO payload) {
+  public void setPayload(com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderDTO payload) {
     this.payload = payload;
   }
 

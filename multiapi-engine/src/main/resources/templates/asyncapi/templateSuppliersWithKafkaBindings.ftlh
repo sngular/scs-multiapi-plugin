@@ -19,9 +19,9 @@ public class ${supplierClassName?cap_first} {
   <#list publishMethods as method>
   private final I${method.operationId?cap_first} ${method.operationId?uncap_first};
 
-  </#list>
   private final ${method.keyClassName} key;
 
+  </#list>
   protected ${supplierClassName?cap_first}(<#list publishMethods as method>final I${method.operationId?cap_first} ${method.operationId?uncap_first}<#sep>, </#list>) {
     <#list publishMethods as method>
     this.${method.operationId?uncap_first} = ${method.operationId?uncap_first};

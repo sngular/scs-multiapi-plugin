@@ -4,29 +4,31 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.asyncapi;
+package com.sngular.api.generator.plugin.asyncapi.model;
 
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import lombok.Builder;
+import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 
+@Value
 public class MethodObject {
 
-  private String operationId;
+  String operationId;
 
-  private String classNamespace;
+  String classNamespace;
 
-  private String className;
+  String className;
 
-  private String type;
+  String type;
 
-  private String channelName;
+  String channelName;
 
-  private SchemaObject schemaObject;
+  SchemaObject schemaObject;
 
-  private String keyClassName;
+  String keyClassName;
 
-  private String bindingType;
+  String bindingType;
 
   public MethodObject(final String operationId, final String classNamespace, final String type, final String keyClassName, final String bindingType) {
     this(operationId, classNamespace, type, null, keyClassName, bindingType);
@@ -36,6 +38,7 @@ public class MethodObject {
     this(operationId, classNamespace, type, channelName, null, keyClassName, bindingType);
   }
 
+  @Builder(toBuilder = true)
   public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
       final String keyClassName, final String bindingType) {
     this.operationId = operationId;
@@ -49,53 +52,4 @@ public class MethodObject {
     this.bindingType = StringUtils.isEmpty(bindingType) ? BindingTypeEnum.NONBINDING.getValue() : bindingType;
   }
 
-  protected final void setOperationId(final String operationId) {
-    this.operationId = operationId;
-  }
-
-  protected final void setClassNamespace(final String classNamespace) {
-    this.classNamespace = classNamespace;
-  }
-
-  protected final void setClassName(final String className) {
-    this.className = className;
-  }
-
-  protected final void setType(final String type) {
-    this.type = type;
-  }
-
-  protected final void setChannelName(final String channelName) {
-    this.channelName = channelName;
-  }
-
-  protected final void setSchemaObject(final SchemaObject schemaObject) {
-    this.schemaObject = schemaObject;
-  }
-
-  public final String getOperationId() {
-    return operationId;
-  }
-
-  public final String getClassNamespace() {
-    return classNamespace;
-  }
-
-  public final String getClassName() {
-    return className;
-  }
-
-  public final String getType() {
-    return type;
-  }
-
-  public final String getChannelName() {
-    return channelName;
-  }
-
-  public final SchemaObject getSchemaObject() {
-    return schemaObject;
-  }
-
-  public final String getBindingType() { return bindingType; }
 }

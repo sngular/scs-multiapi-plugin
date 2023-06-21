@@ -1,8 +1,8 @@
-package com.sngular.scsplugin.filegenerationwithkey.model.event.producer;
+package com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.producer;
 
-import com.sngular.scsplugin.filegenerationwithkey.model.event.schemas.CreateOrderMapper;
+import com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.CreateOrderMapper;
 
-public interface ISubscribeOperationFileGenerationWithKey {
+public interface ISubscribeOperationFileGenerationWithKafkaBindings {
 
-  CreateOrderMapper subscribeOperationFileGenerationWithKey(String key);
+  CreateOrderMapper subscribeOperationFileGenerationWithKafkaBindings(String key);
 }

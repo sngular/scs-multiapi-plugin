@@ -1,8 +1,8 @@
-package com.sngular.scsplugin.filegenerationwithkey.model.event.consumer;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer;
 
-import com.sngular.scsplugin.filegenerationwithkey.model.event.messages.OrderCreatedDTO;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.messages.OrderCreatedDTO;
 
-public interface IPublishOperationFileGenerationWithKey {
+public interface IPublishOperationFileGenerationWithKafkaBindings {
 
-  void publishOperationFileGenerationWithKey(final OrderCreatedDTO value);
+  void publishOperationFileGenerationWithKafkaBindings(final OrderCreatedDTO value);
 }
