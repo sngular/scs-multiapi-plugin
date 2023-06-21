@@ -29,6 +29,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperContentUtil {
 
+  public static final String OBJECT = "object";
+
+  public static final String ONE_OF = "oneOf";
+
+  public static final String PROPERTIES = "properties";
+  public static final String REF = "$ref";
+
+  public static final String TYPE = "type";
+
   public static final String ALL_OF = "allOf";
 
   public static final String ANY_OF = "anyOf";
@@ -38,15 +47,6 @@ public class MapperContentUtil {
   private static final String BIG_DECIMAL = "bigDecimal";
 
   private static final String MAP = "map";
-
-  public static final String OBJECT = "object";
-
-  public static final String ONE_OF = "oneOf";
-
-  public static final String PROPERTIES = "properties";
-  public static final String REF = "$ref";
-
-  public static final String TYPE = "type";
 
   private static String schemaCombinatorType;
 
@@ -110,7 +110,7 @@ public class MapperContentUtil {
         listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
         listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
-      } else if (Objects.nonNull(fieldObject.getDataTypeSimple()) && fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
+      } else if (fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
         listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
       }
@@ -239,7 +239,7 @@ public class MapperContentUtil {
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (schema.has("type")) {
       final var type = schema.get("type").textValue();
-      if ("object".equalsIgnoreCase(type)) {
+      if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject = SchemaFieldObject.builder().restrictions(new SchemaFieldObjectProperties()).baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
       } else if (schema.has("items")) {
@@ -300,7 +300,7 @@ public class MapperContentUtil {
       modelToBuildList.add(MapperUtil.getLongRefClass(items));
     }
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-    Entry<String, JsonNode> current = null;
+    Entry<String, JsonNode> current;
     while (iterator.hasNext()) {
       current = iterator.next();
       switch (current.getKey()) {
@@ -352,7 +352,7 @@ public class MapperContentUtil {
           props.setMinLength(current.getValue().intValue());
           break;
         case "pattern":
-          props.setPattern(current.getValue().toString().replaceAll("\"", ""));
+          props.setPattern(current.getValue().toString().replace("\"", ""));
           break;
         case "uniqueItems":
           props.setUniqueItems(current.getValue().booleanValue());

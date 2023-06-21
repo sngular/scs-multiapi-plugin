@@ -6,6 +6,20 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
@@ -15,13 +29,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 public class TemplateFactory {
 
@@ -38,6 +45,8 @@ public class TemplateFactory {
   public static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
 
   public static final String FILE_TYPE_JAVA = ".java";
+
+  public static final String EXCEPTION_PACKAGE = "exceptionPackage";
 
   private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
@@ -81,7 +90,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateName, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
+  public final void fillTemplates(final boolean generateExceptionTemplate) throws IOException, TemplateException {
     root.put("publishMethods", publishMethods);
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
@@ -194,7 +203,7 @@ public class TemplateFactory {
   public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
     final Path pathToExceptionPackage = filePathToSave.resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
-    root.put("exceptionPackage", modelPackage);
+    root.put(EXCEPTION_PACKAGE, modelPackage);
     final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
   }
@@ -226,8 +235,8 @@ public class TemplateFactory {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
       }
       if (Objects.nonNull(exceptionPackage)) {
-        rootSchema.put("exceptionPackage", exceptionPackage);
-        root.put("exceptionPackage", exceptionPackage);
+        rootSchema.put(EXCEPTION_PACKAGE, exceptionPackage);
+        root.put(EXCEPTION_PACKAGE, exceptionPackage);
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
@@ -306,7 +315,7 @@ public class TemplateFactory {
     root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
-  public void calculateJavaEEPackage(final Integer springBootVersion) {
+  public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
       root.put("javaEEPackage", "jakarta");
     } else {
