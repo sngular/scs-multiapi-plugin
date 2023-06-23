@@ -19,6 +19,8 @@ public class ${supplierClassName?cap_first} {
   private final I${method.operationId?cap_first} ${method.operationId?uncap_first};
 
   </#list>
+  private final String key;
+
   protected ${supplierClassName?cap_first}(<#list publishMethods as method>final I${method.operationId?cap_first} ${method.operationId?uncap_first}<#sep>, </#list>) {
     <#list publishMethods as method>
     this.${method.operationId?uncap_first} = ${method.operationId?uncap_first};
@@ -27,8 +29,9 @@ public class ${supplierClassName?cap_first} {
 
   <#list publishMethods as method>
   @Bean
-  public Supplier<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>> ${method.operationId?uncap_first}(String key) {
-    return () -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}();
+  public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}(final String key) {
+    return () -> ${method.operationId?uncap_first}.${method.operationId?uncap_first}()
+                  setHeader(key, "");
   }
 
   </#list>
