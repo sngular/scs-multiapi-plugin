@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testReferenceFile.model.TestDTO;
 public interface TestApi {
 
   /**
-  * GET /test 
-  * @return  Some schema from another file; (status code 200)
-  */
+   * GET /test
+   * @return  Some schema from another file; (status code 200)
+   */
 
   @Operation(
      operationId = "testFile",

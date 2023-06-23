@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-public class TestAdditionalPropertyAdditionalPropertyDTO {
+public class TestValueValueDTO {
 
   @JsonProperty(value ="additionalProperties")
   private Map<String, List<ArraySchemaDTO>> additionalProperties = new HashMap<String, List<ArraySchemaDTO>>();
@@ -25,7 +23,7 @@ public class TestAdditionalPropertyAdditionalPropertyDTO {
 
   @Builder
   @Jacksonized
-  private TestAdditionalPropertyAdditionalPropertyDTO(Map<String, List<ArraySchemaDTO>> additionalProperties, @NonNull String name) {
+  private TestValueValueDTO(Map<String, List<ArraySchemaDTO>> additionalProperties, @NonNull String name) {
     this.additionalProperties = additionalProperties;
     this.name = name;
 

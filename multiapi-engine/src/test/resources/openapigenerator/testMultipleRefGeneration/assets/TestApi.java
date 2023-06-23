@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.multipleref.model.InlineResponse200CreateGame
 public interface TestApi {
 
   /**
-  * POST /test : Start a Game
-  * @return  Test File for SCC MultiApi Plugin.; (status code 200)
-  */
+   * POST /test: Start a Game
+   * @return  Test File for SCC MultiApi Plugin.; (status code 200)
+   */
 
   @Operation(
      operationId = "createGame",

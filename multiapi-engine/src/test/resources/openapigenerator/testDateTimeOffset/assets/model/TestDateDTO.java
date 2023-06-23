@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testDateTimeOffset.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import lombok.Builder;

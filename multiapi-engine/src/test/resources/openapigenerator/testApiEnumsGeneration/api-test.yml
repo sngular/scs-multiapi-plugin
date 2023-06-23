@@ -34,7 +34,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /test/{testId}:
-    summary:  other available test
+    summary: other available test
     get:
       summary: Info for a specific test
       operationId: showTestById

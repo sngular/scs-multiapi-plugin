@@ -16,16 +16,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.inlineschemacreation.model.ApiTestDTO;
 import com.sngular.multifileplugin.inlineschemacreation.model.ApiErrorDTO;
+import com.sngular.multifileplugin.inlineschemacreation.model.ApiTestDTO;
 
 public interface RuleApi {
 
   /**
-  * GET /rule/{ruleId} 
-  * @param ruleId Name of the Rule true
-  * @return  OK; (status code 200)  Not Found; (status code 404)  Internal Server Error; (status code 500)
-  */
+   * PUT /rule/{ruleId}
+   * @param ruleId Name of the Rule true
+   * @return  OK; (status code 200)  Internal Server Error; (status code 500)  Not Found; (status code 404)
+   */
+
+  @Operation(
+     operationId = "updateRule",
+     tags = {"rules"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+       @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.PUT,
+    value = "/rule/{ruleId}",
+    produces = {"application/json"}
+  )
+
+  default ResponseEntity<String> updateRule(@Parameter(name = "ruleId", description = "Name of the Rule", required = true, schema = @Schema(description = "")) @PathVariable("ruleId") Integer ruleId) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+  /**
+   * GET /rule/{ruleId}
+   * @param ruleId Name of the Rule true
+   * @return  OK; (status code 200)  Not Found; (status code 404)  Internal Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getSpecificRule",
@@ -47,10 +72,10 @@ public interface RuleApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * DELETE /rule/{ruleId} 
-  * @param ruleId Name of the Rule true
-  * @return  OK; (status code 200)  Not Found; (status code 404)  Internal Server Error; (status code 500)
-  */
+   * DELETE /rule/{ruleId}
+   * @param ruleId Name of the Rule true
+   * @return  OK; (status code 200)  Not Found; (status code 404)  Internal Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "deleteRule",
@@ -69,31 +94,6 @@ public interface RuleApi {
   )
 
   default ResponseEntity<String> deleteRule(@Parameter(name = "ruleId", description = "Name of the Rule", required = true, schema = @Schema(description = "")) @PathVariable("ruleId") Integer ruleId) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-  /**
-  * PUT /rule/{ruleId} 
-  * @param ruleId Name of the Rule true
-  * @return  OK; (status code 200)  Internal Server Error; (status code 500)  Not Found; (status code 404)
-  */
-
-  @Operation(
-     operationId = "updateRule",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
-  )
-  @RequestMapping(
-    method = RequestMethod.PUT,
-    value = "/rule/{ruleId}",
-    produces = {"application/json"}
-  )
-
-  default ResponseEntity<String> updateRule(@Parameter(name = "ruleId", description = "Name of the Rule", required = true, schema = @Schema(description = "")) @PathVariable("ruleId") Integer ruleId) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

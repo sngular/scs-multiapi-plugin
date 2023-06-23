@@ -10,6 +10,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
 
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,7 +103,7 @@ public class SchemaFieldObjectType {
     final boolean hasInner = baseString.contains("?");
 
     if (hasInner && Objects.isNull(innerType)) {
-      throw new RuntimeException(String.format("Field object type '%s' missing an inner type", baseType));
+      throw new CodeGenerationException(String.format("Field object type '%s' missing an inner type", baseType));
     }
 
     return hasInner ? baseString.replace("?", innerType.mapIntoString(TYPE_MAPPINGS)) : baseString;

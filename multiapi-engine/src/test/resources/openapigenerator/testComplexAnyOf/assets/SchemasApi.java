@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testcomplexanyof.model.ApiSchemaDTO;
 public interface SchemasApi {
 
   /**
-  * GET /schemas/names 
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * GET /schemas/names
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getAllSchemaNames",
@@ -45,9 +45,9 @@ public interface SchemasApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * GET /schemas 
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * GET /schemas
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getSchemas",
@@ -69,9 +69,9 @@ public interface SchemasApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * DELETE /schemas 
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-  */
+   * DELETE /schemas
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "deleteSchemas",

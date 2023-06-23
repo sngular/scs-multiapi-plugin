@@ -23,7 +23,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                              TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK, TemplateIndexConstants.TEMPLATE_CALL_WEB_API,
                                                              TemplateIndexConstants.TEMPLATE_WEB_CLIENT, TemplateIndexConstants.TEMPLATE_CALL_REST_API,
                                                              TemplateIndexConstants.TEMPLATE_REST_CLIENT, TemplateIndexConstants.TEMPLATE_REACTIVE_API,
-                                                             TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION);
+                                                             TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, TemplateIndexConstants.TEMPLATE_CONTENT_ENUM_SCHEMA);
 
   private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,

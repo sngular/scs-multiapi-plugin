@@ -11,11 +11,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,19 +25,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class OpenApiGeneratorTest {
 
-  @TempDir
+  @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
 
   private static OpenApiGenerator openApiGenerator;
 
-  private static int SPRING_BOOT_VERSION = 2;
+  private static final int SPRING_BOOT_VERSION = 2;
 
   @BeforeAll
   static void setup() {
     openApiGenerator =
         new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
                              new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
-                             baseDir.toFile());
+                             Path.of("src","test","resources").toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {
@@ -97,7 +99,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING, OpenApiGeneratorFixtures.validateListString()),
         Arguments.of("testReferenceFile", OpenApiGeneratorFixtures.TEST_REFERENCE_FILE, OpenApiGeneratorFixtures.validateReferenceFile()),
         Arguments.of("testQueryParam", OpenApiGeneratorFixtures.TEST_QUERY_PARAM, OpenApiGeneratorFixtures.validateQueryParam()),
-        Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS, OpenApiGeneratorFixtures.validateApiWithNoComponents())
+        Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS, OpenApiGeneratorFixtures.validateApiWithNoComponents()),
+        Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
+                    OpenApiGeneratorFixtures.validateRestrictionsSchema())
     );
   }
 

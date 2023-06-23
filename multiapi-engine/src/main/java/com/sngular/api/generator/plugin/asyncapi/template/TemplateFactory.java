@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
@@ -29,7 +29,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.commons.collections4.CollectionUtils;
 
 public class TemplateFactory {
 
@@ -46,6 +45,8 @@ public class TemplateFactory {
   public static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
 
   public static final String FILE_TYPE_JAVA = ".java";
+
+  public static final String EXCEPTION_PACKAGE = "exceptionPackage";
 
   private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
@@ -89,7 +90,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateName, root, pathToSaveMainClass);
   }
 
-  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
+  public final void fillTemplates(final boolean generateExceptionTemplate) throws IOException, TemplateException {
     root.put("publishMethods", publishMethods);
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
@@ -139,7 +140,7 @@ public class TemplateFactory {
     this.generateInterfaces();
   }
 
-  private ClassTemplate getClassTemplate(){
+  private ClassTemplate getClassTemplate() {
     ClassTemplate ourClassTemplate = null;
     for (ClassTemplate classTemplate : schemaObjectMap) {
       if (classTemplate.getFilePath().endsWith("schemas")) {
@@ -202,7 +203,7 @@ public class TemplateFactory {
   public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
     final Path pathToExceptionPackage = filePathToSave.resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
-    root.put("exceptionPackage", modelPackage);
+    root.put(EXCEPTION_PACKAGE, modelPackage);
     final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
   }
@@ -219,9 +220,10 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
+  private void fillTemplateSchema(
+      final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
       final String exceptionPackage)
-    throws IOException, TemplateException {
+      throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -232,9 +234,9 @@ public class TemplateFactory {
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         rootSchema.put("packageModel", classTemplate.getModelPackage());
       }
-      if (Objects.nonNull(exceptionPackage)){
-        rootSchema.put("exceptionPackage", exceptionPackage);
-        root.put("exceptionPackage", exceptionPackage);
+      if (Objects.nonNull(exceptionPackage)) {
+        rootSchema.put(EXCEPTION_PACKAGE, exceptionPackage);
+        root.put(EXCEPTION_PACKAGE, exceptionPackage);
       }
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
@@ -313,7 +315,7 @@ public class TemplateFactory {
     root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
-  public void calculateJavaEEPackage(final Integer springBootVersion) {
+  public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
       root.put("javaEEPackage", "jakarta");
     } else {

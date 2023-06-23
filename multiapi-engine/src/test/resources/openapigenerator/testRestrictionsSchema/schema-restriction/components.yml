@@ -1,0 +1,304 @@
+components:
+  schemas:
+    arrayNames:
+      type: array
+      items:
+        type: string
+    Schema:
+      type: object
+      required:
+      - subjectName
+      - name
+      - type
+      - properties
+      properties:
+        id:
+          type: string
+        subjectName:
+          type: string
+        name:
+          type: string
+        original:
+          type: boolean
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        type:
+          type: string
+    StringField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: string
+        regex:
+          type: string
+        minLength:
+          type: integer
+          format: int32
+        maxLength:
+          type: integer
+          format: int32
+        format:
+          type: string
+        valueLength:
+          type: integer
+          format: int32
+        properties:
+          type: array
+          items:
+            type: string
+    ArrayField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        regex:
+          type: string
+        minItems:
+          type: integer
+          format: int32
+        arraySize:
+          type: integer
+          format: int32
+        uniqueItems:
+          type: boolean
+    BooleanField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: boolean
+    DateField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: string
+        format:
+          type: string
+    EnumField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: string
+        enumValues:
+          type: array
+          items:
+            type: string
+    MapField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: array
+          items:
+            type: object
+        mapTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        keyType:
+          type: string
+        mapSize:
+          type: integer
+          format: int32
+    NumberField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: integer
+          format: int32
+        minimum:
+          type: integer
+          format: int32
+        maximum:
+          type: integer
+          format: int32
+        flagExclusiveMinimum:
+          type: boolean
+        flagExclusiveMaximum:
+          type: boolean
+        multipleOf:
+          type: integer
+          format: int32
+        numberEnum:
+          type: string
+          enum:
+          - integer
+          - float
+          - long
+          - decimal
+          - bytes
+          - fixed
+        precision:
+          type: integer
+          format: int32
+        scale:
+          type: integer
+          format: int32
+    ObjectField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: array
+          items:
+            type: object
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        requiredValues:
+          type: array
+          items:
+            type: string
+    UnionField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        defaultItem:
+          $ref: '#/components/schemas/Field'
+        unionEnum:
+          type: string
+          enum:
+          - oneof
+          - anyof
+          - allof
+        generatedFlag:
+          type: boolean
+        optionalUnion:
+          type: boolean
+    UUIDField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        defaultValue:
+          type: string
+          format: uuid
+        regex:
+          type: string
+        format:
+          type: string
+    SequenceField:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        mandatory:
+          type: boolean
+        initialValue:
+          $ref: '#/components/schemas/Field'
+        property:
+          $ref: '#/components/schemas/Field'
+        elements:
+          type: integer
+          format: int32
+        increment:
+          type: integer
+          format: int32
+        seqEnum:
+          type: string
+          enum:
+          - YEAR
+          - MONTH
+          - DAY
+          - HOUR
+          - MINUTE
+          - SECOND
+    Field:
+      type: object
+      properties:
+        typeField:
+          type: string
+          enum:
+          - StringField
+          - ArrayField
+          - BooleanField
+          - DateField
+          - EnumField
+          - MapField
+          - NumberField
+          - ObjectField
+          - UnionField
+          - UUIDField
+          - SequenceField
+        fieldValue:
+          oneOf:
+          - $ref: '#/components/schemas/StringField'
+          - $ref: '#/components/schemas/ArrayField'
+          - $ref: '#/components/schemas/BooleanField'
+          - $ref: '#/components/schemas/DateField'
+          - $ref: '#/components/schemas/EnumField'
+          - $ref: '#/components/schemas/MapField'
+          - $ref: '#/components/schemas/NumberField'
+          - $ref: '#/components/schemas/ObjectField'
+          - $ref: '#/components/schemas/UnionField'
+          - $ref: '#/components/schemas/SequenceField'
+          - $ref: '#/components/schemas/UUIDField'

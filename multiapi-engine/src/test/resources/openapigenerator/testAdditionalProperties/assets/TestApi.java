@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testadditionalproperties.model.TestDTO;
 public interface TestApi {
 
   /**
-  * GET /test : testAdditionalProperties
-  * @return  An object with additional properties; (status code 200)
-  */
+   * GET /test: testAdditionalProperties
+   * @return  An object with additional properties; (status code 200)
+   */
 
   @Operation(
      operationId = "testAdditionalProperties",

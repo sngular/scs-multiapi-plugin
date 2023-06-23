@@ -73,7 +73,8 @@ public class TemplateIndexConstants {
   public static final String TEMPLATE_UNIQUE_ITEMS_ANNOTATION = "templateUniqueItems.ftlh";
 
   public static final String TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION = "templateUniqueItemsValidator.ftlh";
+    public static final String TEMPLATE_CONTENT_ENUM_SCHEMA = "templateEnumSchema.ftlh" ;
 
-  private TemplateIndexConstants() {}
+    private TemplateIndexConstants() {}
 
 }

@@ -109,10 +109,6 @@ public class ApiObjectFieldDTO {
     }
   }
 
-  /**
-  * Get requiredValues
-  * @return requiredValues
-  */
   @Schema(name = "requiredValues", required = false)
   public List<String> getRequiredValues() {
     return requiredValues;
@@ -121,10 +117,6 @@ public class ApiObjectFieldDTO {
     this.requiredValues = requiredValues;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -133,10 +125,6 @@ public class ApiObjectFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get properties
-  * @return properties
-  */
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
@@ -145,10 +133,6 @@ public class ApiObjectFieldDTO {
     this.properties = properties;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -157,10 +141,6 @@ public class ApiObjectFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -199,17 +179,12 @@ public class ApiObjectFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }
