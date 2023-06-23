@@ -653,15 +653,15 @@ public class AsyncApiGeneratorFixtures {
   static Function<Path, Boolean> validateTestFileGenerationWithKey() {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/consumer";
 
-    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/producer";
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/producer";
 
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/schemas";
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/schemas";
 
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/messages";
+    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/messages";
 
     final String DEFAULT_CUSTOMVALIDATOR_FOLDER = DEFAULT_MODEL_MESSAGE_FOLDER + "/customvalidator";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKey/";
+    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKafkaBindings/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -883,7 +883,7 @@ private static Boolean commonTest (
     return result;
   }
 
-  private static boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
+  private static boolean customValidatorTest (final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
