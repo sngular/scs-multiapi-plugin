@@ -14,25 +14,31 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"schemaName", "className"})
 public class SchemaObject {
+
+  private boolean isEnum;
 
   private String schemaName;
 
   private String className;
 
-  private List<String> importList = new ArrayList<>();
+  private List<String> importList;
 
-  private Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
+  private Set<SchemaFieldObject> fieldObjectList;
 
   private String schemaCombinator;
 
   public static final class SchemaObjectBuilder {
+
+    private boolean isEnum;
 
     private final List<String> importList = new ArrayList<>();
 
@@ -48,13 +54,18 @@ public class SchemaObject {
       return this;
     }
 
-    public SchemaObjectBuilder fieldObjectList(final List<SchemaFieldObject> fieldObjectList) {
+    public SchemaObjectBuilder fieldObjectList(final Set<SchemaFieldObject> fieldObjectList) {
       this.fieldObjectList.addAll(fieldObjectList);
       return this;
     }
 
     public SchemaObjectBuilder fieldObject(final SchemaFieldObject fieldObject) {
       this.fieldObjectList.add(fieldObject);
+      return this;
+    }
+
+    public SchemaObjectBuilder isEnum(final boolean isEnum) {
+      this.isEnum = isEnum;
       return this;
     }
   }

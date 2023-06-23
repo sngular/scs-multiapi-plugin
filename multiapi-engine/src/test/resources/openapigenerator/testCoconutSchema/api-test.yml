@@ -159,7 +159,6 @@ paths:
           description: Bad Request
         '500':
           description: Server Error
-
   /schema_master/{schemaType}:
     post:
       tags:

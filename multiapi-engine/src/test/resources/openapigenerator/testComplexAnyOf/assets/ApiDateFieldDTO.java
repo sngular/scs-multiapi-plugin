@@ -73,10 +73,6 @@ public class ApiDateFieldDTO {
     }
   }
 
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -85,10 +81,6 @@ public class ApiDateFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
   @Schema(name = "defaultValues", required = false)
   public Object getDefaultValues() {
     return defaultValues;
@@ -97,10 +89,6 @@ public class ApiDateFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -109,10 +97,6 @@ public class ApiDateFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get format
-  * @return format
-  */
   @Schema(name = "format", required = false)
   public String getFormat() {
     return format;
@@ -150,17 +134,12 @@ public class ApiDateFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

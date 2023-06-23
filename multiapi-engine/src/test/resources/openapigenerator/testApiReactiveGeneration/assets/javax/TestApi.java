@@ -28,11 +28,11 @@ import com.sngular.multifileplugin.reactivegeneration.model.ApiTestDTO;
 public interface TestApi {
 
   /**
-  * GET /test/{testId} : Info for a specific test
-  * @param  testId The id of the test to retrieve true
-  * @return  Expected response to a valid request; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test/{testId}: Info for a specific test
+   * @param  testId The id of the test to retrieve true
+   * @return  Expected response to a valid request; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   @Operation(
      operationId = "showTestById",
      summary = "Info for a specific test",
@@ -52,10 +52,10 @@ public interface TestApi {
   }
 
   /**
-  * GET /test : List all available test
-  * @return  A paged array of tests; (status code 200)
-  * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-  */
+   * GET /test: List all available test
+   * @return  A paged array of tests; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
   @Operation(
      operationId = "listTest",
      summary = "List all available test",

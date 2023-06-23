@@ -317,6 +317,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_RESTRICTION_SCHEMA = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testRestrictionsSchema/api-rest.yaml")
+          .apiPackage("com.sngular.multifileplugin.testRestrictionsSchema")
+          .modelPackage("com.sngular.multifileplugin.testRestrictionsSchema.model")
+          .clientPackage("com.sngular.multifileplugin.testRestrictionsSchema.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
       SpecFile
           .builder()
@@ -631,7 +643,6 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestDTO.java",
         ASSETS_PATH + "ApiTestProcessorDTO.java",
         ASSETS_PATH + "ApiTestTypeDTO.java"
-
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
@@ -647,12 +658,11 @@ public final class OpenApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final List<String> expectedTestApiFile = List.of(
-        ASSETS_PATH + "TestApi.java");
+    final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "TestApi.java");
 
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "ApiErrorDTO.java",
-        ASSETS_PATH + "ApiInlineParameterShowTestByIdTestIdDTO.java",
+        ASSETS_PATH + "ApiInlineParameterTestIdDTO.java",
         ASSETS_PATH + "ApiTestDTO.java",
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
@@ -1020,9 +1030,9 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ArraySchemaDTO.java",
         ASSETS_PATH + "EnumSchemaDTO.java",
         ASSETS_PATH + "SecondTestDTO.java",
-        ASSETS_PATH + "TestAdditionalPropertyAdditionalPropertyDTO.java",
-        ASSETS_PATH + "TestAdditionalPropertyDTO.java",
         ASSETS_PATH + "TestDTO.java",
+        ASSETS_PATH + "TestValueDTO.java",
+        ASSETS_PATH + "TestValueValueDTO.java",
         ASSETS_PATH + "ThirdTestDTO.java"
     );
 
@@ -1059,6 +1069,46 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/SchemaDTO.java",
         ASSETS_PATH + "model/SequenceFieldDTO.java",
         ASSETS_PATH + "model/StringFieldDTO.java",
+        ASSETS_PATH + "model/UnionFieldDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of(
+        ASSETS_PATH + "exception/ModelClassException.java");
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+  static Function<Path, Boolean> validateRestrictionsSchema() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testRestrictionsSchema";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testRestrictionsSchema/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testRestrictionsSchema/model/exception";
+
+    final String COMMON_PATH = "openapigenerator/testRestrictionsSchema/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "SchemaApi.java",
+        ASSETS_PATH + "SchemaMasterApi.java",
+        ASSETS_PATH + "SchemasApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/ArrayFieldDTO.java",
+        ASSETS_PATH + "model/BooleanFieldDTO.java",
+        ASSETS_PATH + "model/DateFieldDTO.java",
+        ASSETS_PATH + "model/EnumFieldDTO.java",
+        ASSETS_PATH + "model/FieldDTO.java",
+        ASSETS_PATH + "model/FieldValueDTO.java",
+        ASSETS_PATH + "model/MapFieldDTO.java",
+        ASSETS_PATH + "model/NumberFieldDTO.java",
+        ASSETS_PATH + "model/ObjectFieldDTO.java",
+        ASSETS_PATH + "model/SchemaDTO.java",
+        ASSETS_PATH + "model/SequenceFieldDTO.java",
+        ASSETS_PATH + "model/StringFieldDTO.java",
+        ASSETS_PATH + "model/UUIDFieldDTO.java",
         ASSETS_PATH + "model/UnionFieldDTO.java"
     );
 
@@ -1120,7 +1170,7 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API)
-                     && customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_API);
+                     && customValidatorTest(path, expectedValidatorFiles);
   }
 
   static Function<Path, Boolean> validateValidationAnnotationsLombok(int springBootTest) {
@@ -1328,13 +1378,13 @@ public final class OpenApiGeneratorFixtures {
     return result;
   }
 
-  private static Boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String targetCustomValidator) {
+  private static Boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
 
       if (!expectedValidatorFiles.isEmpty()) {
-        final Path pathToTargetCustomValidator = pathToTarget.resolve(targetCustomValidator);
+        final Path pathToTargetCustomValidator = pathToTarget.resolve("generated/com/sngular/multifileplugin/testapi/model/customvalidator");
         final File targetCustomValidatorFolder = pathToTargetCustomValidator.toFile();
         assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);

@@ -26,12 +26,15 @@ public class TestUtils {
     List<File> outputFiles = new ArrayList<>(List.of(Objects.requireNonNull(targetDirectory.listFiles())));
     outputFiles.removeIf(File::isDirectory);
     outputFiles.sort(Comparator.comparing(File::getPath));
-    assertThat(outputFiles).hasSize(expectedFiles.size());
+    assertThat(outputFiles)
+            .overridingErrorMessage("Wrong Number of files %d vs %d: %s", outputFiles.size(), expectedFiles.size(), outputFiles)
+            .hasSize(expectedFiles.size());
     for (int i = 0; i < outputFiles.size(); i++) {
       reader1 = new FileInputStream(outputFiles.get(i));
       final String sourceName = expectedFiles.get(i);
       reader2 = TestUtils.resourceAsFile(sourceName);
-      assertThat(reader1).as(() -> "Unexpected content for file " + sourceName).hasSameContentAs(reader2);
+      int finalI = i;
+      assertThat(reader1).as(() -> "Unexpected content for file " + outputFiles.get(finalI)).hasSameContentAs(reader2);
     }
   }
 

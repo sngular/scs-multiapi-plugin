@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.multifileplugin.testcomplexanyof.model.ApiTypeArrayDTO;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -156,10 +155,6 @@ public class ApiSequenceFieldDTO {
     }
   }
 
-  /**
-  * Get elements
-  * @return elements
-  */
   @Schema(name = "elements", required = false)
   public Integer getElements() {
     return elements;
@@ -168,10 +163,6 @@ public class ApiSequenceFieldDTO {
     this.elements = elements;
   }
 
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public String getType() {
     return type;
@@ -180,10 +171,6 @@ public class ApiSequenceFieldDTO {
     this.type = type;
   }
 
-  /**
-  * Get properties
-  * @return properties
-  */
   @Schema(name = "properties", required = false)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
@@ -192,10 +179,6 @@ public class ApiSequenceFieldDTO {
     this.properties = properties;
   }
 
-  /**
-  * Get defaultValues
-  * @return defaultValues
-  */
   @Schema(name = "defaultValues", required = false)
   public List<Object> getDefaultValues() {
     return defaultValues;
@@ -204,10 +187,6 @@ public class ApiSequenceFieldDTO {
     this.defaultValues = defaultValues;
   }
 
-  /**
-  * Get seqEnum
-  * @return seqEnum
-  */
   @Schema(name = "seqEnum", required = false)
   public SeqEnum getSeqEnum() {
     return seqEnum;
@@ -216,10 +195,6 @@ public class ApiSequenceFieldDTO {
     this.seqEnum = seqEnum;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
@@ -228,10 +203,6 @@ public class ApiSequenceFieldDTO {
     this.name = name;
   }
 
-  /**
-  * Get initialValue
-  * @return initialValue
-  */
   @Schema(name = "initialValue", required = false)
   public String getInitialValue() {
     return initialValue;
@@ -240,10 +211,6 @@ public class ApiSequenceFieldDTO {
     this.initialValue = initialValue;
   }
 
-  /**
-  * Get increment
-  * @return increment
-  */
   @Schema(name = "increment", required = false)
   public Integer getIncrement() {
     return increment;
@@ -285,17 +252,12 @@ public class ApiSequenceFieldDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n ");
   }
-
 
 
 }

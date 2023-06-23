@@ -32,11 +32,10 @@ import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassExcepti
 import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
-import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
@@ -552,7 +551,7 @@ public class AsyncApiGenerator {
 
     final List<SchemaObject> schemaObjectList = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage);
 
-    Path filePath = null;
+    Path filePath;
     for (SchemaObject schemaObject : schemaObjectList) {
       filePath = processPath(getPath((modelPackageReceived != null ? modelPackageReceived : DEFAULT_ASYNCAPI_API_PACKAGE) + SLASH + schemaObject.getParentPackage()));
       templateFactory.addSchemaObject(modelPackageReceived, className, keyClassName, schemaObject, filePath);

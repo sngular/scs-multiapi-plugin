@@ -24,9 +24,9 @@ public class SchemaObject {
 
   private String className;
 
-  private List<String> importList = new ArrayList<>();
+  private List<String> importList;
 
-  private List<SchemaFieldObject> fieldObjectList = new ArrayList<>();
+  private List<SchemaFieldObject> fieldObjectList;
 
   private String schemaCombinator;
 

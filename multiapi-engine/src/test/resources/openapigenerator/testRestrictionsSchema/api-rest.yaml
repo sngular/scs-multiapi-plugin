@@ -1,0 +1,208 @@
+openapi: 3.0.2
+info:
+  title: Schema Restriction Management
+  version: 2.0.0
+servers:
+  - url: https://localhost/v1
+paths:
+  /schema:
+    post:
+      tags:
+        - SchemaRestriction
+      operationId: createSchemaRestriction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /schema/{name}:
+    get:
+      tags:
+        - SchemaRestriction
+      operationId: getSchemaRestrictionByName
+      parameters:
+        - name: name
+          in: path
+          description: Schema name to get
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+        - SchemaRestriction
+      operationId: updateSchemaRestrictionByName
+      parameters:
+        - name: name
+          in: path
+          description: Schema name to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schema/{id}:
+    delete:
+      tags:
+        - SchemaRestriction
+      operationId: deleteSchemaRestrictionById
+      parameters:
+        - name: id
+          in: path
+          description: Subject name to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schemas:
+    get:
+      tags:
+        - SchemasRestrictions
+      operationId: getAllSchemaRestriction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+        - SchemasRestrictions
+      operationId: deleteAllSchemaRestriction
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /schema-master/{subject}:
+    get:
+      tags:
+        - SchemaMaster
+      operationId: getSchemaMaster
+      parameters:
+        - name: subject
+          in: path
+          description: Retrieve the schema of the Schema Registry, not the Schema Restriction
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /schema-master/{schemaType}:
+    post:
+      tags:
+        - SchemaMaster
+      operationId: createSchemaMaster
+      parameters:
+        - name: schemaType
+          in: path
+          description: The schema which you need create in the schema registry
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/Schema'
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+  /schemas/names:
+    get:
+      tags:
+        - SchemaMaster
+      operationId: getAllSchemaNames
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schema-restriction/components.yml#/components/schemas/arrayNames'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error

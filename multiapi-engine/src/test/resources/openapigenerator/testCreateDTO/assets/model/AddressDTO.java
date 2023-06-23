@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testCreateDTO.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;

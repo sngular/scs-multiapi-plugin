@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.HashMap;

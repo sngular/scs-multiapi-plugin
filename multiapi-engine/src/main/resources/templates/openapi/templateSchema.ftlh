@@ -277,10 +277,6 @@ public class ${schema.className} {
   }
 
 <#list schema.fieldObjectList as field>
-  /**
-  * Get ${field.baseName?uncap_first}
-  * @return ${field.baseName?uncap_first}
-  */
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
   <#if field.dataType.baseType == "array">
   public ${field.dataType} get${field.baseName?cap_first}() {
@@ -358,10 +354,6 @@ public class ${schema.className} {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
@@ -384,9 +376,8 @@ public class ${schema.className} {
     }
   }
   </#if>
-
   <#list schema.fieldObjectList as field>
-    <#if field.required>
+  <#if field.required>
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 

@@ -1,11 +1,8 @@
 package com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.HashMap;
-import com.sngular.multifileplugin.testadditionalpropertiesWithUnnamedObject.model.EnumSchemaDTO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;

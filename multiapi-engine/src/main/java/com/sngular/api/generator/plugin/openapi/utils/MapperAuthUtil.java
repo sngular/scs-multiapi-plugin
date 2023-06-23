@@ -6,18 +6,17 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class MapperAuthUtil {
 
@@ -25,30 +24,28 @@ public class MapperAuthUtil {
 
   private MapperAuthUtil() {}
 
-  public static List<AuthSchemaObject> createAuthSchemaList(final OpenAPI openAPI) {
+  public static List<AuthSchemaObject> createAuthSchemaList(final JsonNode openAPI) {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
-    if (Objects.nonNull(openAPI.getComponents()) && MapUtils.isNotEmpty(openAPI.getComponents().getSecuritySchemes())) {
-      openAPI.getComponents().getSecuritySchemes().forEach((key, value) -> {
-        final var typeStr = value.getType().toString();
-        final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(value.getScheme());
-        final var authSchema = AuthSchemaObject.builder()
-                                               .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
-                                               .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? value.getName() : "")
-                                               .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? value.getIn().toString() : "")
-                                               .bearerSchema(isHttpBearer ? value.getScheme() : "").build();
-        authList.add(authSchema);
-      });
-    }
+    ApiTool.getComponentSecuritySchemes(openAPI).forEach((key, value) -> {
+      final var typeStr = ApiTool.getType(value);
+      final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(ApiTool.getNodeAsString(value, "scheme"));
+      final var authSchema = AuthSchemaObject.builder()
+                                             .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
+                                             .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
+                                             .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")
+                                             .bearerSchema(isHttpBearer ? ApiTool.getNodeAsString(value, "scheme") : "").build();
+      authList.add(authSchema);
+    });
     return authList;
   }
 
-  private static String getModelTypeAuth(final SecurityScheme securityScheme) {
-    var type = securityScheme.getType().toString();
-    if (securityScheme.getType().toString().equalsIgnoreCase(API_KEY)) {
+  private static String getModelTypeAuth(final JsonNode securityScheme) {
+    var type = ApiTool.getType(securityScheme);
+    if (API_KEY.equalsIgnoreCase(type)) {
       type = "ApiKeyAuth";
-    } else if (securityScheme.getType().toString().equalsIgnoreCase("oauth2")) {
+    } else if ("oauth2".equalsIgnoreCase(type)) {
       type = "OAuth";
-    } else if (securityScheme.getType().toString().equalsIgnoreCase("http")) {
+    } else if ("http".equalsIgnoreCase(type)) {
       type = "HttpBasicAuth";
     }
 
@@ -57,7 +54,7 @@ public class MapperAuthUtil {
 
   public static AuthObject getApiAuthObject(final List<AuthSchemaObject> authSchemas, final List<PathObject> pathObjects) {
     final var authList = getApiAuthNames(pathObjects);
-    final var authApiList = new ArrayList<String>();
+    final var authApiList = new HashSet<String>();
     if (null != authSchemas && !authSchemas.isEmpty() && !authList.isEmpty()) {
       authSchemas.forEach(authValue -> {
         if (authList.contains(authValue.getName()) && !authApiList.contains(authValue.getType())) {
@@ -65,7 +62,7 @@ public class MapperAuthUtil {
         }
       });
     }
-    return AuthObject.builder().securityRequirements(authApiList).build();
+    return AuthObject.builder().securityRequirements(new ArrayList<>(authApiList)).build();
   }
 
   private static List<String> getApiAuthNames(final List<PathObject> pathObjects) {

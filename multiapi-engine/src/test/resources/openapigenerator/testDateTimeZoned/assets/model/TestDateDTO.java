@@ -1,7 +1,5 @@
 package com.sngular.multifileplugin.testDateTimeZoned.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
 import lombok.Builder;

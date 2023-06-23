@@ -21,10 +21,10 @@ import com.sngular.multifileplugin.testCoconutSchema.model.SchemaDTO;
 public interface SchemaMasterApi {
 
   /**
-  * GET /schema_master/{subject} 
-  * @param subject Schema Subject to retrieve true
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
-  */
+   * GET /schema_master/{subject}
+   * @param subject Schema Subject to retrieve true
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "getSchemaMaster",
@@ -45,11 +45,11 @@ public interface SchemaMasterApi {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
-  * POST /schema_master/{schemaType} 
-  * @param schemaType Schema Type to create true
-  * @param schemaDTO (required)
-  * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
-  */
+   * POST /schema_master/{schemaType}
+   * @param schemaType Schema Type to create true
+   * @param schemaDTO (required)
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
+   */
 
   @Operation(
      operationId = "createSchemaMaster",

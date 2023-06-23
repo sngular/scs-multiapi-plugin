@@ -22,8 +22,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
-@Mojo(name = "openapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 @Slf4j
+@Mojo(name = "openapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -51,7 +51,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
     final OpenApiGenerator openApiGenerator = new OpenApiGenerator(springBootVersion, overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
-                                                                   targetFolder, project.getBasedir());
+            targetFolder, project.getBasedir());
     if (null != specFiles && !specFiles.isEmpty()) {
       openApiGenerator.processFileSpec(specFiles);
     } else {
@@ -75,3 +75,4 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
 
 
 }
+

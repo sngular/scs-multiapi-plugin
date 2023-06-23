@@ -1,8 +1,9 @@
 <#ftl output_format="plainText">
 package ${packageModel};
 
+<#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import java.util.Objects;
-
+</#if>
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "enum">

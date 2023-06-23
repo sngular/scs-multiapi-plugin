@@ -7,11 +7,10 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.swagger.v3.oas.models.media.Schema;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,11 +26,11 @@ public class GlobalObject {
 
   private List<String> serverUrl;
 
-  private List<AuthSchemaObject> authSchemas = new ArrayList<>();
+  private List<AuthSchemaObject> authSchemas;
 
-  private List<String> authentications = new ArrayList<>();
+  private List<String> authentications;
 
-  private Map<String, Schema> schemaMap = new HashMap<>();
+  private Map<String, JsonNode> schemaMap;
 
   public static class GlobalObjectBuilder {
 

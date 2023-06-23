@@ -6,17 +6,15 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public final class OperationObject {
 
@@ -26,19 +24,19 @@ public final class OperationObject {
 
   private String operationId;
 
-  private List<String> tags = new ArrayList<>();
+  private List<String> tags;
 
-  private List<ResponseObject> responseObjects = new ArrayList<>();
+  private List<ResponseObject> responseObjects;
 
-  private List<RequestObject> requestObjects = new ArrayList<>();
+  private List<RequestObject> requestObjects;
 
-  private List<ParameterObject> parameterObjects = new ArrayList<>();
+  private List<ParameterObject> parameterObjects;
 
-  private List<String> produces = new ArrayList<>();
+  private List<String> produces;
 
-  private List<String> consumes = new ArrayList<>();
+  private List<String> consumes;
 
-  private List<String> securities = new ArrayList<>();
+  private List<String> securities;
 
   public static final class OperationObjectBuilder {
 

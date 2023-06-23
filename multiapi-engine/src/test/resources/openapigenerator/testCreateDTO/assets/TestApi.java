@@ -21,9 +21,9 @@ import com.sngular.multifileplugin.testCreateDTO.model.TestDTO;
 public interface TestApi {
 
   /**
-  * GET /test : testCreateDTO
-  * @return  An object with additional properties; (status code 200)
-  */
+   * GET /test: testCreateDTO
+   * @return  An object with additional properties; (status code 200)
+   */
 
   @Operation(
      operationId = "testCreateDTO",

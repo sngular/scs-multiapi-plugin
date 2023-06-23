@@ -74,6 +74,10 @@ public final class TypeConstants {
       OFFSETDATETIME
   );
 
+  public static boolean isBoolean(final String isBoolean) {
+    return Boolean.parseBoolean(isBoolean.toLowerCase());
+  }
+
   public enum TimeType {
     LOCAL,
     ZONED,
@@ -81,7 +85,5 @@ public final class TypeConstants {
   }
 
   private TypeConstants() {
-
   }
-
 }

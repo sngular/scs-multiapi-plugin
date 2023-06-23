@@ -35,10 +35,6 @@ public class ApiTestsDTO {
     }
   }
 
-  /**
-  * Get apiTestDTO
-  * @return apiTestDTO
-  */
   @Schema(name = "apiTestDTO", required = false)
   public ApiTestDTO getApiTestDTO() {
     return apiTestDTO;
@@ -73,10 +69,6 @@ public class ApiTestsDTO {
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
   private String toIndentedString(Object o) {
     if (o == null) {
       return "null";

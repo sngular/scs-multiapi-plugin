@@ -47,14 +47,15 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateSchema(final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject, final Set<String> propertiesSet) throws IOException,
+  public final void fillTemplateSchema(
+          final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
+          final Set<String> propertiesSet) throws IOException,
                                                                                                                                                                       TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
-      writeTemplateToFile(null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA, root,
-                          pathToSaveMainClass);
+      writeTemplateToFile(templateSelector(useLombok, schemaObject), root, pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
@@ -62,6 +63,22 @@ public class TemplateFactory {
         }
       }
     }
+  }
+
+  private static String templateSelector(final Boolean useLombok, final SchemaObject schemaObject) {
+    final var shouldUseLombok = Objects.requireNonNullElse(useLombok, false);
+    final var shouldUseEnum = schemaObject.isEnum();
+    final String template;
+
+    if (shouldUseEnum) {
+      template = TemplateIndexConstants.TEMPLATE_CONTENT_ENUM_SCHEMA;
+    } else if (Boolean.TRUE.equals(shouldUseLombok)) {
+      template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
+    } else {
+      template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+    }
+
+    return template;
   }
 
   public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {
@@ -133,7 +150,7 @@ public class TemplateFactory {
 
   }
 
-  public void calculateJavaEEPackage(final Integer springBootVersion) {
+  public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
       root.put("javaEEPackage", "jakarta");
     } else {

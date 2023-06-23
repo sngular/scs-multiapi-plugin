@@ -1,13 +1,10 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import com.sngular.multifileplugin.testCoconutSchema.model.FieldDTO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;

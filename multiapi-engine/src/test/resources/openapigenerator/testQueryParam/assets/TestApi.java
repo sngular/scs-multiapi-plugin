@@ -20,10 +20,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface TestApi {
 
   /**
-  * GET /test 
-  * @param param1 First test parameter false @param param2 Second test parameter true
-  * @return  An object with a list of strings; (status code 200)
-  */
+   * GET /test
+   * @param param1 First test parameter false @param param2 Second test parameter true
+   * @return  An object with a list of strings; (status code 200)
+   */
 
   @Operation(
      operationId = "testReactiveQueryParam",
