@@ -557,6 +557,10 @@ public class AsyncApiGenerator {
       templateFactory.addSchemaObject(modelPackageReceived, className, keyClassName, schemaObject, filePath);
       checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     }
+
+    if (filePath != null && Boolean.TRUE.equals(generateExceptionTemplate)) {
+      templateFactory.fillTemplateModelClassException(filePath, modelPackage);
+    }
   }
 
   private ProcessMethodResult processMethod(final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String prefix,
