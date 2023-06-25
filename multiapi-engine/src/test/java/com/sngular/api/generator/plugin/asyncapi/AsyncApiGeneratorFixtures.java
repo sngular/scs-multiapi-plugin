@@ -17,6 +17,7 @@ import java.util.function.Function;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class AsyncApiGeneratorFixtures {
 
@@ -751,9 +752,7 @@ public class AsyncApiGeneratorFixtures {
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
-  private static Boolean commonTest(
-      final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer, final String targetProducer) {
-  private static Boolean commonTest (
+private static Boolean commonTest (
   final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
   final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
     Boolean result = Boolean.TRUE;
