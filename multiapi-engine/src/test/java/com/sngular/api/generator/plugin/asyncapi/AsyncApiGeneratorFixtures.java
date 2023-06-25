@@ -219,6 +219,25 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
+  final static List<SpecFile> TEST_MODEL_CLASS_EXCEPTION_GENERATION = List.of(
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testModelClassExceptionGeneration/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("subscribeOrder")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("publishOrder")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
+                                        .build())
+      .build()
+  );
+
   final static List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
       SpecFile
         .builder()
