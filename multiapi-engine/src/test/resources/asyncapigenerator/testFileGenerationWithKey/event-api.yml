@@ -31,3 +31,7 @@ channels:
       message:
         payload:
           $ref: './assets/path.yml#/components/schemas/CreateOrder'
+        bindings:
+          kafka:
+            key:
+              type: string
