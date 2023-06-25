@@ -651,7 +651,7 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestFileGenerationWithKey() {
-    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkey/model/event/consumer";
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/filegenerationwithkafkabindings/model/event/producer";
 
@@ -829,15 +829,15 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "OrderCreatedDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER) &&
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), null) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                      modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
-private static Boolean commonTest (
-  final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
-  final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
+  private static Boolean commonTest(
+    final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
+    final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
