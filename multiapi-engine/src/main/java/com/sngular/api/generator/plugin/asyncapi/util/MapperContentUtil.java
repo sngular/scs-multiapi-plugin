@@ -34,6 +34,7 @@ public class MapperContentUtil {
   public static final String ONE_OF = "oneOf";
 
   public static final String PROPERTIES = "properties";
+
   public static final String REF = "$ref";
 
   public static final String TYPE = "type";
