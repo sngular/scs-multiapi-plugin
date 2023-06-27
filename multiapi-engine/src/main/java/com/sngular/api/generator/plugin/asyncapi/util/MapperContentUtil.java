@@ -6,19 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -26,6 +13,10 @@ import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MapperContentUtil {
 
@@ -64,7 +55,7 @@ public class MapperContentUtil {
         final var modelToBuild = modelToBuildList.remove();
         final var path = MapperUtil.splitName(modelToBuild);
         final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
-                                                 prefix, suffix, modelToBuildList, path.length >= 2 ? path[path.length - 2] : "");
+                                                 prefix, suffix, modelToBuildList, path[path.length - 2]);
         if (schemasList.contains(nexElement)) {
           modelToBuildList.poll();
         } else {

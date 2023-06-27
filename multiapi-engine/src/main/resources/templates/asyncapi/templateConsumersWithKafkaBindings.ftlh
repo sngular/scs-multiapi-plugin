@@ -18,7 +18,6 @@ public class ${subscribeClassName?cap_first} {
 
   <#list subscribeMethods as method>
   private final I${method.operationId?cap_first} ${method.operationId?uncap_first};
-
   </#list>
 
   protected ${subscribeClassName?cap_first}(<#list subscribeMethods as method>final I${method.operationId?cap_first} ${method.operationId?uncap_first}<#sep>, </#list>) {
@@ -29,7 +28,7 @@ public class ${subscribeClassName?cap_first} {
 
   <#list subscribeMethods as method>
   @Bean
-  public Consumer<Message<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>> ${method.operationId?uncap_first}() {
+  public Consumer<Message<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     return value -> {
       final var messageWrapper = MessageWrapper.builder().payload(value.getPayload()).key(value.getKey()).build();
       ${method.operationId?uncap_first}.${method.operationId?uncap_first}(messageWrapper);

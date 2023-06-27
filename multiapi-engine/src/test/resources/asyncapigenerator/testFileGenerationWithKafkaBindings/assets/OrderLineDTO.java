@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas;
 
 import java.util.Objects;
 
@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.exception.ModelClassException;
-import com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.customvalidator.NotNull;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.exception.ModelClassException;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
@@ -19,9 +19,9 @@ public class OrderLineDTO {
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO> products;
+  private final List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO> products;
 
-  private OrderLineDTO(String ref, List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO> products) {
+  private OrderLineDTO(String ref, List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO> products) {
     this.ref = ref;
     this.products = products;
 
@@ -43,20 +43,20 @@ public class OrderLineDTO {
   public static class OrderLineDTOBuilder {
 
     private String ref;
-    private List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO> products = new ArrayList<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO>();
+    private List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO> products = new ArrayList<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO>();
 
     public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;
     }
-    public OrderLineDTO.OrderLineDTOBuilder products(List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO> products) {
+    public OrderLineDTO.OrderLineDTOBuilder products(List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;
     }
 
-    public OrderLineDTO.OrderLineDTOBuilder product(com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO product) {
+    public OrderLineDTO.OrderLineDTOBuilder product(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO product) {
       if (product != null) {
         this.products.add(product);
       }
@@ -83,7 +83,7 @@ public class OrderLineDTO {
   * @return products
   */
   @Schema(name = "products", required = true)
-  public List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderProductDTO> getProducts() {
+  public List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderProductDTO> getProducts() {
     return products;
   }
 

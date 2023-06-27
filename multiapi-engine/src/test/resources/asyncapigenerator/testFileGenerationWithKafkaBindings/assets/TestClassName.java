@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.messages.OrderCreatedDTO;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer.MessageWrapperDTO;
 
 @Configuration
 public class TestClassName {

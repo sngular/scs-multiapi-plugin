@@ -24,7 +24,8 @@ channels:
     publish:
       operationId: "publishOperationExternalAvro"
       message:
-        $ref: '/avro/Order.avsc'
+        payload:
+          $ref: 'avro/Order.avsc'
   order/createCommand:
     subscribe:
       operationId: "subscribeOperationExternalAvro"

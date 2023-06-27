@@ -6,7 +6,10 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AsyncApiGeneratorFixtures {
 
@@ -218,37 +218,6 @@ public class AsyncApiGeneratorFixtures {
                                         .modelPackage("com.sngular.scsplugin.withoutoperationid.model.event")
                                         .build())
       .build()
-  );
-
-  final static List<SpecFile> TEST_MODEL_CLASS_EXCEPTION_GENERATION = List.of(
-    SpecFile
-      .builder()
-      .filePath("src/test/resources/asyncapigenerator/testModelClassExceptionGeneration/event-api.yml")
-      .consumer(OperationParameterObject.builder()
-                                        .ids("subscribeOrder")
-                                        .modelNameSuffix("DTO")
-                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.consumer")
-                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
-                                        .build())
-      .supplier(OperationParameterObject.builder()
-                                        .ids("publishOrder")
-                                        .modelNameSuffix("DTO")
-                                        .apiPackage("com.sngular.scsplugin.modelclass.model.event.producer")
-                                        .modelPackage("com.sngular.scsplugin.modelclass.model.event")
-                                        .build())
-      .build()
-  );
-
-  final static List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
-      SpecFile
-        .builder()
-        .filePath("src/test/resources/asyncapigenerator/testGenerationWithNoOperationId/event-api.yml")
-        .consumer(OperationParameterObject.builder()
-                                          .modelNameSuffix("DTO")
-                                          .apiPackage("com.sngular.scsplugin.withoutoperationid.model.event.consumer")
-                                          .modelPackage("com.sngular.scsplugin.withoutoperationid.model.event")
-                                          .build())
-        .build()
   );
 
   final static List<SpecFile> TEST_NO_SCHEMAS = List.of(

@@ -6,20 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
@@ -32,6 +18,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class TemplateFactory {
 
@@ -223,8 +216,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(
-      final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
       final String exceptionPackage)
       throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
@@ -298,8 +290,8 @@ public class TemplateFactory {
     streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName, bindings, bindingType));
   }
 
-  public final void addSchemaObject(final String modelPackage, final String className, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
-    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject);
+  public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
+    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }

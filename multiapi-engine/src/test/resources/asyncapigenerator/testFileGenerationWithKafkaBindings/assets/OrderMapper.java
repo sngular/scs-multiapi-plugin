@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas;
 
 import java.util.Objects;
 
@@ -20,9 +20,9 @@ public class OrderMapper {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper>();
+  private List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper>();
 
-  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> lines) {
+  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> lines) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
@@ -48,7 +48,7 @@ public class OrderMapper {
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper>();
+    private List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper>();
 
     public OrderMapper.OrderMapperBuilder ref(String ref) {
       this.ref = ref;
@@ -64,14 +64,14 @@ public class OrderMapper {
       this.amount = amount;
       return this;
     }
-    public OrderMapper.OrderMapperBuilder lines(List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> lines) {
+    public OrderMapper.OrderMapperBuilder lines(List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;
     }
 
-    public OrderMapper.OrderMapperBuilder line(com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper line) {
+    public OrderMapper.OrderMapperBuilder line(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper line) {
       if (line != null) {
         this.lines.add(line);
       }
@@ -125,10 +125,10 @@ public class OrderMapper {
   * @return lines
   */
   @Schema(name = "lines", required = false)
-  public List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> getLines() {
+  public List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> getLines() {
     return lines;
   }
-  public void setLines(List<com.sngular.scsplugin.fileGenerationWithKafkaBindings.model.event.schemas.OrderLineMapper> lines) {
+  public void setLines(List<com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderLineMapper> lines) {
     this.lines = lines;
   }
 
