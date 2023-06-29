@@ -3,11 +3,8 @@ package ${streamBridgePackage};
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
 <#list streamBridgeMethods as method>
-<#if streamBridgeEntitiesSuffix?has_content>
-import ${method.classNamespace}${streamBridgeEntitiesSuffix};
-<#else>
-import ${method.classNamespace};
-</#if>
+import ${method.classNamespace}.${method.className}<#if streamBridgeEntitiesSuffix?has_content>${streamBridgeEntitiesSuffix}</#if>;
+import ${method.keyClassNamespace}.${method.keyClassName};
 </#list>
 
 @Component

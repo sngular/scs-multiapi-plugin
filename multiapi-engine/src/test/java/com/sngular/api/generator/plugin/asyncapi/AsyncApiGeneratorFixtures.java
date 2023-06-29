@@ -6,10 +6,7 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class AsyncApiGeneratorFixtures {
 
@@ -772,10 +772,12 @@ public class AsyncApiGeneratorFixtures {
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "IPublishOperation.java",
+        ASSETS_PATH + "consumer/MessageWrapper.java",
         ASSETS_PATH + "TestClassName.java");
 
     final List<String> expectedProducerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperation.java",
+        ASSETS_PATH + "producer/MessageWrapper.java",
         ASSETS_PATH + "Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(

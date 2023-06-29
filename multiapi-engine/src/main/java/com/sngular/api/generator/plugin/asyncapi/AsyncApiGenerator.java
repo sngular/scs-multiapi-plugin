@@ -6,11 +6,34 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.PluginConstants;
-import com.sngular.api.generator.plugin.asyncapi.exception.*;
+import com.sngular.api.generator.plugin.asyncapi.exception.ChannelNameException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
+import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
@@ -31,12 +54,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.*;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 @Slf4j
 public class AsyncApiGenerator {
@@ -141,6 +158,7 @@ public class AsyncApiGenerator {
         final JsonNode internalNode = openApi.get(CHANNELS);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
         final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
+        setUpTemplate(fileParameter, springBootVersion);
         while (iter.hasNext()) {
 
           final Map.Entry<String, JsonNode> entry = iter.next();
@@ -155,11 +173,10 @@ public class AsyncApiGenerator {
           processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas, openApi);
         }
 
-        setUpTemplate(fileParameter, springBootVersion);
         templateFactory.fillTemplates(generateExceptionTemplate);
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
-        e.printStackTrace();
+        throw new FileSystemException(e);
       }
     }
   }
@@ -343,20 +360,17 @@ public class AsyncApiGenerator {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSubscribeMethod(channelPayload, operationObject.getModelPackage(), ymlParent, totalSchemas, operationObject.isUseLombokModelAnnotation(),
-                             operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), openApi);
+      processSubscribeMethod(channelPayload, operationObject, ymlParent, totalSchemas, openApi);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
       final var operationObject = fileParameter.getSupplier();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSupplierMethod(channelPayload, operationObject.getModelPackage(), ymlParent, totalSchemas, operationObject.isUseLombokModelAnnotation(),
-                            operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), openApi);
+      processSupplierMethod(channelPayload, operationObject, ymlParent, totalSchemas, openApi);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       final var operationObject = fileParameter.getStreamBridge();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processStreamBridgeMethod(channelPayload, operationObject.getModelPackage(), ymlParent, entry.getKey(), totalSchemas, operationObject.isUseLombokModelAnnotation(),
-                                operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), openApi);
+      processStreamBridgeMethod(channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas, openApi);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
   }
@@ -483,9 +497,12 @@ public class AsyncApiGenerator {
   }
 
   private void processPackage(final SpecFile fileParameter) {
-    templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
-    templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
-    templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
+    final var supplierPackageName = evaluatePackage(fileParameter.getSupplier());
+    templateFactory.setSupplierPackageName(supplierPackageName);
+    final var streamBridgePackageName = evaluatePackage(fileParameter.getStreamBridge());
+    templateFactory.setStreamBridgePackageName(streamBridgePackageName);
+    final var subscribePackageName = evaluatePackage(fileParameter.getConsumer());
+    templateFactory.setSubscribePackageName(subscribePackageName);
   }
 
   private String evaluatePackage(final OperationParameterObject operation) {
@@ -499,36 +516,35 @@ public class AsyncApiGenerator {
   }
 
   private void processSupplierMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
-      final String suffix, final JsonNode node) throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, modelPackage, ymlParent, prefix, suffix, node, totalSchemas);
-    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+          final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+          final Map<String, JsonNode> totalSchemas, final JsonNode openApi) throws IOException, TemplateException {
+    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, openApi, totalSchemas);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, operationObject);
     templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   private void processStreamBridgeMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas,
-      final boolean usingLombok, final String prefix, final String suffix, final JsonNode node) throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, node, totalSchemas);
+      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas,
+      final JsonNode openApi) throws IOException, TemplateException {
+    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, openApi, totalSchemas);
     final String regex = "[a-zA-Z0-9.\\-]*";
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
-    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, operationObject);
     templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), result.getBindingType());
   }
 
   private void processSubscribeMethod(
-      final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String prefix,
-      final String suffix, final JsonNode openApi) throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, Objects.isNull(modelPackage) ? null : modelPackage, ymlParent, prefix, suffix, openApi, totalSchemas);
-    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, usingLombok, suffix, modelPackage);
+      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final Map<String, JsonNode> totalSchemas, final JsonNode openApi) throws IOException, TemplateException {
+    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, openApi, totalSchemas);
+    fillTemplateFactory(result.getNamespace(), result.getBindings(), totalSchemas, operationObject);
     templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   private void fillTemplateFactory(
-      final String classFullName, final String keyClassFullName, final Map<String, JsonNode> totalSchemas, final boolean usingLombok, final String classSuffix,
-      final String modelPackageReceived)
+      final String classFullName, final String keyClassFullName, final Map<String, JsonNode> totalSchemas, final OperationParameterObject operationObject)
       throws TemplateException, IOException {
     final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
     final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
@@ -536,12 +552,17 @@ public class AsyncApiGenerator {
     final String keyClassName = keyClassFullName != null ? keyClassFullName.substring(keyClassFullName.lastIndexOf(".") + 1) : null;
     final JsonNode schemaToBuild = totalSchemas.get((parentPackage + SLASH + className).toUpperCase());
 
-    final var schemaObjectIt = MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, classSuffix, parentPackage).iterator();
+    final var schemaObjectIt =
+        MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage).iterator();
 
     if (schemaObjectIt.hasNext()) {
-      final var filePath = writeSchemaObject(usingLombok, modelPackageReceived, keyClassName, schemaObjectIt.next());
-
-      schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(usingLombok, modelPackageReceived, null, schemaObj));
+      final var filePath = writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
+      if (Objects.nonNull(keyClassName)) {
+        templateFactory.setWrapperPackageName(operationObject.getApiPackage());
+        templateFactory.fillTemplateWrapper(processPath(getPath(operationObject.getApiPackage())),
+                                            operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
+      }
+      schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
 
       if (Boolean.TRUE.equals(generateExceptionTemplate)) {
         templateFactory.fillTemplateModelClassException(filePath, modelPackage);
@@ -556,25 +577,34 @@ public class AsyncApiGenerator {
     return filePath;
   }
 
-  private ProcessMethodResult processMethod(final JsonNode channel, final String modelPackage, final FileLocation ymlParent, final String prefix,
-      final String suffix, final JsonNode openApi, final Map<String, JsonNode> totalSchemas)
+  private ProcessMethodResult processMethod(
+          final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+          final JsonNode openApi, final Map<String, JsonNode> totalSchemas)
       throws IOException {
     final JsonNode message = channel.get(MESSAGE);
     final String operationId = channel.get(OPERATION_ID).asText();
     final String namespace;
     final var processBindingsResultBuilder = ProcessBindingsResult.builder();
     if (message.has(REF)) {
-      namespace = processMethodRef(processBindingsResultBuilder, ApiTool.getRefValue(message), modelPackage, ymlParent, totalSchemas, message);
+      namespace = processMethodRef(processBindingsResultBuilder, ApiTool.getRefValue(message), operationObject.getModelPackage(), ymlParent, totalSchemas, message);
     } else if (message.has(PAYLOAD)) {
-      namespace = processPayload(modelPackage, ApiTool.getName(message), ApiTool.getNode(message, PAYLOAD), ymlParent, openApi, processBindingsResultBuilder);
+      namespace = processPayload(operationObject.getModelPackage(), ApiTool.getName(message), ApiTool.getNode(message, PAYLOAD), ymlParent, openApi, processBindingsResultBuilder);
       if (ApiTool.hasNode(message, BINDINGS)) {
-        processBindings(processBindingsResultBuilder, modelPackage, message);
+        processBindings(processBindingsResultBuilder, operationObject.getModelPackage(), message);
       }
     } else {
-      namespace = processModelPackage(MapperUtil.getPojoName(operationId, prefix, suffix), modelPackage);
+      namespace = processModelPackage(
+              MapperUtil.getPojoName(operationId, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix()),
+              operationObject.getModelPackage());
     }
     final var processBindingsResult = processBindingsResultBuilder.build();
-    return ProcessMethodResult.builder().operationId(operationId).namespace(namespace).bindings(processBindingsResult.getBindings()).bindingType(processBindingsResult.getBindingType()).build();
+    return ProcessMethodResult
+            .builder()
+            .operationId(operationId)
+            .namespace(namespace)
+            .bindings(processBindingsResult.getBindings())
+            .bindingType(processBindingsResult.getBindingType())
+            .build();
   }
 
   private String processPayload(
@@ -583,7 +613,7 @@ public class AsyncApiGenerator {
       throws IOException {
     final String namespace;
     if (payload.has(REF)) {
-      namespace = processMessageRef(payload, modelPackage, ymlParent, openApi);
+      namespace = processMessageRef(payload, modelPackage, ymlParent);
     } else {
       namespace = modelPackage + PACKAGE_SEPARATOR_STR + MESSAGES + PACKAGE_SEPARATOR_STR + messageName;
     }
@@ -604,7 +634,7 @@ public class AsyncApiGenerator {
     return modelPackage + PACKAGE_SEPARATOR_STR + MESSAGES + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(MapperUtil.getRefClass(method));
   }
 
-  private String processMessageRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent, final JsonNode node) throws IOException {
+  private String processMessageRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent) throws IOException {
     final String namespace;
     final String messageContent = messageBody.get(REF).asText();
     if (messageContent.startsWith("#")) {

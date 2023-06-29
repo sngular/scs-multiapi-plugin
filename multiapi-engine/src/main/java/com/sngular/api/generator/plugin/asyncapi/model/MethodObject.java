@@ -6,6 +6,8 @@
 
 package com.sngular.api.generator.plugin.asyncapi.model;
 
+import java.util.Objects;
+
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import lombok.Builder;
 import lombok.Value;
@@ -28,27 +30,26 @@ public class MethodObject {
 
   String keyClassName;
 
+  String keyClassNamespace;
+
   String bindingType;
-
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String keyClassName, final String bindingType) {
-    this(operationId, classNamespace, type, null, keyClassName, bindingType);
-  }
-
-  public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final String keyClassName, final String bindingType) {
-    this(operationId, classNamespace, type, channelName, null, keyClassName, bindingType);
-  }
 
   @Builder(toBuilder = true)
   public MethodObject(final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
-      final String keyClassName, final String bindingType) {
+      final String keyClassNamespace, final String bindingType) {
     this.operationId = operationId;
-    this.classNamespace = classNamespace;
-    final var splitNamespace = classNamespace.split("\\.");
-    this.className = splitNamespace[splitNamespace.length - 1];
+    this.classNamespace = classNamespace.substring(0, classNamespace.lastIndexOf("."));
+    this.className = classNamespace.substring(classNamespace.lastIndexOf(".") + 1);
     this.type = type;
     this.channelName = channelName;
     this.schemaObject = schemaObject;
-    this.keyClassName = keyClassName;
+    if (Objects.nonNull(keyClassNamespace)) {
+      this.keyClassNamespace = keyClassNamespace.substring(0, keyClassNamespace.lastIndexOf("."));
+      this.keyClassName = keyClassNamespace.substring(keyClassNamespace.lastIndexOf(".") + 1);
+    } else {
+      this.keyClassName = null;
+      this.keyClassNamespace = null;
+    }
     this.bindingType = StringUtils.isEmpty(bindingType) ? BindingTypeEnum.NONBINDING.getValue() : bindingType;
   }
 

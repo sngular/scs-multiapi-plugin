@@ -5,7 +5,8 @@ import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.messages.OrderCreatedDTO;
-import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer.MessageWrapperDTO;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.MessageDTO;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer.MessageWrapper;
 
 @Configuration
 public class TestClassName {
@@ -19,7 +20,7 @@ public class TestClassName {
   @Bean
   public Consumer<Message<OrderCreatedDTO>> publishOperationFileGenerationWithKafkaBindings() {
     return value -> {
-      final var messageWrapper = MessageWrapper.builder().payload(value.getPayload()).key(value.getKey()).build();
+      final var messageWrapper = MessageWrapper.<OrderCreatedDTO, MessageDTO>builder().payload(value.getPayload()).key(value.getKey()).build();
       publishOperationFileGenerationWithKafkaBindings.publishOperationFileGenerationWithKafkaBindings(messageWrapper);
     }
   }

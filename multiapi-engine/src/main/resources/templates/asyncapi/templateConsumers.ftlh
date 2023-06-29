@@ -5,11 +5,7 @@ import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list subscribeMethods as method>
-<#if subscribeEntitiesSuffix?has_content>
-import ${method.classNamespace}${subscribeEntitiesSuffix};
-<#else>
-import ${method.classNamespace};
-</#if>
+import ${method.classNamespace}.${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>;
 </#list>
 
 @Configuration

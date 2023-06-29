@@ -6,8 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
-import freemarker.cache.TemplateLoader;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -17,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import freemarker.cache.TemplateLoader;
+
 public class ClasspathTemplateLoader implements TemplateLoader {
 
   private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
@@ -24,7 +24,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                                                              "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh",
                                                              "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
                                                              "interfaceConsumerWithKafkaBindings.ftlh", "templateConsumersWithKafkaBindings.ftlh",
-                                                             "templateStreamBridgeWithKafkaBindings.ftlh", "templateMessageWrapperDTO");
+                                                             "templateStreamBridgeWithKafkaBindings.ftlh", "templateMessageWrapper.ftlh");
 
   private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
                                                                         TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,

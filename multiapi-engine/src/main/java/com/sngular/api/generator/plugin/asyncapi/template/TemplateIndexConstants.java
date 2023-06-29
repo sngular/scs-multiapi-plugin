@@ -70,6 +70,8 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION = "templateUniqueItemsValidator.ftlh";
 
+  public static final String TEMPLATE_MESSAGE_WRAPPER = "templateMessageWrapper.ftlh";
+
   protected TemplateIndexConstants() {
   }
 }

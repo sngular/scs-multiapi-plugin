@@ -5,13 +5,10 @@ import java.util.function.Consumer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list subscribeMethods as method>
-<#if subscribeEntitiesSuffix?has_content>
-import ${method.classNamespace}${subscribeEntitiesSuffix};
-<#else>
-import ${method.classNamespace};
-</#if>
+import ${method.classNamespace}.${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>;
+import ${method.keyClassNamespace}.${method.keyClassName};
 </#list>
-import ${subscribePackage}.MessageWrapper<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>;
+import ${subscribePackage}.MessageWrapper;
 
 @Configuration
 public class ${subscribeClassName?cap_first} {
@@ -30,7 +27,7 @@ public class ${subscribeClassName?cap_first} {
   @Bean
   public Consumer<Message<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     return value -> {
-      final var messageWrapper = MessageWrapper.builder().payload(value.getPayload()).key(value.getKey()).build();
+      final var messageWrapper = MessageWrapper.<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>, ${method.keyClassName}>builder().payload(value.getPayload()).key(value.getKey()).build();
       ${method.operationId?uncap_first}.${method.operationId?uncap_first}(messageWrapper);
     }
   }

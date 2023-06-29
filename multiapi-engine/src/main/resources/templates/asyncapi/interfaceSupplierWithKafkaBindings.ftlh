@@ -1,9 +1,10 @@
 package ${supplierPackage};
 
-import ${method.classNamespace}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
-import ${supplierPackage}.MessageWrapper<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
+import ${method.classNamespace}.${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
+import ${method.keyClassNamespace}.${method.keyClassName};
+import ${supplierPackage}.MessageWrapper;
 
 public interface I${method.operationId?cap_first} {
 
-  MessageWrapper<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if> ${method.operationId?uncap_first}(String key);
+  MessageWrapper<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>, ${method.keyClassName}> ${method.operationId?uncap_first}();
 }

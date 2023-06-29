@@ -5,11 +5,7 @@ import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list publishMethods as method>
-<#if supplierEntitiesSuffix?has_content>
-import ${method.classNamespace}${supplierEntitiesSuffix};
-<#else>
-import ${method.classNamespace};
-</#if>
+import ${method.classNamespace}.${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
 </#list>
 
 @Configuration

@@ -5,13 +5,10 @@ import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list publishMethods as method>
-<#if supplierEntitiesSuffix?has_content>
-import ${method.classNamespace}${supplierEntitiesSuffix};
-<#else>
-import ${method.classNamespace};
-</#if>
+import ${method.classNamespace}.${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
+import ${method.keyClassNamespace}.${method.keyClassName};
 </#list>
-import ${supplierPackage}.MessageWrapper<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
+import ${wrapperPackage}.MessageWrapper;
 
 @Configuration
 public class ${supplierClassName?cap_first} {
@@ -32,7 +29,7 @@ public class ${supplierClassName?cap_first} {
   @Bean
   public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     final var messageWrapper =  ${method.operationId?uncap_first}.${method.operationId?uncap_first}();
-    return () -> Message.build().payload((${method.className}) messageWrapper.getPayload()).setHeader("key", (${method.keyClassName}) messageWrapper.getKey()).build();
+    return () -> Message.build().payload((${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>) messageWrapper.getPayload()).setHeader("key", (${method.keyClassName}) messageWrapper.getKey()).build();
   }
 
   </#list>
