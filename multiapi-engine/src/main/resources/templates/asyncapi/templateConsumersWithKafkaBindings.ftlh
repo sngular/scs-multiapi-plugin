@@ -11,6 +11,7 @@ import ${method.keyClassNamespace}.${method.keyClassName};
 </#if>
 </#list>
 import ${subscribePackage}.MessageWrapper;
+import org.springframework.messaging.Message;
 
 @Configuration
 public class ${subscribeClassName?cap_first} {

@@ -10,6 +10,8 @@ import ${method.classNamespace}.${method.className}<#if supplierEntitiesSuffix?h
 import ${method.keyClassNamespace}.${method.keyClassName};
 </#if></#list>
 import ${wrapperPackage}.MessageWrapper;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 
 @Configuration
 public class ${supplierClassName?cap_first} {
@@ -28,7 +30,7 @@ public class ${supplierClassName?cap_first} {
   @Bean
   public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     final var messageWrapper =  ${method.operationId?uncap_first}.${method.operationId?uncap_first}();
-    return () -> Message.build().payload((${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>) messageWrapper.getPayload()).setHeader("key", (${method.keyClassName}) messageWrapper.getKey()).build();
+    return () -> MessageBuilder.withPayload((${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>) messageWrapper.getPayload()).setHeader("key", (${method.keyClassName}) messageWrapper.getKey()).build();
   }
 
   </#list>

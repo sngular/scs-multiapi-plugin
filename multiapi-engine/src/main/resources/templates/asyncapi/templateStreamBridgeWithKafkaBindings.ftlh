@@ -7,6 +7,7 @@ import ${method.classNamespace}.${method.className}<#if streamBridgeEntitiesSuff
 <#if method.keyClassNamespace?has_content>
 import ${method.keyClassNamespace}.${method.keyClassName};
 </#if></#list>
+import org.springframework.messaging.support.MessageBuilder;
 
 @Component
 public class ${streamBridgeClassName?cap_first} {
@@ -19,7 +20,7 @@ public class ${streamBridgeClassName?cap_first} {
 
   <#list streamBridgeMethods as method>
   public void ${method.operationId?uncap_first}(final ${method.className}<#if streamBridgeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> ${method.className?uncap_first}, final ${method.keyClassName}<#if streamBridgeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if> ${method.keyClassName?uncap_first}) {
-    final var message = Message.build().payload(${method.className?uncap_first}).setHeader("key", ${method.keyClassName?uncap_first}).build();
+    final var message = MessageBuilder.withPayload(${method.className?uncap_first}).setHeader("key", ${method.keyClassName?uncap_first}).build();
     streamBridge.send("${method.channelName}", message);
   }
 

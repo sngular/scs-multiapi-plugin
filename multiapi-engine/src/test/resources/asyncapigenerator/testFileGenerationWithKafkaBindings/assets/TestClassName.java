@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.messages.OrderCreatedDTO;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.consumer.MessageWrapper;
+import org.springframework.messaging.Message;
 
 @Configuration
 public class TestClassName {
