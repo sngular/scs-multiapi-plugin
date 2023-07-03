@@ -6,12 +6,12 @@
 
 package com.sngular.api.generator.plugin.asyncapi.model;
 
-import java.util.Objects;
-
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 @Value
 public class MethodObject {
@@ -44,8 +44,13 @@ public class MethodObject {
     this.channelName = channelName;
     this.schemaObject = schemaObject;
     if (Objects.nonNull(keyClassNamespace)) {
-      this.keyClassNamespace = keyClassNamespace.substring(0, keyClassNamespace.lastIndexOf("."));
-      this.keyClassName = keyClassNamespace.substring(keyClassNamespace.lastIndexOf(".") + 1);
+      if (keyClassNamespace.contains(".")) {
+        this.keyClassNamespace = keyClassNamespace.substring(0, keyClassNamespace.lastIndexOf("."));
+        this.keyClassName = keyClassNamespace.substring(keyClassNamespace.lastIndexOf(".") + 1);
+      } else {
+        this.keyClassNamespace = null;
+        this.keyClassName = keyClassNamespace;
+      }
     } else {
       this.keyClassName = null;
       this.keyClassNamespace = null;

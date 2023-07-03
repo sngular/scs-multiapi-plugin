@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list publishMethods as method>
 import ${method.classNamespace}.${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>;
+<#if method.keyClassNamespace?has_content>
 import ${method.keyClassNamespace}.${method.keyClassName};
-</#list>
+</#if></#list>
 import ${wrapperPackage}.MessageWrapper;
 
 @Configuration

@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 <#list subscribeMethods as method>
 import ${method.classNamespace}.${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>;
+<#if method.keyClassNamespace?has_content>
 import ${method.keyClassNamespace}.${method.keyClassName};
+</#if>
 </#list>
 import ${subscribePackage}.MessageWrapper;
 

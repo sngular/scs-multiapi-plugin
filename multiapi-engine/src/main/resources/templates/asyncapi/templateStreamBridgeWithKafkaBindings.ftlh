@@ -4,8 +4,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
 <#list streamBridgeMethods as method>
 import ${method.classNamespace}.${method.className}<#if streamBridgeEntitiesSuffix?has_content>${streamBridgeEntitiesSuffix}</#if>;
+<#if method.keyClassNamespace?has_content>
 import ${method.keyClassNamespace}.${method.keyClassName};
-</#list>
+</#if></#list>
 
 @Component
 public class ${streamBridgeClassName?cap_first} {
