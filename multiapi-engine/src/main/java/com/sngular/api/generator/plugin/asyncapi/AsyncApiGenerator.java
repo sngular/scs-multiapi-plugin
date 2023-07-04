@@ -480,8 +480,6 @@ public class AsyncApiGenerator {
     final String path;
     if (Objects.nonNull(apiPackage)) {
       path = getPath(apiPackage);
-    } else if (Objects.nonNull(groupId)) {
-      path = getPath(groupId);
     } else {
       path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
     }
