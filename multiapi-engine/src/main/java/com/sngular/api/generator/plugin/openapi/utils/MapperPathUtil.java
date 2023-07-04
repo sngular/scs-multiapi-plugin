@@ -210,9 +210,9 @@ public class MapperPathUtil {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (JsonNode parameter : parameters) {
-        if (ApiTool.hasRef(parameter)) {
-          final String refName = MapperUtil.getRefSchemaName(parameter);
-          final JsonNode refParameter = openAPI.path(refName);
+        if (parameter.isTextual()) {
+          final String refName = parameter.asText().substring(1);
+          final JsonNode refParameter = openAPI.at(refName);
           parameterObjects.add(buildParameterObject(specFile, globalObject, refParameter, baseDir));
         } else if (ApiTool.hasNode(parameter, CONTENT)) {
           parameterObjects.addAll(buildParameterContent(contentClassName, parameter, specFile, globalObject, baseDir));
