@@ -321,9 +321,9 @@ public class AsyncApiGeneratorFixtures {
   }
 
   static Function<Path, Boolean> validateTestFileGenerationNoConf() {
-    final String DEFAULT_CONSUMER_FOLDER = "generated/groupid";
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/apigenerator/asyncapi";
 
-    final String DEFAULT_PRODUCER_FOLDER = "generated/groupid";
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/apigenerator/asyncapi";
 
     final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/apigenerator/asyncapi/model/schemas";
 

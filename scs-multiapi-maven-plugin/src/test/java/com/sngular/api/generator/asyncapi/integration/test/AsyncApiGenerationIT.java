@@ -70,7 +70,7 @@ public class AsyncApiGenerationIT {
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
-    File targetProducerDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular").toFile();
+    File targetProducerDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi").toFile();
     File targetMessageDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/messages").toFile();
     File targetSchemaDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/schemas").toFile();
 
