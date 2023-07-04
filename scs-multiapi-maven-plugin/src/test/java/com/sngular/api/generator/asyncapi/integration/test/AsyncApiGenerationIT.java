@@ -48,7 +48,7 @@ public class AsyncApiGenerationIT {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/");
     Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
