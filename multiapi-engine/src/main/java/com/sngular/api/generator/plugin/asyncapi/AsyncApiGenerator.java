@@ -6,11 +6,34 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.PluginConstants;
-import com.sngular.api.generator.plugin.asyncapi.exception.*;
+import com.sngular.api.generator.plugin.asyncapi.exception.ChannelNameException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
+import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
@@ -31,12 +54,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.*;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 @Slf4j
 public class AsyncApiGenerator {

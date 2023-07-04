@@ -859,7 +859,7 @@ public class AsyncApiGeneratorFixtures {
     return result;
   }
 
-  private static boolean customValidatorTest (final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
+  private static boolean customValidatorTest(final Path resultPath, final List<String> expectedValidatorFiles, final String default_customvalidator_folder) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
