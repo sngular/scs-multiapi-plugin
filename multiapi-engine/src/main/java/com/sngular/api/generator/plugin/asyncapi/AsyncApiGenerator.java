@@ -495,12 +495,9 @@ public class AsyncApiGenerator {
   }
 
   private void processPackage(final SpecFile fileParameter) {
-    final var supplierPackageName = evaluatePackage(fileParameter.getSupplier());
-    templateFactory.setSupplierPackageName(supplierPackageName);
-    final var streamBridgePackageName = evaluatePackage(fileParameter.getStreamBridge());
-    templateFactory.setStreamBridgePackageName(streamBridgePackageName);
-    final var subscribePackageName = evaluatePackage(fileParameter.getConsumer());
-    templateFactory.setSubscribePackageName(subscribePackageName);
+    templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
+    templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
+    templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
   }
 
   private String evaluatePackage(final OperationParameterObject operation) {

@@ -426,7 +426,7 @@ public class TemplateFactory {
       case NONBINDING:
         return defaultTemplate;
       case KAFKA:
-        return MapperUtil.splitName(defaultTemplate)[0] + "WithKafkaBindings.ftlh";
+        return MapperUtil.splitName(defaultTemplate)[0] + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
       default:
         throw new NonSupportedBindingException(bindingType);
     }
