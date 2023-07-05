@@ -7,8 +7,10 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,22 @@ public class GlobalObject {
 
   private Map<String, JsonNode> schemaMap;
 
+  private Map<String, JsonNode> parameterMap;
+
+  private Map<String, JsonNode> responseMap;
+
+  public Optional<JsonNode> getSchemaNode(final String schemaName) {
+    return Optional.ofNullable(schemaMap.get(schemaName));
+  }
+
+  public Optional<JsonNode> getResponseNode(final String schemaName) {
+    return Optional.ofNullable(responseMap.get(schemaName));
+  }
+
+  public Optional<JsonNode> getParameterNode(final String schemaName) {
+    return Optional.ofNullable(parameterMap.get(schemaName));
+  }
+
   public static class GlobalObjectBuilder {
 
     private final List<String> serverUrl = new ArrayList<>();
@@ -39,6 +57,13 @@ public class GlobalObject {
     private final List<AuthSchemaObject> authSchemas = new ArrayList<>();
 
     private final List<String> authentications = new ArrayList<>();
+
+    private final Map<String, JsonNode> schemaMap = new HashMap<>();
+
+
+    private final Map<String, JsonNode> parameterMap = new HashMap<>();
+
+    private final Map<String, JsonNode> responseMap = new HashMap<>();
 
     public final GlobalObjectBuilder serverUrl(final List<String> serverUrl) {
       this.serverUrl.addAll(serverUrl);
@@ -69,6 +94,35 @@ public class GlobalObject {
       this.authentications.add(authentication);
       return this;
     }
-  }
 
+    public final GlobalObjectBuilder schemaMap(final Map<String, JsonNode> schemaMap) {
+      this.schemaMap.putAll(schemaMap);
+      return this;
+    }
+
+    public final GlobalObjectBuilder schema(final String name, JsonNode schema) {
+      this.schemaMap.put(name, schema);
+      return this;
+    }
+
+    public final GlobalObjectBuilder parameterMap(final Map<String, JsonNode> schemaMap) {
+      this.parameterMap.putAll(schemaMap);
+      return this;
+    }
+
+    public final GlobalObjectBuilder parameter(final String name, JsonNode schema) {
+      this.parameterMap.put(name, schema);
+      return this;
+    }
+
+    public final GlobalObjectBuilder responseMap(final Map<String, JsonNode> schemaMap) {
+      this.responseMap.putAll(schemaMap);
+      return this;
+    }
+
+    public final GlobalObjectBuilder response(final String name, JsonNode schema) {
+      this.responseMap.put(name, schema);
+      return this;
+    }
+  }
 }

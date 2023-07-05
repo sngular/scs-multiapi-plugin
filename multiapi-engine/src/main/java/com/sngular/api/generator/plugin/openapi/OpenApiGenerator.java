@@ -170,7 +170,7 @@ public class OpenApiGenerator {
 
     for (Map.Entry<String, Map<String, JsonNode>> apisEntry : apis.entrySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
-      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(openAPI, specFile, apisEntry, globalObject, baseDir);
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(specFile, apisEntry, globalObject, baseDir);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
