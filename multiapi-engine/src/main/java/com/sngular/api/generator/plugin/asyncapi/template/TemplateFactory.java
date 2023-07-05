@@ -6,6 +6,8 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
+import static com.sngular.api.generator.plugin.asyncapi.template.TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,10 +22,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.sngular.api.generator.plugin.asyncapi.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -33,6 +38,8 @@ import freemarker.template.TemplateExceptionHandler;
 public class TemplateFactory {
 
   public static final String SUBSCRIBE_PACKAGE = "subscribePackage";
+
+  public static final String WRAPPER_PACKAGE = "wrapperPackage";
 
   public static final String SUPPLIER_PACKAGE = "supplierPackage";
 
@@ -95,16 +102,16 @@ public class TemplateFactory {
     root.put("subscribeMethods", subscribeMethods);
     root.put("streamBridgeMethods", streamBridgeMethods);
 
-    if (!publishMethods.isEmpty()) {
-      fillTemplate(supplierFilePath, supplierClassName, TemplateIndexConstants.TEMPLATE_API_SUPPLIERS, root);
+    for (final var method : publishMethods) {
+      fillTemplate(supplierFilePath, supplierClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_SUPPLIERS), root);
     }
 
-    if (!subscribeMethods.isEmpty()) {
-      fillTemplate(subscribeFilePath, subscribeClassName, TemplateIndexConstants.TEMPLATE_API_CONSUMERS, root);
+    for (final var method : subscribeMethods) {
+      fillTemplate(subscribeFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
     }
 
-    if (!streamBridgeMethods.isEmpty()) {
-      fillTemplate(streamBridgeFilePath, streamBridgeClassName, TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE, root);
+    for (final var method : streamBridgeMethods) {
+      fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE), root);
     }
 
     final String exceptionPackage;
@@ -220,8 +227,7 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(
-      final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
+  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
       final String exceptionPackage)
       throws IOException, TemplateException {
     final var schemaObject = classTemplate.getClassSchema();
@@ -250,6 +256,10 @@ public class TemplateFactory {
 
   public final void setSubscribePackageName(final String packageName) {
     root.put(SUBSCRIBE_PACKAGE, packageName);
+  }
+
+  public final void setWrapperPackageName(final String packageName) {
+    root.put(WRAPPER_PACKAGE, packageName);
   }
 
   public final void setSupplierPackageName(final String packageName) {
@@ -287,20 +297,46 @@ public class TemplateFactory {
     this.streamBridgeFilePath = path.toString();
   }
 
-  public final void addSupplierMethod(final String operationId, final String classNamespace) {
-    publishMethods.add(new MethodObject(operationId, classNamespace, "publish"));
+  public final void addSupplierMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
+    publishMethods.add(MethodObject
+                         .builder()
+                         .operationId(operationId)
+                         .classNamespace(classNamespace)
+                         .type("publish")
+                         .keyClassNamespace(bindings)
+                         .bindingType(bindingType)
+                         .build());
   }
 
-  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName) {
-    streamBridgeMethods.add(new MethodObject(operationId, classNamespace, "streamBridge", channelName));
+  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName, final String bindings, final String bindingType) {
+    streamBridgeMethods.add(MethodObject
+                              .builder()
+                              .operationId(operationId)
+                              .channelName(channelName)
+                              .classNamespace(classNamespace)
+                              .type("streamBridge")
+                              .keyClassNamespace(bindings)
+                              .bindingType(bindingType)
+                              .build());
   }
 
-  public final void addSchemaObject(final String modelPackage, final String className, final SchemaObject schemaObject, final Path filePath) {
-    schemaObjectMap.add(ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(className).classSchema(schemaObject).build());
+  public final void addSubscribeMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
+    subscribeMethods.add(MethodObject
+                           .builder()
+                           .operationId(operationId)
+                           .classNamespace(classNamespace)
+                           .type("subscribe")
+                           .keyClassNamespace(bindings)
+                           .bindingType(bindingType)
+                           .build());
   }
 
-  public final void addSubscribeMethod(final String operationId, final String classNamespace) {
-    subscribeMethods.add(new MethodObject(operationId, classNamespace, "subscribe"));
+  public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
+    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject);
+    if (Objects.nonNull(keyClassName)) {
+      builder.keyClassName(keyClassName);
+    }
+    schemaObjectMap.add(builder.build());
   }
 
   public final void setSupplierEntitiesSuffix(final String suffix) {
@@ -337,6 +373,22 @@ public class TemplateFactory {
     streamBridgeClassName = null;
   }
 
+  public final void fillTemplateWrapper(final Path filePath,
+      final String modelPackage,
+      final String classFullName,
+      final String className,
+      final String keyClassFullName,
+      final String keyClassName
+  ) throws TemplateException, IOException {
+    final Map<String, Object> context = Map.of(WRAPPER_PACKAGE, modelPackage,
+                                            "classNamespace", classFullName,
+                                            "className", className,
+                                            "keyNamespace", keyClassFullName,
+                                            "keyClassName", keyClassName);
+
+    writeTemplateToFile(TEMPLATE_MESSAGE_WRAPPER, context, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
+  }
+
   private void generateInterfaces() throws IOException, TemplateException {
     final ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
     allMethods.addAll(publishMethods);
@@ -353,10 +405,10 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS, interfaceRoot);
+                 checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS), interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS, interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS), interfaceRoot);
       }
     }
   }
@@ -367,5 +419,16 @@ public class TemplateFactory {
     final FileWriter writer = new FileWriter(path);
     template.process(root, writer);
     writer.close();
+  }
+
+  private String checkTemplate(final String bindingType, final String defaultTemplate) {
+    switch (BindingTypeEnum.valueOf(bindingType)) {
+      case NONBINDING:
+        return defaultTemplate;
+      case KAFKA:
+        return MapperUtil.splitName(defaultTemplate)[0] + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
+      default:
+        throw new NonSupportedBindingException(bindingType);
+    }
   }
 }

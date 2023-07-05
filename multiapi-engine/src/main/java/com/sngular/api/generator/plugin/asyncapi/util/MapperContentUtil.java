@@ -34,6 +34,7 @@ public class MapperContentUtil {
   public static final String ONE_OF = "oneOf";
 
   public static final String PROPERTIES = "properties";
+
   public static final String REF = "$ref";
 
   public static final String TYPE = "type";
@@ -63,7 +64,7 @@ public class MapperContentUtil {
         final var modelToBuild = modelToBuildList.remove();
         final var path = MapperUtil.splitName(modelToBuild);
         final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get((path[path.length - 2] + "/" + path[path.length - 1]).toUpperCase()),
-                                                 prefix, suffix, modelToBuildList, path.length >= 2 ? path[path.length - 2] : "");
+                                                 prefix, suffix, modelToBuildList, path[path.length - 2]);
         if (schemasList.contains(nexElement)) {
           modelToBuildList.poll();
         } else {

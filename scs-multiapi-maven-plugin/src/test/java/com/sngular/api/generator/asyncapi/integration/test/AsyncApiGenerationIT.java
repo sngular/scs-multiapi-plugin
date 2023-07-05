@@ -48,7 +48,7 @@ public class AsyncApiGenerationIT {
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
 
-    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi");
+    Path pathToTargetFirstYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/");
     Path pathToTargetSecondYml = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/producer2");
 
     File targetFirstYmlDirectory = pathToTargetFirstYml.toFile();
@@ -74,8 +74,18 @@ public class AsyncApiGenerationIT {
     File targetMessageDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/messages").toFile();
     File targetSchemaDirectory = pathToTarget.resolve("target/generated-sources/apigenerator/com/sngular/apigenerator/asyncapi/model/schemas").toFile();
 
+    List<String> expectedMessagesFiles = List.of(
+      "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testDependencyYml/assets/messages/OrderCreated.java");
+
+    List<String> expectedSchemasFiles = List.of(
+      "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testDependencyYml/assets/schemas/Order.java");
+
+
     checkTargetFiles(expectedProducerFiles, targetProducerDirectory);
     checkTargetFiles(expectedMessageFiles, targetMessageDirectory);
     checkTargetFiles(expectedSchemaFiles, targetSchemaDirectory);
+    TestUtils.validateFiles(expectedMessagesFiles, targetMessageDirectory);
+    TestUtils.validateFiles(expectedSchemasFiles, targetSchemaDirectory);
+
   }
 }

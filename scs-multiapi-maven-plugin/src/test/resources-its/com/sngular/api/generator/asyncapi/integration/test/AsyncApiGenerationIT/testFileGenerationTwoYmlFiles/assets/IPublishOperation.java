@@ -1,4 +1,4 @@
-package com.sngular.apigenerator.asyncapi;
+package com.sngular;
 
 import com.sngular.apigenerator.asyncapi.model.messages.OrderCreated;
 

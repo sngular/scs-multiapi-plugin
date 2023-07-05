@@ -1,4 +1,4 @@
-package com.sngular.apigenerator.asyncapi;
+package com.sngular;
 
 import java.util.function.Supplier;
 

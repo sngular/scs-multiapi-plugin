@@ -35,13 +35,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /test/{testId}:
     parameters:
-    - name: testId
-      in: path
-      required: true
-      description: The id of the test to retrieve
-      schema:
-        type: integer
-        format: int32
+      $ref: "#/components/parameters/testId"
     summary: other available test
     get:
       summary: Info for a specific test
@@ -62,6 +56,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 components:
+  parameters:
+    testId:
+      name: testId
+      in: path
+      required: true
+      description: The id of the test to retrieve
+      schema:
+        type: integer
+        format: int32
   schemas:
     Test:
       type: object

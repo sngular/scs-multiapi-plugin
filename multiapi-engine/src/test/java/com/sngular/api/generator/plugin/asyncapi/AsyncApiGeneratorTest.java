@@ -28,7 +28,7 @@ class AsyncApiGeneratorTest {
 
   private static AsyncApiGenerator asyncApiGenerator;
 
-  private static int SPRING_BOOT_VERSION = 2;
+  private static final int SPRING_BOOT_VERSION = 2;
 
   @BeforeAll
   static void setup() {
@@ -41,6 +41,7 @@ class AsyncApiGeneratorTest {
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
         Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
+        Arguments.of("TestFileGenerationNoConfig", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG, AsyncApiGeneratorFixtures.validateTestFileGenerationNoConf()),
         Arguments.of("TestIssueGeneration", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION, AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
         Arguments.of("TestFileGenerationIssue", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE, AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
         Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
@@ -58,7 +59,10 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),
         Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
-        Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas())
+        Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
+        Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
+
     );
   }
 
