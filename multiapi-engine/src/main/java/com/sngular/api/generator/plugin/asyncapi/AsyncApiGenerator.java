@@ -680,7 +680,7 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processBindings(final ProcessBindingsResult.ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode message) {
+  private void processBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode message) {
     if (message.has(BINDINGS)) {
       final var bindingsNode = message.get(BINDINGS);
       if (bindingsNode.has(KAFKA)) {
