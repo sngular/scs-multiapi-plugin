@@ -35,7 +35,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /test/{testId}:
     parameters:
-      $ref: "#/components/parameters/testId"
+      - $ref: "#/components/parameters/testId"
     summary: other available test
     get:
       summary: Info for a specific test
