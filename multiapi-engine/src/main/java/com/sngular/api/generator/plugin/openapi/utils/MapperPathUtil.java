@@ -50,7 +50,13 @@ public class MapperPathUtil {
     final var authList = getSecurityRequirementList(ApiTool.getNode(openAPI, "security"), new ArrayList<>());
     final GlobalObjectBuilder globalObject =
         GlobalObject.builder().url(ApiTool.getNode(openAPI, "servers").findValue("url").textValue()).authSchemas(authSchemaList).authentications(authList);
-    globalObject.schemaMap(ApiTool.hasNode(openAPI, "components") ? ApiTool.getComponentSchemas(openAPI) : new HashMap<>());
+    if (ApiTool.hasNode(openAPI, "components")) {
+      globalObject.schemaMap(ApiTool.getComponentSchemas(openAPI));
+      globalObject.parameterMap(ApiTool.getParameterSchemas(openAPI));
+      globalObject.responseMap(ApiTool.getResponseSchemas(openAPI));
+    } else {
+      globalObject.schemaMap(new HashMap<>());
+    }
     return globalObject.build();
   }
 
@@ -65,14 +71,13 @@ public class MapperPathUtil {
     return authSecList;
   }
 
-  public static List<PathObject> mapPathObjects(
-          final JsonNode openAPI, final SpecFile specFile, final Entry<String, Map<String, JsonNode>> path, final GlobalObject globalObject, final Path baseDir) {
+  public static List<PathObject> mapPathObjects(final SpecFile specFile, final Entry<String, Map<String, JsonNode>> path, final GlobalObject globalObject, final Path baseDir) {
     final List<PathObject> pathObjects = new ArrayList<>();
     for (Entry<String, JsonNode> pathItem : path.getValue().entrySet()) {
       final PathObject pathObject = PathObject.builder()
                                               .pathName(pathItem.getKey())
                                               .globalObject(globalObject)
-                                              .operationObjects(mapOperationObject(openAPI, specFile, pathItem, globalObject, baseDir))
+                                              .operationObjects(mapOperationObject(specFile, pathItem, globalObject, baseDir))
                                               .build();
       pathObjects.add(pathObject);
     }
@@ -80,9 +85,7 @@ public class MapperPathUtil {
     return pathObjects;
   }
 
-  private static List<OperationObject> mapOperationObject(
-          final JsonNode openAPI, final SpecFile specFile, final Entry<String, JsonNode> path,
-          final GlobalObject globalObject, final Path baseDir) {
+  private static List<OperationObject> mapOperationObject(final SpecFile specFile, final Entry<String, JsonNode> path, final GlobalObject globalObject, final Path baseDir) {
     final List<OperationObject> operationObjects = new ArrayList<>();
     final List<String> operationIdList = new ArrayList<>();
     final var pathNode = path.getValue();
@@ -95,10 +98,10 @@ public class MapperPathUtil {
         case "delete":
         case "put":
         case "patch":
-          operationObjects.add(createOperation(openAPI, field.getValue(), field.getKey().toUpperCase(), specFile, globalObject, operationIdList, baseDir));
+          operationObjects.add(createOperation(field.getValue(), field.getKey().toUpperCase(), specFile, globalObject, operationIdList, baseDir));
           break;
         case "parameters":
-          pathParameters.addAll(mapParameterObjects(openAPI, IteratorUtils.toList(field.getValue().elements()), specFile, null, globalObject, baseDir));
+          pathParameters.addAll(mapParameterObjects(IteratorUtils.toList(field.getValue().elements()), specFile, null, globalObject, baseDir));
           break;
         default:
           break;
@@ -114,18 +117,17 @@ public class MapperPathUtil {
     return operationObjects;
   }
 
-  private static OperationObject createOperation(
-          final JsonNode openAPI, final JsonNode operation, final String operationType,
-          final SpecFile specFile, final GlobalObject globalObject, final List<String> operationIdList, final Path baseDir) {
+  private static OperationObject createOperation(final JsonNode operation, final String operationType, final SpecFile specFile, final GlobalObject globalObject,
+      final List<String> operationIdList, final Path baseDir) {
     return OperationObject.builder()
                           .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
                           .summary(ApiTool.getNodeAsString(operation, "summary"))
                           .tags(elementsToStrList(operation.get("tags").elements()))
                           .requestObjects(mapRequestObject(specFile, operation, globalObject, baseDir))
-                          .responseObjects(mapResponseObject(specFile, operation, globalObject, baseDir))
-                          .parameterObjects(mapParameterObjects(openAPI, IteratorUtils.toList(operation.at("/parameters").elements()), specFile,
-                                                                getOperationId(operation), globalObject, baseDir))
+                          .responseObjects(mapResponseObject(specFile, globalObject, operation, baseDir))
+                          .parameterObjects(mapParameterObjects(IteratorUtils.toList(operation.at("/parameters").elements()), specFile, getOperationId(operation),
+                                                                globalObject, baseDir))
                           .securities(getSecurityRequirementList(operation.path("/security"), globalObject.getAuthentications()))
                           .consumes(getRequestList(operation.at("/requestBody")))
                           .produces(getResponseList(operation.at("/responses")))
@@ -204,15 +206,13 @@ public class MapperPathUtil {
     return requestObjects;
   }
 
-  private static List<ParameterObject> mapParameterObjects(
-          final JsonNode openAPI, final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
+  private static List<ParameterObject> mapParameterObjects(final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
           final GlobalObject globalObject, final Path baseDir) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (JsonNode parameter : parameters) {
         if (ApiTool.hasRef(parameter)) {
-          final String refName = ApiTool.getRefValue(parameter).substring(1);
-          final JsonNode refParameter = openAPI.at(refName);
+          final JsonNode refParameter = globalObject.getParameterNode(MapperUtil.getRefSchemaName(parameter)).orElseThrow();
           parameterObjects.add(buildParameterObject(specFile, globalObject, refParameter, baseDir));
         } else if (ApiTool.hasNode(parameter, CONTENT)) {
           parameterObjects.addAll(buildParameterContent(contentClassName, parameter, specFile, globalObject, baseDir));
@@ -285,8 +285,7 @@ public class MapperPathUtil {
     return StringUtils.isEmpty(text) ? "" : StringUtils.capitalize(text);
   }
 
-  private static List<ResponseObject> mapResponseObject(final SpecFile specFile, final JsonNode operation,
-                                                        final GlobalObject globalObject, final Path baseDir) {
+  private static List<ResponseObject> mapResponseObject(final SpecFile specFile, final GlobalObject globalObject, final JsonNode operation, final Path baseDir) {
     final List<ResponseObject> responseObjects = new ArrayList<>();
     if (ApiTool.hasNode(operation, "responses")) {
       final JsonNode responses = ApiTool.getNode(operation, "responses");
@@ -303,13 +302,17 @@ public class MapperPathUtil {
   private static BiConsumer<String, JsonNode> createResponseObject(final SpecFile specFile, final GlobalObject globalObject,
                                                                    final List<ResponseObject> responseObjects, final String operationId, final Path baseDir) {
     return (responseCode, response) -> {
+      var realResponse = response;
+      if (ApiTool.hasRef(response)) {
+        realResponse = globalObject.getResponseNode(MapperUtil.getRefSchemaName(response)).orElseThrow();
+      }
       final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
+      var content = ApiTool.getNode(realResponse, CONTENT);
       responseObjects.add(ResponseObject
                       .builder()
                       .responseName(responseCode)
-                      .description(StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(response, DESCRIPTION), ""))
-                      .contentObjects(mapContentObject(specFile, ApiTool.getNode(response, CONTENT),
-                              "InlineResponse" + responseCode + operationIdWithCap, globalObject, baseDir))
+                      .description(StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(realResponse, DESCRIPTION), ""))
+                      .contentObjects(mapContentObject(specFile, content, "InlineResponse" + responseCode + operationIdWithCap, globalObject, baseDir))
                       .build());
     };
   }

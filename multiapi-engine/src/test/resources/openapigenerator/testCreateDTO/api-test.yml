@@ -25,12 +25,15 @@ paths:
       operationId: testCreateDTO
       responses:
         '200':
-          description: An object with additional properties
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/test'
+          $ref: '#/components/responses/testCreate'
 components:
+  responses:
+    testCreate:
+      description: An object with additional properties
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/test'
   schemas:
     test:
       type: object

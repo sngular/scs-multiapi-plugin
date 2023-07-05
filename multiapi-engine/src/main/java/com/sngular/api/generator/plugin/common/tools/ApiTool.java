@@ -27,6 +27,10 @@ public final class ApiTool {
   public static final String SCHEMAS = "schemas";
   public static final String REQUIRED = "required";
 
+  public static final String PARAMETERS = "parameters";
+
+  public static final String RESPONSES = "responses";
+
   private ApiTool() {
   }
 
@@ -99,6 +103,36 @@ public final class ApiTool {
       final var components = getNode(openApi, COMPONENTS);
       if (hasNode(components, SCHEMAS)) {
         final var schemas = getNode(components, SCHEMAS);
+        final var schemasIt = schemas.fieldNames();
+        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
+      }
+    }
+
+    return schemasMap;
+  }
+
+  public static Map<String, JsonNode> getParameterSchemas(final JsonNode openApi) {
+    final var schemasMap = new HashMap<String, JsonNode>();
+
+    if (hasNode(openApi, COMPONENTS)) {
+      final var components = getNode(openApi, COMPONENTS);
+      if (hasNode(components, PARAMETERS)) {
+        final var schemas = getNode(components, PARAMETERS);
+        final var schemasIt = schemas.fieldNames();
+        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
+      }
+    }
+
+    return schemasMap;
+  }
+
+  public static Map<String, JsonNode> getResponseSchemas(final JsonNode openApi) {
+    final var schemasMap = new HashMap<String, JsonNode>();
+
+    if (hasNode(openApi, COMPONENTS)) {
+      final var components = getNode(openApi, COMPONENTS);
+      if (hasNode(components, RESPONSES)) {
+        final var schemas = getNode(components, RESPONSES);
         final var schemasIt = schemas.fieldNames();
         schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
       }
