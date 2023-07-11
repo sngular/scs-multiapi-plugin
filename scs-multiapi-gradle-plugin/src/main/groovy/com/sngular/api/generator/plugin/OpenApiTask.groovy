@@ -9,6 +9,8 @@ package com.sngular.api.generator.plugin
 
 import com.sngular.api.generator.plugin.model.OpenApiModelExtension
 import com.sngular.api.generator.plugin.model.OpenApiSpecFile
+import com.sngular.api.generator.plugin.openapi.OpenApiGenerator
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Optional
@@ -27,8 +29,8 @@ abstract class OpenApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
     if (null != openApiExtension && !openApiExtension.getSpecFile().isEmpty()) {
-      def openApiGen = new com.sngular.api.generator.plugin.openapi.OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
-      List<com.sngular.api.generator.plugin.openapi.parameter.SpecFile> openApiSpecFiles = []
+      def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
+      List<SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
         openApiSpecFiles.add(toFileSpec(apiSpec))
       })
@@ -57,7 +59,7 @@ abstract class OpenApiTask extends DefaultTask {
   }
 
   static def toFileSpec(OpenApiSpecFile openApiSpecFile) {
-    def builder = com.sngular.api.generator.plugin.openapi.parameter.SpecFile.builder()
+    def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
     }
