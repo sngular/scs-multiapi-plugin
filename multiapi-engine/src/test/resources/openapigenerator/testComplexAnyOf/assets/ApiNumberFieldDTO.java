@@ -299,28 +299,21 @@ public class ApiNumberFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiNumberFieldDTO {\n");
-    sb.append(" precision: ").append(toIndentedString(precision)).append("\n");
-    sb.append(" maximum: ").append(toIndentedString(maximum)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" multipleOf: ").append(toIndentedString(multipleOf)).append("\n");
-    sb.append(" scale: ").append(toIndentedString(scale)).append("\n");
-    sb.append(" minimum: ").append(toIndentedString(minimum)).append("\n");
-    sb.append(" flagExclusiveMinimum: ").append(toIndentedString(flagExclusiveMinimum)).append("\n");
-    sb.append(" flagExclusiveMaximum: ").append(toIndentedString(flagExclusiveMaximum)).append("\n");
-    sb.append(" numberEnum: ").append(toIndentedString(numberEnum)).append("\n");
-    sb.append(" defaultValue: ").append(toIndentedString(defaultValue)).append("\n");
+    sb.append("ApiNumberFieldDTO{");
+    sb.append(" precision:").append(toIndentedString(precision)).append(",");
+    sb.append(" maximum:").append(toIndentedString(maximum)).append(",");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" multipleOf:").append(toIndentedString(multipleOf)).append(",");
+    sb.append(" scale:").append(toIndentedString(scale)).append(",");
+    sb.append(" minimum:").append(toIndentedString(minimum)).append(",");
+    sb.append(" flagExclusiveMinimum:").append(toIndentedString(flagExclusiveMinimum)).append(",");
+    sb.append(" flagExclusiveMaximum:").append(toIndentedString(flagExclusiveMaximum)).append(",");
+    sb.append(" numberEnum:").append(toIndentedString(numberEnum)).append(",");
+    sb.append(" defaultValue:").append(toIndentedString(defaultValue)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

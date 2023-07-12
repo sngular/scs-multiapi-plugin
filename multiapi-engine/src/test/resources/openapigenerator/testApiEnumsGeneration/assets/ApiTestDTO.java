@@ -203,21 +203,14 @@ public class ApiTestDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestDTO {\n");
-    sb.append(" unionEnum: ").append(toIndentedString(unionEnum)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
-    sb.append(" unionIntegerEnum: ").append(toIndentedString(unionIntegerEnum)).append("\n");
-    sb.append(" unionNumberEnum: ").append(toIndentedString(unionNumberEnum)).append("\n");
+    sb.append("ApiTestDTO{");
+    sb.append(" unionEnum:").append(toIndentedString(unionEnum)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" id:").append(toIndentedString(id)).append(",");
+    sb.append(" unionIntegerEnum:").append(toIndentedString(unionIntegerEnum)).append(",");
+    sb.append(" unionNumberEnum:").append(toIndentedString(unionNumberEnum)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   private void validateRequiredAttributes() {

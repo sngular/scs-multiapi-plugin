@@ -119,24 +119,14 @@ public class Waiter {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Waiter {\n");
-    sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
-    sb.append(" timestamp: ").append(toIndentedString(timestamp)).append("\n");
-    sb.append(" table: ").append(toIndentedString(table)).append("\n");
+    sb.append("Waiter{");
+    sb.append(" ref:").append(toIndentedString(ref)).append(",");
+    sb.append(" timestamp:").append(toIndentedString(timestamp)).append(",");
+    sb.append(" table:").append(toIndentedString(table)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

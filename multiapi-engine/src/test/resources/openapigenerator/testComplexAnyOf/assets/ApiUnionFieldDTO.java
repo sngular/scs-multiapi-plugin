@@ -210,23 +210,16 @@ public class ApiUnionFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiUnionFieldDTO {\n");
-    sb.append(" defaultItem: ").append(toIndentedString(defaultItem)).append("\n");
-    sb.append(" generatedFlag: ").append(toIndentedString(generatedFlag)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" unionEnum: ").append(toIndentedString(unionEnum)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" optionalUnion: ").append(toIndentedString(optionalUnion)).append("\n");
-    sb.append(" values: ").append(toIndentedString(values)).append("\n");
+    sb.append("ApiUnionFieldDTO{");
+    sb.append(" defaultItem:").append(toIndentedString(defaultItem)).append(",");
+    sb.append(" generatedFlag:").append(toIndentedString(generatedFlag)).append(",");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" unionEnum:").append(toIndentedString(unionEnum)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" optionalUnion:").append(toIndentedString(optionalUnion)).append(",");
+    sb.append(" values:").append(toIndentedString(values)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

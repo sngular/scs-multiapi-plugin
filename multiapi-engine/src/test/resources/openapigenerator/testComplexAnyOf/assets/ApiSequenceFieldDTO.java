@@ -239,24 +239,17 @@ public class ApiSequenceFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiSequenceFieldDTO {\n");
-    sb.append(" elements: ").append(toIndentedString(elements)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" seqEnum: ").append(toIndentedString(seqEnum)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" initialValue: ").append(toIndentedString(initialValue)).append("\n");
-    sb.append(" increment: ").append(toIndentedString(increment)).append("\n");
+    sb.append("ApiSequenceFieldDTO{");
+    sb.append(" elements:").append(toIndentedString(elements)).append(",");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" properties:").append(toIndentedString(properties)).append(",");
+    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
+    sb.append(" seqEnum:").append(toIndentedString(seqEnum)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" initialValue:").append(toIndentedString(initialValue)).append(",");
+    sb.append(" increment:").append(toIndentedString(increment)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

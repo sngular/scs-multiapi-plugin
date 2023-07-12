@@ -71,17 +71,10 @@ public class ApiInlineParameterTestIdDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiInlineParameterTestIdDTO {\n");
-    sb.append(" email: ").append(toIndentedString(email)).append("\n");
+    sb.append("ApiInlineParameterTestIdDTO{");
+    sb.append(" email:").append(toIndentedString(email)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

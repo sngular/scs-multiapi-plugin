@@ -125,20 +125,13 @@ public class ApiDateFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiDateFieldDTO {\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" format: ").append(toIndentedString(format)).append("\n");
+    sb.append("ApiDateFieldDTO{");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" format:").append(toIndentedString(format)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

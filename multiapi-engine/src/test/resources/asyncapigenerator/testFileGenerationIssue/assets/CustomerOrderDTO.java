@@ -225,28 +225,18 @@ public class CustomerOrderDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CustomerOrderDTO {\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
-    sb.append(" date: ").append(toIndentedString(date)).append("\n");
-    sb.append(" shippingDetailsDTO: ").append(toIndentedString(shippingDetailsDTO)).append("\n");
-    sb.append(" orderedItems: ").append(toIndentedString(orderedItems)).append("\n");
-    sb.append(" paymentDetails: ").append(toIndentedString(paymentDetails)).append("\n");
-    sb.append(" orderStatusDTO: ").append(toIndentedString(orderStatusDTO)).append("\n");
-    sb.append(" customerDTO: ").append(toIndentedString(customerDTO)).append("\n");
+    sb.append("CustomerOrderDTO{");
+    sb.append(" id:").append(toIndentedString(id)).append(",");
+    sb.append(" date:").append(toIndentedString(date)).append(",");
+    sb.append(" shippingDetailsDTO:").append(toIndentedString(shippingDetailsDTO)).append(",");
+    sb.append(" orderedItems:").append(toIndentedString(orderedItems)).append(",");
+    sb.append(" paymentDetails:").append(toIndentedString(paymentDetails)).append(",");
+    sb.append(" orderStatusDTO:").append(toIndentedString(orderStatusDTO)).append(",");
+    sb.append(" customerDTO:").append(toIndentedString(customerDTO)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

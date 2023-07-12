@@ -75,22 +75,12 @@ public class ConfigurationDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ConfigurationDTO {\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
+    sb.append("ConfigurationDTO{");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

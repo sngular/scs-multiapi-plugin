@@ -106,19 +106,12 @@ public class InlineResponse200CreateGameDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class InlineResponse200CreateGameDTO {\n");
-    sb.append(" description: ").append(toIndentedString(description)).append("\n");
-    sb.append(" code: ").append(toIndentedString(code)).append("\n");
-    sb.append(" message: ").append(toIndentedString(message)).append("\n");
+    sb.append("InlineResponse200CreateGameDTO{");
+    sb.append(" description:").append(toIndentedString(description)).append(",");
+    sb.append(" code:").append(toIndentedString(code)).append(",");
+    sb.append(" message:").append(toIndentedString(message)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

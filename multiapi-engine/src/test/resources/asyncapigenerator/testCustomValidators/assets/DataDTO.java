@@ -163,25 +163,15 @@ public class DataDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DataDTO {\n");
-    sb.append(" clientId: ").append(toIndentedString(clientId)).append("\n");
-    sb.append(" clientName: ").append(toIndentedString(clientName)).append("\n");
-    sb.append(" flightNumber: ").append(toIndentedString(flightNumber)).append("\n");
-    sb.append(" test: ").append(toIndentedString(test)).append("\n");
+    sb.append("DataDTO{");
+    sb.append(" clientId:").append(toIndentedString(clientId)).append(",");
+    sb.append(" clientName:").append(toIndentedString(clientName)).append(",");
+    sb.append(" flightNumber:").append(toIndentedString(flightNumber)).append(",");
+    sb.append(" test:").append(toIndentedString(test)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
   private void validateRequiredAttributes() {

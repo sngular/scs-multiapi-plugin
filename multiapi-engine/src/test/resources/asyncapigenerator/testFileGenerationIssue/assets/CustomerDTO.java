@@ -185,27 +185,17 @@ public class CustomerDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CustomerDTO {\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
-    sb.append(" firstName: ").append(toIndentedString(firstName)).append("\n");
-    sb.append(" lastName: ").append(toIndentedString(lastName)).append("\n");
-    sb.append(" password: ").append(toIndentedString(password)).append("\n");
-    sb.append(" email: ").append(toIndentedString(email)).append("\n");
-    sb.append(" username: ").append(toIndentedString(username)).append("\n");
+    sb.append("CustomerDTO{");
+    sb.append(" id:").append(toIndentedString(id)).append(",");
+    sb.append(" firstName:").append(toIndentedString(firstName)).append(",");
+    sb.append(" lastName:").append(toIndentedString(lastName)).append(",");
+    sb.append(" password:").append(toIndentedString(password)).append(",");
+    sb.append(" email:").append(toIndentedString(email)).append(",");
+    sb.append(" username:").append(toIndentedString(username)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
   private void validateRequiredAttributes() {

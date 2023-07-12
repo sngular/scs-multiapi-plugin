@@ -215,24 +215,17 @@ public class ApiArrayFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiArrayFieldDTO {\n");
-    sb.append(" uniqueItems: ").append(toIndentedString(uniqueItems)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" arraySize: ").append(toIndentedString(arraySize)).append("\n");
-    sb.append(" regex: ").append(toIndentedString(regex)).append("\n");
-    sb.append(" minItems: ").append(toIndentedString(minItems)).append("\n");
-    sb.append(" values: ").append(toIndentedString(values)).append("\n");
+    sb.append("ApiArrayFieldDTO{");
+    sb.append(" uniqueItems:").append(toIndentedString(uniqueItems)).append(",");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" arraySize:").append(toIndentedString(arraySize)).append(",");
+    sb.append(" regex:").append(toIndentedString(regex)).append(",");
+    sb.append(" minItems:").append(toIndentedString(minItems)).append(",");
+    sb.append(" values:").append(toIndentedString(values)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

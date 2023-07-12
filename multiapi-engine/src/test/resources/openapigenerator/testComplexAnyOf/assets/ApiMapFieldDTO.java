@@ -179,22 +179,15 @@ public class ApiMapFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiMapFieldDTO {\n");
-    sb.append(" keyType: ").append(toIndentedString(keyType)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" mapSize: ").append(toIndentedString(mapSize)).append("\n");
-    sb.append(" mapTypes: ").append(toIndentedString(mapTypes)).append("\n");
+    sb.append("ApiMapFieldDTO{");
+    sb.append(" keyType:").append(toIndentedString(keyType)).append(",");
+    sb.append(" type:").append(toIndentedString(type)).append(",");
+    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
+    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" mapSize:").append(toIndentedString(mapSize)).append(",");
+    sb.append(" mapTypes:").append(toIndentedString(mapTypes)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

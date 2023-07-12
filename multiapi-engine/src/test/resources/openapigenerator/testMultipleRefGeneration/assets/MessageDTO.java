@@ -88,18 +88,11 @@ public class MessageDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MessageDTO {\n");
-    sb.append(" description: ").append(toIndentedString(description)).append("\n");
-    sb.append(" message: ").append(toIndentedString(message)).append("\n");
+    sb.append("MessageDTO{");
+    sb.append(" description:").append(toIndentedString(description)).append(",");
+    sb.append(" message:").append(toIndentedString(message)).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 
