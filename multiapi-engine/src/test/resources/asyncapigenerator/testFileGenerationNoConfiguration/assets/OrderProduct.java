@@ -137,25 +137,15 @@ public class OrderProduct {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderProduct {\n");
-    sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
-    sb.append(" productRef: ").append(toIndentedString(productRef)).append("\n");
-    sb.append(" price: ").append(toIndentedString(price)).append("\n");
-    sb.append(" quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("OrderProduct{");
+    sb.append(" ref:").append(toIndentedString(ref)).append(",");
+    sb.append(" productRef:").append(toIndentedString(productRef)).append(",");
+    sb.append(" price:").append(toIndentedString(price)).append(",");
+    sb.append(" quantity:").append(toIndentedString(quantity)).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
   private void validateRequiredAttributes() {
