@@ -6,9 +6,12 @@
 
 package com.sngular.api.generator.plugin
 
-
+import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile
 import com.sngular.api.generator.plugin.model.AsyncApiModelExtension
 import com.sngular.api.generator.plugin.model.AsyncApiSpecFile
+import com.sngular.api.generator.plugin.model.OperationParameter
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Optional
@@ -27,8 +30,8 @@ abstract class AsyncApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
     if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFiles().isEmpty()) {
-      def asyncApiGen = new com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator(asyncApiModelExtension.getSpringBootVersion(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
-      List<com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile> asyncApiSpecFiles = []
+      def asyncApiGen = new AsyncApiGenerator(asyncApiModelExtension.getSpringBootVersion(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
+      List<SpecFile> asyncApiSpecFiles = []
       asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {
         asyncApiSpecFiles.add(toFileSpec(apiSpec))
       })
@@ -58,7 +61,7 @@ abstract class AsyncApiTask extends DefaultTask {
   }
 
   static def toFileSpec(AsyncApiSpecFile apiSpecFile) {
-    def builder = com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile.builder()
+    def builder = SpecFile.builder()
     if (!apiSpecFile.filePath.isEmpty()) {
       builder.filePath(apiSpecFile.getFilePath())
     }
@@ -75,8 +78,8 @@ abstract class AsyncApiTask extends DefaultTask {
     return builder.build()
   }
 
-  static com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject toOperationParameterObject(com.sngular.api.generator.plugin.model.OperationParameter parameterObject) {
-    def builder = com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject.builder()
+  static OperationParameterObject toOperationParameterObject(OperationParameter parameterObject) {
+    def builder = OperationParameterObject.builder()
     if (parameterObject.getApiPackage()) {
       builder.apiPackage(parameterObject.apiPackage)
     }
