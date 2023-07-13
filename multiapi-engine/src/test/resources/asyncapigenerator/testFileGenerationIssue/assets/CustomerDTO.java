@@ -186,12 +186,12 @@ public class CustomerDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerDTO{");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
-    sb.append(" firstName:").append(toIndentedString(firstName)).append(",");
-    sb.append(" lastName:").append(toIndentedString(lastName)).append(",");
-    sb.append(" password:").append(toIndentedString(password)).append(",");
-    sb.append(" email:").append(toIndentedString(email)).append(",");
-    sb.append(" username:").append(toIndentedString(username)).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" firstName:").append(firstName).append(",");
+    sb.append(" lastName:").append(lastName).append(",");
+    sb.append(" password:").append(password).append(",");
+    sb.append(" email:").append(email).append(",");
+    sb.append(" username:").append(username).append(",");
     sb.append("}");
     return sb.toString();
   }

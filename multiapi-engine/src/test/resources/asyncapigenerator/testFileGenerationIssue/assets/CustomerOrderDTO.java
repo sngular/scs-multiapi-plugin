@@ -226,13 +226,13 @@ public class CustomerOrderDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerOrderDTO{");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
-    sb.append(" date:").append(toIndentedString(date)).append(",");
-    sb.append(" shippingDetailsDTO:").append(toIndentedString(shippingDetailsDTO)).append(",");
-    sb.append(" orderedItems:").append(toIndentedString(orderedItems)).append(",");
-    sb.append(" paymentDetails:").append(toIndentedString(paymentDetails)).append(",");
-    sb.append(" orderStatusDTO:").append(toIndentedString(orderStatusDTO)).append(",");
-    sb.append(" customerDTO:").append(toIndentedString(customerDTO)).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" date:").append(date).append(",");
+    sb.append(" shippingDetailsDTO:").append(shippingDetailsDTO).append(",");
+    sb.append(" orderedItems:").append(orderedItems).append(",");
+    sb.append(" paymentDetails:").append(paymentDetails).append(",");
+    sb.append(" orderStatusDTO:").append(orderStatusDTO).append(",");
+    sb.append(" customerDTO:").append(customerDTO).append(",");
     sb.append("}");
     return sb.toString();
   }

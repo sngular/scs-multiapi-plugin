@@ -162,11 +162,11 @@ public class ApiEnumFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiEnumFieldDTO{");
-    sb.append(" enumValues:").append(toIndentedString(enumValues)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" defaultValue:").append(toIndentedString(defaultValue)).append(",");
+    sb.append(" enumValues:").append(enumValues).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
     sb.append("}");
     return sb.toString();
   }

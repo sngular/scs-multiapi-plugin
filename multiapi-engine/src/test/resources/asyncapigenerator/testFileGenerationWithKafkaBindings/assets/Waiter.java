@@ -120,9 +120,9 @@ public class Waiter {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Waiter{");
-    sb.append(" ref:").append(toIndentedString(ref)).append(",");
-    sb.append(" timestamp:").append(toIndentedString(timestamp)).append(",");
-    sb.append(" table:").append(toIndentedString(table)).append(",");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" timestamp:").append(timestamp).append(",");
+    sb.append(" table:").append(table).append(",");
     sb.append("}");
     return sb.toString();
   }

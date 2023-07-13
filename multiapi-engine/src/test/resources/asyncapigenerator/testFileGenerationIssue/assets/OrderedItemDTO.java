@@ -144,10 +144,10 @@ public class OrderedItemDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderedItemDTO{");
-    sb.append(" catalogItemId:").append(toIndentedString(catalogItemId)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" quantity:").append(toIndentedString(quantity)).append(",");
-    sb.append(" price:").append(toIndentedString(price)).append(",");
+    sb.append(" catalogItemId:").append(catalogItemId).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" quantity:").append(quantity).append(",");
+    sb.append(" price:").append(price).append(",");
     sb.append("}");
     return sb.toString();
   }

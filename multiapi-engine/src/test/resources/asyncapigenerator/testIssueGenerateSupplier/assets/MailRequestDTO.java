@@ -130,9 +130,9 @@ public class MailRequestDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("MailRequestDTO{");
-    sb.append(" sender:").append(toIndentedString(sender)).append(",");
-    sb.append(" recipients:").append(toIndentedString(recipients)).append(",");
-    sb.append(" configurationDTO:").append(toIndentedString(configurationDTO)).append(",");
+    sb.append(" sender:").append(sender).append(",");
+    sb.append(" recipients:").append(recipients).append(",");
+    sb.append(" configurationDTO:").append(configurationDTO).append(",");
     sb.append("}");
     return sb.toString();
   }

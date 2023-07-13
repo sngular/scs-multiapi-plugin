@@ -72,7 +72,7 @@ public class ApiInlineParameterTestIdDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiInlineParameterTestIdDTO{");
-    sb.append(" email:").append(toIndentedString(email)).append(",");
+    sb.append(" email:").append(email).append(",");
     sb.append("}");
     return sb.toString();
   }

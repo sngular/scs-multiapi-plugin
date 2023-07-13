@@ -85,8 +85,8 @@ public class ErrorDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ErrorDTO{");
-    sb.append(" code:").append(toIndentedString(code)).append(",");
-    sb.append(" message:").append(toIndentedString(message)).append(",");
+    sb.append(" code:").append(code).append(",");
+    sb.append(" message:").append(message).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -65,7 +65,7 @@ public class ApiTestsDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestsDTO{");
-    sb.append(" apiTestDTO:").append(toIndentedString(apiTestDTO)).append(",");
+    sb.append(" apiTestDTO:").append(apiTestDTO).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -216,14 +216,14 @@ public class ApiArrayFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiArrayFieldDTO{");
-    sb.append(" uniqueItems:").append(toIndentedString(uniqueItems)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" arraySize:").append(toIndentedString(arraySize)).append(",");
-    sb.append(" regex:").append(toIndentedString(regex)).append(",");
-    sb.append(" minItems:").append(toIndentedString(minItems)).append(",");
-    sb.append(" values:").append(toIndentedString(values)).append(",");
+    sb.append(" uniqueItems:").append(uniqueItems).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" arraySize:").append(arraySize).append(",");
+    sb.append(" regex:").append(regex).append(",");
+    sb.append(" minItems:").append(minItems).append(",");
+    sb.append(" values:").append(values).append(",");
     sb.append("}");
     return sb.toString();
   }

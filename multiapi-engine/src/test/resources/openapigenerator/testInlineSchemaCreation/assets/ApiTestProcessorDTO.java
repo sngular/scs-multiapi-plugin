@@ -90,8 +90,8 @@ public class ApiTestProcessorDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestProcessorDTO{");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" id:").append(id).append(",");
     sb.append("}");
     return sb.toString();
   }

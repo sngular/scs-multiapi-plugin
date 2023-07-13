@@ -240,14 +240,14 @@ public class ApiSequenceFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiSequenceFieldDTO{");
-    sb.append(" elements:").append(toIndentedString(elements)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" properties:").append(toIndentedString(properties)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" seqEnum:").append(toIndentedString(seqEnum)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" initialValue:").append(toIndentedString(initialValue)).append(",");
-    sb.append(" increment:").append(toIndentedString(increment)).append(",");
+    sb.append(" elements:").append(elements).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" seqEnum:").append(seqEnum).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" initialValue:").append(initialValue).append(",");
+    sb.append(" increment:").append(increment).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -164,10 +164,10 @@ public class DataDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("DataDTO{");
-    sb.append(" clientId:").append(toIndentedString(clientId)).append(",");
-    sb.append(" clientName:").append(toIndentedString(clientName)).append(",");
-    sb.append(" flightNumber:").append(toIndentedString(flightNumber)).append(",");
-    sb.append(" test:").append(toIndentedString(test)).append(",");
+    sb.append(" clientId:").append(clientId).append(",");
+    sb.append(" clientName:").append(clientName).append(",");
+    sb.append(" flightNumber:").append(flightNumber).append(",");
+    sb.append(" test:").append(test).append(",");
     sb.append("}");
     return sb.toString();
   }

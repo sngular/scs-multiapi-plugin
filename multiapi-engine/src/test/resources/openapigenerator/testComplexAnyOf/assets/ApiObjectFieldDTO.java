@@ -170,11 +170,11 @@ public class ApiObjectFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiObjectFieldDTO{");
-    sb.append(" requiredValues:").append(toIndentedString(requiredValues)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" properties:").append(toIndentedString(properties)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" requiredValues:").append(requiredValues).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
     sb.append("}");
     return sb.toString();
   }

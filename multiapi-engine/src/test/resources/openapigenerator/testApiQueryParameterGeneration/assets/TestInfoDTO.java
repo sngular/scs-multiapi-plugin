@@ -104,8 +104,8 @@ public class TestInfoDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("TestInfoDTO{");
-    sb.append(" testers:").append(toIndentedString(testers)).append(",");
-    sb.append(" testName:").append(toIndentedString(testName)).append(",");
+    sb.append(" testers:").append(testers).append(",");
+    sb.append(" testName:").append(testName).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -76,7 +76,7 @@ public class CustomerEventMessageDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerEventMessageDTO{");
-    sb.append(" payload:").append(toIndentedString(payload)).append(",");
+    sb.append(" payload:").append(payload).append(",");
     sb.append("}");
     return sb.toString();
   }

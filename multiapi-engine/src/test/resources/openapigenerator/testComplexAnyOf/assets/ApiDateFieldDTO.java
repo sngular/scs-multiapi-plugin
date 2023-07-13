@@ -126,10 +126,10 @@ public class ApiDateFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiDateFieldDTO{");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" format:").append(toIndentedString(format)).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" format:").append(format).append(",");
     sb.append("}");
     return sb.toString();
   }

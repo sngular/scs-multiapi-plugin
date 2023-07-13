@@ -141,9 +141,9 @@ public class CustomerEventPayloadDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerEventPayloadDTO{");
-    sb.append(" customerId:").append(toIndentedString(customerId)).append(",");
-    sb.append(" eventType:").append(toIndentedString(eventType)).append(",");
-    sb.append(" customerDTO:").append(toIndentedString(customerDTO)).append(",");
+    sb.append(" customerId:").append(customerId).append(",");
+    sb.append(" eventType:").append(eventType).append(",");
+    sb.append(" customerDTO:").append(customerDTO).append(",");
     sb.append("}");
     return sb.toString();
   }

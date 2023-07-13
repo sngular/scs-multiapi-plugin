@@ -234,15 +234,15 @@ public class ApiStringFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiStringFieldDTO{");
-    sb.append(" maxLength:").append(toIndentedString(maxLength)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" properties:").append(toIndentedString(properties)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" regex:").append(toIndentedString(regex)).append(",");
-    sb.append(" minLength:").append(toIndentedString(minLength)).append(",");
-    sb.append(" format:").append(toIndentedString(format)).append(",");
-    sb.append(" valueLength:").append(toIndentedString(valueLength)).append(",");
+    sb.append(" maxLength:").append(maxLength).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" regex:").append(regex).append(",");
+    sb.append(" minLength:").append(minLength).append(",");
+    sb.append(" format:").append(format).append(",");
+    sb.append(" valueLength:").append(valueLength).append(",");
     sb.append("}");
     return sb.toString();
   }

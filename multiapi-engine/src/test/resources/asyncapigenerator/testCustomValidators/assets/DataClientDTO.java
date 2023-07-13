@@ -76,7 +76,7 @@ public class DataClientDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("DataClientDTO{");
-    sb.append(" payload:").append(toIndentedString(payload)).append(",");
+    sb.append(" payload:").append(payload).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -130,9 +130,9 @@ public class ObjectArrayDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ObjectArrayDTO{");
-    sb.append(" idObject:").append(toIndentedString(idObject)).append(",");
-    sb.append(" players:").append(toIndentedString(players)).append(",");
-    sb.append(" info:").append(toIndentedString(info)).append(",");
+    sb.append(" idObject:").append(idObject).append(",");
+    sb.append(" players:").append(players).append(",");
+    sb.append(" info:").append(info).append(",");
     sb.append("}");
     return sb.toString();
   }

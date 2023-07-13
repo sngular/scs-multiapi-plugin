@@ -300,18 +300,18 @@ public class ApiNumberFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiNumberFieldDTO{");
-    sb.append(" precision:").append(toIndentedString(precision)).append(",");
-    sb.append(" maximum:").append(toIndentedString(maximum)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" multipleOf:").append(toIndentedString(multipleOf)).append(",");
-    sb.append(" scale:").append(toIndentedString(scale)).append(",");
-    sb.append(" minimum:").append(toIndentedString(minimum)).append(",");
-    sb.append(" flagExclusiveMinimum:").append(toIndentedString(flagExclusiveMinimum)).append(",");
-    sb.append(" flagExclusiveMaximum:").append(toIndentedString(flagExclusiveMaximum)).append(",");
-    sb.append(" numberEnum:").append(toIndentedString(numberEnum)).append(",");
-    sb.append(" defaultValue:").append(toIndentedString(defaultValue)).append(",");
+    sb.append(" precision:").append(precision).append(",");
+    sb.append(" maximum:").append(maximum).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" multipleOf:").append(multipleOf).append(",");
+    sb.append(" scale:").append(scale).append(",");
+    sb.append(" minimum:").append(minimum).append(",");
+    sb.append(" flagExclusiveMinimum:").append(flagExclusiveMinimum).append(",");
+    sb.append(" flagExclusiveMaximum:").append(flagExclusiveMaximum).append(",");
+    sb.append(" numberEnum:").append(numberEnum).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
     sb.append("}");
     return sb.toString();
   }

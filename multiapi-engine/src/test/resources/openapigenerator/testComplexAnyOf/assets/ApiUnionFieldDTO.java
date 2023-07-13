@@ -211,13 +211,13 @@ public class ApiUnionFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiUnionFieldDTO{");
-    sb.append(" defaultItem:").append(toIndentedString(defaultItem)).append(",");
-    sb.append(" generatedFlag:").append(toIndentedString(generatedFlag)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" unionEnum:").append(toIndentedString(unionEnum)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" optionalUnion:").append(toIndentedString(optionalUnion)).append(",");
-    sb.append(" values:").append(toIndentedString(values)).append(",");
+    sb.append(" defaultItem:").append(defaultItem).append(",");
+    sb.append(" generatedFlag:").append(generatedFlag).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" unionEnum:").append(unionEnum).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" optionalUnion:").append(optionalUnion).append(",");
+    sb.append(" values:").append(values).append(",");
     sb.append("}");
     return sb.toString();
   }

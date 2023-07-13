@@ -108,8 +108,8 @@ public class OrderLine {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderLine{");
-    sb.append(" ref:").append(toIndentedString(ref)).append(",");
-    sb.append(" products:").append(toIndentedString(products)).append(",");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" products:").append(products).append(",");
     sb.append("}");
     return sb.toString();
   }

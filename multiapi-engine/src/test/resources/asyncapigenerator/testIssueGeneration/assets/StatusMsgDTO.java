@@ -118,8 +118,8 @@ public class StatusMsgDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StatusMsgDTO{");
-    sb.append(" clientId:").append(toIndentedString(clientId)).append(",");
-    sb.append(" status:").append(toIndentedString(status)).append(",");
+    sb.append(" clientId:").append(clientId).append(",");
+    sb.append(" status:").append(status).append(",");
     sb.append("}");
     return sb.toString();
   }

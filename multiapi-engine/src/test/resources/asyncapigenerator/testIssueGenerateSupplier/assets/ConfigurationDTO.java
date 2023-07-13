@@ -76,7 +76,7 @@ public class ConfigurationDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ConfigurationDTO{");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
+    sb.append(" name:").append(name).append(",");
     sb.append("}");
     return sb.toString();
   }

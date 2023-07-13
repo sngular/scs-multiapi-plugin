@@ -180,12 +180,12 @@ public class ApiMapFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiMapFieldDTO{");
-    sb.append(" keyType:").append(toIndentedString(keyType)).append(",");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" defaultValues:").append(toIndentedString(defaultValues)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" mapSize:").append(toIndentedString(mapSize)).append(",");
-    sb.append(" mapTypes:").append(toIndentedString(mapTypes)).append(",");
+    sb.append(" keyType:").append(keyType).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" mapSize:").append(mapSize).append(",");
+    sb.append(" mapTypes:").append(mapTypes).append(",");
     sb.append("}");
     return sb.toString();
   }

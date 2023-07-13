@@ -204,11 +204,11 @@ public class ApiTestDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestDTO{");
-    sb.append(" unionEnum:").append(toIndentedString(unionEnum)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
-    sb.append(" unionIntegerEnum:").append(toIndentedString(unionIntegerEnum)).append(",");
-    sb.append(" unionNumberEnum:").append(toIndentedString(unionNumberEnum)).append(",");
+    sb.append(" unionEnum:").append(unionEnum).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" unionIntegerEnum:").append(unionIntegerEnum).append(",");
+    sb.append(" unionNumberEnum:").append(unionNumberEnum).append(",");
     sb.append("}");
     return sb.toString();
   }

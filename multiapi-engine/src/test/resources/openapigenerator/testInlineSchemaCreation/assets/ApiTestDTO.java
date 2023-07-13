@@ -197,13 +197,13 @@ public class ApiTestDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestDTO{");
-    sb.append(" testProcessor:").append(toIndentedString(testProcessor)).append(",");
-    sb.append(" description:").append(toIndentedString(description)).append(",");
-    sb.append(" tags:").append(toIndentedString(tags)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" testTypeList:").append(toIndentedString(testTypeList)).append(",");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
-    sb.append(" priority:").append(toIndentedString(priority)).append(",");
+    sb.append(" testProcessor:").append(testProcessor).append(",");
+    sb.append(" description:").append(description).append(",");
+    sb.append(" tags:").append(tags).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" testTypeList:").append(testTypeList).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" priority:").append(priority).append(",");
     sb.append("}");
     return sb.toString();
   }

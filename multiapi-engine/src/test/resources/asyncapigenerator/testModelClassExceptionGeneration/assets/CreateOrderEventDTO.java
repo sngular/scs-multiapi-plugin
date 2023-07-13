@@ -98,8 +98,8 @@ public class CreateOrderEventDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CreateOrderEventDTO{");
-    sb.append(" order:").append(toIndentedString(order)).append(",");
-    sb.append(" waiter:").append(toIndentedString(waiter)).append(",");
+    sb.append(" order:").append(order).append(",");
+    sb.append(" waiter:").append(waiter).append(",");
     sb.append("}");
     return sb.toString();
   }

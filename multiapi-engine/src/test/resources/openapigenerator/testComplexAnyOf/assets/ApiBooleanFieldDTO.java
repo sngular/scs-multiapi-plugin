@@ -108,9 +108,9 @@ public class ApiBooleanFieldDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiBooleanFieldDTO{");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" defaultValue:").append(toIndentedString(defaultValue)).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
     sb.append("}");
     return sb.toString();
   }

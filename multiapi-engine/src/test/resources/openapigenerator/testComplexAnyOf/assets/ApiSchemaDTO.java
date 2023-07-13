@@ -177,12 +177,12 @@ public class ApiSchemaDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiSchemaDTO{");
-    sb.append(" type:").append(toIndentedString(type)).append(",");
-    sb.append(" properties:").append(toIndentedString(properties)).append(",");
-    sb.append(" name:").append(toIndentedString(name)).append(",");
-    sb.append(" id:").append(toIndentedString(id)).append(",");
-    sb.append(" subjectName:").append(toIndentedString(subjectName)).append(",");
-    sb.append(" requiredFields:").append(toIndentedString(requiredFields)).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" subjectName:").append(subjectName).append(",");
+    sb.append(" requiredFields:").append(requiredFields).append(",");
     sb.append("}");
     return sb.toString();
   }

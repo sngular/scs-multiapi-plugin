@@ -108,8 +108,8 @@ public class OrderLineDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderLineDTO{");
-    sb.append(" ref:").append(toIndentedString(ref)).append(",");
-    sb.append(" products:").append(toIndentedString(products)).append(",");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" products:").append(products).append(",");
     sb.append("}");
     return sb.toString();
   }

@@ -153,10 +153,10 @@ public class OrderDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderDTO{");
-    sb.append(" ref:").append(toIndentedString(ref)).append(",");
-    sb.append(" clientRef:").append(toIndentedString(clientRef)).append(",");
-    sb.append(" amount:").append(toIndentedString(amount)).append(",");
-    sb.append(" lines:").append(toIndentedString(lines)).append(",");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" clientRef:").append(clientRef).append(",");
+    sb.append(" amount:").append(amount).append(",");
+    sb.append(" lines:").append(lines).append(",");
     sb.append("}");
     return sb.toString();
   }

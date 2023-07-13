@@ -89,8 +89,8 @@ public class MessageDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("MessageDTO{");
-    sb.append(" description:").append(toIndentedString(description)).append(",");
-    sb.append(" message:").append(toIndentedString(message)).append(",");
+    sb.append(" description:").append(description).append(",");
+    sb.append(" message:").append(message).append(",");
     sb.append("}");
     return sb.toString();
   }
