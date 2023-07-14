@@ -103,20 +103,15 @@ public class TestInfoDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TestInfoDTO {\n");
-    sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
+    sb.append("TestInfoDTO{");
+    sb.append(" testers:").append(testers).append(",");
+    sb.append(" testName:").append(testName).append(",");
     sb.append("}");
     return sb.toString();
   }
 
 
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
+
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;

@@ -151,25 +151,15 @@ public class OrderDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderDTO {\n");
-    sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
-    sb.append(" clientRef: ").append(toIndentedString(clientRef)).append("\n");
-    sb.append(" amount: ").append(toIndentedString(amount)).append("\n");
-    sb.append(" lines: ").append(toIndentedString(lines)).append("\n");
+    sb.append("OrderDTO{");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" clientRef:").append(clientRef).append(",");
+    sb.append(" amount:").append(amount).append(",");
+    sb.append(" lines:").append(lines).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

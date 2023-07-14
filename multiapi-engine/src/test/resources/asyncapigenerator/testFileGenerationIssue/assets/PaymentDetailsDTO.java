@@ -75,22 +75,12 @@ public class PaymentDetailsDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PaymentDetailsDTO {\n");
-    sb.append(" creditCardNumber: ").append(toIndentedString(creditCardNumber)).append("\n");
+    sb.append("PaymentDetailsDTO{");
+    sb.append(" creditCardNumber:").append(creditCardNumber).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

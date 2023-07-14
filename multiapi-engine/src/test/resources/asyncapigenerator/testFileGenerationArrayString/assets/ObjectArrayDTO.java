@@ -129,24 +129,14 @@ public class ObjectArrayDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ObjectArrayDTO {\n");
-    sb.append(" idObject: ").append(toIndentedString(idObject)).append("\n");
-    sb.append(" players: ").append(toIndentedString(players)).append("\n");
-    sb.append(" info: ").append(toIndentedString(info)).append("\n");
+    sb.append("ObjectArrayDTO{");
+    sb.append(" idObject:").append(idObject).append(",");
+    sb.append(" players:").append(players).append(",");
+    sb.append(" info:").append(info).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

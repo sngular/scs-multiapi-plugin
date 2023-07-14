@@ -64,19 +64,14 @@ public class ApiTestsDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestsDTO {\n");
-    sb.append(" apiTestDTO: ").append(toIndentedString(apiTestDTO)).append("\n");
+    sb.append("ApiTestsDTO{");
+    sb.append(" apiTestDTO:").append(apiTestDTO).append(",");
     sb.append("}");
     return sb.toString();
   }
 
 
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
+
 
 
 }

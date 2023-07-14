@@ -89,18 +89,11 @@ public class ApiErrorDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiErrorDTO {\n");
-    sb.append(" code: ").append(toIndentedString(code)).append("\n");
-    sb.append(" message: ").append(toIndentedString(message)).append("\n");
+    sb.append("ApiErrorDTO{");
+    sb.append(" code:").append(code).append(",");
+    sb.append(" message:").append(message).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   private void validateRequiredAttributes() {

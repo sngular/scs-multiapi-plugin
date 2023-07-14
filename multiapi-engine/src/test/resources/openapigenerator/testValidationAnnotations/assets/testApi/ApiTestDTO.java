@@ -99,18 +99,11 @@ public class ApiTestDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiTestDTO {\n");
-    sb.append(" testers: ").append(toIndentedString(testers)).append("\n");
-    sb.append(" testName: ").append(toIndentedString(testName)).append("\n");
+    sb.append("ApiTestDTO{");
+    sb.append(" testers:").append(testers).append(",");
+    sb.append(" testName:").append(testName).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   private void validateRequiredAttributes() {

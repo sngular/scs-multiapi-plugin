@@ -140,24 +140,14 @@ public class CustomerOrderEventPayloadDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CustomerOrderEventPayloadDTO {\n");
-    sb.append(" customerOrderId: ").append(toIndentedString(customerOrderId)).append("\n");
-    sb.append(" eventType: ").append(toIndentedString(eventType)).append("\n");
-    sb.append(" customerOrderDTO: ").append(toIndentedString(customerOrderDTO)).append("\n");
+    sb.append("CustomerOrderEventPayloadDTO{");
+    sb.append(" customerOrderId:").append(customerOrderId).append(",");
+    sb.append(" eventType:").append(eventType).append(",");
+    sb.append(" customerOrderDTO:").append(customerOrderDTO).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

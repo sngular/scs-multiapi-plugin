@@ -707,47 +707,40 @@ public class ApiDefaultItemDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiDefaultItemDTO {\n");
-    sb.append(" precision: ").append(toIndentedString(precision)).append("\n");
-    sb.append(" maximum: ").append(toIndentedString(maximum)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" scale: ").append(toIndentedString(scale)).append("\n");
-    sb.append(" minLength: ").append(toIndentedString(minLength)).append("\n");
-    sb.append(" increment: ").append(toIndentedString(increment)).append("\n");
-    sb.append(" keyType: ").append(toIndentedString(keyType)).append("\n");
-    sb.append(" requiredValues: ").append(toIndentedString(requiredValues)).append("\n");
-    sb.append(" initialValue: ").append(toIndentedString(initialValue)).append("\n");
-    sb.append(" flagExclusiveMinimum: ").append(toIndentedString(flagExclusiveMinimum)).append("\n");
-    sb.append(" flagExclusiveMaximum: ").append(toIndentedString(flagExclusiveMaximum)).append("\n");
-    sb.append(" defaultValue: ").append(toIndentedString(defaultValue)).append("\n");
-    sb.append(" enumValues: ").append(toIndentedString(enumValues)).append("\n");
-    sb.append(" properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" seqEnum: ").append(toIndentedString(seqEnum)).append("\n");
-    sb.append(" arraySize: ").append(toIndentedString(arraySize)).append("\n");
-    sb.append(" multipleOf: ").append(toIndentedString(multipleOf)).append("\n");
-    sb.append(" mapSize: ").append(toIndentedString(mapSize)).append("\n");
-    sb.append(" mapTypes: ").append(toIndentedString(mapTypes)).append("\n");
-    sb.append(" format: ").append(toIndentedString(format)).append("\n");
-    sb.append(" maxLength: ").append(toIndentedString(maxLength)).append("\n");
-    sb.append(" uniqueItems: ").append(toIndentedString(uniqueItems)).append("\n");
-    sb.append(" elements: ").append(toIndentedString(elements)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" regex: ").append(toIndentedString(regex)).append("\n");
-    sb.append(" minItems: ").append(toIndentedString(minItems)).append("\n");
-    sb.append(" values: ").append(toIndentedString(values)).append("\n");
-    sb.append(" minimum: ").append(toIndentedString(minimum)).append("\n");
-    sb.append(" numberEnum: ").append(toIndentedString(numberEnum)).append("\n");
-    sb.append(" valueLength: ").append(toIndentedString(valueLength)).append("\n");
+    sb.append("ApiDefaultItemDTO{");
+    sb.append(" precision:").append(precision).append(",");
+    sb.append(" maximum:").append(maximum).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" scale:").append(scale).append(",");
+    sb.append(" minLength:").append(minLength).append(",");
+    sb.append(" increment:").append(increment).append(",");
+    sb.append(" keyType:").append(keyType).append(",");
+    sb.append(" requiredValues:").append(requiredValues).append(",");
+    sb.append(" initialValue:").append(initialValue).append(",");
+    sb.append(" flagExclusiveMinimum:").append(flagExclusiveMinimum).append(",");
+    sb.append(" flagExclusiveMaximum:").append(flagExclusiveMaximum).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
+    sb.append(" enumValues:").append(enumValues).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" seqEnum:").append(seqEnum).append(",");
+    sb.append(" arraySize:").append(arraySize).append(",");
+    sb.append(" multipleOf:").append(multipleOf).append(",");
+    sb.append(" mapSize:").append(mapSize).append(",");
+    sb.append(" mapTypes:").append(mapTypes).append(",");
+    sb.append(" format:").append(format).append(",");
+    sb.append(" maxLength:").append(maxLength).append(",");
+    sb.append(" uniqueItems:").append(uniqueItems).append(",");
+    sb.append(" elements:").append(elements).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" regex:").append(regex).append(",");
+    sb.append(" minItems:").append(minItems).append(",");
+    sb.append(" values:").append(values).append(",");
+    sb.append(" minimum:").append(minimum).append(",");
+    sb.append(" numberEnum:").append(numberEnum).append(",");
+    sb.append(" valueLength:").append(valueLength).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   private void validatePartialCombinations() {

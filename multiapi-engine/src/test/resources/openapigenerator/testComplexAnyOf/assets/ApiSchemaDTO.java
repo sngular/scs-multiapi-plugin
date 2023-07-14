@@ -176,22 +176,15 @@ public class ApiSchemaDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiSchemaDTO {\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
-    sb.append(" subjectName: ").append(toIndentedString(subjectName)).append("\n");
-    sb.append(" requiredFields: ").append(toIndentedString(requiredFields)).append("\n");
+    sb.append("ApiSchemaDTO{");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" properties:").append(properties).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" subjectName:").append(subjectName).append(",");
+    sb.append(" requiredFields:").append(requiredFields).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   private void validateRequiredAttributes() {

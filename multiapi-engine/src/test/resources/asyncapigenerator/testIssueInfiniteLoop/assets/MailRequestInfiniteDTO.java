@@ -129,24 +129,14 @@ public class MailRequestInfiniteDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MailRequestInfiniteDTO {\n");
-    sb.append(" sender: ").append(toIndentedString(sender)).append("\n");
-    sb.append(" recipients: ").append(toIndentedString(recipients)).append("\n");
-    sb.append(" configDTO: ").append(toIndentedString(configDTO)).append("\n");
+    sb.append("MailRequestInfiniteDTO{");
+    sb.append(" sender:").append(sender).append(",");
+    sb.append(" recipients:").append(recipients).append(",");
+    sb.append(" configDTO:").append(configDTO).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

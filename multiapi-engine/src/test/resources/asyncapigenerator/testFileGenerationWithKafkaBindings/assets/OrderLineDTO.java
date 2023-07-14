@@ -107,23 +107,13 @@ public class OrderLineDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderLineDTO {\n");
-    sb.append(" ref: ").append(toIndentedString(ref)).append("\n");
-    sb.append(" products: ").append(toIndentedString(products)).append("\n");
+    sb.append("OrderLineDTO{");
+    sb.append(" ref:").append(ref).append(",");
+    sb.append(" products:").append(products).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
   private void validateRequiredAttributes() {

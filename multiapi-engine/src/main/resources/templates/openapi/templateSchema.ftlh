@@ -346,19 +346,12 @@ public class ${schema.className} {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ${schema.className} {\n");
+    sb.append("${schema.className}{");
     <#list schema.fieldObjectList as field>
-    sb.append(" ${field.baseName?uncap_first}: ").append(toIndentedString(${field.baseName?uncap_first})).append("\n");
+    sb.append(" ${field.baseName?uncap_first}:").append(${field.baseName?uncap_first}).append(",");
     </#list>
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
   <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">

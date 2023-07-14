@@ -75,22 +75,12 @@ public class TestMsg {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TestMsg {\n");
-    sb.append(" id: ").append(toIndentedString(id)).append("\n");
+    sb.append("TestMsg{");
+    sb.append(" id:").append(id).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

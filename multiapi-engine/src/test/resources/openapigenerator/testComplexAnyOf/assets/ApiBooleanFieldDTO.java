@@ -107,19 +107,12 @@ public class ApiBooleanFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiBooleanFieldDTO {\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" defaultValue: ").append(toIndentedString(defaultValue)).append("\n");
+    sb.append("ApiBooleanFieldDTO{");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 

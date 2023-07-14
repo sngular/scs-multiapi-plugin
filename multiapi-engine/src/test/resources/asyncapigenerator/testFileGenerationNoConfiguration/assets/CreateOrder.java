@@ -97,23 +97,13 @@ public class CreateOrder {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateOrder {\n");
-    sb.append(" order: ").append(toIndentedString(order)).append("\n");
-    sb.append(" waiter: ").append(toIndentedString(waiter)).append("\n");
+    sb.append("CreateOrder{");
+    sb.append(" order:").append(order).append(",");
+    sb.append(" waiter:").append(waiter).append(",");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-  * Convert the given object to string with each line indented by 4 spaces
-  * (except the first line).
-  */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
-  }
 
 
 

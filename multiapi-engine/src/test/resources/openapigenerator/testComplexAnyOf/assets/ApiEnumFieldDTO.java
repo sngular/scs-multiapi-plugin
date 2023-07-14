@@ -161,21 +161,14 @@ public class ApiEnumFieldDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiEnumFieldDTO {\n");
-    sb.append(" enumValues: ").append(toIndentedString(enumValues)).append("\n");
-    sb.append(" type: ").append(toIndentedString(type)).append("\n");
-    sb.append(" defaultValues: ").append(toIndentedString(defaultValues)).append("\n");
-    sb.append(" name: ").append(toIndentedString(name)).append("\n");
-    sb.append(" defaultValue: ").append(toIndentedString(defaultValue)).append("\n");
+    sb.append("ApiEnumFieldDTO{");
+    sb.append(" enumValues:").append(enumValues).append(",");
+    sb.append(" type:").append(type).append(",");
+    sb.append(" defaultValues:").append(defaultValues).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" defaultValue:").append(defaultValue).append(",");
     sb.append("}");
     return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n ");
   }
 
 
