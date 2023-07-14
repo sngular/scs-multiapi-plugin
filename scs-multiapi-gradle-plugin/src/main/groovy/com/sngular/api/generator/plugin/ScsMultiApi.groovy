@@ -18,15 +18,17 @@ class ScsMultiApi implements Plugin<Project> {
     project.plugins.apply("java")
     project.extensions.create("openapimodel", OpenApiModelExtension)
     project.extensions.create("asyncapimodel", AsyncApiModelExtension)
-    def openApiTask = project.task("openApiTask", type: OpenApiTask)
     def outputDirDefault = new File(project.buildDir.absolutePath + '/generated-source')
     outputDirDefault.mkdirs()
-    openApiTask.configure {
+    def openApiTask = project.getTasks().register("openApiTask", OpenApiTask.class, {
       it.outputDir = outputDirDefault
-    }
-    def asyncApiTask = project.task("asyncApiTask", type: AsyncApiTask)
-    asyncApiTask.configure {
+    })
+    def asyncApiTask = project.getTasks().register("asyncApiTask", AsyncApiTask.class, {
       it.outputDir = outputDirDefault
+    })
+    project.tasks.named('compileJava').configure {
+      it.dependsOn(openApiTask)
+      it.dependsOn(asyncApiTask)
     }
   }
 }
