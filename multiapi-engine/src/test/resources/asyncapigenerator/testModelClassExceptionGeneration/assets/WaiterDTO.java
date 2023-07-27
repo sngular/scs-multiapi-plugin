@@ -122,7 +122,7 @@ public class WaiterDTO {
     sb.append("WaiterDTO{");
     sb.append(" ref:").append(ref).append(",");
     sb.append(" timestamp:").append(timestamp).append(",");
-    sb.append(" table:").append(table).append(",");
+    sb.append(" table:").append(table);
     sb.append("}");
     return sb.toString();
   }

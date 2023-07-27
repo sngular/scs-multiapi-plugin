@@ -185,7 +185,7 @@ public class ApiMapFieldDTO {
     sb.append(" defaultValues:").append(defaultValues).append(",");
     sb.append(" name:").append(name).append(",");
     sb.append(" mapSize:").append(mapSize).append(",");
-    sb.append(" mapTypes:").append(mapTypes).append(",");
+    sb.append(" mapTypes:").append(mapTypes);
     sb.append("}");
     return sb.toString();
   }

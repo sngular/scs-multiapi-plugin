@@ -191,7 +191,7 @@ public class CustomerDTO {
     sb.append(" lastName:").append(lastName).append(",");
     sb.append(" password:").append(password).append(",");
     sb.append(" email:").append(email).append(",");
-    sb.append(" username:").append(username).append(",");
+    sb.append(" username:").append(username);
     sb.append("}");
     return sb.toString();
   }

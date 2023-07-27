@@ -76,7 +76,7 @@ public class TestMsg {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("TestMsg{");
-    sb.append(" id:").append(id).append(",");
+    sb.append(" id:").append(id);
     sb.append("}");
     return sb.toString();
   }

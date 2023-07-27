@@ -119,7 +119,7 @@ public class StatusMsgDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("StatusMsgDTO{");
     sb.append(" clientId:").append(clientId).append(",");
-    sb.append(" status:").append(status).append(",");
+    sb.append(" status:").append(status);
     sb.append("}");
     return sb.toString();
   }

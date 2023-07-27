@@ -109,7 +109,7 @@ public class InlineResponse200CreateGameDTO {
     sb.append("InlineResponse200CreateGameDTO{");
     sb.append(" description:").append(description).append(",");
     sb.append(" code:").append(code).append(",");
-    sb.append(" message:").append(message).append(",");
+    sb.append(" message:").append(message);
     sb.append("}");
     return sb.toString();
   }

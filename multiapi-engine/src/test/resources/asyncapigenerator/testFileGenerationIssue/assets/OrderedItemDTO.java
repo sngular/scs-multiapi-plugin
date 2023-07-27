@@ -147,7 +147,7 @@ public class OrderedItemDTO {
     sb.append(" catalogItemId:").append(catalogItemId).append(",");
     sb.append(" name:").append(name).append(",");
     sb.append(" quantity:").append(quantity).append(",");
-    sb.append(" price:").append(price).append(",");
+    sb.append(" price:").append(price);
     sb.append("}");
     return sb.toString();
   }

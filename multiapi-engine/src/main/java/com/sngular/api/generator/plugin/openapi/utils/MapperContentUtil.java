@@ -25,7 +25,6 @@ import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -265,6 +264,8 @@ public class MapperContentUtil {
               .baseName(fieldName)
               .dataType(new SchemaFieldObjectType(TypeConstants.OBJECT))
               .build());
+    } else if (ApiTool.isEnum(schema)) {
+      fieldObjectArrayList.add(processEnumField(fieldName, schema, specFile, ApiTool.getEnumValues(schema), schema));
     } else if (!ApiTool.hasProperties(schema) && !ApiTool.isComposed(schema)) {
       fieldObjectArrayList.add(SchemaFieldObject
                                    .builder()
@@ -347,20 +348,24 @@ public class MapperContentUtil {
     final SchemaFieldObject field;
     if (ApiTool.hasRef(fieldBody)) {
       final var typeName = MapperUtil.getRefSchemaName(fieldBody);
-
-      if (!antiLoopList.contains(typeName) && totalSchemas.containsKey(typeName) && ApiTool.hasType(totalSchemas.get(typeName))
-          && ApiTool.hasItems(totalSchemas.get(typeName)) || ApiTool.getRefValue(fieldBody).contains(fieldName)) {
+      final var refSchema = totalSchemas.get(typeName);
+      if (!antiLoopList.contains(typeName) && totalSchemas.containsKey(typeName) && ApiTool.hasType(refSchema)
+          && ApiTool.hasItems(refSchema) || ApiTool.getRefValue(fieldBody).contains(fieldName)) {
         antiLoopList.add(typeName);
         fieldObjectArrayList.addAll(processFieldObjectList(fieldName, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList, baseDir));
+      } else if (ApiTool.isEnum(refSchema)) {
+        fieldObjectArrayList.add(processEnumField(fieldName, refSchema, specFile, ApiTool.getEnumValues(refSchema), schema));
       } else {
         fieldObjectArrayList.add(SchemaFieldObject
                  .builder()
                  .baseName(fieldName)
-                 .required(isRequired)
-                 .dataType(SchemaFieldObjectType.fromTypeList(MapperUtil.getSimpleType(totalSchemas.get(typeName), specFile),
+                 .required(ApiTool.checkIfRequired(schema, fieldName))
+                 .dataType(SchemaFieldObjectType.fromTypeList(MapperUtil.getSimpleType(refSchema, specFile),
                                                               MapperUtil.getPojoName(typeName, specFile)))
                  .build());
       }
+    } else if (ApiTool.isEnum(fieldBody)) {
+      fieldObjectArrayList.add(processEnumField(fieldName, fieldBody, specFile, ApiTool.getEnumValues(fieldBody), fieldBody));
     } else if (TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(fieldBody))) {
       field = processStringProperty(fieldName, fieldBody, specFile);
       setFieldType(field, fieldBody, schema, specFile, fieldName);
@@ -709,8 +714,7 @@ public class MapperContentUtil {
                           .baseName(key)
                           .dataType(new SchemaFieldObjectType(TypeConstants.ENUM))
                           .build();
-    field.setRequired(schema.has("required")
-                      && Objects.nonNull(IteratorUtils.find(schema.get("required").elements(), required -> required.textValue().equalsIgnoreCase(key))));
+    field.setRequired(ApiTool.checkIfRequired(schema, key));
     final var dataType = MapperUtil.getSimpleType(value, specFile);
     field.getDataType().setDeepType(dataType);
 

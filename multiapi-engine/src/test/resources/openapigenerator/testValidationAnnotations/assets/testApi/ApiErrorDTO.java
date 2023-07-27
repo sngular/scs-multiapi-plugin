@@ -136,7 +136,7 @@ public class ApiErrorDTO {
     sb.append("ApiErrorDTO{");
     sb.append(" code:").append(code).append(",");
     sb.append(" message:").append(message).append(",");
-    sb.append(" test:").append(test).append(",");
+    sb.append(" test:").append(test);
     sb.append("}");
     return sb.toString();
   }

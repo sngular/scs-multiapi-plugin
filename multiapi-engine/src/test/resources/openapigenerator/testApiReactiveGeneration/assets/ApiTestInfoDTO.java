@@ -103,7 +103,7 @@ public class ApiTestInfoDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestInfoDTO{");
     sb.append(" testers:").append(testers).append(",");
-    sb.append(" testName:").append(testName).append(",");
+    sb.append(" testName:").append(testName);
     sb.append("}");
     return sb.toString();
   }

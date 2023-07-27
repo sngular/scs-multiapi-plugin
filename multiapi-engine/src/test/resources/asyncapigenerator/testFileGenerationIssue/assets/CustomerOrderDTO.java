@@ -232,7 +232,7 @@ public class CustomerOrderDTO {
     sb.append(" orderedItems:").append(orderedItems).append(",");
     sb.append(" paymentDetails:").append(paymentDetails).append(",");
     sb.append(" orderStatusDTO:").append(orderStatusDTO).append(",");
-    sb.append(" customerDTO:").append(customerDTO).append(",");
+    sb.append(" customerDTO:").append(customerDTO);
     sb.append("}");
     return sb.toString();
   }

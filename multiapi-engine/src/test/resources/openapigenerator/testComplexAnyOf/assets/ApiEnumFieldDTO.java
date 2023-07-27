@@ -166,7 +166,7 @@ public class ApiEnumFieldDTO {
     sb.append(" type:").append(type).append(",");
     sb.append(" defaultValues:").append(defaultValues).append(",");
     sb.append(" name:").append(name).append(",");
-    sb.append(" defaultValue:").append(defaultValue).append(",");
+    sb.append(" defaultValue:").append(defaultValue);
     sb.append("}");
     return sb.toString();
   }

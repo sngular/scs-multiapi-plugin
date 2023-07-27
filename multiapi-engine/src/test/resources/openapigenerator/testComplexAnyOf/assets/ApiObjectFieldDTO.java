@@ -174,7 +174,7 @@ public class ApiObjectFieldDTO {
     sb.append(" type:").append(type).append(",");
     sb.append(" properties:").append(properties).append(",");
     sb.append(" defaultValues:").append(defaultValues).append(",");
-    sb.append(" name:").append(name).append(",");
+    sb.append(" name:").append(name);
     sb.append("}");
     return sb.toString();
   }

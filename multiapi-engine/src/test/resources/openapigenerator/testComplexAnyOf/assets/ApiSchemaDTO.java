@@ -19,7 +19,8 @@ public class ApiSchemaDTO {
   @NotNull
   private final String type;
   @JsonProperty(value ="properties")
-  private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
+  @NotNull
+  private final List<ApiTypeArrayDTO> properties;
   @JsonProperty(value ="name")
   @NotNull
   private final String name;
@@ -125,12 +126,9 @@ public class ApiSchemaDTO {
     return type;
   }
 
-  @Schema(name = "properties", required = false)
+  @Schema(name = "properties", required = true)
   public List<ApiTypeArrayDTO> getProperties() {
     return properties;
-  }
-  public void setProperties(List<ApiTypeArrayDTO> properties) {
-    this.properties = properties;
   }
 
   @Schema(name = "name", required = true)
@@ -182,7 +180,7 @@ public class ApiSchemaDTO {
     sb.append(" name:").append(name).append(",");
     sb.append(" id:").append(id).append(",");
     sb.append(" subjectName:").append(subjectName).append(",");
-    sb.append(" requiredFields:").append(requiredFields).append(",");
+    sb.append(" requiredFields:").append(requiredFields);
     sb.append("}");
     return sb.toString();
   }
@@ -191,6 +189,8 @@ public class ApiSchemaDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.type)) {
+      satisfiedCondition = false;
+    } else if (!Objects.nonNull(this.properties)) {
       satisfiedCondition = false;
     } else if (!Objects.nonNull(this.name)) {
       satisfiedCondition = false;

@@ -223,7 +223,7 @@ public class ApiArrayFieldDTO {
     sb.append(" arraySize:").append(arraySize).append(",");
     sb.append(" regex:").append(regex).append(",");
     sb.append(" minItems:").append(minItems).append(",");
-    sb.append(" values:").append(values).append(",");
+    sb.append(" values:").append(values);
     sb.append("}");
     return sb.toString();
   }

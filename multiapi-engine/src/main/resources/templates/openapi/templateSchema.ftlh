@@ -347,10 +347,13 @@ public class ${schema.className} {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("${schema.className}{");
-    <#list schema.fieldObjectList as field>
-    sb.append(" ${field.baseName?uncap_first}:").append(${field.baseName?uncap_first})
-    <#if field_has_next>sb.append(",")</#if>;
-    </#list>
+<#list schema.fieldObjectList as field>
+  <#if field_has_next>
+    sb.append(" ${field.baseName?uncap_first}:").append(${field.baseName?uncap_first}).append(",");
+  <#else>
+    sb.append(" ${field.baseName?uncap_first}:").append(${field.baseName?uncap_first});
+  </#if>
+</#list>
     sb.append("}");
     return sb.toString();
   }

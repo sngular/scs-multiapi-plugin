@@ -129,7 +129,7 @@ public class ApiDateFieldDTO {
     sb.append(" type:").append(type).append(",");
     sb.append(" defaultValues:").append(defaultValues).append(",");
     sb.append(" name:").append(name).append(",");
-    sb.append(" format:").append(format).append(",");
+    sb.append(" format:").append(format);
     sb.append("}");
     return sb.toString();
   }

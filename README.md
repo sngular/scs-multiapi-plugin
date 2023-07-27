@@ -134,6 +134,7 @@ configure the tasks.
 In the case that you only want to run one of the goals of the plugin, you only
 need to remove the *execution* section that you don't need.
 
+In case no configuration is provided but only the file to generate an exception will be raised and an error will occur.
 In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.

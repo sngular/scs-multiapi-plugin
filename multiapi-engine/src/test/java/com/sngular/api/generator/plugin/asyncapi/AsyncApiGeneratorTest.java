@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import org.assertj.core.api.Assertions;
@@ -41,7 +42,6 @@ class AsyncApiGeneratorTest {
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
         Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
-        Arguments.of("TestFileGenerationNoConfig", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG, AsyncApiGeneratorFixtures.validateTestFileGenerationNoConf()),
         Arguments.of("TestIssueGeneration", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION, AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
         Arguments.of("TestFileGenerationIssue", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE, AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
         Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
@@ -76,6 +76,12 @@ class AsyncApiGeneratorTest {
   @Test
   void testExceptionForTestGenerationWithNoOperationId() {
     Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
+      .isInstanceOf(InvalidAPIException.class);
+  }
+
+  @Test
+  void testExceptionForTestGenerationWithNoOperationConfiguration() {
+    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG))
       .isInstanceOf(InvalidAPIException.class);
   }
 

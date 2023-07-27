@@ -167,7 +167,7 @@ public class DataDTO {
     sb.append(" clientId:").append(clientId).append(",");
     sb.append(" clientName:").append(clientName).append(",");
     sb.append(" flightNumber:").append(flightNumber).append(",");
-    sb.append(" test:").append(test).append(",");
+    sb.append(" test:").append(test);
     sb.append("}");
     return sb.toString();
   }

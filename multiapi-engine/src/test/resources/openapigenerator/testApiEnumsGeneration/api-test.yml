@@ -76,11 +76,7 @@ components:
         name:
           type: string
         unionEnum:
-          type: string
-          enum:
-          - oneof
-          - anyof
-          - allof
+          $ref: '#/components/schemas/UnionEnum'
         unionIntegerEnum:
           type: integer
           format: int64
@@ -94,6 +90,12 @@ components:
           - 1.1
           - 2.2
           - 4.4
+    UnionEnum:
+      type: string
+      enum:
+      - oneof
+      - anyof
+      - allof
     TestInfo:
       type: object
       required:

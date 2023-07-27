@@ -132,7 +132,7 @@ public class MailRequestDTO {
     sb.append("MailRequestDTO{");
     sb.append(" sender:").append(sender).append(",");
     sb.append(" recipients:").append(recipients).append(",");
-    sb.append(" configurationDTO:").append(configurationDTO).append(",");
+    sb.append(" configurationDTO:").append(configurationDTO);
     sb.append("}");
     return sb.toString();
   }

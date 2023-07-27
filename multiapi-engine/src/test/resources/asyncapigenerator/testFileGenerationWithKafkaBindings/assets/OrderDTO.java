@@ -156,7 +156,7 @@ public class OrderDTO {
     sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
     sb.append(" amount:").append(amount).append(",");
-    sb.append(" lines:").append(lines).append(",");
+    sb.append(" lines:").append(lines);
     sb.append("}");
     return sb.toString();
   }

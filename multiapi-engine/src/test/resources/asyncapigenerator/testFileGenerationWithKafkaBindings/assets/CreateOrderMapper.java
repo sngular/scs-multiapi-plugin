@@ -99,7 +99,7 @@ public class CreateOrderMapper {
     StringBuilder sb = new StringBuilder();
     sb.append("CreateOrderMapper{");
     sb.append(" order:").append(order).append(",");
-    sb.append(" waiter:").append(waiter).append(",");
+    sb.append(" waiter:").append(waiter);
     sb.append("}");
     return sb.toString();
   }
