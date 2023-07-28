@@ -242,7 +242,7 @@ public class ApiStringFieldDTO {
     sb.append(" regex:").append(regex).append(",");
     sb.append(" minLength:").append(minLength).append(",");
     sb.append(" format:").append(format).append(",");
-    sb.append(" valueLength:").append(valueLength).append(",");
+    sb.append(" valueLength:").append(valueLength);
     sb.append("}");
     return sb.toString();
   }

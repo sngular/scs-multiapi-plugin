@@ -311,7 +311,7 @@ public class ApiNumberFieldDTO {
     sb.append(" flagExclusiveMinimum:").append(flagExclusiveMinimum).append(",");
     sb.append(" flagExclusiveMaximum:").append(flagExclusiveMaximum).append(",");
     sb.append(" numberEnum:").append(numberEnum).append(",");
-    sb.append(" defaultValue:").append(defaultValue).append(",");
+    sb.append(" defaultValue:").append(defaultValue);
     sb.append("}");
     return sb.toString();
   }

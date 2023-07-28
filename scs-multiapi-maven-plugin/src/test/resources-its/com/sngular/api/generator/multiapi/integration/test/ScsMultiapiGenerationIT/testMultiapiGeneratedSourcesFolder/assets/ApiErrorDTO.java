@@ -91,7 +91,7 @@ public class ApiErrorDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiErrorDTO{");
     sb.append(" code:").append(code).append(",");
-    sb.append(" message:").append(message).append(",");
+    sb.append(" message:").append(message);
     sb.append("}");
     return sb.toString();
   }

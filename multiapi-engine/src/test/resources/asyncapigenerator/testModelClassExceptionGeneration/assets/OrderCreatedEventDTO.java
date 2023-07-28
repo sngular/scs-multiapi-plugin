@@ -76,7 +76,7 @@ public class OrderCreatedEventDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderCreatedEventDTO{");
-    sb.append(" payload:").append(payload).append(",");
+    sb.append(" payload:").append(payload);
     sb.append("}");
     return sb.toString();
   }

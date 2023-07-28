@@ -208,7 +208,7 @@ public class ApiTestDTO {
     sb.append(" name:").append(name).append(",");
     sb.append(" id:").append(id).append(",");
     sb.append(" unionIntegerEnum:").append(unionIntegerEnum).append(",");
-    sb.append(" unionNumberEnum:").append(unionNumberEnum).append(",");
+    sb.append(" unionNumberEnum:").append(unionNumberEnum);
     sb.append("}");
     return sb.toString();
   }

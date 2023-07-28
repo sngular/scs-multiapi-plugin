@@ -217,7 +217,7 @@ public class ApiUnionFieldDTO {
     sb.append(" unionEnum:").append(unionEnum).append(",");
     sb.append(" name:").append(name).append(",");
     sb.append(" optionalUnion:").append(optionalUnion).append(",");
-    sb.append(" values:").append(values).append(",");
+    sb.append(" values:").append(values);
     sb.append("}");
     return sb.toString();
   }

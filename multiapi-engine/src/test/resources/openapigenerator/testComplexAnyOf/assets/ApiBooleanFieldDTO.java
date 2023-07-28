@@ -110,7 +110,7 @@ public class ApiBooleanFieldDTO {
     sb.append("ApiBooleanFieldDTO{");
     sb.append(" type:").append(type).append(",");
     sb.append(" name:").append(name).append(",");
-    sb.append(" defaultValue:").append(defaultValue).append(",");
+    sb.append(" defaultValue:").append(defaultValue);
     sb.append("}");
     return sb.toString();
   }

@@ -132,7 +132,7 @@ public class MailRequestInfiniteDTO {
     sb.append("MailRequestInfiniteDTO{");
     sb.append(" sender:").append(sender).append(",");
     sb.append(" recipients:").append(recipients).append(",");
-    sb.append(" configDTO:").append(configDTO).append(",");
+    sb.append(" configDTO:").append(configDTO);
     sb.append("}");
     return sb.toString();
   }

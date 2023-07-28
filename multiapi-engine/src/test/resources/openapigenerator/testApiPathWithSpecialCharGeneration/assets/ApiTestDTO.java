@@ -91,7 +91,7 @@ public class ApiTestDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiTestDTO{");
     sb.append(" name:").append(name).append(",");
-    sb.append(" id:").append(id).append(",");
+    sb.append(" id:").append(id);
     sb.append("}");
     return sb.toString();
   }

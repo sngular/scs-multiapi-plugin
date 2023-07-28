@@ -103,7 +103,7 @@ public class TestInfoDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("TestInfoDTO{");
     sb.append(" testers:").append(testers).append(",");
-    sb.append(" testName:").append(testName).append(",");
+    sb.append(" testName:").append(testName);
     sb.append("}");
     return sb.toString();
   }

@@ -76,7 +76,7 @@ public class ShippingDetailsDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ShippingDetailsDTO{");
-    sb.append(" address:").append(address).append(",");
+    sb.append(" address:").append(address);
     sb.append("}");
     return sb.toString();
   }

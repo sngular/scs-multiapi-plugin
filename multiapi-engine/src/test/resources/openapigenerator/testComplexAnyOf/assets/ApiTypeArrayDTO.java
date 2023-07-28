@@ -834,7 +834,7 @@ public class ApiTypeArrayDTO {
     sb.append(" values:").append(values).append(",");
     sb.append(" minimum:").append(minimum).append(",");
     sb.append(" numberEnum:").append(numberEnum).append(",");
-    sb.append(" valueLength:").append(valueLength).append(",");
+    sb.append(" valueLength:").append(valueLength);
     sb.append("}");
     return sb.toString();
   }

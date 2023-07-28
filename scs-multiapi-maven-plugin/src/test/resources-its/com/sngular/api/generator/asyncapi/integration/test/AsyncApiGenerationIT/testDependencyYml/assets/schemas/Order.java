@@ -123,7 +123,7 @@ public class Order {
     sb.append("Order{");
     sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
-    sb.append(" amount:").append(amount).append(",");
+    sb.append(" amount:").append(amount);
     sb.append("}");
     return sb.toString();
   }

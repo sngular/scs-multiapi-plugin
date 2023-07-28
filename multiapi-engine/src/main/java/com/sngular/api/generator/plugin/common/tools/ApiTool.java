@@ -199,7 +199,7 @@ public final class ApiTool {
   }
 
   public static boolean hasRef(final JsonNode schema) {
-    return hasNode(schema, "$ref");
+    return (hasNode(schema, "$ref") || schema.fieldNames().hasNext()) && schema.fieldNames().next().equals("$ref");
   }
 
   public static boolean hasProperties(final JsonNode schema) {

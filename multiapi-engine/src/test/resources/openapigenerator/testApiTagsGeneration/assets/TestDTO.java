@@ -91,7 +91,7 @@ public class TestDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("TestDTO{");
     sb.append(" name:").append(name).append(",");
-    sb.append(" id:").append(id).append(",");
+    sb.append(" id:").append(id);
     sb.append("}");
     return sb.toString();
   }

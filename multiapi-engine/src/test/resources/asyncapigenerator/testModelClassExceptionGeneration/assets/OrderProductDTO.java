@@ -141,7 +141,7 @@ public class OrderProductDTO {
     sb.append(" ref:").append(ref).append(",");
     sb.append(" productRef:").append(productRef).append(",");
     sb.append(" price:").append(price).append(",");
-    sb.append(" quantity:").append(quantity).append(",");
+    sb.append(" quantity:").append(quantity);
     sb.append("}");
     return sb.toString();
   }

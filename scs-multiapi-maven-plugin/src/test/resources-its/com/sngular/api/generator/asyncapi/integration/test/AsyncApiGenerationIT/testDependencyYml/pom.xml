@@ -41,6 +41,10 @@
               <specFiles>
                 <specFile>
                   <filePath>contracts/event-api.yml</filePath>
+                  <supplier>
+                    <apiPackage>com.sngular.apigenerator.asyncapi</apiPackage>
+                    <modelPackage>com.sngular.apigenerator.asyncapi.model</modelPackage>
+                  </supplier>
                 </specFile>
               </specFiles>
             </configuration>

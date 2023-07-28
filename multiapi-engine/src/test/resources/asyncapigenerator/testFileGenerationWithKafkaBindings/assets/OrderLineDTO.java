@@ -109,7 +109,7 @@ public class OrderLineDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderLineDTO{");
     sb.append(" ref:").append(ref).append(",");
-    sb.append(" products:").append(products).append(",");
+    sb.append(" products:").append(products);
     sb.append("}");
     return sb.toString();
   }

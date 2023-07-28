@@ -132,7 +132,7 @@ public class ObjectArrayDTO {
     sb.append("ObjectArrayDTO{");
     sb.append(" idObject:").append(idObject).append(",");
     sb.append(" players:").append(players).append(",");
-    sb.append(" info:").append(info).append(",");
+    sb.append(" info:").append(info);
     sb.append("}");
     return sb.toString();
   }

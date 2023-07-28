@@ -143,7 +143,7 @@ public class CustomerEventPayloadDTO {
     sb.append("CustomerEventPayloadDTO{");
     sb.append(" customerId:").append(customerId).append(",");
     sb.append(" eventType:").append(eventType).append(",");
-    sb.append(" customerDTO:").append(customerDTO).append(",");
+    sb.append(" customerDTO:").append(customerDTO);
     sb.append("}");
     return sb.toString();
   }

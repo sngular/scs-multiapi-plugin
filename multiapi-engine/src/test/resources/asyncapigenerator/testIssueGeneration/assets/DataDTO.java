@@ -122,7 +122,7 @@ public class DataDTO {
     sb.append("DataDTO{");
     sb.append(" clientId:").append(clientId).append(",");
     sb.append(" clientName:").append(clientName).append(",");
-    sb.append(" flightNumber:").append(flightNumber).append(",");
+    sb.append(" flightNumber:").append(flightNumber);
     sb.append("}");
     return sb.toString();
   }

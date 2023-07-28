@@ -90,7 +90,7 @@ public class MessageDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("MessageDTO{");
     sb.append(" description:").append(description).append(",");
-    sb.append(" message:").append(message).append(",");
+    sb.append(" message:").append(message);
     sb.append("}");
     return sb.toString();
   }

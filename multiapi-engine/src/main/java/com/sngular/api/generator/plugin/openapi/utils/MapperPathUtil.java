@@ -307,7 +307,7 @@ public class MapperPathUtil {
         realResponse = globalObject.getResponseNode(MapperUtil.getRefSchemaName(response)).orElseThrow();
       }
       final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
-      var content = ApiTool.getNode(realResponse, CONTENT);
+      final var content = ApiTool.getNode(realResponse, CONTENT);
       responseObjects.add(ResponseObject
                       .builder()
                       .responseName(responseCode)

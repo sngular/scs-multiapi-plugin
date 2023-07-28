@@ -247,7 +247,7 @@ public class ApiSequenceFieldDTO {
     sb.append(" seqEnum:").append(seqEnum).append(",");
     sb.append(" name:").append(name).append(",");
     sb.append(" initialValue:").append(initialValue).append(",");
-    sb.append(" increment:").append(increment).append(",");
+    sb.append(" increment:").append(increment);
     sb.append("}");
     return sb.toString();
   }

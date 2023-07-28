@@ -203,7 +203,7 @@ public class ApiTestDTO {
     sb.append(" name:").append(name).append(",");
     sb.append(" testTypeList:").append(testTypeList).append(",");
     sb.append(" id:").append(id).append(",");
-    sb.append(" priority:").append(priority).append(",");
+    sb.append(" priority:").append(priority);
     sb.append("}");
     return sb.toString();
   }

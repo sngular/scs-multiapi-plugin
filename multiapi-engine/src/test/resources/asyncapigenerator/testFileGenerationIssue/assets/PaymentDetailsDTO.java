@@ -76,7 +76,7 @@ public class PaymentDetailsDTO {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("PaymentDetailsDTO{");
-    sb.append(" creditCardNumber:").append(creditCardNumber).append(",");
+    sb.append(" creditCardNumber:").append(creditCardNumber);
     sb.append("}");
     return sb.toString();
   }

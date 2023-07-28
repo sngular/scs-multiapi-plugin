@@ -48,6 +48,7 @@ import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -168,8 +169,6 @@ public class AsyncApiGenerator {
           final String operationId = getOperationId(channel);
           final JsonNode channelPayload = getChannelPayload(channel);
 
-          handleMissingPublisherConsumer(fileParameter, channel, operationId);
-
           processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas);
         }
 
@@ -196,32 +195,6 @@ public class AsyncApiGenerator {
     }
 
     return new ImmutablePair<>(ymlFile, ymlParentPath);
-  }
-
-  private void handleMissingPublisherConsumer(final SpecFile fileParameter, final JsonNode channel, final String operationId) {
-    final OperationParameterObject operationParameter = OperationParameterObject
-                                                            .builder()
-                                                            .ids(operationId)
-                                                            .apiPackage(DEFAULT_ASYNCAPI_API_PACKAGE)
-                                                            .modelPackage(DEFAULT_ASYNCAPI_MODEL_PACKAGE)
-                                                            .build();
-    if (channel.has(SUBSCRIBE) && ObjectUtils.allNull(fileParameter.getConsumer(), fileParameter.getStreamBridge())) {
-      try {
-        checkClassPackageDuplicate(CONSUMER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
-        fileParameter.setConsumer(operationParameter);
-      } catch (final DuplicateClassException ignored) {
-        // Don't set consumer
-      }
-    }
-
-    if (channel.has(PUBLISH) && ObjectUtils.allNull(fileParameter.getSupplier(), fileParameter.getStreamBridge())) {
-      try {
-        checkClassPackageDuplicate(SUPPLIER_CLASS_NAME, DEFAULT_ASYNCAPI_API_PACKAGE);
-        fileParameter.setSupplier(operationParameter);
-      } catch (final DuplicateClassException ignored) {
-        // Don't set supplier
-      }
-    }
   }
 
   private void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok) {
@@ -421,9 +394,18 @@ public class AsyncApiGenerator {
   }
 
   private void processFilePaths(final SpecFile fileParameter) {
-    templateFactory.setSupplierFilePath(processPath(convertPackageToTargetPath(fileParameter.getSupplier())));
-    templateFactory.setStreamBridgeFilePath(processPath(convertPackageToTargetPath(fileParameter.getStreamBridge())));
-    templateFactory.setSubscribeFilePath(processPath(convertPackageToTargetPath(fileParameter.getConsumer())));
+    var pathToCreate = convertPackageToTargetPath(fileParameter.getSupplier());
+    if (Objects.nonNull(pathToCreate)) {
+      templateFactory.setSupplierFilePath(processPath(pathToCreate));
+    }
+    pathToCreate = convertPackageToTargetPath(fileParameter.getStreamBridge());
+    if (Objects.nonNull(pathToCreate)) {
+      templateFactory.setStreamBridgeFilePath(processPath(pathToCreate));
+    }
+    pathToCreate = convertPackageToTargetPath(fileParameter.getConsumer());
+    if (Objects.nonNull(pathToCreate)) {
+      templateFactory.setSubscribeFilePath(processPath(pathToCreate));
+    }
   }
 
   private void processEntitiesSuffix(final SpecFile fileParameter) {
@@ -476,12 +458,13 @@ public class AsyncApiGenerator {
   }
 
   private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
-    final String apiPackage = operationParameter != null ? operationParameter.getApiPackage() : null;
-    final String path;
-    if (Objects.nonNull(apiPackage)) {
-      path = getPath(apiPackage);
-    } else {
-      path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
+    String path = null;
+    if (Objects.nonNull(operationParameter)) {
+      if (Objects.nonNull(operationParameter.getApiPackage())) {
+        path = getPath(operationParameter.getApiPackage());
+      } else {
+        path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
+      }
     }
     return path;
   }
@@ -495,9 +478,13 @@ public class AsyncApiGenerator {
   }
 
   private void processPackage(final SpecFile fileParameter) {
-    templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
-    templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
-    templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
+    if (ObjectUtils.anyNotNull(fileParameter.getSupplier(), fileParameter.getStreamBridge(), fileParameter.getConsumer())) {
+      templateFactory.setSupplierPackageName(evaluatePackage(fileParameter.getSupplier()));
+      templateFactory.setStreamBridgePackageName(evaluatePackage(fileParameter.getStreamBridge()));
+      templateFactory.setSubscribePackageName(evaluatePackage(fileParameter.getConsumer()));
+    } else {
+      throw new InvalidAPIException("No Configuration provided, nothing will be generated.");
+    }
   }
 
   private String evaluatePackage(final OperationParameterObject operation) {
