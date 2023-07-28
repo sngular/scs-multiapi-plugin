@@ -1,4 +1,4 @@
-package com.sngular;
+package com.sngular.apigenerator.asyncapi;
 
 import java.util.function.Consumer;
 

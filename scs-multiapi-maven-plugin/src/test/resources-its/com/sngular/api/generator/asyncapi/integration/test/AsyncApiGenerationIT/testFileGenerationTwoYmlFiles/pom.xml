@@ -41,6 +41,14 @@
               <specFiles>
                 <specFile>
                   <filePath>event-api.yml</filePath>
+                  <supplier>
+                    <apiPackage>com.sngular.apigenerator.asyncapi</apiPackage>
+                    <modelPackage>com.sngular.apigenerator.asyncapi.model</modelPackage>
+                  </supplier>
+                  <consumer>
+                    <apiPackage>com.sngular.apigenerator.asyncapi</apiPackage>
+                    <modelPackage>com.sngular.apigenerator.asyncapi.model</modelPackage>
+                  </consumer>
                 </specFile>
                 <specFile>
                   <filePath>event-api2.yml</filePath>
