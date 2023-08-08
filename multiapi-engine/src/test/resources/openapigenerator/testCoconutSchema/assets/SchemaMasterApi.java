@@ -27,13 +27,13 @@ public interface SchemaMasterApi {
    */
 
   @Operation(
-     operationId = "getSchemaMaster",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "getSchemaMaster",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -52,13 +52,13 @@ public interface SchemaMasterApi {
    */
 
   @Operation(
-     operationId = "createSchemaMaster",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "createSchemaMaster",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.POST,

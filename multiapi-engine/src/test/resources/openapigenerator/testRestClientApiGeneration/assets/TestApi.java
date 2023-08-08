@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.sngular.multifileplugin.restclient.client.ApiRestClient;
 
-import com.sngular.multifileplugin.restclient.model.ApiTestInfoDTO;
-import com.sngular.multifileplugin.restclient.model.ApiErrorDTO;
 import com.sngular.multifileplugin.restclient.model.ApiTestDTO;
+import com.sngular.multifileplugin.restclient.model.ApiErrorDTO;
+import com.sngular.multifileplugin.restclient.model.ApiTestInfoDTO;
 
 import com.sngular.multifileplugin.restclient.client.auth.Authentication;
 import com.sngular.multifileplugin.restclient.client.auth.HttpBasicAuth;
@@ -43,6 +43,36 @@ public class TestApi {
   }
 
   /**
+   * GET /test: List all available test
+   * @return A paged array of tests; (status code 200)
+   * @throws RestClientException if an error occurs while attempting to invoke the API
+   */
+  public ApiTestDTO listTest() throws RestClientException {
+    return listTestWithHttpInfo().getBody();
+  }
+
+  public ResponseEntity<ApiTestDTO> listTestWithHttpInfo() throws RestClientException {
+
+    Object postBody = null;
+    final Map<String, Object> uriVariables = new HashMap<String, Object>();
+
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+
+    final String[] localVarAccepts = {"application/json"};
+    final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {};
+    final MediaType localVarContentType = apiRestClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"BasicAuth"};
+
+    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
+    return apiRestClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+  }
+
+  /**
    * GET /test/{testId}: Info for a specific test
    * @param testId The id of the test to retrieve true
    * @return Expected response to a valid request; (status code 200)
@@ -72,36 +102,6 @@ public class TestApi {
 
     ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
     return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
-  }
-
-  /**
-   * GET /test: List all available test
-   * @return A paged array of tests; (status code 200)
-   * @throws RestClientException if an error occurs while attempting to invoke the API
-   */
-  public ApiTestDTO listTest() throws RestClientException {
-    return listTestWithHttpInfo().getBody();
-  }
-
-  public ResponseEntity<ApiTestDTO> listTestWithHttpInfo() throws RestClientException {
-
-    Object postBody = null;
-    final Map<String, Object> uriVariables = new HashMap<String, Object>();
-
-    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-    final HttpHeaders headerParams = new HttpHeaders();
-    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
-    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
-    final String[] localVarAccepts = {"application/json"};
-    final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
-    final String[] localVarContentTypes = {};
-    final MediaType localVarContentType = apiRestClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {"BasicAuth"};
-
-    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-    return apiRestClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
 }

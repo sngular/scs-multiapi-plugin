@@ -8,6 +8,7 @@ package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -71,15 +72,17 @@ public class MapperPathUtil {
     return authSecList;
   }
 
-  public static List<PathObject> mapPathObjects(final SpecFile specFile, final Entry<String, Map<String, JsonNode>> path, final GlobalObject globalObject, final Path baseDir) {
+  public static List<PathObject> mapPathObjects(final SpecFile specFile, final Collection<Map<String, JsonNode>> path, final GlobalObject globalObject, final Path baseDir) {
     final List<PathObject> pathObjects = new ArrayList<>();
-    for (Entry<String, JsonNode> pathItem : path.getValue().entrySet()) {
-      final PathObject pathObject = PathObject.builder()
-                                              .pathName(pathItem.getKey())
-                                              .globalObject(globalObject)
-                                              .operationObjects(mapOperationObject(specFile, pathItem, globalObject, baseDir))
-                                              .build();
-      pathObjects.add(pathObject);
+    for (var pathMap : path) {
+      for (var pathItem : pathMap.entrySet()) {
+        final PathObject pathObject = PathObject.builder()
+                                                .pathName(pathItem.getKey())
+                                                .globalObject(globalObject)
+                                                .operationObjects(mapOperationObject(specFile, pathItem, globalObject, baseDir))
+                                                .build();
+        pathObjects.add(pathObject);
+      }
     }
 
     return pathObjects;

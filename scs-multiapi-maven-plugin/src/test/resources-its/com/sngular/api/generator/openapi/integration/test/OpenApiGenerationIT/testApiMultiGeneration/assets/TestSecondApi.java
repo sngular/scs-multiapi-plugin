@@ -28,13 +28,13 @@ public interface TestSecondApi {
    */
 
   @Operation(
-     operationId = "listTest",
-     summary = "List all available test",
-     tags = {"testSecond"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestSecondDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorSecondDTO.class)))
-     }
+    operationId = "listTest",
+    summary = "List all available test",
+    tags = {"testSecond"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestSecondDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorSecondDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -52,13 +52,13 @@ public interface TestSecondApi {
    */
 
   @Operation(
-     operationId = "showTestById",
-     summary = "Info for a specific test",
-     tags = {"testSecond"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoSecondDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorSecondDTO.class)))
-     }
+    operationId = "showTestById",
+    summary = "Info for a specific test",
+    tags = {"testSecond"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoSecondDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorSecondDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

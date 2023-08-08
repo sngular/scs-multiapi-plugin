@@ -21,11 +21,34 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import springfox.documentation.annotations.ApiIgnore;
 
-import com.sngular.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
-import com.sngular.multifileplugin.reactivegeneration.model.ApiErrorDTO;
 import com.sngular.multifileplugin.reactivegeneration.model.ApiTestDTO;
+import com.sngular.multifileplugin.reactivegeneration.model.ApiErrorDTO;
+import com.sngular.multifileplugin.reactivegeneration.model.ApiTestInfoDTO;
 
 public interface TestApi {
+
+  /**
+   * GET /test: List all available test
+   * @return  A paged array of tests; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  @Operation(
+     operationId = "listTest",
+     summary = "List all available test",
+     tags = {"test"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
+       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = "/test",
+    produces = {"application/json"}
+  )
+  default ResponseEntity<Flux<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 
   /**
    * GET /test/{testId}: Info for a specific test
@@ -48,29 +71,6 @@ public interface TestApi {
     produces = {"application/json"}
   )
   default ResponseEntity<Mono<ApiTestInfoDTO>> showTestById(@Parameter(name = "testId", description = "The id of the test to retrieve", required = true, schema = @Schema(description = "")) @PathVariable("testId") Integer testId, @ApiIgnore final ServerWebExchange exchange) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  /**
-   * GET /test: List all available test
-   * @return  A paged array of tests; (status code 200)
-   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
-   */
-  @Operation(
-     operationId = "listTest",
-     summary = "List all available test",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
-  )
-  @RequestMapping(
-    method = RequestMethod.GET,
-    value = "/test",
-    produces = {"application/json"}
-  )
-  default ResponseEntity<Flux<ApiTestDTO>> listTest(@ApiIgnore final ServerWebExchange exchange) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

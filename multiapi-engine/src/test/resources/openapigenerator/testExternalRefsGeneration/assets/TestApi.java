@@ -26,12 +26,12 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "listTest",
-     summary = "List all available test",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class)))
-     }
+    operationId = "listTest",
+    summary = "List all available test",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

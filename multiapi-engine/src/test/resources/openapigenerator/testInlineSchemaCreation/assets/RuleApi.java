@@ -28,14 +28,14 @@ public interface RuleApi {
    */
 
   @Operation(
-     operationId = "updateRule",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
+    operationId = "updateRule",
+    tags = {"rules"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.PUT,
@@ -53,14 +53,14 @@ public interface RuleApi {
    */
 
   @Operation(
-     operationId = "getSpecificRule",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
-       @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
+    operationId = "getSpecificRule",
+    tags = {"rules"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -78,14 +78,14 @@ public interface RuleApi {
    */
 
   @Operation(
-     operationId = "deleteRule",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-       @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
+    operationId = "deleteRule",
+    tags = {"rules"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+      @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.DELETE,

@@ -28,13 +28,13 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "showTestById",
-     summary = "Info for a specific test",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestInfoDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
+    operationId = "showTestById",
+    summary = "Info for a specific test",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestInfoDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

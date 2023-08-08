@@ -26,12 +26,12 @@ public interface GamesApi {
    */
 
   @Operation(
-     operationId = "listGames",
-     summary = "List all available games",
-     tags = {"games"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesAnyOfDTO.class)))
-     }
+    operationId = "listGames",
+    summary = "List all available games",
+    tags = {"games"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesAnyOfDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

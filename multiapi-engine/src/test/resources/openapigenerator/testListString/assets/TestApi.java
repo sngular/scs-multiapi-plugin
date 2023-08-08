@@ -25,11 +25,11 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "testListString",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "An object with a list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-     }
+    operationId = "testListString",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "An object with a list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

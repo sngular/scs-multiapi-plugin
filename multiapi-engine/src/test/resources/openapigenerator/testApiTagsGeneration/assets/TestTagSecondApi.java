@@ -28,13 +28,13 @@ public interface TestTagSecondApi {
    */
 
   @Operation(
-     operationId = "showTestById",
-     summary = "Info for a specific test",
-     tags = {"TestTagSecond"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
-     }
+    operationId = "showTestById",
+    summary = "Info for a specific test",
+    tags = {"TestTagSecond"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
