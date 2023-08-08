@@ -40,6 +40,7 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
+import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -164,13 +165,13 @@ public class OpenApiGenerator {
   }
 
   private GlobalObject createApiTemplate(final SpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
-    final Map<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
+    final MultiValuedMap<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
 
-    for (Map.Entry<String, Map<String, JsonNode>> apisEntry : apis.entrySet()) {
-      final String javaFileName = OpenApiUtil.processJavaFileName(apisEntry.getKey());
-      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(specFile, apisEntry, globalObject, baseDir);
+    for (var apisKey : apis.keySet()) {
+      final String javaFileName = OpenApiUtil.processJavaFileName(apisKey);
+      final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(specFile, apis.get(apisKey), globalObject, baseDir);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {

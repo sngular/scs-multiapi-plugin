@@ -21,6 +21,30 @@ import com.sngular.multifileplugin.testRestrictionsSchema.model.SchemaDTO;
 public interface SchemaApi {
 
   /**
+   * POST /schema
+   * @param schemaDTO (required)
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
+   */
+
+  @Operation(
+     operationId = "createSchemaRestriction",
+     tags = {"SchemaRestriction"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+       @ApiResponse(responseCode = "400", description = "Bad Request"),
+       @ApiResponse(responseCode = "500", description = "Server Error")
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.POST,
+    value = "/schema",
+    produces = {"application/json"}
+  )
+
+  default ResponseEntity<SchemaDTO> createSchemaRestriction(@Parameter(name = "schemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody SchemaDTO schemaDTO) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+  /**
    * GET /schema/{name}
    * @param name Schema name to get true
    * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
@@ -69,30 +93,6 @@ public interface SchemaApi {
   )
 
   default ResponseEntity<SchemaDTO> updateSchemaRestrictionByName(@Parameter(name = "name", description = "Schema name to update", required = true, schema = @Schema(description = "")) @PathVariable("name") String name , @Parameter(name = "schemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody SchemaDTO schemaDTO) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-  /**
-   * POST /schema
-   * @param schemaDTO (required)
-   * @return  OK; (status code 200)  Bad Request; (status code 400)  Server Error; (status code 500)
-   */
-
-  @Operation(
-     operationId = "createSchemaRestriction",
-     tags = {"SchemaRestriction"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
-  )
-  @RequestMapping(
-    method = RequestMethod.POST,
-    value = "/schema",
-    produces = {"application/json"}
-  )
-
-  default ResponseEntity<SchemaDTO> createSchemaRestriction(@Parameter(name = "schemaDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody SchemaDTO schemaDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**

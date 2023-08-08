@@ -37,15 +37,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public class OpenApiUtil {
 
-  static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
-
-  static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
   public static final String PATHS = "paths";
+
+  static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
+  static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
 
   private OpenApiUtil() {}
 
-  public static Map<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
-    final Map<String, Map<String, JsonNode>> mapApis = new HashMap<>();
+  public static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
+    final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
     final var pathList = openAPI.findValue(PATHS).fields();
     if (pathList.hasNext()) {
       mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI));
@@ -54,31 +54,21 @@ public class OpenApiUtil {
     return mapApis;
   }
 
-  private static Map<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {
+  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {
 
-    final Map<String, Map<String, JsonNode>> mapApis = new HashMap<>();
+    final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
     while (pathList.hasNext()) {
       final Entry<String, JsonNode> openAPIPath = pathList.next();
       final var mapMethodsByTag = getMapMethodsByTag(openAPIPath);
       for (Entry<String, Map<String, JsonNode>> tagMethodEntry : mapMethodsByTag.entries()) {
-        mapApis.compute(tagMethodEntry.getKey(), (key, value) -> initOrInsert(tagMethodEntry.getValue(), value));
+        mapApis.put(tagMethodEntry.getKey(), tagMethodEntry.getValue());
       }
     }
 
     return mapApis;
 
   }
-
-  private static Map<String, JsonNode> initOrInsert(final Map<String, JsonNode> mapPathMethod, final Map<String, JsonNode> value) {
-    var newValue = value;
-    if (Objects.isNull(newValue)) {
-      newValue = new HashMap<>();
-    }
-    newValue.putAll(mapPathMethod);
-
-    return newValue;
-  }
-
+  
   private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(final Entry<String, JsonNode> pathItem) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapByTag = new ArrayListValuedHashMap<>();
     final var operations = IteratorUtils.filteredIterator(pathItem.getValue().fields(), opProperty -> REST_VERB_SET.contains(opProperty.getKey()));
@@ -92,14 +82,13 @@ public class OpenApiUtil {
     return mapByTag;
   }
 
-  private static Map<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
-    final var mapByUrl = new HashMap<String, Map<String, JsonNode>>();
+  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
+    final var mapByUrl = new ArrayListValuedHashMap<String, Map<String, JsonNode>>();
 
     for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext();) {
       final var pathUrl = it.next();
       final String[] pathName = pathUrl.split("/");
-      mapByUrl.putIfAbsent(pathName[1], new HashMap<>());
-      mapByUrl.get(pathName[1]).put(pathUrl, openAPI.get(PATHS).get(pathUrl));
+      mapByUrl.put(pathName[1], Map.of(pathUrl, openAPI.get(PATHS).get(pathUrl)));
     }
 
     return mapByUrl;

@@ -21,30 +21,6 @@ import com.sngular.multifileplugin.testcomplexanyof.model.ApiSchemaDTO;
 public interface SchemasApi {
 
   /**
-   * GET /schemas/names
-   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
-   */
-
-  @Operation(
-     operationId = "getAllSchemaNames",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
-  )
-  @RequestMapping(
-    method = RequestMethod.GET,
-    value = "/schemas/names",
-    produces = {"application/json"}
-  )
-
-  default ResponseEntity<List<String>> getAllSchemaNames() {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-  /**
    * GET /schemas
    * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
    */
@@ -90,6 +66,30 @@ public interface SchemasApi {
   )
 
   default ResponseEntity<Void> deleteSchemas() {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+  /**
+   * GET /schemas/names
+   * @return  OK; (status code 200)  Bad Request; (status code 400)  Not Found; (status code 404)  Server Error; (status code 500)
+   */
+
+  @Operation(
+     operationId = "getAllSchemaNames",
+     tags = {"schemas"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
+       @ApiResponse(responseCode = "400", description = "Bad Request"),
+       @ApiResponse(responseCode = "404", description = "Not Found"),
+       @ApiResponse(responseCode = "500", description = "Server Error")
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = "/schemas/names",
+    produces = {"application/json"}
+  )
+
+  default ResponseEntity<List<String>> getAllSchemaNames() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
