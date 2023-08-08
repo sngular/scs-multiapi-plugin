@@ -26,11 +26,11 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "testFile",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Some schema from another file", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class)))
-     }
+    operationId = "testFile",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Some schema from another file", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

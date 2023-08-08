@@ -27,13 +27,13 @@ public interface RulesApi {
    */
 
   @Operation(
-     operationId = "getAllRules",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
-     }
+    operationId = "getAllRules",
+    tags = {"rules"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -51,13 +51,13 @@ public interface RulesApi {
    */
 
   @Operation(
-     operationId = "createRule",
-     tags = {"rules"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
-       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
-       @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
-     }
+    operationId = "createRule",
+    tags = {"rules"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiTestDTO.class))),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))),
+      @ApiResponse(responseCode = "default", description = "Error", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.POST,

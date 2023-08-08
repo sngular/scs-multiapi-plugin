@@ -70,13 +70,13 @@ public interface ${className?cap_first}Api {
    */
 
   @Operation(
-     operationId = "${operation.operationId}",<#if operation.summary?has_content>
-     summary = "${operation.summary}",</#if>
-     tags = {<#list operation.tags as tag>"${tag}"</#list>}<#if operation.responseObjects?has_content>,
-     responses = {
-<#list operation.responseObjects as response>       @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}", schema = @Schema(implementation = ${content.dataType?api.getClassString()}))</#list></#if>)<#if !response?is_last>,</#if>
+    operationId = "${operation.operationId}",<#if operation.summary?has_content>
+    summary = "${operation.summary}",</#if>
+    tags = {<#list operation.tags as tag>"${tag}"</#list>}<#if operation.responseObjects?has_content>,
+    responses = {
+<#list operation.responseObjects as response>      @ApiResponse(responseCode = "${response.responseName}", description = "${response.description}"<#if response.contentObjects?has_content>, content = @Content(<#list response.contentObjects as content>mediaType = "${content.name}", schema = @Schema(implementation = ${content.dataType?api.getClassString()}))</#list></#if>)<#if !response?is_last>,</#if>
        </#list>
-     }</#if>
+    }</#if>
   )
   @RequestMapping(
     method = RequestMethod.${operation.operationType},

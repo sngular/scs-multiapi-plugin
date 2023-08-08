@@ -26,11 +26,11 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "testDateTime",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "An object with date and date-time formats", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDateDTO.class)))
-     }
+    operationId = "testDateTime",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "An object with date and date-time formats", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDateDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

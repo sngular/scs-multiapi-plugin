@@ -26,12 +26,12 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "createGame",
-     summary = "Start a Game",
-     tags = {"games"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200CreateGameDTO.class)))
-     }
+    operationId = "createGame",
+    summary = "Start a Game",
+    tags = {"games"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Test File for SCC MultiApi Plugin.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200CreateGameDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.POST,

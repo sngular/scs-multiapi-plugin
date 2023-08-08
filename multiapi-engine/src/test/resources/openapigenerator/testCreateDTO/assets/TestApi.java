@@ -26,12 +26,12 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "testCreateDTO",
-     summary = "testCreateDTO",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "An object with additional properties", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class)))
-     }
+    operationId = "testCreateDTO",
+    summary = "testCreateDTO",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "An object with additional properties", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

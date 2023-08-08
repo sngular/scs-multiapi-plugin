@@ -25,11 +25,11 @@ public interface TestInlineApi {
    */
 
   @Operation(
-     operationId = "testListStringInline",
-     tags = {"test-inline"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-     }
+    operationId = "testListStringInline",
+    tags = {"test-inline"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "A list of strings", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
