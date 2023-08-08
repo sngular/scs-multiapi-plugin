@@ -59,10 +59,7 @@ public class OpenApiUtil {
     final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
     while (pathList.hasNext()) {
       final Entry<String, JsonNode> openAPIPath = pathList.next();
-      final var mapMethodsByTag = getMapMethodsByTag(openAPIPath);
-      for (Entry<String, Map<String, JsonNode>> tagMethodEntry : mapMethodsByTag.entries()) {
-        mapApis.put(tagMethodEntry.getKey(), tagMethodEntry.getValue());
-      }
+      mapApis.putAll(getMapMethodsByTag(openAPIPath));
     }
 
     return mapApis;
@@ -75,8 +72,8 @@ public class OpenApiUtil {
     while (operations.hasNext()) {
       final var method = operations.next();
       if (ApiTool.hasNode(method.getValue(), "tags")) {
-        final var tag = ApiTool.getNode(method.getValue(), "tags").elements().next();
-        mapByTag.put(tag.asText(), Map.of(pathItem.getKey(), new ObjectNode(JsonNodeFactory.instance, Map.ofEntries(method))));
+        final var tag = ApiTool.getNode(method.getValue(), "tags").elements().next().asText();
+        mapByTag.put(tag, Map.of(pathItem.getKey(), new ObjectNode(JsonNodeFactory.instance, Map.ofEntries(method))));
       }
     }
     return mapByTag;
