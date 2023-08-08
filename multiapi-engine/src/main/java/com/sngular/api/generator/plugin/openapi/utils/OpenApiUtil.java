@@ -68,7 +68,7 @@ public class OpenApiUtil {
     return mapApis;
 
   }
-  
+
   private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(final Entry<String, JsonNode> pathItem) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapByTag = new ArrayListValuedHashMap<>();
     final var operations = IteratorUtils.filteredIterator(pathItem.getValue().fields(), opProperty -> REST_VERB_SET.contains(opProperty.getKey()));
