@@ -26,14 +26,14 @@ public interface SchemasApi {
    */
 
   @Operation(
-     operationId = "getSchemas",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "getSchemas",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -50,14 +50,14 @@ public interface SchemasApi {
    */
 
   @Operation(
-     operationId = "deleteSchemas",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK"),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "deleteSchemas",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.DELETE,
@@ -74,14 +74,14 @@ public interface SchemasApi {
    */
 
   @Operation(
-     operationId = "getAllSchemaNames",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "getAllSchemaNames",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

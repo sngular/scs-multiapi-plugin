@@ -28,13 +28,13 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "listTest",
-     summary = "List all available test",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
-     }
+    operationId = "listTest",
+    summary = "List all available test",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "A paged array of tests", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -52,13 +52,13 @@ public interface TestApi {
    */
 
   @Operation(
-     operationId = "showTestById",
-     summary = "Info for a specific test",
-     tags = {"test"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoDTO.class))),
-       @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
-     }
+    operationId = "showTestById",
+    summary = "Info for a specific test",
+    tags = {"test"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TestInfoDTO.class))),
+      @ApiResponse(responseCode = "default", description = "unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDTO.class)))
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,

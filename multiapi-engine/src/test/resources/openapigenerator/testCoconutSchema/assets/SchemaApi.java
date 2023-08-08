@@ -27,13 +27,13 @@ public interface SchemaApi {
    */
 
   @Operation(
-     operationId = "createSchema",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "createSchema",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.POST,
@@ -51,14 +51,14 @@ public interface SchemaApi {
    */
 
   @Operation(
-     operationId = "getSchema",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "getSchema",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.GET,
@@ -77,14 +77,14 @@ public interface SchemaApi {
    */
 
   @Operation(
-     operationId = "updateSchema",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "updateSchema",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.PUT,
@@ -102,14 +102,14 @@ public interface SchemaApi {
    */
 
   @Operation(
-     operationId = "deleteSchema",
-     tags = {"schemas"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK"),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not Found"),
-       @ApiResponse(responseCode = "500", description = "Server Error")
-     }
+    operationId = "deleteSchema",
+    tags = {"schemas"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not Found"),
+      @ApiResponse(responseCode = "500", description = "Server Error")
+    }
   )
   @RequestMapping(
     method = RequestMethod.DELETE,
