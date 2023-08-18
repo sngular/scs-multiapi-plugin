@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.9.7</version>
+  <version>4.9.8</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -213,9 +213,9 @@
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-project.version>2.2.1</maven-project.version>
     <maven-core.version>3.9.1</maven-core.version>
-    <maven-plugin-plugin.version>3.8.2</maven-plugin-plugin.version>
+    <maven-plugin-plugin.version>3.9.0</maven-plugin-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
     <sortpom-maven-plugin.version>3.2.1</sortpom-maven-plugin.version>
     <itf.version>0.12.0</itf.version>
@@ -233,7 +233,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>4.9.7</version>
+      <version>4.9.8</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -347,7 +347,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.3.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <consoleOutput>true</consoleOutput>
@@ -388,7 +388,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.2</version>
         <configuration>
           <systemProperties>
             <maven.version>${maven.version}</maven.version>
@@ -414,7 +414,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
         <configuration>
           <minimizeJar>false</minimizeJar>
           <createDependencyReducedPom>true</createDependencyReducedPom>
@@ -484,6 +484,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <configLocation>../checkstyle.xml</configLocation>
         </configuration>
@@ -505,7 +506,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
