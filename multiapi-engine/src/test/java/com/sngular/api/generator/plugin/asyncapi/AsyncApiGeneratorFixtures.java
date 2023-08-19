@@ -239,6 +239,18 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
+  final static List<SpecFile> TEST_NESTED_OBJECT = List.of(
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testNestedObjectIssue/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .modelNameSuffix("")
+                                        .apiPackage("com.sngular.scsplugin.nestedobject")
+                                        .modelPackage("com.sngular.scsplugin.nestedobject.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
+
   final static List<SpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(
       SpecFile
           .builder()
@@ -752,6 +764,28 @@ public class AsyncApiGeneratorFixtures {
       "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
       "asyncapigenerator/testNoSchemas/assets/Producer.java"
     );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
+                   modelTest(path, expectedProducerFiles, API_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateNestedObject () {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/nestedobject";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model/schemas";
+
+    final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model/messages";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+      "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+      "asyncapigenerator/testNestedObjectIssue/assets/message/UserSignedUp.java"
+    );
+
+    final List<String> expectedProducerFiles = List.of();
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
                    modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
