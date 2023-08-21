@@ -61,7 +61,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.12</version>
+  <version>4.9.8</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -115,7 +115,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id 'java'
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.3.12'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '4.9.8'
 
   openapimodel {
 
@@ -154,7 +154,7 @@ which the plugin is designed.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.12</version>
+  <version>4.9.8</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -577,7 +577,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>4.3.12</version>
+  <version>4.9.8</version>
   <executions>
     <execution>
       <goals>
