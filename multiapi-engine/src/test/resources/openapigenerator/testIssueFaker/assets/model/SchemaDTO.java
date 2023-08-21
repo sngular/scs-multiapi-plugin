@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testIssueFaker.model;
+package com.sngular.multifileplugin.testissuefaker.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

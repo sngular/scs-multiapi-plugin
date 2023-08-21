@@ -368,9 +368,9 @@ public final class OpenApiGeneratorFixtures {
       SpecFile
           .builder()
           .filePath("openapigenerator/testIssueFaker/api-test.yml")
-          .apiPackage("com.sngular.multifileplugin.testIssueFaker")
-          .modelPackage("com.sngular.multifileplugin.testIssueFaker.model")
-          .clientPackage("com.sngular.multifileplugin.testIssueFaker.client")
+          .apiPackage("com.sngular.multifileplugin.testissuefaker")
+          .modelPackage("com.sngular.multifileplugin.testissuefaker.model")
+          .clientPackage("com.sngular.multifileplugin.testissuefaker.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -1137,8 +1137,6 @@ public final class OpenApiGeneratorFixtures {
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testapi/model";
 
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
-
-    final String DEFAULT_CUSTOMVALIDATOR_API = "generated/com/sngular/multifileplugin/testapi/model/customvalidator";
 
     final String COMMON_PATH = "openapigenerator/testValidationAnnotations/";
 

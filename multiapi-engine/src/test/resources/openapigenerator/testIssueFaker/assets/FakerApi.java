@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testIssueFaker;
+package com.sngular.multifileplugin.testissuefaker;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.testIssueFaker.model.ConfigurationDTO;
-import com.sngular.multifileplugin.testIssueFaker.model.FakerSchemaDTO;
+import com.sngular.multifileplugin.testissuefaker.model.ConfigurationDTO;
+import com.sngular.multifileplugin.testissuefaker.model.FakerSchemaDTO;
 
 public interface FakerApi {
 
