@@ -27,6 +27,7 @@ import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperti
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 
 public class MapperContentUtil {
 
@@ -104,12 +105,12 @@ public class MapperContentUtil {
     final var splitPackage = MapperUtil.splitName(component);
     final String className = splitPackage[splitPackage.length - 1];
     return SchemaObject.builder()
-                       .schemaName(StringUtils.capitalize(className))
+                       .schemaName(WordUtils.capitalizeFully(className))
                        .className(MapperUtil.getPojoName(className, prefix, suffix))
                        .importList(getImportList(listSchema))
                        .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
                        .fieldObjectList(listSchema)
-                       .parentPackage(parentPackage)
+                       .parentPackage(parentPackage.toLowerCase())
                        .build();
   }
 
@@ -271,7 +272,7 @@ public class MapperContentUtil {
         setFieldType(fieldObject, schema, required, prefix, suffix);
         if (StringUtils.isNotEmpty(propertyName) && !totalSchemas.containsKey(propertyName)) {
           totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
-          modelToBuildList.add(createKey(modelPackage, propertyName.toUpperCase(), "."));
+          modelToBuildList.add(createKey(modelPackage.toLowerCase(), propertyName, "."));
         }
       } else if (schema.has("items")) {
         final var items = schema.get("items");

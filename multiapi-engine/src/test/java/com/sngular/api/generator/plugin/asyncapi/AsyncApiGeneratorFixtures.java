@@ -732,6 +732,7 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model/messages";
 
     final List<String> expectedModelSchemaFiles = List.of(
+      "asyncapigenerator/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
       "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
     );
 
