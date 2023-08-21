@@ -31,8 +31,10 @@ public class TestUtils {
             .hasSize(expectedFiles.size());
     for (int i = 0; i < outputFiles.size(); i++) {
       reader1 = new FileInputStream(outputFiles.get(i));
+      assertThat(reader1).overridingErrorMessage("File : %s not found", outputFiles.get(i)).isNotNull();
       final String sourceName = expectedFiles.get(i);
       reader2 = TestUtils.resourceAsFile(sourceName);
+      assertThat(reader2).overridingErrorMessage("File : %s not found", outputFiles.get(i)).isNotNull();
       int finalI = i;
       assertThat(reader1).as(() -> "Unexpected content for file " + outputFiles.get(finalI)).hasSameContentAs(reader2);
     }

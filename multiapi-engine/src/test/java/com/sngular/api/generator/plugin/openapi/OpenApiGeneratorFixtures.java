@@ -18,8 +18,10 @@ import java.util.function.Function;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Slf4j
 public final class OpenApiGeneratorFixtures {
 
   final static String GENERATED = "generated";
@@ -1409,6 +1411,7 @@ public final class OpenApiGeneratorFixtures {
       }
     } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
+      log.error(e.getLocalizedMessage());
     }
     return result;
   }
@@ -1426,6 +1429,7 @@ public final class OpenApiGeneratorFixtures {
       }
     } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
+      log.error(e.getLocalizedMessage());
     }
     return result;
   }
