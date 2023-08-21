@@ -100,7 +100,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
 
-    final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList);
+    final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList, parentPackage);
     final var splitPackage = MapperUtil.splitName(component);
     final String className = splitPackage[splitPackage.length - 1];
     return SchemaObject.builder()
@@ -140,17 +140,17 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> getFields(
-      final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
-      final String suffix, final Collection<String> modelToBuildList) {
+          final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
+          final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
       if (OBJECT.equalsIgnoreCase(model.get(TYPE).textValue())) {
-        processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList);
+        processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList, parentPackage);
       } else if (ARRAY.equalsIgnoreCase(model.get(TYPE).textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage));
       } else if ("enum".equalsIgnoreCase(model.get(TYPE).textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage));
       }
     } else if (model.elements().hasNext()) {
       final var fieldsIt = model.fields();
@@ -160,8 +160,8 @@ public class MapperContentUtil {
   }
 
   private static void processFieldObject(
-      final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-      final ArrayList<SchemaFieldObject> fieldObjectArrayList) {
+          final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
+          final ArrayList<SchemaFieldObject> fieldObjectArrayList, String parentPackage) {
     final Set<String> requiredSet = new HashSet<>();
     if (model.has("required")) {
       final JsonNode arrayNode = model.get("required");
@@ -173,8 +173,7 @@ public class MapperContentUtil {
       final var propertiesIt = model.get(PROPERTIES).fieldNames();
       while (propertiesIt.hasNext()) {
         final var property = propertiesIt.next();
-        fieldObjectArrayList.add(
-            processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList, parentPackage));
         if (model.get(PROPERTIES).path(property).has(REF)) {
           modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
         }
@@ -246,27 +245,33 @@ public class MapperContentUtil {
     if (element.has(REF)) {
       final String schemaName = MapperUtil.getLongRefClass(element);
       final var schemaToProcess = totalSchemas.get(schemaName.toUpperCase());
-      result = processFieldObjectList(totalSchemas, schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList);
+      result = processFieldObjectList(totalSchemas, schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList, null);
       result.setRequired(false);
     } else {
-      result = processFieldObjectList(totalSchemas, "", element, required, prefix, suffix, modelToBuildList);
+      result = processFieldObjectList(totalSchemas, "", element, required, prefix, suffix, modelToBuildList, null);
     }
     return result;
   }
 
   private static SchemaFieldObject processFieldObjectList(
-      final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required, final String prefix, final String suffix,
-      final Collection<String> modelToBuildList) {
+          final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
+          final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (schema.has("type")) {
       final var type = schema.get("type").textValue();
       if (OBJECT.equalsIgnoreCase(type)) {
-        fieldObject = SchemaFieldObject.builder().restrictions(new SchemaFieldObjectProperties()).baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).build();
+        fieldObject =
+            SchemaFieldObject
+                .builder()
+                .restrictions(new SchemaFieldObjectProperties())
+                .baseName(name)
+                .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                .build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
         if (StringUtils.isNotEmpty(propertyName) && !totalSchemas.containsKey(propertyName)) {
-          totalSchemas.put(propertyName.toUpperCase(), schema);
-          modelToBuildList.add(propertyName);
+          totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
+          modelToBuildList.add(createKey(modelPackage, propertyName.toUpperCase(), "."));
         }
       } else if (schema.has("items")) {
         final var items = schema.get("items");
@@ -319,6 +324,10 @@ public class MapperContentUtil {
                         .build();
     }
     return fieldObject;
+  }
+
+  private static String createKey(final String modelPackage, final String className, final String separator) {
+    return Objects.nonNull(modelPackage) ? modelPackage.toUpperCase() + separator + className : className;
   }
 
   private static void handleItems(final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
