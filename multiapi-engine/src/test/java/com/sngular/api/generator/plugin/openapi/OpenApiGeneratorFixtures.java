@@ -1234,11 +1234,11 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateIssueFaker() {
 
-    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testIssueFaker";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testissuefaker";
 
-    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testIssueFaker/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testissuefaker/model";
 
-    final String COMMON_PATH = "openapigenerator/testIssueFaker/";
+    final String COMMON_PATH = "openapigenerator/testissuefaker/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
