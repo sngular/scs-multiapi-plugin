@@ -1407,7 +1407,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
     }
     return result;
@@ -1424,7 +1424,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
     }
     return result;
