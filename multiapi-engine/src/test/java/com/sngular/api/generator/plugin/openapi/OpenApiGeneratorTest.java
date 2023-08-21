@@ -90,6 +90,8 @@ class OpenApiGeneratorTest {
                      OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)),
         Arguments.of("testCreateDTO", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
                      OpenApiGeneratorFixtures.validateCreateDTO()),
+        Arguments.of("testIssueFaker", OpenApiGeneratorFixtures.TEST_ISSUE_FAKER,
+                      OpenApiGeneratorFixtures.validateIssueFaker()),
         Arguments.of("testDateTime", OpenApiGeneratorFixtures.TEST_DATE_TIME,
                      OpenApiGeneratorFixtures.validateDateTime()),
         Arguments.of("testDateTimeZoned", OpenApiGeneratorFixtures.TEST_DATE_TIME_ZONED,
