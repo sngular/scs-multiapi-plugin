@@ -1240,7 +1240,7 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testissuefaker/model";
 
-    final String COMMON_PATH = "openapigenerator/testissuefaker/";
+    final String COMMON_PATH = "openapigenerator/testIssueFaker/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
