@@ -76,7 +76,7 @@ public class MapperContentUtil {
     return schemasList;
   }
 
-  private static String getParentName(String[] path) {
+  private static String getParentName(final String[] path) {
     final String parenName;
     if (path.length > 1) {
       parenName = path[path.length - 2];
@@ -86,10 +86,10 @@ public class MapperContentUtil {
     return parenName;
   }
 
-  private static String getComponent(String[] path) {
+  private static String getComponent(final String[] path) {
     final String componentName;
     if (path.length > 1) {
-      componentName = (path[path.length - 2] + "/" + path[path.length - 1]);
+      componentName = path[path.length - 2] + "/" + path[path.length - 1];
     } else {
       componentName = path[0];
     }
