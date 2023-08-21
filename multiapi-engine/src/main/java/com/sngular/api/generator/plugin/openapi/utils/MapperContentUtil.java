@@ -539,11 +539,13 @@ public class MapperContentUtil {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(schema))) {
-      ApiTool.getProperties(schema).forEachRemaining(
+      if (ApiTool.hasProperties(schema)) {
+        ApiTool.getProperties(schema).forEachRemaining(
           processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+      }
     }
 
-    if (ApiTool.hasProperties(schema)) {
+    if (ApiTool.hasAdditionalProperties(schema)) {
       fieldObjectArrayList.addAll(processAdditionalProperties(fieldName, schema, specFile, totalSchemas, compositedSchemas,
               antiLoopList, ADDITIONAL_PROPERTIES, baseDir));
     }
