@@ -20,14 +20,17 @@ public class MultipleOfValidator implements ConstraintValidator<MultipleOf, BigD
 public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Integer> {
 
   private int multiple;
+    <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Float" || field.dataTypeSimple == "float")>
 public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Float> {
 
   private float multiple;
+    <#break>
     <#elseif field.dataTypeSimple?has_content && (field.dataTypeSimple == "Double" || field.dataTypeSimple == "double")>
 public class MultipleOfValidator implements ConstraintValidator<MultipleOf, Double> {
 
   private double multiple;
+    <#break>
     </#if>
 </#list>
 
