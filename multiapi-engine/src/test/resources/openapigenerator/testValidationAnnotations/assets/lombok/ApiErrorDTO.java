@@ -19,6 +19,9 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class ApiErrorDTO {
 
+  @JsonProperty(value ="intCode")
+  private Integer intCode;
+
   @JsonProperty(value ="code")
   @Min(minimum = "10", exclusive = false)
   @Max(maximum = "200", exclusive = true)
@@ -41,7 +44,8 @@ public class ApiErrorDTO {
 
   @Builder
   @Jacksonized
-  private ApiErrorDTO(@NonNull Integer code, @NonNull String message, List<Integer> test) {
+  private ApiErrorDTO(Integer intCode, @NonNull Integer code, @NonNull String message, List<Integer> test) {
+    this.intCode = intCode;
     this.code = code;
     this.message = message;
     this.test = test;
