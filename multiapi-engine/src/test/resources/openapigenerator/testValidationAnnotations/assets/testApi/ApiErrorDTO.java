@@ -22,6 +22,8 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
 @JsonDeserialize(builder = ApiErrorDTO.ApiErrorDTOBuilder.class)
 public class ApiErrorDTO {
 
+  @JsonProperty(value ="intCode")
+  private Integer intCode;
   @JsonProperty(value ="code")
   @Min(minimum = "10", exclusive = false)
   @Max(maximum = "200", exclusive = true)
@@ -39,7 +41,8 @@ public class ApiErrorDTO {
   @UniqueItems
   private List<Integer> test = new ArrayList<Integer>();
 
-  private ApiErrorDTO(Integer code, String message, List<Integer> test) {
+  private ApiErrorDTO(Integer intCode, Integer code, String message, List<Integer> test) {
+    this.intCode = intCode;
     this.code = code;
     this.message = message;
     this.test = test;
@@ -48,6 +51,7 @@ public class ApiErrorDTO {
   }
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
+    this.intCode = builder.intCode;
     this.code = builder.code;
     this.message = builder.message;
     this.test = builder.test;
@@ -62,9 +66,15 @@ public class ApiErrorDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class ApiErrorDTOBuilder {
 
+    private Integer intCode;
     private Integer code;
     private String message;
     private List<Integer> test = new ArrayList<Integer>();
+
+    public ApiErrorDTO.ApiErrorDTOBuilder intCode(Integer intCode) {
+      this.intCode = intCode;
+      return this;
+    }
 
     public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
       this.code = code;
@@ -95,6 +105,14 @@ public class ApiErrorDTO {
     }
   }
 
+  @Schema(name = "intCode", required = false)
+  public Integer getIntCode() {
+    return intCode;
+  }
+  public void setIntCode(Integer intCode) {
+    this.intCode = intCode;
+  }
+
   @Schema(name = "code", required = true)
   public Integer getCode() {
     return code;
@@ -122,18 +140,19 @@ public class ApiErrorDTO {
       return false;
     }
     ApiErrorDTO apiErrorDTO = (ApiErrorDTO) o;
-    return Objects.equals(this.code, apiErrorDTO.code) && Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.test, apiErrorDTO.test);
+    return Objects.equals(this.intCode, apiErrorDTO.intCode) && Objects.equals(this.code, apiErrorDTO.code) && Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.test, apiErrorDTO.test);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, test);
+    return Objects.hash(intCode, code, message, test);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiErrorDTO{");
+    sb.append(" intCode:").append(intCode).append(",");
     sb.append(" code:").append(code).append(",");
     sb.append(" message:").append(message).append(",");
     sb.append(" test:").append(test);
