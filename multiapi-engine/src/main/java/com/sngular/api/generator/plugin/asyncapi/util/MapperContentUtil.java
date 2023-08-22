@@ -162,7 +162,7 @@ public class MapperContentUtil {
 
   private static void processFieldObject(
           final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-          final ArrayList<SchemaFieldObject> fieldObjectArrayList, String parentPackage) {
+          final ArrayList<SchemaFieldObject> fieldObjectArrayList, final String parentPackage) {
     final Set<String> requiredSet = new HashSet<>();
     if (model.has("required")) {
       final JsonNode arrayNode = model.get("required");
@@ -174,7 +174,8 @@ public class MapperContentUtil {
       final var propertiesIt = model.get(PROPERTIES).fieldNames();
       while (propertiesIt.hasNext()) {
         final var property = propertiesIt.next();
-        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix, modelToBuildList, parentPackage));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix,
+                                                        modelToBuildList, parentPackage));
         if (model.get(PROPERTIES).path(property).has(REF)) {
           modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
         }
