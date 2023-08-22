@@ -538,11 +538,9 @@ public class MapperContentUtil {
           final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
-    if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(schema))) {
-      if (ApiTool.hasProperties(schema)) {
-        ApiTool.getProperties(schema).forEachRemaining(
-          processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
-      }
+    if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(schema)) && ApiTool.hasProperties(schema)) {
+      ApiTool.getProperties(schema).forEachRemaining(
+        processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
     }
 
     if (ApiTool.hasAdditionalProperties(schema)) {
