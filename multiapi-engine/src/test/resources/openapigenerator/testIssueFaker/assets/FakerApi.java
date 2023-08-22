@@ -28,13 +28,13 @@ public interface FakerApi {
    */
 
   @Operation(
-     operationId = "generateSchema",
-     tags = {"SchemaGenerator"},
-     responses = {
-       @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FakerSchemaDTO.class))),
-       @ApiResponse(responseCode = "400", description = "Bad Request"),
-       @ApiResponse(responseCode = "404", description = "Not found")
-     }
+    operationId = "generateSchema",
+    tags = {"SchemaGenerator"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FakerSchemaDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request"),
+      @ApiResponse(responseCode = "404", description = "Not found")
+    }
   )
   @RequestMapping(
     method = RequestMethod.POST,
