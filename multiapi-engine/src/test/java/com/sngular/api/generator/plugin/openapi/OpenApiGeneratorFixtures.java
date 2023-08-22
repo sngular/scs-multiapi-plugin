@@ -364,6 +364,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_ISSUE_FAKER = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testIssueFaker/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testIssueFaker")
+          .modelPackage("com.sngular.multifileplugin.testIssueFaker.model")
+          .clientPackage("com.sngular.multifileplugin.testIssueFaker.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static final List<SpecFile> TEST_DATE_TIME = List.of(
       SpecFile
           .builder()
@@ -1220,6 +1232,31 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateIssueFaker() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testIssueFaker";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testIssueFaker/model";
+
+    final String COMMON_PATH = "openapigenerator/testIssueFaker/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "FakerApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/ConfigurationDTO.java",
+        ASSETS_PATH + "model/FakerFieldDTO.java",
+        ASSETS_PATH + "model/FakerSchemaDTO.java",
+        ASSETS_PATH + "model/FieldDTO.java",
+        ASSETS_PATH + "model/SchemaDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateDateTime() {
