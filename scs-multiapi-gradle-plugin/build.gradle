@@ -32,7 +32,7 @@ dependencies {
 
   implementation 'com.sngular:multiapi-engine:4.9.9'
   testImplementation 'org.assertj:assertj-core:3.23.1'
-  testImplementation 'com.puppycrawl.tools:checkstyle:10.3.1'
+  testImplementation 'com.puppycrawl.tools:checkstyle:10.9.1'
 }
 
 jar {
@@ -98,8 +98,8 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.9.3'
-        implementation 'org.assertj:assertj-core:3.23.1'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.9.9'
+        implementation 'org.assertj:assertj-core:3.24.2'
       }
 
       targets {
