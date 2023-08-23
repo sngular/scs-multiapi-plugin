@@ -20,14 +20,17 @@ public class MaxValidator implements ConstraintValidator<Max, BigDecimal> {
 public class MaxValidator implements ConstraintValidator<Max, Integer> {
 
     private int maximum;
+        <#break>
     <#elseif field.dataType.baseType?has_content && (field.dataType.baseType == "Float" || field.dataType.baseType == "float")>
 public class MaxValidator implements ConstraintValidator<Max, Float> {
 
     private float maximum;
+        <#break>
     <#elseif field.dataType.baseType?has_content && (field.dataType.baseType == "Double" || field.dataType.baseType == "double")>
 public class MaxValidator implements ConstraintValidator<Max, Double> {
 
     private double maximum;
+        <#break>
     </#if>
 </#list>
     private boolean exclusive;

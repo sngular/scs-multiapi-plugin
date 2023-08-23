@@ -20,14 +20,17 @@ public class MinValidator implements ConstraintValidator<Min, BigDecimal> {
 public class MinValidator implements ConstraintValidator<Min, Integer> {
 
     private int minimum;
+        <#break>
     <#elseif field.dataType.baseType?has_content && (field.dataType.baseType == "Float" || field.dataType.baseType == "float")>
 public class MinValidator implements ConstraintValidator<Min, Float> {
 
     private float minimum;
+        <#break>
     <#elseif field.dataType.baseType?has_content && (field.dataType.baseType == "Double" || field.dataType.baseType == "double")>
 public class MinValidator implements ConstraintValidator<Min, Double> {
 
     private double minimum;
+        <#break>
     </#if>
 </#list>
     private boolean exclusive;
@@ -47,6 +50,7 @@ public class MinValidator implements ConstraintValidator<Min, Double> {
         <#break>
     <#elseif field.dataType.baseType?has_content && (field.dataType.baseType == "Double" || field.dataType.baseType == "double")>
         this.minimum = Double.parseDouble(constraintAnnotation.minimum());
+        <#break>
     </#if>
 </#list>
         this.exclusive = constraintAnnotation.exclusive();

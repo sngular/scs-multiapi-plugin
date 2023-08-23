@@ -105,6 +105,8 @@ components:
           maximum: 200
           exclusiveMaximum: true
           multipleOf: 10.55
+        intCode:
+          type: integer
         message:
           type: string
           minLength: 50
