@@ -328,8 +328,8 @@ public class AsyncApiGenerator {
   }
 
   private void processOperation(
-      final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel, final String operationId,
-      final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
+      final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel,
+      final String operationId, final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
@@ -349,12 +349,12 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-      final OperationParameterObject operation, final String operationId, final JsonNode channel, final String channelType, final boolean excludingOperationExists) {
+      final OperationParameterObject operation, final String operationId, final JsonNode channel, final String channelType,
+      final boolean excludingOperationExists) {
     final boolean result;
     if (operation != null) {
       final List<String> operationIds = operation.getOperationIds();
-      result = operationIds.contains(operationId)
-               || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
+      result = operationIds.contains(operationId) || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
     } else {
       result = false;
     }
@@ -646,7 +646,7 @@ public class AsyncApiGenerator {
       final String fullNamespace = fileTree.get("namespace").asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();
       namespace = processModelPackage(fullNamespace, modelPackage);
     } catch (final IOException e) {
-      e.printStackTrace();
+      throw new FileSystemException(e);
     }
     return namespace;
   }
