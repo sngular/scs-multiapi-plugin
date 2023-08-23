@@ -17,6 +17,7 @@ import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,7 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class AsyncApiGeneratorTest {
 
-  @TempDir
+  @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
 
   private static AsyncApiGenerator asyncApiGenerator;
@@ -60,6 +61,7 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
         Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
+        Arguments.of("TestNestedObjectIssue", AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT, AsyncApiGeneratorFixtures.validateNestedObject()),
         Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
 

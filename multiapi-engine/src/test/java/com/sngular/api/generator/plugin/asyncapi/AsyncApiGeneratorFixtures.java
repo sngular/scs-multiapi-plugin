@@ -239,6 +239,24 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
+  final static List<SpecFile> TEST_NESTED_OBJECT = List.of(
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testNestedObjectIssue/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .modelNameSuffix("")
+                                        .apiPackage("com.sngular.scsplugin.nestedobject.consumer")
+                                        .modelPackage("com.sngular.scsplugin.nestedobject.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .modelNameSuffix("")
+                                        .apiPackage("com.sngular.scsplugin.nestedobject.producer")
+                                        .modelPackage("com.sngular.scsplugin.nestedobject.model")
+                                        .useLombokModelAnnotation(true)
+                                        .build())
+      .build());
+
   final static List<SpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(
       SpecFile
           .builder()
@@ -320,59 +338,7 @@ public class AsyncApiGeneratorFixtures {
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
   }
 
-  static Function<Path, Boolean> validateTestFileGenerationNoConf() {
-    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/apigenerator/asyncapi";
-
-    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/apigenerator/asyncapi";
-
-    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/apigenerator/asyncapi/model/schemas";
-
-    final String DEFAULT_MODEL_MESSAGE_FOLDER = "generated/com/sngular/apigenerator/asyncapi/model/messages";
-
-    final String DEFAULT_CUSTOMVALIDATOR_FOLDER = DEFAULT_MODEL_MESSAGE_FOLDER + "/customvalidator";
-
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationNoConfiguration/";
-
-    final String ASSETS_PATH = COMMON_PATH + "assets/";
-
-    final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
-
-    final String DEFAULT_EXCEPTION_API = DEFAULT_MODEL_SCHEMA_FOLDER + "/exception";
-
-    final List<String> expectedConsumerFiles = List.of(
-      ASSETS_PATH + "IPublishOperation.java",
-      ASSETS_PATH + "ISubscribeOperation.java",
-      ASSETS_PATH + "Producer.java",
-      ASSETS_PATH + "TestClassName.java");
-
-    final List<String> expectedModelSchemaFiles = List.of(
-      ASSETS_PATH + "CreateOrder.java",
-      ASSETS_PATH + "Order.java",
-      ASSETS_PATH + "OrderLine.java",
-      ASSETS_PATH + "OrderProduct.java",
-      ASSETS_PATH + "Waiter.java"
-    );
-
-    final List<String> expectedValidatorFiles = List.of(
-      CUSTOM_VALIDATOR_PATH + "NotNull.java",
-      CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
-    );
-
-    final List<String> expectedModelMessageFiles = List.of(
-      ASSETS_PATH + "OrderCreated.java"
-    );
-
-    final List<String> expectedExceptionFiles = List.of(
-      ASSETS_PATH + "ModelClassException.java");
-
-    return (path) -> commonTest(path, expectedConsumerFiles, Collections.emptyList(), DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API) &&
-                     modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
-                     modelTest(path, expectedModelMessageFiles, DEFAULT_MODEL_MESSAGE_FOLDER) &&
-                     customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOMVALIDATOR_FOLDER);
-  }
-
-  static Function<Path, Boolean> validateTestIssueGeneration() {
+   static Function<Path, Boolean> validateTestIssueGeneration() {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/producer";
@@ -752,6 +718,29 @@ public class AsyncApiGeneratorFixtures {
       "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
       "asyncapigenerator/testNoSchemas/assets/Producer.java"
     );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
+                   modelTest(path, expectedProducerFiles, API_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateNestedObject () {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/nestedobject";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model/schemas";
+
+    final String MODEL_MESSAGE_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model/messages";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+      "asyncapigenerator/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
+      "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
+    );
+
+    final List<String> expectedModelMessageFiles = List.of(
+      "asyncapigenerator/testNestedObjectIssue/assets/message/UserSignedUp.java"
+    );
+
+    final List<String> expectedProducerFiles = List.of();
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
                    modelTest(path, expectedModelMessageFiles, MODEL_MESSAGE_FOLDER) &&
