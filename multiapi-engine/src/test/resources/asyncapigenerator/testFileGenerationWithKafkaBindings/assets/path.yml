@@ -9,10 +9,12 @@ components:
             type: string
   schemas:
     CreateOrder:
-      order:
-        $ref: '#/components/schemas/Order'
-      waiter:
-        $ref: '#/components/schemas/Waiter'
+      type: object
+      properties:
+        order:
+          $ref: '#/components/schemas/Order'
+        waiter:
+          $ref: '#/components/schemas/Waiter'
     Waiter:
       type: object
       properties:

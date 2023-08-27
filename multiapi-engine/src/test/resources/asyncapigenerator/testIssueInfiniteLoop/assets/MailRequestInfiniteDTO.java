@@ -16,20 +16,20 @@ public class MailRequestInfiniteDTO {
   private String sender;
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
-  @JsonProperty(value ="configDTO")
-  private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO configDTO;
+  @JsonProperty(value ="config")
+  private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config;
 
-  private MailRequestInfiniteDTO(String sender, List<String> recipients, com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO configDTO) {
+  private MailRequestInfiniteDTO(String sender, List<String> recipients, com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
     this.sender = sender;
     this.recipients = recipients;
-    this.configDTO = configDTO;
+    this.config = config;
 
   }
 
   private MailRequestInfiniteDTO(MailRequestInfiniteDTOBuilder builder) {
     this.sender = builder.sender;
     this.recipients = builder.recipients;
-    this.configDTO = builder.configDTO;
+    this.config = builder.config;
 
   }
 
@@ -42,7 +42,7 @@ public class MailRequestInfiniteDTO {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO configDTO;
+    private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config;
 
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder sender(String sender) {
       this.sender = sender;
@@ -62,8 +62,8 @@ public class MailRequestInfiniteDTO {
       return this;
     }
 
-    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder configDTO(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO configDTO) {
-      this.configDTO = configDTO;
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder config(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
+      this.config = config;
       return this;
     }
 
@@ -98,15 +98,15 @@ public class MailRequestInfiniteDTO {
   }
 
   /**
-  * Get configDTO
-  * @return configDTO
+  * Get config
+  * @return config
   */
-  @Schema(name = "configDTO", required = false)
-  public com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO getConfigDTO() {
-    return configDTO;
+  @Schema(name = "config", required = false)
+  public com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO getConfig() {
+    return config;
   }
-  public void setConfigDTO(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO configDTO) {
-    this.configDTO = configDTO;
+  public void setConfig(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
+    this.config = config;
   }
 
   @Override
@@ -118,12 +118,12 @@ public class MailRequestInfiniteDTO {
       return false;
     }
     MailRequestInfiniteDTO mailRequestInfiniteDTO = (MailRequestInfiniteDTO) o;
-    return Objects.equals(this.sender, mailRequestInfiniteDTO.sender) && Objects.equals(this.recipients, mailRequestInfiniteDTO.recipients) && Objects.equals(this.configDTO, mailRequestInfiniteDTO.configDTO);
+    return Objects.equals(this.sender, mailRequestInfiniteDTO.sender) && Objects.equals(this.recipients, mailRequestInfiniteDTO.recipients) && Objects.equals(this.config, mailRequestInfiniteDTO.config);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sender, recipients, configDTO);
+    return Objects.hash(sender, recipients, config);
   }
 
   @Override
@@ -132,7 +132,7 @@ public class MailRequestInfiniteDTO {
     sb.append("MailRequestInfiniteDTO{");
     sb.append(" sender:").append(sender).append(",");
     sb.append(" recipients:").append(recipients).append(",");
-    sb.append(" configDTO:").append(configDTO);
+    sb.append(" config:").append(config);
     sb.append("}");
     return sb.toString();
   }

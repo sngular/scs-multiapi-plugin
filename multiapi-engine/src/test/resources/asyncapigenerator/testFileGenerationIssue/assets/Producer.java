@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegenerationissue.model.event.messages.CustomerOrderEventMessageDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderEventPayloadDTO;
 
 @Configuration
 public class Producer {
@@ -16,7 +16,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<CustomerOrderEventMessageDTO> onCustomerOrderEvent() {
+  public Supplier<CustomerOrderEventPayloadDTO> onCustomerOrderEvent() {
     return () -> onCustomerOrderEvent.onCustomerOrderEvent();
   }
 

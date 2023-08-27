@@ -36,20 +36,20 @@ public class CustomerEventPayloadDTO {
       return String.valueOf(value);
     }
   }
-  @JsonProperty(value ="customerDTO")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
+  @JsonProperty(value ="customer")
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
 
-  private CustomerEventPayloadDTO(String customerId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
+  private CustomerEventPayloadDTO(String customerId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
     this.customerId = customerId;
     this.eventType = eventType;
-    this.customerDTO = customerDTO;
+    this.customer = customer;
 
   }
 
   private CustomerEventPayloadDTO(CustomerEventPayloadDTOBuilder builder) {
     this.customerId = builder.customerId;
     this.eventType = builder.eventType;
-    this.customerDTO = builder.customerDTO;
+    this.customer = builder.customer;
 
   }
 
@@ -62,7 +62,7 @@ public class CustomerEventPayloadDTO {
 
     private String customerId;
     private EventType eventType;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
 
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerId(String customerId) {
       this.customerId = customerId;
@@ -73,8 +73,8 @@ public class CustomerEventPayloadDTO {
       return this;
     }
 
-    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
-      this.customerDTO = customerDTO;
+    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+      this.customer = customer;
       return this;
     }
 
@@ -109,15 +109,15 @@ public class CustomerEventPayloadDTO {
   }
 
   /**
-  * Get customerDTO
-  * @return customerDTO
+  * Get customer
+  * @return customer
   */
-  @Schema(name = "customerDTO", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomerDTO() {
-    return customerDTO;
+  @Schema(name = "customer", required = false)
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomer() {
+    return customer;
   }
-  public void setCustomerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
-    this.customerDTO = customerDTO;
+  public void setCustomer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+    this.customer = customer;
   }
 
   @Override
@@ -129,12 +129,12 @@ public class CustomerEventPayloadDTO {
       return false;
     }
     CustomerEventPayloadDTO customerEventPayloadDTO = (CustomerEventPayloadDTO) o;
-    return Objects.equals(this.customerId, customerEventPayloadDTO.customerId) && Objects.equals(this.eventType, customerEventPayloadDTO.eventType) && Objects.equals(this.customerDTO, customerEventPayloadDTO.customerDTO);
+    return Objects.equals(this.customerId, customerEventPayloadDTO.customerId) && Objects.equals(this.eventType, customerEventPayloadDTO.eventType) && Objects.equals(this.customer, customerEventPayloadDTO.customer);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerId, eventType, customerDTO);
+    return Objects.hash(customerId, eventType, customer);
   }
 
   @Override
@@ -143,7 +143,7 @@ public class CustomerEventPayloadDTO {
     sb.append("CustomerEventPayloadDTO{");
     sb.append(" customerId:").append(customerId).append(",");
     sb.append(" eventType:").append(eventType).append(",");
-    sb.append(" customerDTO:").append(customerDTO);
+    sb.append(" customer:").append(customer);
     sb.append("}");
     return sb.toString();
   }

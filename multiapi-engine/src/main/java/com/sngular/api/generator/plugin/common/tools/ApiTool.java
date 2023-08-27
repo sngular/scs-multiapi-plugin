@@ -74,6 +74,10 @@ public final class ApiTool {
     return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
   }
 
+  public static String getNodeAsString(final JsonNode schema) {
+    return Objects.nonNull(schema) ? schema.textValue() : null;
+  }
+
   public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
     return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
   }
@@ -290,5 +294,13 @@ public final class ApiTool {
 
   private static Transformer<JsonNode, String> getTextValue() {
     return JsonNode::asText;
+  }
+
+  public static boolean hasMessages(final JsonNode node) {
+    return hasNode(node, "components") && hasNode(getNode(node, "components"), "messages");
+  }
+
+  public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
+    return hasMessages(node) ? getNode(getNode(node, "components"), componentType).fields() : Collections.emptyIterator();
   }
 }

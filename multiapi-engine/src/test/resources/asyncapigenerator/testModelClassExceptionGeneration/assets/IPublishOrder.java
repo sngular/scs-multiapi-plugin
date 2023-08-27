@@ -1,8 +1,8 @@
 package com.sngular.scsplugin.modelclass.model.event.producer;
 
-import com.sngular.scsplugin.modelclass.model.event.messages.OrderCreatedEventDTO;
+import com.sngular.scsplugin.modelclass.model.event.schemas.OrderDTO;
 
 public interface IPublishOrder {
 
-  OrderCreatedEventDTO publishOrder();
+  OrderDTO publishOrder();
 }

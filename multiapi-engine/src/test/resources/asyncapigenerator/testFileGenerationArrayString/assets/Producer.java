@@ -2,7 +2,7 @@ package com.sngular.scsplugin.arraywithstring.supplier;
 
 import java.util.function.Supplier;
 
-import com.sngular.scsplugin.arraywithstring.asyncapi.model.messages.ObjectArrayMessageDTO;
+import com.sngular.scsplugin.arraywithstring.asyncapi.model.schemas.ObjectArrayDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +16,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<ObjectArrayMessageDTO> objectArrayString() {
+  public Supplier<ObjectArrayDTO> objectArrayString() {
     return () -> objectArrayString.objectArrayString();
   }
 

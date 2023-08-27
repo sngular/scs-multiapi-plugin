@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.modelclass.model.event.messages.OrderCreatedEventDTO;
+import com.sngular.scsplugin.modelclass.model.event.schemas.OrderDTO;
 
 @Configuration
 public class Producer {
@@ -16,7 +16,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<OrderCreatedEventDTO> publishOrder() {
+  public Supplier<OrderDTO> publishOrder() {
     return () -> publishOrder.publishOrder();
   }
 

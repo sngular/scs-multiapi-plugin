@@ -37,10 +37,12 @@ components:
         $ref: '#/components/schemas/Order'
     CreateOrderEvent:
       payload:
-        order:
-          $ref: '#/components/schemas/Order'
-        waiter:
-          $ref: '#/components/schemas/Waiter'
+        type: object
+        properties:
+          order:
+            $ref: '#/components/schemas/Order'
+          waiter:
+            $ref: '#/components/schemas/Waiter'
   schemas:
     Waiter:
       type: object

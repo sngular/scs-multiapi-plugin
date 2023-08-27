@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.modelclass.model.event.consumer;
 
-import com.sngular.scsplugin.modelclass.model.event.messages.CreateOrderEventDTO;
+import com.sngular.scsplugin.modelclass.model.event.CreateOrderEventDTO;
 
 public interface ISubscribeOrder {
 

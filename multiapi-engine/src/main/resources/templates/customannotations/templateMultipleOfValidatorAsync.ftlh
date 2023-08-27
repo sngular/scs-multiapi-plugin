@@ -1,4 +1,4 @@
-package ${packageModel}.customvalidator;
+package ${packageModel}.${schema.parentPackage}.customvalidator;
 
 <#list schema.fieldObjectList as field>
     <#if field.dataTypeSimple?has_content && field.dataTypeSimple == "BigDecimal">

@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.issuegeneration.model.event.messages.StatusDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.schemas.StatusMsgDTO;
 
 @Configuration
 public class Subscriber {
@@ -16,7 +16,7 @@ public class Subscriber {
   }
 
   @Bean
-  public Consumer<StatusDTO> response() {
+  public Consumer<StatusMsgDTO> response() {
     return value -> response.response(value);
   }
 

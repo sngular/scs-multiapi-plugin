@@ -36,20 +36,20 @@ public class CustomerOrderEventPayloadDTO {
       return String.valueOf(value);
     }
   }
-  @JsonProperty(value ="customerOrderDTO")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO;
+  @JsonProperty(value ="customerOrder")
+  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder;
 
-  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
+  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
     this.customerOrderId = customerOrderId;
     this.eventType = eventType;
-    this.customerOrderDTO = customerOrderDTO;
+    this.customerOrder = customerOrder;
 
   }
 
   private CustomerOrderEventPayloadDTO(CustomerOrderEventPayloadDTOBuilder builder) {
     this.customerOrderId = builder.customerOrderId;
     this.eventType = builder.eventType;
-    this.customerOrderDTO = builder.customerOrderDTO;
+    this.customerOrder = builder.customerOrder;
 
   }
 
@@ -62,7 +62,7 @@ public class CustomerOrderEventPayloadDTO {
 
     private String customerOrderId;
     private EventType eventType;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO;
+    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
       this.customerOrderId = customerOrderId;
@@ -73,8 +73,8 @@ public class CustomerOrderEventPayloadDTO {
       return this;
     }
 
-    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
-      this.customerOrderDTO = customerOrderDTO;
+    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrder(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
+      this.customerOrder = customerOrder;
       return this;
     }
 
@@ -109,15 +109,15 @@ public class CustomerOrderEventPayloadDTO {
   }
 
   /**
-  * Get customerOrderDTO
-  * @return customerOrderDTO
+  * Get customerOrder
+  * @return customerOrder
   */
-  @Schema(name = "customerOrderDTO", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO getCustomerOrderDTO() {
-    return customerOrderDTO;
+  @Schema(name = "customerOrder", required = false)
+  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO getCustomerOrder() {
+    return customerOrder;
   }
-  public void setCustomerOrderDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrderDTO) {
-    this.customerOrderDTO = customerOrderDTO;
+  public void setCustomerOrder(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
+    this.customerOrder = customerOrder;
   }
 
   @Override
@@ -129,12 +129,12 @@ public class CustomerOrderEventPayloadDTO {
       return false;
     }
     CustomerOrderEventPayloadDTO customerOrderEventPayloadDTO = (CustomerOrderEventPayloadDTO) o;
-    return Objects.equals(this.customerOrderId, customerOrderEventPayloadDTO.customerOrderId) && Objects.equals(this.eventType, customerOrderEventPayloadDTO.eventType) && Objects.equals(this.customerOrderDTO, customerOrderEventPayloadDTO.customerOrderDTO);
+    return Objects.equals(this.customerOrderId, customerOrderEventPayloadDTO.customerOrderId) && Objects.equals(this.eventType, customerOrderEventPayloadDTO.eventType) && Objects.equals(this.customerOrder, customerOrderEventPayloadDTO.customerOrder);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerOrderId, eventType, customerOrderDTO);
+    return Objects.hash(customerOrderId, eventType, customerOrder);
   }
 
   @Override
@@ -143,7 +143,7 @@ public class CustomerOrderEventPayloadDTO {
     sb.append("CustomerOrderEventPayloadDTO{");
     sb.append(" customerOrderId:").append(customerOrderId).append(",");
     sb.append(" eventType:").append(eventType).append(",");
-    sb.append(" customerOrderDTO:").append(customerOrderDTO);
+    sb.append(" customerOrder:").append(customerOrder);
     sb.append("}");
     return sb.toString();
   }

@@ -114,30 +114,29 @@ public class MapperContentUtil {
                        .build();
   }
 
-  private static List<String> getImportList(final List<SchemaFieldObject> fieldObjectList) {
+  private static List<String> getImportList(final List<SchemaFieldObject> schemaListToImport) {
     final var listHashMap = new HashMap<String, List<String>>();
-    final var importList = new ArrayList<String>();
+    final var importList = new HashSet<String>();
 
-    for (SchemaFieldObject fieldObject : fieldObjectList) {
-      getTypeImports(listHashMap, fieldObject);
+    for (SchemaFieldObject fieldObject : schemaListToImport) {
+      importList.addAll(getTypeImports(fieldObject));
     }
-    if (!listHashMap.isEmpty()) {
-      listHashMap.forEach((key, value) -> importList.addAll(value));
-    }
-    return importList;
+    return new ArrayList<>(importList);
   }
 
-  private static void getTypeImports(final HashMap<String, List<String>> listHashMap, final SchemaFieldObject fieldObject) {
+  private static List<String> getTypeImports(final SchemaFieldObject fieldObject) {
+    final List<String> importList = new ArrayList<>();
     if (Objects.nonNull(fieldObject.getDataTypeSimple())) {
       if (fieldObject.getDataTypeSimple().equals(ARRAY)) {
-        listHashMap.computeIfAbsent(ARRAY, key -> List.of("java.util.List", "java.util.ArrayList"));
+        importList.addAll(List.of("java.util.List", "java.util.ArrayList"));
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
-        listHashMap.computeIfAbsent(MAP, key -> List.of("java.util.Map", "java.util.HashMap"));
+        importList.addAll(List.of("java.util.Map", "java.util.HashMap"));
       } else if (fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
-        listHashMap.computeIfAbsent(BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+        importList.add("java.math.BigDecimal");
       }
     }
+    return importList;
   }
 
   private static List<SchemaFieldObject> getFields(
@@ -147,23 +146,26 @@ public class MapperContentUtil {
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
       if (OBJECT.equalsIgnoreCase(model.get(TYPE).textValue())) {
-        processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, fieldObjectArrayList, parentPackage);
+        fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage));
       } else if (ARRAY.equalsIgnoreCase(model.get(TYPE).textValue())) {
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage));
       } else if ("enum".equalsIgnoreCase(model.get(TYPE).textValue())) {
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage));
       }
+    } else if (ApiTool.hasRef(model)) {
+      fieldObjectArrayList.addAll(processFieldObject(totalSchemas, totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(ApiTool.getRefValue(model)))), prefix, suffix,
+                                              modelToBuildList, parentPackage));
     } else if (model.elements().hasNext()) {
-      final var fieldsIt = model.fields();
-      extractFieldsComplexObject(fieldObjectArrayList, fieldsIt, modelToBuildList, prefix, suffix);
+      fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage));
     }
     return fieldObjectArrayList;
   }
 
-  private static void processFieldObject(
+  private static List<SchemaFieldObject> processFieldObject(
           final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-          final ArrayList<SchemaFieldObject> fieldObjectArrayList, final String parentPackage) {
+          final String parentPackage) {
     final Set<String> requiredSet = new HashSet<>();
+    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     if (model.has("required")) {
       final JsonNode arrayNode = model.get("required");
       final Iterator<JsonNode> fields = arrayNode.iterator();
@@ -190,6 +192,7 @@ public class MapperContentUtil {
       fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ONE_OF), false, prefix, suffix, modelToBuildList));
       schemaCombinatorType = ONE_OF;
     }
+    return fieldObjectArrayList;
   }
 
   private static void extractFieldsComplexObject(
@@ -260,14 +263,14 @@ public class MapperContentUtil {
           final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
-    if (schema.has("type")) {
-      final var type = schema.get("type").textValue();
+    if (ApiTool.hasType(schema)) {
+      final var type = ApiTool.getType(schema);
       if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject =
             SchemaFieldObject
                 .builder()
-                .restrictions(new SchemaFieldObjectProperties())
                 .baseName(name)
+                .restrictions(new SchemaFieldObjectProperties())
                 .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                 .build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
@@ -275,8 +278,8 @@ public class MapperContentUtil {
           totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
           modelToBuildList.add(createKey(modelPackage.toLowerCase(), propertyName, "."));
         }
-      } else if (schema.has("items")) {
-        final var items = schema.get("items");
+      } else if (ApiTool.hasItems(schema)) {
+        final var items = ApiTool.getItems(schema);
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
         String parentPackage = null;
         if (items.has(REF)) {
@@ -296,24 +299,26 @@ public class MapperContentUtil {
                 .parentPackage(parentPackage)
                 .build();
         handleItems(schema, modelToBuildList, fieldObject, required, items);
-      } else if (schema.has("enum")) {
+      } else if (ApiTool.isEnum(schema)) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
         fieldObject = SchemaFieldObject
                           .builder()
-                          .restrictions(new SchemaFieldObjectProperties()).baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .baseName(name)
+                          .restrictions(new SchemaFieldObjectProperties())
+                          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .build();
         setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
       }
-    } else if (schema.has(REF)) {
+    } else if (ApiTool.hasRef(schema)) {
       final String[] path = MapperUtil.splitName(schema.get(REF).textValue());
       final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
       fieldObject =
           SchemaFieldObject
               .builder()
-              .baseName(refSchemaName)
+              .baseName(name)
               .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
               .restrictions(new SchemaFieldObjectProperties())
               .parentPackage(path[path.length - 2])
@@ -321,7 +326,10 @@ public class MapperContentUtil {
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
       fieldObject = SchemaFieldObject
-                        .builder().baseName(name).dataType(MapperUtil.getSimpleType(schema, prefix, suffix)).dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .builder()
+                        .baseName(name)
+                        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                         .restrictions(new SchemaFieldObjectProperties())
                         .build();
     }
@@ -334,7 +342,7 @@ public class MapperContentUtil {
 
   private static void handleItems(final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
       final JsonNode items) {
-    if (items.has("$ref")) {
+    if (ApiTool.hasRef(items)) {
       modelToBuildList.add(MapperUtil.getLongRefClass(items));
     }
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();

@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.withoutids.model.event.consumer;
 
-import com.sngular.scsplugin.withoutids.model.event.messages.CreateOrderDTO;
+import com.sngular.scsplugin.withoutids.model.event.CreateOrderDTO;
 
 public interface ISubscribeOperation {
 

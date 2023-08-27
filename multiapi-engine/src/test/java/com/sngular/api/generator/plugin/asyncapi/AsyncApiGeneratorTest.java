@@ -62,6 +62,7 @@ class AsyncApiGeneratorTest {
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
         Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
         Arguments.of("TestNestedObjectIssue", AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT, AsyncApiGeneratorFixtures.validateNestedObject()),
+        Arguments.of("testPropertiesNotGeneratedIssue", AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE, AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),
         Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
 

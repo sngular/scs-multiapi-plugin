@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegeneration.model.event.messages.OrderCreatedDTO;
+import com.sngular.scsplugin.filegeneration.model.event.schemas.OrderDTO;
 
 @Configuration
 public class TestClassName {
@@ -16,7 +16,7 @@ public class TestClassName {
   }
 
   @Bean
-  public Consumer<OrderCreatedDTO> publishOperationFileGeneration() {
+  public Consumer<OrderDTO> publishOperationFileGeneration() {
     return value -> publishOperationFileGeneration.publishOperationFileGeneration(value);
   }
 

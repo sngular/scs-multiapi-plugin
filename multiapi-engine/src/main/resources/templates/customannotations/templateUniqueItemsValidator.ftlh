@@ -1,4 +1,4 @@
-package ${packageModel}.customvalidator;
+package ${packageModel}.${schema.parentPackage}.customvalidator;
 
 import java.util.Arrays;
 import java.util.HashSet;

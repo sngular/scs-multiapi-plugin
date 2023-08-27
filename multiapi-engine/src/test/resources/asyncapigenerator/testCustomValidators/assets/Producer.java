@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.customvalidator.model.event.messages.DataClientDTO;
+import com.sngular.scsplugin.customvalidator.model.event.schemas.DataDTO;
 
 @Configuration
 public class Producer {
@@ -16,7 +16,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<DataClientDTO> customValidatorClients() {
+  public Supplier<DataDTO> customValidatorClients() {
     return () -> customValidatorClients.customValidatorClients();
   }
 

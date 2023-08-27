@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.customvalidator;
+package com.sngular.scsplugin.filegenerationissue.model.event.schemas.customvalidator;
 
 import java.util.Objects;
 

@@ -1,8 +1,8 @@
 package com.sngular.scsplugin.filegeneration.model.event.consumer;
 
-import com.sngular.scsplugin.filegeneration.model.event.messages.OrderCreatedDTO;
+import com.sngular.scsplugin.filegeneration.model.event.schemas.OrderDTO;
 
 public interface IPublishOperationFileGeneration {
 
-  void publishOperationFileGeneration(final OrderCreatedDTO value);
+  void publishOperationFileGeneration(final OrderDTO value);
 }
