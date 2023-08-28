@@ -268,13 +268,6 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
                                         .modelPackage("com.sngular.scsplugin.notgeneratedproperties.model")
                                         .useLombokModelAnnotation(true)
                                         .build())
-      .supplier(OperationParameterObject.builder()
-                                        .modelNameSuffix("")
-                                        .operationIds(List.of("onUserSignUp"))
-                                        .apiPackage("com.sngular.scsplugin.notgeneratedproperties.producer")
-                                        .modelPackage("com.sngular.scsplugin.notgeneratedproperties.model")
-                                        .useLombokModelAnnotation(true)
-                                        .build())
       .build());
 
   final static List<SpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(

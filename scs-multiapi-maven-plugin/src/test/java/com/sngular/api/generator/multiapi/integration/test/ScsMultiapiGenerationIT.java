@@ -51,16 +51,14 @@ public class ScsMultiapiGenerationIT {
   private void commonTest(String testName, String generatedSourcesFolderName, MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
 
-    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperationExternalAvro.java");
+    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
 
-    List<String> expectedConsumerFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT" +
-                                                 "/" + testName + "/assets/IPublishOperation.java",
+    List<String> expectedConsumerFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/IPublishOperation.java",
 
-                                                 "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName +
-                                                 "/assets/TestClassName.java");
+                                                 "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/TestClassName.java");
 
     List<String> expectedProducerFiles = List.of(
-      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ISubscribeOperationExternalAvro.java",
+      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ISubscribeOperation.java",
       "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/Producer.java");
 
     List<String> expectedFileNames = List.of("TestApi.java");
@@ -73,12 +71,11 @@ public class ScsMultiapiGenerationIT {
     List<String> expectedModelFiles = List.of(
       "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ApiErrorDTO.java",
       "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ApiTestDTO.java",
-      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ApiTestInfoDTO.java"    );
+      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ApiTestInfoDTO.java");
 
     List<String> expectedExceptionFilenames = List.of("ModelClassException.java");
 
-    List<String> expectedExceptionFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets" +
-                                                  "/ModelClassException.java");
+    List<String> expectedExceptionFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ModelClassException.java");
 
     assertThat(result).hasTarget();
     Path pathToTarget = result.getTargetProjectDirectory().toAbsolutePath();
