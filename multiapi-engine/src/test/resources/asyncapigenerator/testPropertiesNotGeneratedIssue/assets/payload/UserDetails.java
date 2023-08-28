@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.notgeneratedproperties.model.schemas;
+package com.sngular.scsplugin.notgeneratedproperties.model;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package ${packageModel}.${schema.parentPackage};
+package ${packageModel};
 
 import java.util.Objects;
 

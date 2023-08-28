@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
@@ -17,17 +17,17 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="date")
   private String date;
   @JsonProperty(value ="shippingDetails")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetails;
+  private ShippingDetailsDTO shippingDetails;
   @JsonProperty(value ="orderedItems")
-  private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO>();
+  private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
   @JsonProperty(value ="paymentDetails")
-  private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO>();
+  private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
   @JsonProperty(value ="status")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO status;
+  private OrderStatusDTO status;
   @JsonProperty(value ="customer")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
+  private CustomerDTO customer;
 
-  private CustomerOrderDTO(String id, String date, com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetails, List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems, List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails, com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO status, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+  private CustomerOrderDTO(String id, String date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, OrderStatusDTO status, CustomerDTO customer) {
     this.id = id;
     this.date = date;
     this.shippingDetails = shippingDetails;
@@ -58,11 +58,11 @@ public class CustomerOrderDTO {
 
     private String id;
     private String date;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetails;
-    private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO>();
-    private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO>();
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO status;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
+    private ShippingDetailsDTO shippingDetails;
+    private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+    private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+    private OrderStatusDTO status;
+    private CustomerDTO customer;
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {
       this.id = id;
@@ -74,43 +74,43 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetails) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(ShippingDetailsDTO shippingDetails) {
       this.shippingDetails = shippingDetails;
       return this;
     }
-    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
       if (!orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO orderedItem) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(OrderedItemDTO orderedItem) {
       if (orderedItem != null) {
         this.orderedItems.add(orderedItem);
       }
       return this;
     }
-    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<PaymentDetailsDTO> paymentDetails) {
       if (!paymentDetails.isEmpty()) {
         this.paymentDetails.addAll(paymentDetails);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO paymentDetail) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(PaymentDetailsDTO paymentDetail) {
       if (paymentDetail != null) {
         this.paymentDetails.add(paymentDetail);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder status(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO status) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder status(OrderStatusDTO status) {
       this.status = status;
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder customer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder customer(CustomerDTO customer) {
       this.customer = customer;
       return this;
     }
@@ -150,10 +150,10 @@ public class CustomerOrderDTO {
   * @return shippingDetails
   */
   @Schema(name = "shippingDetails", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO getShippingDetails() {
+  public ShippingDetailsDTO getShippingDetails() {
     return shippingDetails;
   }
-  public void setShippingDetails(com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetails) {
+  public void setShippingDetails(ShippingDetailsDTO shippingDetails) {
     this.shippingDetails = shippingDetails;
   }
 
@@ -162,10 +162,10 @@ public class CustomerOrderDTO {
   * @return orderedItems
   */
   @Schema(name = "orderedItems", required = false)
-  public List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> getOrderedItems() {
+  public List<OrderedItemDTO> getOrderedItems() {
     return orderedItems;
   }
-  public void setOrderedItems(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems) {
+  public void setOrderedItems(List<OrderedItemDTO> orderedItems) {
     this.orderedItems = orderedItems;
   }
 
@@ -174,10 +174,10 @@ public class CustomerOrderDTO {
   * @return paymentDetails
   */
   @Schema(name = "paymentDetails", required = false)
-  public List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> getPaymentDetails() {
+  public List<PaymentDetailsDTO> getPaymentDetails() {
     return paymentDetails;
   }
-  public void setPaymentDetails(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails) {
+  public void setPaymentDetails(List<PaymentDetailsDTO> paymentDetails) {
     this.paymentDetails = paymentDetails;
   }
 
@@ -186,10 +186,10 @@ public class CustomerOrderDTO {
   * @return status
   */
   @Schema(name = "status", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO getStatus() {
+  public OrderStatusDTO getStatus() {
     return status;
   }
-  public void setStatus(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO status) {
+  public void setStatus(OrderStatusDTO status) {
     this.status = status;
   }
 
@@ -198,10 +198,10 @@ public class CustomerOrderDTO {
   * @return customer
   */
   @Schema(name = "customer", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomer() {
+  public CustomerDTO getCustomer() {
     return customer;
   }
-  public void setCustomer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+  public void setCustomer(CustomerDTO customer) {
     this.customer = customer;
   }
 

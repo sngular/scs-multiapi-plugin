@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schemas;
+package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
@@ -20,9 +20,9 @@ public class OrderMapper {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper>();
+  private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
 
-  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
+  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<OrderLineMapper> lines) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
@@ -48,7 +48,7 @@ public class OrderMapper {
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper>();
+    private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
 
     public OrderMapper.OrderMapperBuilder ref(String ref) {
       this.ref = ref;
@@ -64,14 +64,14 @@ public class OrderMapper {
       this.amount = amount;
       return this;
     }
-    public OrderMapper.OrderMapperBuilder lines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
+    public OrderMapper.OrderMapperBuilder lines(List<OrderLineMapper> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;
     }
 
-    public OrderMapper.OrderMapperBuilder line(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper line) {
+    public OrderMapper.OrderMapperBuilder line(OrderLineMapper line) {
       if (line != null) {
         this.lines.add(line);
       }
@@ -125,10 +125,10 @@ public class OrderMapper {
   * @return lines
   */
   @Schema(name = "lines", required = false)
-  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> getLines() {
+  public List<OrderLineMapper> getLines() {
     return lines;
   }
-  public void setLines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineMapper> lines) {
+  public void setLines(List<OrderLineMapper> lines) {
     this.lines = lines;
   }
 

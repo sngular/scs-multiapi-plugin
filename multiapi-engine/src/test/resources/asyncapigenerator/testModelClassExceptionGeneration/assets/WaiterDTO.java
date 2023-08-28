@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.modelclass.model.event.schemas;
+package com.sngular.scsplugin.modelclass.model.event;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.infiniteLoop.model.schemas;
+package com.sngular.scsplugin.infiniteLoop.model;
 
 import java.util.Objects;
 
@@ -17,9 +17,9 @@ public class MailRequestInfiniteDTO {
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
   @JsonProperty(value ="config")
-  private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config;
+  private ConfigDTO config;
 
-  private MailRequestInfiniteDTO(String sender, List<String> recipients, com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
+  private MailRequestInfiniteDTO(String sender, List<String> recipients, ConfigDTO config) {
     this.sender = sender;
     this.recipients = recipients;
     this.config = config;
@@ -42,7 +42,7 @@ public class MailRequestInfiniteDTO {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config;
+    private ConfigDTO config;
 
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder sender(String sender) {
       this.sender = sender;
@@ -62,7 +62,7 @@ public class MailRequestInfiniteDTO {
       return this;
     }
 
-    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder config(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
+    public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder config(ConfigDTO config) {
       this.config = config;
       return this;
     }
@@ -102,10 +102,10 @@ public class MailRequestInfiniteDTO {
   * @return config
   */
   @Schema(name = "config", required = false)
-  public com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO getConfig() {
+  public ConfigDTO getConfig() {
     return config;
   }
-  public void setConfig(com.sngular.scsplugin.infiniteLoop.model.schemas.ConfigDTO config) {
+  public void setConfig(ConfigDTO config) {
     this.config = config;
   }
 

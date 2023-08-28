@@ -35,6 +35,4 @@ public class SchemaFieldObject {
 
   private List<String> enumValues;
 
-  private String parentPackage;
-
 }

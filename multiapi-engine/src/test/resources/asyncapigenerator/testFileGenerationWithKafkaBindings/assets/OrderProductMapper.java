@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.exception.ModelClassException;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = OrderProductMapper.OrderProductMapperBuilder.class)

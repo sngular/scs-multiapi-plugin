@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.notgeneratedproperties.consumer;
 
-import com.sngular.scsplugin.notgeneratedproperties.model.schemas.UserSignedUp;
+import com.sngular.scsplugin.model.schemas.UserSignedUp;
 
 public interface IEmitUserSignUpEvent {
 

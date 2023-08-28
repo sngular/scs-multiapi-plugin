@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.modelclass.model.event;
 
 import java.util.Objects;
 
@@ -7,49 +7,49 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonDeserialize(builder = CreateOrderMapper.CreateOrderMapperBuilder.class)
-public class CreateOrderMapper {
+@JsonDeserialize(builder = CreateOrderEventDTO.CreateOrderEventDTOBuilder.class)
+public class CreateOrderEventDTO {
 
   @JsonProperty(value ="order")
-  private OrderMapper order;
+  private OrderDTO order;
   @JsonProperty(value ="waiter")
-  private WaiterMapper waiter;
+  private WaiterDTO waiter;
 
-  private CreateOrderMapper(OrderMapper order, WaiterMapper waiter) {
+  private CreateOrderEventDTO(OrderDTO order, WaiterDTO waiter) {
     this.order = order;
     this.waiter = waiter;
 
   }
 
-  private CreateOrderMapper(CreateOrderMapperBuilder builder) {
+  private CreateOrderEventDTO(CreateOrderEventDTOBuilder builder) {
     this.order = builder.order;
     this.waiter = builder.waiter;
 
   }
 
-  public static CreateOrderMapper.CreateOrderMapperBuilder builder() {
-    return new CreateOrderMapper.CreateOrderMapperBuilder();
+  public static CreateOrderEventDTO.CreateOrderEventDTOBuilder builder() {
+    return new CreateOrderEventDTO.CreateOrderEventDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class CreateOrderMapperBuilder {
+  public static class CreateOrderEventDTOBuilder {
 
-    private OrderMapper order;
-    private WaiterMapper waiter;
+    private OrderDTO order;
+    private WaiterDTO waiter;
 
-    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
+    public CreateOrderEventDTO.CreateOrderEventDTOBuilder order(OrderDTO order) {
       this.order = order;
       return this;
     }
 
-    public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
+    public CreateOrderEventDTO.CreateOrderEventDTOBuilder waiter(WaiterDTO waiter) {
       this.waiter = waiter;
       return this;
     }
 
-    public CreateOrderMapper build() {
-      CreateOrderMapper createOrderMapper = new CreateOrderMapper(this);
-      return createOrderMapper;
+    public CreateOrderEventDTO build() {
+      CreateOrderEventDTO createOrderEventDTO = new CreateOrderEventDTO(this);
+      return createOrderEventDTO;
     }
   }
 
@@ -58,10 +58,10 @@ public class CreateOrderMapper {
   * @return order
   */
   @Schema(name = "order", required = false)
-  public OrderMapper getOrder() {
+  public OrderDTO getOrder() {
     return order;
   }
-  public void setOrder(OrderMapper order) {
+  public void setOrder(OrderDTO order) {
     this.order = order;
   }
 
@@ -70,10 +70,10 @@ public class CreateOrderMapper {
   * @return waiter
   */
   @Schema(name = "waiter", required = false)
-  public WaiterMapper getWaiter() {
+  public WaiterDTO getWaiter() {
     return waiter;
   }
-  public void setWaiter(WaiterMapper waiter) {
+  public void setWaiter(WaiterDTO waiter) {
     this.waiter = waiter;
   }
 
@@ -85,8 +85,8 @@ public class CreateOrderMapper {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateOrderMapper createOrderMapper = (CreateOrderMapper) o;
-    return Objects.equals(this.order, createOrderMapper.order) && Objects.equals(this.waiter, createOrderMapper.waiter);
+    CreateOrderEventDTO createOrderEventDTO = (CreateOrderEventDTO) o;
+    return Objects.equals(this.order, createOrderEventDTO.order) && Objects.equals(this.waiter, createOrderEventDTO.waiter);
   }
 
   @Override
@@ -97,7 +97,7 @@ public class CreateOrderMapper {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("CreateOrderMapper{");
+    sb.append("CreateOrderEventDTO{");
     sb.append(" order:").append(order).append(",");
     sb.append(" waiter:").append(waiter);
     sb.append("}");

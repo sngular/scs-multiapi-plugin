@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.infiniteLoop.model.schemas;
+package com.sngular.scsplugin.infiniteLoop.model;
 
 import java.util.Objects;
 

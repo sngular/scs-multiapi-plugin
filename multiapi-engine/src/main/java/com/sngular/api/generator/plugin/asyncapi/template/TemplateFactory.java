@@ -116,14 +116,7 @@ public class TemplateFactory {
 
     final String exceptionPackage;
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      final ClassTemplate finalClassTemplate = getClassTemplate();
-      if (finalClassTemplate.getFilePath().endsWith("schemas")) {
-        fillTemplateModelClassException(finalClassTemplate.getFilePath(), finalClassTemplate.getModelPackage() + ".schemas");
-        exceptionPackage = finalClassTemplate.getModelPackage() + ".schemas";
-      } else {
-        fillTemplateModelClassException(finalClassTemplate.getFilePath(), finalClassTemplate.getModelPackage() + ".messages");
-        exceptionPackage = finalClassTemplate.getModelPackage() + ".messages";
-      }
+      exceptionPackage = getClassTemplate().getModelPackage();
     } else {
       exceptionPackage = null;
     }
@@ -131,7 +124,7 @@ public class TemplateFactory {
     final HashSet<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
-        fillTemplateSchema(classTemplate, false, propertiesSet, exceptionPackage);
+        propertiesSet.addAll(fillTemplateSchema(classTemplate, false, exceptionPackage));
       } catch (final IOException | TemplateException exception) {
         throw new FileSystemException(exception);
       }
@@ -139,7 +132,7 @@ public class TemplateFactory {
 
     if (!schemaObjectMap.isEmpty()) {
       try {
-        fillTemplates(schemaObjectMap.get(0).getFilePath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
+        fillTemplates(schemaObjectMap.get(0).getPropertiesPath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
       } catch (IOException | TemplateException e) {
         throw new GeneratorTemplateException("Generation Error", e);
       }
@@ -227,9 +220,9 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
-  private void fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final Set<String> propertiesSet,
-      final String exceptionPackage)
+  private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final String exceptionPackage)
       throws IOException, TemplateException {
+    final var propertiesSet = new HashSet<String>();
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
@@ -252,6 +245,7 @@ public class TemplateFactory {
         }
       }
     }
+    return propertiesSet;
   }
 
   public final void setSubscribePackageName(final String packageName) {
@@ -331,8 +325,8 @@ public class TemplateFactory {
                            .build());
   }
 
-  public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath) {
-    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject);
+  public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath, final Path propertiesPath) {
+    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject).propertiesPath(propertiesPath);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }

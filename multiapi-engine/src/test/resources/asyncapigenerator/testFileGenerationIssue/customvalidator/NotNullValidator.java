@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schemas.customvalidator;
+package com.sngular.scsplugin.filegenerationissue.model.event.customvalidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

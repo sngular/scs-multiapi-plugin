@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
@@ -37,9 +37,9 @@ public class CustomerEventPayloadDTO {
     }
   }
   @JsonProperty(value ="customer")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
+  private CustomerDTO customer;
 
-  private CustomerEventPayloadDTO(String customerId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+  private CustomerEventPayloadDTO(String customerId, EventType eventType, CustomerDTO customer) {
     this.customerId = customerId;
     this.eventType = eventType;
     this.customer = customer;
@@ -62,7 +62,7 @@ public class CustomerEventPayloadDTO {
 
     private String customerId;
     private EventType eventType;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer;
+    private CustomerDTO customer;
 
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customerId(String customerId) {
       this.customerId = customerId;
@@ -73,7 +73,7 @@ public class CustomerEventPayloadDTO {
       return this;
     }
 
-    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+    public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customer(CustomerDTO customer) {
       this.customer = customer;
       return this;
     }
@@ -113,10 +113,10 @@ public class CustomerEventPayloadDTO {
   * @return customer
   */
   @Schema(name = "customer", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomer() {
+  public CustomerDTO getCustomer() {
     return customer;
   }
-  public void setCustomer(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customer) {
+  public void setCustomer(CustomerDTO customer) {
     this.customer = customer;
   }
 

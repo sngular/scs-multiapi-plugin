@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.notgeneratedproperties.model.schemas.UserSignedUp;
+import com.sngular.scsplugin.model.schemas.UserSignedUp;
 
 @Configuration
 public class Subscriber {

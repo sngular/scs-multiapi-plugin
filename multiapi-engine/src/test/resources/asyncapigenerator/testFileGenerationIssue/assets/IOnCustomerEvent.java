@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.filegenerationissue.model.event.consumer;
 
-import com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerEventPayloadDTO;
+import com.sngular.scsplugin.filegenerationissue.model.event.CustomerEventPayloadDTO;
 
 public interface IOnCustomerEvent {
 

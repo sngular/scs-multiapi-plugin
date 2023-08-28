@@ -195,44 +195,6 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static void extractFieldsComplexObject(
-      final ArrayList<SchemaFieldObject> fieldObjectArrayList, final Iterator<Entry<String, JsonNode>> fieldsIt,
-      final Collection<String> modelToBuildList, final String prefix, final String suffix) {
-    while (fieldsIt.hasNext()) {
-      final var field = fieldsIt.next();
-      final var fieldName = field.getKey();
-      final var fieldBody = field.getValue();
-      if (fieldBody.has(REF)) {
-        String fieldType = extractTypeFromBody(fieldBody);
-        modelToBuildList.add(fieldType);
-        final var splitPackage = MapperUtil.splitName(fieldType);
-        fieldType = splitPackage[splitPackage.length - 1];
-        fieldObjectArrayList.add(
-            SchemaFieldObject.builder()
-                             .baseName(fieldName)
-                             .restrictions(new SchemaFieldObjectProperties())
-                             .dataType(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                             .dataTypeSimple(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                             .importClass(MapperUtil.getPojoName(fieldType, prefix, suffix))
-                             .required(false)
-                             .parentPackage(splitPackage[splitPackage.length - 2])
-                             .build());
-      } else if (fieldBody.elements().hasNext()) {
-        final var fieldObjectsIt = fieldBody.fields();
-        extractFieldsComplexObject(fieldObjectArrayList, fieldObjectsIt, modelToBuildList, prefix, suffix);
-      }
-    }
-  }
-
-  private static String extractTypeFromBody(final JsonNode fieldBody) {
-    String bodyType = fieldBody.get(REF).asText();
-    if (bodyType.contains("#")) {
-      final String[] path = MapperUtil.splitName(bodyType);
-      bodyType = path[path.length - 2] + "." + StringUtils.capitalize(path[path.length - 1]);
-    }
-    return bodyType;
-  }
-
   private static List<SchemaFieldObject> processAllOfAnyOfOneOf(
       final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
       final Collection<String> modelToBuildList) {
@@ -281,11 +243,8 @@ public class MapperContentUtil {
       } else if (ApiTool.hasItems(schema)) {
         final var items = ApiTool.getItems(schema);
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix);
-        String parentPackage = null;
         if (items.has(REF)) {
           final var longType = MapperUtil.getLongRefClass(items);
-          final String[] path = MapperUtil.splitName(longType);
-          parentPackage = path.length > 1 ? path[path.length - 2] : "";
           modelToBuildList.add(longType);
         }
         fieldObject =
@@ -296,7 +255,6 @@ public class MapperContentUtil {
                 .dataType(arrayType)
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
-                .parentPackage(parentPackage)
                 .build();
         handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (ApiTool.isEnum(schema)) {
@@ -313,15 +271,12 @@ public class MapperContentUtil {
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
-      final String[] path = MapperUtil.splitName(schema.get(REF).textValue());
-      final String refSchemaName = MapperUtil.getRef(schema, prefix, suffix);
       fieldObject =
           SchemaFieldObject
               .builder()
               .baseName(name)
               .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
               .restrictions(new SchemaFieldObjectProperties())
-              .parentPackage(path[path.length - 2])
               .build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
@@ -435,10 +390,6 @@ public class MapperContentUtil {
           field.setImportClass(getImportClass(typeObject));
           field.setDataType(typeObject);
           field.setDataTypeSimple(typeObject);
-          if (ApiTool.hasRef(value)) {
-            final String[] path = MapperUtil.splitName(ApiTool.getRefValue(value));
-            field.setParentPackage(path[path.length - 2]);
-          }
         }
       } else {
         throw new NonSupportedSchemaException(value.toPrettyString());

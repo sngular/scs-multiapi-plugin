@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.arraywithstring.supplier;
 
-import com.sngular.scsplugin.arraywithstring.model.schemas.ObjectArrayDTO;
+import com.sngular.scsplugin.arraywithstring.model.event.ObjectArrayDTO;
 
 public interface IObjectArrayString {
 

@@ -2,7 +2,7 @@ package com.sngular.scsplugin.streambridge.model.event.producer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
-import com.sngular.scsplugin.streambridge.model.event.schemas.Order;
+import com.sngular.scsplugin.streambridge.model.event.Order;
 
 @Component
 public class StreamBridgeProducer {

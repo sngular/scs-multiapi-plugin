@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event;
 
 import java.util.Objects;
 

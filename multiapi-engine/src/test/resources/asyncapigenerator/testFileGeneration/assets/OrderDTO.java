@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schemas;
+package com.sngular.scsplugin.filegeneration.model.event;
 
 import java.util.Objects;
 
@@ -20,9 +20,9 @@ public class OrderDTO {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO>();
+  private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
 
-  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
+  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<OrderLineDTO> lines) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
@@ -48,7 +48,7 @@ public class OrderDTO {
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines = new ArrayList<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO>();
+    private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {
       this.ref = ref;
@@ -64,14 +64,14 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
-    public OrderDTO.OrderDTOBuilder lines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
+    public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder line(com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO line) {
+    public OrderDTO.OrderDTOBuilder line(OrderLineDTO line) {
       if (line != null) {
         this.lines.add(line);
       }
@@ -125,10 +125,10 @@ public class OrderDTO {
   * @return lines
   */
   @Schema(name = "lines", required = false)
-  public List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> getLines() {
+  public List<OrderLineDTO> getLines() {
     return lines;
   }
-  public void setLines(List<com.sngular.scsplugin.filegeneration.model.event.schemas.OrderLineDTO> lines) {
+  public void setLines(List<OrderLineDTO> lines) {
     this.lines = lines;
   }
 

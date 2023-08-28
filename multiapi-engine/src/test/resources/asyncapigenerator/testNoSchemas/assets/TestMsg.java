@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.noschemas.model.messages;
+package com.sngular.scsplugin.noschemas.model;
 
 import java.util.Objects;
 

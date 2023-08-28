@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
@@ -37,9 +37,9 @@ public class CustomerOrderEventPayloadDTO {
     }
   }
   @JsonProperty(value ="customerOrder")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder;
+  private CustomerOrderDTO customerOrder;
 
-  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
+  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, CustomerOrderDTO customerOrder) {
     this.customerOrderId = customerOrderId;
     this.eventType = eventType;
     this.customerOrder = customerOrder;
@@ -62,7 +62,7 @@ public class CustomerOrderEventPayloadDTO {
 
     private String customerOrderId;
     private EventType eventType;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder;
+    private CustomerOrderDTO customerOrder;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
       this.customerOrderId = customerOrderId;
@@ -73,7 +73,7 @@ public class CustomerOrderEventPayloadDTO {
       return this;
     }
 
-    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrder(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
+    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrder(CustomerOrderDTO customerOrder) {
       this.customerOrder = customerOrder;
       return this;
     }
@@ -113,10 +113,10 @@ public class CustomerOrderEventPayloadDTO {
   * @return customerOrder
   */
   @Schema(name = "customerOrder", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO getCustomerOrder() {
+  public CustomerOrderDTO getCustomerOrder() {
     return customerOrder;
   }
-  public void setCustomerOrder(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerOrderDTO customerOrder) {
+  public void setCustomerOrder(CustomerOrderDTO customerOrder) {
     this.customerOrder = customerOrder;
   }
 

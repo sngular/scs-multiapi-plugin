@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.nestedobject.model.schemas;
+package com.sngular.scsplugin.nestedobject.model;
 
 import java.util.Objects;
 

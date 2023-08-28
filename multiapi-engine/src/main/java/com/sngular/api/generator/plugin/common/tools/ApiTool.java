@@ -297,10 +297,20 @@ public final class ApiTool {
   }
 
   public static boolean hasMessages(final JsonNode node) {
-    return hasNode(node, "components") && hasNode(getNode(node, "components"), "messages");
+    return hasComponents(node) && hasNode(getNode(node, "components"), "messages");
+  }
+
+  public static boolean hasComponents(final JsonNode node) {
+    return hasNode(node, "components");
   }
 
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
-    return hasMessages(node) ? getNode(getNode(node, "components"), componentType).fields() : Collections.emptyIterator();
+    Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
+    if (hasComponents(node)) {
+      if (hasNode(getNode(node, "components"), componentType)) {
+        result = getNode(getNode(node, "components"), componentType).fields();
+      }
+    }
+    return result;
   }
 }

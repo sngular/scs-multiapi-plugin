@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event.schemas.exception;
+package com.sngular.scsplugin.filegeneration.model.event.exception;
 
 public class ModelClassException extends RuntimeException {
 

@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.modelclass.model.event.schemas.OrderDTO;
+import com.sngular.scsplugin.modelclass.model.event.OrderDTO;
 
 @Configuration
 public class Producer {
