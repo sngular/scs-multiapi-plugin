@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '4.9.9'
+version = '4.9.11'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:4.9.9'
+  implementation 'com.sngular:multiapi-engine:4.9.11'
   testImplementation 'org.assertj:assertj-core:3.23.1'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.9.1'
 }
@@ -86,7 +86,7 @@ gradlePlugin {
 }
 
 checkstyle {
-  toolVersion "10.3.1"
+  toolVersion "10.9.1"
   configFile = file("../checkstyle.xml")
 }
 
@@ -98,7 +98,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.9.9'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.9.11'
         implementation 'org.assertj:assertj-core:3.24.2'
       }
 
