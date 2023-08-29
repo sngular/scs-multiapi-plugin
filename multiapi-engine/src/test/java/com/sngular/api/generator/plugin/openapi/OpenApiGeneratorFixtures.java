@@ -18,8 +18,10 @@ import java.util.function.Function;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Slf4j
 public final class OpenApiGeneratorFixtures {
 
   final static String GENERATED = "generated";
@@ -359,6 +361,18 @@ public final class OpenApiGeneratorFixtures {
           .apiPackage("com.sngular.multifileplugin.testCreateDTO")
           .modelPackage("com.sngular.multifileplugin.testCreateDTO.model")
           .clientPackage("com.sngular.multifileplugin.testCreateDTO.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
+  static final List<SpecFile> TEST_ISSUE_FAKER = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testIssueFaker/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testissuefaker")
+          .modelPackage("com.sngular.multifileplugin.testissuefaker.model")
+          .clientPackage("com.sngular.multifileplugin.testissuefaker.client")
           .modelNameSuffix("DTO")
           .useLombokModelAnnotation(true)
           .build()
@@ -1126,8 +1140,6 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testapi/model/exception";
 
-    final String DEFAULT_CUSTOMVALIDATOR_API = "generated/com/sngular/multifileplugin/testapi/model/customvalidator";
-
     final String COMMON_PATH = "openapigenerator/testValidationAnnotations/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
@@ -1220,6 +1232,31 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateIssueFaker() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testissuefaker";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testissuefaker/model";
+
+    final String COMMON_PATH = "openapigenerator/testIssueFaker/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "FakerApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/ConfigurationDTO.java",
+        ASSETS_PATH + "model/FakerFieldDTO.java",
+        ASSETS_PATH + "model/FakerSchemaDTO.java",
+        ASSETS_PATH + "model/FieldDTO.java",
+        ASSETS_PATH + "model/SchemaDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateDateTime() {
@@ -1372,8 +1409,9 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
+      log.error(e.getLocalizedMessage());
     }
     return result;
   }
@@ -1389,8 +1427,9 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       result = Boolean.FALSE;
+      log.error(e.getLocalizedMessage());
     }
     return result;
   }
