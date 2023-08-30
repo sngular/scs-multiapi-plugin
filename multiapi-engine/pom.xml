@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>multiapi-engine</artifactId>
-  <version>4.9.11</version>
+  <version>4.9.12</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -19,7 +19,7 @@
     <assertj-core.version>3.24.2</assertj-core.version>
     <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
     <swagger-core.version>2.2.9</swagger-core.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
   </properties>
 
@@ -178,7 +178,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.0</version>
         <configuration>
           <configLocation>../checkstyle.xml</configLocation>
         </configuration>
@@ -198,6 +198,16 @@
             <phase>validate</phase>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
       </plugin>
     </plugins>
   </build>
