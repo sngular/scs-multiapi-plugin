@@ -544,12 +544,12 @@ public class MapperContentUtil {
 
     if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(schema)) && ApiTool.hasProperties(schema)) {
       ApiTool.getProperties(schema).forEachRemaining(
-          processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+        processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
     }
 
     if (ApiTool.hasAdditionalProperties(schema)) {
       fieldObjectArrayList.addAll(processAdditionalProperties(fieldName, schema, specFile, totalSchemas, compositedSchemas,
-              antiLoopList, ADDITIONAL_PROPERTIES, baseDir));
+                                                              antiLoopList, ADDITIONAL_PROPERTIES, baseDir));
     }
 
     return fieldObjectArrayList;
