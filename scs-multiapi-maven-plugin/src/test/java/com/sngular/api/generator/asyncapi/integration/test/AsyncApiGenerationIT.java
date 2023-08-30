@@ -31,13 +31,13 @@ public class AsyncApiGenerationIT {
   @MavenTest
   @MavenGoal("generate-sources")
   void testFileGenerationTwoYmlFiles(MavenProjectResult result) throws IOException {
-    List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperationExternalAvro.java", "Producer.java", "Subscriber.java");
+    List<String> expectedFirstYmlFileNames = List.of("IPublishOperation.java", "ISubscribeOperation.java", "Producer.java", "Subscriber.java");
 
     List<String> expectedSecondYmlFileNames = List.of("Producer.java", "IPublishOperation2.java");
 
     List<String> expectedFirstYmlFiles = List.of(
       "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testFileGenerationTwoYmlFiles/assets/IPublishOperation.java",
-      "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testFileGenerationTwoYmlFiles/assets/ISubscribeOperationExternalAvro.java",
+      "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testFileGenerationTwoYmlFiles/assets/ISubscribeOperation.java",
       "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testFileGenerationTwoYmlFiles/assets/Producer.java",
       "com/sngular/api/generator/asyncapi/integration/test/AsyncApiGenerationIT/testFileGenerationTwoYmlFiles/assets/Subscriber.java");
 
