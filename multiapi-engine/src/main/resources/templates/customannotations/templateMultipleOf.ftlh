@@ -1,4 +1,4 @@
-package ${packageModel}.customvalidator;
+package ${packageModel}.${schema.parentPackage}.customvalidator;
 
 import ${javaEEPackage}.validation.Constraint;
 import ${javaEEPackage}.validation.Payload;

@@ -1,4 +1,4 @@
-package ${packageModel}.customvalidator;
+package ${packageModel}.${schema.parentPackage}.customvalidator;
 
 import java.util.List;
 import java.util.Objects;

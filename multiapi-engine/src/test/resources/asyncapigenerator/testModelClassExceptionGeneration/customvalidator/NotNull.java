@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.modelclass.model.event.customvalidator;
+package com.sngular.scsplugin.modelclass.model.event.schemas.customvalidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
