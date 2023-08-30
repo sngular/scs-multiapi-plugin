@@ -304,7 +304,8 @@ public class AsyncApiGenerator {
   }
 
   private void processReference(
-      final JsonNode node, final String referenceLink, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final List<JsonNode> referenceList) {
+      final JsonNode node, final String referenceLink, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
+      final List<JsonNode> referenceList) {
     final String[] path = MapperUtil.splitName(referenceLink);
     final JsonNode component;
     final var calculatedKey = calculateKey(path);

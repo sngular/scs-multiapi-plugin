@@ -51,14 +51,14 @@ public class ScsMultiapiGenerationIT {
   private void commonTest(String testName, String generatedSourcesFolderName, MavenProjectResult result) throws IOException {
     List<String> expectedFileConsumerNames = List.of("TestClassName.java", "IPublishOperation.java");
 
-    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperation.java");
+    List<String> expectedFileProducerNames = List.of("Producer.java", "ISubscribeOperationExternalAvro.java");
 
     List<String> expectedConsumerFiles = List.of("com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/IPublishOperation.java",
 
                                                  "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/TestClassName.java");
 
     List<String> expectedProducerFiles = List.of(
-      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ISubscribeOperation.java",
+      "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/ISubscribeOperationExternalAvro.java",
       "com/sngular/api/generator/multiapi/integration/test/ScsMultiapiGenerationIT/" + testName + "/assets/Producer.java");
 
     List<String> expectedFileNames = List.of("TestApi.java");
