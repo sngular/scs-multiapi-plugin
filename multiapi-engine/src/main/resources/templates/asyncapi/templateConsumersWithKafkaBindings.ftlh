@@ -11,6 +11,7 @@ import ${method.keyClassNamespace}.${method.keyClassName};
 </#if>
 </#list>
 import ${subscribePackage}.MessageWrapper;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 
 @Configuration
@@ -30,9 +31,9 @@ public class ${subscribeClassName?cap_first} {
   @Bean
   public Consumer<Message<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     return value -> {
-      final var messageWrapper = MessageWrapper.<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>, ${method.keyClassName}>builder().payload(value.getPayload()).key(value.getKey()).build();
+      final var messageWrapper = MessageWrapper.<${method.className}<#if subscribeEntitiesSuffix?has_content>${subscribeEntitiesSuffix}</#if>, ${method.keyClassName}>builder().payload(value.getPayload()).key(value.getHeaders().get(KafkaHeaders.MESSAGE_KEY)).build();
       ${method.operationId?uncap_first}.${method.operationId?uncap_first}(messageWrapper);
-    }
+    };
   }
 
   </#list>

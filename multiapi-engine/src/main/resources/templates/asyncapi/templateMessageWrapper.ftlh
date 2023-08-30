@@ -6,7 +6,7 @@ public class MessageWrapper<T, Y> {
 
   private Y key;
 
-  public MessageWrapper(final Y key, final T payload) {
+  private MessageWrapper(final Y key, final T payload) {
     this.payload = payload;
     this.key = key;
   }
@@ -27,4 +27,28 @@ public class MessageWrapper<T, Y> {
     this.key = key;
   }
 
+  public static MessageWrapperBuilder builder() {
+    return new MessageWrapperBuilder();
+  }
+
+  public static class MessageWrapperBuilder<T, Y> {
+
+    private T payload;
+
+    private Y key;
+
+    public MessageWrapperBuilder payload(final T payload) {
+      this.payload = payload;
+      return this;
+    }
+
+    public MessageWrapperBuilder key(final Y key) {
+      this.key = key;
+      return this;
+    }
+
+    public MessageWrapper build() {
+      return new MessageWrapper(key, payload);
+    }
+  }
 }
