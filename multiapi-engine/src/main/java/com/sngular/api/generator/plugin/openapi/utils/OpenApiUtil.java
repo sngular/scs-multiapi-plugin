@@ -40,6 +40,7 @@ public class OpenApiUtil {
   public static final String PATHS = "paths";
 
   static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
+
   static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
 
   private OpenApiUtil() {}
@@ -82,7 +83,7 @@ public class OpenApiUtil {
   private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
     final var mapByUrl = new ArrayListValuedHashMap<String, Map<String, JsonNode>>();
 
-    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext();) {
+    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext(); ) {
       final var pathUrl = it.next();
       final String[] pathName = pathUrl.split("/");
       mapByUrl.put(pathName[1], Map.of(pathUrl, openAPI.get(PATHS).get(pathUrl)));
@@ -134,9 +135,9 @@ public class OpenApiUtil {
   public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
-    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
+    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext(); ) {
       final var pathDefinition = pathElement.next();
-      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
+      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
           processContentForBasicJsonNodes(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
@@ -169,7 +170,7 @@ public class OpenApiUtil {
   private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
-      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext();) {
+      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext(); ) {
         final var response = it.next();
         if (ApiTool.hasContent(response.getValue())) {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
@@ -187,12 +188,12 @@ public class OpenApiUtil {
 
   private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
     if (ApiTool.hasNode(operation, "parameters")) {
-      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext();) {
+      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext(); ) {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-                          "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
-                          ApiTool.getNode(parameter, "schema"));
+            "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
+            ApiTool.getNode(parameter, "schema"));
         }
       }
     }

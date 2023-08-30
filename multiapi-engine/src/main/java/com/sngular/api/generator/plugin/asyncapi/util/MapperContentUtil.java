@@ -56,8 +56,8 @@ public class MapperContentUtil {
   private MapperContentUtil() {}
 
   public static List<SchemaObject> mapComponentToSchemaObject(
-      final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
-      final String prefix, final String suffix, final String parentPackage) {
+    final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
+    final String prefix, final String suffix, final String parentPackage) {
     final List<SchemaObject> schemasList = new ArrayList<>();
     if (Objects.nonNull(model)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
@@ -98,8 +98,8 @@ public class MapperContentUtil {
   }
 
   private static SchemaObject buildSchemaObject(
-      final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
-      final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
+    final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
+    final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
 
     final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList, parentPackage);
     final var splitPackage = MapperUtil.splitName(component);
@@ -140,8 +140,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> getFields(
-          final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
-          final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
+    final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
+    final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
@@ -154,7 +154,7 @@ public class MapperContentUtil {
       }
     } else if (ApiTool.hasRef(model)) {
       fieldObjectArrayList.addAll(processFieldObject(totalSchemas, totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(ApiTool.getRefValue(model)))), prefix, suffix,
-                                              modelToBuildList, parentPackage));
+                                                     modelToBuildList, parentPackage));
     } else if (model.elements().hasNext()) {
       fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage));
     }
@@ -162,8 +162,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> processFieldObject(
-          final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-          final String parentPackage) {
+    final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
+    final String parentPackage) {
     final Set<String> requiredSet = new HashSet<>();
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     if (model.has("required")) {
@@ -196,8 +196,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> processAllOfAnyOfOneOf(
-      final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
-      final Collection<String> modelToBuildList) {
+    final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
+    final Collection<String> modelToBuildList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
 
@@ -206,8 +206,8 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject solveElement(
-      final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
-      final JsonNode element, final Collection<String> modelToBuildList) {
+    final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
+    final JsonNode element, final Collection<String> modelToBuildList) {
     final SchemaFieldObject result;
     if (element.has(REF)) {
       final String schemaName = MapperUtil.getLongRefClass(element);
@@ -221,20 +221,20 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject processFieldObjectList(
-          final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
-          final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
+    final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
+    final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (ApiTool.hasType(schema)) {
       final var type = ApiTool.getType(schema);
       if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject =
-            SchemaFieldObject
-                .builder()
-                .baseName(name)
-                .restrictions(new SchemaFieldObjectProperties())
-                .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-                .build();
+          SchemaFieldObject
+            .builder()
+            .baseName(name)
+            .restrictions(new SchemaFieldObjectProperties())
+            .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+            .build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
         if (StringUtils.isNotEmpty(propertyName) && !totalSchemas.containsKey(propertyName)) {
           totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
@@ -248,45 +248,45 @@ public class MapperContentUtil {
           modelToBuildList.add(longType);
         }
         fieldObject =
-            SchemaFieldObject
-                .builder()
-                .baseName(name)
-                .restrictions(new SchemaFieldObjectProperties())
-                .dataType(arrayType)
-                .dataTypeSimple(type)
-                .importClass(getImportClass(arrayType))
-                .build();
+          SchemaFieldObject
+            .builder()
+            .baseName(name)
+            .restrictions(new SchemaFieldObjectProperties())
+            .dataType(arrayType)
+            .dataTypeSimple(type)
+            .importClass(getImportClass(arrayType))
+            .build();
         handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (ApiTool.isEnum(schema)) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
         fieldObject = SchemaFieldObject
-                          .builder()
-                          .baseName(name)
-                          .restrictions(new SchemaFieldObjectProperties())
-                          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-                          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-                          .build();
+          .builder()
+          .baseName(name)
+          .restrictions(new SchemaFieldObjectProperties())
+          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+          .build();
         setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
       fieldObject =
-          SchemaFieldObject
-              .builder()
-              .baseName(name)
-              .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-              .restrictions(new SchemaFieldObjectProperties())
-              .build();
+        SchemaFieldObject
+          .builder()
+          .baseName(name)
+          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+          .restrictions(new SchemaFieldObjectProperties())
+          .build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
       fieldObject = SchemaFieldObject
-                        .builder()
-                        .baseName(name)
-                        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-                        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-                        .restrictions(new SchemaFieldObjectProperties())
-                        .build();
+        .builder()
+        .baseName(name)
+        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+        .restrictions(new SchemaFieldObjectProperties())
+        .build();
     }
     return fieldObject;
   }
@@ -295,8 +295,9 @@ public class MapperContentUtil {
     return Objects.nonNull(modelPackage) ? modelPackage.toUpperCase() + separator + className : className;
   }
 
-  private static void handleItems(final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
-      final JsonNode items) {
+  private static void handleItems(
+    final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
+    final JsonNode items) {
     if (ApiTool.hasRef(items)) {
       modelToBuildList.add(MapperUtil.getLongRefClass(items));
     }
@@ -406,14 +407,14 @@ public class MapperContentUtil {
     }
 
     return SchemaFieldObject
-               .builder()
-               .baseName(name)
-               .dataTypeSimple("enum")
-               .dataType(MapperUtil.getSimpleType(value, prefix, suffix))
-               .required(required)
-               .enumValues(enumValues)
-               .restrictions(new SchemaFieldObjectProperties())
-               .build();
+      .builder()
+      .baseName(name)
+      .dataTypeSimple("enum")
+      .dataType(MapperUtil.getSimpleType(value, prefix, suffix))
+      .required(required)
+      .enumValues(enumValues)
+      .restrictions(new SchemaFieldObjectProperties())
+      .build();
   }
 
   private static String getImportClass(final String type) {

@@ -18,41 +18,41 @@ import org.apache.commons.lang3.StringUtils;
 public class SchemaFieldObjectType {
 
   private static final Map<String, String> TYPE_MAPPINGS = Map.ofEntries(
-      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
-      new SimpleImmutableEntry<>(TypeConstants.ARRAY, "List<?>"),
-      new SimpleImmutableEntry<>(TypeConstants.MAP, "Map<String, ?>"),
-      new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
-      new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
-      new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
-      new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
-      new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
-      new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
-      new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
+    new SimpleImmutableEntry<>(TypeConstants.ARRAY, "List<?>"),
+    new SimpleImmutableEntry<>(TypeConstants.MAP, "Map<String, ?>"),
+    new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
+    new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
+    new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
+    new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
+    new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
+    new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
+    new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
+    new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
+    new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
   );
 
   private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
-      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
-      new SimpleImmutableEntry<>(TypeConstants.ARRAY, "ArrayList<?>"),
-      new SimpleImmutableEntry<>(TypeConstants.MAP, "HashMap<String, ?>"),
-      new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
-      new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
-      new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
-      new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
-      new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
-      new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
-      new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
+    new SimpleImmutableEntry<>(TypeConstants.ARRAY, "ArrayList<?>"),
+    new SimpleImmutableEntry<>(TypeConstants.MAP, "HashMap<String, ?>"),
+    new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "BigDecimal"),
+    new SimpleImmutableEntry<>(TypeConstants.INTEGER, "Integer"),
+    new SimpleImmutableEntry<>(TypeConstants.DOUBLE, "Double"),
+    new SimpleImmutableEntry<>(TypeConstants.FLOAT, "Float"),
+    new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
+    new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
+    new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
+    new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
+    new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
   );
 
   private SchemaFieldObjectType innerType;
@@ -116,7 +116,7 @@ public class SchemaFieldObjectType {
 
   private String innerGetClassString() {
     final String baseString = TypeConstants.OBJECT.equals(baseType) && Objects.nonNull(innerType) ? innerType.innerGetClassString()
-                                  : TYPE_MAPPINGS.getOrDefault(baseType, baseType);
+      : TYPE_MAPPINGS.getOrDefault(baseType, baseType);
     return baseString.split("<")[0];
   }
 

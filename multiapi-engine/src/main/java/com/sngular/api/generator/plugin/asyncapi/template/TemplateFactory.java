@@ -209,8 +209,8 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateCustom(
-      final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
-      final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
+    final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
+    final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToCustomValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
@@ -221,7 +221,7 @@ public class TemplateFactory {
   }
 
   private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final String exceptionPackage)
-      throws IOException, TemplateException {
+    throws IOException, TemplateException {
     final var propertiesSet = new HashSet<String>();
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
@@ -326,7 +326,8 @@ public class TemplateFactory {
   }
 
   public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath, final Path propertiesPath) {
-    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject).propertiesPath(propertiesPath);
+    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject)
+                                     .propertiesPath(propertiesPath);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }
@@ -367,18 +368,19 @@ public class TemplateFactory {
     streamBridgeClassName = null;
   }
 
-  public final void fillTemplateWrapper(final Path filePath,
-      final String modelPackage,
-      final String classFullName,
-      final String className,
-      final String keyClassFullName,
-      final String keyClassName
+  public final void fillTemplateWrapper(
+    final Path filePath,
+    final String modelPackage,
+    final String classFullName,
+    final String className,
+    final String keyClassFullName,
+    final String keyClassName
   ) throws TemplateException, IOException {
     final Map<String, Object> context = Map.of(WRAPPER_PACKAGE, modelPackage,
-                                            "classNamespace", classFullName,
-                                            "className", className,
-                                            "keyNamespace", keyClassFullName,
-                                            "keyClassName", keyClassName);
+                                               "classNamespace", classFullName,
+                                               "className", className,
+                                               "keyNamespace", keyClassFullName,
+                                               "keyClassName", keyClassName);
 
     writeTemplateToFile(TEMPLATE_MESSAGE_WRAPPER, context, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
   }
@@ -399,7 +401,7 @@ public class TemplateFactory {
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                 checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS), interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS), interfaceRoot);
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
                      checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS), interfaceRoot);

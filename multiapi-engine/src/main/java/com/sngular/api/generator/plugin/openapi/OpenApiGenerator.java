@@ -83,9 +83,9 @@ public class OpenApiGenerator {
   private final Integer springBootVersion;
 
   public OpenApiGenerator(
-      final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
-      final File targetFolder,
-      final File basedir) {
+    final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
+    final File targetFolder,
+    final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
@@ -252,8 +252,8 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-          final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
-          final boolean overwrite) {
+    final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
+    final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
@@ -270,11 +270,12 @@ public class OpenApiGenerator {
 
   }
 
-  private Map<String, SchemaObject> writeModel(final SpecFile specFile, final String fileModelToSave,
-                                               final String schemaName, final JsonNode basicSchema,
-                                               final Map<String, JsonNode> basicSchemaMap, final Map<String, SchemaObject> builtSchemasMap) {
+  private Map<String, SchemaObject> writeModel(
+    final SpecFile specFile, final String fileModelToSave,
+    final String schemaName, final JsonNode basicSchema,
+    final Map<String, JsonNode> basicSchemaMap, final Map<String, SchemaObject> builtSchemasMap) {
     final var schemaObjectMap = MapperContentUtil
-            .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
+      .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
     checkRequiredOrCombinatorExists(schemaObjectMap);
     schemaObjectMap.values().forEach(schemaObject -> {
       try {

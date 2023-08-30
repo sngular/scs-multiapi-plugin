@@ -6,6 +6,10 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
@@ -13,10 +17,6 @@ import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 public class MapperAuthUtil {
 
@@ -57,7 +57,7 @@ public class MapperAuthUtil {
     final var authApiList = new HashSet<String>();
     if (null != authSchemas && !authSchemas.isEmpty() && !authList.isEmpty()) {
       authSchemas.forEach(authValue -> {
-        if (authList.contains(authValue.getName()) && !authApiList.contains(authValue.getType())) {
+        if (authList.contains(authValue.getName())) {
           authApiList.add(authValue.getType());
         }
       });

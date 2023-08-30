@@ -48,9 +48,9 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateSchema(
-          final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
-          final Set<String> propertiesSet) throws IOException,
-                                                                                                                                                                      TemplateException {
+    final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
+    final Set<String> propertiesSet) throws IOException,
+                                            TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
@@ -115,8 +115,8 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateCustom(
-      final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
-      final String validatorTemplate) throws IOException, TemplateException {
+    final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
+    final String validatorTemplate) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
@@ -127,8 +127,8 @@ public class TemplateFactory {
   }
 
   public final void fillTemplate(
-      final String filePathToSave, final SpecFile specFile, final String className,
-      final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
+    final String filePathToSave, final SpecFile specFile, final String className,
+    final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
     root.put("pathObjects", pathObjects);

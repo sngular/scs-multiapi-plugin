@@ -20,11 +20,17 @@ import org.apache.commons.lang3.StringUtils;
 public final class ApiTool {
 
   public static final String FORMAT = "format";
+
   public static final String ALL_OF = "allOf";
+
   public static final String ANY_OF = "anyOf";
+
   public static final String ONE_OF = "oneOf";
+
   public static final String COMPONENTS = "components";
+
   public static final String SCHEMAS = "schemas";
+
   public static final String REQUIRED = "required";
 
   public static final String PARAMETERS = "parameters";
@@ -162,17 +168,23 @@ public final class ApiTool {
     final String type;
     if (hasType(schema)) {
       switch (getType(schema)) {
-        case TypeConstants.DOUBLE: type = TypeConstants.DOUBLE;
-                                      break;
-        case TypeConstants.FLOAT: type = TypeConstants.FLOAT;
-                                      break;
-        case TypeConstants.NUMBER: type = TypeConstants.NUMBER;
-                                      break;
-        case TypeConstants.INT_64: type = TypeConstants.INT_64;
-                                      break;
-        case TypeConstants.INT_32: type = TypeConstants.INT_32;
-                                      break;
-        default: type = TypeConstants.INTEGER;
+        case TypeConstants.DOUBLE:
+          type = TypeConstants.DOUBLE;
+          break;
+        case TypeConstants.FLOAT:
+          type = TypeConstants.FLOAT;
+          break;
+        case TypeConstants.NUMBER:
+          type = TypeConstants.NUMBER;
+          break;
+        case TypeConstants.INT_64:
+          type = TypeConstants.INT_64;
+          break;
+        case TypeConstants.INT_32:
+          type = TypeConstants.INT_32;
+          break;
+        default:
+          type = TypeConstants.INTEGER;
           break;
       }
     } else {
@@ -241,9 +253,9 @@ public final class ApiTool {
   public static boolean isNumber(final JsonNode schema) {
     return hasType(schema)
            && (TypeConstants.INTEGER.equalsIgnoreCase(getType(schema))
-            || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
-            || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
-            || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
+               || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
+               || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
+               || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
   }
 
   public static boolean isEnum(final JsonNode schema) {
@@ -306,10 +318,8 @@ public final class ApiTool {
 
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
     Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
-    if (hasComponents(node)) {
-      if (hasNode(getNode(node, "components"), componentType)) {
-        result = getNode(getNode(node, "components"), componentType).fields();
-      }
+    if (hasComponents(node) && hasNode(getNode(node, "components"), componentType)) {
+      result = getNode(getNode(node, "components"), componentType).fields();
     }
     return result;
   }

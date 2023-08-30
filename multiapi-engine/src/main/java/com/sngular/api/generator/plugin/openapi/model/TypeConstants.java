@@ -55,23 +55,23 @@ public final class TypeConstants {
   public static final Set<String> NO_IMPORT_TYPE = Set.of(STRING, INTEGER, OBJECT);
 
   public static final Set<String> ALL_TYPES = Set.of(
-      NUMBER,
-      BOOLEAN,
-      OBJECT,
-      ARRAY,
-      BIG_DECIMAL,
-      INTEGER,
-      DOUBLE,
-      FLOAT,
-      LONG,
-      STRING,
-      ENUM,
-      LOCALDATE,
-      LOCALDATETIME,
-      ZONEDDATE,
-      ZONEDDATETIME,
-      OFFSETDATE,
-      OFFSETDATETIME
+    NUMBER,
+    BOOLEAN,
+    OBJECT,
+    ARRAY,
+    BIG_DECIMAL,
+    INTEGER,
+    DOUBLE,
+    FLOAT,
+    LONG,
+    STRING,
+    ENUM,
+    LOCALDATE,
+    LOCALDATETIME,
+    ZONEDDATE,
+    ZONEDDATETIME,
+    OFFSETDATE,
+    OFFSETDATETIME
   );
 
   public static boolean isBoolean(final String isBoolean) {

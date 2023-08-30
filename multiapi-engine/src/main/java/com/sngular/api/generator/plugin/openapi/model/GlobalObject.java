@@ -60,7 +60,6 @@ public class GlobalObject {
 
     private final Map<String, JsonNode> schemaMap = new HashMap<>();
 
-
     private final Map<String, JsonNode> parameterMap = new HashMap<>();
 
     private final Map<String, JsonNode> responseMap = new HashMap<>();
