@@ -6,8 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
-import static com.sngular.api.generator.plugin.asyncapi.template.TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
@@ -140,21 +137,7 @@ public class TemplateFactory {
     this.generateInterfaces();
   }
 
-  private ClassTemplate getClassTemplate() {
-    ClassTemplate ourClassTemplate = null;
-    for (ClassTemplate classTemplate : schemaObjectMap) {
-      if (classTemplate.getFilePath().endsWith("schemas")) {
-        ourClassTemplate = classTemplate;
-        break;
-      }
-    }
-    if (ourClassTemplate == null) {
-      ourClassTemplate = schemaObjectMap.get(0);
-    }
-
-    return ourClassTemplate;
-  }
-
+  @SuppressWarnings("checkstyle:CyclomaticComplexity")
   private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
     for (final String current : fieldProperties) {
       switch (current) {
@@ -200,6 +183,21 @@ public class TemplateFactory {
     }
   }
 
+  private ClassTemplate getClassTemplate() {
+    ClassTemplate ourClassTemplate = null;
+    for (ClassTemplate classTemplate : schemaObjectMap) {
+      if (classTemplate.getFilePath().endsWith("schemas")) {
+        ourClassTemplate = classTemplate;
+        break;
+      }
+    }
+    if (ourClassTemplate == null) {
+      ourClassTemplate = schemaObjectMap.get(0);
+    }
+
+    return ourClassTemplate;
+  }
+
   public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
     final Path pathToExceptionPackage = filePathToSave.resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
@@ -209,8 +207,8 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateCustom(
-    final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
-    final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
+      final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
+      final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     pathToCustomValidatorPackage.toFile().mkdirs();
     root.put("packageModel", modelPackage);
@@ -220,8 +218,9 @@ public class TemplateFactory {
     writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
   }
 
+  @SuppressWarnings("checkstyle:CyclomaticComplexity")
   private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final String exceptionPackage)
-    throws IOException, TemplateException {
+      throws IOException, TemplateException {
     final var propertiesSet = new HashSet<String>();
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
@@ -369,12 +368,12 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateWrapper(
-    final Path filePath,
-    final String modelPackage,
-    final String classFullName,
-    final String className,
-    final String keyClassFullName,
-    final String keyClassName
+      final Path filePath,
+      final String modelPackage,
+      final String classFullName,
+      final String className,
+      final String keyClassFullName,
+      final String keyClassName
   ) throws TemplateException, IOException {
     final Map<String, Object> context = Map.of(WRAPPER_PACKAGE, modelPackage,
                                                "classNamespace", classFullName,
@@ -382,7 +381,7 @@ public class TemplateFactory {
                                                "keyNamespace", keyClassFullName,
                                                "keyClassName", keyClassName);
 
-    writeTemplateToFile(TEMPLATE_MESSAGE_WRAPPER, context, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, context, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
   }
 
   private void generateInterfaces() throws IOException, TemplateException {
@@ -418,13 +417,17 @@ public class TemplateFactory {
   }
 
   private String checkTemplate(final String bindingType, final String defaultTemplate) {
+    final String templateName;
     switch (BindingTypeEnum.valueOf(bindingType)) {
       case NONBINDING:
-        return defaultTemplate;
+        templateName = defaultTemplate;
+        break;
       case KAFKA:
-        return MapperUtil.splitName(defaultTemplate)[0] + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
+        templateName = MapperUtil.splitName(defaultTemplate)[0] + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
+        break;
       default:
         throw new NonSupportedBindingException(bindingType);
     }
+    return templateName;
   }
 }

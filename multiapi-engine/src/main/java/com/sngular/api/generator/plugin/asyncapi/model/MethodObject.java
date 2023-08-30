@@ -7,7 +7,6 @@
 package com.sngular.api.generator.plugin.asyncapi.model;
 
 import java.util.Objects;
-
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import lombok.Builder;
 import lombok.Value;
@@ -36,8 +35,8 @@ public class MethodObject {
 
   @Builder(toBuilder = true)
   public MethodObject(
-    final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
-    final String keyClassNamespace, final String bindingType) {
+      final String operationId, final String classNamespace, final String type, final String channelName, final SchemaObject schemaObject,
+      final String keyClassNamespace, final String bindingType) {
     this.operationId = operationId;
     this.classNamespace = classNamespace.substring(0, classNamespace.lastIndexOf("."));
     this.className = classNamespace.substring(classNamespace.lastIndexOf(".") + 1);

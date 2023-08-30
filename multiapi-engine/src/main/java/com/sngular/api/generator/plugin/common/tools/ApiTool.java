@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
@@ -107,42 +106,24 @@ public final class ApiTool {
   }
 
   public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, SCHEMAS)) {
-        final var schemas = getNode(components, SCHEMAS);
-        final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, SCHEMAS);
   }
 
   public static Map<String, JsonNode> getParameterSchemas(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, PARAMETERS)) {
-        final var schemas = getNode(components, PARAMETERS);
-        final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, PARAMETERS);
   }
 
   public static Map<String, JsonNode> getResponseSchemas(final JsonNode openApi) {
+    return getComponentSchemasByType(openApi, RESPONSES);
+  }
+
+  private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
     if (hasNode(openApi, COMPONENTS)) {
       final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, RESPONSES)) {
-        final var schemas = getNode(components, RESPONSES);
+      if (hasNode(components, schemaType)) {
+        final var schemas = getNode(components, schemaType);
         final var schemasIt = schemas.fieldNames();
         schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
       }
@@ -152,16 +133,7 @@ public final class ApiTool {
   }
 
   public static Map<String, JsonNode> getComponentSecuritySchemes(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, "securitySchemes")) {
-        getNode(components, "securitySchemes").fields().forEachRemaining(schema -> schemasMap.put(schema.getKey(), schema.getValue()));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, "securitySchemes");
   }
 
   public static String getNumberType(final JsonNode schema) {

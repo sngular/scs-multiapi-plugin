@@ -8,7 +8,6 @@ package com.sngular.api.generator.plugin.asyncapi.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -56,8 +54,8 @@ public class MapperContentUtil {
   private MapperContentUtil() {}
 
   public static List<SchemaObject> mapComponentToSchemaObject(
-    final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
-    final String prefix, final String suffix, final String parentPackage) {
+      final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
+      final String prefix, final String suffix, final String parentPackage) {
     final List<SchemaObject> schemasList = new ArrayList<>();
     if (Objects.nonNull(model)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
@@ -98,8 +96,8 @@ public class MapperContentUtil {
   }
 
   private static SchemaObject buildSchemaObject(
-    final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
-    final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
+      final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
+      final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
 
     final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList, parentPackage);
     final var splitPackage = MapperUtil.splitName(component);
@@ -115,7 +113,6 @@ public class MapperContentUtil {
   }
 
   private static List<String> getImportList(final List<SchemaFieldObject> schemaListToImport) {
-    final var listHashMap = new HashMap<String, List<String>>();
     final var importList = new HashSet<String>();
 
     for (SchemaFieldObject fieldObject : schemaListToImport) {
@@ -140,8 +137,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> getFields(
-    final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
-    final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
+      final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
+      final String suffix, final Collection<String> modelToBuildList, final String parentPackage) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
@@ -162,8 +159,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> processFieldObject(
-    final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-    final String parentPackage) {
+      final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
+      final String parentPackage) {
     final Set<String> requiredSet = new HashSet<>();
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     if (model.has("required")) {
@@ -196,8 +193,8 @@ public class MapperContentUtil {
   }
 
   private static List<SchemaFieldObject> processAllOfAnyOfOneOf(
-    final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
-    final Collection<String> modelToBuildList) {
+      final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
+      final Collection<String> modelToBuildList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
 
@@ -206,8 +203,8 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject solveElement(
-    final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
-    final JsonNode element, final Collection<String> modelToBuildList) {
+      final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
+      final JsonNode element, final Collection<String> modelToBuildList) {
     final SchemaFieldObject result;
     if (element.has(REF)) {
       final String schemaName = MapperUtil.getLongRefClass(element);
@@ -220,9 +217,10 @@ public class MapperContentUtil {
     return result;
   }
 
+  @SuppressWarnings("checkstyle:ParameterNumber")
   private static SchemaFieldObject processFieldObjectList(
-    final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
-    final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
+      final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
+      final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (ApiTool.hasType(schema)) {
@@ -296,8 +294,8 @@ public class MapperContentUtil {
   }
 
   private static void handleItems(
-    final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
-    final JsonNode items) {
+      final JsonNode schema, final Collection<String> modelToBuildList, final SchemaFieldObject fieldObject, final boolean required,
+      final JsonNode items) {
     if (ApiTool.hasRef(items)) {
       modelToBuildList.add(MapperUtil.getLongRefClass(items));
     }
@@ -322,6 +320,7 @@ public class MapperContentUtil {
     fieldObject.setRequired(required);
   }
 
+  @SuppressWarnings("checkstyle:CyclomaticComplexity")
   private static void setFieldProperties(final SchemaFieldObject fieldObject, final JsonNode schema) {
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
     Entry<String, JsonNode> current;

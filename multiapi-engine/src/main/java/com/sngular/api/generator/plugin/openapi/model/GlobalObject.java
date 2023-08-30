@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -99,7 +98,7 @@ public class GlobalObject {
       return this;
     }
 
-    public final GlobalObjectBuilder schema(final String name, JsonNode schema) {
+    public final GlobalObjectBuilder schema(final String name, final JsonNode schema) {
       this.schemaMap.put(name, schema);
       return this;
     }
@@ -109,7 +108,7 @@ public class GlobalObject {
       return this;
     }
 
-    public final GlobalObjectBuilder parameter(final String name, JsonNode schema) {
+    public final GlobalObjectBuilder parameter(final String name, final JsonNode schema) {
       this.parameterMap.put(name, schema);
       return this;
     }
@@ -119,7 +118,7 @@ public class GlobalObject {
       return this;
     }
 
-    public final GlobalObjectBuilder response(final String name, JsonNode schema) {
+    public final GlobalObjectBuilder response(final String name, final JsonNode schema) {
       this.responseMap.put(name, schema);
       return this;
     }

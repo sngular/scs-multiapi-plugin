@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -83,9 +82,8 @@ public class OpenApiGenerator {
   private final Integer springBootVersion;
 
   public OpenApiGenerator(
-    final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
-    final File targetFolder,
-    final File basedir) {
+      final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
+      final File targetFolder, final File basedir) {
     templateFactory = new TemplateFactory();
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
@@ -177,7 +175,7 @@ public class OpenApiGenerator {
       try {
         templateFactory.fillTemplate(filePathToSave, specFile, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
-        e.printStackTrace();
+        throw new GeneratorTemplateException("Error filling the template", e);
       }
 
       if (Boolean.TRUE.equals(specFile.isCallMode())) {
@@ -251,9 +249,10 @@ public class OpenApiGenerator {
     return FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(toMatch).replaceAll("/"));
   }
 
+  @SuppressWarnings("checkstyle:LambdaBodyLength")
   private void processModels(
-    final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
-    final boolean overwrite) {
+      final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
+      final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
@@ -271,11 +270,10 @@ public class OpenApiGenerator {
   }
 
   private Map<String, SchemaObject> writeModel(
-    final SpecFile specFile, final String fileModelToSave,
-    final String schemaName, final JsonNode basicSchema,
-    final Map<String, JsonNode> basicSchemaMap, final Map<String, SchemaObject> builtSchemasMap) {
+      final SpecFile specFile, final String fileModelToSave, final String schemaName, final JsonNode basicSchema, final Map<String, JsonNode> basicSchemaMap,
+      final Map<String, SchemaObject> builtSchemasMap) {
     final var schemaObjectMap = MapperContentUtil
-      .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
+        .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
     checkRequiredOrCombinatorExists(schemaObjectMap);
     schemaObjectMap.values().forEach(schemaObject -> {
       try {
@@ -297,6 +295,7 @@ public class OpenApiGenerator {
     return schemaObjectMap;
   }
 
+  @SuppressWarnings("checkstyle:CyclomaticComplexity")
   private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {
     for (final String current : fieldProperties) {
       switch (current) {

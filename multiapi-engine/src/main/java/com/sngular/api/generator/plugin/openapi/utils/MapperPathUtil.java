@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
@@ -55,7 +54,7 @@ public class MapperPathUtil {
   public static GlobalObject mapOpenApiObjectToOurModels(final JsonNode openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(ApiTool.getNode(openAPI, "security"), new ArrayList<>());
     final GlobalObjectBuilder globalObject =
-      GlobalObject.builder().url(ApiTool.getNode(openAPI, "servers").findValue("url").textValue()).authSchemas(authSchemaList).authentications(authList);
+        GlobalObject.builder().url(ApiTool.getNode(openAPI, "servers").findValue("url").textValue()).authSchemas(authSchemaList).authentications(authList);
     if (ApiTool.hasNode(openAPI, "components")) {
       globalObject.schemaMap(ApiTool.getComponentSchemas(openAPI));
       globalObject.parameterMap(ApiTool.getParameterSchemas(openAPI));
@@ -98,7 +97,7 @@ public class MapperPathUtil {
     final List<String> operationIdList = new ArrayList<>();
     final var pathNode = path.getValue();
     final var pathParameters = new ArrayList<ParameterObject>();
-    for (Iterator<Entry<String, JsonNode>> it = pathNode.fields(); it.hasNext(); ) {
+    for (Iterator<Entry<String, JsonNode>> it = pathNode.fields(); it.hasNext();) {
       final var field = it.next();
       switch (field.getKey()) {
         case "get":
@@ -126,8 +125,8 @@ public class MapperPathUtil {
   }
 
   private static OperationObject createOperation(
-    final JsonNode operation, final String operationType, final SpecFile specFile, final GlobalObject globalObject,
-    final List<String> operationIdList, final Path baseDir) {
+      final JsonNode operation, final String operationType, final SpecFile specFile, final GlobalObject globalObject,
+      final List<String> operationIdList, final Path baseDir) {
     return OperationObject.builder()
                           .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
@@ -185,7 +184,7 @@ public class MapperPathUtil {
       responses.elements().forEachRemaining(response -> {
         if (Objects.nonNull(response.findValue(CONTENT))) {
           response.get(CONTENT).fieldNames().forEachRemaining(
-            mediaType -> {
+              mediaType -> {
               if (!mediaType.equalsIgnoreCase("*/*") && !producesList.contains(mediaType)) {
                 producesList.add(mediaType.replace("\"", "\\\""));
               }
@@ -197,8 +196,8 @@ public class MapperPathUtil {
   }
 
   private static List<RequestObject> mapRequestObject(
-    final SpecFile specFile, final JsonNode operation,
-    final GlobalObject globalObject, final Path baseDir) {
+      final SpecFile specFile, final JsonNode operation,
+      final GlobalObject globalObject, final Path baseDir) {
     final List<RequestObject> requestObjects = new ArrayList<>();
     if (Objects.isNull(getOperationId(operation))) {
       throw new InvalidOpenAPIException();
@@ -217,8 +216,8 @@ public class MapperPathUtil {
   }
 
   private static List<ParameterObject> mapParameterObjects(
-    final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
-    final GlobalObject globalObject, final Path baseDir) {
+      final List<JsonNode> parameters, final SpecFile specFile, final String contentClassName,
+      final GlobalObject globalObject, final Path baseDir) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
       for (JsonNode parameter : parameters) {
@@ -236,7 +235,7 @@ public class MapperPathUtil {
   }
 
   private static ParameterObject buildParameterObject(
-    final SpecFile specFile, final GlobalObject globalObject, final JsonNode refParameter, final Path baseDir) {
+       final SpecFile specFile, final GlobalObject globalObject, final JsonNode refParameter, final Path baseDir) {
     return ParameterObject.builder()
                           .name(ApiTool.getName(refParameter))
                           .required(ApiTool.getNodeAsBoolean(refParameter, REQUIRED))
@@ -258,12 +257,12 @@ public class MapperPathUtil {
   }
 
   private static List<ParameterObject> buildParameterContent(
-    final String contentClassName, final JsonNode parameter, final SpecFile specFile,
-    final GlobalObject globalObject, final Path baseDir) {
+      final String contentClassName, final JsonNode parameter, final SpecFile specFile,
+      final GlobalObject globalObject, final Path baseDir) {
     final var content = ApiTool.getNode(parameter, CONTENT);
     final var parameterName = ApiTool.getName(parameter);
     final var parameterObjects = new ArrayList<ParameterObject>();
-    for (Iterator<JsonNode> it = content.elements(); it.hasNext(); ) {
+    for (Iterator<JsonNode> it = content.elements(); it.hasNext();) {
       final var contentType = it.next();
       final String inlineParameter = INLINE_PARAMETER + safeCapitalize(contentClassName)
                                      + StringUtils.capitalize(parameterName);
@@ -302,17 +301,18 @@ public class MapperPathUtil {
       final JsonNode responses = ApiTool.getNode(operation, "responses");
       final var operationId = getOperationId(operation);
       responses
-        .fieldNames()
-        .forEachRemaining(responseCode ->
+          .fieldNames()
+          .forEachRemaining(responseCode ->
                             createResponseObject(specFile, globalObject, responseObjects, operationId, baseDir)
                               .accept(responseCode, ApiTool.getNode(responses, responseCode)));
     }
     return responseObjects;
   }
 
+  @SuppressWarnings("checkstyle:LambdaBodyLength")
   private static BiConsumer<String, JsonNode> createResponseObject(
-    final SpecFile specFile, final GlobalObject globalObject,
-    final List<ResponseObject> responseObjects, final String operationId, final Path baseDir) {
+      final SpecFile specFile, final GlobalObject globalObject,
+      final List<ResponseObject> responseObjects, final String operationId, final Path baseDir) {
     return (responseCode, response) -> {
       var realResponse = response;
       if (ApiTool.hasRef(response)) {
@@ -330,11 +330,11 @@ public class MapperPathUtil {
   }
 
   private static List<ContentObject> mapContentObject(
-    final SpecFile specFile, final JsonNode content, final String inlineObject, final GlobalObject globalObject,
-    final Path baseDir) {
+      final SpecFile specFile, final JsonNode content, final String inlineObject, final GlobalObject globalObject,
+      final Path baseDir) {
     final List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
-      for (Iterator<String> it = content.fieldNames(); it.hasNext(); ) {
+      for (Iterator<String> it = content.fieldNames(); it.hasNext();) {
         final String mediaType = it.next();
         final var schema = ApiTool.getNode(ApiTool.getNode(content, mediaType), SCHEMA);
         final String pojoName = preparePojoName(inlineObject, schema, specFile);
@@ -368,8 +368,8 @@ public class MapperPathUtil {
   }
 
   private static SchemaFieldObjectType getSchemaType(
-    final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
-    final Path baseDir) {
+      final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
+      final Path baseDir) {
     SchemaFieldObjectType type = null;
 
     if (ApiTool.hasRef(schema)) {
@@ -391,8 +391,8 @@ public class MapperPathUtil {
   }
 
   private static SchemaFieldObjectType getObjectOrType(
-    final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
-    final Path baseDir) {
+      final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
+      final Path baseDir) {
     final SchemaFieldObjectType type;
     switch (ApiTool.getType(schema)) {
       case TypeConstants.OBJECT:
@@ -417,8 +417,8 @@ public class MapperPathUtil {
   }
 
   private static SchemaFieldObjectType getMapSchemaType(
-    final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
-    final Path baseDir) {
+      final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
+      final Path baseDir) {
     final SchemaFieldObjectType type;
 
     final JsonNode addPropObj = ApiTool.getAdditionalProperties(schema);

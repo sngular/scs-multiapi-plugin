@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 
 public class DirectoryFileLocation implements FileLocation {
@@ -22,7 +21,7 @@ public class DirectoryFileLocation implements FileLocation {
   }
 
   @Override
-  public InputStream getFileAtLocation(final String filename) {
+  public final InputStream getFileAtLocation(final String filename) {
     try {
       return new FileInputStream(path.resolve(filename).toFile());
     } catch (final IOException e) {
