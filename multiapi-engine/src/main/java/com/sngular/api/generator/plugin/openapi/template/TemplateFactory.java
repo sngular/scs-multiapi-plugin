@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -48,9 +47,9 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateSchema(
-          final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
-          final Set<String> propertiesSet) throws IOException,
-                                                                                                                                                                      TemplateException {
+      final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
+      final Set<String> propertiesSet) throws IOException,
+                                            TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);

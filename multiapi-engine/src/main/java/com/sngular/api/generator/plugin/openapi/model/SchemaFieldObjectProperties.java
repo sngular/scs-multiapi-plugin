@@ -1,10 +1,10 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
-import lombok.Data;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import lombok.Data;
 
 @Data
 public class SchemaFieldObjectProperties {

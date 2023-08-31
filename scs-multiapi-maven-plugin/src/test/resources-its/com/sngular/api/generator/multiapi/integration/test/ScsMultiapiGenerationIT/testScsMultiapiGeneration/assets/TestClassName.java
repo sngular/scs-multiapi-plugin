@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.generator.multiapi.model.event.messages.OrderCreatedDTO;
+import com.sngular.generator.multiapi.model.event.OrderDTO;
 
 @Configuration
 public class TestClassName {
@@ -16,7 +16,7 @@ public class TestClassName {
   }
 
   @Bean
-  public Consumer<OrderCreatedDTO> publishOperation() {
+  public Consumer<OrderDTO> publishOperation() {
     return value -> publishOperation.publishOperation(value);
   }
 

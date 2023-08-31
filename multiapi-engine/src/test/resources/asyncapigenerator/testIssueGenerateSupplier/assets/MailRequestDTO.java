@@ -1,4 +1,4 @@
-package company.mail.model.schemas;
+package company.mail.model;
 
 import java.util.Objects;
 
@@ -16,20 +16,20 @@ public class MailRequestDTO {
   private String sender;
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
-  @JsonProperty(value ="configurationDTO")
-  private company.mail.model.schemas.ConfigurationDTO configurationDTO;
+  @JsonProperty(value ="config")
+  private ConfigurationDTO config;
 
-  private MailRequestDTO(String sender, List<String> recipients, company.mail.model.schemas.ConfigurationDTO configurationDTO) {
+  private MailRequestDTO(String sender, List<String> recipients, ConfigurationDTO config) {
     this.sender = sender;
     this.recipients = recipients;
-    this.configurationDTO = configurationDTO;
+    this.config = config;
 
   }
 
   private MailRequestDTO(MailRequestDTOBuilder builder) {
     this.sender = builder.sender;
     this.recipients = builder.recipients;
-    this.configurationDTO = builder.configurationDTO;
+    this.config = builder.config;
 
   }
 
@@ -42,7 +42,7 @@ public class MailRequestDTO {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private company.mail.model.schemas.ConfigurationDTO configurationDTO;
+    private ConfigurationDTO config;
 
     public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {
       this.sender = sender;
@@ -62,8 +62,8 @@ public class MailRequestDTO {
       return this;
     }
 
-    public MailRequestDTO.MailRequestDTOBuilder configurationDTO(company.mail.model.schemas.ConfigurationDTO configurationDTO) {
-      this.configurationDTO = configurationDTO;
+    public MailRequestDTO.MailRequestDTOBuilder config(ConfigurationDTO config) {
+      this.config = config;
       return this;
     }
 
@@ -98,15 +98,15 @@ public class MailRequestDTO {
   }
 
   /**
-  * Get configurationDTO
-  * @return configurationDTO
+  * Get config
+  * @return config
   */
-  @Schema(name = "configurationDTO", required = false)
-  public company.mail.model.schemas.ConfigurationDTO getConfigurationDTO() {
-    return configurationDTO;
+  @Schema(name = "config", required = false)
+  public ConfigurationDTO getConfig() {
+    return config;
   }
-  public void setConfigurationDTO(company.mail.model.schemas.ConfigurationDTO configurationDTO) {
-    this.configurationDTO = configurationDTO;
+  public void setConfig(ConfigurationDTO config) {
+    this.config = config;
   }
 
   @Override
@@ -118,12 +118,12 @@ public class MailRequestDTO {
       return false;
     }
     MailRequestDTO mailRequestDTO = (MailRequestDTO) o;
-    return Objects.equals(this.sender, mailRequestDTO.sender) && Objects.equals(this.recipients, mailRequestDTO.recipients) && Objects.equals(this.configurationDTO, mailRequestDTO.configurationDTO);
+    return Objects.equals(this.sender, mailRequestDTO.sender) && Objects.equals(this.recipients, mailRequestDTO.recipients) && Objects.equals(this.config, mailRequestDTO.config);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sender, recipients, configurationDTO);
+    return Objects.hash(sender, recipients, config);
   }
 
   @Override
@@ -132,7 +132,7 @@ public class MailRequestDTO {
     sb.append("MailRequestDTO{");
     sb.append(" sender:").append(sender).append(",");
     sb.append(" recipients:").append(recipients).append(",");
-    sb.append(" configurationDTO:").append(configurationDTO);
+    sb.append(" config:").append(config);
     sb.append("}");
     return sb.toString();
   }

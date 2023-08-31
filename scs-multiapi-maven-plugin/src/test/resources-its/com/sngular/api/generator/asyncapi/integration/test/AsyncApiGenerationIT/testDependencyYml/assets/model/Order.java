@@ -1,4 +1,4 @@
-package com.sngular.apigenerator.asyncapi.model.schemas;
+package com.sngular.apigenerator.asyncapi.model;
 
 import java.util.Objects;
 

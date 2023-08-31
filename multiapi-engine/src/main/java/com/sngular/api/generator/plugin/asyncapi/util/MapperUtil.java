@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.asyncapi.util;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
@@ -30,6 +31,8 @@ public class MapperUtil {
   public static final String REF = "$ref";
 
   private static final String DIVISOR = "([./])";
+
+  private static final String SLASH = "/";
 
   private MapperUtil() {}
 
@@ -130,7 +133,13 @@ public class MapperUtil {
   }
 
   public static String[] splitName(final String name) {
-    return name.split(DIVISOR);
+    return ArrayUtils.removeAllOccurrences(name.split(DIVISOR), "");
   }
+
+  public static String buildKey(final String[] pathList) {
+    final var arrayLength = pathList.length;
+    return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
+  }
+
 
 }

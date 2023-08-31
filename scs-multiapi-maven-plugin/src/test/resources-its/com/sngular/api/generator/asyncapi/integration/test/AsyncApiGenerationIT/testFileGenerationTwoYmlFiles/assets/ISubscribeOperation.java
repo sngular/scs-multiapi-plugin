@@ -1,6 +1,6 @@
 package com.sngular.apigenerator.asyncapi;
 
-import com.sngular.apigenerator.asyncapi.model.messages.CreateOrder;
+import com.sngular.apigenerator.asyncapi.model.CreateOrder;
 
 public interface ISubscribeOperation {
 

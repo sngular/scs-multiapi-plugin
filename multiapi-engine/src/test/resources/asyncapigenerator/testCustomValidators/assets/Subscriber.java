@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.customvalidator.model.event.messages.StatusDTO;
+import com.sngular.scsplugin.customvalidator.model.event.StatusMsgDTO;
 
 @Configuration
 public class Subscriber {
@@ -16,7 +16,7 @@ public class Subscriber {
   }
 
   @Bean
-  public Consumer<StatusDTO> customValidatorResponse() {
+  public Consumer<StatusMsgDTO> customValidatorResponse() {
     return value -> customValidatorResponse.customValidatorResponse(value);
   }
 

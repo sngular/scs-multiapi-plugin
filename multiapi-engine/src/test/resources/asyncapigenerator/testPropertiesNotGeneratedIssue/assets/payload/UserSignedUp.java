@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.nestedobject.model.messages;
+package com.sngular.scsplugin.notgeneratedproperties.model;
 
 import java.util.Objects;
 
@@ -10,16 +10,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = UserSignedUp.UserSignedUpBuilder.class)
 public class UserSignedUp {
 
-  @JsonProperty(value ="payload")
-  private com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload payload;
+  @JsonProperty(value ="id")
+  private String id;
+  @JsonProperty(value ="details")
+  private UserDetails details;
 
-  private UserSignedUp(com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload payload) {
-    this.payload = payload;
+  private UserSignedUp(String id, UserDetails details) {
+    this.id = id;
+    this.details = details;
 
   }
 
   private UserSignedUp(UserSignedUpBuilder builder) {
-    this.payload = builder.payload;
+    this.id = builder.id;
+    this.details = builder.details;
 
   }
 
@@ -30,10 +34,16 @@ public class UserSignedUp {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class UserSignedUpBuilder {
 
-    private com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload payload;
+    private String id;
+    private UserDetails details;
 
-    public UserSignedUp.UserSignedUpBuilder payload(com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload payload) {
-      this.payload = payload;
+    public UserSignedUp.UserSignedUpBuilder id(String id) {
+      this.id = id;
+      return this;
+    }
+
+    public UserSignedUp.UserSignedUpBuilder details(UserDetails details) {
+      this.details = details;
       return this;
     }
 
@@ -44,15 +54,27 @@ public class UserSignedUp {
   }
 
   /**
-  * Get payload
-  * @return payload
+  * Get id
+  * @return id
   */
-  @Schema(name = "payload", required = false)
-  public com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload getPayload() {
-    return payload;
+  @Schema(name = "id", required = false)
+  public String getId() {
+    return id;
   }
-  public void setPayload(com.sngular.scsplugin.nestedobject.model.schemas.UserSignedUpPayload payload) {
-    this.payload = payload;
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+  * Get details
+  * @return details
+  */
+  @Schema(name = "details", required = false)
+  public UserDetails getDetails() {
+    return details;
+  }
+  public void setDetails(UserDetails details) {
+    this.details = details;
   }
 
   @Override
@@ -64,19 +86,20 @@ public class UserSignedUp {
       return false;
     }
     UserSignedUp userSignedUp = (UserSignedUp) o;
-    return Objects.equals(this.payload, userSignedUp.payload);
+    return Objects.equals(this.id, userSignedUp.id) && Objects.equals(this.details, userSignedUp.details);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(payload);
+    return Objects.hash(id, details);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("UserSignedUp{");
-    sb.append(" payload:").append(payload);
+    sb.append(" id:").append(id).append(",");
+    sb.append(" details:").append(details);
     sb.append("}");
     return sb.toString();
   }

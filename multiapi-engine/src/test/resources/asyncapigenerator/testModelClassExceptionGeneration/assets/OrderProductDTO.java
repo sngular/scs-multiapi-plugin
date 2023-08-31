@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.modelclass.model.event.schemas;
+package com.sngular.scsplugin.modelclass.model.event;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.sngular.scsplugin.modelclass.model.event.schemas.exception.ModelClassException;
+import com.sngular.scsplugin.modelclass.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.modelclass.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = OrderProductDTO.OrderProductDTOBuilder.class)

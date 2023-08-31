@@ -17,7 +17,7 @@ public class ClasspathFileLocation implements FileLocation {
   }
 
   @Override
-  public InputStream getFileAtLocation(final String filename) {
+  public final InputStream getFileAtLocation(final String filename) {
     return ClasspathFileLocation.class.getClassLoader().getResourceAsStream(path + filename.replace("./", ""));
   }
 }

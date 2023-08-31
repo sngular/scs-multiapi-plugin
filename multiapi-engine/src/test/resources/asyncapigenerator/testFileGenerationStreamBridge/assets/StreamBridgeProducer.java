@@ -2,7 +2,7 @@ package com.sngular.scsplugin.streambridge.model.event.producer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.cloud.stream.function.StreamBridge;
-import com.sngular.scsplugin.streambridge.model.event.messages.OrderCreated;
+import com.sngular.scsplugin.streambridge.model.event.Order;
 
 @Component
 public class StreamBridgeProducer {
@@ -13,8 +13,8 @@ public class StreamBridgeProducer {
     this.streamBridge = streamBridge;
   }
 
-  public void publishOperationStreamBridge(final OrderCreated orderCreated) {
-    streamBridge.send("order.created", orderCreated);
+  public void publishOperationStreamBridge(final Order order) {
+    streamBridge.send("order.created", order);
   }
 
 }

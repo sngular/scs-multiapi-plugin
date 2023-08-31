@@ -29,8 +29,9 @@ channels:
     subscribe:
       operationId: "subscribeOperation2"
       message:
-        CreateOrder:
-          payload:
+        payload:
+          type: object
+          properties:
             order:
               $ref: '#/components/schemas/Order'
             waiter:

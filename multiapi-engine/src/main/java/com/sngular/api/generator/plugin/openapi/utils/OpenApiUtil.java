@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -40,6 +39,7 @@ public class OpenApiUtil {
   public static final String PATHS = "paths";
 
   static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
+
   static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
 
   private OpenApiUtil() {}
@@ -118,15 +118,13 @@ public class OpenApiUtil {
       fileURL = parentFolder.toUri().toURL();
     }
     final var sb = new StringBuilder();
-    if (Objects.nonNull(fileURL)) {
-      try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
-        String inputLine;
-        while ((inputLine = reader.readLine()) != null) {
-          sb.append(inputLine).append(System.lineSeparator());
-        }
-      } catch (final IOException e) {
-        throw new FileParseException("Error reading api file", e);
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
+      String inputLine;
+      while ((inputLine = reader.readLine()) != null) {
+        sb.append(inputLine).append(System.lineSeparator());
       }
+    } catch (final IOException e) {
+      throw new FileParseException("Error reading api file", e);
     }
     return sb.toString();
   }
@@ -191,8 +189,8 @@ public class OpenApiUtil {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-                          "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
-                          ApiTool.getNode(parameter, "schema"));
+              "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
+              ApiTool.getNode(parameter, "schema"));
         }
       }
     }

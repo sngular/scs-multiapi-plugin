@@ -74,6 +74,9 @@ public final class TypeConstants {
       OFFSETDATETIME
   );
 
+  private TypeConstants() {
+  }
+
   public static boolean isBoolean(final String isBoolean) {
     return Boolean.parseBoolean(isBoolean.toLowerCase());
   }
@@ -82,8 +85,6 @@ public final class TypeConstants {
     LOCAL,
     ZONED,
     OFFSET
-  }
 
-  private TypeConstants() {
   }
 }

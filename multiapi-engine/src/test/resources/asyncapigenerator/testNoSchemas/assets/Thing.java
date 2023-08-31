@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.noschemas.model.schemas;
+package com.sngular.scsplugin.noschemas.model;
 
 import java.util.Objects;
 

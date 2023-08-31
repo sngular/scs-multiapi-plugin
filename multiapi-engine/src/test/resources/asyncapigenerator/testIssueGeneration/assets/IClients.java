@@ -1,8 +1,8 @@
 package com.sngular.scsplugin.issuegeneration.model.event.producer;
 
-import com.sngular.scsplugin.issuegeneration.model.event.messages.DataClientDTO;
+import com.sngular.scsplugin.issuegeneration.model.event.DataDTO;
 
 public interface IClients {
 
-  DataClientDTO clients();
+  DataDTO clients();
 }

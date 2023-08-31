@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegeneration.model.event.schemas.CreateOrderMapper;
+import com.sngular.scsplugin.filegeneration.model.event.CreateOrderMapper;
 
 @Configuration
 public class Producer {

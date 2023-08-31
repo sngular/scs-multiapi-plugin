@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '4.9.12'
+version = '5.0.0'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -30,7 +30,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:4.9.12'
+  implementation 'com.sngular:multiapi-engine:5.0.0'
   testImplementation 'org.assertj:assertj-core:3.24.2'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.9.1'
 }
@@ -98,7 +98,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:4.9.12'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:5.0.0'
         implementation 'org.assertj:assertj-core:3.24.2'
       }
 

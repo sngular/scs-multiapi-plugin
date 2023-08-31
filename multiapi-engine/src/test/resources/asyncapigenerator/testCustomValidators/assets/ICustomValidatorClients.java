@@ -1,8 +1,8 @@
 package com.sngular.scsplugin.customvalidator.model.event.producer;
 
-import com.sngular.scsplugin.customvalidator.model.event.messages.DataClientDTO;
+import com.sngular.scsplugin.customvalidator.model.event.DataDTO;
 
 public interface ICustomValidatorClients {
 
-  DataClientDTO customValidatorClients();
+  DataDTO customValidatorClients();
 }

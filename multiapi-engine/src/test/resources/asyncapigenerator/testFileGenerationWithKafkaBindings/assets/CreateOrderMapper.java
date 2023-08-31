@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas;
+package com.sngular.scsplugin.filegenerationwithkafkabindings.model.event;
 
 import java.util.Objects;
 
@@ -11,11 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CreateOrderMapper {
 
   @JsonProperty(value ="order")
-  private com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper order;
+  private OrderMapper order;
   @JsonProperty(value ="waiter")
-  private com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper waiter;
+  private WaiterMapper waiter;
 
-  private CreateOrderMapper(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper order, com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper waiter) {
+  private CreateOrderMapper(OrderMapper order, WaiterMapper waiter) {
     this.order = order;
     this.waiter = waiter;
 
@@ -34,15 +34,15 @@ public class CreateOrderMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CreateOrderMapperBuilder {
 
-    private com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper order;
-    private com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper waiter;
+    private OrderMapper order;
+    private WaiterMapper waiter;
 
-    public CreateOrderMapper.CreateOrderMapperBuilder order(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper order) {
+    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
       this.order = order;
       return this;
     }
 
-    public CreateOrderMapper.CreateOrderMapperBuilder waiter(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper waiter) {
+    public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
       this.waiter = waiter;
       return this;
     }
@@ -58,10 +58,10 @@ public class CreateOrderMapper {
   * @return order
   */
   @Schema(name = "order", required = false)
-  public com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper getOrder() {
+  public OrderMapper getOrder() {
     return order;
   }
-  public void setOrder(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.OrderMapper order) {
+  public void setOrder(OrderMapper order) {
     this.order = order;
   }
 
@@ -70,10 +70,10 @@ public class CreateOrderMapper {
   * @return waiter
   */
   @Schema(name = "waiter", required = false)
-  public com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper getWaiter() {
+  public WaiterMapper getWaiter() {
     return waiter;
   }
-  public void setWaiter(com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.WaiterMapper waiter) {
+  public void setWaiter(WaiterMapper waiter) {
     this.waiter = waiter;
   }
 

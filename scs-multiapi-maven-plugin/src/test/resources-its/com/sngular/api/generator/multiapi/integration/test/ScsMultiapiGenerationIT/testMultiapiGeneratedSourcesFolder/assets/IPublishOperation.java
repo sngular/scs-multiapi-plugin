@@ -1,8 +1,8 @@
 package com.sngular.generator.multiapi.model.event.consumer;
 
-import com.sngular.generator.multiapi.model.event.messages.OrderCreatedDTO;
+import com.sngular.generator.multiapi.model.event.OrderDTO;
 
 public interface IPublishOperation {
 
-  void publishOperation(final OrderCreatedDTO value);
+  void publishOperation(final OrderDTO value);
 }

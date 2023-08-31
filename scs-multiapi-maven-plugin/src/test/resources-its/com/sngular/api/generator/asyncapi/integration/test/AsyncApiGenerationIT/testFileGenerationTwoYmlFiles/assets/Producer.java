@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.apigenerator.asyncapi.model.messages.OrderCreated;
+import com.sngular.apigenerator.asyncapi.model.Order;
 
 @Configuration
 public class Producer {
@@ -16,7 +16,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<OrderCreated> publishOperation() {
+  public Supplier<Order> publishOperation() {
     return () -> publishOperation.publishOperation();
   }
 

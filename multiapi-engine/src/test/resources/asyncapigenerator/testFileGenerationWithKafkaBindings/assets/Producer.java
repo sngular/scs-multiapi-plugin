@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.schemas.CreateOrderMapper;
+import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.CreateOrderMapper;
 import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.producer.MessageWrapper;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;

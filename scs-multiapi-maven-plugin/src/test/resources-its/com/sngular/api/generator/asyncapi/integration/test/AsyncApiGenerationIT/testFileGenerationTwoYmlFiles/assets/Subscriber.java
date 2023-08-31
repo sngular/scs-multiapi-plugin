@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.apigenerator.asyncapi.model.messages.CreateOrder;
+import com.sngular.apigenerator.asyncapi.model.CreateOrder;
 
 @Configuration
 public class Subscriber {

@@ -18,6 +18,8 @@ public class ClassTemplate {
 
   Path filePath;
 
+  Path propertiesPath;
+
   String modelPackage;
 
   String className;

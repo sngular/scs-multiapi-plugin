@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.noschemas.model.messages.TestMsg;
-import com.sngular.scsplugin.noschemas.model.schemas.Thing;
+import com.sngular.scsplugin.noschemas.model.TestMsg;
+import com.sngular.scsplugin.noschemas.model.Thing;
 
 @Configuration
 public class Producer {

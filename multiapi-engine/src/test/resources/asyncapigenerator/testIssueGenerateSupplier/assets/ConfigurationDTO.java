@@ -1,4 +1,4 @@
-package company.mail.model.schemas;
+package company.mail.model;
 
 import java.util.Objects;
 

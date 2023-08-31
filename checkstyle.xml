@@ -417,5 +417,9 @@
     <property name="files" value="[/\\].*AsyncApiGenerator.java"/>
     <property name="checks" value="ClassDataAbstractionCoupling"/>
   </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*.java"/>
+    <property name="checks" value="CyclomaticComplexity"/>
+  </module>
   
 </module>

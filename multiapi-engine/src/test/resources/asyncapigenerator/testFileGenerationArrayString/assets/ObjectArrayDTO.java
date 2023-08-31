@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.arraywithstring.model.event.schemas;
+package com.sngular.scsplugin.arraywithstring.model.event;
 
 import java.util.Objects;
 

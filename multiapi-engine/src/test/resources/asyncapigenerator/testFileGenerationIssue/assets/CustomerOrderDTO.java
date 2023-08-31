@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegenerationissue.model.event.schemas;
+package com.sngular.scsplugin.filegenerationissue.model.event;
 
 import java.util.Objects;
 
@@ -16,36 +16,36 @@ public class CustomerOrderDTO {
   private String id;
   @JsonProperty(value ="date")
   private String date;
-  @JsonProperty(value ="shippingDetailsDTO")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetailsDTO;
+  @JsonProperty(value ="shippingDetails")
+  private ShippingDetailsDTO shippingDetails;
   @JsonProperty(value ="orderedItems")
-  private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO>();
+  private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
   @JsonProperty(value ="paymentDetails")
-  private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO>();
-  @JsonProperty(value ="orderStatusDTO")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO orderStatusDTO;
-  @JsonProperty(value ="customerDTO")
-  private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
+  private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+  @JsonProperty(value ="status")
+  private OrderStatusDTO status;
+  @JsonProperty(value ="customer")
+  private CustomerDTO customer;
 
-  private CustomerOrderDTO(String id, String date, com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetailsDTO, List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems, List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails, com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO orderStatusDTO, com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
+  private CustomerOrderDTO(String id, String date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, OrderStatusDTO status, CustomerDTO customer) {
     this.id = id;
     this.date = date;
-    this.shippingDetailsDTO = shippingDetailsDTO;
+    this.shippingDetails = shippingDetails;
     this.orderedItems = orderedItems;
     this.paymentDetails = paymentDetails;
-    this.orderStatusDTO = orderStatusDTO;
-    this.customerDTO = customerDTO;
+    this.status = status;
+    this.customer = customer;
 
   }
 
   private CustomerOrderDTO(CustomerOrderDTOBuilder builder) {
     this.id = builder.id;
     this.date = builder.date;
-    this.shippingDetailsDTO = builder.shippingDetailsDTO;
+    this.shippingDetails = builder.shippingDetails;
     this.orderedItems = builder.orderedItems;
     this.paymentDetails = builder.paymentDetails;
-    this.orderStatusDTO = builder.orderStatusDTO;
-    this.customerDTO = builder.customerDTO;
+    this.status = builder.status;
+    this.customer = builder.customer;
 
   }
 
@@ -58,11 +58,11 @@ public class CustomerOrderDTO {
 
     private String id;
     private String date;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetailsDTO;
-    private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO>();
-    private List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails = new ArrayList<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO>();
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO orderStatusDTO;
-    private com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO;
+    private ShippingDetailsDTO shippingDetails;
+    private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+    private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+    private OrderStatusDTO status;
+    private CustomerDTO customer;
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {
       this.id = id;
@@ -74,44 +74,44 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetailsDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetailsDTO) {
-      this.shippingDetailsDTO = shippingDetailsDTO;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(ShippingDetailsDTO shippingDetails) {
+      this.shippingDetails = shippingDetails;
       return this;
     }
-    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
       if (!orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO orderedItem) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(OrderedItemDTO orderedItem) {
       if (orderedItem != null) {
         this.orderedItems.add(orderedItem);
       }
       return this;
     }
-    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<PaymentDetailsDTO> paymentDetails) {
       if (!paymentDetails.isEmpty()) {
         this.paymentDetails.addAll(paymentDetails);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO paymentDetail) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(PaymentDetailsDTO paymentDetail) {
       if (paymentDetail != null) {
         this.paymentDetails.add(paymentDetail);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder orderStatusDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO orderStatusDTO) {
-      this.orderStatusDTO = orderStatusDTO;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder status(OrderStatusDTO status) {
+      this.status = status;
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder customerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
-      this.customerDTO = customerDTO;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder customer(CustomerDTO customer) {
+      this.customer = customer;
       return this;
     }
 
@@ -146,15 +146,15 @@ public class CustomerOrderDTO {
   }
 
   /**
-  * Get shippingDetailsDTO
-  * @return shippingDetailsDTO
+  * Get shippingDetails
+  * @return shippingDetails
   */
-  @Schema(name = "shippingDetailsDTO", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO getShippingDetailsDTO() {
-    return shippingDetailsDTO;
+  @Schema(name = "shippingDetails", required = false)
+  public ShippingDetailsDTO getShippingDetails() {
+    return shippingDetails;
   }
-  public void setShippingDetailsDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.ShippingDetailsDTO shippingDetailsDTO) {
-    this.shippingDetailsDTO = shippingDetailsDTO;
+  public void setShippingDetails(ShippingDetailsDTO shippingDetails) {
+    this.shippingDetails = shippingDetails;
   }
 
   /**
@@ -162,10 +162,10 @@ public class CustomerOrderDTO {
   * @return orderedItems
   */
   @Schema(name = "orderedItems", required = false)
-  public List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> getOrderedItems() {
+  public List<OrderedItemDTO> getOrderedItems() {
     return orderedItems;
   }
-  public void setOrderedItems(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderedItemDTO> orderedItems) {
+  public void setOrderedItems(List<OrderedItemDTO> orderedItems) {
     this.orderedItems = orderedItems;
   }
 
@@ -174,35 +174,35 @@ public class CustomerOrderDTO {
   * @return paymentDetails
   */
   @Schema(name = "paymentDetails", required = false)
-  public List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> getPaymentDetails() {
+  public List<PaymentDetailsDTO> getPaymentDetails() {
     return paymentDetails;
   }
-  public void setPaymentDetails(List<com.sngular.scsplugin.filegenerationissue.model.event.schemas.PaymentDetailsDTO> paymentDetails) {
+  public void setPaymentDetails(List<PaymentDetailsDTO> paymentDetails) {
     this.paymentDetails = paymentDetails;
   }
 
   /**
-  * Get orderStatusDTO
-  * @return orderStatusDTO
+  * Get status
+  * @return status
   */
-  @Schema(name = "orderStatusDTO", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO getOrderStatusDTO() {
-    return orderStatusDTO;
+  @Schema(name = "status", required = false)
+  public OrderStatusDTO getStatus() {
+    return status;
   }
-  public void setOrderStatusDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.OrderStatusDTO orderStatusDTO) {
-    this.orderStatusDTO = orderStatusDTO;
+  public void setStatus(OrderStatusDTO status) {
+    this.status = status;
   }
 
   /**
-  * Get customerDTO
-  * @return customerDTO
+  * Get customer
+  * @return customer
   */
-  @Schema(name = "customerDTO", required = false)
-  public com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO getCustomerDTO() {
-    return customerDTO;
+  @Schema(name = "customer", required = false)
+  public CustomerDTO getCustomer() {
+    return customer;
   }
-  public void setCustomerDTO(com.sngular.scsplugin.filegenerationissue.model.event.schemas.CustomerDTO customerDTO) {
-    this.customerDTO = customerDTO;
+  public void setCustomer(CustomerDTO customer) {
+    this.customer = customer;
   }
 
   @Override
@@ -214,12 +214,12 @@ public class CustomerOrderDTO {
       return false;
     }
     CustomerOrderDTO customerOrderDTO = (CustomerOrderDTO) o;
-    return Objects.equals(this.id, customerOrderDTO.id) && Objects.equals(this.date, customerOrderDTO.date) && Objects.equals(this.shippingDetailsDTO, customerOrderDTO.shippingDetailsDTO) && Objects.equals(this.orderedItems, customerOrderDTO.orderedItems) && Objects.equals(this.paymentDetails, customerOrderDTO.paymentDetails) && Objects.equals(this.orderStatusDTO, customerOrderDTO.orderStatusDTO) && Objects.equals(this.customerDTO, customerOrderDTO.customerDTO);
+    return Objects.equals(this.id, customerOrderDTO.id) && Objects.equals(this.date, customerOrderDTO.date) && Objects.equals(this.shippingDetails, customerOrderDTO.shippingDetails) && Objects.equals(this.orderedItems, customerOrderDTO.orderedItems) && Objects.equals(this.paymentDetails, customerOrderDTO.paymentDetails) && Objects.equals(this.status, customerOrderDTO.status) && Objects.equals(this.customer, customerOrderDTO.customer);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, date, shippingDetailsDTO, orderedItems, paymentDetails, orderStatusDTO, customerDTO);
+    return Objects.hash(id, date, shippingDetails, orderedItems, paymentDetails, status, customer);
   }
 
   @Override
@@ -228,11 +228,11 @@ public class CustomerOrderDTO {
     sb.append("CustomerOrderDTO{");
     sb.append(" id:").append(id).append(",");
     sb.append(" date:").append(date).append(",");
-    sb.append(" shippingDetailsDTO:").append(shippingDetailsDTO).append(",");
+    sb.append(" shippingDetails:").append(shippingDetails).append(",");
     sb.append(" orderedItems:").append(orderedItems).append(",");
     sb.append(" paymentDetails:").append(paymentDetails).append(",");
-    sb.append(" orderStatusDTO:").append(orderStatusDTO).append(",");
-    sb.append(" customerDTO:").append(customerDTO);
+    sb.append(" status:").append(status).append(",");
+    sb.append(" customer:").append(customer);
     sb.append("}");
     return sb.toString();
   }

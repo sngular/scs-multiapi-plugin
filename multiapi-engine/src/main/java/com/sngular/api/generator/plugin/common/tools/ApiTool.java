@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,11 +19,17 @@ import org.apache.commons.lang3.StringUtils;
 public final class ApiTool {
 
   public static final String FORMAT = "format";
+
   public static final String ALL_OF = "allOf";
+
   public static final String ANY_OF = "anyOf";
+
   public static final String ONE_OF = "oneOf";
+
   public static final String COMPONENTS = "components";
+
   public static final String SCHEMAS = "schemas";
+
   public static final String REQUIRED = "required";
 
   public static final String PARAMETERS = "parameters";
@@ -74,6 +79,10 @@ public final class ApiTool {
     return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
   }
 
+  public static String getNodeAsString(final JsonNode schema) {
+    return Objects.nonNull(schema) ? schema.textValue() : null;
+  }
+
   public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
     return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
   }
@@ -97,42 +106,24 @@ public final class ApiTool {
   }
 
   public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, SCHEMAS)) {
-        final var schemas = getNode(components, SCHEMAS);
-        final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, SCHEMAS);
   }
 
   public static Map<String, JsonNode> getParameterSchemas(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, PARAMETERS)) {
-        final var schemas = getNode(components, PARAMETERS);
-        final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, PARAMETERS);
   }
 
   public static Map<String, JsonNode> getResponseSchemas(final JsonNode openApi) {
+    return getComponentSchemasByType(openApi, RESPONSES);
+  }
+
+  private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
     if (hasNode(openApi, COMPONENTS)) {
       final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, RESPONSES)) {
-        final var schemas = getNode(components, RESPONSES);
+      if (hasNode(components, schemaType)) {
+        final var schemas = getNode(components, schemaType);
         final var schemasIt = schemas.fieldNames();
         schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
       }
@@ -142,33 +133,30 @@ public final class ApiTool {
   }
 
   public static Map<String, JsonNode> getComponentSecuritySchemes(final JsonNode openApi) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, "securitySchemes")) {
-        getNode(components, "securitySchemes").fields().forEachRemaining(schema -> schemasMap.put(schema.getKey(), schema.getValue()));
-      }
-    }
-
-    return schemasMap;
+    return getComponentSchemasByType(openApi, "securitySchemes");
   }
 
   public static String getNumberType(final JsonNode schema) {
     final String type;
     if (hasType(schema)) {
       switch (getType(schema)) {
-        case TypeConstants.DOUBLE: type = TypeConstants.DOUBLE;
-                                      break;
-        case TypeConstants.FLOAT: type = TypeConstants.FLOAT;
-                                      break;
-        case TypeConstants.NUMBER: type = TypeConstants.NUMBER;
-                                      break;
-        case TypeConstants.INT_64: type = TypeConstants.INT_64;
-                                      break;
-        case TypeConstants.INT_32: type = TypeConstants.INT_32;
-                                      break;
-        default: type = TypeConstants.INTEGER;
+        case TypeConstants.DOUBLE:
+          type = TypeConstants.DOUBLE;
+          break;
+        case TypeConstants.FLOAT:
+          type = TypeConstants.FLOAT;
+          break;
+        case TypeConstants.NUMBER:
+          type = TypeConstants.NUMBER;
+          break;
+        case TypeConstants.INT_64:
+          type = TypeConstants.INT_64;
+          break;
+        case TypeConstants.INT_32:
+          type = TypeConstants.INT_32;
+          break;
+        default:
+          type = TypeConstants.INTEGER;
           break;
       }
     } else {
@@ -237,9 +225,9 @@ public final class ApiTool {
   public static boolean isNumber(final JsonNode schema) {
     return hasType(schema)
            && (TypeConstants.INTEGER.equalsIgnoreCase(getType(schema))
-            || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
-            || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
-            || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
+               || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
+               || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
+               || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
   }
 
   public static boolean isEnum(final JsonNode schema) {
@@ -290,5 +278,21 @@ public final class ApiTool {
 
   private static Transformer<JsonNode, String> getTextValue() {
     return JsonNode::asText;
+  }
+
+  public static boolean hasMessages(final JsonNode node) {
+    return hasComponents(node) && hasNode(getNode(node, "components"), "messages");
+  }
+
+  public static boolean hasComponents(final JsonNode node) {
+    return hasNode(node, "components");
+  }
+
+  public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
+    Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
+    if (hasComponents(node) && hasNode(getNode(node, "components"), componentType)) {
+      result = getNode(getNode(node, "components"), componentType).fields();
+    }
+    return result;
   }
 }
