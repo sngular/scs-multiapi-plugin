@@ -271,10 +271,20 @@ public class AsyncApiGenerator {
 
   private void processReference(
       final JsonNode node, final String referenceLink, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final List<JsonNode> referenceList) {
+      processReferenceInner(node, referenceLink, ymlParent, totalSchemas, referenceList, null);
+  }
+
+  private void processReferenceInner(
+      final JsonNode node, final String referenceLink, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final List<JsonNode> referenceList,
+      List<String> alreadyProcessed) {
+    if(alreadyProcessed == null) {
+      alreadyProcessed = new ArrayList<>();
+    }
     final String[] path = MapperUtil.splitName(referenceLink);
     final JsonNode component;
     final var calculatedKey = calculateKey(path);
-    if (!totalSchemas.containsKey(calculatedKey)) {
+    if (!totalSchemas.containsKey(calculatedKey) &&  !alreadyProcessed.contains(calculatedKey)) {
+      alreadyProcessed.add(calculatedKey);
       try {
         if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(JSON)) {
           component = solveRef(ymlParent, path, referenceLink, totalSchemas);
@@ -285,7 +295,7 @@ public class AsyncApiGenerator {
             component = (node.findValue(path[path.length - 2])).get(path[path.length - 1]);
           }
           if (Objects.nonNull(component)) {
-            checkReference(node, component, ymlParent, totalSchemas, referenceList);
+            checkReferenceInner(node, component, ymlParent, totalSchemas, referenceList, alreadyProcessed);
           }
         }
       } catch (final IOException e) {
@@ -304,9 +314,18 @@ public class AsyncApiGenerator {
   private void checkReference(
       final JsonNode mainNode, final JsonNode node, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
       final List<JsonNode> referenceList) {
+
+    checkReferenceInner(mainNode, node, ymlParent, totalSchemas, referenceList, new ArrayList<>());
+  }
+
+  private void checkReferenceInner(
+      final JsonNode mainNode, final JsonNode node, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
+      final List<JsonNode> referenceList, List<String> alreadyProcessed) {
     final var localReferences = node.findValues(REF);
     if (!localReferences.isEmpty()) {
-      localReferences.forEach(localReference -> processReference(mainNode, ApiTool.getNodeAsString(localReference), ymlParent, totalSchemas, referenceList));
+      localReferences.forEach(localReference -> {
+        processReferenceInner(mainNode, ApiTool.getNodeAsString(localReference), ymlParent, totalSchemas, referenceList, alreadyProcessed);
+      });
     }
   }
 

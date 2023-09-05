@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -59,16 +60,21 @@ public class MapperContentUtil {
     final List<SchemaObject> schemasList = new ArrayList<>();
     if (Objects.nonNull(model)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
+      final List<String> alreadyBuilt = new ArrayList<>();
       schemasList.add(buildSchemaObject(totalSchemas, component, model, prefix, suffix, modelToBuildList, parentPackage));
       while (!modelToBuildList.isEmpty()) {
+
         final var modelToBuild = modelToBuildList.remove();
-        final var path = MapperUtil.splitName(modelToBuild);
-        final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get(getComponent(path)),
-                                                 prefix, suffix, modelToBuildList, getParentName(path));
-        if (schemasList.contains(nexElement)) {
-          modelToBuildList.poll();
-        } else {
-          schemasList.add(nexElement);
+        if (!alreadyBuilt.contains(modelToBuild)) {
+          final var path = MapperUtil.splitName(modelToBuild);
+          final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get(getComponent(path)),
+                                                   prefix, suffix, modelToBuildList, getParentName(path));
+          if (schemasList.contains(nexElement)) {
+            modelToBuildList.poll();
+          } else {
+            schemasList.add(nexElement);
+          }
+          alreadyBuilt.add(modelToBuild);
         }
       }
     }
@@ -227,12 +233,12 @@ public class MapperContentUtil {
       final var type = ApiTool.getType(schema);
       if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject =
-          SchemaFieldObject
-            .builder()
-            .baseName(name)
-            .restrictions(new SchemaFieldObjectProperties())
-            .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-            .build();
+            SchemaFieldObject
+                .builder()
+                .baseName(name)
+                .restrictions(new SchemaFieldObjectProperties())
+                .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                .build();
         setFieldType(fieldObject, schema, required, prefix, suffix);
         if (StringUtils.isNotEmpty(propertyName) && !totalSchemas.containsKey(propertyName)) {
           totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
@@ -246,45 +252,45 @@ public class MapperContentUtil {
           modelToBuildList.add(longType);
         }
         fieldObject =
-          SchemaFieldObject
-            .builder()
-            .baseName(name)
-            .restrictions(new SchemaFieldObjectProperties())
-            .dataType(arrayType)
-            .dataTypeSimple(type)
-            .importClass(getImportClass(arrayType))
-            .build();
+            SchemaFieldObject
+                .builder()
+                .baseName(name)
+                .restrictions(new SchemaFieldObjectProperties())
+                .dataType(arrayType)
+                .dataTypeSimple(type)
+                .importClass(getImportClass(arrayType))
+                .build();
         handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (ApiTool.isEnum(schema)) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
         fieldObject = SchemaFieldObject
-          .builder()
-          .baseName(name)
-          .restrictions(new SchemaFieldObjectProperties())
-          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-          .build();
+                          .builder()
+                          .baseName(name)
+                          .restrictions(new SchemaFieldObjectProperties())
+                          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .build();
         setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
       fieldObject =
-        SchemaFieldObject
-          .builder()
-          .baseName(name)
-          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-          .restrictions(new SchemaFieldObjectProperties())
-          .build();
+          SchemaFieldObject
+              .builder()
+              .baseName(name)
+              .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+              .restrictions(new SchemaFieldObjectProperties())
+              .build();
       setFieldType(fieldObject, schema, required, prefix, suffix);
     } else {
       fieldObject = SchemaFieldObject
-        .builder()
-        .baseName(name)
-        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-        .restrictions(new SchemaFieldObjectProperties())
-        .build();
+                        .builder()
+                        .baseName(name)
+                        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .restrictions(new SchemaFieldObjectProperties())
+                        .build();
     }
     return fieldObject;
   }
@@ -406,14 +412,14 @@ public class MapperContentUtil {
     }
 
     return SchemaFieldObject
-      .builder()
-      .baseName(name)
-      .dataTypeSimple("enum")
-      .dataType(MapperUtil.getSimpleType(value, prefix, suffix))
-      .required(required)
-      .enumValues(enumValues)
-      .restrictions(new SchemaFieldObjectProperties())
-      .build();
+               .builder()
+               .baseName(name)
+               .dataTypeSimple("enum")
+               .dataType(MapperUtil.getSimpleType(value, prefix, suffix))
+               .required(required)
+               .enumValues(enumValues)
+               .restrictions(new SchemaFieldObjectProperties())
+               .build();
   }
 
   private static String getImportClass(final String type) {
