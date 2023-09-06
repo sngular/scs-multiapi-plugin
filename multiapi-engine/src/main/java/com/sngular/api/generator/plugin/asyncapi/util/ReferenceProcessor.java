@@ -33,13 +33,10 @@ public class ReferenceProcessor {
 
   private final Map<String, JsonNode> totalSchemas;
 
-  private final List<JsonNode> referenceList;
-
   @Builder
-  private ReferenceProcessor(FileLocation ymlParent, Map<String, JsonNode> totalSchemas, List<JsonNode> referenceList) {
+  private ReferenceProcessor(FileLocation ymlParent, Map<String, JsonNode> totalSchemas) {
     this.ymlParent = ymlParent;
     this.totalSchemas = totalSchemas;
-    this.referenceList = referenceList;
   }
 
   public void processReference(
@@ -103,9 +100,7 @@ public class ReferenceProcessor {
       final JsonNode mainNode, final JsonNode node) {
     final var localReferences = node.findValues(REF);
     if (!localReferences.isEmpty()) {
-      localReferences.forEach(localReference -> {
-        processReference(mainNode, ApiTool.getNodeAsString(localReference));
-      });
+      localReferences.forEach(localReference -> processReference(mainNode, ApiTool.getNodeAsString(localReference)));
     }
   }
 }

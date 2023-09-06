@@ -217,7 +217,7 @@ public class AsyncApiGenerator {
     final List<JsonNode> referenceList = node.findValues(REF);
 
     referenceList.forEach(reference -> {
-      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).referenceList(referenceList).build();
+      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
       refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
     });
 
@@ -226,11 +226,11 @@ public class AsyncApiGenerator {
     );
 
     ApiTool.getComponent(node, MESSAGES).forEachRemaining(
-        message -> getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas, referenceList)
+        message -> getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas)
     );
 
     getChannels(node).forEachRemaining(
-        channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent, referenceList)
+        channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent)
     );
 
     return totalSchemas;
@@ -241,8 +241,7 @@ public class AsyncApiGenerator {
   }
 
   private void getMessageSchemas(
-      final String messageName, final JsonNode message, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
-      final List<JsonNode> referenceList) {
+      final String messageName, final JsonNode message, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {
     if (ApiTool.hasNode(message, PAYLOAD)) {
       final JsonNode payload = message.get(PAYLOAD);
       if (!payload.has(REF)) {
@@ -250,7 +249,7 @@ public class AsyncApiGenerator {
         totalSchemas.putIfAbsent(key, payload);
       }
     } else if (ApiTool.hasRef(message)) {
-      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).referenceList(referenceList).build();
+      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
       refProcessor.processReference(message, ApiTool.getRefValue(message));
     }
   }
@@ -259,11 +258,11 @@ public class AsyncApiGenerator {
     return StringUtils.defaultString(ApiTool.getName(message), messageName);
   }
 
-  private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent, final List<JsonNode> referenceList) {
+  private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent) {
     final List<String> options = List.of(PUBLISH, SUBSCRIBE);
     options.forEach(option -> {
       if (channel.has(option) && channel.get(option).has(MESSAGE)) {
-        getMessageSchemas(null, channel.get(option).get(MESSAGE), ymlParent, totalSchemas, referenceList);
+        getMessageSchemas(null, channel.get(option).get(MESSAGE), ymlParent, totalSchemas);
       }
     });
   }
@@ -582,7 +581,7 @@ public class AsyncApiGenerator {
 
   private String processExternalAvro(final String modelPackage, final FileLocation ymlParent, final String messageContent) {
     String avroFilePath = messageContent;
-    String namespace = "";
+    String namespace;
     if (messageContent.startsWith(SLASH)) {
       avroFilePath = avroFilePath.replaceFirst(SLASH, "");
     } else if (messageContent.startsWith(".")) {
