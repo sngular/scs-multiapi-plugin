@@ -34,7 +34,7 @@ public class ReferenceProcessor {
   private final Map<String, JsonNode> totalSchemas;
 
   @Builder
-  private ReferenceProcessor(FileLocation ymlParent, Map<String, JsonNode> totalSchemas) {
+  public ReferenceProcessor(final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {
     this.ymlParent = ymlParent;
     this.totalSchemas = totalSchemas;
   }
