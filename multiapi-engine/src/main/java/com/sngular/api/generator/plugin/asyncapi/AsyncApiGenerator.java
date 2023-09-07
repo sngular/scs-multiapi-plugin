@@ -6,8 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import static com.sngular.api.generator.plugin.common.tools.ApiTool.nodeFromFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -217,7 +215,7 @@ public class AsyncApiGenerator {
     final List<JsonNode> referenceList = node.findValues(REF);
 
     referenceList.forEach(reference -> {
-      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
+      final ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
       refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
     });
 
@@ -249,7 +247,7 @@ public class AsyncApiGenerator {
         totalSchemas.putIfAbsent(key, payload);
       }
     } else if (ApiTool.hasRef(message)) {
-      ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
+      final ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
       refProcessor.processReference(message, ApiTool.getRefValue(message));
     }
   }
@@ -535,13 +533,13 @@ public class AsyncApiGenerator {
     }
     final var processBindingsResult = processBindingsResultBuilder.build();
     return ProcessMethodResult
-             .builder()
-             .operationId(operationId)
-             .namespace(payloadInfo.getKey())
-             .payload(payloadInfo.getValue())
-             .bindings(processBindingsResult.getBindings())
-             .bindingType(processBindingsResult.getBindingType())
-             .build();
+               .builder()
+               .operationId(operationId)
+               .namespace(payloadInfo.getKey())
+               .payload(payloadInfo.getValue())
+               .bindings(processBindingsResult.getBindings())
+               .bindingType(processBindingsResult.getBindingType())
+               .build();
   }
 
   private Pair<String, JsonNode> processPayload(final OperationParameterObject operationObject, final String messageName, final JsonNode payload, final FileLocation ymlParent)
@@ -581,7 +579,7 @@ public class AsyncApiGenerator {
 
   private String processExternalAvro(final String modelPackage, final FileLocation ymlParent, final String messageContent) {
     String avroFilePath = messageContent;
-    String namespace;
+    final String namespace;
     if (messageContent.startsWith(SLASH)) {
       avroFilePath = avroFilePath.replaceFirst(SLASH, "");
     } else if (messageContent.startsWith(".")) {
@@ -607,7 +605,7 @@ public class AsyncApiGenerator {
     final String[] path = MapperUtil.splitName(componentPath);
     component = path[path.length - 2] + SLASH + path[path.length - 1];
 
-    final JsonNode node = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
+    final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
     if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
       return processModelPackage(component, modelPackage);
     } else {

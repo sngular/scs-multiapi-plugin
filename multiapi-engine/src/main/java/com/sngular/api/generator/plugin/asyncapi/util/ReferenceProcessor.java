@@ -1,7 +1,5 @@
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import static com.sngular.api.generator.plugin.common.tools.ApiTool.nodeFromFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,7 @@ import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import lombok.Builder;
 
-public class ReferenceProcessor {
+public final class ReferenceProcessor {
 
   private static final String JSON = "json";
 
@@ -81,7 +79,7 @@ public class ReferenceProcessor {
     JsonNode returnNode = null;
 
     if (filePath.endsWith(YML) || filePath.endsWith(JSON)) {
-      final JsonNode node = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
+      final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
       if (node.findValue(path[path.length - 2]).has(path[path.length - 1])) {
         returnNode = node.findValue(path[path.length - 2]).get(path[path.length - 1]);
         checkReference(node, returnNode);
@@ -89,7 +87,7 @@ public class ReferenceProcessor {
         throw new NonSupportedSchemaException(node.toPrettyString());
       }
     } else if (filePath.endsWith(AVSC)) {
-      returnNode = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.AVRO);
+      returnNode = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.AVRO);
     } else if (totalSchemas.containsKey((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase())) {
       returnNode = totalSchemas.get((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase());
     }
