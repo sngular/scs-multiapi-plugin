@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -33,7 +34,6 @@ import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationEx
 import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
@@ -45,6 +45,7 @@ import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
+import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
@@ -60,40 +61,70 @@ import org.apache.commons.lang3.tuple.Pair;
 @Slf4j
 public class AsyncApiGenerator {
 
-  private static final String YML = "yml";
   private static final String SLASH = "/";
+
   private static final String DEFAULT_ASYNCAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".asyncapi";
+
   private static final String DEFAULT_ASYNCAPI_MODEL_PACKAGE = DEFAULT_ASYNCAPI_API_PACKAGE + ".model";
+
   private static final String CONSUMER_CLASS_NAME = "Subscriber";
+
   private static final String SUPPLIER_CLASS_NAME = "Producer";
+
   private static final String STREAM_BRIDGE_CLASS_NAME = "StreamBridgeProducer";
+
   private static final String SUBSCRIBE = "subscribe";
+
   private static final String PUBLISH = "publish";
+
   private static final String OPERATION_ID = "operationId";
+
   private static final String PACKAGE_SEPARATOR_STR = ".";
+
   public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
+
   private static final String AVSC = "avsc";
+
   private static final String PAYLOAD = "payload";
+
   private static final String REF = "$ref";
+
   private static final String MESSAGES = "messages";
+
   private static final String EVENT = "event";
+
   private static final String MESSAGE = "message";
+
   private static final String SCHEMAS = "schemas";
+
   private static final String CHANNELS = "channels";
-  private static final String JSON = "json";
+
   private static final String BINDINGS = "bindings";
+
   private static final String KAFKA = "kafka";
+
   private static final String KEY = "key";
+
   private final List<String> processedOperationIds = new ArrayList<>();
+
   private final List<String> processedClassnames = new ArrayList<>();
+
   private final List<String> processedApiPackages = new ArrayList<>();
+
   private final File targetFolder;
+
   private final File baseDir;
+
   private final FilenameFilter targetFileFilter;
+
   private final TemplateFactory templateFactory;
+
   private final String processedGeneratedSourcesFolder;
+
   private final String groupId;
+
   private final Integer springBootVersion;
+
   private boolean generateExceptionTemplate;
 
   public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
@@ -182,18 +213,22 @@ public class AsyncApiGenerator {
   private Map<String, JsonNode> getAllSchemas(final FileLocation ymlParent, final JsonNode node) {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
     final List<JsonNode> referenceList = node.findValues(REF);
-    referenceList.forEach(reference -> processReference(node, ApiTool.getNodeAsString(reference), ymlParent, totalSchemas, referenceList));
+
+    referenceList.forEach(reference -> {
+      final ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
+      refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
+    });
 
     ApiTool.getComponent(node, SCHEMAS).forEachRemaining(
         schema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue())
     );
 
     ApiTool.getComponent(node, MESSAGES).forEachRemaining(
-        message -> getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas, referenceList)
+        message -> getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas)
     );
 
     getChannels(node).forEachRemaining(
-        channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent, referenceList)
+        channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent)
     );
 
     return totalSchemas;
@@ -204,8 +239,7 @@ public class AsyncApiGenerator {
   }
 
   private void getMessageSchemas(
-      final String messageName, final JsonNode message, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
-      final List<JsonNode> referenceList) {
+      final String messageName, final JsonNode message, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {
     if (ApiTool.hasNode(message, PAYLOAD)) {
       final JsonNode payload = message.get(PAYLOAD);
       if (!payload.has(REF)) {
@@ -213,7 +247,8 @@ public class AsyncApiGenerator {
         totalSchemas.putIfAbsent(key, payload);
       }
     } else if (ApiTool.hasRef(message)) {
-      processReference(message, ApiTool.getRefValue(message), ymlParent, totalSchemas, referenceList);
+      final ReferenceProcessor refProcessor = ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
+      refProcessor.processReference(message, ApiTool.getRefValue(message));
     }
   }
 
@@ -221,93 +256,13 @@ public class AsyncApiGenerator {
     return StringUtils.defaultString(ApiTool.getName(message), messageName);
   }
 
-  private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent, final List<JsonNode> referenceList) {
+  private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent) {
     final List<String> options = List.of(PUBLISH, SUBSCRIBE);
     options.forEach(option -> {
       if (channel.has(option) && channel.get(option).has(MESSAGE)) {
-        getMessageSchemas(null, channel.get(option).get(MESSAGE), ymlParent, totalSchemas, referenceList);
+        getMessageSchemas(null, channel.get(option).get(MESSAGE), ymlParent, totalSchemas);
       }
     });
-  }
-
-  private JsonNode solveRef(final FileLocation ymlParent, final String[] path, final String reference, final Map<String, JsonNode> totalSchemas) throws IOException {
-    final String[] pathToFile = reference.split("#");
-    final String filePath = pathToFile[0];
-    JsonNode returnNode = null;
-
-    if (filePath.endsWith(YML) || filePath.endsWith(JSON)) {
-      final JsonNode node = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
-      if (node.findValue(path[path.length - 2]).has(path[path.length - 1])) {
-        returnNode = node.findValue(path[path.length - 2]).get(path[path.length - 1]);
-        checkReference(node, returnNode, ymlParent, totalSchemas, null);
-      } else {
-        throw new NonSupportedSchemaException(node.toPrettyString());
-      }
-    } else if (filePath.endsWith(AVSC)) {
-      returnNode = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.AVRO);
-    } else if (totalSchemas.containsKey((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase())) {
-      returnNode = totalSchemas.get((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase());
-    }
-    return returnNode;
-  }
-
-  private JsonNode nodeFromFile(final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum) throws IOException {
-    final InputStream file;
-    if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
-      file = ymlParent.getFileAtLocation(filePath);
-    } else {
-      file = new FileInputStream(filePath);
-    }
-
-    final ObjectMapper om;
-
-    if (FactoryTypeEnum.YML.equals(factoryTypeEnum)) {
-      om = new ObjectMapper(new YAMLFactory());
-    } else {
-      om = new ObjectMapper();
-    }
-    return om.readTree(file);
-  }
-
-  private void processReference(
-      final JsonNode node, final String referenceLink, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final List<JsonNode> referenceList) {
-    final String[] path = MapperUtil.splitName(referenceLink);
-    final JsonNode component;
-    final var calculatedKey = calculateKey(path);
-    if (!totalSchemas.containsKey(calculatedKey)) {
-      try {
-        if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(JSON)) {
-          component = solveRef(ymlParent, path, referenceLink, totalSchemas);
-        } else {
-          if (referenceLink.toLowerCase().contains(AVSC)) {
-            component = solveRef(ymlParent, path, referenceLink, totalSchemas);
-          } else {
-            component = (node.findValue(path[path.length - 2])).get(path[path.length - 1]);
-          }
-          if (Objects.nonNull(component)) {
-            checkReference(node, component, ymlParent, totalSchemas, referenceList);
-          }
-        }
-      } catch (final IOException e) {
-        throw new FileSystemException(e);
-      }
-      if (Objects.nonNull(component)) {
-        totalSchemas.put(calculatedKey, component);
-      }
-    }
-  }
-
-  private String calculateKey(final String[] path) {
-    return (path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase();
-  }
-
-  private void checkReference(
-      final JsonNode mainNode, final JsonNode node, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas,
-      final List<JsonNode> referenceList) {
-    final var localReferences = node.findValues(REF);
-    if (!localReferences.isEmpty()) {
-      localReferences.forEach(localReference -> processReference(mainNode, ApiTool.getNodeAsString(localReference), ymlParent, totalSchemas, referenceList));
-    }
   }
 
   private void processOperation(
@@ -393,11 +348,11 @@ public class AsyncApiGenerator {
 
   private void processEntitiesSuffix(final SpecFile fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
-                                                ? fileParameter.getSupplier().getModelNameSuffix() : null);
+                                                  ? fileParameter.getSupplier().getModelNameSuffix() : null);
     templateFactory.setStreamBridgeEntitiesSuffix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getModelNameSuffix() != null
-                                                    ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
+                                                      ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
     templateFactory.setSubscribeEntitiesSuffix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getModelNameSuffix() != null
-                                                 ? fileParameter.getConsumer().getModelNameSuffix() : null);
+                                                   ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
 
   private void checkClassPackageDuplicate(final String className, final String apiPackage) {
@@ -415,11 +370,11 @@ public class AsyncApiGenerator {
 
   private void processClassNames(final SpecFile fileParameter) {
     templateFactory.setSupplierClassName(fileParameter.getSupplier() != null && fileParameter.getSupplier().getClassNamePostfix() != null
-                                           ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
+                                             ? fileParameter.getSupplier().getClassNamePostfix() : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getClassNamePostfix() != null
-                                               ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
+                                                 ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null
-                                            ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
+                                              ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
   }
 
   private Path processPath(final String packagePath) {
@@ -578,13 +533,13 @@ public class AsyncApiGenerator {
     }
     final var processBindingsResult = processBindingsResultBuilder.build();
     return ProcessMethodResult
-      .builder()
-      .operationId(operationId)
-      .namespace(payloadInfo.getKey())
-      .payload(payloadInfo.getValue())
-      .bindings(processBindingsResult.getBindings())
-      .bindingType(processBindingsResult.getBindingType())
-      .build();
+               .builder()
+               .operationId(operationId)
+               .namespace(payloadInfo.getKey())
+               .payload(payloadInfo.getValue())
+               .bindings(processBindingsResult.getBindings())
+               .bindingType(processBindingsResult.getBindingType())
+               .build();
   }
 
   private Pair<String, JsonNode> processPayload(final OperationParameterObject operationObject, final String messageName, final JsonNode payload, final FileLocation ymlParent)
@@ -624,7 +579,7 @@ public class AsyncApiGenerator {
 
   private String processExternalAvro(final String modelPackage, final FileLocation ymlParent, final String messageContent) {
     String avroFilePath = messageContent;
-    String namespace = "";
+    final String namespace;
     if (messageContent.startsWith(SLASH)) {
       avroFilePath = avroFilePath.replaceFirst(SLASH, "");
     } else if (messageContent.startsWith(".")) {
@@ -650,7 +605,7 @@ public class AsyncApiGenerator {
     final String[] path = MapperUtil.splitName(componentPath);
     component = path[path.length - 2] + SLASH + path[path.length - 1];
 
-    final JsonNode node = nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
+    final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
     if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
       return processModelPackage(component, modelPackage);
     } else {
@@ -703,7 +658,7 @@ public class AsyncApiGenerator {
       final var splitPackage = MapperUtil.splitName(extractedPackage);
       final var className = splitPackage[splitPackage.length - 1];
       processedPackage =
-        StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
+          StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
     } else {
       processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + capitalizeWithPrefix(extractedPackage);
     }

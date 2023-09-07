@@ -1,5 +1,8 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,6 +13,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
+import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -35,6 +42,8 @@ public final class ApiTool {
   public static final String PARAMETERS = "parameters";
 
   public static final String RESPONSES = "responses";
+
+  private static final String PACKAGE_SEPARATOR_STR = ".";
 
   private ApiTool() {
   }
@@ -294,5 +303,23 @@ public final class ApiTool {
       result = getNode(getNode(node, "components"), componentType).fields();
     }
     return result;
+  }
+
+  public static JsonNode nodeFromFile(final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum) throws IOException {
+    final InputStream file;
+    if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
+      file = ymlParent.getFileAtLocation(filePath);
+    } else {
+      file = new FileInputStream(filePath);
+    }
+
+    final ObjectMapper om;
+
+    if (FactoryTypeEnum.YML.equals(factoryTypeEnum)) {
+      om = new ObjectMapper(new YAMLFactory());
+    } else {
+      om = new ObjectMapper();
+    }
+    return om.readTree(file);
   }
 }

@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.0.0</version>
+  <version>5.0.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -186,6 +186,16 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>amondacaSN</id>
+      <name>Antonio Mondaca Leonardo</name>
+      <email>antonio.mondaca@sngular.com</email>
+      <organizationUrl>https://sngular.github.io/</organizationUrl>
+      <roles>
+        <role>Senior Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>
@@ -233,7 +243,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>5.0.0</version>
+      <version>5.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -349,7 +359,8 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>3.3.0</version>
           <configuration>
-            <encoding>UTF-8</encoding>
+            <inputEncoding>UTF-8</inputEncoding>
+            <outputEncoding>UTF-8</outputEncoding>
             <consoleOutput>true</consoleOutput>
             <failsOnError>true</failsOnError>
             <linkXRef>false</linkXRef>
