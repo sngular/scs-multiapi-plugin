@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import org.assertj.core.api.Assertions;
@@ -55,9 +54,13 @@ class AsyncApiGeneratorTest {
                      AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
         Arguments.of("TestIssueGenerateSupplier", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
                      AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
+        Arguments.of("TestParameterizedChannelGeneration", AsyncApiGeneratorFixtures.TEST_PARAMETERIZED_CHANNEL_GENERATOR,
+                     AsyncApiGeneratorFixtures.validateTestParameterizedChannelGeneration()),
         Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
                      AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
         Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),
+        Arguments.of("TestCustomValidatorsDifferentModel", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS_DIFFERENT_FOLDER,
+                     AsyncApiGeneratorFixtures.validateCustomValidatorsDifferentModel(SPRING_BOOT_VERSION)),
         Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
         Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),

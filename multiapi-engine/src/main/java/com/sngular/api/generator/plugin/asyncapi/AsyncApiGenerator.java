@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -34,6 +33,7 @@ import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationEx
 import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
+import com.sngular.api.generator.plugin.asyncapi.model.ChannelParameter;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
@@ -76,6 +76,8 @@ public class AsyncApiGenerator {
   private static final String SUBSCRIBE = "subscribe";
 
   private static final String PUBLISH = "publish";
+
+  private static final String PARAMETERS = "parameters";
 
   private static final String OPERATION_ID = "operationId";
 
@@ -170,20 +172,21 @@ public class AsyncApiGenerator {
 
       try {
         final JsonNode openApi = om.readTree(ymlFile);
-        final JsonNode internalNode = openApi.get(CHANNELS);
+        final JsonNode channelList = openApi.get(CHANNELS);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
-        final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
+        final Iterator<Entry<String, JsonNode>> channelListIt = channelList.fields();
         setUpTemplate(fileParameter, springBootVersion);
-        while (iter.hasNext()) {
+        while (channelListIt.hasNext()) {
 
-          final Map.Entry<String, JsonNode> entry = iter.next();
+          final Map.Entry<String, JsonNode> channel = channelListIt.next();
 
-          final JsonNode channel = entry.getValue();
+          final JsonNode channelBody = channel.getValue();
 
-          final String operationId = getOperationId(channel);
-          final JsonNode channelPayload = getChannelDefinition(channel);
+          final String operationId = getOperationId(channelBody);
+          final JsonNode channelPayload = getChannelDefinition(channelBody);
+          final JsonNode channelParameter = getChannelParameters(channelBody);
 
-          processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas);
+          processOperation(fileParameter, ymlParent, channel, channelBody, operationId, channelPayload, totalSchemas, channelParameter);
         }
 
         templateFactory.fillTemplates(generateExceptionTemplate);
@@ -267,21 +270,21 @@ public class AsyncApiGenerator {
 
   private void processOperation(
       final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel,
-      final String operationId, final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
+      final String operationId, final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas, final JsonNode channelParameter) throws IOException, TemplateException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSubscribeMethod(channelPayload, operationObject, ymlParent, totalSchemas);
+      processSubscribeMethod(channelPayload, operationObject, ymlParent, totalSchemas, channelParameter);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
       final var operationObject = fileParameter.getSupplier();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSupplierMethod(channelPayload, operationObject, ymlParent, totalSchemas);
+      processSupplierMethod(channelPayload, operationObject, ymlParent, totalSchemas, channelParameter);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       final var operationObject = fileParameter.getStreamBridge();
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processStreamBridgeMethod(channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas);
+      processStreamBridgeMethod(channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas, channelParameter);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
   }
@@ -305,6 +308,14 @@ public class AsyncApiGenerator {
       channelDefinition = channel.get(SUBSCRIBE);
     } else {
       channelDefinition = channel.get(PUBLISH);
+    }
+    return channelDefinition;
+  }
+
+  private JsonNode getChannelParameters(final JsonNode channel) {
+    JsonNode channelDefinition = null;
+    if (channel.has(PARAMETERS)) {
+      channelDefinition = channel.get(PARAMETERS);
     }
     return channelDefinition;
   }
@@ -350,7 +361,7 @@ public class AsyncApiGenerator {
     templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
                                                   ? fileParameter.getSupplier().getModelNameSuffix() : null);
     templateFactory.setStreamBridgeEntitiesSuffix(fileParameter.getStreamBridge() != null && fileParameter.getStreamBridge().getModelNameSuffix() != null
-                                                      ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
+                                                    ? fileParameter.getStreamBridge().getModelNameSuffix() : null);
     templateFactory.setSubscribeEntitiesSuffix(fileParameter.getConsumer() != null && fileParameter.getConsumer().getModelNameSuffix() != null
                                                    ? fileParameter.getConsumer().getModelNameSuffix() : null);
   }
@@ -435,29 +446,49 @@ public class AsyncApiGenerator {
     return evaluated;
   }
 
-  private void processSupplierMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
-      final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
+  private void processSupplierMethod(final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final Map<String, JsonNode> totalSchemas, final JsonNode channelParameter) throws IOException, TemplateException {
     final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
     fillTemplateFactory(result, totalSchemas, operationObject);
     templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
-  private void processStreamBridgeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
-      throws IOException, TemplateException {
+  private void processStreamBridgeMethod(final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName,
+      final Map<String, JsonNode> totalSchemas, final JsonNode channelParameter) throws IOException, TemplateException {
     final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
-    final String regex = "[a-zA-Z0-9.\\-]*";
+    final List<ChannelParameter> parameterList = processParameters(channelParameter, totalSchemas);
+    final String regex = "[a-zA-Z0-9.{}\\-]*";
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
     fillTemplateFactory(result, totalSchemas, operationObject);
-    templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), result.getBindingType());
+    templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, parameterList, result.getBindings(), result.getBindingType());
   }
 
-  private void processSubscribeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
-      final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
+  private List<ChannelParameter> processParameters(final JsonNode channelParameters, final Map<String, JsonNode> totalSchemas) {
+    final List<ChannelParameter> parameterList = new ArrayList<>();
+    ApiTool.getFieldIterator(channelParameters).forEachRemaining(
+        channelParameter -> parameterList.add(ChannelParameter.builder().name(channelParameter.getKey()).type(getParameterType(channelParameter.getValue(), totalSchemas)).build())
+    );
+    return parameterList;
+  }
+
+  private String getParameterType(final JsonNode parameter, final Map<String, JsonNode> totalSchemas) {
+    String type = null;
+    var finalParameter = parameter;
+    if (ApiTool.hasRef(parameter)) {
+      finalParameter = totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(ApiTool.getRefValue(parameter))));
+    }
+    if (ApiTool.hasType(finalParameter)) {
+      type = ApiTool.getType(finalParameter);
+    } else if (ApiTool.hasNode(finalParameter, "schema")) {
+      type = ApiTool.getType(ApiTool.getNode(finalParameter, "schema"));
+    }
+    return type;
+  }
+
+  private void processSubscribeMethod(final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final Map<String, JsonNode> totalSchemas, final JsonNode channelParameter) throws IOException, TemplateException {
     final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
     fillTemplateFactory(result, totalSchemas, operationObject);
     templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());

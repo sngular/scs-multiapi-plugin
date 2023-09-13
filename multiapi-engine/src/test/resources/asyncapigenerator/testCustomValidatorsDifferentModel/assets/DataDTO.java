@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.customvalidator.model.event;
+package com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model;
 
 import java.util.Objects;
 
@@ -8,23 +8,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Size;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Max;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Min;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxItems;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinItems;
-import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MultipleOf;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.NotNull;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.UniqueItems;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.Size;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.Max;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.Min;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.MaxItems;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.MinItems;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.exception.ModelClassException;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.Pattern;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.MultipleOf;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.NotNull;
+import com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator.UniqueItems;
 
 @JsonDeserialize(builder = DataDTO.DataDTOBuilder.class)
 public class DataDTO {
 
   @JsonProperty(value ="clientId")
   @Min(minimum = "12", exclusive = true)
-  @Max(maximum = "201", exclusive = true)
+  @Max(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10")
   @NotNull
   private final Integer clientId;

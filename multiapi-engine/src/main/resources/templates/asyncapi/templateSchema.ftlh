@@ -81,17 +81,17 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
-<#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content || field.restrictions.exclusiveMinimum == false)>
+<#if field.restrictions.minimum?has_content && !field.restrictions.exclusiveMinimum?has_content>
   @Min(minimum = "${field.restrictions.minimum}", exclusive = false)
 </#if>
-<#if field.restrictions.minimum?has_content && field.restrictions.exclusiveMinimum?has_content && field.restrictions.exclusiveMinimum == true>
-  @Min(minimum = "${field.restrictions.minimum}", exclusive = ${field.restrictions.exclusiveMinimum?string})
+<#if field.restrictions.minimum?has_content && field.restrictions.exclusiveMinimum?has_content>
+  @Min(minimum = "${field.restrictions.exclusiveMinimum}", exclusive = true)
 </#if>
-<#if field.restrictions.maximum?has_content && (!field.restrictions.exclusiveMaximum?has_content || field.restrictions.exclusiveMaximum == false)>
+<#if field.restrictions.maximum?has_content && !field.restrictions.exclusiveMaximum?has_content>
   @Max(maximum = "${field.restrictions.maximum}", exclusive = false)
 </#if>
-<#if field.restrictions.maximum?has_content && field.restrictions.exclusiveMaximum?has_content && field.restrictions.exclusiveMaximum == true>
-  @Max(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
+<#if field.restrictions.maximum?has_content && field.restrictions.exclusiveMaximum?has_content>
+  @Max(maximum = "${field.restrictions.exclusiveMaximum}", exclusive = true)
 </#if>
 <#if field.restrictions.maxItems?has_content>
   @MaxItems(maximum = ${field.restrictions.maxItems})

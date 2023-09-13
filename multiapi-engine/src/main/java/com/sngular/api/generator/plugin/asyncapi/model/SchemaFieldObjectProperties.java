@@ -3,7 +3,6 @@ package com.sngular.api.generator.plugin.asyncapi.model;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import lombok.Data;
 
 @Data
@@ -13,9 +12,9 @@ public class SchemaFieldObjectProperties {
 
   private String minimum = null;
 
-  private Boolean exclusiveMaximum = null;
+  private Integer exclusiveMaximum = null;
 
-  private Boolean exclusiveMinimum = null;
+  private Integer exclusiveMinimum = null;
 
   private Boolean uniqueItems = null;
 

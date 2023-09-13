@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -341,10 +340,10 @@ public class MapperContentUtil {
           props.setMaximum(current.getValue().asText());
           break;
         case "exclusiveMinimum":
-          props.setExclusiveMinimum(current.getValue().booleanValue());
+          props.setExclusiveMinimum(current.getValue().intValue());
           break;
         case "exclusiveMaximum":
-          props.setExclusiveMaximum(current.getValue().booleanValue());
+          props.setExclusiveMaximum(current.getValue().intValue());
           break;
         case "maxItems":
           props.setMaxItems(current.getValue().intValue());
@@ -404,8 +403,7 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject processEnumField(final String name, final boolean required, final JsonNode value, final String prefix, final String suffix) {
-    final List<String> enumValues = new ArrayList<>();
-    value.get("enum").elements().forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));
+    final List<String> enumValues = new ArrayList<>(ApiTool.getEnumValues(value));
 
     if (enumValues.isEmpty()) {
       throw new BadDefinedEnumException(name);

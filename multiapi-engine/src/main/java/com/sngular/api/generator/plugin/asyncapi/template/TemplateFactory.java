@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.ChannelParameter;
 import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
@@ -31,6 +32,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class TemplateFactory {
 
@@ -301,11 +303,17 @@ public class TemplateFactory {
                          .build());
   }
 
-  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName, final String bindings, final String bindingType) {
+  public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName,
+      final List<ChannelParameter> parameterList, final String bindings, final String bindingType) {
+    var newChannelName = channelName;
+    if (CollectionUtils.isNotEmpty(parameterList)) {
+      newChannelName = channelName.replaceAll("\\{.*\\}", "%s");
+    }
     streamBridgeMethods.add(MethodObject
                               .builder()
                               .operationId(operationId)
-                              .channelName(channelName)
+                              .channelName(newChannelName)
+                              .channelParameterList(parameterList)
                               .classNamespace(classNamespace)
                               .type("streamBridge")
                               .keyClassNamespace(bindings)
