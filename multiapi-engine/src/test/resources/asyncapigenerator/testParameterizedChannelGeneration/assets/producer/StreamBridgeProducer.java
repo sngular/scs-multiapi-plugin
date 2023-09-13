@@ -12,9 +12,8 @@ public class StreamBridgeProducer {
   public StreamBridgeProducer(final StreamBridge streamBridge) {
     this.streamBridge = streamBridge;
   }
-
-      public void receiveLightMeasurement(final LightMeasuredPayloadDTO lightMeasuredPayload, final String... parameters) {
-      streamBridge.send(String.format("smartylighting.streetlights.1.0.event.%s.lighting.measured", parameters), lightMeasuredPayload);
-      }
+  public void receiveLightMeasurement(final LightMeasuredPayloadDTO lightMeasuredPayload, final String... parameters) {
+    streamBridge.send(String.format("smartylighting.streetlights.1.0.event.%s.lighting.measured", (Object[])parameters), lightMeasuredPayload);
+  }
 
 }

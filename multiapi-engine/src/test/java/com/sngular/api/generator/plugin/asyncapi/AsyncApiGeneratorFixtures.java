@@ -480,7 +480,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidatordifferentmodel/event/producer";
 
-    final String DEFAULT_CUSTOM_VALIDATOR_FOLDER = "generated/com/sngular/scsplugin/customvalidatordifferentmodel/event/consumer/customvalidator";
+    final String DEFAULT_CUSTOM_VALIDATOR_FOLDER = "generated/com/sngular/scsplugin/customvalidatordifferentmodel/event/producer/model/customvalidator";
 
     final String COMMON_PATH = "asyncapigenerator/testCustomValidatorsDifferentModel/";
 

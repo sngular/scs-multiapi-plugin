@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.customvalidator.event.customvalidator;
+package com.sngular.scsplugin.customvalidatordifferentmodel.event.producer.model.customvalidator;
 
 import java.util.Objects;
 

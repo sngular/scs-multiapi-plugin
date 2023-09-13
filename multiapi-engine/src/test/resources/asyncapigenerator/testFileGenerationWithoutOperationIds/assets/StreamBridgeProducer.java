@@ -13,7 +13,7 @@ public class StreamBridgeProducer {
     this.streamBridge = streamBridge;
   }
 
-  public void publishOperation(final OrderDTO order) {
+  public void publishOperation(final OrderMapper order) {
     streamBridge.send("order.created", order);
   }
 
