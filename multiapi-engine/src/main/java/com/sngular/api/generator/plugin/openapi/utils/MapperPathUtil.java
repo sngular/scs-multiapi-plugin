@@ -16,8 +16,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
@@ -374,8 +376,8 @@ public class MapperPathUtil {
 
     if (ApiTool.hasRef(schema)) {
       final String refSchemaPojoName = MapperUtil.getRef(schema, specFile);
-      final JsonNode refSchema = OpenApiUtil.solveRef(ApiTool.getRefValue(schema), globalObject.getSchemaMap(),
-                                                      baseDir.resolve(specFile.getFilePath()).getParent());
+      final JsonNode refSchema = SchemaUtil.solveRef(ApiTool.getRefValue(schema), globalObject.getSchemaMap(),
+                                                     baseDir.resolve(specFile.getFilePath()).getParent());
       type = getSchemaType(refSchema, refSchemaPojoName, specFile, globalObject, baseDir);
     } else if (ApiTool.hasAdditionalProperties(schema)) {
       type = getMapSchemaType(schema, pojoName, specFile, globalObject, baseDir);

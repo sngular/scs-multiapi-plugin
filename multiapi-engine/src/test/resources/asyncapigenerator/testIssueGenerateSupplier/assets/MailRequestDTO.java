@@ -17,9 +17,9 @@ public class MailRequestDTO {
   @JsonProperty(value ="recipients")
   private List<String> recipients = new ArrayList<String>();
   @JsonProperty(value ="config")
-  private ConfigurationDTO config;
+  private ConfigDTO config;
 
-  private MailRequestDTO(String sender, List<String> recipients, ConfigurationDTO config) {
+  private MailRequestDTO(String sender, List<String> recipients, ConfigDTO config) {
     this.sender = sender;
     this.recipients = recipients;
     this.config = config;
@@ -42,7 +42,7 @@ public class MailRequestDTO {
 
     private String sender;
     private List<String> recipients = new ArrayList<String>();
-    private ConfigurationDTO config;
+    private ConfigDTO config;
 
     public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {
       this.sender = sender;
@@ -62,7 +62,7 @@ public class MailRequestDTO {
       return this;
     }
 
-    public MailRequestDTO.MailRequestDTOBuilder config(ConfigurationDTO config) {
+    public MailRequestDTO.MailRequestDTOBuilder config(ConfigDTO config) {
       this.config = config;
       return this;
     }
@@ -102,10 +102,10 @@ public class MailRequestDTO {
   * @return config
   */
   @Schema(name = "config", required = false)
-  public ConfigurationDTO getConfig() {
+  public ConfigDTO getConfig() {
     return config;
   }
-  public void setConfig(ConfigurationDTO config) {
+  public void setConfig(ConfigDTO config) {
     this.config = config;
   }
 

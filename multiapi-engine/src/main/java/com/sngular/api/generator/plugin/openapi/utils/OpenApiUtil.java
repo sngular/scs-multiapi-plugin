@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -238,26 +239,6 @@ public class OpenApiUtil {
       javaFileName = javaFileName.substring(0, position + 1) + javaFileName.substring(position + 1, position + 2).toUpperCase(Locale.ROOT) + javaFileName.substring(position + 2);
     }
     return javaFileName;
-  }
-
-  protected static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final Path rootFilePath) {
-    JsonNode solvedRef;
-    if (StringUtils.isNotEmpty(refValue)) {
-      if (refValue.startsWith("#")) {
-        final String refSchemaName = MapperUtil.getRefSchemaName(refValue);
-        solvedRef = schemaMap.get(refSchemaName);
-      } else {
-        final var refValueArr = refValue.split("#");
-        final var filePath = refValueArr[0];
-        solvedRef = getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
-        final var refName = MapperUtil.getRefSchemaName(refValueArr[1]);
-        schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
-        solvedRef = solvedRef.findValue(refName);
-      }
-    } else {
-      solvedRef = null;
-    }
-    return solvedRef;
   }
 
 }

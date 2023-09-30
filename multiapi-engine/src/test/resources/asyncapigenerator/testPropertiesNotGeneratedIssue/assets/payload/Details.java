@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonDeserialize(builder = UserDetails.UserDetailsBuilder.class)
-public class UserDetails {
+@JsonDeserialize(builder = Details.DetailsBuilder.class)
+public class Details {
 
   @JsonProperty(value ="firstName")
   private String firstName;
@@ -17,49 +17,49 @@ public class UserDetails {
   @JsonProperty(value ="email")
   private String email;
 
-  private UserDetails(String firstName, String lastName, String email) {
+  private Details(String firstName, String lastName, String email) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
 
   }
 
-  private UserDetails(UserDetailsBuilder builder) {
+  private Details(DetailsBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
     this.email = builder.email;
 
   }
 
-  public static UserDetails.UserDetailsBuilder builder() {
-    return new UserDetails.UserDetailsBuilder();
+  public static Details.DetailsBuilder builder() {
+    return new Details.DetailsBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class UserDetailsBuilder {
+  public static class DetailsBuilder {
 
     private String firstName;
     private String lastName;
     private String email;
 
-    public UserDetails.UserDetailsBuilder firstName(String firstName) {
+    public Details.DetailsBuilder firstName(String firstName) {
       this.firstName = firstName;
       return this;
     }
 
-    public UserDetails.UserDetailsBuilder lastName(String lastName) {
+    public Details.DetailsBuilder lastName(String lastName) {
       this.lastName = lastName;
       return this;
     }
 
-    public UserDetails.UserDetailsBuilder email(String email) {
+    public Details.DetailsBuilder email(String email) {
       this.email = email;
       return this;
     }
 
-    public UserDetails build() {
-      UserDetails userDetails = new UserDetails(this);
-      return userDetails;
+    public Details build() {
+      Details details = new Details(this);
+      return details;
     }
   }
 
@@ -107,8 +107,8 @@ public class UserDetails {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserDetails userDetails = (UserDetails) o;
-    return Objects.equals(this.firstName, userDetails.firstName) && Objects.equals(this.lastName, userDetails.lastName) && Objects.equals(this.email, userDetails.email);
+    Details details = (Details) o;
+    return Objects.equals(this.firstName, details.firstName) && Objects.equals(this.lastName, details.lastName) && Objects.equals(this.email, details.email);
   }
 
   @Override
@@ -119,7 +119,7 @@ public class UserDetails {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("UserDetails{");
+    sb.append("Details{");
     sb.append(" firstName:").append(firstName).append(",");
     sb.append(" lastName:").append(lastName).append(",");
     sb.append(" email:").append(email);

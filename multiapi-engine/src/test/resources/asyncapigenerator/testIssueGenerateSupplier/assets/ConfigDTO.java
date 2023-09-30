@@ -7,39 +7,39 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonDeserialize(builder = ConfigurationDTO.ConfigurationDTOBuilder.class)
-public class ConfigurationDTO {
+@JsonDeserialize(builder = ConfigDTO.ConfigDTOBuilder.class)
+public class ConfigDTO {
 
   @JsonProperty(value ="name")
   private String name;
 
-  private ConfigurationDTO(String name) {
+  private ConfigDTO(String name) {
     this.name = name;
 
   }
 
-  private ConfigurationDTO(ConfigurationDTOBuilder builder) {
+  private ConfigDTO(ConfigDTOBuilder builder) {
     this.name = builder.name;
 
   }
 
-  public static ConfigurationDTO.ConfigurationDTOBuilder builder() {
-    return new ConfigurationDTO.ConfigurationDTOBuilder();
+  public static ConfigDTO.ConfigDTOBuilder builder() {
+    return new ConfigDTO.ConfigDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class ConfigurationDTOBuilder {
+  public static class ConfigDTOBuilder {
 
     private String name;
 
-    public ConfigurationDTO.ConfigurationDTOBuilder name(String name) {
+    public ConfigDTO.ConfigDTOBuilder name(String name) {
       this.name = name;
       return this;
     }
 
-    public ConfigurationDTO build() {
-      ConfigurationDTO configurationDTO = new ConfigurationDTO(this);
-      return configurationDTO;
+    public ConfigDTO build() {
+      ConfigDTO configDTO = new ConfigDTO(this);
+      return configDTO;
     }
   }
 
@@ -63,8 +63,8 @@ public class ConfigurationDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ConfigurationDTO configurationDTO = (ConfigurationDTO) o;
-    return Objects.equals(this.name, configurationDTO.name);
+    ConfigDTO configDTO = (ConfigDTO) o;
+    return Objects.equals(this.name, configDTO.name);
   }
 
   @Override
@@ -75,7 +75,7 @@ public class ConfigurationDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("ConfigurationDTO{");
+    sb.append("ConfigDTO{");
     sb.append(" name:").append(name);
     sb.append("}");
     return sb.toString();

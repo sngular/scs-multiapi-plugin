@@ -182,7 +182,9 @@ public class MapperContentUtil {
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix,
                                                         modelToBuildList, parentPackage));
         if (model.get(PROPERTIES).path(property).has(REF)) {
-          modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
+          if (!totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
+            modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
+          }
         }
       }
     } else if (properties.has(ALL_OF)) {
@@ -275,14 +277,8 @@ public class MapperContentUtil {
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
-      fieldObject =
-          SchemaFieldObject
-              .builder()
-              .baseName(name)
-              .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
-              .restrictions(new SchemaFieldObjectProperties())
-              .build();
-      setFieldType(fieldObject, schema, required, prefix, suffix);
+      final var solvedRef = totalSchemas.get(getComponent(MapperUtil.splitName(ApiTool.getRefValue(schema))));
+      fieldObject = processFieldObjectList(totalSchemas, name, solvedRef, required, prefix, suffix, modelToBuildList, modelPackage);
     } else {
       fieldObject = SchemaFieldObject
                         .builder()

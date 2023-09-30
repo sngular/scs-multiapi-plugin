@@ -16,8 +16,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
@@ -319,7 +321,7 @@ public class MapperContentUtil {
       final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final SpecFile specFile,
       final Path baseDir) {
 
-    final var referredSchema = OpenApiUtil.solveRef(ApiTool.getRefValue(schema), totalSchemas, baseDir.resolve(specFile.getFilePath()).getParent());
+    final var referredSchema = SchemaUtil.solveRef(ApiTool.getRefValue(schema), totalSchemas, baseDir.resolve(specFile.getFilePath()).getParent());
 
     final var schemaObject = toSchemaObject(MapperUtil.getRefSchemaName(schema), totalSchemas, compositedSchemas,
                                             antiLoopList, referredSchema, MapperUtil.getRefSchemaName(schema), specFile, baseDir);
