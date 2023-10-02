@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.filegeneration.model.event;
+package com.sngular.scsplugin.reservedwordsgeneration.model.event;
 
 import java.util.Objects;
 
@@ -19,14 +19,14 @@ public class OrderDTO {
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
-  @JsonProperty(value ="lines")
-  private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+  @JsonProperty(value ="new")
+  private List<OrderLineDTO> _new = new ArrayList<OrderLineDTO>();
 
-  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<OrderLineDTO> lines) {
+  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<OrderLineDTO> _new) {
     this.ref = ref;
     this.clientRef = clientRef;
     this.amount = amount;
-    this.lines = lines;
+    this._new = _new;
 
   }
 
@@ -34,7 +34,7 @@ public class OrderDTO {
     this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this.lines = builder.lines;
+    this._new = builder._new;
 
   }
 
@@ -48,7 +48,7 @@ public class OrderDTO {
     private String ref;
     private String clientRef;
     private BigDecimal amount;
-    private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+    private List<OrderLineDTO> _new = new ArrayList<OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {
       this.ref = ref;
@@ -65,16 +65,16 @@ public class OrderDTO {
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
-      if (!lines.isEmpty()) {
-        this.lines.addAll(lines);
+    public OrderDTO.OrderDTOBuilder _new(List<OrderLineDTO> _new) {
+      if (!_new.isEmpty()) {
+        this._new.addAll(_new);
       }
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder line(OrderLineDTO line) {
-      if (line != null) {
-        this.lines.add(line);
+    public OrderDTO.OrderDTOBuilder _new(OrderLineDTO _new) {
+      if (_new != null) {
+        this._new.add(_new);
       }
       return this;
     }
@@ -122,15 +122,15 @@ public class OrderDTO {
   }
 
   /**
-  * Get lines
-  * @return lines
+  * Get new
+  * @return new
   */
-  @Schema(name = "lines", required = false)
-  public List<OrderLineDTO> getLines() {
-    return lines;
+  @Schema(name = "new", required = false)
+  public List<OrderLineDTO> getNew() {
+    return _new;
   }
-  public void setLines(List<OrderLineDTO> lines) {
-    this.lines = lines;
+  public void setNew(List<OrderLineDTO> _new) {
+    this._new = _new;
   }
 
   @Override
@@ -142,12 +142,12 @@ public class OrderDTO {
       return false;
     }
     OrderDTO orderDTO = (OrderDTO) o;
-    return Objects.equals(this.ref, orderDTO.ref) && Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this.lines, orderDTO.lines);
+    return Objects.equals(this.ref, orderDTO.ref) && Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this._new, orderDTO._new);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, clientRef, amount, lines);
+    return Objects.hash(ref, clientRef, amount, _new);
   }
 
   @Override
@@ -157,7 +157,7 @@ public class OrderDTO {
     sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
     sb.append(" amount:").append(amount).append(",");
-    sb.append(" lines:").append(lines);
+    sb.append(" new:").append(_new);
     sb.append("}");
     return sb.toString();
   }

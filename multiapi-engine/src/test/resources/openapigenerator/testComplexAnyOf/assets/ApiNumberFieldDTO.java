@@ -131,9 +131,9 @@ public class ApiNumberFieldDTO {
       return this;
     }
 
-    public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValues(Object defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValue(Object defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }

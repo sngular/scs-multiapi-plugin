@@ -87,6 +87,7 @@ public class DataDTO {
       this.flightNumber = flightNumber;
       return this;
     }
+
     public DataDTO.DataDTOBuilder test(List<integer> test) {
       if (!test.isEmpty()) {
         this.test.addAll(test);
@@ -94,9 +95,9 @@ public class DataDTO {
       return this;
     }
 
-    public DataDTO.DataDTOBuilder tes(integer tes) {
-      if (tes != null) {
-        this.test.add(tes);
+    public DataDTO.DataDTOBuilder test(integer test) {
+      if (test != null) {
+        this.test.add(test);
       }
       return this;
     }
@@ -173,7 +174,6 @@ public class DataDTO {
   }
 
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
@@ -191,5 +191,4 @@ public class DataDTO {
       throw new ModelClassException("DataDTO");
     }
   }
-
 }

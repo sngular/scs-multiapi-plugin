@@ -110,9 +110,9 @@ public class ApiSequenceFieldDTO {
       return this;
     }
 
-    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder properties(ApiTypeArrayDTO properties) {
-      if (properties != null) {
-        this.properties.add(properties);
+    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder propertie(ApiTypeArrayDTO propertie) {
+      if (propertie != null) {
+        this.properties.add(propertie);
       }
       return this;
     }
@@ -123,9 +123,9 @@ public class ApiSequenceFieldDTO {
       return this;
     }
 
-    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValues(Object defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValue(Object defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }

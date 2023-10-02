@@ -121,9 +121,9 @@ public class ApiUnionFieldDTO {
       return this;
     }
 
-    public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder values(ApiTypeArrayDTO values) {
-      if (values != null) {
-        this.values.add(values);
+    public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder value(ApiTypeArrayDTO value) {
+      if (value != null) {
+        this.values.add(value);
       }
       return this;
     }

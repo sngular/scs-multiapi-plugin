@@ -49,6 +49,7 @@ public class OrderLineMapper {
       this.ref = ref;
       return this;
     }
+
     public OrderLineMapper.OrderLineMapperBuilder products(List<OrderProductMapper> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
@@ -115,7 +116,6 @@ public class OrderLineMapper {
   }
 
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
@@ -129,5 +129,4 @@ public class OrderLineMapper {
       throw new ModelClassException("OrderLineMapper");
     }
   }
-
 }

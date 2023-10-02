@@ -174,6 +174,4 @@ public class UserSignedUpPayload {
   }
 
 
-
-
 }

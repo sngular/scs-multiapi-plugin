@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
@@ -82,7 +83,7 @@ public class ClasspathTemplateLoader implements TemplateLoader {
                       readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/customannotations/" + templateFile)).getContent()));
       }
     } catch (final IOException e) {
-      e.printStackTrace();
+      throw new GeneratorTemplateException("Template Engine error", e);
     }
     return templates;
 
