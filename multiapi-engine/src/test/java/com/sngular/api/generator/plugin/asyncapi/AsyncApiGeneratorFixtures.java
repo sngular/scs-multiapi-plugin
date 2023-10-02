@@ -355,10 +355,6 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
       CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
     );
 
-    final List<String> expectedModelMessageFiles = List.of(
-      ASSETS_PATH + "OrderCreatedDTO.java"
-    );
-
     final List<String> expectedExceptionFiles = List.of(
       ASSETS_PATH + "ModelClassException.java");
 
@@ -390,11 +386,6 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
     final List<String> expectedModelSchemaFiles = List.of(
       ASSETS_PATH + "DataDTO.java",
       ASSETS_PATH + "StatusMsgDTO.java"
-    );
-
-    final List<String> expectedModelMessageFiles = List.of(
-      ASSETS_PATH + "DataClientDTO.java",
-      ASSETS_PATH + "StatusDTO.java"
     );
 
     final List<String> expectedExceptionFiles = List.of();
@@ -804,10 +795,6 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
     final List<String> expectedValidatorFiles = List.of(
         CUSTOM_VALIDATOR_PATH + "NotNull.java",
         CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
-    );
-
-    final List<String> expectedModelMessageFiles = List.of(
-        ASSETS_PATH + "OrderCreatedDTO.java"
     );
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), null) &&
