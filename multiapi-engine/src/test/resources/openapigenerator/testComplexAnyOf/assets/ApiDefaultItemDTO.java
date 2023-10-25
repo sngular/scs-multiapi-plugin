@@ -273,9 +273,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder requiredValues(String requiredValues) {
-      if (requiredValues != null) {
-        this.requiredValues.add(requiredValues);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder requiredValue(String requiredValue) {
+      if (requiredValue != null) {
+        this.requiredValues.add(requiredValue);
       }
       return this;
     }
@@ -306,9 +306,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumValues(String enumValues) {
-      if (enumValues != null) {
-        this.enumValues.add(enumValues);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumValue(String enumValue) {
+      if (enumValue != null) {
+        this.enumValues.add(enumValue);
       }
       return this;
     }
@@ -319,9 +319,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder properties(String properties) {
-      if (properties != null) {
-        this.properties.add(properties);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder propertie(String propertie) {
+      if (propertie != null) {
+        this.properties.add(propertie);
       }
       return this;
     }
@@ -332,9 +332,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder defaultValues(String defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder defaultValue(String defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }
@@ -364,9 +364,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapTypes(ApiTypeArrayDTO mapTypes) {
-      if (mapTypes != null) {
-        this.mapTypes.add(mapTypes);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapType(ApiTypeArrayDTO mapType) {
+      if (mapType != null) {
+        this.mapTypes.add(mapType);
       }
       return this;
     }
@@ -412,9 +412,9 @@ public class ApiDefaultItemDTO {
       return this;
     }
 
-    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder values(ApiTypeArrayDTO values) {
-      if (values != null) {
-        this.values.add(values);
+    public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder value(ApiTypeArrayDTO value) {
+      if (value != null) {
+        this.values.add(value);
       }
       return this;
     }

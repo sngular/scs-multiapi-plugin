@@ -147,7 +147,6 @@ public class OrderProductDTO {
   }
 
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
@@ -165,5 +164,4 @@ public class OrderProductDTO {
       throw new ModelClassException("OrderProductDTO");
     }
   }
-
 }

@@ -80,9 +80,9 @@ public class ApiSchemaDTO {
       return this;
     }
 
-    public ApiSchemaDTO.ApiSchemaDTOBuilder properties(ApiTypeArrayDTO properties) {
-      if (properties != null) {
-        this.properties.add(properties);
+    public ApiSchemaDTO.ApiSchemaDTOBuilder propertie(ApiTypeArrayDTO propertie) {
+      if (propertie != null) {
+        this.properties.add(propertie);
       }
       return this;
     }
@@ -108,9 +108,9 @@ public class ApiSchemaDTO {
       return this;
     }
 
-    public ApiSchemaDTO.ApiSchemaDTOBuilder requiredFields(ApiTypeArrayDTO requiredFields) {
-      if (requiredFields != null) {
-        this.requiredFields.add(requiredFields);
+    public ApiSchemaDTO.ApiSchemaDTOBuilder requiredField(ApiTypeArrayDTO requiredField) {
+      if (requiredField != null) {
+        this.requiredFields.add(requiredField);
       }
       return this;
     }

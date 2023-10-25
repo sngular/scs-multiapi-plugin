@@ -64,6 +64,7 @@ public class OrderMapper {
       this.amount = amount;
       return this;
     }
+
     public OrderMapper.OrderMapperBuilder lines(List<OrderLineMapper> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
@@ -160,8 +161,6 @@ public class OrderMapper {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

@@ -60,9 +60,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(String requiredValues) {
-      if (requiredValues != null) {
-        this.requiredValues.add(requiredValues);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValue(String requiredValue) {
+      if (requiredValue != null) {
+        this.requiredValues.add(requiredValue);
       }
       return this;
     }
@@ -78,9 +78,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder properties(ApiTypeArrayDTO properties) {
-      if (properties != null) {
-        this.properties.add(properties);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder propertie(ApiTypeArrayDTO propertie) {
+      if (propertie != null) {
+        this.properties.add(propertie);
       }
       return this;
     }
@@ -91,9 +91,9 @@ public class ApiObjectFieldDTO {
       return this;
     }
 
-    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder defaultValues(Object defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder defaultValue(Object defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }

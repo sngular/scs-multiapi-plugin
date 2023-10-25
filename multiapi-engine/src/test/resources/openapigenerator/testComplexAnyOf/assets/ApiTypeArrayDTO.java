@@ -319,9 +319,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder requiredValues(String requiredValues) {
-      if (requiredValues != null) {
-        this.requiredValues.add(requiredValues);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder requiredValue(String requiredValue) {
+      if (requiredValue != null) {
+        this.requiredValues.add(requiredValue);
       }
       return this;
     }
@@ -357,9 +357,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder enumValues(String enumValues) {
-      if (enumValues != null) {
-        this.enumValues.add(enumValues);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder enumValue(String enumValue) {
+      if (enumValue != null) {
+        this.enumValues.add(enumValue);
       }
       return this;
     }
@@ -370,9 +370,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder properties(String properties) {
-      if (properties != null) {
-        this.properties.add(properties);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder propertie(String propertie) {
+      if (propertie != null) {
+        this.properties.add(propertie);
       }
       return this;
     }
@@ -383,9 +383,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder defaultValues(String defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder defaultValue(String defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }
@@ -419,9 +419,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder mapTypes(ApiTypeArrayDTO mapTypes) {
-      if (mapTypes != null) {
-        this.mapTypes.add(mapTypes);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder mapType(ApiTypeArrayDTO mapType) {
+      if (mapType != null) {
+        this.mapTypes.add(mapType);
       }
       return this;
     }
@@ -472,9 +472,9 @@ public class ApiTypeArrayDTO {
       return this;
     }
 
-    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder values(ApiTypeArrayDTO values) {
-      if (values != null) {
-        this.values.add(values);
+    public ApiTypeArrayDTO.ApiTypeArrayDTOBuilder value(ApiTypeArrayDTO value) {
+      if (value != null) {
+        this.values.add(value);
       }
       return this;
     }

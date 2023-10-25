@@ -1,3 +1,11 @@
+<#assign words = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "double", "do", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"]>
+<#function calculateSafeName propertyName ender>
+    <#if words?seq_contains(propertyName?uncap_first)>
+        <#return "_"+propertyName+ender/>
+    <#else >
+        <#return propertyName+ender/>
+    </#if>
+</#function>
 package ${packageModel};
 
 import java.util.Objects;
@@ -114,11 +122,13 @@ public class ${schema.className} {
   @NonNull
   </#if>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
-  private List<${field.dataType}> ${field.baseName?uncap_first} = new ArrayList<${field.dataType}>();
+  @Builder.Default
+  private List<${field.dataType}> ${calculateSafeName (field.baseName, "")} = new ArrayList<${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
-  private Map<String, ${field.dataType}> ${field.baseName?uncap_first} = new HashMap<String, ${field.dataType}>();
+  @Builder.Default
+  private Map<String, ${field.dataType}> ${calculateSafeName (field.baseName, "")} = new HashMap<String, ${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
-  private ${field.baseName?cap_first} ${field.baseName?uncap_first};
+  private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
 
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
@@ -142,16 +152,16 @@ public class ${schema.className} {
     }
   }
   <#elseif field.dataTypeSimple?has_content>
-  private ${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first};
+  private ${field.dataTypeSimple?cap_first} ${calculateSafeName (field.baseName, ";")};
   </#if>
 
 </#list>
 
   @Builder
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-    <#if field.required>@NonNull </#if><#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${field.baseName}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${field.baseName}<#else>${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    <#if field.required>@NonNull </#if><#if field.dataType?has_content && field.dataTypeSimple == "enum">${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}<#elseif field.dataType?has_content && field.dataTypeSimple == "array">List<${field.dataType}> ${calculateSafeName (field.baseName, ";")}<#elseif field.dataType?has_content && field.dataTypeSimple == "map">Map<String, ${field.dataType}> ${calculateSafeName (field.baseName, ";")}<#else>${field.dataTypeSimple?cap_first} ${calculateSafeName (field.baseName, ";")}</#if><#sep>, </#list>) {</@compress>
     <#list schema.fieldObjectList as field>
-    this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
+    this.${calculateSafeName (field.baseName, ";")} = ${calculateSafeName (field.baseName, ";")};
     </#list>
 
     <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
@@ -165,9 +175,9 @@ public class ${schema.className} {
 
   <#list schema.fieldObjectList as field>
     <#if field == schema.fieldObjectList?first>
-    if (Objects.nonNull(this.${field.baseName?uncap_first})) {
+    if (Objects.nonNull(this.${calculateSafeName (field.baseName, ";")})) {
     <#else>
-    else if (Objects.nonNull(this.${field.baseName?uncap_first})) {
+    else if (Objects.nonNull(this.${calculateSafeName (field.baseName, ";")})) {
     </#if>
       satisfiedCondition = true;
     }

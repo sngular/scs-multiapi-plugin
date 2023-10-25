@@ -147,7 +147,6 @@ public class OrderProductMapper {
   }
 
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
@@ -165,5 +164,4 @@ public class OrderProductMapper {
       throw new ModelClassException("OrderProductMapper");
     }
   }
-
 }
