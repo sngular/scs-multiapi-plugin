@@ -132,8 +132,8 @@ public class AsyncApiGenerator {
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.targetFolder = targetFolder;
     this.baseDir = baseDir;
-    templateFactory = new TemplateFactory();
-    targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
+    this.templateFactory = new TemplateFactory();
+    this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
     this.springBootVersion = springBootVersion;
   }
 

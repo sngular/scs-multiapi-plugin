@@ -128,6 +128,7 @@ public class CustomerOrderDTO {
       }
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder status(Status status) {
       this.status = status;
       return this;

@@ -13,9 +13,9 @@ public class UserSignedUp {
   @JsonProperty(value ="id")
   private String id;
   @JsonProperty(value ="details")
-  private Details details;
+  private UserDetails details;
 
-  private UserSignedUp(String id, Details details) {
+  private UserSignedUp(String id, UserDetails details) {
     this.id = id;
     this.details = details;
 
@@ -35,14 +35,14 @@ public class UserSignedUp {
   public static class UserSignedUpBuilder {
 
     private String id;
-    private Details details;
+    private UserDetails details;
 
     public UserSignedUp.UserSignedUpBuilder id(String id) {
       this.id = id;
       return this;
     }
 
-    public UserSignedUp.UserSignedUpBuilder details(Details details) {
+    public UserSignedUp.UserSignedUpBuilder details(UserDetails details) {
       this.details = details;
       return this;
     }
@@ -70,10 +70,10 @@ public class UserSignedUp {
   * @return details
   */
   @Schema(name = "details", required = false)
-  public Details getDetails() {
+  public UserDetails getDetails() {
     return details;
   }
-  public void setDetails(Details details) {
+  public void setDetails(UserDetails details) {
     this.details = details;
   }
 

@@ -94,7 +94,7 @@ As commented above, they both could be used at the same time, setting a double
 ```
 
 In the example above, you can see a partial configuration for the plugin with
-a double *execution*. This makes neccesary to set an `id` for each execution,
+a double *execution*. This makes necessary to set an `id` for each execution,
 `asyncapi` and `openapi` in this case.
 
 In the case that you only want to run one of the goals of the plugin, you only

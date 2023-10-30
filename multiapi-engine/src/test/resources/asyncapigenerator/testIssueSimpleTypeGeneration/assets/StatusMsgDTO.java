@@ -62,6 +62,7 @@ public class StatusMsgDTO {
       this.clientId = clientId;
       return this;
     }
+
     public StatusMsgDTO.StatusMsgDTOBuilder status(Status status) {
       this.status = status;
       return this;
@@ -123,8 +124,6 @@ public class StatusMsgDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }
