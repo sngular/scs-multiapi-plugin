@@ -48,6 +48,7 @@ public class MailRequestInfiniteDTO {
       this.sender = sender;
       return this;
     }
+
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder recipients(List<String> recipients) {
       if (!recipients.isEmpty()) {
         this.recipients.addAll(recipients);
@@ -136,8 +137,6 @@ public class MailRequestInfiniteDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

@@ -48,6 +48,7 @@ public class MailRequestDTO {
       this.sender = sender;
       return this;
     }
+
     public MailRequestDTO.MailRequestDTOBuilder recipients(List<String> recipients) {
       if (!recipients.isEmpty()) {
         this.recipients.addAll(recipients);
@@ -136,7 +137,6 @@ public class MailRequestDTO {
     sb.append("}");
     return sb.toString();
   }
-
 
 
 

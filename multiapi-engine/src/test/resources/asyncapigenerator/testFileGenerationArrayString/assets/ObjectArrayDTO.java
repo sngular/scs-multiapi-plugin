@@ -48,6 +48,7 @@ public class ObjectArrayDTO {
       this.idObject = idObject;
       return this;
     }
+
     public ObjectArrayDTO.ObjectArrayDTOBuilder players(List<String> players) {
       if (!players.isEmpty()) {
         this.players.addAll(players);
@@ -136,8 +137,6 @@ public class ObjectArrayDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

@@ -17,7 +17,7 @@ import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObj
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Assertions;
 
 public class AsyncApiGeneratorFixtures {
 
@@ -82,6 +82,25 @@ public class AsyncApiGeneratorFixtures {
                                         .modelNameSuffix("DTO")
                                         .apiPackage("com.sngular.scsplugin.issuesimpletypegeneration.model.event.producer")
                                         .modelPackage("com.sngular.scsplugin.issuesimpletypegeneration.model.event")
+                                        .build())
+      .build()
+  );
+
+ final static List<SpecFile> TEST_RESERVED_WORDS_GENERATION = List.of(
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testReservedWordsGeneration/event-api.yml")
+      .consumer(OperationParameterObject.builder()
+                                        .ids("subscribeOperationFileGeneration")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.reservedwordsgeneration.model.event.consumer")
+                                        .modelPackage("com.sngular.scsplugin.reservedwordsgeneration.model.event")
+                                        .build())
+      .supplier(OperationParameterObject.builder()
+                                        .ids("publishOperationFileGeneration")
+                                        .modelNameSuffix("DTO")
+                                        .apiPackage("com.sngular.scsplugin.reservedwordsgeneration.model.event.producer")
+                                        .modelPackage("com.sngular.scsplugin.reservedwordsgeneration.model.event")
                                         .build())
       .build()
   );
@@ -363,7 +382,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
 
-   static Function<Path, Boolean> validateTestIssueGeneration() {
+  static Function<Path, Boolean> validateTestIssueGeneration() {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/issuegeneration/model/event/producer";
@@ -422,6 +441,38 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
                                 expectedExceptionFiles, null) &&
+                     modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestReservedWordsGeneration() {
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/reservedwordsgeneration/model/event/consumer";
+
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/reservedwordsgeneration/model/event/producer";
+
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/reservedwordsgeneration/model/event";
+
+    final String COMMON_PATH = "asyncapigenerator/testReservedWordsGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedConsumerFiles = List.of(
+      ASSETS_PATH + "ISubscribeOperationFileGeneration.java",
+      ASSETS_PATH + "Subscriber.java");
+
+    final List<String> expectedProducerFiles = List.of(
+      ASSETS_PATH + "IPublishOperationFileGeneration.java",
+      ASSETS_PATH + "Producer.java");
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        ASSETS_PATH + "CreateOrderDTO.java",
+        ASSETS_PATH + "OrderDTO.java",
+        ASSETS_PATH + "OrderLineDTO.java",
+        ASSETS_PATH + "WaiterDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of();
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, expectedExceptionFiles, null) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
@@ -634,7 +685,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
     final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/company/mail/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigDTO.java",
+      "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
       "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java"
     );
 
@@ -743,7 +794,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
 
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/Details.java",
+      "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/UserDetails.java",
       "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/UserSignedUp.java"
     );
 
@@ -809,20 +860,20 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
       final Path pathToTargetConsumer = pathToTarget.resolve(targetConsumer);
 
       final File targetConsumerFolder = pathToTargetConsumer.toFile();
-      assertThat(targetConsumerFolder).isNotEmptyDirectory();
+      Assertions.assertThat(targetConsumerFolder).isNotEmptyDirectory();
       TestUtils.validateFiles(expectedFile, targetConsumerFolder);
 
       if (!expectedModelFiles.isEmpty()) {
         final Path pathToTargetProducer = pathToTarget.resolve(targetProducer);
         final File targetProducerFolder = pathToTargetProducer.toFile();
-        assertThat(targetProducerFolder).isNotEmptyDirectory();
+        Assertions.assertThat(targetProducerFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedModelFiles, targetProducerFolder);
       }
 
       if (CollectionUtils.isNotEmpty(expectedExceptionFiles)) {
         Path pathToTargetException = pathToTarget.resolve(targetException);
         File targetModelException = pathToTargetException.toFile();
-        assertThat(targetModelException).isNotEmptyDirectory();
+        Assertions.assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
     } catch (final IOException e) {
@@ -839,7 +890,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
       if (!expectedModelFiles.isEmpty()) {
         final Path pathToTargetModel = pathToTarget.resolve(default_model_folder);
         final File targetModelFolder = pathToTargetModel.toFile();
-        assertThat(targetModelFolder).isNotEmptyDirectory();
+        Assertions.assertThat(targetModelFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedModelFiles, targetModelFolder);
       }
     } catch (final IOException e) {
@@ -856,7 +907,7 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
       if (!expectedValidatorFiles.isEmpty()) {
         final Path pathToTargetCustomValidator = pathToTarget.resolve(default_customvalidator_folder);
         final File targetCustomValidatorFolder = pathToTargetCustomValidator.toFile();
-        assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
+        Assertions.assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
     } catch (final IOException e) {

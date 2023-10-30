@@ -85,9 +85,9 @@ public class ApiArrayFieldDTO {
       return this;
     }
 
-    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValues(ApiTypeArrayDTO defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValue(ApiTypeArrayDTO defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }
@@ -118,9 +118,9 @@ public class ApiArrayFieldDTO {
       return this;
     }
 
-    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder values(ApiTypeArrayDTO values) {
-      if (values != null) {
-        this.values.add(values);
+    public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder value(ApiTypeArrayDTO value) {
+      if (value != null) {
+        this.values.add(value);
       }
       return this;
     }

@@ -100,6 +100,7 @@ public class CustomerOrderDTO {
       this.shippingDetails = shippingDetails;
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
       if (!orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
@@ -113,6 +114,7 @@ public class CustomerOrderDTO {
       }
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<PaymentDetailsDTO> paymentDetails) {
       if (!paymentDetails.isEmpty()) {
         this.paymentDetails.addAll(paymentDetails);
@@ -257,8 +259,6 @@ public class CustomerOrderDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

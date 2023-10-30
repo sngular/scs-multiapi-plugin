@@ -63,6 +63,7 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
@@ -159,8 +160,6 @@ public class OrderDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

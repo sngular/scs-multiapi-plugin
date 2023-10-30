@@ -45,9 +45,9 @@ public class ApiTestAllOfDTO {
       return this;
     }
 
-    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testers(String testers) {
-      if (testers != null) {
-        this.testers.add(testers);
+    public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder tester(String tester) {
+      if (tester != null) {
+        this.testers.add(tester);
       }
       return this;
     }

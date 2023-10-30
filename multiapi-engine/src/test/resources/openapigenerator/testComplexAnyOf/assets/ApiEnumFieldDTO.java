@@ -60,9 +60,9 @@ public class ApiEnumFieldDTO {
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(String enumValues) {
-      if (enumValues != null) {
-        this.enumValues.add(enumValues);
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValue(String enumValue) {
+      if (enumValue != null) {
+        this.enumValues.add(enumValue);
       }
       return this;
     }
@@ -78,9 +78,9 @@ public class ApiEnumFieldDTO {
       return this;
     }
 
-    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(String defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValue(String defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }

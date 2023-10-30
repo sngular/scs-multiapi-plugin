@@ -44,6 +44,7 @@ class AsyncApiGeneratorTest {
     return Stream.of(
         Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
         Arguments.of("TestIssueGeneration", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION, AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
+        Arguments.of("TestReservedWordsGeneration", AsyncApiGeneratorFixtures.TEST_RESERVED_WORDS_GENERATION, AsyncApiGeneratorFixtures.validateTestReservedWordsGeneration()),
         Arguments.of("TestFileGenerationIssue", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE, AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
         Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationExternalAvro()),
@@ -80,14 +81,12 @@ class AsyncApiGeneratorTest {
 
   @Test
   void testExceptionForTestGenerationWithNoOperationId() {
-    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
-      .isInstanceOf(InvalidAPIException.class);
+    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID)).isInstanceOf(InvalidAPIException.class);
   }
 
   @Test
   void testExceptionForTestGenerationWithNoOperationConfiguration() {
-    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG))
-      .isInstanceOf(InvalidAPIException.class);
+    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG)).isInstanceOf(InvalidAPIException.class);
   }
 
 }

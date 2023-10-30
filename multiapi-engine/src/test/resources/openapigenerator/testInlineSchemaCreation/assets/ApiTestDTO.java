@@ -79,9 +79,9 @@ public class ApiTestDTO {
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder tags(String tags) {
-      if (tags != null) {
-        this.tags.add(tags);
+    public ApiTestDTO.ApiTestDTOBuilder tag(String tag) {
+      if (tag != null) {
+        this.tags.add(tag);
       }
       return this;
     }
@@ -97,9 +97,9 @@ public class ApiTestDTO {
       return this;
     }
 
-    public ApiTestDTO.ApiTestDTOBuilder testTypeList(ApiTestTypeDTO testTypeList) {
-      if (testTypeList != null) {
-        this.testTypeList.add(testTypeList);
+    public ApiTestDTO.ApiTestDTOBuilder testType(ApiTestTypeDTO testType) {
+      if (testType != null) {
+        this.testTypeList.add(testType);
       }
       return this;
     }

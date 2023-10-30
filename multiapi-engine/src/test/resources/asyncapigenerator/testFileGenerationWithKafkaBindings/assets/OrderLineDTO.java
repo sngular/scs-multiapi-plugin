@@ -49,6 +49,7 @@ public class OrderLineDTO {
       this.ref = ref;
       return this;
     }
+
     public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);
@@ -115,7 +116,6 @@ public class OrderLineDTO {
   }
 
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
@@ -129,5 +129,4 @@ public class OrderLineDTO {
       throw new ModelClassException("OrderLineDTO");
     }
   }
-
 }

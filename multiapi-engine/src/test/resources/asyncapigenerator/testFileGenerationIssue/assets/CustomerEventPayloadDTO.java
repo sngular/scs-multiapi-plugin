@@ -68,6 +68,7 @@ public class CustomerEventPayloadDTO {
       this.customerId = customerId;
       return this;
     }
+
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder eventType(EventType eventType) {
       this.eventType = eventType;
       return this;
@@ -147,8 +148,6 @@ public class CustomerEventPayloadDTO {
     sb.append("}");
     return sb.toString();
   }
-
-
 
 
 }

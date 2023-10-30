@@ -75,9 +75,9 @@ public class ApiMapFieldDTO {
       return this;
     }
 
-    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValues(Object defaultValues) {
-      if (defaultValues != null) {
-        this.defaultValues.add(defaultValues);
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValue(Object defaultValue) {
+      if (defaultValue != null) {
+        this.defaultValues.add(defaultValue);
       }
       return this;
     }
@@ -98,9 +98,9 @@ public class ApiMapFieldDTO {
       return this;
     }
 
-    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapTypes(ApiTypeArrayDTO mapTypes) {
-      if (mapTypes != null) {
-        this.mapTypes.add(mapTypes);
+    public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapType(ApiTypeArrayDTO mapType) {
+      if (mapType != null) {
+        this.mapTypes.add(mapType);
       }
       return this;
     }
