@@ -181,7 +181,7 @@ public class MapperContentUtil {
       while (propertiesIt.hasNext()) {
         final var property = propertiesIt.next();
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix,
-                                                        modelToBuildList, parentPackage, null));
+                                                        modelToBuildList, parentPackage, className));
         if (model.get(PROPERTIES).path(property).has(REF)) {
           if (!totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
             modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
@@ -243,9 +243,10 @@ public class MapperContentUtil {
                 .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                 .build();
         setFieldType(fieldObject, schema, required, prefix, suffix, className);
-        if (StringUtils.isNotEmpty(propertyName) && !totalSchemas.containsKey(propertyName)) {
-          totalSchemas.put(createKey(modelPackage, propertyName.toUpperCase(), "/"), schema);
-          modelToBuildList.add(createKey(modelPackage.toLowerCase(), propertyName, "."));
+        final var schemaName = StringUtils.defaultString(className, propertyName);
+        if (StringUtils.isNotEmpty(schemaName) && !totalSchemas.containsKey(schemaName)) {
+          totalSchemas.put(createKey(modelPackage, schemaName.toUpperCase(), "/"), schema);
+          modelToBuildList.add(createKey(modelPackage.toLowerCase(), schemaName, "."));
         }
       } else if (ApiTool.hasItems(schema)) {
         final var items = ApiTool.getItems(schema);
