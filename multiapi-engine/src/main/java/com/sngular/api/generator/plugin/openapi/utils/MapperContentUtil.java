@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
@@ -46,15 +47,15 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas, final JsonNode schema,
       final String schemaName, final SpecFile specFile, final Path baseDir) {
 
-    return mapComponentToSchemaObject(totalSchemas, compositedSchemas, new ArrayList<>(), schema,
-                                      StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(schema, "name"), schemaName), specFile, baseDir);
+    return mapComponentToSchemaObject(totalSchemas, compositedSchemas, new HashSet<>(), schema,
+                                      StringUtils.defaultIfEmpty(ApiTool.getName(schema), schemaName), specFile, baseDir);
   }
 
   private static Map<String, SchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
-      final List<String> antiLoopList, final JsonNode schema, final String schemaName, final SpecFile specFile,
+      final Set<String> antiLoopList, final JsonNode schema, final String schemaName, final SpecFile specFile,
       final Path baseDir) {
-    final var name = StringUtils.defaultIfBlank(ApiTool.getNodeAsString(schema, "name"), schemaName);
+    final var name = StringUtils.defaultIfBlank(ApiTool.getName(schema), schemaName);
     if (!compositedSchemas.containsKey(name)) {
       compositedSchemas
         .put(name, toSchemaObject(name, totalSchemas, compositedSchemas, antiLoopList, schema, schemaName, specFile, baseDir));
@@ -65,12 +66,12 @@ public class MapperContentUtil {
   @SuppressWarnings("checkstyle:ParameterNumber")
   private static SchemaObject toSchemaObject(
       final String name, final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
-      final List<String> antiLoopList, final JsonNode schema, final String schemaName, final SpecFile specFile,
+      final Set<String> antiLoopList, final JsonNode schema, final String schemaName, final SpecFile specFile,
       final Path baseDir) {
 
     antiLoopList.add(schemaName);
 
-    final var listSchema = getFields(totalSchemas, schema, specFile, compositedSchemas, antiLoopList, schemaName, baseDir);
+    final var listSchema = getFields(null, totalSchemas, schema, specFile, compositedSchemas, antiLoopList, schemaName, baseDir);
 
     String schemaCombinatorType = "";
     if (ApiTool.isAllOf(schema)) {
@@ -154,20 +155,20 @@ public class MapperContentUtil {
     }
   }
 
-  private static Set<SchemaFieldObject> getFields(
+  private static Set<SchemaFieldObject> getFields(final String buildingSchema,
       final Map<String, JsonNode> totalSchemas, final JsonNode schema, final SpecFile specFile,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final String nameSchema,
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final String nameSchema,
       final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     if (ApiTool.hasProperties(schema)) {
       if (ApiTool.hasAdditionalProperties(schema)) {
-        ApiTool.getProperties(schema)
-               .forEachRemaining(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
-        fieldObjectArrayList.addAll(
-            processAdditionalProperties(ADDITIONAL_PROPERTIES, schema, specFile, totalSchemas, compositedSchemas, antiLoopList, nameSchema, baseDir));
+        ApiTool.getProperties(schema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
+                                                                         baseDir));
+        fieldObjectArrayList.addAll(processAdditionalProperties(ADDITIONAL_PROPERTIES, schema, specFile, totalSchemas, compositedSchemas, antiLoopList, nameSchema, baseDir));
       } else {
-        ApiTool.getProperties(schema).forEachRemaining(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+        ApiTool.getProperties(schema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
+                                                                         baseDir));
       }
     } else if (TypeConstants.ARRAY.equalsIgnoreCase(ApiTool.getType(schema))) {
       final String itemType = ApiTool.hasRef(ApiTool.getItems(schema)) ? MapperUtil.getRef(ApiTool.getItems(schema), specFile) : ApiTool.getType(ApiTool.getItems(schema));
@@ -178,14 +179,15 @@ public class MapperContentUtil {
     } else if (ApiTool.isAllOf(schema)) {
       fieldObjectArrayList.addAll(processAllOf(totalSchemas, ApiTool.getAllOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isAnyOf(schema)) {
-      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+      fieldObjectArrayList.addAll(processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isOneOf(schema)) {
-      fieldObjectArrayList.addAll(processAnyOfOneOf(totalSchemas, ApiTool.getOneOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+      fieldObjectArrayList.addAll(processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getOneOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isEnum(schema)) {
       fieldObjectArrayList.add(processEnumField(ApiTool.getName(schema), schema, specFile, ApiTool.getEnumValues(schema), schema));
     } else if (ApiTool.hasRef(schema)) {
       final var refSchema = totalSchemas.get(MapperUtil.getRefSchemaName(schema));
-      ApiTool.getProperties(refSchema).forEachRemaining(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+      ApiTool.getProperties(refSchema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
+                                                                          baseDir));
     } else {
       fieldObjectArrayList.add(SchemaFieldObject.builder()
                                                 .baseName(ApiTool.getName(schema))
@@ -198,14 +200,14 @@ public class MapperContentUtil {
 
   private static Set<SchemaFieldObject> processAllOf(
       final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final SpecFile specFile,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     for (JsonNode ref : schemaList) {
       if (ApiTool.hasRef(ref)) {
         final String schemaName = MapperUtil.getRefSchemaName(ref);
         final var schemaToProcess = totalSchemas.get(schemaName);
-        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, ref, antiLoopList, baseDir));
+        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, ref, antiLoopList, baseDir));
         for (var fieldObject : fieldObjectArrayList) {
           fieldObject.setRequired(true);
         }
@@ -214,9 +216,9 @@ public class MapperContentUtil {
     return fieldObjectArrayList;
   }
 
-  private static Set<SchemaFieldObject> processAnyOfOneOf(
+  private static Set<SchemaFieldObject> processAnyOfOneOf(final String buildingSchema,
       final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final SpecFile specFile,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     for (JsonNode internalSchema : schemaList) {
@@ -228,16 +230,17 @@ public class MapperContentUtil {
             fieldObjectArrayList.addAll(compositedSchemas.get(schemaName).getFieldObjectList());
           } else {
             final var schemaObject = solveRef(internalSchema, totalSchemas, compositedSchemas, antiLoopList, specFile, baseDir);
-            fieldObjectArrayList.addAll(schemaObject.getFieldObjectList());
+            compositedSchemas.put(schemaName, schemaObject);
             antiLoopList.add(schemaName);
+            fieldObjectArrayList.addAll(schemaObject.getFieldObjectList());
           }
-        } else {
-          if (compositedSchemas.containsKey(schemaName)) {
-            fieldObjectArrayList.addAll(compositedSchemas.get(schemaName).getFieldObjectList());
-          }
+        } else if (compositedSchemas.containsKey(schemaName)) {
+          fieldObjectArrayList.addAll(compositedSchemas.get(schemaName).getFieldObjectList());
+        } else if (!schemaName.equalsIgnoreCase(buildingSchema)) {
+          fieldObjectArrayList.addAll(getFields(schemaName, totalSchemas, internalSchema, specFile, compositedSchemas, antiLoopList, ApiTool.getName(internalSchema), baseDir));
         }
       } else {
-        fieldObjectArrayList.addAll(getFields(totalSchemas, internalSchema, specFile, compositedSchemas, antiLoopList, ApiTool.getName(internalSchema), baseDir));
+        fieldObjectArrayList.addAll(getFields(buildingSchema, totalSchemas, internalSchema, specFile, compositedSchemas, antiLoopList, ApiTool.getName(internalSchema), baseDir));
         for (var fieldObject : fieldObjectArrayList) {
           if (ApiTool.checkIfRequired(internalSchema, fieldObject.getBaseName())) {
             fieldObject.setRequired(true);
@@ -249,9 +252,9 @@ public class MapperContentUtil {
   }
 
   @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private static List<SchemaFieldObject> processFieldObjectList(
+  private static List<SchemaFieldObject> processFieldObjectList(final String buildingSchema,
       final String fieldName, final String className, final JsonNode schema, final SpecFile specFile, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     if (TypeConstants.ARRAY.equalsIgnoreCase(ApiTool.getType(schema))) {
@@ -281,7 +284,7 @@ public class MapperContentUtil {
       final var composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
       var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
       if (Objects.isNull(schemaObjectComposed)) {
-        schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), schema, specFile,
+        schemaObjectComposed = createComposedSchema(buildingSchema, StringUtils.defaultIfBlank(className, fieldName), schema, specFile,
                                                     totalSchemas, compositedSchemas, antiLoopList, baseDir);
         compositedSchemas.put(composedSchemaName, schemaObjectComposed);
       }
@@ -299,7 +302,7 @@ public class MapperContentUtil {
   private static SchemaFieldObject processRef(
       final String fieldName, final JsonNode schema, final SchemaFieldObjectType dataType,
       final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
-      final List<String> antiLoopList, final SpecFile specFile, final Path baseDir) {
+      final Set<String> antiLoopList, final SpecFile specFile, final Path baseDir) {
     final var field = SchemaFieldObject.builder()
                                        .baseName(fieldName)
                                        .dataType(dataType)
@@ -316,7 +319,7 @@ public class MapperContentUtil {
 
   private static SchemaObject solveRef(
       final JsonNode schema, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final SpecFile specFile,
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final SpecFile specFile,
       final Path baseDir) {
 
     final var referredSchema = OpenApiUtil.solveRef(ApiTool.getRefValue(schema), totalSchemas, baseDir.resolve(specFile.getFilePath()).getParent());
@@ -329,24 +332,24 @@ public class MapperContentUtil {
     return schemaObject;
   }
 
-  private static Consumer<Map.Entry<String, JsonNode>> processProperties(
+  private static Consumer<Map.Entry<String, JsonNode>> processProperties(final String buildingSchema,
       final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas, final Set<SchemaFieldObject> fieldObjectArrayList, final SpecFile specFile,
-      final JsonNode schema, final List<String> antiLoopList, final Path baseDir) {
+      final JsonNode schema, final Set<String> antiLoopList, final Path baseDir) {
     return field -> {
       final var nodeName = field.getKey();
       final var nodeValue = field.getValue();
       if (ApiTool.isEnum(field.getValue())) {
         fieldObjectArrayList.add(processEnumField(nodeName, nodeValue, specFile, ApiTool.getEnumValues(nodeValue), schema));
       } else {
-        fieldObjectArrayList.addAll(processObjectProperty(totalSchemas, nodeName, nodeValue, compositedSchemas, specFile, schema, antiLoopList, baseDir));
+        fieldObjectArrayList.addAll(processObjectProperty(buildingSchema, totalSchemas, nodeName, nodeValue, compositedSchemas, specFile, schema, antiLoopList, baseDir));
       }
     };
   }
 
   @SuppressWarnings({"checkstyle:CyclomaticComplexity", "checkstyle:ParameterNumber"})
-  private static List<SchemaFieldObject> processObjectProperty(
+  private static List<SchemaFieldObject> processObjectProperty(final String buildingSchema,
       final Map<String, JsonNode> totalSchemas, final String fieldName, final JsonNode fieldBody, final Map<String, SchemaObject> compositedSchemas, final SpecFile specFile,
-      final JsonNode schema, final List<String> antiLoopList, final Path baseDir) {
+      final JsonNode schema, final Set<String> antiLoopList, final Path baseDir) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
     final var isRequired = ApiTool.checkIfRequired(fieldBody, fieldName);
     final SchemaFieldObject field;
@@ -356,7 +359,8 @@ public class MapperContentUtil {
       if (!antiLoopList.contains(typeName) && totalSchemas.containsKey(typeName) && ApiTool.hasType(refSchema)
           && ApiTool.hasItems(refSchema) || ApiTool.getRefValue(fieldBody).contains(fieldName)) {
         antiLoopList.add(typeName);
-        fieldObjectArrayList.addAll(processFieldObjectList(fieldName, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas, antiLoopList, baseDir));
+        fieldObjectArrayList.addAll(processFieldObjectList(buildingSchema, fieldName, typeName, totalSchemas.get(typeName), specFile, totalSchemas, compositedSchemas,
+                                                           antiLoopList, baseDir));
       } else if (ApiTool.isEnum(refSchema)) {
         fieldObjectArrayList.add(processEnumField(fieldName, refSchema, specFile, ApiTool.getEnumValues(refSchema), schema));
       } else {
@@ -385,7 +389,7 @@ public class MapperContentUtil {
       setFieldType(field, fieldBody, schema, specFile, fieldName);
       fieldObjectArrayList.add(field);
     } else {
-      fieldObjectArrayList.addAll(processFieldObjectList(fieldName, fieldName, fieldBody, specFile, totalSchemas, compositedSchemas, antiLoopList, baseDir));
+      fieldObjectArrayList.addAll(processFieldObjectList(buildingSchema, fieldName, fieldName, fieldBody, specFile, totalSchemas, compositedSchemas, antiLoopList, baseDir));
     }
     return fieldObjectArrayList;
   }
@@ -451,7 +455,7 @@ public class MapperContentUtil {
   @SuppressWarnings("checkstyle:ParameterNumber")
   private static List<SchemaFieldObject> processArray(
       final String fieldName, final String className, final JsonNode schema, final SpecFile specFile, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
 
     if (!ApiTool.hasItems(schema)) {
@@ -470,7 +474,7 @@ public class MapperContentUtil {
         final String composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
         SchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
         if (Objects.isNull(schemaObjectComposed)) {
-          schemaObjectComposed = createComposedSchema(StringUtils.defaultIfBlank(className, fieldName), items, specFile,
+          schemaObjectComposed = createComposedSchema("", StringUtils.defaultIfBlank(className, fieldName), items, specFile,
                                                       totalSchemas, compositedSchemas, antiLoopList, baseDir);
           compositedSchemas.put(composedSchemaName, schemaObjectComposed);
         }
@@ -506,12 +510,12 @@ public class MapperContentUtil {
   private static Set<SchemaFieldObject> processObject(
       final String fieldName, final String className, final JsonNode schema, final SpecFile specFile,
       final Map<String, JsonNode> totalSchemas, final Map<String, SchemaObject> compositedSchemas,
-      final List<String> antiLoopList, final Path baseDir) {
+      final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     if (ObjectUtils.allNull(className, fieldName)) {
       ApiTool.getProperties(schema).forEachRemaining(
-          processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+          processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
     } else if (antiLoopList.contains(className)) {
       fieldObjectArrayList
           .add(SchemaFieldObject
@@ -544,12 +548,12 @@ public class MapperContentUtil {
 
   private static Set<SchemaFieldObject> processMap(
       final String fieldName, final JsonNode schema, final SpecFile specFile, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(schema)) && ApiTool.hasProperties(schema)) {
       ApiTool.getProperties(schema).forEachRemaining(
-           processProperties(totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
+           processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
     }
 
     if (ApiTool.hasAdditionalProperties(schema)) {
@@ -562,7 +566,7 @@ public class MapperContentUtil {
 
   private static List<SchemaFieldObject> processAdditionalProperties(
       final String fieldName, final JsonNode schema, final SpecFile specFile, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas, final List<String> antiLoopList, final String nameSchema,
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final String nameSchema,
       final Path baseDir) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
@@ -616,10 +620,9 @@ public class MapperContentUtil {
              || ApiTool.hasAdditionalProperties(value));
   }
 
-  private static SchemaObject createComposedSchema(
+  private static SchemaObject createComposedSchema(final String buildingSchema,
       final String fieldName, final JsonNode schema, final SpecFile specFile, final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
-      final List<String> antiLoopList, final Path baseDir) {
+      final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
     String schemaCombinatorType = "";
     if (ApiTool.isAllOf(schema)) {
@@ -628,11 +631,11 @@ public class MapperContentUtil {
       schemaCombinatorType = ALL_OF_COMBINATOR;
     } else if (ApiTool.isAnyOf(schema)) {
       fieldObjectArrayList.addAll(
-           processAnyOfOneOf(totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+           processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
       schemaCombinatorType = ANY_OF_COMBINATOR;
     } else if (ApiTool.isOneOf(schema)) {
       fieldObjectArrayList.addAll(
-           processAnyOfOneOf(totalSchemas, ApiTool.getOneOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+           processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getOneOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
       schemaCombinatorType = ONE_OF_COMBINATOR;
     }
 
