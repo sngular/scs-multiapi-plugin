@@ -255,19 +255,24 @@ public class OpenApiGenerator {
       final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
       final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
-    basicSchemaMap.forEach((schemaName, basicSchema) -> {
-      if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
-        throw new DuplicateModelClassException(schemaName, modelPackage);
-      }
+    basicSchemaMap.forEach((schemaName, basicSchema) ->
+        processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap)
+    );
+  }
 
-      if (ApiTool.hasRef(basicSchema)) {
-        final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
-        builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
-      } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
-        builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
-      }
-    });
+  private void processModel(
+      final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap, final boolean overwrite,
+      final String schemaName, final JsonNode basicSchema, final Map<String, SchemaObject> builtSchemasMap) {
+    if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {
+      throw new DuplicateModelClassException(schemaName, modelPackage);
+    }
 
+    if (ApiTool.hasRef(basicSchema)) {
+      final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
+      builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
+    } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
+      builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
+    }
   }
 
   private Map<String, SchemaObject> writeModel(

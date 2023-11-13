@@ -182,10 +182,8 @@ public class MapperContentUtil {
         final var property = propertiesIt.next();
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix,
                                                         modelToBuildList, parentPackage, className));
-        if (model.get(PROPERTIES).path(property).has(REF)) {
-          if (!totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
-            modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
-          }
+        if (model.get(PROPERTIES).path(property).has(REF) && !totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
+          modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
         }
       }
     } else if (properties.has(ALL_OF)) {
