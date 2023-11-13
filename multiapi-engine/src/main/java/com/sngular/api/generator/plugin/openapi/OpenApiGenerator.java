@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -175,7 +176,7 @@ public class OpenApiGenerator {
       try {
         templateFactory.fillTemplate(filePathToSave, specFile, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
-        throw new GeneratorTemplateException("Error filling the template", e);
+        throw new GeneratorTemplateException("Error filling the template", specFile.getFilePath(), e);
       }
 
       if (Boolean.TRUE.equals(specFile.isCallMode())) {

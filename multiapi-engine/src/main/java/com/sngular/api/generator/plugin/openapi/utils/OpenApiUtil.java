@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -156,7 +157,7 @@ public class OpenApiUtil {
     if (ApiTool.hasNode(operation, "requestBody") && !operation.at("/requestBody/content").isMissingNode()) {
       final var content = operation.at("/requestBody/content");
       final var schema = content.findValue("schema");
-      if (ApiTool.hasRef(schema)) {
+      if (!ApiTool.hasRef(schema)) {
         basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
       } else if (ApiTool.hasItems(schema)) {
         basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), ApiTool.getItems(schema));

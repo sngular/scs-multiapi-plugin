@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -42,6 +43,8 @@ public final class ApiTool {
   public static final String PARAMETERS = "parameters";
 
   public static final String RESPONSES = "responses";
+
+  public static final String REQUEST_BODIES = "requestBodies";
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
@@ -124,6 +127,10 @@ public final class ApiTool {
 
   public static Map<String, JsonNode> getResponseSchemas(final JsonNode openApi) {
     return getComponentSchemasByType(openApi, RESPONSES);
+  }
+
+  public static Map<String, JsonNode> getRequestBodySchemas(final JsonNode openApi) {
+    return getComponentSchemasByType(openApi, REQUEST_BODIES);
   }
 
   private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {

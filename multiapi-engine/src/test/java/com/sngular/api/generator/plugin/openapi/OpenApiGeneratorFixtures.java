@@ -331,6 +331,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_SIMPLE_BUILD = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testSimpleBuild/api-rest.yaml")
+          .apiPackage("com.sngular.multifileplugin.testsimplebuild")
+          .modelPackage("com.sngular.multifileplugin.testsimplebuild.model")
+          .clientPackage("com.sngular.multifileplugin.testsimplebuild.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
       SpecFile
           .builder()
@@ -1130,6 +1142,41 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "exception/ModelClassException.java");
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+  }
+
+static Function<Path, Boolean> validateSimpleBuild() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testsimplebuild";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testsimplebuild/model";
+
+    final String COMMON_PATH = "openapigenerator/testsimplebuild/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "V1Api.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/ActivatePolicyDTO.java",
+        ASSETS_PATH + "model/AddressDTO.java",
+        ASSETS_PATH + "model/CompanyDTO.java",
+        ASSETS_PATH + "model/ContactDTO.java",
+        ASSETS_PATH + "model/CreditLimitDTO.java",
+        ASSETS_PATH + "model/DocumentDTO.java",
+        ASSETS_PATH + "model/ErrorResponseDTO.java",
+        ASSETS_PATH + "model/InsuredCreditObjectDTO.java",
+        ASSETS_PATH + "model/PolicyActivationDTO.java",
+        ASSETS_PATH + "model/PolicyClaimDTO.java",
+        ASSETS_PATH + "model/PolicySettlementDTO.java",
+        ASSETS_PATH + "model/QuoteRequestDTO.java",
+        ASSETS_PATH + "model/QuoteResponseDTO.java",
+        ASSETS_PATH + "model/QuoteUpdateResponseDTO.java",
+        ASSETS_PATH + "model/UpdateQuoteDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateValidationAnnotations(int springBootVersion) {
