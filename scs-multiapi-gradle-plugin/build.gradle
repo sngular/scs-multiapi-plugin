@@ -30,9 +30,9 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:5.0.2'
+  implementation 'com.sngular:multiapi-engine:5.0.3'
   testImplementation 'org.assertj:assertj-core:3.24.2'
-  testImplementation 'com.puppycrawl.tools:checkstyle:10.9.1'
+  testImplementation 'com.puppycrawl.tools:checkstyle:10.12.3'
 }
 
 jar {
@@ -86,7 +86,7 @@ gradlePlugin {
 }
 
 checkstyle {
-  toolVersion "10.9.1"
+  toolVersion "10.12.3"
   configFile = file("../checkstyle.xml")
 }
 
