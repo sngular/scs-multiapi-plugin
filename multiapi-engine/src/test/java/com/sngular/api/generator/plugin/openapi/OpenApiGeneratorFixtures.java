@@ -1150,7 +1150,7 @@ static Function<Path, Boolean> validateSimpleBuild() {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testsimplebuild/model";
 
-    final String COMMON_PATH = "openapigenerator/testsimplebuild/";
+    final String COMMON_PATH = "openapigenerator/testSimpleBuild/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
