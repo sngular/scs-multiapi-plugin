@@ -58,8 +58,8 @@ public class UserDetails {
     }
 
     public UserDetails build() {
-      UserDetails details = new UserDetails(this);
-      return details;
+      UserDetails userDetails = new UserDetails(this);
+      return userDetails;
     }
   }
 
@@ -107,8 +107,8 @@ public class UserDetails {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserDetails details = (UserDetails) o;
-    return Objects.equals(this.firstName, details.firstName) && Objects.equals(this.lastName, details.lastName) && Objects.equals(this.email, details.email);
+    UserDetails userDetails = (UserDetails) o;
+    return Objects.equals(this.firstName, userDetails.firstName) && Objects.equals(this.lastName, userDetails.lastName) && Objects.equals(this.email, userDetails.email);
   }
 
   @Override
