@@ -224,7 +224,6 @@ public class MapperContentUtil {
     return result;
   }
 
-  @SuppressWarnings("checkstyle:ParameterNumber")
   private static SchemaFieldObject processFieldObjectList(
       final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage, final String className) {

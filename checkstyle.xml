@@ -406,6 +406,14 @@
     <property name="checks" value="ParameterNumber"/>
   </module>
   <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*OpenApiGenerator.java"/>
+    <property name="checks" value="ParameterNumber"/>
+  </module>
+  <module name="SuppressionSingleFilter">
+    <property name="files" value="[/\\].*MapperContentUtil.java"/>
+    <property name="checks" value="ParameterNumber"/>
+  </module>
+  <module name="SuppressionSingleFilter">
     <property name="files" value="[\\/]test[\\/].*"/>
     <property name="checks" value="[a-zA-Z0-9]*"/>
   </module>

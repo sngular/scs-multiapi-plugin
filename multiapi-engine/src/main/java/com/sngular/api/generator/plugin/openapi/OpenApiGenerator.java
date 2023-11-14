@@ -260,7 +260,6 @@ public class OpenApiGenerator {
     );
   }
 
-  @SuppressWarnings("checkstyle:ParameterNumber")
   private void processModel(
       final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap, final boolean overwrite,
       final String schemaName, final JsonNode basicSchema, final Map<String, SchemaObject> builtSchemasMap) {
