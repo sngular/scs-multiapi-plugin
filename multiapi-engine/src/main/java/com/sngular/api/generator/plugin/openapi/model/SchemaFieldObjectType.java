@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.openapi.model;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
+
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;

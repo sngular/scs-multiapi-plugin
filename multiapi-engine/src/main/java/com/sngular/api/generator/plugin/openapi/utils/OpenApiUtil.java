@@ -241,26 +241,6 @@ public class OpenApiUtil {
     return javaFileName;
   }
 
-  protected static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final Path rootFilePath) {
-    JsonNode solvedRef;
-    if (StringUtils.isNotEmpty(refValue)) {
-      if (refValue.startsWith("#")) {
-        final String refSchemaName = MapperUtil.getRefSchemaName(refValue);
-        solvedRef = schemaMap.get(refSchemaName);
-      } else {
-        final var refValueArr = refValue.split("#");
-        final var filePath = refValueArr[0];
-        solvedRef = getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
-        final var refName = MapperUtil.getRefSchemaName(refValueArr[1]);
-        schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
-        solvedRef = solvedRef.findValue(refName);
-      }
-    } else {
-      solvedRef = null;
-    }
-    return solvedRef;
-  }
-
 }
 
 

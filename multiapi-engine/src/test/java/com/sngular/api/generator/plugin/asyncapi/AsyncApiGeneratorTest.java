@@ -56,6 +56,8 @@ class AsyncApiGeneratorTest {
                      AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
         Arguments.of("TestIssueGenerateSupplier", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
                      AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
+        Arguments.of("TestIssueSimpleTypeGenerate", AsyncApiGeneratorFixtures.TEST_ISSUE_SIMPLE_TYPE_GENERATION,
+                     AsyncApiGeneratorFixtures.validateTestIssueSimpleTypeGeneration()),
         Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
                      AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
         Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),

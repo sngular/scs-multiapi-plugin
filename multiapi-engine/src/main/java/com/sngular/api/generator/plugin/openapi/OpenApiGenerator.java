@@ -255,13 +255,11 @@ public class OpenApiGenerator {
       final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
     basicSchemaMap.forEach((schemaName, basicSchema) ->
-        getModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap)
+        processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap)
     );
-
   }
 
-  @SuppressWarnings("checkstyle:ParameterNumber")
-  private void getModel(
+  private void processModel(
       final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap, final boolean overwrite,
       final String schemaName, final JsonNode basicSchema, final Map<String, SchemaObject> builtSchemasMap) {
     if (!overwrite && !overwriteModelList.add(schemaName + modelPackage)) {

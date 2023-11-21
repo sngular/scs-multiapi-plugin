@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,11 +24,32 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="paymentDetails")
   private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
   @JsonProperty(value ="status")
-  private OrderStatusDTO status;
+  private Status status;
+  public enum Status {
+    DELIVERED("DELIVERED"),
+    CONFIRMED("CONFIRMED"),
+    SHIPPED("SHIPPED");
+
+    private String value;
+
+    Status(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
 
-  private CustomerOrderDTO(String id, String date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, OrderStatusDTO status, CustomerDTO customer) {
+  private CustomerOrderDTO(String id, String date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, Status status, CustomerDTO customer) {
     this.id = id;
     this.date = date;
     this.shippingDetails = shippingDetails;
@@ -61,7 +83,7 @@ public class CustomerOrderDTO {
     private ShippingDetailsDTO shippingDetails;
     private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
     private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
-    private OrderStatusDTO status;
+    private Status status;
     private CustomerDTO customer;
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {
@@ -107,7 +129,7 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder status(OrderStatusDTO status) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder status(Status status) {
       this.status = status;
       return this;
     }
@@ -188,10 +210,10 @@ public class CustomerOrderDTO {
   * @return status
   */
   @Schema(name = "status", required = false)
-  public OrderStatusDTO getStatus() {
+  public Status getStatus() {
     return status;
   }
-  public void setStatus(OrderStatusDTO status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
