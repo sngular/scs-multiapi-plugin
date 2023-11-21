@@ -7,6 +7,7 @@
 package com.sngular.api.generator.plugin.asyncapi.model;
 
 import java.util.Objects;
+
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import lombok.Builder;
 import lombok.Value;

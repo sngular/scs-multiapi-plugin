@@ -28,7 +28,7 @@ Maven and Gradle
   - [Getting Started](#getting-started)
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
-- [Property Validation](#properties-validation)
+- [Property Validation](#property-validation)
 
 ## Main Configuration
 
@@ -60,7 +60,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.0.2</version>
+  <version>5.1.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -94,7 +94,7 @@ As commented above, they both could be used at the same time, setting a double
 ```
 
 In the example above, you can see a partial configuration for the plugin with
-a double *execution*. This makes neccesary to set an `id` for each execution,
+a double *execution*. This makes necessary to set an `id` for each execution,
 `asyncapi` and `openapi` in this case.
 
 In the case that you only want to run one of the goals of the plugin, you only
@@ -113,8 +113,8 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 
 ```groovy
 plugins {
-  id 'java'
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '5.0.2'
+  id "java"
+  id "com.sngular.scs-multiapi-gradle-plugin' version '5.1.0"
 
   openapimodel {
 
@@ -153,7 +153,7 @@ which the plugin is designed.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.0.2</version>
+  <version>5.1.0</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -466,7 +466,7 @@ public interface Mapper {
 ```java
 
 @Component
-public class subscribeOperation implements ISubscribeOperation {
+public class SubscribeOperation implements ISubscribeOperation {
 
   private final Mapper mapper;
 
@@ -576,7 +576,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.0.2</version>
+  <version>5.1.0</version>
   <executions>
     <execution>
       <goals>
@@ -692,12 +692,12 @@ RestClient and the WebClient will be located, if this option is set in any
 of the specFiles, and the name of the folder where the generated sources will
 be saved in the api of the project.
 
-| Name                                                | Description                                                                                                                                                                                                                                                                     | Example                              |
-|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| Name                                                | Description                                                                                                                                                                                                                                                                     | Example                                 |
+|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------|
 | clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | com.sngular.apigenerator.openapi.client |
-| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                    |
-| overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                |
-| springBootVersion                                   | The version of spring to target during generation. It's default value is `2`. | 3
+| [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                       |
+| overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                   |
+| springBootVersion                                   | The version of spring to target during generation. It's default value is `2`.                                                                                                                                                                                                   | 3                                       |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
