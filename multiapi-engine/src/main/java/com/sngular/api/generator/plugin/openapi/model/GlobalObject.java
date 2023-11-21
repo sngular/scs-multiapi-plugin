@@ -38,6 +38,8 @@ public class GlobalObject {
 
   private Map<String, JsonNode> responseMap;
 
+  private Map<String, JsonNode> requestBodyMap;
+
   public Optional<JsonNode> getSchemaNode(final String schemaName) {
     return Optional.ofNullable(schemaMap.get(schemaName));
   }
@@ -48,6 +50,10 @@ public class GlobalObject {
 
   public Optional<JsonNode> getParameterNode(final String schemaName) {
     return Optional.ofNullable(parameterMap.get(schemaName));
+  }
+
+  public Optional<JsonNode> getRequestBodyNode(final String schemaName) {
+    return Optional.ofNullable(requestBodyMap.get(schemaName));
   }
 
   public static class GlobalObjectBuilder {

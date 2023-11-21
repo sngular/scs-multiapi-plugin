@@ -61,6 +61,7 @@ public class MapperPathUtil {
       globalObject.schemaMap(ApiTool.getComponentSchemas(openAPI));
       globalObject.parameterMap(ApiTool.getParameterSchemas(openAPI));
       globalObject.responseMap(ApiTool.getResponseSchemas(openAPI));
+      globalObject.requestBodyMap(ApiTool.getRequestBodySchemas(openAPI));
     } else {
       globalObject.schemaMap(new HashMap<>());
     }
@@ -208,11 +209,20 @@ public class MapperPathUtil {
     final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
     if (ApiTool.hasNode(operation, REQUEST_BODY)) {
       final var requestBody = ApiTool.getNode(operation, REQUEST_BODY);
-      requestObjects.add(RequestObject.builder()
-                                      .required(ApiTool.hasNode(requestBody, REQUIRED))
-                                      .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
-                                                                       "InlineObject" + operationIdWithCap, globalObject, baseDir))
-                                      .build());
+      if (!ApiTool.hasRef(requestBody)) {
+        requestObjects.add(RequestObject.builder()
+                                        .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
+                                                                         "InlineObject" + operationIdWithCap, globalObject, baseDir))
+                                        .build());
+      } else {
+        final var requestBodyNode = globalObject.getRequestBodyNode(MapperUtil.getRefSchemaName(requestBody)).orElseThrow();
+        requestObjects.add(RequestObject.builder()
+                                        .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBodyNode, CONTENT),
+                                                                         operationIdWithCap, globalObject, baseDir))
+                                        .build());
+      }
     }
     return requestObjects;
   }

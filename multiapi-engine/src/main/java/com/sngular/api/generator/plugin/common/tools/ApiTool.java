@@ -44,6 +44,8 @@ public final class ApiTool {
 
   public static final String RESPONSES = "responses";
 
+  public static final String REQUEST_BODIES = "requestBodies";
+
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
   private ApiTool() {
@@ -125,6 +127,10 @@ public final class ApiTool {
 
   public static Map<String, JsonNode> getResponseSchemas(final JsonNode openApi) {
     return getComponentSchemasByType(openApi, RESPONSES);
+  }
+
+  public static Map<String, JsonNode> getRequestBodySchemas(final JsonNode openApi) {
+    return getComponentSchemasByType(openApi, REQUEST_BODIES);
   }
 
   private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {

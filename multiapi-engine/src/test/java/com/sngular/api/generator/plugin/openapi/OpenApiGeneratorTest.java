@@ -115,7 +115,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS,
                      OpenApiGeneratorFixtures.validateApiWithNoComponents()),
         Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
-                    OpenApiGeneratorFixtures.validateRestrictionsSchema())
+                    OpenApiGeneratorFixtures.validateRestrictionsSchema()),
+        Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
+                    OpenApiGeneratorFixtures.validateSimpleBuild())
     );
   }
 

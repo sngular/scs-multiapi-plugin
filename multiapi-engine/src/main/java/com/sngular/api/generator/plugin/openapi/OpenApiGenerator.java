@@ -176,7 +176,7 @@ public class OpenApiGenerator {
       try {
         templateFactory.fillTemplate(filePathToSave, specFile, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
-        throw new GeneratorTemplateException("Error filling the template", e);
+        throw new GeneratorTemplateException("Error filling the template", specFile.getFilePath(), e);
       }
 
       if (Boolean.TRUE.equals(specFile.isCallMode())) {
@@ -250,7 +250,6 @@ public class OpenApiGenerator {
     return FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(toMatch).replaceAll("/"));
   }
 
-  @SuppressWarnings("checkstyle:LambdaBodyLength")
   private void processModels(
       final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
       final boolean overwrite) {

@@ -1,0 +1,595 @@
+openapi: 3.0.0
+info:
+  title: Operation Authorization Service
+  description: |
+    This service provides the set of operations needed to make a decision on whether a certain operation should be financed. 
+    It will rely on a number of providers, but initially we will only be using Allianz Trade (AZT).
+  contact:
+    name: BNPL Support Team
+    email: payments.m3a.1@gmail.com
+  version: 0.1.0
+servers:
+  - url: http://localhost:8087
+    description: Localhost
+tags:
+  - name: Company
+    description: Gather info about a company
+  - name: Insurance
+    description: Run insurance operations
+paths:
+  /v1/company/{companyId}/info:
+    get:
+      tags:
+        - Company
+      summary: Retrieve info from a company
+      description: |
+        Gather info about a company of a certain country, provided its VAT code, countryCode and database identifier.
+      operationId: getCompanyInfo
+      parameters:
+        - name: countryCode
+          in: query
+          description: Country code according to ISO 3166
+          required: true
+          schema:
+            type: string
+        - name: vatCode
+          in: query
+          description: The unique VAT code that identifies the company
+          required: true
+          schema:
+            type: string
+        - name: companyId
+          in: path
+          description: The company database identifier
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/company/{companyId}/creditLimit:
+    post:
+      tags:
+        - Company
+      summary: Compute the credit limits for a company
+      description: Gather info about the credit limits that certain providers allow for a specific company.
+      operationId: getCompanyCreditLimit
+      parameters:
+        - name: companyId
+          in: path
+          description: Company database identifier
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditLimit'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/insurance:
+    post:
+      tags:
+        - Insurance
+      summary: Request a quote to insure an invoice
+      description: Request a quote for the insurance of an invoice from a number of insurance providers
+      operationId: obtainInsuranceQuote
+      requestBody:
+        $ref: '#/components/requestBodies/QuoteRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuoteResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/insurance/update/{quoteId}:
+    put:
+      tags:
+        - Insurance
+      summary: Update the invoice number and invoice date for a certain quote
+      description:
+        Normally, at the time of sale, there is not an invoice number as the invoice has not yet been issued. 
+        Therefore, we need to update the invoice number and date for a certain quote before activating it.
+      operationId: updateInvoiceNumberAndDateForInsurance
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/UpdateQuote'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteUpdateResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/insurance/activate/{quoteId}:
+    post:
+      tags:
+        - Insurance
+      summary: Activate a quote to insure an invoice
+      description: We activate a policy that has already the correct invoice number and date, for an 
+        accepted sale (for which we have the dispatch info and invoice on file)
+      operationId: activate
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/ActivatePolicy'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyActivation'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/insurance/settle/{policyId}:
+    post:
+      tags:
+        - Insurance
+      summary: Settle a policy that was previously activated
+      description: Once the debtor has paid for the insurance, we settle it using this endpoint.
+      operationId: settle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/PolicySettlement'
+      parameters:
+        - name: policyIdInProvider
+          in: path
+          description: ID of the policy for the specific insurance provider
+          required: true
+          schema:
+            type: string
+            example: 1
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicySettlement'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/insurance/claim/{policyId}:
+    post:
+      tags:
+        - Insurance
+      summary: Claim a policy that was unpaid
+      description: If the policy was unpaid, we make a claim to the insurance company.
+      operationId: claim
+      parameters:
+        - name: operationId
+          in: query
+          description: ID of the operation in our own records, for reconciliation purposes
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: integer
+            example: 12345678
+        - name: provider
+          in: query
+          description: Name of the insurance provider
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: AZT
+        - name: policyId
+          in: path
+          description: ID of the policy for the specific insurance provider
+          required: true
+          schema:
+            type: string
+            example: 1
+        - name: claimDate
+          in: query
+          description: Date that we start the claim
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: datetime
+            example: 2023-11-06T14:00:00Z
+      requestBody:
+        $ref: '#/components/requestBodies/ClaimRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicySettlement'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Error status
+        message:
+          type: string
+          description: Error message
+    Company:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Sngular
+        isActive:
+          type: boolean
+          example: true
+        isInsurable:
+          type: boolean
+          example: true
+        fiscalAddress:
+          $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+          example: Calle Sor Joaquina
+        number:
+          type: integer
+          example: 6
+        postcode:
+          type: integer
+          example: 15002
+        city:
+          type: string
+          example: A Coruña
+        country:
+          type: string
+          example: ES
+    Contact:
+      type: object
+      required:
+        - lastName
+        - officePhoneNumber
+        - phoneNumber
+        - email
+      properties:
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: integer
+        officePhoneNumber:
+          type: integer
+          example: 34600111222
+        phoneNumber:
+          type: integer
+          example: 34600111222
+        email:
+          type: string
+          example: john@doe.com
+    CreditLimit:
+      type: object
+      properties:
+        isFundable:
+          type: boolean
+          example: true
+        insuredCreditLimit:
+          $ref: '#/components/schemas/InsuredCreditObject'
+    InsuredCreditObject:
+      type: object
+      properties:
+        providerName:
+          type: string
+          example: AZT
+        creditLimitInCents:
+          type: integer
+          example: 1000000
+        creditAvailableInCents:
+          type: integer
+          example: 800000
+    QuoteRequest:
+      type: object
+      properties:
+        totalAmountInCents:
+          type: integer
+          format: int64
+          example: 10000
+        currency:
+          type: string
+          example: EUR
+        saleDate:
+          type: string
+          description:
+            Is the date the sale is made. 
+            Initially, we assume the date of invoice will be the date of sale.
+          format: datetime
+          example: 2023-10-31T14:00:00Z
+        paymentDueDate:
+          type: string
+          description:
+            Is the date the invoice must be paid. As of now, 60 days from saleDate.
+          format: datetime
+          example: 2023-12-30T14:00:00Z
+        debtorId:
+          type: integer
+          example: 1
+        merchantId:
+          type: integer
+          example: 2
+    QuoteResponse:
+      type: object
+      properties:
+        isInsurable:
+          type: boolean
+          example: true
+        quoteId:
+          type: string
+          example: 1
+          description: Quote adapter database identifier
+        estimatedCostInCents:
+          type: integer
+          example: 242
+        currency:
+          type: string
+          example: EUR
+        activateBeforeDate:
+          type: string
+          format: datetime
+          example: 2023-11-06T14:00:00Z
+        claimBeforeDate:
+          type: string
+          format: datetime
+          example: 2024-03-10T14:00:00Z
+    QuoteUpdateResponse:
+      type: object
+      properties:
+        isInsurable:
+          type: boolean
+          example: true
+        estimatedCostInCents:
+          type: integer
+          example: 242
+        activateBeforeDate:
+          type: string
+          format: datetime
+          example: 2023-11-06T14:00:00Z
+        claimBeforeDate:
+          type: string
+          format: datetime
+          example: 2024-03-10T14:00:00Z
+    PolicyActivation:
+      type: object
+      properties:
+        isActive:
+          type: boolean
+          example: true
+        insuranceProvider:
+          type: string
+          example: AZT
+        policyId:
+          type: string
+          example: 1
+          description: Policy identifier in adapter database
+        netCostInCents:
+          type: integer
+          example: 200
+        totalCostInCents:
+          type: integer
+          example: 242
+        currency:
+          type: string
+          example: EUR
+        claimBeforeDate:
+          type: string
+          format: datetime
+          example: 2024-03-10T14:00:00Z
+        coveredAmountInCents:
+          type: integer
+          example: 10000
+    PolicySettlement:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: AZT
+        settlementDate:
+          type: string
+          format: datetime
+          example: 2023-11-06T14:00:00Z
+    PolicyClaim:
+      type: object
+      properties:
+        claimKind:
+          type: string
+          example: Dispute
+        claimDocument:
+          $ref: '#/components/schemas/Document'
+        invoiceDocument:
+          $ref: '#/components/schemas/Document'
+        proofOfDeliveryDocument:
+          $ref: '#/components/schemas/Document'
+        debtorContactDetails:
+          $ref: '#/components/schemas/Contact'
+        merchantContactDetails:
+          $ref: '#/components/schemas/Contact'
+    Document:
+      type: object
+      properties:
+        document:
+          type: string
+          format: binary
+          example: invoice01234.pdf
+        description:
+          type: string
+          example: Invoice for the sale 01234
+    UpdateQuote:
+      type: object
+      required:
+        - invoiceNumber
+        - invoiceDate
+      properties:
+        provider:
+          type: string
+          example: AZT
+        invoiceNumber:
+          type: string
+          description: Invoice number
+          example: INV/2023/00234
+        invoiceDate:
+          type: string
+          format: datetime
+          example: 2024-03-10T14:00:00Z
+    ActivatePolicy:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: AZT
+  requestBodies:
+    PolicySettlement:
+      description: Data needed to settle a policy
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PolicySettlement'
+    ActivatePolicy:
+      description: Data needed to activate a policy
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ActivatePolicy'
+    UpdateQuote:
+      description: Data needed to update the invoice number and date for a certain quote
+      required: true
+      content:
+        application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQuote'
+    QuoteRequest:
+      description: Data needed to obtain a quote
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuoteRequest'
+      required: true
+    ClaimRequest:
+      description: Data needed to make a claim
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PolicyClaim'
+      required: true
