@@ -31,6 +31,8 @@ public class SchemaFieldObjectProperties {
 
   private String multipleOf = null;
 
+  private String format = null;
+
   private Set<String> properties;
 
   public SchemaFieldObjectProperties() {
@@ -95,6 +97,13 @@ public class SchemaFieldObjectProperties {
     this.minimum = mininum;
     if (Objects.nonNull(mininum)) {
       properties.add("Minimum");
+    }
+  }
+
+  public void setFormat(final String format) {
+    this.format = format;
+    if (Objects.nonNull(format)) {
+      properties.add("Format");
     }
   }
 

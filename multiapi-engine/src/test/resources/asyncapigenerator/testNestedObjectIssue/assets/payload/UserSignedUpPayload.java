@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonDeserialize(builder = UserSignedUpPayload.UserSignedUpPayloadBuilder.class)
 public class UserSignedUpPayload {
@@ -17,11 +19,12 @@ public class UserSignedUpPayload {
   @JsonProperty(value ="email")
   private String email;
   @JsonProperty(value ="createdAt")
-  private String createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private LocalDateTime createdAt;
   @JsonProperty(value ="someOtherObject")
   private SomeOtherObject someOtherObject;
 
-  private UserSignedUpPayload(String firstName, String lastName, String email, String createdAt, SomeOtherObject someOtherObject) {
+  private UserSignedUpPayload(String firstName, String lastName, String email, LocalDateTime createdAt, SomeOtherObject someOtherObject) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -49,7 +52,7 @@ public class UserSignedUpPayload {
     private String firstName;
     private String lastName;
     private String email;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private SomeOtherObject someOtherObject;
 
     public UserSignedUpPayload.UserSignedUpPayloadBuilder firstName(String firstName) {
@@ -67,7 +70,7 @@ public class UserSignedUpPayload {
       return this;
     }
 
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(String createdAt) {
+    public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(LocalDateTime createdAt) {
       this.createdAt = createdAt;
       return this;
     }
@@ -124,10 +127,10 @@ public class UserSignedUpPayload {
   * @return createdAt
   */
   @Schema(name = "createdAt", required = false)
-  public String getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 

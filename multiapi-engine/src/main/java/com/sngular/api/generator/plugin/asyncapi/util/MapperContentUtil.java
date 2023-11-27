@@ -46,7 +46,11 @@ public class MapperContentUtil {
 
   private static final String ARRAY = "array";
 
-  private static final String BIG_DECIMAL = "bigDecimal";
+  private static final String BIG_DECIMAL = "BigDecimal";
+
+  private static final String LOCAL_DATE = "LocalDate";
+
+  private static final String LOCAL_DATE_TIME = "LocalDateTime";
 
   private static final String MAP = "map";
 
@@ -137,6 +141,10 @@ public class MapperContentUtil {
       } else if (fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
                  || Objects.nonNull(fieldObject.getDataType()) && fieldObject.getDataType().equals(BIG_DECIMAL)) {
         importList.add("java.math.BigDecimal");
+      } else if (Objects.equals(fieldObject.getDataTypeSimple(), LOCAL_DATE)) {
+        importList.add("java.time.LocalDate");
+      } else if (Objects.equals(fieldObject.getDataTypeSimple(), LOCAL_DATE_TIME)) {
+        importList.add("java.time.LocalDateTime");
       }
     }
     return importList;
@@ -273,6 +281,7 @@ public class MapperContentUtil {
                           .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .build();
         setFieldProperties(fieldObject, schema);
+        setFormatProperies(fieldObject);
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
@@ -366,6 +375,14 @@ public class MapperContentUtil {
         default:
           break;
       }
+    }
+  }
+
+  private static void setFormatProperies(final SchemaFieldObject fieldObject) {
+    if (Objects.equals(fieldObject.getDataTypeSimple(), LOCAL_DATE)) {
+      fieldObject.getRestrictions().setFormat("dd-MM-yyyy");
+    } else if (Objects.equals(fieldObject.getDataTypeSimple(), LOCAL_DATE_TIME)) {
+      fieldObject.getRestrictions().setFormat("yyyy-MM-dd'T'HH:mm:ss");
     }
   }
 

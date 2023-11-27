@@ -26,7 +26,15 @@ public class MapperUtil {
 
   public static final String LONG = "long";
 
-  public static final String BIG_DECIMAL = "bigDecimal";
+  public static final String DATE = "date";
+  
+  public static final String DATE_TIME = "date-time";
+
+  public static final String BIG_DECIMAL = "BigDecimal";
+
+  public static final String LOCAL_DATE = "LocalDate";
+
+  public static final String LOCAL_DATE_TIME = "LocalDateTime";
 
   public static final String REF = "$ref";
 
@@ -47,7 +55,16 @@ public class MapperUtil {
       if (schema.has("format")) {
         format = schema.get("format").textValue();
       }
-      if (NUMBER.equalsIgnoreCase(type)) {
+      if ("string".equalsIgnoreCase(type)) {
+        type = "String";
+        if (format != null) {
+          if (DATE_TIME.equalsIgnoreCase(format)) {
+            type = LOCAL_DATE_TIME;
+          } else if (DATE.equalsIgnoreCase(format)) {
+            type = LOCAL_DATE;
+          }
+        }
+      } else if (NUMBER.equalsIgnoreCase(type)) {
         if (FLOAT.equalsIgnoreCase(format)) {
           type = FLOAT;
         } else if (DOUBLE.equalsIgnoreCase(format)) {
@@ -110,13 +127,7 @@ public class MapperUtil {
   private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, final String suffix) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
-      if ("string".equalsIgnoreCase(mapValueType.textValue())) {
-        typeMap = "String";
-      } else if (INTEGER.equalsIgnoreCase(mapValueType.textValue())) {
-        typeMap = "Integer";
-      } else {
-        typeMap = mapValueType.textValue();
-      }
+      typeMap = getSimpleType(mapNode, prefix, suffix);
     } else {
       final var valueSchema = mapNode.findPath(REF);
       if (Objects.nonNull(valueSchema)) {
