@@ -17,13 +17,6 @@ public class WaiterDTO {
   @JsonProperty(value ="table")
   private String table;
 
-  private WaiterDTO(String ref, String timestamp, String table) {
-    this.ref = ref;
-    this.timestamp = timestamp;
-    this.table = table;
-
-  }
-
   private WaiterDTO(WaiterDTOBuilder builder) {
     this.ref = builder.ref;
     this.timestamp = builder.timestamp;

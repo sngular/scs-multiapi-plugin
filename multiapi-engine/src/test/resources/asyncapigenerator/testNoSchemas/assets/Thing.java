@@ -13,11 +13,6 @@ public class Thing {
   @JsonProperty(value ="id")
   private Integer id;
 
-  private Thing(Integer id) {
-    this.id = id;
-
-  }
-
   private Thing(ThingBuilder builder) {
     this.id = builder.id;
 

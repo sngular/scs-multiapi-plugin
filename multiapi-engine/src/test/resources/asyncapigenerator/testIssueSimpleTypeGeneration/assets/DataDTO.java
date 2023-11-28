@@ -17,13 +17,6 @@ public class DataDTO {
   @JsonProperty(value ="flightNumber")
   private String flightNumber;
 
-  private DataDTO(Integer clientId, String clientName, String flightNumber) {
-    this.clientId = clientId;
-    this.clientName = clientName;
-    this.flightNumber = flightNumber;
-
-  }
-
   private DataDTO(DataDTOBuilder builder) {
     this.clientId = builder.clientId;
     this.clientName = builder.clientName;

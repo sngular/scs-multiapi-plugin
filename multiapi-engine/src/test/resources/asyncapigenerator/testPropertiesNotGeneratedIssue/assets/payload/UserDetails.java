@@ -17,13 +17,6 @@ public class UserDetails {
   @JsonProperty(value ="email")
   private String email;
 
-  private UserDetails(String firstName, String lastName, String email) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-
-  }
-
   private UserDetails(UserDetailsBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;

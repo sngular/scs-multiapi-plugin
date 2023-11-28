@@ -19,16 +19,9 @@ public class ObjectArrayDTO {
   @JsonProperty(value ="info")
   private String info;
 
-  private ObjectArrayDTO(Integer idObject, List<String> players, String info) {
-    this.idObject = idObject;
-    this.players = players;
-    this.info = info;
-
-  }
-
   private ObjectArrayDTO(ObjectArrayDTOBuilder builder) {
     this.idObject = builder.idObject;
-    this.players = builder.players;
+    this.players.addAll(builder.players);
     this.info = builder.info;
 
   }

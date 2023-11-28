@@ -6,6 +6,18 @@
         <#return propertyName+ender/>
     </#if>
 </#function>
+<#function requireFinal property>
+  <#if property.required || property.const?has_content>
+      <#return "final "/>
+  </#if>
+</#function>
+<#function hasConstValue value>
+    <#if value?has_content>
+        <#return "= " + value +";"/>
+    <#else >
+        <#return ";"/>
+    </#if>
+</#function>
 package ${packageModel};
 
 import java.util.Objects;
@@ -128,7 +140,7 @@ public class ${schema.className} {
   @Builder.Default
   private Map<String, ${field.dataType}> ${calculateSafeName (field.baseName, "")} = new HashMap<String, ${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
-  private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, hasConstValue(field.constValue))}
 
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
@@ -152,7 +164,7 @@ public class ${schema.className} {
     }
   }
   <#elseif field.dataTypeSimple?has_content>
-  private ${field.dataTypeSimple?cap_first} ${calculateSafeName (field.baseName, ";")};
+  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, hasConstValue(field.constValue))}
   </#if>
 
 </#list>

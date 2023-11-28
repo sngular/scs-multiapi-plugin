@@ -17,13 +17,6 @@ public class WaiterDTO {
   @JsonProperty(value ="abstract")
   private String _abstract;
 
-  private WaiterDTO(Boolean _new, String _private, String _abstract) {
-    this._new = _new;
-    this._private = _private;
-    this._abstract = _abstract;
-
-  }
-
   private WaiterDTO(WaiterDTOBuilder builder) {
     this._new = builder._new;
     this._private = builder._private;

@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.asyncapi.util;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -141,5 +142,7 @@ public class MapperUtil {
     return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
   }
 
-
+  protected static String getConstValue(final JsonNode schema) {
+    return ApiTool.hasNode(schema, "const") ? ApiTool.getNodeAsString(schema, "const") : null;
+  }
 }

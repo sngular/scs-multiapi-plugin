@@ -17,13 +17,6 @@ public class WaiterMapper {
   @JsonProperty(value ="table")
   private String table;
 
-  private WaiterMapper(String ref, String timestamp, String table) {
-    this.ref = ref;
-    this.timestamp = timestamp;
-    this.table = table;
-
-  }
-
   private WaiterMapper(WaiterMapperBuilder builder) {
     this.ref = builder.ref;
     this.timestamp = builder.timestamp;

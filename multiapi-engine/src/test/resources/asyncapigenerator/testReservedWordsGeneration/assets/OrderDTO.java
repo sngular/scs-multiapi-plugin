@@ -22,19 +22,11 @@ public class OrderDTO {
   @JsonProperty(value ="new")
   private List<OrderLineDTO> _new = new ArrayList<OrderLineDTO>();
 
-  private OrderDTO(String ref, String clientRef, BigDecimal amount, List<OrderLineDTO> _new) {
-    this.ref = ref;
-    this.clientRef = clientRef;
-    this.amount = amount;
-    this._new = _new;
-
-  }
-
   private OrderDTO(OrderDTOBuilder builder) {
     this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this._new = builder._new;
+    this._new.addAll(builder._new);
 
   }
 

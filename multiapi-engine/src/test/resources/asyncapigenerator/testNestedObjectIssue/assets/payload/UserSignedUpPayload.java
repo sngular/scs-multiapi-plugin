@@ -21,15 +21,6 @@ public class UserSignedUpPayload {
   @JsonProperty(value ="someOtherObject")
   private SomeOtherObject someOtherObject;
 
-  private UserSignedUpPayload(String firstName, String lastName, String email, String createdAt, SomeOtherObject someOtherObject) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.createdAt = createdAt;
-    this.someOtherObject = someOtherObject;
-
-  }
-
   private UserSignedUpPayload(UserSignedUpPayloadBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;

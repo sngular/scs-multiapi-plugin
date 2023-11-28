@@ -36,12 +36,6 @@ public class StatusMsgDTO {
     }
   }
 
-  private StatusMsgDTO(Integer clientId, Status status) {
-    this.clientId = clientId;
-    this.status = status;
-
-  }
-
   private StatusMsgDTO(StatusMsgDTOBuilder builder) {
     this.clientId = builder.clientId;
     this.status = builder.status;

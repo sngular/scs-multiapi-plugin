@@ -39,13 +39,6 @@ public class CustomerEventPayloadDTO {
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
 
-  private CustomerEventPayloadDTO(String customerId, EventType eventType, CustomerDTO customer) {
-    this.customerId = customerId;
-    this.eventType = eventType;
-    this.customer = customer;
-
-  }
-
   private CustomerEventPayloadDTO(CustomerEventPayloadDTOBuilder builder) {
     this.customerId = builder.customerId;
     this.eventType = builder.eventType;

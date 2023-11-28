@@ -15,12 +15,6 @@ public class CreateOrderMapper {
   @JsonProperty(value ="waiter")
   private WaiterMapper waiter;
 
-  private CreateOrderMapper(OrderMapper order, WaiterMapper waiter) {
-    this.order = order;
-    this.waiter = waiter;
-
-  }
-
   private CreateOrderMapper(CreateOrderMapperBuilder builder) {
     this.order = builder.order;
     this.waiter = builder.waiter;

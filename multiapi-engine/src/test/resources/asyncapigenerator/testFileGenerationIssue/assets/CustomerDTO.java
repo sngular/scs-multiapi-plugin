@@ -36,17 +36,6 @@ public class CustomerDTO {
   @NotNull
   private final String username;
 
-  private CustomerDTO(String id, String firstName, String lastName, String password, String email, String username) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.password = password;
-    this.email = email;
-    this.username = username;
-
-    validateRequiredAttributes();
-  }
-
   private CustomerDTO(CustomerDTOBuilder builder) {
     this.id = builder.id;
     this.firstName = builder.firstName;

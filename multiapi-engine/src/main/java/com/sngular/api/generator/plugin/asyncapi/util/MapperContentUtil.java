@@ -271,6 +271,7 @@ public class MapperContentUtil {
                           .restrictions(new SchemaFieldObjectProperties())
                           .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .constValue(MapperUtil.getConstValue(schema))
                           .build();
         setFieldProperties(fieldObject, schema);
         fieldObject.setRequired(required);
@@ -286,6 +287,7 @@ public class MapperContentUtil {
                         .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                         .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                         .restrictions(new SchemaFieldObjectProperties())
+                        .constValue(MapperUtil.getConstValue(schema))
                         .build();
     }
     return fieldObject;

@@ -22,19 +22,11 @@ public class OrderMapper {
   @JsonProperty(value ="lines")
   private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
 
-  private OrderMapper(String ref, String clientRef, BigDecimal amount, List<OrderLineMapper> lines) {
-    this.ref = ref;
-    this.clientRef = clientRef;
-    this.amount = amount;
-    this.lines = lines;
-
-  }
-
   private OrderMapper(OrderMapperBuilder builder) {
     this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this.lines = builder.lines;
+    this.lines.addAll(builder.lines);
 
   }
 

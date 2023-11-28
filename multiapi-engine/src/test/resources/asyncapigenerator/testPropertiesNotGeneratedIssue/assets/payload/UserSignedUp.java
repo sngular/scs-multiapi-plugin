@@ -15,12 +15,6 @@ public class UserSignedUp {
   @JsonProperty(value ="details")
   private UserDetails details;
 
-  private UserSignedUp(String id, UserDetails details) {
-    this.id = id;
-    this.details = details;
-
-  }
-
   private UserSignedUp(UserSignedUpBuilder builder) {
     this.id = builder.id;
     this.details = builder.details;
