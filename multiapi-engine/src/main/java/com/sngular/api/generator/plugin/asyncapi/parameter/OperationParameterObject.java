@@ -13,6 +13,7 @@
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,10 @@ public final class OperationParameterObject {
 
   public List<String> getOperationIds() {
     return StringUtils.isEmpty(ids) ? List.of() : List.of(ids.replace(" ", "").split(","));
+  }
+  
+  public Map<String, String> getFormats() {
+    return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
   }
 
 }

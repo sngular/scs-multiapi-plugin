@@ -61,19 +61,19 @@ public class MapperContentUtil {
   public static List<SchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
       final String prefix, final String suffix, final String parentPackage,
-      final String dateTimeFormat, final String dateFormat) {
+      final Map<String, String> formats) {
     final List<SchemaObject> schemasList = new ArrayList<>();
     if (Objects.nonNull(model)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
       final List<String> alreadyBuilt = new ArrayList<>();
-      schemasList.add(buildSchemaObject(totalSchemas, component, model, prefix, suffix, modelToBuildList, parentPackage, dateTimeFormat, dateFormat));
+      schemasList.add(buildSchemaObject(totalSchemas, component, model, prefix, suffix, modelToBuildList, parentPackage, formats));
       while (!modelToBuildList.isEmpty()) {
 
         final var modelToBuild = modelToBuildList.remove();
         if (!alreadyBuilt.contains(modelToBuild)) {
           final var path = MapperUtil.splitName(modelToBuild);
           final var nexElement = buildSchemaObject(totalSchemas, modelToBuild, totalSchemas.get(getComponent(path)),
-                                                   prefix, suffix, modelToBuildList, getParentName(path), dateTimeFormat, dateFormat);
+                                                   prefix, suffix, modelToBuildList, getParentName(path), formats);
           if (schemasList.contains(nexElement)) {
             modelToBuildList.poll();
           } else {
@@ -109,9 +109,9 @@ public class MapperContentUtil {
   private static SchemaObject buildSchemaObject(
       final Map<String, JsonNode> totalSchemas, final String component, final JsonNode model,
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String parentPackage,
-      final String dateTimeFormat, final String dateFormat) {
+      final Map<String, String> formats) {
 
-    final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList, parentPackage, dateTimeFormat, dateFormat);
+    final var listSchema = getFields(totalSchemas, model, true, prefix, suffix, modelToBuildList, parentPackage, formats);
     final var splitPackage = MapperUtil.splitName(component);
     final String className = splitPackage[splitPackage.length - 1];
     return SchemaObject.builder()
@@ -161,30 +161,30 @@ public class MapperContentUtil {
 
   private static List<SchemaFieldObject> getFields(
       final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
-      final String suffix, final Collection<String> modelToBuildList, final String parentPackage, final String dateTimeFormat, final String dateFormat) {
+      final String suffix, final Collection<String> modelToBuildList, final String parentPackage, final Map<String, String> formats) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
       if (OBJECT.equalsIgnoreCase(model.get(TYPE).textValue())) {
-        fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage, dateTimeFormat, dateFormat));
+        fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage, formats));
       } else if (ARRAY.equalsIgnoreCase(model.get(TYPE).textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage, null, dateTimeFormat, dateFormat));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage, null, formats));
       } else if ("enum".equalsIgnoreCase(model.get(TYPE).textValue())) {
-        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage, null, dateTimeFormat, dateFormat));
+        fieldObjectArrayList.add(processFieldObjectList(totalSchemas, "", model, required, prefix, suffix, modelToBuildList, parentPackage, null, formats));
       }
     } else if (ApiTool.hasRef(model)) {
       final var splitName = MapperUtil.splitName(ApiTool.getRefValue(model));
       fieldObjectArrayList.addAll(processFieldObject(totalSchemas, totalSchemas.get(MapperUtil.buildKey(splitName)), prefix, suffix,
-                                                     modelToBuildList, parentPackage, dateTimeFormat, dateFormat));
+                                                     modelToBuildList, parentPackage, formats));
     } else if (model.elements().hasNext()) {
-      fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage, dateTimeFormat, dateFormat));
+      fieldObjectArrayList.addAll(processFieldObject(totalSchemas, model, prefix, suffix, modelToBuildList, parentPackage, formats));
     }
     return fieldObjectArrayList;
   }
 
   private static List<SchemaFieldObject> processFieldObject(
       final Map<String, JsonNode> totalSchemas, final JsonNode model, final String prefix, final String suffix, final Collection<String> modelToBuildList,
-      final String parentPackage, final String dateTimeFormat, final String dateFormat) {
+      final String parentPackage, final Map<String, String> formats) {
     final Set<String> requiredSet = new HashSet<>();
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     if (model.has("required")) {
@@ -198,19 +198,19 @@ public class MapperContentUtil {
       while (propertiesIt.hasNext()) {
         final var property = propertiesIt.next();
         fieldObjectArrayList.add(processFieldObjectList(totalSchemas, property, model.get(PROPERTIES).path(property), requiredSet.contains(property), prefix, suffix,
-                                                        modelToBuildList, parentPackage, null, dateTimeFormat, dateFormat));
+                                                        modelToBuildList, parentPackage, null, formats));
         if (model.get(PROPERTIES).path(property).has(REF) && !totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
           modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
         }
       }
     } else if (properties.has(ALL_OF)) {
-      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ALL_OF), true, prefix, suffix, modelToBuildList, dateTimeFormat, dateFormat));
+      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ALL_OF), true, prefix, suffix, modelToBuildList, formats));
       schemaCombinatorType = ALL_OF;
     } else if (properties.has(ANY_OF)) {
-      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ANY_OF), false, prefix, suffix, modelToBuildList, dateTimeFormat, dateFormat));
+      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ANY_OF), false, prefix, suffix, modelToBuildList, formats));
       schemaCombinatorType = ANY_OF;
     } else if (properties.has(ONE_OF)) {
-      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ONE_OF), false, prefix, suffix, modelToBuildList, dateTimeFormat, dateFormat));
+      fieldObjectArrayList.addAll(processAllOfAnyOfOneOf(totalSchemas, properties.get(ONE_OF), false, prefix, suffix, modelToBuildList, formats));
       schemaCombinatorType = ONE_OF;
     }
     return fieldObjectArrayList;
@@ -218,26 +218,26 @@ public class MapperContentUtil {
 
   private static List<SchemaFieldObject> processAllOfAnyOfOneOf(
       final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final boolean required, final String prefix, final String suffix,
-      final Collection<String> modelToBuildList, final String dateTimeFormat, final String dateFormat) {
+      final Collection<String> modelToBuildList, final Map<String, String> formats) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
 
     allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, required, prefix, suffix, element, 
-        modelToBuildList, dateTimeFormat, dateFormat)));
+        modelToBuildList, formats)));
     return fieldObjectArrayList;
   }
 
   private static SchemaFieldObject solveElement(
       final Map<String, JsonNode> totalSchemas, final boolean required, final String prefix, final String suffix,
-      final JsonNode element, final Collection<String> modelToBuildList, final String dateTimeFormat, final String dateFormat) {
+      final JsonNode element, final Collection<String> modelToBuildList, final Map<String, String> formats) {
     final SchemaFieldObject result;
     if (element.has(REF)) {
       final String schemaName = MapperUtil.getLongRefClass(element);
       final var schemaToProcess = totalSchemas.get(schemaName.toUpperCase());
-      result = processFieldObjectList(totalSchemas, schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList, null, null, dateTimeFormat, dateFormat);
+      result = processFieldObjectList(totalSchemas, schemaName, schemaToProcess, required, prefix, suffix, modelToBuildList, null, null, formats);
       result.setRequired(false);
     } else {
-      result = processFieldObjectList(totalSchemas, "", element, required, prefix, suffix, modelToBuildList, null, null, dateTimeFormat, dateFormat);
+      result = processFieldObjectList(totalSchemas, "", element, required, prefix, suffix, modelToBuildList, null, null, formats);
     }
     return result;
   }
@@ -245,7 +245,7 @@ public class MapperContentUtil {
   private static SchemaFieldObject processFieldObjectList(
       final Map<String, JsonNode> totalSchemas, final String propertyName, final JsonNode schema, final boolean required,
       final String prefix, final String suffix, final Collection<String> modelToBuildList, final String modelPackage, final String className,
-      final String dateTimeFormat, final String dateFormat) {
+      final Map<String, String> formats) {
     final SchemaFieldObject fieldObject;
     final var name = schema.has("name") ? schema.get("name").textValue() : propertyName;
     if (ApiTool.hasType(schema)) {
@@ -258,7 +258,7 @@ public class MapperContentUtil {
                 .restrictions(new SchemaFieldObjectProperties())
                 .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
                 .build();
-        setFieldType(fieldObject, schema, required, prefix, suffix, className, dateTimeFormat, dateFormat);
+        setFieldType(fieldObject, schema, required, prefix, suffix, className, formats);
         final var schemaName = StringUtils.defaultString(className, propertyName);
         if (StringUtils.isNotEmpty(schemaName) && !totalSchemas.containsKey(createKey(modelPackage, schemaName.toUpperCase(), "/"))) {
           totalSchemas.put(createKey(modelPackage, schemaName.toUpperCase(), "/"), schema);
@@ -280,7 +280,7 @@ public class MapperContentUtil {
                 .dataTypeSimple(type)
                 .importClass(getImportClass(arrayType))
                 .build();
-        setFormatProperies(fieldObject, arrayType, dateTimeFormat, dateFormat);
+        setFormatProperies(fieldObject, arrayType, formats);
         handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (ApiTool.isEnum(schema)) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
@@ -293,14 +293,14 @@ public class MapperContentUtil {
                           .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
                           .build();
         setFieldProperties(fieldObject, schema);
-        setFormatProperies(fieldObject, fieldObject.getDataTypeSimple(), dateTimeFormat, dateFormat);
+        setFormatProperies(fieldObject, fieldObject.getDataTypeSimple(), formats);
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
       final var splitName = MapperUtil.splitName(ApiTool.getRefValue(schema));
       final var solvedRef = totalSchemas.get(getComponent(splitName));
       fieldObject = processFieldObjectList(totalSchemas, name, solvedRef, required, prefix, suffix, modelToBuildList, modelPackage,
-          splitName[splitName.length - 1], dateTimeFormat, dateFormat);
+          splitName[splitName.length - 1], formats);
     } else {
       fieldObject = SchemaFieldObject
                         .builder()
@@ -391,23 +391,23 @@ public class MapperContentUtil {
     }
   }
 
-  private static void setFormatProperies(final SchemaFieldObject fieldObject, final String dataType, final String dateTimeFormat, final String dateFormat) {
+  private static void setFormatProperies(final SchemaFieldObject fieldObject, final String dataType, final Map<String, String> formats) {
     if (Objects.equals(dataType, LOCAL_DATE)) {
-      fieldObject.getRestrictions().setFormat(dateFormat);
+      fieldObject.getRestrictions().setFormat(formats.get("DATE"));
     } else if (Objects.equals(dataType, LOCAL_DATE_TIME)) {
-      fieldObject.getRestrictions().setFormat(dateTimeFormat);
+      fieldObject.getRestrictions().setFormat(formats.get("DATE_TIME"));
     }
   }
 
   private static void setFieldType(final SchemaFieldObject field, final JsonNode value, final boolean required, final String prefix, final String suffix, final String className,
-      final String dateTimeFormat, final String dateFormat) {
+      final Map<String, String> formats) {
     field.setRequired(required);
     if (ApiTool.hasType(value)) {
       if (ARRAY.equalsIgnoreCase(ApiTool.getType(value))) {
         final var typeArray = MapperUtil.getTypeArray(value, prefix, suffix);
         field.setDataType(typeArray);
         field.setImportClass(getImportClass(typeArray));
-        setFormatProperies(field, typeArray, dateTimeFormat, dateFormat);
+        setFormatProperies(field, typeArray, formats);
       } else if (ApiTool.getType(value).equalsIgnoreCase(OBJECT)) {
         if (value.has("additionalProperties")) {
           final var typeMap = MapperUtil.getTypeMap(value, prefix, suffix);
