@@ -32,7 +32,9 @@ public class UserDetails {
   public static class UserDetailsBuilder {
 
     private String firstName;
+
     private String lastName;
+
     private String email;
 
     public UserDetails.UserDetailsBuilder firstName(String firstName) {

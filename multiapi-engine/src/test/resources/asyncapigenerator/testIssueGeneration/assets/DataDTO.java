@@ -32,7 +32,9 @@ public class DataDTO {
   public static class DataDTOBuilder {
 
     private Integer clientId;
+
     private String clientName;
+
     private String flightNumber;
 
     public DataDTO.DataDTOBuilder clientId(Integer clientId) {

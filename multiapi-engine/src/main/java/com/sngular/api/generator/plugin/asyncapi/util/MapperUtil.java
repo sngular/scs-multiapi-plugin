@@ -142,7 +142,7 @@ public class MapperUtil {
     return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
   }
 
-  protected static String getConstValue(final JsonNode schema) {
-    return ApiTool.hasNode(schema, "const") ? ApiTool.getNodeAsString(schema, "const") : null;
+  protected static Object getConstValue(final JsonNode schema) {
+    return ApiTool.hasNode(schema, "const") ? ApiTool.getNodeAsObject(schema, "const") : null;
   }
 }

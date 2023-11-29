@@ -15,19 +15,35 @@
         <#return propertyName/>
     </#if>
 </#function>
-<#function requireFinal field="">
+<#function requireFinal field>
     <#if field.required == true || field.constValue??>
       <#return "final "/>
     <#else >
         <#return ""/>
     </#if>
 </#function>
-<#function hasConstValue field>
-    <#if field.constValue?has_content>
-        <#return "= " + field.constValue + ";"/>
+<#function checkIfShouldSet field>
+    <#if field.required == true || field.constValue??>
+        <#return false/>
+    <#else >
+        <#return true/>
+    </#if>
+</#function>
+<#function hasConstValue value="">
+    <#if value?has_content>
+        <#return " = " + renderValue (value) + ";"/>
     <#else >
         <#return ";"/>
     </#if>
+</#function>
+<#function renderValue value="">
+  <#if value?is_boolean>
+    <#return value == true>
+  <#elseif value?is_number>
+    <#return value>
+  <#elseif value?is_string>
+    <#return '\"${value}\"'?no_esc>
+  </#if>
 </#function>
 package ${packageModel};
 
@@ -154,7 +170,7 @@ public class ${schema.className} {
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
   private ${requireFinal (field)}Map<String, ${field.dataType}> ${calculateSafeName (field.baseName,"")} = new HashMap<String, <#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}>();
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
-  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, hasConstValue(field.constValue))}
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as value>
     ${value?upper_case}("${value?no_esc}")<#sep>,
@@ -222,10 +238,10 @@ public class ${schema.className} {
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
     private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
   <#else>
-    private <#if field.parentPackage??>${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first}<#else>${field.dataTypeSimple?cap_first}</#if> ${calculateSafeName (field.baseName, ";")}
+    private <#if field.parentPackage??>${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first}<#else>${field.dataTypeSimple?cap_first}</#if> ${calculateSafeName (field.baseName, hasConstValue(field.constValue))}
   </#if>
-</#list>
 
+</#list>
 <#list schema.fieldObjectList as field>
   <#if field.dataType?has_content && field.dataTypeSimple == "array">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
@@ -243,6 +259,7 @@ public class ${schema.className} {
       }
       return this;
     }
+
   <#elseif field.dataType?has_content && field.dataTypeSimple == "map">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
     public ${schema.className}.${schema.className}Builder ${propName}(Map<String, ${field.dataType}> ${propName}) {
@@ -254,12 +271,14 @@ public class ${schema.className} {
       this.${propName}.put(key, value);
       return this;
     }
+
   <#elseif field.dataType?has_content && field.dataTypeSimple == "enum">
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
-  <#else>
+
+  <#elseif !(field.constValue??)>
     <#if field.parentPackage??>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first} ${calculateSafeName (field.baseName, "")}) {
     <#else>
@@ -268,8 +287,8 @@ public class ${schema.className} {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, "")};
       return this;
     }
-  </#if>
 
+  </#if>
   </#list>
     public ${schema.className} build() {
       ${schema.className} ${schema.className?uncap_first} = new ${schema.className}(this);
@@ -287,7 +306,7 @@ public class ${schema.className} {
   public List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> get${field.baseName?cap_first}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
-  <#if field.required == false>
+  <#if checkIfShouldSet (field)>
   public void set${field.baseName?cap_first}(List<<#if field.parentPackage??>${packageModel}.${field.parentPackage}.</#if>${field.dataType}> ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
@@ -296,7 +315,7 @@ public class ${schema.className} {
   public Map<String, ${field.dataType}> get${field.baseName?cap_first}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
-  <#if field.required == false>
+  <#if checkIfShouldSet (field)>
   public void set${field.baseName?cap_first}(Map<String, ${field.dataType}> ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
@@ -305,7 +324,7 @@ public class ${schema.className} {
   public ${field.baseName?cap_first} get${field.baseName?cap_first}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
-  <#if field.required == false>
+  <#if checkIfShouldSet (field)>
   public void set${field.baseName?cap_first}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
@@ -318,7 +337,7 @@ public class ${schema.className} {
   </#if>
     return ${calculateSafeName (field.baseName, ";")}
   }
-  <#if field.required == false>
+  <#if checkIfShouldSet (field)>
     <#if field.parentPackage??>
   public void set${field.baseName?cap_first}(${packageModel}.${field.parentPackage}.${field.dataTypeSimple?cap_first} ${field.baseName?uncap_first}) {
     <#else>

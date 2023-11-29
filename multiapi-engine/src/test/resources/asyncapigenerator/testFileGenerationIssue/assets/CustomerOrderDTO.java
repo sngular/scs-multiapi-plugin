@@ -68,11 +68,17 @@ public class CustomerOrderDTO {
   public static class CustomerOrderDTOBuilder {
 
     private String id;
+
     private String date;
+
     private ShippingDetailsDTO shippingDetails;
+
     private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+
     private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+
     private Status status;
+
     private CustomerDTO customer;
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {

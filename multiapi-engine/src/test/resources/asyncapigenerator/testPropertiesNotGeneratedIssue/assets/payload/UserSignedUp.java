@@ -29,6 +29,7 @@ public class UserSignedUp {
   public static class UserSignedUpBuilder {
 
     private String id;
+
     private UserDetails details;
 
     public UserSignedUp.UserSignedUpBuilder id(String id) {

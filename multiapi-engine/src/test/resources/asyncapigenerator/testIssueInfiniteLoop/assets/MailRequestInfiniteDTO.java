@@ -34,7 +34,9 @@ public class MailRequestInfiniteDTO {
   public static class MailRequestInfiniteDTOBuilder {
 
     private String sender;
+
     private List<String> recipients = new ArrayList<String>();
+
     private ConfigDTO config;
 
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder sender(String sender) {

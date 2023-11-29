@@ -32,7 +32,9 @@ public class WaiterDTO {
   public static class WaiterDTOBuilder {
 
     private Boolean _new;
+
     private String _private;
+
     private String _abstract;
 
     public WaiterDTO.WaiterDTOBuilder _new(Boolean _new) {

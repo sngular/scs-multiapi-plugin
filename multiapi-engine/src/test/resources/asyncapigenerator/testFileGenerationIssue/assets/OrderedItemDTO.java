@@ -42,8 +42,11 @@ public class OrderedItemDTO {
   public static class OrderedItemDTOBuilder {
 
     private Long catalogItemId;
+
     private String name;
+
     private Integer quantity;
+
     private Double price;
 
     public OrderedItemDTO.OrderedItemDTOBuilder catalogItemId(Long catalogItemId) {

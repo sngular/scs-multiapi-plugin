@@ -36,6 +36,7 @@ public class OrderLineDTO {
   public static class OrderLineDTOBuilder {
 
     private String ref;
+
     private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
 
     public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {

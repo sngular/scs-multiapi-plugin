@@ -29,6 +29,7 @@ public class CreateOrderMapper {
   public static class CreateOrderMapperBuilder {
 
     private OrderMapper order;
+
     private WaiterMapper waiter;
 
     public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {

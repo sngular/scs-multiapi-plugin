@@ -38,8 +38,11 @@ public class OrderDTO {
   public static class OrderDTOBuilder {
 
     private String ref;
+
     private String clientRef;
+
     private BigDecimal amount;
+
     private List<OrderLineDTO> _new = new ArrayList<OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {

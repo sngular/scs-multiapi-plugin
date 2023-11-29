@@ -32,7 +32,9 @@ public class WaiterDTO {
   public static class WaiterDTOBuilder {
 
     private String ref;
+
     private String timestamp;
+
     private String table;
 
     public WaiterDTO.WaiterDTOBuilder ref(String ref) {

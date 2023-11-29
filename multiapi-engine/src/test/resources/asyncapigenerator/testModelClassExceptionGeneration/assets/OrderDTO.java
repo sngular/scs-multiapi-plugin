@@ -37,8 +37,11 @@ public class OrderDTO {
   public static class OrderDTOBuilder {
 
     private String ref;
+
     private String clientRef;
+
     private String amount;
+
     private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {

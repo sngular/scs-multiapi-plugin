@@ -60,8 +60,11 @@ public class DataDTO {
   public static class DataDTOBuilder {
 
     private Integer clientId;
+
     private String clientName;
+
     private String flightNumber;
+
     private List<integer> test = new ArrayList<integer>();
 
     public DataDTO.DataDTOBuilder clientId(Integer clientId) {

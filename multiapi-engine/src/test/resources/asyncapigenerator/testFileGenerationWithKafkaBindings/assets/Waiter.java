@@ -32,7 +32,9 @@ public class Waiter {
   public static class WaiterBuilder {
 
     private String ref;
+
     private String timestamp;
+
     private String table;
 
     public Waiter.WaiterBuilder ref(String ref) {

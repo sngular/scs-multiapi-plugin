@@ -32,7 +32,9 @@ public class WaiterMapper {
   public static class WaiterMapperBuilder {
 
     private String ref;
+
     private String timestamp;
+
     private String table;
 
     public WaiterMapper.WaiterMapperBuilder ref(String ref) {

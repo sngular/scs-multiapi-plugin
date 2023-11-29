@@ -54,7 +54,9 @@ public class CustomerOrderEventPayloadDTO {
   public static class CustomerOrderEventPayloadDTOBuilder {
 
     private String customerOrderId;
+
     private EventType eventType;
+
     private CustomerOrderDTO customerOrder;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {

@@ -42,8 +42,11 @@ public class OrderProductDTO {
   public static class OrderProductDTOBuilder {
 
     private String ref;
+
     private String productRef;
+
     private String price;
+
     private String quantity;
 
     public OrderProductDTO.OrderProductDTOBuilder ref(String ref) {

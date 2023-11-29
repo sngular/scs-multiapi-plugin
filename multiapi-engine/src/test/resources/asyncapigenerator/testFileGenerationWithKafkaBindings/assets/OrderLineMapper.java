@@ -36,6 +36,7 @@ public class OrderLineMapper {
   public static class OrderLineMapperBuilder {
 
     private String ref;
+
     private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
 
     public OrderLineMapper.OrderLineMapperBuilder ref(String ref) {

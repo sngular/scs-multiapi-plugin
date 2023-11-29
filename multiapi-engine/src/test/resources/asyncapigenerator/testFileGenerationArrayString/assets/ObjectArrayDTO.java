@@ -34,7 +34,9 @@ public class ObjectArrayDTO {
   public static class ObjectArrayDTOBuilder {
 
     private Integer idObject;
+
     private List<String> players = new ArrayList<String>();
+
     private String info;
 
     public ObjectArrayDTO.ObjectArrayDTOBuilder idObject(Integer idObject) {

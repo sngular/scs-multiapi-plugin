@@ -38,8 +38,11 @@ public class OrderMapper {
   public static class OrderMapperBuilder {
 
     private String ref;
+
     private String clientRef;
+
     private BigDecimal amount;
+
     private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
 
     public OrderMapper.OrderMapperBuilder ref(String ref) {

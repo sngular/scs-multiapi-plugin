@@ -9,6 +9,8 @@
 <#function requireFinal property>
   <#if property.required || property.const?has_content>
       <#return "final "/>
+  <#else >
+      <#return ""/>
   </#if>
 </#function>
 <#function hasConstValue value>

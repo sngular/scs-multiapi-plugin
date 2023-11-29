@@ -42,8 +42,11 @@ public class OrderProductMapper {
   public static class OrderProductMapperBuilder {
 
     private String ref;
+
     private String productRef;
+
     private String price;
+
     private String quantity;
 
     public OrderProductMapper.OrderProductMapperBuilder ref(String ref) {

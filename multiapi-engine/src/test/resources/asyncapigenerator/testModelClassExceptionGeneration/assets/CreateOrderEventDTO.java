@@ -29,6 +29,7 @@ public class CreateOrderEventDTO {
   public static class CreateOrderEventDTOBuilder {
 
     private OrderDTO order;
+
     private WaiterDTO waiter;
 
     public CreateOrderEventDTO.CreateOrderEventDTOBuilder order(OrderDTO order) {

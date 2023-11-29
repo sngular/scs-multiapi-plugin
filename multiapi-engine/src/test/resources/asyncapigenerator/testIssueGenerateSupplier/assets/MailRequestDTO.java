@@ -34,7 +34,9 @@ public class MailRequestDTO {
   public static class MailRequestDTOBuilder {
 
     private String sender;
+
     private List<String> recipients = new ArrayList<String>();
+
     private ConfigurationDTO config;
 
     public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {

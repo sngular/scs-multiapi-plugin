@@ -36,6 +36,7 @@ public class OrderLineDTO {
   public static class OrderLineDTOBuilder {
 
     private BigDecimal _byte;
+
     private List<String> _continue = new ArrayList<String>();
 
     public OrderLineDTO.OrderLineDTOBuilder _byte(BigDecimal _byte) {

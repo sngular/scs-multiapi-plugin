@@ -29,6 +29,7 @@ public class CreateOrderDTO {
   public static class CreateOrderDTOBuilder {
 
     private OrderDTO order;
+
     private WaiterDTO waiter;
 
     public CreateOrderDTO.CreateOrderDTOBuilder order(OrderDTO order) {

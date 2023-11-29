@@ -50,6 +50,7 @@ public class StatusMsgDTO {
   public static class StatusMsgDTOBuilder {
 
     private Integer clientId;
+
     private Status status;
 
     public StatusMsgDTO.StatusMsgDTOBuilder clientId(Integer clientId) {
