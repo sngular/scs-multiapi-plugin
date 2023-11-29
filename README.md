@@ -315,8 +315,8 @@ can be configured in the plugin.
       information about how his parameter works, and the values it could have.
   - **dateFormat**: This parameter changes the format for `LocalDate` fields.
       The default value are `yyyy-MM-dd`.
-  - **dateTimeFormat**: This parameter changes the format for `LocalDateTime` fields.
-      The default value are `yyyy-MM-dd'T'HH:mm:ss`.
+  - **dateTimeFormat**: This parameter changes the format for `LocalDateTime`
+      fields. The default value are `yyyy-MM-dd'T'HH:mm:ss`.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
