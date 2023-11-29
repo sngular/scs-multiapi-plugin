@@ -313,9 +313,9 @@ can be configured in the plugin.
       created by the user. As the previous parameter, this is also optional.
       Check [how is the modelPackage set](#how-is-modelpackage-set) for more
       information about how his parameter works, and the values it could have.
-  - **dateFormat**: This parameter changes the format for `LocalDate` fields. 
+  - **dateFormat**: This parameter changes the format for `LocalDate` fields.
       The default value are `yyyy-MM-dd`.
-  - **dateTimeFormat**: This parameter changes the format for `LocalDateTime` fields. 
+  - **dateTimeFormat**: This parameter changes the format for `LocalDateTime` fields.
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
