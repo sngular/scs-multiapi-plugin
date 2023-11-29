@@ -475,7 +475,8 @@ public class AsyncApiGenerator {
     final JsonNode schemaToBuild = processedMethod.getPayload();
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
-          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage).iterator();
+          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage,
+              operationObject.getDateTimeFormat(), operationObject.getDateFormat()).iterator();
 
       if (schemaObjectIt.hasNext()) {
         final var filePath = writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());

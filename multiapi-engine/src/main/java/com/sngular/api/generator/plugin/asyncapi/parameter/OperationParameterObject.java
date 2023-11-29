@@ -38,6 +38,12 @@ public final class OperationParameterObject {
 
   private boolean useLombokModelAnnotation;
 
+  @Builder.Default
+  private String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
+
+  @Builder.Default
+  private String dateFormat = "yyyy-MM-dd";
+
   private List<String> operationIds;
 
   public List<String> getOperationIds() {
