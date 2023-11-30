@@ -6,16 +6,9 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
