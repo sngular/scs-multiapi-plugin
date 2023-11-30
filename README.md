@@ -313,10 +313,10 @@ can be configured in the plugin.
       created by the user. As the previous parameter, this is also optional.
       Check [how is the modelPackage set](#how-is-modelpackage-set) for more
       information about how his parameter works, and the values it could have.
-  - **dateFormat**: This parameter changes the format annotation for `LocalDate` fields.
+  -  **dateFormat**: This parameter changes the format annotation for `LocalDate` fields.
       The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd`.
-  - **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
+  -  **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
       fields. The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
 

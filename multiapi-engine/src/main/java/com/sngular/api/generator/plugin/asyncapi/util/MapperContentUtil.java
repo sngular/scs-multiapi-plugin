@@ -285,15 +285,16 @@ public class MapperContentUtil {
       } else if (ApiTool.isEnum(schema)) {
         fieldObject = processEnumField(name, required, schema, prefix, suffix);
       } else {
+        final String simpleType = MapperUtil.getSimpleType(schema, prefix, suffix);
         fieldObject = SchemaFieldObject
                           .builder()
                           .baseName(name)
                           .restrictions(new SchemaFieldObjectProperties())
-                          .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-                          .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                          .dataType(simpleType)
+                          .dataTypeSimple(simpleType)
                           .build();
         setFieldProperties(fieldObject, schema);
-        setFormatProperies(fieldObject, fieldObject.getDataTypeSimple(), formats);
+        setFormatProperies(fieldObject, simpleType, formats);
         fieldObject.setRequired(required);
       }
     } else if (ApiTool.hasRef(schema)) {
@@ -302,11 +303,12 @@ public class MapperContentUtil {
       fieldObject = processFieldObjectList(totalSchemas, name, solvedRef, required, prefix, suffix, modelToBuildList, modelPackage,
           splitName[splitName.length - 1], formats);
     } else {
+      final String simpleType = MapperUtil.getSimpleType(schema, prefix, suffix);
       fieldObject = SchemaFieldObject
                         .builder()
                         .baseName(name)
-                        .dataType(MapperUtil.getSimpleType(schema, prefix, suffix))
-                        .dataTypeSimple(MapperUtil.getSimpleType(schema, prefix, suffix))
+                        .dataType(simpleType)
+                        .dataTypeSimple(simpleType)
                         .restrictions(new SchemaFieldObjectProperties())
                         .build();
     }
