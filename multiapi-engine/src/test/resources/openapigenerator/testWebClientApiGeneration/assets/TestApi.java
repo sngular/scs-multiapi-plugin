@@ -62,7 +62,7 @@ public class TestApi {
 
     String[] localVarAuthNames = new String[] {"BasicAuth"};
 
-    ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
+    ParameterizedTypeReference<List<ApiTestDTO>> localVarReturnType = new ParameterizedTypeReference<List<ApiTestDTO>>() {};
     return apiWebClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
@@ -72,14 +72,14 @@ public class TestApi {
    * @return A paged array of tests; (status code 200)
    * @throws WebClientResponseException if an error occurs while attempting to invoke the API
    */
-  public Mono<ApiTestDTO> listTest() throws WebClientResponseException {
+  public Flux<ApiTestDTO> listTest() throws WebClientResponseException {
     ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-    return listTestRequestCreation().bodyToMono(localVarReturnType);
+    return listTestRequestCreation().bodyToFlux(localVarReturnType);
   }
 
-  public Mono<ResponseEntity<ApiTestDTO>> listTestWithHttpInfo() throws WebClientResponseException {
+  public Flux<ResponseEntity<ApiTestDTO>> listTestWithHttpInfo() throws WebClientResponseException {
     ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
-    return listTestRequestCreation().toEntity(localVarReturnType);
+    return listTestRequestCreation().toEntityList(localVarReturnType);
   }
 
   /**
