@@ -9,6 +9,8 @@ package com.sngular.api.generator.plugin.asyncapi.util;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.TimeType;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,6 +38,8 @@ public class MapperUtil {
 
   public static final String LOCAL_DATE_TIME = "LocalDateTime";
 
+  public static final String ZONED_DATE_TIME = "ZonedDateTime";
+
   public static final String REF = "$ref";
 
   private static final String DIVISOR = "([./])";
@@ -44,7 +48,8 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix) {
+  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix, 
+      final TimeType useTimeType) {
     String type = schema.textValue();
     if (schema.has("type")) {
       type = schema.get("type").textValue();
@@ -56,7 +61,7 @@ public class MapperUtil {
         format = schema.get("format").textValue();
       }
       if ("string".equalsIgnoreCase(type)) {
-        type = formatTypeOfString(format);
+        type = formatTypeOfString(format, useTimeType);
       } else if (NUMBER.equalsIgnoreCase(type)) {
         if (FLOAT.equalsIgnoreCase(format)) {
           type = FLOAT;
@@ -78,11 +83,18 @@ public class MapperUtil {
     return type;
   }
 
-  public static String formatTypeOfString(final String format) {
+  public static String formatTypeOfString(final String format, final TimeType useTimeType) {
     String type = "String";
     if (format != null) {
       if (DATE_TIME.equalsIgnoreCase(format)) {
-        type = LOCAL_DATE_TIME;
+        switch(useTimeType) {
+        case ZONED:
+            type = ZONED_DATE_TIME;
+            break;
+          default:
+            type = LOCAL_DATE_TIME;
+        }
+        
       } else if (DATE.equalsIgnoreCase(format)) {
         type = LOCAL_DATE;
       }
@@ -108,15 +120,15 @@ public class MapperUtil {
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
-  public static String getTypeMap(final JsonNode mapSchema, final String prefix, final String suffix) {
+  public static String getTypeMap(final JsonNode mapSchema, final String prefix, final String suffix, final TimeType useTimeType) {
     var typeMap = "";
     final var mapNode = mapSchema.get("additionalProperties");
     final var mapValueType = mapNode.findPath("type");
-    typeMap = getCollectionType(mapNode, mapValueType, prefix, suffix);
+    typeMap = getCollectionType(mapNode, mapValueType, prefix, suffix, useTimeType);
     return typeMap;
   }
 
-  public static String getTypeArray(final JsonNode array, final String prefix, final String suffix) {
+  public static String getTypeArray(final JsonNode array, final String prefix, final String suffix, final TimeType useTimeType) {
     var typeArray = "";
     final var arrayNode = array.get("items");
     final JsonNode mapValueType;
@@ -125,14 +137,15 @@ public class MapperUtil {
     } else {
       mapValueType = arrayNode.get(REF);
     }
-    typeArray = getCollectionType(arrayNode, mapValueType, prefix, suffix);
+    typeArray = getCollectionType(arrayNode, mapValueType, prefix, suffix, useTimeType);
     return typeArray;
   }
 
-  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, final String suffix) {
+  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, 
+      final String suffix, final TimeType useTimeType) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
-      typeMap = getSimpleType(mapNode, prefix, suffix);
+      typeMap = getSimpleType(mapNode, prefix, suffix, useTimeType);
     } else {
       final var valueSchema = mapNode.findPath(REF);
       if (Objects.nonNull(valueSchema)) {

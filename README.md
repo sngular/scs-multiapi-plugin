@@ -319,6 +319,8 @@ can be configured in the plugin.
   -  **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
       fields. The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
+  -  **useTimeType**: Enum TimeType value. Controls the types used when generating dates. Can be `LOCAL` or `ZOINED`.
+      The default value is `TimeType.LOCAL`. 
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be

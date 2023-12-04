@@ -12,11 +12,14 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
+
 import java.util.List;
 import java.util.Map;
 
+import com.sngular.api.generator.plugin.common.model.TimeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +47,11 @@ public final class OperationParameterObject {
 
   @Builder.Default
   private String dateFormat = "yyyy-MM-dd";
+  
+  @Default
+  private TimeType useTimeType = TimeType.LOCAL;
 
+  @SuppressWarnings("unused")
   private List<String> operationIds;
 
   public List<String> getOperationIds() {
