@@ -49,6 +49,7 @@ import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.common.model.TimeType;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
@@ -475,7 +476,8 @@ public class AsyncApiGenerator {
     final JsonNode schemaToBuild = processedMethod.getPayload();
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
-          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage).iterator();
+          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage,
+              operationObject.getFormats(), operationObject.getUseTimeType()).iterator();
 
       if (schemaObjectIt.hasNext()) {
         final var filePath = writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
@@ -526,7 +528,7 @@ public class AsyncApiGenerator {
     } else if (message.has(PAYLOAD)) {
       payloadInfo = processPayload(operationObject, ApiTool.getName(message), ApiTool.getNode(message, PAYLOAD), ymlParent);
       if (ApiTool.hasNode(message, BINDINGS)) {
-        processBindings(processBindingsResultBuilder, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message);
+        processBindings(processBindingsResultBuilder, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message, operationObject.getUseTimeType());
       }
     } else {
       throw new InvalidAsyncAPIException(operationId);
@@ -559,7 +561,7 @@ public class AsyncApiGenerator {
 
     final var message = totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(messageRef)));
     if (ApiTool.hasNode(message, BINDINGS)) {
-      processBindings(bindingsResult, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message);
+      processBindings(bindingsResult, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message, operationObject.getUseTimeType());
     }
     return processPayload(operationObject, MapperUtil.getRefClass(method), ApiTool.getNode(message, PAYLOAD), ymlParent);
   }
@@ -613,20 +615,22 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode message) {
+  private void processBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode message, 
+      final TimeType useTimeType) {
     if (message.has(BINDINGS)) {
       final var bindingsNode = message.get(BINDINGS);
       if (bindingsNode.has(KAFKA)) {
-        processKafkaBindings(bindingsResult, prefix, suffix, bindingsNode.get(KAFKA));
+        processKafkaBindings(bindingsResult, prefix, suffix, bindingsNode.get(KAFKA), useTimeType);
       } else {
         bindingsResult.bindingType(BindingTypeEnum.NONBINDING.getValue());
       }
     }
   }
 
-  private void processKafkaBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode kafkaBindings) {
+  private void processKafkaBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode kafkaBindings, 
+      final TimeType useTimeType) {
     if (kafkaBindings.has(KEY)) {
-      bindingsResult.bindings(MapperUtil.getSimpleType(ApiTool.getNode(kafkaBindings, "key"), prefix, suffix))
+      bindingsResult.bindings(MapperUtil.getSimpleType(ApiTool.getNode(kafkaBindings, "key"), prefix, suffix, useTimeType))
                     .bindingType(BindingTypeEnum.KAFKA.getValue());
     }
   }

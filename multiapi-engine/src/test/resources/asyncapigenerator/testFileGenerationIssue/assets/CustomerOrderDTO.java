@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonDeserialize(builder = CustomerOrderDTO.CustomerOrderDTOBuilder.class)
 public class CustomerOrderDTO {
@@ -16,7 +18,8 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="id")
   private String id;
   @JsonProperty(value ="date")
-  private String date;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private LocalDateTime date;
   @JsonProperty(value ="shippingDetails")
   private ShippingDetailsDTO shippingDetails;
   @JsonProperty(value ="orderedItems")
@@ -69,7 +72,7 @@ public class CustomerOrderDTO {
 
     private String id;
 
-    private String date;
+    private LocalDateTime date;
 
     private ShippingDetailsDTO shippingDetails;
 
@@ -86,7 +89,7 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder date(String date) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder date(LocalDateTime date) {
       this.date = date;
       return this;
     }
@@ -157,10 +160,10 @@ public class CustomerOrderDTO {
   * @return date
   */
   @Schema(name = "date", required = false)
-  public String getDate() {
+  public LocalDateTime getDate() {
     return date;
   }
-  public void setDate(String date) {
+  public void setDate(LocalDateTime date) {
     this.date = date;
   }
 
