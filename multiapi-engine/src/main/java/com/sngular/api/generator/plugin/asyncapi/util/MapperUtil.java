@@ -28,7 +28,7 @@ public class MapperUtil {
   public static final String LONG = "long";
 
   public static final String DATE = "date";
-  
+
   public static final String DATE_TIME = "date-time";
 
   public static final String BIG_DECIMAL = "BigDecimal";
@@ -47,7 +47,7 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix, 
+  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix,
       final TimeType useTimeType) {
     String type = schema.textValue();
     if (schema.has("type")) {
@@ -91,7 +91,7 @@ public class MapperUtil {
         } else {
           type = LOCAL_DATE_TIME;
         }
-        
+
       } else if (DATE.equalsIgnoreCase(format)) {
         type = LOCAL_DATE;
       }
@@ -138,7 +138,7 @@ public class MapperUtil {
     return typeArray;
   }
 
-  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, 
+  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix,
       final String suffix, final TimeType useTimeType) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
