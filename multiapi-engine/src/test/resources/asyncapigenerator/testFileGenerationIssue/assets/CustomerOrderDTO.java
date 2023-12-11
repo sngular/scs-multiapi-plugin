@@ -52,6 +52,17 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
 
+  private CustomerOrderDTO(String id, LocalDateTime date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, Status status, CustomerDTO customer) {
+    this.id = id;
+    this.date = date;
+    this.shippingDetails = shippingDetails;
+    this.orderedItems = orderedItems;
+    this.paymentDetails = paymentDetails;
+    this.status = status;
+    this.customer = customer;
+
+  }
+
   private CustomerOrderDTO(CustomerOrderDTOBuilder builder) {
     this.id = builder.id;
     this.date = builder.date;
