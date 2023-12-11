@@ -63,6 +63,12 @@ import ${packageModel}.customvalidator.MinItems;
     </#if>
 </#list>
 <#list schema.fieldObjectList as field>
+    <#if field.restrictions.format?has_content>
+import com.fasterxml.jackson.annotation.JsonFormat;
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
     <#if field.required || schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${exceptionPackage}.exception.ModelClassException;
         <#break>
@@ -115,6 +121,9 @@ public class ${schema.className} {
 </#if>
 <#if field.restrictions.minItems?has_content>
   @MinItems(minimum = ${field.restrictions.minItems})
+</#if>
+<#if field.restrictions.format?has_content>
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${field.restrictions.format?no_esc}")
 </#if>
 <#if field.restrictions.uniqueItems?has_content && field.restrictions.uniqueItems == true>
   @UniqueItems

@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonDeserialize(builder = CustomerOrderDTO.CustomerOrderDTOBuilder.class)
 public class CustomerOrderDTO {
@@ -16,7 +18,8 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="id")
   private String id;
   @JsonProperty(value ="date")
-  private String date;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private LocalDateTime date;
   @JsonProperty(value ="shippingDetails")
   private ShippingDetailsDTO shippingDetails;
   @JsonProperty(value ="orderedItems")
@@ -49,7 +52,7 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
 
-  private CustomerOrderDTO(String id, String date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, Status status, CustomerDTO customer) {
+  private CustomerOrderDTO(String id, LocalDateTime date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, Status status, CustomerDTO customer) {
     this.id = id;
     this.date = date;
     this.shippingDetails = shippingDetails;
@@ -79,7 +82,7 @@ public class CustomerOrderDTO {
   public static class CustomerOrderDTOBuilder {
 
     private String id;
-    private String date;
+    private LocalDateTime date;
     private ShippingDetailsDTO shippingDetails;
     private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
     private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
@@ -91,7 +94,7 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder date(String date) {
+    public CustomerOrderDTO.CustomerOrderDTOBuilder date(LocalDateTime date) {
       this.date = date;
       return this;
     }
@@ -162,10 +165,10 @@ public class CustomerOrderDTO {
   * @return date
   */
   @Schema(name = "date", required = false)
-  public String getDate() {
+  public LocalDateTime getDate() {
     return date;
   }
-  public void setDate(String date) {
+  public void setDate(LocalDateTime date) {
     this.date = date;
   }
 
