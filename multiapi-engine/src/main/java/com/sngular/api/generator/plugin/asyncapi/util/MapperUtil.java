@@ -1,7 +1,7 @@
 /*
  *  This Source Code Form is subject to the terms of the Mozilla Public
- *  * License, v. 2.0. If a copy of the MPL was not distributed with this
- *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.sngular.api.generator.plugin.asyncapi.util;
@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.TimeType;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,12 +86,10 @@ public class MapperUtil {
     String type = "String";
     if (format != null) {
       if (DATE_TIME.equalsIgnoreCase(format)) {
-        switch(useTimeType) {
-        case ZONED:
-            type = ZONED_DATE_TIME;
-            break;
-          default:
-            type = LOCAL_DATE_TIME;
+        if (Objects.requireNonNull(useTimeType) == TimeType.ZONED) {
+          type = ZONED_DATE_TIME;
+        } else {
+          type = LOCAL_DATE_TIME;
         }
         
       } else if (DATE.equalsIgnoreCase(format)) {
