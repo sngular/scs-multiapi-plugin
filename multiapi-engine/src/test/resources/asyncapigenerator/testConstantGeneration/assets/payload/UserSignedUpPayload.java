@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonDeserialize(builder = UserSignedUpPayload.UserSignedUpPayloadBuilder.class)
 public class UserSignedUpPayload {
@@ -17,7 +19,8 @@ public class UserSignedUpPayload {
   @JsonProperty(value ="email")
   private final String email;
   @JsonProperty(value ="createdAt")
-  private String createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private LocalDateTime createdAt;
   @JsonProperty(value ="someOtherObject")
   private SomeOtherObject someOtherObject;
 
@@ -43,11 +46,11 @@ public class UserSignedUpPayload {
 
     private String email = "je.garcia@oneemail.com";
 
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     private SomeOtherObject someOtherObject;
 
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(String createdAt) {
+    public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(LocalDateTime createdAt) {
       this.createdAt = createdAt;
       return this;
     }
@@ -95,10 +98,10 @@ public class UserSignedUpPayload {
   * @return createdAt
   */
   @Schema(name = "createdAt", required = false)
-  public String getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
