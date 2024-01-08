@@ -9,7 +9,7 @@ package com.sngular.api.generator.plugin.openapi.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,7 +17,7 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final SpecFile specFile) {
+  public static String getSimpleType(final JsonNode schema, final OpenAPISpecFile specFile) {
     final String type;
     final var nodeType = ApiTool.getType(schema);
     if (checkIfNumber(nodeType)) {
@@ -43,8 +43,10 @@ public class MapperUtil {
   }
 
   private static boolean checkIfNumber(final String nodeType) {
-    return TypeConstants.NUMBER.equalsIgnoreCase(nodeType) || TypeConstants.INTEGER.equalsIgnoreCase(nodeType)
-           || TypeConstants.INT_32.equalsIgnoreCase(nodeType) || TypeConstants.INT_64.equalsIgnoreCase(nodeType);
+    return TypeConstants.NUMBER.equalsIgnoreCase(nodeType)
+        || TypeConstants.INTEGER.equalsIgnoreCase(nodeType)
+        || TypeConstants.INT_32.equalsIgnoreCase(nodeType)
+        || TypeConstants.INT_64.equalsIgnoreCase(nodeType);
   }
 
   private static String processNumber(final JsonNode schema) {
@@ -70,7 +72,7 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getTypeArray(final JsonNode array, final SpecFile specFile) {
+  public static String getTypeArray(final JsonNode array, final OpenAPISpecFile specFile) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
       typeArray = TypeConstants.STRING;
@@ -82,22 +84,25 @@ public class MapperUtil {
     return typeArray;
   }
 
-  public static String getPojoName(final String namePojo, final SpecFile specFile) {
-    return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-           + StringUtils.capitalize(namePojo)
-           + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
+  public static String getPojoName(final String namePojo, final OpenAPISpecFile specFile) {
+    return (StringUtils.isNotBlank(specFile.getModelNamePrefix())
+            ? specFile.getModelNamePrefix()
+            : "")
+        + StringUtils.capitalize(namePojo)
+        + (StringUtils.isNotBlank(specFile.getModelNameSuffix())
+            ? specFile.getModelNameSuffix()
+            : "");
   }
 
-  public static String getRef(final JsonNode schema, final SpecFile specFile) {
+  public static String getRef(final JsonNode schema, final OpenAPISpecFile specFile) {
     final String typeObject;
     typeObject = getPojoName(getRefSchemaName(schema), specFile);
     return typeObject;
   }
 
-  public static String getDateType(final JsonNode schema, final SpecFile specFile) {
+  public static String getDateType(final JsonNode schema, final OpenAPISpecFile specFile) {
     final String dateType;
     switch (ApiTool.getFormat(schema)) {
-
       case "date":
         switch (specFile.getUseTimeType()) {
           case ZONED:

@@ -6,20 +6,19 @@
 
 package com.sngular.api.generator.plugin.openapi.parameter;
 
+import com.sngular.api.generator.plugin.common.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpecFile {
-
-  private String filePath;
+public class OpenAPISpecFile extends SpecFile {
 
   private String apiPackage;
 
@@ -39,6 +38,5 @@ public class SpecFile {
 
   private boolean isReactive;
 
-  @Default
-  private TimeType useTimeType = TimeType.LOCAL;
+  @Default private TimeType useTimeType = TimeType.LOCAL;
 }

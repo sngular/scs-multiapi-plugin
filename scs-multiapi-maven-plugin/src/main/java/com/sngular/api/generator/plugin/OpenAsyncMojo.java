@@ -6,13 +6,12 @@
 
 package com.sngular.api.generator.plugin;
 
+import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-
-import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -31,7 +30,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
   private File targetFolder;
 
   @Parameter(property = "specFiles")
-  private List<SpecFile> specFiles;
+  private List<AsynAPISpecFile> specFiles;
 
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;

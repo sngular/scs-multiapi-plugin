@@ -6,23 +6,22 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.test.utils.TestUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.Assertions;
 
 public class AsyncApiGeneratorFixtures {
 
-  final static List<SpecFile> TEST_FILE_GENERATION = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGeneration/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -41,15 +40,15 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_NO_CONFIG = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_NO_CONFIG = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationNoConfiguration/event-api.yml")
       .build()
   );
 
-  final static List<SpecFile> TEST_ISSUE_GENERATION = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_ISSUE_GENERATION = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testIssueGeneration/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -67,8 +66,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_ISSUE_SIMPLE_TYPE_GENERATION = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_ISSUE_SIMPLE_TYPE_GENERATION = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testIssueSimpleTypeGeneration/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -86,8 +85,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
- final static List<SpecFile> TEST_RESERVED_WORDS_GENERATION = List.of(
-    SpecFile
+ final static List<AsynAPISpecFile> TEST_RESERVED_WORDS_GENERATION = List.of(
+     AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testReservedWordsGeneration/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -105,8 +104,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_CUSTOM_VALIDATORS = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_CUSTOM_VALIDATORS = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testCustomValidators/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -124,8 +123,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_ISSUE = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_ISSUE = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationIssue/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -144,8 +143,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_EXTERNAL_AVRO = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -161,8 +160,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationStreamBridge/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -180,8 +179,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_WITHOUT_IDS = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithoutOperationIds/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -198,8 +197,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_FILE_GENERATION_WITH_ARRAY_STRING = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_WITH_ARRAY_STRING = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testFileGenerationArrayString/event-api.yml")
       .supplier(OperationParameterObject.builder()
@@ -209,8 +208,8 @@ public class AsyncApiGeneratorFixtures {
                                         .useLombokModelAnnotation(true)
                                         .build())
       .build());
-  final static List<SpecFile> TEST_ISSUE_GENERATE_SUPPLIER = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_ISSUE_GENERATE_SUPPLIER = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testIssueGenerateSupplier/async-api.yml")
       .supplier(OperationParameterObject.builder()
@@ -221,8 +220,8 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
-  final static List<SpecFile> TEST_ISSUE_INFINITE_LOOP = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_ISSUE_INFINITE_LOOP = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testIssueInfiniteLoop/async-api.yml")
       .supplier(OperationParameterObject.builder()
@@ -233,8 +232,8 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
-  final static List<SpecFile> TEST_MODEL_CLASS_EXCEPTION_GENERATION = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_MODEL_CLASS_EXCEPTION_GENERATION = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testModelClassExceptionGeneration/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -252,8 +251,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_GENERATION_WITH_NO_OPERATION_ID = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testGenerationWithNoOperationId/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -264,8 +263,8 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
-  final static List<SpecFile> TEST_NO_SCHEMAS = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_NO_SCHEMAS = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testNoSchemas/event-api.yml")
       .supplier(OperationParameterObject.builder()
@@ -276,8 +275,8 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
-  final static List<SpecFile> TEST_NESTED_OBJECT = List.of(
-    SpecFile
+  final static List<AsynAPISpecFile> TEST_NESTED_OBJECT = List.of(
+      AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testNestedObjectIssue/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -294,8 +293,8 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
-final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
-    SpecFile
+final static List<AsynAPISpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
+    AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testPropertiesNotGeneratedIssue/event-api.yml")
       .consumer(OperationParameterObject.builder()
@@ -307,8 +306,8 @@ final static List<SpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
                                         .build())
       .build());
 
-  final static List<SpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(
-      SpecFile
+  final static List<AsynAPISpecFile> TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS = List.of(
+      AsynAPISpecFile
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationWithKafkaBindings/event-api.yml")
           .consumer(OperationParameterObject.builder()

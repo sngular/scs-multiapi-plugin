@@ -6,6 +6,16 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
+import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,17 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
-import com.sngular.api.generator.plugin.openapi.model.AuthObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateFactory {
 
@@ -127,7 +126,7 @@ public class TemplateFactory {
   }
 
   public final void fillTemplate(
-      final String filePathToSave, final SpecFile specFile, final String className,
+      final String filePathToSave, final OpenAPISpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
@@ -195,11 +194,11 @@ public class TemplateFactory {
     return "template" + classNameAuth + ".ftlh";
   }
 
-  private String getTemplateClientApi(final SpecFile specFile) {
+  private String getTemplateClientApi(final OpenAPISpecFile specFile) {
     return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
   }
 
-  private String getTemplateApi(final SpecFile specFile) {
+  private String getTemplateApi(final OpenAPISpecFile specFile) {
     return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
@@ -22,8 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class AsyncApiGeneratorJakartaTest {
 
-  @TempDir
-  static Path baseDir;
+  @TempDir static Path baseDir;
 
   private static AsyncApiGenerator asyncApiGenerator;
 
@@ -32,22 +31,29 @@ class AsyncApiGeneratorJakartaTest {
   @BeforeAll
   static void setup() {
     asyncApiGenerator =
-        new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED,
-                              "groupId",
-                              baseDir.toFile());
+        new AsyncApiGenerator(
+            SPRING_BOOT_VERSION,
+            new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET),
+            AsyncApiGeneratorFixtures.GENERATED,
+            "groupId",
+            baseDir.toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION))
-    );
+        Arguments.of(
+            "TestCustomValidators",
+            AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS,
+            AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)));
   }
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpecForTestFileGeneration(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {
+  void processFileSpecForTestFileGeneration(
+      final String type,
+      final List<AsynAPISpecFile> specFileList,
+      final Function<Path, Boolean> validation) {
     asyncApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }
-
 }

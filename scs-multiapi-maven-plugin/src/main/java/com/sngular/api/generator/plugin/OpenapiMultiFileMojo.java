@@ -6,13 +6,12 @@
 
 package com.sngular.api.generator.plugin;
 
+import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
+import com.sngular.api.generator.plugin.openapi.OpenApiGenerator;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-
-import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
-import com.sngular.api.generator.plugin.openapi.OpenApiGenerator;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -33,7 +32,7 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   private File targetFolder;
 
   @Parameter(property = "specFiles")
-  private List<SpecFile> specFiles;
+  private List<OpenAPISpecFile> specFiles;
 
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
