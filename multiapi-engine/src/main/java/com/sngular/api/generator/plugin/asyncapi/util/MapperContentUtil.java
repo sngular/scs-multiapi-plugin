@@ -6,14 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.common.model.TimeType;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +17,15 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.TimeType;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
@@ -490,13 +491,14 @@ public class MapperContentUtil {
         fieldObject = processEnumField(name, required, schema, prefix, suffix, useTimeType);
       } else {
         final String simpleType = MapperUtil.getSimpleType(schema, prefix, suffix, useTimeType);
-        fieldObject =
-            SchemaFieldObject.builder()
-                .baseName(name)
-                .restrictions(new SchemaFieldObjectProperties())
-                .dataType(simpleType)
-                .dataTypeSimple(simpleType)
-                .build();
+        fieldObject = SchemaFieldObject
+                          .builder()
+                          .baseName(name)
+                          .restrictions(new SchemaFieldObjectProperties())
+                          .dataType(simpleType)
+                          .dataTypeSimple(simpleType)
+                          .constValue(MapperUtil.getConstValue(schema))
+                          .build();
         setFieldProperties(fieldObject, schema);
         setFormatProperies(fieldObject, simpleType, formats);
         fieldObject.setRequired(required);
@@ -519,13 +521,14 @@ public class MapperContentUtil {
               useTimeType);
     } else {
       final String simpleType = MapperUtil.getSimpleType(schema, prefix, suffix, useTimeType);
-      fieldObject =
-          SchemaFieldObject.builder()
-              .baseName(name)
-              .dataType(simpleType)
-              .dataTypeSimple(simpleType)
-              .restrictions(new SchemaFieldObjectProperties())
-              .build();
+      fieldObject = SchemaFieldObject
+                        .builder()
+                        .baseName(name)
+                        .dataType(simpleType)
+                        .dataTypeSimple(simpleType)
+                        .restrictions(new SchemaFieldObjectProperties())
+                        .constValue(MapperUtil.getConstValue(schema))
+                        .build();
     }
     return fieldObject;
   }

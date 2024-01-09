@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.TimeType;
-
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +29,7 @@ public class MapperUtil {
   public static final String LONG = "long";
 
   public static final String DATE = "date";
-  
+
   public static final String DATE_TIME = "date-time";
 
   public static final String BIG_DECIMAL = "BigDecimal";
@@ -48,7 +48,7 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix, 
+  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix,
       final TimeType useTimeType) {
     String type = schema.textValue();
     if (schema.has("type")) {
@@ -94,7 +94,7 @@ public class MapperUtil {
           default:
             type = LOCAL_DATE_TIME;
         }
-        
+
       } else if (DATE.equalsIgnoreCase(format)) {
         type = LOCAL_DATE;
       }
@@ -141,7 +141,7 @@ public class MapperUtil {
     return typeArray;
   }
 
-  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, 
+  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix,
       final String suffix, final TimeType useTimeType) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
@@ -170,5 +170,7 @@ public class MapperUtil {
     return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
   }
 
-
+  protected static Object getConstValue(final JsonNode schema) {
+    return ApiTool.hasNode(schema, "const") ? ApiTool.getNodeAsObject(schema, "const") : null;
+  }
 }

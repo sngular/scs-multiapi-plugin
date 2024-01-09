@@ -3,6 +3,8 @@ package com.sngular.api.generator.plugin.common.tools;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -87,16 +89,20 @@ public final class ApiTool {
     return schema.get(nodeName);
   }
 
+  public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
+  }
+
+  public static Object getNodeAsObject(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) ? getNodeAsType(getNode(schema, nodeName)) : null;
+  }
+
   public static String getNodeAsString(final JsonNode schema, final String nodeName) {
     return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
   }
 
   public static String getNodeAsString(final JsonNode schema) {
     return Objects.nonNull(schema) ? schema.textValue() : null;
-  }
-
-  public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
-    return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
   }
 
   public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema) {
@@ -296,10 +302,6 @@ public final class ApiTool {
     return JsonNode::asText;
   }
 
-  public static boolean hasMessages(final JsonNode node) {
-    return hasComponents(node) && hasNode(getNode(node, "components"), "messages");
-  }
-
   public static boolean hasComponents(final JsonNode node) {
     return hasNode(node, "components");
   }
@@ -328,5 +330,23 @@ public final class ApiTool {
       om = new ObjectMapper();
     }
     return om.readTree(file);
+  }
+
+  private static Object getNodeAsType(final JsonNode node) {
+    final Object result;
+    if (node.isBigDecimal()) {
+      result = BigDecimal.valueOf(node.asDouble());
+    } else if (node.isBigInteger()) {
+      result = BigInteger.valueOf(node.asLong());
+    } else if (node.isBoolean()) {
+      result = node.asBoolean();
+    } else if (node.isFloat() || node.isDouble()) {
+      result = node.asDouble();
+    } else if (node.isInt() || node.isNumber()) {
+      result = node.asInt();
+    } else {
+      result = node.asText();
+    }
+    return result;
   }
 }

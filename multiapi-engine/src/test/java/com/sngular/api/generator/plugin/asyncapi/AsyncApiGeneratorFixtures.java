@@ -6,15 +6,16 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.test.utils.TestUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.Assertions;
 
@@ -293,7 +294,25 @@ public class AsyncApiGeneratorFixtures {
                                         .build())
       .build());
 
-final static List<AsynAPISpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
+    final static List<AsynAPISpecFile> TEST_CONSTANT_GENERATION = List.of(
+            AsynAPISpecFile
+                .builder()
+                .filePath("src/test/resources/asyncapigenerator/testConstantGeneration/event-api.yml")
+                .consumer(OperationParameterObject.builder()
+                        .modelNameSuffix("")
+                        .apiPackage("com.sngular.scsplugin.constantgeneration.consumer")
+                        .modelPackage("com.sngular.scsplugin.constantgeneration.model")
+                        .useLombokModelAnnotation(true)
+                        .build())
+                .supplier(OperationParameterObject.builder()
+                        .modelNameSuffix("")
+                        .apiPackage("com.sngular.scsplugin.constantgeneration.producer")
+                        .modelPackage("com.sngular.scsplugin.constantgeneration.model")
+                        .useLombokModelAnnotation(true)
+                        .build())
+                .build());
+    
+    final static List<AsynAPISpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
     AsynAPISpecFile
       .builder()
       .filePath("src/test/resources/asyncapigenerator/testPropertiesNotGeneratedIssue/event-api.yml")
@@ -778,6 +797,22 @@ final static List<AsynAPISpecFile> PROPERTIES_NOT_GENERATED_ISSUE = List.of(
     final List<String> expectedModelSchemaFiles = List.of(
       "asyncapigenerator/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
       "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
+    );
+
+    final List<String> expectedProducerFiles = List.of();
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+                   modelTest(path, expectedProducerFiles, API_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateConstantGeneration() {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/constantgeneration";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/constantgeneration/model";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        "asyncapigenerator/testConstantGeneration/assets/payload/SomeOtherObject.java",
+        "asyncapigenerator/testConstantGeneration/assets/payload/UserSignedUpPayload.java"
     );
 
     final List<String> expectedProducerFiles = List.of();

@@ -25,15 +25,6 @@ public class OrderProductMapper {
   @NotNull
   private final String quantity;
 
-  private OrderProductMapper(String ref, String productRef, String price, String quantity) {
-    this.ref = ref;
-    this.productRef = productRef;
-    this.price = price;
-    this.quantity = quantity;
-
-    validateRequiredAttributes();
-  }
-
   private OrderProductMapper(OrderProductMapperBuilder builder) {
     this.ref = builder.ref;
     this.productRef = builder.productRef;
@@ -51,8 +42,11 @@ public class OrderProductMapper {
   public static class OrderProductMapperBuilder {
 
     private String ref;
+
     private String productRef;
+
     private String price;
+
     private String quantity;
 
     public OrderProductMapper.OrderProductMapperBuilder ref(String ref) {

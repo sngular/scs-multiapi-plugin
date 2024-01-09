@@ -39,13 +39,6 @@ public class CustomerOrderEventPayloadDTO {
   @JsonProperty(value ="customerOrder")
   private CustomerOrderDTO customerOrder;
 
-  private CustomerOrderEventPayloadDTO(String customerOrderId, EventType eventType, CustomerOrderDTO customerOrder) {
-    this.customerOrderId = customerOrderId;
-    this.eventType = eventType;
-    this.customerOrder = customerOrder;
-
-  }
-
   private CustomerOrderEventPayloadDTO(CustomerOrderEventPayloadDTOBuilder builder) {
     this.customerOrderId = builder.customerOrderId;
     this.eventType = builder.eventType;
@@ -61,7 +54,9 @@ public class CustomerOrderEventPayloadDTO {
   public static class CustomerOrderEventPayloadDTOBuilder {
 
     private String customerOrderId;
+
     private EventType eventType;
+
     private CustomerOrderDTO customerOrder;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
