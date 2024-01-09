@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.nestedobject.model;
+package com.sngular.scsplugin.constantgeneration.model;
 
 import java.util.Objects;
 
@@ -13,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class UserSignedUpPayload {
 
   @JsonProperty(value ="firstName")
-  private String firstName;
+  private final String firstName;
   @JsonProperty(value ="lastName")
-  private String lastName;
+  private final String lastName;
   @JsonProperty(value ="email")
-  private String email;
+  private final String email;
   @JsonProperty(value ="createdAt")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime createdAt;
@@ -40,30 +40,15 @@ public class UserSignedUpPayload {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class UserSignedUpPayloadBuilder {
 
-    private String firstName;
+    private String firstName = "Jose";
 
-    private String lastName;
+    private String lastName = "Garcia";
 
-    private String email;
+    private String email = "je.garcia@oneemail.com";
 
     private LocalDateTime createdAt;
 
     private SomeOtherObject someOtherObject;
-
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder firstName(String firstName) {
-      this.firstName = firstName;
-      return this;
-    }
-
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder lastName(String lastName) {
-      this.lastName = lastName;
-      return this;
-    }
-
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder email(String email) {
-      this.email = email;
-      return this;
-    }
 
     public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(LocalDateTime createdAt) {
       this.createdAt = createdAt;
@@ -89,9 +74,6 @@ public class UserSignedUpPayload {
   public String getFirstName() {
     return firstName;
   }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
 
   /**
   * Get lastName
@@ -101,9 +83,6 @@ public class UserSignedUpPayload {
   public String getLastName() {
     return lastName;
   }
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
 
   /**
   * Get email
@@ -112,9 +91,6 @@ public class UserSignedUpPayload {
   @Schema(name = "email", required = false)
   public String getEmail() {
     return email;
-  }
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   /**

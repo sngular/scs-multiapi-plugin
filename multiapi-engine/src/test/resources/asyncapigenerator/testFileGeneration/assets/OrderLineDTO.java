@@ -19,18 +19,11 @@ public class OrderLineDTO {
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<OrderProductDTO> products;
-
-  private OrderLineDTO(String ref, List<OrderProductDTO> products) {
-    this.ref = ref;
-    this.products = products;
-
-    validateRequiredAttributes();
-  }
+  private final List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
 
   private OrderLineDTO(OrderLineDTOBuilder builder) {
     this.ref = builder.ref;
-    this.products = builder.products;
+    this.products.addAll(builder.products);
 
     validateRequiredAttributes();
   }
@@ -43,6 +36,7 @@ public class OrderLineDTO {
   public static class OrderLineDTOBuilder {
 
     private String ref;
+
     private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
 
     public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {

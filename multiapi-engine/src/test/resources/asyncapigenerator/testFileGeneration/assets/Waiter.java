@@ -17,13 +17,6 @@ public class Waiter {
   @JsonProperty(value ="table")
   private String table;
 
-  private Waiter(String ref, String timestamp, String table) {
-    this.ref = ref;
-    this.timestamp = timestamp;
-    this.table = table;
-
-  }
-
   private Waiter(WaiterBuilder builder) {
     this.ref = builder.ref;
     this.timestamp = builder.timestamp;

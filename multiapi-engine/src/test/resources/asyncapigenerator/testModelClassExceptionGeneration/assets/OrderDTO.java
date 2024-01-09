@@ -21,19 +21,11 @@ public class OrderDTO {
   @JsonProperty(value ="lines")
   private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
 
-  private OrderDTO(String ref, String clientRef, String amount, List<OrderLineDTO> lines) {
-    this.ref = ref;
-    this.clientRef = clientRef;
-    this.amount = amount;
-    this.lines = lines;
-
-  }
-
   private OrderDTO(OrderDTOBuilder builder) {
     this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this.lines = builder.lines;
+    this.lines.addAll(builder.lines);
 
   }
 
@@ -45,8 +37,11 @@ public class OrderDTO {
   public static class OrderDTOBuilder {
 
     private String ref;
+
     private String clientRef;
+
     private String amount;
+
     private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
 
     public OrderDTO.OrderDTOBuilder ref(String ref) {

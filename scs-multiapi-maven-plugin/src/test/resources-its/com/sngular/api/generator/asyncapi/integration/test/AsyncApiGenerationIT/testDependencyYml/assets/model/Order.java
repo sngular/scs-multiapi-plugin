@@ -18,13 +18,6 @@ public class Order {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
 
-  private Order(String ref, String clientRef, BigDecimal amount) {
-    this.ref = ref;
-    this.clientRef = clientRef;
-    this.amount = amount;
-
-  }
-
   private Order(OrderBuilder builder) {
     this.ref = builder.ref;
     this.clientRef = builder.clientRef;
@@ -40,7 +33,9 @@ public class Order {
   public static class OrderBuilder {
 
     private String ref;
+
     private String clientRef;
+
     private BigDecimal amount;
 
     public Order.OrderBuilder ref(String ref) {

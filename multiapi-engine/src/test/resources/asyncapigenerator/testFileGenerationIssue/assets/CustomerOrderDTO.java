@@ -52,23 +52,12 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
 
-  private CustomerOrderDTO(String id, LocalDateTime date, ShippingDetailsDTO shippingDetails, List<OrderedItemDTO> orderedItems, List<PaymentDetailsDTO> paymentDetails, Status status, CustomerDTO customer) {
-    this.id = id;
-    this.date = date;
-    this.shippingDetails = shippingDetails;
-    this.orderedItems = orderedItems;
-    this.paymentDetails = paymentDetails;
-    this.status = status;
-    this.customer = customer;
-
-  }
-
   private CustomerOrderDTO(CustomerOrderDTOBuilder builder) {
     this.id = builder.id;
     this.date = builder.date;
     this.shippingDetails = builder.shippingDetails;
-    this.orderedItems = builder.orderedItems;
-    this.paymentDetails = builder.paymentDetails;
+    this.orderedItems.addAll(builder.orderedItems);
+    this.paymentDetails.addAll(builder.paymentDetails);
     this.status = builder.status;
     this.customer = builder.customer;
 
@@ -82,11 +71,17 @@ public class CustomerOrderDTO {
   public static class CustomerOrderDTOBuilder {
 
     private String id;
+
     private LocalDateTime date;
+
     private ShippingDetailsDTO shippingDetails;
+
     private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+
     private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+
     private Status status;
+
     private CustomerDTO customer;
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {
