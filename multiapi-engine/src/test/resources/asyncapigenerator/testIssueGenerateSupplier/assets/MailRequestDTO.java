@@ -19,16 +19,9 @@ public class MailRequestDTO {
   @JsonProperty(value ="config")
   private ConfigurationDTO config;
 
-  private MailRequestDTO(String sender, List<String> recipients, ConfigurationDTO config) {
-    this.sender = sender;
-    this.recipients = recipients;
-    this.config = config;
-
-  }
-
   private MailRequestDTO(MailRequestDTOBuilder builder) {
     this.sender = builder.sender;
-    this.recipients = builder.recipients;
+    this.recipients.addAll(builder.recipients);
     this.config = builder.config;
 
   }
@@ -41,7 +34,9 @@ public class MailRequestDTO {
   public static class MailRequestDTOBuilder {
 
     private String sender;
+
     private List<String> recipients = new ArrayList<String>();
+
     private ConfigurationDTO config;
 
     public MailRequestDTO.MailRequestDTOBuilder sender(String sender) {

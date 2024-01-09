@@ -21,16 +21,9 @@ public class OrderLineDTO {
   @JsonProperty(value ="continue")
   private List<String> _continue = new ArrayList<String>();
 
-  private OrderLineDTO(BigDecimal _byte, List<String> _continue) {
-    this._byte = _byte;
-    this._continue = _continue;
-
-    validateRequiredAttributes();
-  }
-
   private OrderLineDTO(OrderLineDTOBuilder builder) {
     this._byte = builder._byte;
-    this._continue = builder._continue;
+    this._continue.addAll(builder._continue);
 
     validateRequiredAttributes();
   }
@@ -43,6 +36,7 @@ public class OrderLineDTO {
   public static class OrderLineDTOBuilder {
 
     private BigDecimal _byte;
+
     private List<String> _continue = new ArrayList<String>();
 
     public OrderLineDTO.OrderLineDTOBuilder _byte(BigDecimal _byte) {

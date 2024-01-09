@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.nestedobject.model;
+package com.sngular.scsplugin.constantgeneration.model;
 
 import java.util.Objects;
 
@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SomeOtherObject {
 
   @JsonProperty(value ="property1")
-  private String property1;
+  private final Integer property1;
   @JsonProperty(value ="property2")
-  private Integer property2;
+  private final Integer property2;
 
   private SomeOtherObject(SomeOtherObjectBuilder builder) {
     this.property1 = builder.property1;
@@ -28,19 +28,9 @@ public class SomeOtherObject {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class SomeOtherObjectBuilder {
 
-    private String property1;
+    private Integer property1 = 3;
 
-    private Integer property2;
-
-    public SomeOtherObject.SomeOtherObjectBuilder property1(String property1) {
-      this.property1 = property1;
-      return this;
-    }
-
-    public SomeOtherObject.SomeOtherObjectBuilder property2(Integer property2) {
-      this.property2 = property2;
-      return this;
-    }
+    private Integer property2 = 6;
 
     public SomeOtherObject build() {
       SomeOtherObject someOtherObject = new SomeOtherObject(this);
@@ -53,11 +43,8 @@ public class SomeOtherObject {
   * @return property1
   */
   @Schema(name = "property1", required = false)
-  public String getProperty1() {
+  public Integer getProperty1() {
     return property1;
-  }
-  public void setProperty1(String property1) {
-    this.property1 = property1;
   }
 
   /**
@@ -67,9 +54,6 @@ public class SomeOtherObject {
   @Schema(name = "property2", required = false)
   public Integer getProperty2() {
     return property2;
-  }
-  public void setProperty2(Integer property2) {
-    this.property2 = property2;
   }
 
   @Override

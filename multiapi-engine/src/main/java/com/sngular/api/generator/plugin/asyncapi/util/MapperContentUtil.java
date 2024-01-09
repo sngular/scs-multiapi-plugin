@@ -168,7 +168,7 @@ public class MapperContentUtil {
 
   private static List<SchemaFieldObject> getFields(
       final Map<String, JsonNode> totalSchemas, final JsonNode model, final boolean required, final String prefix,
-      final String suffix, final Collection<String> modelToBuildList, final String parentPackage, 
+      final String suffix, final Collection<String> modelToBuildList, final String parentPackage,
       final Map<String, String> formats, final TimeType useTimeType) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     schemaCombinatorType = null;
@@ -230,7 +230,7 @@ public class MapperContentUtil {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
     final var allOfIterator = schemaList.elements();
 
-    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, required, prefix, suffix, element, 
+    allOfIterator.forEachRemaining(element -> fieldObjectArrayList.add(solveElement(totalSchemas, required, prefix, suffix, element,
         modelToBuildList, formats, useTimeType)));
     return fieldObjectArrayList;
   }
@@ -300,6 +300,7 @@ public class MapperContentUtil {
                           .restrictions(new SchemaFieldObjectProperties())
                           .dataType(simpleType)
                           .dataTypeSimple(simpleType)
+                          .constValue(MapperUtil.getConstValue(schema))
                           .build();
         setFieldProperties(fieldObject, schema);
         setFormatProperies(fieldObject, simpleType, formats);
@@ -318,6 +319,7 @@ public class MapperContentUtil {
                         .dataType(simpleType)
                         .dataTypeSimple(simpleType)
                         .restrictions(new SchemaFieldObjectProperties())
+                        .constValue(MapperUtil.getConstValue(schema))
                         .build();
     }
     return fieldObject;
@@ -445,7 +447,7 @@ public class MapperContentUtil {
     }
   }
 
-  private static SchemaFieldObject processEnumField(final String name, final boolean required, final JsonNode value, final String prefix, 
+  private static SchemaFieldObject processEnumField(final String name, final boolean required, final JsonNode value, final String prefix,
       final String suffix, final TimeType useTimeType) {
     final List<String> enumValues = new ArrayList<>();
     value.get("enum").elements().forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));

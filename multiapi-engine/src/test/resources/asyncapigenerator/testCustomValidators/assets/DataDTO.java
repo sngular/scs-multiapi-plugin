@@ -41,22 +41,13 @@ public class DataDTO {
   @MinItems(minimum = 5)
   @UniqueItems
   @NotNull
-  private final List<integer> test;
-
-  private DataDTO(Integer clientId, String clientName, String flightNumber, List<integer> test) {
-    this.clientId = clientId;
-    this.clientName = clientName;
-    this.flightNumber = flightNumber;
-    this.test = test;
-
-    validateRequiredAttributes();
-  }
+  private final List<integer> test = new ArrayList<integer>();
 
   private DataDTO(DataDTOBuilder builder) {
     this.clientId = builder.clientId;
     this.clientName = builder.clientName;
     this.flightNumber = builder.flightNumber;
-    this.test = builder.test;
+    this.test.addAll(builder.test);
 
     validateRequiredAttributes();
   }
@@ -69,8 +60,11 @@ public class DataDTO {
   public static class DataDTOBuilder {
 
     private Integer clientId;
+
     private String clientName;
+
     private String flightNumber;
+
     private List<integer> test = new ArrayList<integer>();
 
     public DataDTO.DataDTOBuilder clientId(Integer clientId) {

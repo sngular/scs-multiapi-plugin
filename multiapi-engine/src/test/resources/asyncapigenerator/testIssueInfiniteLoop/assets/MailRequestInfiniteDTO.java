@@ -19,16 +19,9 @@ public class MailRequestInfiniteDTO {
   @JsonProperty(value ="config")
   private ConfigDTO config;
 
-  private MailRequestInfiniteDTO(String sender, List<String> recipients, ConfigDTO config) {
-    this.sender = sender;
-    this.recipients = recipients;
-    this.config = config;
-
-  }
-
   private MailRequestInfiniteDTO(MailRequestInfiniteDTOBuilder builder) {
     this.sender = builder.sender;
-    this.recipients = builder.recipients;
+    this.recipients.addAll(builder.recipients);
     this.config = builder.config;
 
   }
@@ -41,7 +34,9 @@ public class MailRequestInfiniteDTO {
   public static class MailRequestInfiniteDTOBuilder {
 
     private String sender;
+
     private List<String> recipients = new ArrayList<String>();
+
     private ConfigDTO config;
 
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder sender(String sender) {

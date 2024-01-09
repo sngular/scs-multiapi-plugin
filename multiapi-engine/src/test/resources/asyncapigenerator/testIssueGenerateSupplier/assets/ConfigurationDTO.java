@@ -13,11 +13,6 @@ public class ConfigurationDTO {
   @JsonProperty(value ="name")
   private String name;
 
-  private ConfigurationDTO(String name) {
-    this.name = name;
-
-  }
-
   private ConfigurationDTO(ConfigurationDTOBuilder builder) {
     this.name = builder.name;
 
