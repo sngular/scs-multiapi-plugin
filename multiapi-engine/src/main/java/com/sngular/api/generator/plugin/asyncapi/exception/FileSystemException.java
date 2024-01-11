@@ -7,12 +7,18 @@
 package com.sngular.api.generator.plugin.asyncapi.exception;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class FileSystemException extends RuntimeException {
 
-  private static final String ERROR_MESSAGE = "AsyncApi -> File System error trying to create necessary folder %s";
+  private static final String ERROR_MESSAGE =
+      "AsyncApi -> File System error trying to create necessary folder %s";
 
-  private static final String IO_ERROR_MESSAGE = "AsyncApi -> File System error trying to manipulate files: %s";
+  private static final String IO_ERROR_MESSAGE =
+      "AsyncApi -> File System error trying to manipulate files: %s";
+
+  private static final String FILE_PATH_ERROR_MESSAGE =
+      "AsyncApi -> File System error trying to manipulate file paths:";
 
   public FileSystemException(final String folderName) {
     super(String.format(ERROR_MESSAGE, folderName));
@@ -24,6 +30,9 @@ public class FileSystemException extends RuntimeException {
 
   public FileSystemException(final Exception exception) {
     super(String.format(IO_ERROR_MESSAGE, exception.getMessage()), exception);
+  }
 
+  public FileSystemException(final Collection<String> filePaths) {
+    super(String.format(ERROR_MESSAGE, String.join(", ", filePaths)));
   }
 }

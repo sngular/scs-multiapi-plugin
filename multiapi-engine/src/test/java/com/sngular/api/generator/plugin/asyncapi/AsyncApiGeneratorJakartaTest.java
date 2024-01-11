@@ -6,13 +6,12 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPISpecFile;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
@@ -51,7 +50,7 @@ class AsyncApiGeneratorJakartaTest {
   @MethodSource("fileSpecToProcess")
   void processFileSpecForTestFileGeneration(
       final String type,
-      final List<AsynAPISpecFile> specFileList,
+      final List<AsyncAPISpecFile> specFileList,
       final Function<Path, Boolean> validation) {
     asyncApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();

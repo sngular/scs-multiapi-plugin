@@ -1,5 +1,11 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
+import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
-import com.sngular.api.generator.plugin.common.files.FileLocation;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
@@ -48,8 +47,9 @@ public final class ApiTool {
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
-  private ApiTool() {
-  }
+  public static final String REF = "$ref";
+
+  private ApiTool() {}
 
   public static String getType(final JsonNode schema) {
     return hasType(schema) ? getNodeAsString(schema, "type") : "";
@@ -60,7 +60,7 @@ public final class ApiTool {
   }
 
   public static String getRefValue(final JsonNode schema) {
-    return getNode(schema, "$ref").textValue();
+    return getNode(schema, REF).textValue();
   }
 
   public static JsonNode getAdditionalProperties(final JsonNode schema) {
@@ -108,9 +108,9 @@ public final class ApiTool {
   }
 
   public static List<String> getEnumValues(final JsonNode schema) {
-    return new ArrayList<>(CollectionUtils.collect(
-      IteratorUtils.toList(schema.get("enum").elements()),
-      getTextValue()));
+    return new ArrayList<>(
+        CollectionUtils.collect(
+            IteratorUtils.toList(schema.get("enum").elements()), getTextValue()));
   }
 
   public static JsonNode getItems(final JsonNode schema) {
@@ -133,7 +133,8 @@ public final class ApiTool {
     return getComponentSchemasByType(openApi, REQUEST_BODIES);
   }
 
-  private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
+  private static Map<String, JsonNode> getComponentSchemasByType(
+      final JsonNode openApi, final String schemaType) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
     if (hasNode(openApi, COMPONENTS)) {
@@ -203,7 +204,8 @@ public final class ApiTool {
   }
 
   public static boolean hasRef(final JsonNode schema) {
-    return (hasNode(schema, "$ref") || schema.fieldNames().hasNext()) && schema.fieldNames().next().equals("$ref");
+    return (hasNode(schema, REF) || schema.fieldNames().hasNext())
+        && schema.fieldNames().next().equals(REF);
   }
 
   public static boolean hasProperties(final JsonNode schema) {
@@ -240,10 +242,10 @@ public final class ApiTool {
 
   public static boolean isNumber(final JsonNode schema) {
     return hasType(schema)
-           && (TypeConstants.INTEGER.equalsIgnoreCase(getType(schema))
-               || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
-               || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
-               || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
+        && (TypeConstants.INTEGER.equalsIgnoreCase(getType(schema))
+            || TypeConstants.NUMBER.equalsIgnoreCase(getType(schema))
+            || TypeConstants.INT_64.equalsIgnoreCase(getType(schema))
+            || TypeConstants.INT_32.equalsIgnoreCase(getType(schema)));
   }
 
   public static boolean isEnum(final JsonNode schema) {
@@ -266,8 +268,9 @@ public final class ApiTool {
     final boolean isDateTime;
     if (hasType(schema) && TypeConstants.STRING.equalsIgnoreCase(getType(schema))) {
       if (hasNode(schema, FORMAT)) {
-        isDateTime = "date".equalsIgnoreCase(getNode(schema, FORMAT).textValue())
-                     || "date-time".equalsIgnoreCase(getNode(schema, FORMAT).textValue());
+        isDateTime =
+            "date".equalsIgnoreCase(getNode(schema, FORMAT).textValue())
+                || "date-time".equalsIgnoreCase(getNode(schema, FORMAT).textValue());
       } else {
         isDateTime = false;
       }
@@ -304,7 +307,8 @@ public final class ApiTool {
     return hasNode(node, "components");
   }
 
-  public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
+  public static Iterator<Entry<String, JsonNode>> getComponent(
+      final JsonNode node, final String componentType) {
     Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
     if (hasComponents(node) && hasNode(getNode(node, "components"), componentType)) {
       result = getNode(getNode(node, "components"), componentType).fields();
@@ -312,7 +316,9 @@ public final class ApiTool {
     return result;
   }
 
-  public static JsonNode nodeFromFile(final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum) throws IOException {
+  public static JsonNode nodeFromFile(
+      final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum)
+      throws IOException {
     final InputStream file;
     if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
       file = ymlParent.getFileAtLocation(filePath);

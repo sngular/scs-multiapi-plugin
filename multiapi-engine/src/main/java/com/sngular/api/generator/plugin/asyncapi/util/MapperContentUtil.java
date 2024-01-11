@@ -13,6 +13,7 @@ import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TimeType;
+import com.sngular.api.generator.plugin.common.parameter.OperationParameter;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,56 +61,52 @@ public class MapperContentUtil {
 
   private MapperContentUtil() {}
 
-  public static List<SchemaObject> mapComponentToSchemaObject(
+  public static Map<String, SchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas,
-      final String component,
-      final JsonNode model,
-      final String prefix,
-      final String suffix,
-      final String parentPackage,
-      final Map<String, String> formats,
-      final TimeType useTimeType) {
-    final List<SchemaObject> schemasList = new ArrayList<>();
-    if (Objects.nonNull(model)) {
-      final List<String> alreadyBuilt = new ArrayList<>();
+      final Map<String, SchemaObject> compositedSchemas,
+      final String schemaName,
+      final JsonNode schema,
+      OperationParameter operationParameter) {
+    if (Objects.nonNull(schema)) {
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
-      schemasList.add(
+      String modelPackage = operationParameter.getModelPackage();
+      String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
+      SchemaObject builtSchemaObject =
           buildSchemaObject(
               totalSchemas,
-              component,
-              model,
-              prefix,
-              suffix,
+              schemaName,
+              schema,
+              operationParameter.getModelNamePrefix(),
+              operationParameter.getModelNameSuffix(),
               modelToBuildList,
               parentPackage,
-              formats,
-              useTimeType));
+              operationParameter.getFormats(),
+              operationParameter.getUseTimeType());
+      compositedSchemas.put(builtSchemaObject.getSchemaName(), builtSchemaObject);
       while (!modelToBuildList.isEmpty()) {
-
         final var modelToBuild = modelToBuildList.remove();
-        if (!alreadyBuilt.contains(modelToBuild)) {
+        if (!compositedSchemas.containsKey(modelToBuild)) {
           final var path = MapperUtil.splitName(modelToBuild);
           final var nexElement =
               buildSchemaObject(
                   totalSchemas,
                   modelToBuild,
                   totalSchemas.get(getComponent(path)),
-                  prefix,
-                  suffix,
+                  operationParameter.getModelNamePrefix(),
+                  operationParameter.getModelNameSuffix(),
                   modelToBuildList,
                   getParentName(path),
-                  formats,
-                  useTimeType);
-          if (schemasList.contains(nexElement)) {
+                  operationParameter.getFormats(),
+                  operationParameter.getUseTimeType());
+
+          if (compositedSchemas.containsKey(nexElement.getSchemaName())) {
             modelToBuildList.poll();
-          } else {
-            schemasList.add(nexElement);
           }
-          alreadyBuilt.add(modelToBuild);
+          compositedSchemas.put(nexElement.getSchemaName(), nexElement);
         }
       }
     }
-    return schemasList;
+    return compositedSchemas;
   }
 
   private static String getParentName(final String[] path) {

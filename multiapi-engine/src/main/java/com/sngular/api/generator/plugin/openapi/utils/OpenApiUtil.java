@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIOperationParameter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,7 +44,8 @@ public class OpenApiUtil {
 
   private OpenApiUtil() {}
 
-  public static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
+  public static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroups(
+      final JsonNode openAPI, final boolean groupByTags) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
     final var pathList = openAPI.findValue(PATHS).fields();
     if (pathList.hasNext()) {
@@ -54,7 +55,8 @@ public class OpenApiUtil {
     return mapApis;
   }
 
-  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {
+  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(
+      final Iterator<Entry<String, JsonNode>> pathList) {
 
     final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
     while (pathList.hasNext()) {
@@ -63,26 +65,34 @@ public class OpenApiUtil {
     }
 
     return mapApis;
-
   }
 
-  private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(final Entry<String, JsonNode> pathItem) {
+  private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(
+      final Entry<String, JsonNode> pathItem) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapByTag = new ArrayListValuedHashMap<>();
-    final var operations = IteratorUtils.filteredIterator(pathItem.getValue().fields(), opProperty -> REST_VERB_SET.contains(opProperty.getKey()));
+    final var operations =
+        IteratorUtils.filteredIterator(
+            pathItem.getValue().fields(),
+            opProperty -> REST_VERB_SET.contains(opProperty.getKey()));
     while (operations.hasNext()) {
       final var method = operations.next();
       if (ApiTool.hasNode(method.getValue(), "tags")) {
         final var tag = ApiTool.getNode(method.getValue(), "tags").elements().next().asText();
-        mapByTag.put(tag, Map.of(pathItem.getKey(), new ObjectNode(JsonNodeFactory.instance, Map.ofEntries(method))));
+        mapByTag.put(
+            tag,
+            Map.of(
+                pathItem.getKey(),
+                new ObjectNode(JsonNodeFactory.instance, Map.ofEntries(method))));
       }
     }
     return mapByTag;
   }
 
-  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
+  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(
+      final JsonNode openAPI) {
     final var mapByUrl = new ArrayListValuedHashMap<String, Map<String, JsonNode>>();
 
-    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext();) {
+    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext(); ) {
       final var pathUrl = it.next();
       final String[] pathName = pathUrl.split("/");
       mapByUrl.put(pathName[1], Map.of(pathUrl, openAPI.get(PATHS).get(pathUrl)));
@@ -91,7 +101,8 @@ public class OpenApiUtil {
     return mapByUrl;
   }
 
-  public static JsonNode getPojoFromSpecFile(final Path baseDir, final OpenAPISpecFile specFile) {
+  public static JsonNode getPojoFromSpecFile(
+      final Path baseDir, final OpenAPIOperationParameter specFile) {
 
     return getPojoFromRef(baseDir, specFile.getFilePath());
   }
@@ -111,7 +122,8 @@ public class OpenApiUtil {
     return openAPI;
   }
 
-  private static String readFile(final Path rootFilePath, final String filePath) throws MalformedURLException {
+  private static String readFile(final Path rootFilePath, final String filePath)
+      throws MalformedURLException {
     URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
     if (Objects.isNull(fileURL)) {
       final var parentFolder = rootFilePath.resolve(filePath);
@@ -129,15 +141,17 @@ public class OpenApiUtil {
     return sb.toString();
   }
 
-  public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
+  public static Map<String, JsonNode> processBasicJsonNodes(
+      final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
-    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
+    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext(); ) {
       final var pathDefinition = pathElement.next();
-      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
+      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processContentForBasicJsonNodes(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
+          processContentForBasicJsonNodes(
+              basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
         }
       }
     }
@@ -145,37 +159,54 @@ public class OpenApiUtil {
     return basicJsonNodeMap;
   }
 
-  private static void processContentForBasicJsonNodes(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processContentForBasicJsonNodes(
+      final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
 
     processParameters(basicJsonNodeMap, operation);
     processRequestBody(basicJsonNodeMap, operation);
     processResponses(basicJsonNodeMap, operation);
   }
 
-  private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
-    if (ApiTool.hasNode(operation, "requestBody") && !operation.at("/requestBody/content").isMissingNode()) {
+  private static void processRequestBody(
+      final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+    if (ApiTool.hasNode(operation, "requestBody")
+        && !operation.at("/requestBody/content").isMissingNode()) {
       final var content = operation.at("/requestBody/content");
       final var schema = content.findValue("schema");
       if (!ApiTool.hasRef(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
+        basicJsonNodeMap.put(
+            "InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
       } else if (ApiTool.hasItems(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), ApiTool.getItems(schema));
+        basicJsonNodeMap.put(
+            "InlineObject"
+                + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")),
+            ApiTool.getItems(schema));
       }
     }
   }
 
-  private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processResponses(
+      final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
-      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext();) {
+      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext(); ) {
         final var response = it.next();
         if (ApiTool.hasContent(response.getValue())) {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
             if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), schema);
+              basicJsonNodeMap.put(
+                  "InlineResponse"
+                      + response.getKey()
+                      + StringUtils.capitalize(getOperationId(operation)),
+                  schema);
             } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), schema);
+              basicJsonNodeMap.put(
+                  "InlineResponse"
+                      + response.getKey()
+                      + StringUtils.capitalize(getOperationId(operation))
+                      + getComposedJsonNodeName(schema),
+                  schema);
             }
           }
         }
@@ -183,13 +214,16 @@ public class OpenApiUtil {
     }
   }
 
-  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processParameters(
+      final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
     if (ApiTool.hasNode(operation, "parameters")) {
-      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext();) {
+      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext(); ) {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-              "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
+              "InlineParameter"
+                  + StringUtils.capitalize(getOperationId(operation))
+                  + StringUtils.capitalize(ApiTool.getName(parameter)),
               ApiTool.getNode(parameter, "schema"));
         }
       }
@@ -225,7 +259,8 @@ public class OpenApiUtil {
     return javaFileName;
   }
 
-  private static String capLettersAfterSpecialCharacters(final String pathName, final List<Integer> positionList) {
+  private static String capLettersAfterSpecialCharacters(
+      final String pathName, final List<Integer> positionList) {
     String javaFileName;
     final char[] pathAsChars = pathName.toCharArray();
     for (int i = 0; i < pathAsChars.length; i++) {
@@ -235,11 +270,11 @@ public class OpenApiUtil {
     }
     javaFileName = pathName;
     for (Integer position : positionList) {
-      javaFileName = javaFileName.substring(0, position + 1) + javaFileName.substring(position + 1, position + 2).toUpperCase(Locale.ROOT) + javaFileName.substring(position + 2);
+      javaFileName =
+          javaFileName.substring(0, position + 1)
+              + javaFileName.substring(position + 1, position + 2).toUpperCase(Locale.ROOT)
+              + javaFileName.substring(position + 2);
     }
     return javaFileName;
   }
-
 }
-
-

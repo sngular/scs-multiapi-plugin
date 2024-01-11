@@ -6,9 +6,18 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.REF;
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.SCHEMAS;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
+import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.common.parameter.OperationParameter;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.util.GeneratorUtil;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
@@ -18,6 +27,7 @@ import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIOperationParameter;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
@@ -30,6 +40,7 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +53,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class OpenApiGenerator {
 
+  private static final String SLASH = "/";
   private static final String DEFAULT_OPENAPI_API_PACKAGE =
       PluginConstants.DEFAULT_API_PACKAGE + ".openapi";
 
@@ -103,14 +116,24 @@ public class OpenApiGenerator {
   }
 
   public final void processFileSpec(final List<OpenAPISpecFile> specsListFile) {
+    final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     for (OpenAPISpecFile specFile : specsListFile) {
+      OpenAPIOperationParameter openAPIOperationParameter = specFile.getOpenApiOperationParameter();
       generateExceptionTemplate = false;
-      useLombok = Boolean.TRUE.equals(specFile.isUseLombokModelAnnotation());
+      useLombok = Boolean.TRUE.equals(openAPIOperationParameter.isUseLombokModelAnnotation());
       try {
-        processPackage(specFile.getApiPackage());
-        final String filePathToSave = processPath(specFile.getApiPackage(), false);
-        processFile(specFile, filePathToSave);
-        createClients(specFile);
+        String filePath = specFile.getOpenApiOperationParameter().getFilePath();
+        final Pair<InputStream, FileLocation> ymlFileAndPath =
+            GeneratorUtil.resolveYmlLocation(filePath, this.getClass());
+        final InputStream ymlFile = ymlFileAndPath.getLeft();
+        final FileLocation ymlParent = ymlFileAndPath.getRight();
+        final JsonNode openApi = om.readTree(ymlFile);
+        final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
+
+        final String filePathToSave = processPath(openAPIOperationParameter.getApiPackage(), false);
+        setUpTemplate(openAPIOperationParameter);
+        processFile(openAPIOperationParameter, openApi, totalSchemas, filePathToSave);
+        createClients(openAPIOperationParameter);
       } catch (final IOException e) {
         throw new CodeGenerationException(
             "Code generation failed. See above for the full exception.", e);
@@ -118,33 +141,61 @@ public class OpenApiGenerator {
     }
   }
 
-  private void processFile(final OpenAPISpecFile specFile, final String filePathToSave)
+  private Map<String, JsonNode> getAllSchemas(final FileLocation ymlParent, final JsonNode node) {
+    final Map<String, JsonNode> totalSchemas = new HashMap<>();
+    final List<JsonNode> referenceList = node.findValues(REF);
+
+    referenceList.forEach(
+        reference -> {
+          // TODO: move ReferenceProcessor to common package
+          final ReferenceProcessor refProcessor =
+              ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
+          refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
+        });
+
+    ApiTool.getComponent(node, SCHEMAS)
+        .forEachRemaining(
+            schema ->
+                totalSchemas.putIfAbsent(
+                    (SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue()));
+
+    return totalSchemas;
+  }
+
+  private final void setUpTemplate(OpenAPIOperationParameter operationParameter) {
+    processPackage(operationParameter.getApiPackage());
+  }
+
+  private void processFile(
+      final OpenAPIOperationParameter operationParameter,
+      JsonNode openAPI,
+      Map<String, JsonNode> totalSchemas,
+      final String filePathToSave)
       throws IOException {
 
-    final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, specFile);
-    final String clientPackage = specFile.getClientPackage();
+    final String clientPackage = operationParameter.getClientPackage();
 
-    if (specFile.isCallMode()) {
+    if (operationParameter.isCallMode()) {
       templateFactory.setWebClientPackageName(
           StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName(
           (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE)
               + ".auth");
-      isWebClient = specFile.isReactive();
-      isRestClient = !specFile.isReactive();
+      isWebClient = operationParameter.isReactive();
+      isRestClient = !operationParameter.isReactive();
     }
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
-    final var globalObject = createApiTemplate(specFile, filePathToSave, openAPI);
+    final var globalObject = createApiTemplate(operationParameter, filePathToSave, openAPI);
 
-    createModelTemplate(specFile, openAPI, globalObject);
+    createModelTemplate(operationParameter, openAPI, globalObject);
   }
 
-  private void createClients(final OpenAPISpecFile specFile) {
+  private void createClients(final OpenAPIOperationParameter operationParameter) {
 
     if (isWebClient || isRestClient) {
       try {
-        final String clientPackage = specFile.getClientPackage();
+        final String clientPackage = operationParameter.getClientPackage();
         final String clientPath =
             processPath(
                 StringUtils.isNotBlank(clientPackage)
@@ -157,16 +208,16 @@ public class OpenApiGenerator {
         if (Boolean.TRUE.equals(isRestClient)) {
           templateFactory.fillTemplateRestClient(clientPath);
         }
-        createAuthTemplates(specFile);
+        createAuthTemplates(operationParameter);
       } catch (IOException | TemplateException e) {
         throw new GeneratorTemplateException("Template Generator problem", e);
       }
     }
   }
 
-  private void createAuthTemplates(final OpenAPISpecFile specFile)
+  private void createAuthTemplates(final OpenAPIOperationParameter operationParameter)
       throws TemplateException, IOException {
-    final String clientPackage = specFile.getClientPackage();
+    final String clientPackage = operationParameter.getClientPackage();
     final var authFileRoot =
         (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE)
             + ".auth";
@@ -183,9 +234,11 @@ public class OpenApiGenerator {
   }
 
   private GlobalObject createApiTemplate(
-      final OpenAPISpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
+      final OpenAPIOperationParameter operationParameter,
+      final String filePathToSave,
+      final JsonNode openAPI) {
     final MultiValuedMap<String, Map<String, JsonNode>> apis =
-        OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
+        OpenApiUtil.mapApiGroups(openAPI, operationParameter.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject =
         MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
@@ -193,19 +246,20 @@ public class OpenApiGenerator {
     for (var apisKey : apis.keySet()) {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisKey);
       final List<PathObject> pathObjects =
-          MapperPathUtil.mapPathObjects(specFile, apis.get(apisKey), globalObject, baseDir);
+          MapperPathUtil.mapPathObjects(
+              operationParameter, apis.get(apisKey), globalObject, baseDir);
       final AuthObject authObject =
           MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
         templateFactory.fillTemplate(
-            filePathToSave, specFile, javaFileName, pathObjects, authObject);
+            filePathToSave, operationParameter, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
         throw new GeneratorTemplateException(
-            "Error filling the template", specFile.getFilePath(), e);
+            "Error filling the template", operationParameter.getFilePath(), e);
       }
 
-      if (Boolean.TRUE.equals(specFile.isCallMode())) {
+      if (Boolean.TRUE.equals(operationParameter.isCallMode())) {
         addAuthentications(authObject);
       }
     }
@@ -229,15 +283,17 @@ public class OpenApiGenerator {
   }
 
   private void createModelTemplate(
-      final OpenAPISpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject)
+      final OperationParameter operationParameter,
+      final JsonNode openAPI,
+      final GlobalObject globalObject)
       throws IOException {
-    final String fileModelToSave = processPath(specFile.getModelPackage(), true);
-    final var modelPackage = processModelPackage(specFile.getModelPackage());
+    final String fileModelToSave = processPath(operationParameter.getModelPackage(), true);
+    final var modelPackage = processModelPackage(operationParameter.getModelPackage());
     final var basicSchemaMap =
         OpenApiUtil.processBasicJsonNodes(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
     processModels(
-        specFile,
+        operationParameter,
         fileModelToSave,
         modelPackage,
         basicSchemaMap,
@@ -296,7 +352,7 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final OpenAPISpecFile specFile,
+      final OperationParameter specFile,
       final String fileModelToSave,
       final String modelPackage,
       final Map<String, JsonNode> basicSchemaMap,
@@ -316,7 +372,7 @@ public class OpenApiGenerator {
   }
 
   private void processModel(
-      final OpenAPISpecFile specFile,
+      final OperationParameter specFile,
       final String fileModelToSave,
       final String modelPackage,
       final Map<String, JsonNode> basicSchemaMap,
@@ -347,7 +403,7 @@ public class OpenApiGenerator {
   }
 
   private Map<String, SchemaObject> writeModel(
-      final OpenAPISpecFile specFile,
+      final OperationParameter operationParameter,
       final String fileModelToSave,
       final String schemaName,
       final JsonNode basicSchema,
@@ -355,7 +411,7 @@ public class OpenApiGenerator {
       final Map<String, SchemaObject> builtSchemasMap) {
     final var schemaObjectMap =
         MapperContentUtil.mapComponentToSchemaObject(
-            basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
+            basicSchemaMap, builtSchemasMap, schemaName, basicSchema, operationParameter, baseDir);
     checkRequiredOrCombinatorExists(schemaObjectMap);
     schemaObjectMap
         .values()
@@ -365,7 +421,7 @@ public class OpenApiGenerator {
                 final Set<String> propertiesSet = new HashSet<>();
                 templateFactory.fillTemplateSchema(
                     fileModelToSave,
-                    specFile.isUseLombokModelAnnotation(),
+                    operationParameter.isUseLombokModelAnnotation(),
                     schemaObject,
                     propertiesSet);
                 fillTemplates(fileModelToSave, propertiesSet);

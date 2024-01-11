@@ -32,25 +32,37 @@ class OpenApiGeneratorJakartaTest {
   @BeforeAll
   static void setup() {
     openApiGenerator =
-        new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
-                             new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
-                             baseDir.toFile());
+        new OpenApiGenerator(
+            SPRING_BOOT_VERSION,
+            Boolean.TRUE,
+            OpenApiGeneratorFixtures.GENERATED,
+            "groupId",
+            new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
+            baseDir.toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-        Arguments.of("testApiReactiveGeneration", OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
-                     OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
-        Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                     OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
-        Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION))
-    );
+        Arguments.of(
+            "testApiReactiveGeneration",
+            OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
+            OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
+        Arguments.of(
+            "testValidationAnnotations",
+            OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
+            OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
+        Arguments.of(
+            "testValidationAnnotationsLombok",
+            OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
+            OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)));
   }
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpec(final String type, final List<OpenAPISpecFile> specFileList, final Function<Path, Boolean> validation) {
+  void processFileSpec(
+      final String type,
+      final List<OpenAPISpecFile> specFileList,
+      final Function<Path, Boolean> validation) {
     openApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }

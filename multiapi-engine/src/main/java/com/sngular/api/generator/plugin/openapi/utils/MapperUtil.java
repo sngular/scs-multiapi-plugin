@@ -6,10 +6,12 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType.OFFSET;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.parameter.OperationParameter;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,13 +19,16 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final OpenAPISpecFile specFile) {
+  public static String getSimpleType(
+      final JsonNode schema,
+      final com.sngular.api.generator.plugin.common.parameter.OperationParameter
+          operationParameter) {
     final String type;
     final var nodeType = ApiTool.getType(schema);
     if (checkIfNumber(nodeType)) {
       type = processNumber(schema);
     } else if (ApiTool.hasRef(schema)) {
-      type = getPojoName(getRefSchemaName(schema), specFile);
+      type = getPojoName(getRefSchemaName(schema), operationParameter);
     } else if (TypeConstants.ARRAY.equalsIgnoreCase(nodeType)) {
       type = TypeConstants.ARRAY;
     } else {
@@ -72,39 +77,43 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getTypeArray(final JsonNode array, final OpenAPISpecFile specFile) {
+  public static String getTypeArray(
+      final JsonNode array, final OperationParameter operationParameter) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
       typeArray = TypeConstants.STRING;
     } else if (ApiTool.isNumber(ApiTool.getItems(array))) {
       typeArray = ApiTool.getNumberType(ApiTool.getItems(array));
     } else if (ApiTool.hasRef(ApiTool.getItems(array))) {
-      typeArray = getPojoName(MapperUtil.getRefSchemaName(ApiTool.getItems(array)), specFile);
+      typeArray =
+          getPojoName(MapperUtil.getRefSchemaName(ApiTool.getItems(array)), operationParameter);
     }
     return typeArray;
   }
 
-  public static String getPojoName(final String namePojo, final OpenAPISpecFile specFile) {
-    return (StringUtils.isNotBlank(specFile.getModelNamePrefix())
-            ? specFile.getModelNamePrefix()
+  public static String getPojoName(
+      final String namePojo, final OperationParameter operationParameter) {
+    return (StringUtils.isNotBlank(operationParameter.getModelNamePrefix())
+            ? operationParameter.getModelNamePrefix()
             : "")
         + StringUtils.capitalize(namePojo)
-        + (StringUtils.isNotBlank(specFile.getModelNameSuffix())
-            ? specFile.getModelNameSuffix()
+        + (StringUtils.isNotBlank(operationParameter.getModelNameSuffix())
+            ? operationParameter.getModelNameSuffix()
             : "");
   }
 
-  public static String getRef(final JsonNode schema, final OpenAPISpecFile specFile) {
+  public static String getRef(final JsonNode schema, final OperationParameter operationParameter) {
     final String typeObject;
-    typeObject = getPojoName(getRefSchemaName(schema), specFile);
+    typeObject = getPojoName(getRefSchemaName(schema), operationParameter);
     return typeObject;
   }
 
-  public static String getDateType(final JsonNode schema, final OpenAPISpecFile specFile) {
+  public static String getDateType(
+      final JsonNode schema, final OperationParameter operationParameter) {
     final String dateType;
     switch (ApiTool.getFormat(schema)) {
       case "date":
-        switch (specFile.getUseTimeType()) {
+        switch (operationParameter.getUseTimeType()) {
           case ZONED:
             dateType = TypeConstants.ZONEDDATE;
             break;
@@ -116,7 +125,7 @@ public class MapperUtil {
         }
         break;
       case "date-time":
-        switch (specFile.getUseTimeType()) {
+        switch (operationParameter.getUseTimeType()) {
           case ZONED:
             dateType = TypeConstants.ZONEDDATETIME;
             break;

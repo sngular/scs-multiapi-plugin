@@ -20,24 +20,21 @@ import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPIOperationParameter;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPISpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
-import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
-import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.model.TimeType;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.util.GeneratorUtil;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +52,6 @@ import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
@@ -145,36 +141,13 @@ public class AsyncApiGenerator {
     this.springBootVersion = springBootVersion;
   }
 
-  public static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath)
-      throws FileNotFoundException {
-    final InputStream classPathInput =
-        AsyncApiGenerator.class.getClassLoader().getResourceAsStream(ymlFilePath);
-
-    final InputStream ymlFile;
-    final FileLocation ymlParentPath;
-    if (Objects.nonNull(classPathInput)) {
-      ymlFile = classPathInput;
-      ymlParentPath = new ClasspathFileLocation(ymlFilePath);
-    } else {
-      final File f = new File(ymlFilePath);
-      ymlFile = new FileInputStream(f);
-      ymlParentPath = new DirectoryFileLocation(f.toPath().getParent());
-    }
-
-    return new ImmutablePair<>(ymlFile, ymlParentPath);
-  }
-
-  public final void processFileSpec(final List<AsynAPISpecFile> specsListFile) {
+  public final void processFileSpec(final List<AsyncAPISpecFile> specsListFile) {
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     processedOperationIds.clear();
     generateExceptionTemplate = false;
-    for (AsynAPISpecFile fileParameter : specsListFile) {
-      final Pair<InputStream, FileLocation> ymlFileAndPath;
-      try {
-        ymlFileAndPath = resolveYmlLocation(fileParameter.getFilePath());
-      } catch (final IOException e) {
-        throw new FileSystemException(e.getMessage());
-      }
+    for (AsyncAPISpecFile fileParameter : specsListFile) {
+      final Pair<InputStream, FileLocation> ymlFileAndPath =
+          GeneratorUtil.resolveYmlLocation(fileParameter.getFilePath(), this.getClass());
       final InputStream ymlFile = ymlFileAndPath.getLeft();
       final FileLocation ymlParent = ymlFileAndPath.getRight();
 
@@ -294,7 +267,7 @@ public class AsyncApiGenerator {
   }
 
   private void processOperation(
-      final AsynAPISpecFile fileParameter,
+      final AsyncAPISpecFile fileParameter,
       final FileLocation ymlParent,
       final Entry<String, JsonNode> entry,
       final JsonNode channel,
@@ -344,7 +317,7 @@ public class AsyncApiGenerator {
   }
 
   private boolean isValidOperation(
-      final OperationParameterObject operation,
+      final AsyncAPIOperationParameter operation,
       final String operationId,
       final JsonNode channel,
       final String channelType,
@@ -385,7 +358,8 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void setUpTemplate(final AsynAPISpecFile fileParameter, final Integer springBootVersion) {
+  private void setUpTemplate(
+      final AsyncAPISpecFile fileParameter, final Integer springBootVersion) {
     processPackage(fileParameter);
     processFilePaths(fileParameter);
     processClassNames(fileParameter);
@@ -393,7 +367,7 @@ public class AsyncApiGenerator {
     processJavaEEPackage(springBootVersion);
   }
 
-  private void processFilePaths(final AsynAPISpecFile fileParameter) {
+  private void processFilePaths(final AsyncAPISpecFile fileParameter) {
     var pathToCreate = convertPackageToTargetPath(fileParameter.getSupplier());
     if (Objects.nonNull(pathToCreate)) {
       templateFactory.setSupplierFilePath(processPath(pathToCreate));
@@ -408,7 +382,7 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processEntitiesSuffix(final AsynAPISpecFile fileParameter) {
+  private void processEntitiesSuffix(final AsyncAPISpecFile fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(
         fileParameter.getSupplier() != null
                 && fileParameter.getSupplier().getModelNameSuffix() != null
@@ -443,7 +417,7 @@ public class AsyncApiGenerator {
     processedApiPackages.add(apiPackage != null ? apiPackage : DEFAULT_ASYNCAPI_API_PACKAGE);
   }
 
-  private void processClassNames(final AsynAPISpecFile fileParameter) {
+  private void processClassNames(final AsyncAPISpecFile fileParameter) {
     templateFactory.setSupplierClassName(
         fileParameter.getSupplier() != null
                 && fileParameter.getSupplier().getClassNamePostfix() != null
@@ -479,7 +453,7 @@ public class AsyncApiGenerator {
     return path;
   }
 
-  private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
+  private String convertPackageToTargetPath(final AsyncAPIOperationParameter operationParameter) {
     String path = null;
     if (Objects.nonNull(operationParameter)) {
       if (Objects.nonNull(operationParameter.getApiPackage())) {
@@ -499,7 +473,7 @@ public class AsyncApiGenerator {
     templateFactory.calculateJavaEEPackage(springBootVersion);
   }
 
-  private void processPackage(final AsynAPISpecFile fileParameter) {
+  private void processPackage(final AsyncAPISpecFile fileParameter) {
     if (ObjectUtils.anyNotNull(
         fileParameter.getSupplier(),
         fileParameter.getStreamBridge(),
@@ -512,7 +486,7 @@ public class AsyncApiGenerator {
     }
   }
 
-  private String evaluatePackage(final OperationParameterObject operation) {
+  private String evaluatePackage(final AsyncAPIOperationParameter operation) {
     final String evaluated;
     if (operation != null && operation.getApiPackage() != null) {
       evaluated = operation.getApiPackage();
@@ -524,23 +498,19 @@ public class AsyncApiGenerator {
 
   private void processSupplierMethod(
       final JsonNode channel,
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas)
       throws IOException, TemplateException {
-    final ProcessMethodResult result =
+    final ProcessMethodResult processMethodResult =
         processMethod(channel, operationObject, ymlParent, totalSchemas);
-    fillTemplateFactory(result, totalSchemas, operationObject);
-    templateFactory.addSupplierMethod(
-        result.getOperationId(),
-        result.getNamespace(),
-        result.getBindings(),
-        result.getBindingType());
+    fillTemplateFactory(processMethodResult, totalSchemas, operationObject);
+    templateFactory.addSupplierMethod(processMethodResult);
   }
 
   private void processStreamBridgeMethod(
       final JsonNode channel,
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final FileLocation ymlParent,
       final String channelName,
       final Map<String, JsonNode> totalSchemas)
@@ -552,39 +522,29 @@ public class AsyncApiGenerator {
       throw new ChannelNameException(channelName);
     }
     fillTemplateFactory(result, totalSchemas, operationObject);
-    templateFactory.addStreamBridgeMethod(
-        result.getOperationId(),
-        result.getNamespace(),
-        channelName,
-        result.getBindings(),
-        result.getBindingType());
+    templateFactory.addStreamBridgeMethod(result, channelName);
   }
 
   private void processSubscribeMethod(
       final JsonNode channel,
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas)
       throws IOException, TemplateException {
-    final ProcessMethodResult result =
+    final ProcessMethodResult processMethodResult =
         processMethod(channel, operationObject, ymlParent, totalSchemas);
-    fillTemplateFactory(result, totalSchemas, operationObject);
-    templateFactory.addSubscribeMethod(
-        result.getOperationId(),
-        result.getNamespace(),
-        result.getBindings(),
-        result.getBindingType());
+    fillTemplateFactory(processMethodResult, totalSchemas, operationObject);
+    templateFactory.addSubscribeMethod(processMethodResult);
   }
 
   private void fillTemplateFactory(
       final ProcessMethodResult processedMethod,
       final Map<String, JsonNode> totalSchemas,
-      final OperationParameterObject operationObject)
+      final AsyncAPIOperationParameter operationObject)
       throws TemplateException, IOException {
     final String classFullName = processedMethod.getNamespace();
     final String keyClassFullName = processedMethod.getBindings();
     final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
-    final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final String className = classFullName.substring(classFullName.lastIndexOf(".") + 1);
     final String keyClassName =
         keyClassFullName != null
@@ -594,14 +554,8 @@ public class AsyncApiGenerator {
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
           MapperContentUtil.mapComponentToSchemaObject(
-                  totalSchemas,
-                  className,
-                  schemaToBuild,
-                  null,
-                  operationObject.getModelNameSuffix(),
-                  parentPackage,
-                  operationObject.getFormats(),
-                  operationObject.getUseTimeType())
+                  totalSchemas, new HashMap<>(), className, schemaToBuild, operationObject)
+              .values()
               .iterator();
 
       if (schemaObjectIt.hasNext()) {
@@ -668,7 +622,7 @@ public class AsyncApiGenerator {
 
   private ProcessMethodResult processMethod(
       final JsonNode channel,
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas)
       throws IOException {
@@ -714,7 +668,7 @@ public class AsyncApiGenerator {
   }
 
   private Pair<String, JsonNode> processPayload(
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final String messageName,
       final JsonNode payload,
       final FileLocation ymlParent)
@@ -731,7 +685,7 @@ public class AsyncApiGenerator {
   private Pair<String, JsonNode> processMethodRef(
       final ProcessBindingsResultBuilder bindingsResult,
       final String messageRef,
-      final OperationParameterObject operationObject,
+      final AsyncAPIOperationParameter operationObject,
       final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas,
       final JsonNode method)

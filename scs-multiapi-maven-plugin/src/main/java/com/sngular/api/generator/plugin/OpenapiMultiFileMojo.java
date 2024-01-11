@@ -22,7 +22,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 @Slf4j
-@Mojo(name = "openapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(
+    name = "openapi-generation",
+    defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+    requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class OpenapiMultiFileMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -37,7 +40,10 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
 
-  @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
+  @Parameter(
+      name = "generatedSourcesFolder",
+      property = "generatedSourcesFolder",
+      defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
 
   @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
@@ -49,19 +55,26 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
-    final OpenApiGenerator openApiGenerator = new OpenApiGenerator(springBootVersion, overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
-                                                                   targetFolder, project.getBasedir());
+    final OpenApiGenerator openApiGenerator =
+        new OpenApiGenerator(
+            springBootVersion,
+            overwriteModel,
+            processedGeneratedSourcesFolder,
+            project.getModel().getGroupId(),
+            targetFolder,
+            project.getBasedir());
     if (null != specFiles && !specFiles.isEmpty()) {
       openApiGenerator.processFileSpec(specFiles);
     } else {
-      throw new MojoExecutionException("Code generation failed. Not exists FileSpec configuration to generate package and class");
+      throw new MojoExecutionException(
+          "Code generation failed. Not exists FileSpec configuration to generate package and class");
     }
-
   }
 
   private void processGeneratedSourcesFolderName() {
     if (generatedSourcesFolder.matches("[a-zA-Z\\d\\-]+")) {
-      processedGeneratedSourcesFolder = generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
+      processedGeneratedSourcesFolder =
+          generatedSourcesFolder + "/" + PluginConstants.GENERATED_SOURCES_API_GENERATOR_FOLDER;
     } else {
       throw new GeneratedSourceFolderException("OpenApi", generatedSourcesFolder);
     }
@@ -71,7 +84,4 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
     final Path projectPath = targetFolder.toPath().resolve(processedGeneratedSourcesFolder);
     project.addCompileSourceRoot(projectPath.toString());
   }
-
-
 }
-

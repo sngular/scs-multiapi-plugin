@@ -7,7 +7,7 @@
 package com.sngular.api.generator.plugin;
 
 import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPISpecFile;
 import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
 import java.io.File;
 import java.nio.file.Path;
@@ -20,7 +20,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
-@Mojo(name = "asyncapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(
+    name = "asyncapi-generation",
+    defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+    requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class OpenAsyncMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -30,9 +33,12 @@ public final class OpenAsyncMojo extends AbstractMojo {
   private File targetFolder;
 
   @Parameter(property = "specFiles")
-  private List<AsynAPISpecFile> specFiles;
+  private List<AsyncAPISpecFile> specFiles;
 
-  @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
+  @Parameter(
+      name = "generatedSourcesFolder",
+      property = "generatedSourcesFolder",
+      defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
 
   @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
@@ -43,10 +49,15 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
-    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
+    final var asyncApiGenerator =
+        new AsyncApiGenerator(
+            springBootVersion,
+            targetFolder,
+            processedGeneratedSourcesFolder,
+            project.getModel().getGroupId(),
+            project.getBasedir());
 
     asyncApiGenerator.processFileSpec(specFiles);
-
   }
 
   private String processGeneratedSourcesFolderName() {
@@ -61,5 +72,4 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final Path projectPath = targetFolder.toPath().resolve(processedGeneratedSourcesFolder);
     project.addCompileSourceRoot(projectPath.toString());
   }
-
 }
