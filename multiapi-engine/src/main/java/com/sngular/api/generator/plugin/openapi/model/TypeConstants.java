@@ -54,6 +54,21 @@ public final class TypeConstants {
 
   public static final Set<String> NO_IMPORT_TYPE = Set.of(STRING, INTEGER, OBJECT);
 
+  public static final Set<String> NO_PROCESS_TYPE = Set.of(NUMBER,
+                                                           BOOLEAN,
+                                                           BIG_DECIMAL,
+                                                           INTEGER,
+                                                           DOUBLE,
+                                                           FLOAT,
+                                                           LONG,
+                                                           STRING,
+                                                           ENUM,
+                                                           LOCALDATE,
+                                                           LOCALDATETIME,
+                                                           ZONEDDATE,
+                                                           ZONEDDATETIME,
+                                                           OFFSETDATE,
+                                                           OFFSETDATETIME);
   public static final Set<String> ALL_TYPES = Set.of(
       NUMBER,
       BOOLEAN,

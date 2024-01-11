@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -167,9 +168,12 @@ public class TemplateFactory {
     final Template template = cfg.getTemplate(templateName);
 
     if (!Files.exists(Path.of(path)) || checkOverwrite) {
-      final FileWriter writer = new FileWriter(path);
-      template.process(root, writer);
-      writer.close();
+      try (FileWriter writer = new FileWriter(path)) {
+        template.process(root, writer);
+      } catch (IOException | TemplateException exception) {
+        final var schema = root.get("schema");
+        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject)schema).getClassName()), exception);
+      }
     } else {
       throw new OverwritingApiFilesException();
     }

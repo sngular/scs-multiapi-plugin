@@ -378,6 +378,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_CREATE_BASIC_DTO = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testCreateBasicDTO/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testcreatebasicdto")
+          .modelPackage("com.sngular.multifileplugin.testcreatebasicdto.model")
+          .clientPackage("com.sngular.multifileplugin.testcreatebasicdto.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static final List<SpecFile> TEST_ISSUE_FAKER = List.of(
       SpecFile
           .builder()
@@ -1275,6 +1287,30 @@ static Function<Path, Boolean> validateSimpleBuild() {
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "model/AddressDTO.java",
         ASSETS_PATH + "model/PropertiesDTO.java",
+        ASSETS_PATH + "model/TestDTO.java"
+    );
+
+    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateCreateBasicDTO() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testcreatebasicdto";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testcreatebasicdto/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testcreatebasicdto/model/exception";
+
+    final String COMMON_PATH = "openapigenerator/testcreatebasicdto/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/AddressDTO.java",
         ASSETS_PATH + "model/TestDTO.java"
     );
 
