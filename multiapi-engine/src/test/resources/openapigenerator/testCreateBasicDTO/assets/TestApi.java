@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testcreatebasicdto;
+package com.sngular.multifileplugin.testCreateBasicDTO;
 
 import java.util.Optional;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.testcreatebasicdto.model.TestDTO;
+import com.sngular.multifileplugin.testCreateBasicDTO.model.TestDTO;
 
 public interface TestApi {
 

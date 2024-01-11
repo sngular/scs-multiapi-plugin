@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testcreatebasicdto.model;
+package com.sngular.multifileplugin.testCreateBasicDTO.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
