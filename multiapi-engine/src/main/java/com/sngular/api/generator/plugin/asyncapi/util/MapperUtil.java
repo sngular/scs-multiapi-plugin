@@ -87,12 +87,10 @@ public class MapperUtil {
     String type = "String";
     if (format != null) {
       if (DATE_TIME.equalsIgnoreCase(format)) {
-        switch(useTimeType) {
-        case ZONED:
-            type = ZONED_DATE_TIME;
-            break;
-          default:
-            type = LOCAL_DATE_TIME;
+        if (Objects.requireNonNull(useTimeType) == TimeType.ZONED) {
+          type = ZONED_DATE_TIME;
+        } else {
+          type = LOCAL_DATE_TIME;
         }
 
       } else if (DATE.equalsIgnoreCase(format)) {

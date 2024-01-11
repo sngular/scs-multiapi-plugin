@@ -107,7 +107,7 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException, TemplateException {
+  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException {
     final File fileToSave = new File(filePathToSave);
     final var nameAuthClass = authName + JAVA_EXTENSION;
     final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
@@ -117,7 +117,7 @@ public class TemplateFactory {
 
   public final void fillTemplateCustom(
       final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
-      final String validatorTemplate) throws IOException, TemplateException {
+      final String validatorTemplate) throws IOException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
@@ -159,12 +159,11 @@ public class TemplateFactory {
     }
   }
 
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException {
     writeTemplateToFile(templateName, root, path, true);
   }
 
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException,
-                                                                                                                                                      TemplateException {
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException {
     final Template template = cfg.getTemplate(templateName);
 
     if (!Files.exists(Path.of(path)) || checkOverwrite) {
@@ -172,7 +171,7 @@ public class TemplateFactory {
         template.process(root, writer);
       } catch (IOException | TemplateException exception) {
         final var schema = root.get("schema");
-        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject)schema).getClassName()), exception);
+        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject) schema).getClassName()), exception);
       }
     } else {
       throw new OverwritingApiFilesException();
