@@ -6,16 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
-import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
-import com.sngular.api.generator.plugin.openapi.model.AuthObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,6 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
+import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateFactory {
 
@@ -105,7 +106,7 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException, TemplateException {
+  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException {
     final File fileToSave = new File(filePathToSave);
     final var nameAuthClass = authName + JAVA_EXTENSION;
     final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
@@ -115,7 +116,7 @@ public class TemplateFactory {
 
   public final void fillTemplateCustom(
       final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
-      final String validatorTemplate) throws IOException, TemplateException {
+      final String validatorTemplate) throws IOException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
@@ -157,18 +158,20 @@ public class TemplateFactory {
     }
   }
 
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException {
     writeTemplateToFile(templateName, root, path, true);
   }
 
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException,
-                                                                                                                                                      TemplateException {
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException {
     final Template template = cfg.getTemplate(templateName);
 
     if (!Files.exists(Path.of(path)) || checkOverwrite) {
-      final FileWriter writer = new FileWriter(path);
-      template.process(root, writer);
-      writer.close();
+      try (FileWriter writer = new FileWriter(path)) {
+        template.process(root, writer);
+      } catch (IOException | TemplateException exception) {
+        final var schema = root.get("schema");
+        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject) schema).getClassName()), exception);
+      }
     } else {
       throw new OverwritingApiFilesException();
     }

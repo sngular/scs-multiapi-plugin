@@ -1,0 +1,67 @@
+---
+openapi: "3.0.0"
+info:
+  contact:
+    name: Os3 Team
+    email: os3-info@sngular.com
+  version: 1.0.0
+  title: Testing example file
+  license:
+    name: MIT
+  description: Testing example file
+servers:
+- url: http://localhost:8080/v1
+tags:
+- name: testAdditionalProperties
+  description: Test service
+paths:
+  /test:
+    summary: testCreateDTO
+    get:
+      summary: testCreateDTO
+      description: Test File for SCC MultiApi Plugin.
+      tags:
+      - test
+      operationId: testCreateDTO
+      responses:
+        '200':
+          $ref: '#/components/responses/testCreate'
+components:
+  responses:
+    testCreate:
+      description: An object with additional properties
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/test'
+  schemas:
+    test:
+      type: object
+      required:
+      - id
+      - age
+      - properties
+      properties:
+        id:
+          $ref: "#/components/schemas/strProperty"
+        age:
+          type: number
+          format: int32
+        properties:
+          $ref: "#/components/schemas/strProperty"
+        address:
+          type: object
+          required:
+          - country
+          - city
+          properties:
+            street:
+              $ref: "#/components/schemas/strProperty"
+            country:
+              $ref: "#/components/schemas/booleanProperty"
+            city:
+              $ref: "#/components/schemas/strProperty"
+    strProperty:
+      type: string
+    booleanProperty:
+      type: boolean

@@ -6,6 +6,19 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -27,18 +40,6 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Pattern;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -302,17 +303,19 @@ public class OpenApiGenerator {
       final Map<String, JsonNode> basicSchemaMap,
       final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
-    basicSchemaMap.forEach(
-        (schemaName, basicSchema) ->
-            processModel(
-                specFile,
-                fileModelToSave,
-                modelPackage,
-                basicSchemaMap,
-                overwrite,
-                schemaName,
-                basicSchema,
-                builtSchemasMap));
+    basicSchemaMap.forEach((schemaName, basicSchema) -> {
+      if (ApiTool.hasType(basicSchema)) {
+        if (validType(ApiTool.getType(basicSchema))) {
+          processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap);
+        }
+      } else {
+        processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap);
+      }
+    });
+  }
+
+  private boolean validType(final String type) {
+    return !TypeConstants.NO_PROCESS_TYPE.contains(type);
   }
 
   private void processModel(
