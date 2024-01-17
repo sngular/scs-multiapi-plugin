@@ -130,9 +130,9 @@ public class OpenApiGenerator {
         final JsonNode openApi = om.readTree(ymlFile);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
 
-        final String filePathToSave = processPath(openAPIOperationParameter.getApiPackage(), false);
         setUpTemplate(openAPIOperationParameter);
-        processFile(openAPIOperationParameter, openApi, totalSchemas, filePathToSave);
+        final String filePathToSave = processPath(openAPIOperationParameter.getApiPackage(), false);
+        processFile(openAPIOperationParameter, filePathToSave, totalSchemas);
         createClients(openAPIOperationParameter);
       } catch (final IOException e) {
         throw new CodeGenerationException(
@@ -147,17 +147,13 @@ public class OpenApiGenerator {
 
     referenceList.forEach(
         reference -> {
-          // TODO: move ReferenceProcessor to common package
           final ReferenceProcessor refProcessor =
               ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
           refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
         });
 
     ApiTool.getComponent(node, SCHEMAS)
-        .forEachRemaining(
-            schema ->
-                totalSchemas.putIfAbsent(
-                    (SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue()));
+        .forEachRemaining(schema -> totalSchemas.putIfAbsent(schema.getKey(), schema.getValue()));
 
     return totalSchemas;
   }
@@ -168,11 +164,11 @@ public class OpenApiGenerator {
 
   private void processFile(
       final OpenAPIOperationParameter operationParameter,
-      JsonNode openAPI,
-      Map<String, JsonNode> totalSchemas,
-      final String filePathToSave)
+      String filePathToSave,
+      Map<String, JsonNode> totalSchemas)
       throws IOException {
 
+    final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, operationParameter);
     final String clientPackage = operationParameter.getClientPackage();
 
     if (operationParameter.isCallMode()) {
@@ -188,7 +184,7 @@ public class OpenApiGenerator {
     templateFactory.calculateJavaEEPackage(springBootVersion);
     final var globalObject = createApiTemplate(operationParameter, filePathToSave, openAPI);
 
-    createModelTemplate(operationParameter, openAPI, globalObject);
+    createModelTemplate(operationParameter, totalSchemas);
   }
 
   private void createClients(final OpenAPIOperationParameter operationParameter) {
@@ -283,20 +279,16 @@ public class OpenApiGenerator {
   }
 
   private void createModelTemplate(
-      final OperationParameter operationParameter,
-      final JsonNode openAPI,
-      final GlobalObject globalObject)
+      final OperationParameter operationParameter, final Map<String, JsonNode> totalSchemas)
       throws IOException {
     final String fileModelToSave = processPath(operationParameter.getModelPackage(), true);
     final var modelPackage = processModelPackage(operationParameter.getModelPackage());
-    final var basicSchemaMap =
-        OpenApiUtil.processBasicJsonNodes(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
     processModels(
         operationParameter,
         fileModelToSave,
         modelPackage,
-        basicSchemaMap,
+        totalSchemas,
         Boolean.TRUE.equals(overwriteModel));
   }
 
@@ -355,16 +347,16 @@ public class OpenApiGenerator {
       final OperationParameter specFile,
       final String fileModelToSave,
       final String modelPackage,
-      final Map<String, JsonNode> basicSchemaMap,
+      final Map<String, JsonNode> totalSchemas,
       final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
-    basicSchemaMap.forEach(
+    totalSchemas.forEach(
         (schemaName, basicSchema) ->
             processModel(
                 specFile,
                 fileModelToSave,
                 modelPackage,
-                basicSchemaMap,
+                totalSchemas,
                 overwrite,
                 schemaName,
                 basicSchema,
@@ -375,7 +367,7 @@ public class OpenApiGenerator {
       final OperationParameter specFile,
       final String fileModelToSave,
       final String modelPackage,
-      final Map<String, JsonNode> basicSchemaMap,
+      final Map<String, JsonNode> totalSchemas,
       final boolean overwrite,
       final String schemaName,
       final JsonNode basicSchema,
@@ -391,14 +383,14 @@ public class OpenApiGenerator {
               specFile,
               fileModelToSave,
               refSchema,
-              basicSchemaMap.get(refSchema),
-              basicSchemaMap,
+              totalSchemas.get(refSchema),
+              totalSchemas,
               builtSchemasMap));
     } else if (!ApiTool.isArray(basicSchema)
         && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
       builtSchemasMap.putAll(
           writeModel(
-              specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
+              specFile, fileModelToSave, schemaName, basicSchema, totalSchemas, builtSchemasMap));
     }
   }
 
@@ -407,11 +399,11 @@ public class OpenApiGenerator {
       final String fileModelToSave,
       final String schemaName,
       final JsonNode basicSchema,
-      final Map<String, JsonNode> basicSchemaMap,
+      final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> builtSchemasMap) {
     final var schemaObjectMap =
         MapperContentUtil.mapComponentToSchemaObject(
-            basicSchemaMap, builtSchemasMap, schemaName, basicSchema, operationParameter, baseDir);
+            totalSchemas, builtSchemasMap, schemaName, basicSchema, operationParameter);
     checkRequiredOrCombinatorExists(schemaObjectMap);
     schemaObjectMap
         .values()

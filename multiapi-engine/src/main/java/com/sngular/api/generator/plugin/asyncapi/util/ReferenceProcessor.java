@@ -1,16 +1,15 @@
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import lombok.Builder;
 
 public final class ReferenceProcessor {
@@ -32,13 +31,13 @@ public final class ReferenceProcessor {
   private final Map<String, JsonNode> totalSchemas;
 
   @Builder
-  public ReferenceProcessor(final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {
+  public ReferenceProcessor(
+      final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {
     this.ymlParent = ymlParent;
     this.totalSchemas = totalSchemas;
   }
 
-  public void processReference(
-      final JsonNode node, final String referenceLink) {
+  public void processReference(final JsonNode node, final String referenceLink) {
     if (alreadyProcessed == null) {
       alreadyProcessed = new ArrayList<>();
     }
@@ -48,7 +47,8 @@ public final class ReferenceProcessor {
     if (!totalSchemas.containsKey(calculatedKey) && !alreadyProcessed.contains(calculatedKey)) {
       alreadyProcessed.add(calculatedKey);
       try {
-        if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(JSON)) {
+        if (referenceLink.toLowerCase().contains(YML)
+            || referenceLink.toLowerCase().contains(JSON)) {
           component = solveRef(ymlParent, path, referenceLink, totalSchemas);
         } else {
           if (referenceLink.toLowerCase().contains(AVSC)) {
@@ -70,10 +70,15 @@ public final class ReferenceProcessor {
   }
 
   private String calculateKey(final String[] path) {
-    return (path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase();
+    return (path[path.length - 1]);
   }
 
-  private JsonNode solveRef(final FileLocation ymlParent, final String[] path, final String reference, final Map<String, JsonNode> totalSchemas) throws IOException {
+  private JsonNode solveRef(
+      final FileLocation ymlParent,
+      final String[] path,
+      final String reference,
+      final Map<String, JsonNode> totalSchemas)
+      throws IOException {
     final String[] pathToFile = reference.split("#");
     final String filePath = pathToFile[0];
     JsonNode returnNode = null;
@@ -88,17 +93,17 @@ public final class ReferenceProcessor {
       }
     } else if (filePath.endsWith(AVSC)) {
       returnNode = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.AVRO);
-    } else if (totalSchemas.containsKey((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase())) {
-      returnNode = totalSchemas.get((path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase());
+    } else if (totalSchemas.containsKey((path[path.length - 2] + SLASH + path[path.length - 1]))) {
+      returnNode = totalSchemas.get((path[path.length - 2] + SLASH + path[path.length - 1]));
     }
     return returnNode;
   }
 
-  private void checkReference(
-      final JsonNode mainNode, final JsonNode node) {
+  private void checkReference(final JsonNode mainNode, final JsonNode node) {
     final var localReferences = node.findValues(REF);
     if (!localReferences.isEmpty()) {
-      localReferences.forEach(localReference -> processReference(mainNode, ApiTool.getNodeAsString(localReference)));
+      localReferences.forEach(
+          localReference -> processReference(mainNode, ApiTool.getNodeAsString(localReference)));
     }
   }
 }

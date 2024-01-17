@@ -39,7 +39,7 @@ public class MapperUtil {
 
   public static String getRefSchemaName(final JsonNode parameter) {
     final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
+    return (pathObjectRef[pathObjectRef.length - 1]);
   }
 
   public static String getRefSchemaName(final String parameter) {
