@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -120,7 +121,7 @@ public class ApiRestClient {
     return dateFormat;
   }
 
-  private static void createDefaultObjectMapper(final DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
+  private static void createDefaultObjectMapper(DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
     DateFormat dateFormat = defaultDateFormat;
     if (Objects.isNull(defaultDateFormat)) {
       dateFormat = createDefaultDateFormat();
@@ -191,12 +192,12 @@ public class ApiRestClient {
     if(collectionFormat == null) {
       result = CollectionFormat.CSV.collectionToString(values);
     } else {
-      result = collectionFormat.collectionToString(values)
+      result = collectionFormat.collectionToString(values);
     }
     return result;
   }
 
-  public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
+  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
     CollectionFormat colFormat = collectionFormat;
     if (name == null || name.isEmpty() || value == null) {
