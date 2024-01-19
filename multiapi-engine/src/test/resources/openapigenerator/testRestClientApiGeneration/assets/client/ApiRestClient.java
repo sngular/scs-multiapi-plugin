@@ -121,7 +121,7 @@ public class ApiRestClient {
     return dateFormat;
   }
 
-  private static void createDefaultObjectMapper(DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
+  private static void createDefaultObjectMapper(final DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
     DateFormat dateFormat = defaultDateFormat;
     if (Objects.isNull(defaultDateFormat)) {
       dateFormat = createDefaultDateFormat();
@@ -197,7 +197,7 @@ public class ApiRestClient {
     return result;
   }
 
-  public MultiValueMap<String, String> parameterToMultiValueMap(CollectionFormat collectionFormat, final String name, final Object value) {
+  public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
     CollectionFormat colFormat = collectionFormat;
     if (name == null || name.isEmpty() || value == null) {
