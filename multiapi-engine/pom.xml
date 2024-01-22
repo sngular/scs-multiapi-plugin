@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>multiapi-engine</artifactId>
-  <version>5.3.2</version>
+  <version>5.3.3</version>
   <packaging>jar</packaging>
 
   <properties>
