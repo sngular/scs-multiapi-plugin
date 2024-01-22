@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -191,7 +192,7 @@ public class ApiRestClient {
     if(collectionFormat == null) {
       result = CollectionFormat.CSV.collectionToString(values);
     } else {
-      result = collectionFormat.collectionToString(values)
+      result = collectionFormat.collectionToString(values);
     }
     return result;
   }
