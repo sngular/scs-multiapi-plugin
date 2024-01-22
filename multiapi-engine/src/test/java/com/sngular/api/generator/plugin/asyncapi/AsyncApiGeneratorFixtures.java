@@ -105,6 +105,25 @@ public class AsyncApiGeneratorFixtures {
       .build()
   );
 
+    final static List<AsynAPISpecFile> TEST_RARE_CHARS_GENERATION = List.of(
+            AsynAPISpecFile
+                    .builder()
+                    .filePath("src/test/resources/asyncapigenerator/testRareCharsGeneration/event-api.yml")
+                    .consumer(OperationParameterObject.builder()
+                            .ids("subscribeOperationFileGeneration")
+                            .modelNameSuffix("DTO")
+                            .apiPackage("com.sngular.scsplugin.rarecharsgeneration.model.event.consumer")
+                            .modelPackage("com.sngular.scsplugin.rarecharsgeneration.model.event")
+                            .build())
+                    .supplier(OperationParameterObject.builder()
+                            .ids("publishOperationFileGeneration")
+                            .modelNameSuffix("DTO")
+                            .apiPackage("com.sngular.scsplugin.rarecharsgeneration.model.event.producer")
+                            .modelPackage("com.sngular.scsplugin.rarecharsgeneration.model.event")
+                            .build())
+                    .build()
+    );
+    
   final static List<AsynAPISpecFile> TEST_CUSTOM_VALIDATORS = List.of(
       AsynAPISpecFile
       .builder()
@@ -494,6 +513,37 @@ public class AsyncApiGeneratorFixtures {
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
+  static Function<Path, Boolean> validateTestRareCharsGeneration() {
+    final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/rarecharsgeneration/model/event/consumer";
+
+    final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/rarecharsgeneration/model/event/producer";
+
+    final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/rarecharsgeneration/model/event";
+
+    final String COMMON_PATH = "asyncapigenerator/testRareCharsGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedConsumerFiles = List.of(
+        ASSETS_PATH + "ISubscribeOperationFileGeneration.java",
+        ASSETS_PATH + "Subscriber.java");
+
+    final List<String> expectedProducerFiles = List.of(
+        ASSETS_PATH + "IPublishOperationFileGeneration.java",
+        ASSETS_PATH + "Producer.java");
+
+    final List<String> expectedModelSchemaFiles = List.of(
+        ASSETS_PATH + "CreateOrderDTO.java",
+        ASSETS_PATH + "OrderDTO.java",
+        ASSETS_PATH + "WaiterDTO.java"
+    );
+
+    final List<String> expectedExceptionFiles = List.of();
+
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, expectedExceptionFiles, null) &&
+                     modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
+  }
+
   static Function<Path, Boolean> validateCustomValidators(int springBootVersion) {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/consumer";
 
@@ -825,7 +875,6 @@ public class AsyncApiGeneratorFixtures {
     final String API_FOLDER = "generated/com/sngular/scsplugin/notgeneratedproperties";
 
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/notgeneratedproperties/model";
-
 
     final List<String> expectedModelSchemaFiles = List.of(
       "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/UserDetails.java",
