@@ -6,11 +6,9 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.TimeType;
-
+import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +27,7 @@ public class MapperUtil {
   public static final String LONG = "long";
 
   public static final String DATE = "date";
-  
+
   public static final String DATE_TIME = "date-time";
 
   public static final String BIG_DECIMAL = "BigDecimal";
@@ -48,8 +46,8 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix, 
-      final TimeType useTimeType) {
+  public static String getSimpleType(
+      final JsonNode schema, final String prefix, final String suffix, final TimeType useTimeType) {
     String type = schema.textValue();
     if (schema.has("type")) {
       type = schema.get("type").textValue();
@@ -87,14 +85,14 @@ public class MapperUtil {
     String type = "String";
     if (format != null) {
       if (DATE_TIME.equalsIgnoreCase(format)) {
-        switch(useTimeType) {
-        case ZONED:
+        switch (useTimeType) {
+          case ZONED:
             type = ZONED_DATE_TIME;
             break;
           default:
             type = LOCAL_DATE_TIME;
         }
-        
+
       } else if (DATE.equalsIgnoreCase(format)) {
         type = LOCAL_DATE;
       }
@@ -111,6 +109,11 @@ public class MapperUtil {
     return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
   }
 
+  public static String getSortRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = getStrings(schema);
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
   private static String[] getStrings(final JsonNode schema) {
     return splitName(schema.get(REF).textValue());
   }
@@ -120,7 +123,11 @@ public class MapperUtil {
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
-  public static String getTypeMap(final JsonNode mapSchema, final String prefix, final String suffix, final TimeType useTimeType) {
+  public static String getTypeMap(
+      final JsonNode mapSchema,
+      final String prefix,
+      final String suffix,
+      final TimeType useTimeType) {
     var typeMap = "";
     final var mapNode = mapSchema.get("additionalProperties");
     final var mapValueType = mapNode.findPath("type");
@@ -128,7 +135,8 @@ public class MapperUtil {
     return typeMap;
   }
 
-  public static String getTypeArray(final JsonNode array, final String prefix, final String suffix, final TimeType useTimeType) {
+  public static String getTypeArray(
+      final JsonNode array, final String prefix, final String suffix, final TimeType useTimeType) {
     var typeArray = "";
     final var arrayNode = array.get("items");
     final JsonNode mapValueType;
@@ -141,8 +149,12 @@ public class MapperUtil {
     return typeArray;
   }
 
-  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix, 
-      final String suffix, final TimeType useTimeType) {
+  private static String getCollectionType(
+      final JsonNode mapNode,
+      final JsonNode mapValueType,
+      final String prefix,
+      final String suffix,
+      final TimeType useTimeType) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
       typeMap = getSimpleType(mapNode, prefix, suffix, useTimeType);
@@ -155,10 +167,11 @@ public class MapperUtil {
     return typeMap;
   }
 
-  public static String getPojoName(final String namePojo, final String prefix, final String suffix) {
+  public static String getPojoName(
+      final String namePojo, final String prefix, final String suffix) {
     return StringUtils.defaultIfBlank(prefix, "")
-           + StringUtils.capitalize(namePojo)
-           + StringUtils.defaultIfBlank(suffix, "");
+        + StringUtils.capitalize(namePojo)
+        + StringUtils.defaultIfBlank(suffix, "");
   }
 
   public static String[] splitName(final String name) {
@@ -167,8 +180,6 @@ public class MapperUtil {
 
   public static String buildKey(final String[] pathList) {
     final var arrayLength = pathList.length;
-    return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
+    return (arrayLength > 2 ? pathList[arrayLength - 1] : pathList[0]);
   }
-
-
 }

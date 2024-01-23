@@ -122,11 +122,11 @@ public class MapperContentUtil {
   private static String getComponent(final String[] path) {
     final String componentName;
     if (path.length > 1) {
-      componentName = path[path.length - 2] + "/" + path[path.length - 1];
+      componentName = path[path.length - 1];
     } else {
       componentName = path[0];
     }
-    return componentName.toUpperCase();
+    return componentName;
   }
 
   private static SchemaObject buildSchemaObject(
@@ -320,7 +320,7 @@ public class MapperContentUtil {
                 useTimeType));
         if (model.get(PROPERTIES).path(property).has(REF)
             && !totalSchemas.containsKey(createKey(parentPackage, property.toUpperCase(), "/"))) {
-          modelToBuildList.add(MapperUtil.getLongRefClass(model.get(PROPERTIES).path(property)));
+          modelToBuildList.add(MapperUtil.getSortRefClass(model.get(PROPERTIES).path(property)));
         }
       }
     } else if (properties.has(ALL_OF)) {
@@ -401,7 +401,7 @@ public class MapperContentUtil {
       final TimeType useTimeType) {
     final SchemaFieldObject result;
     if (element.has(REF)) {
-      final String schemaName = MapperUtil.getLongRefClass(element);
+      final String schemaName = MapperUtil.getSortRefClass(element);
       final var schemaToProcess = totalSchemas.get(schemaName.toUpperCase());
       result =
           processFieldObjectList(
@@ -463,14 +463,14 @@ public class MapperContentUtil {
         final var schemaName = StringUtils.defaultString(className, propertyName);
         if (StringUtils.isNotEmpty(schemaName)
             && !totalSchemas.containsKey(createKey(modelPackage, schemaName.toUpperCase(), "/"))) {
-          totalSchemas.put(createKey(modelPackage, schemaName.toUpperCase(), "/"), schema);
+          totalSchemas.put(schemaName, schema);
           modelToBuildList.add(createKey(modelPackage.toLowerCase(), schemaName, "."));
         }
       } else if (ApiTool.hasItems(schema)) {
         final var items = ApiTool.getItems(schema);
         final var arrayType = MapperUtil.getSimpleType(items, prefix, suffix, useTimeType);
         if (items.has(REF)) {
-          final var longType = MapperUtil.getLongRefClass(items);
+          final var longType = MapperUtil.getSortRefClass(items);
           modelToBuildList.add(longType);
         }
         fieldObject =
@@ -529,9 +529,7 @@ public class MapperContentUtil {
 
   private static String createKey(
       final String modelPackage, final String className, final String separator) {
-    return Objects.nonNull(modelPackage)
-        ? modelPackage.toUpperCase() + separator + className
-        : className;
+    return Objects.nonNull(modelPackage) ? modelPackage + separator + className : className;
   }
 
   private static void handleItems(
@@ -541,7 +539,7 @@ public class MapperContentUtil {
       final boolean required,
       final JsonNode items) {
     if (ApiTool.hasRef(items)) {
-      modelToBuildList.add(MapperUtil.getLongRefClass(items));
+      modelToBuildList.add(MapperUtil.getSortRefClass(items));
     }
     final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
     Entry<String, JsonNode> current;

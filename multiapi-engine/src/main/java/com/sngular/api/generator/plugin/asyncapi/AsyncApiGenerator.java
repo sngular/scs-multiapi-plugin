@@ -6,6 +6,10 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.COMPONENTS;
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.REF;
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.SCHEMAS;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -48,7 +52,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -197,7 +203,7 @@ public class AsyncApiGenerator {
 
   private Map<String, JsonNode> getAllSchemas(final FileLocation ymlParent, final JsonNode node) {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
-    final List<JsonNode> referenceList = node.findValues(REF);
+    final Set<JsonNode> referenceList = getAllReferencedSchemas(node);
 
     referenceList.forEach(
         reference -> {
@@ -205,12 +211,6 @@ public class AsyncApiGenerator {
               ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
           refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
         });
-
-    ApiTool.getComponent(node, SCHEMAS)
-        .forEachRemaining(
-            schema ->
-                totalSchemas.putIfAbsent(
-                    (SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue()));
 
     ApiTool.getComponent(node, MESSAGES)
         .forEachRemaining(
@@ -221,7 +221,18 @@ public class AsyncApiGenerator {
         .forEachRemaining(
             channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent));
 
+    ApiTool.getComponent(node, SCHEMAS)
+        .forEachRemaining(
+            schema ->
+                totalSchemas.computeIfPresent(schema.getKey(), (key, values) -> schema.getValue()));
+
     return totalSchemas;
+  }
+
+  private static Set<JsonNode> getAllReferencedSchemas(final JsonNode node) {
+    return node.findValues(REF).stream()
+        .filter(reference -> reference.textValue().contains("#" + SLASH + COMPONENTS + SLASH))
+        .collect(Collectors.toSet());
   }
 
   private Iterator<Entry<String, JsonNode>> getChannels(final JsonNode node) {
@@ -691,7 +702,8 @@ public class AsyncApiGenerator {
       final JsonNode method)
       throws IOException {
 
-    final var message = totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(messageRef)));
+    final var message =
+        totalSchemas.get(MESSAGES + SLASH + MapperUtil.buildKey(MapperUtil.splitName(messageRef)));
     if (ApiTool.hasNode(message, BINDINGS)) {
       processBindings(
           bindingsResult,
@@ -713,7 +725,7 @@ public class AsyncApiGenerator {
     final String namespace;
     final String messageContent = ApiTool.getRefValue(messageBody);
     if (messageContent.startsWith("#")) {
-      namespace = processModelPackage(MapperUtil.getLongRefClass(messageBody), modelPackage);
+      namespace = processModelPackage(MapperUtil.getSortRefClass(messageBody), modelPackage);
     } else if (messageContent.contains("#")) {
       namespace = processExternalRef(modelPackage, ymlParent, messageBody);
     } else {

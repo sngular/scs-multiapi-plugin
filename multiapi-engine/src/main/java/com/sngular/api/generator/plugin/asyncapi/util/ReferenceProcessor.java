@@ -1,5 +1,7 @@
 package com.sngular.api.generator.plugin.asyncapi.util;
 
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.SCHEMAS;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -7,6 +9,7 @@ import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,7 +73,9 @@ public final class ReferenceProcessor {
   }
 
   private String calculateKey(final String[] path) {
-    return (path[path.length - 1]);
+    return Arrays.asList(path).contains(SCHEMAS)
+        ? path[path.length - 1]
+        : path[path.length - 2] + SLASH + path[path.length - 1];
   }
 
   private JsonNode solveRef(

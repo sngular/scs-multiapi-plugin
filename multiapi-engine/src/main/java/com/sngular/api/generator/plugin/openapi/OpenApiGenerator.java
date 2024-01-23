@@ -6,6 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import static com.sngular.api.generator.plugin.common.tools.ApiTool.COMPONENTS;
 import static com.sngular.api.generator.plugin.common.tools.ApiTool.REF;
 import static com.sngular.api.generator.plugin.common.tools.ApiTool.SCHEMAS;
 
@@ -50,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -143,19 +145,23 @@ public class OpenApiGenerator {
 
   private Map<String, JsonNode> getAllSchemas(final FileLocation ymlParent, final JsonNode node) {
     final Map<String, JsonNode> totalSchemas = new HashMap<>();
-    final List<JsonNode> referenceList = node.findValues(REF);
+    final Set<JsonNode> references = getAllReferencedSchemas(node);
 
-    referenceList.forEach(
+    references.forEach(
         reference -> {
           final ReferenceProcessor refProcessor =
               ReferenceProcessor.builder().ymlParent(ymlParent).totalSchemas(totalSchemas).build();
           refProcessor.processReference(node, ApiTool.getNodeAsString(reference));
         });
 
-    ApiTool.getComponent(node, SCHEMAS)
-        .forEachRemaining(schema -> totalSchemas.putIfAbsent(schema.getKey(), schema.getValue()));
-
     return totalSchemas;
+  }
+
+  private static Set<JsonNode> getAllReferencedSchemas(final JsonNode node) {
+    return node.findValues(REF).stream()
+        .filter(
+            reference -> reference.textValue().contains("#" + SLASH + COMPONENTS + SLASH + SCHEMAS))
+        .collect(Collectors.toSet());
   }
 
   private final void setUpTemplate(OpenAPIOperationParameter operationParameter) {
@@ -182,9 +188,9 @@ public class OpenApiGenerator {
     }
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
-    final var globalObject = createApiTemplate(operationParameter, filePathToSave, openAPI);
-
-    createModelTemplate(operationParameter, totalSchemas);
+    GlobalObject globalObject = createApiTemplate(operationParameter, filePathToSave, openAPI);
+    globalObject.getSchemaMap().forEach(totalSchemas::putIfAbsent);
+    createModelTemplate(operationParameter, totalSchemas, openAPI);
   }
 
   private void createClients(final OpenAPIOperationParameter operationParameter) {
@@ -279,10 +285,13 @@ public class OpenApiGenerator {
   }
 
   private void createModelTemplate(
-      final OperationParameter operationParameter, final Map<String, JsonNode> totalSchemas)
+      final OperationParameter operationParameter,
+      Map<String, JsonNode> totalSchemas,
+      JsonNode openAPI)
       throws IOException {
     final String fileModelToSave = processPath(operationParameter.getModelPackage(), true);
     final var modelPackage = processModelPackage(operationParameter.getModelPackage());
+    totalSchemas = OpenApiUtil.processBasicJsonNodes(openAPI, totalSchemas);
     templateFactory.setModelPackageName(modelPackage);
     processModels(
         operationParameter,
