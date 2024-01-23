@@ -36,12 +36,6 @@ public class StatusMsgDTO {
     }
   }
 
-  private StatusMsgDTO(Integer clientId, Status status) {
-    this.clientId = clientId;
-    this.status = status;
-
-  }
-
   private StatusMsgDTO(StatusMsgDTOBuilder builder) {
     this.clientId = builder.clientId;
     this.status = builder.status;
@@ -56,6 +50,7 @@ public class StatusMsgDTO {
   public static class StatusMsgDTOBuilder {
 
     private Integer clientId;
+
     private Status status;
 
     public StatusMsgDTO.StatusMsgDTOBuilder clientId(Integer clientId) {

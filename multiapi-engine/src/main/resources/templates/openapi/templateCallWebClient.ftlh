@@ -237,11 +237,15 @@ public class ${className?cap_first}Api {
   ${content.dataType}
   ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
-    <#if operation.responseObjects[0].contentObjects[0]??>
-    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}>() {};
+  <#if operation.responseObjects[0].contentObjects[0]??>
+    <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
     <#else>
-    ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}>() {};
     </#if>
+  <#else>
+    ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
+  </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
       <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
       <#if operation.requestObjects?has_content>
@@ -249,7 +253,7 @@ public class ${className?cap_first}Api {
       </@compress>).<#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
   }
 
-  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>>
+  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
   <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
@@ -259,7 +263,11 @@ public class ${className?cap_first}Api {
   ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list>
   </#list></#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObjects[0]??>
+      <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
+    ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
+      <#else>
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}>() {};
+      </#if>
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>

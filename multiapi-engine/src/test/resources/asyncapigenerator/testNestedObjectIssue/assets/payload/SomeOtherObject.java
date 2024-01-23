@@ -15,12 +15,6 @@ public class SomeOtherObject {
   @JsonProperty(value ="property2")
   private Integer property2;
 
-  private SomeOtherObject(String property1, Integer property2) {
-    this.property1 = property1;
-    this.property2 = property2;
-
-  }
-
   private SomeOtherObject(SomeOtherObjectBuilder builder) {
     this.property1 = builder.property1;
     this.property2 = builder.property2;
@@ -35,6 +29,7 @@ public class SomeOtherObject {
   public static class SomeOtherObjectBuilder {
 
     private String property1;
+
     private Integer property2;
 
     public SomeOtherObject.SomeOtherObjectBuilder property1(String property1) {

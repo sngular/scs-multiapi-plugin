@@ -13,11 +13,6 @@ public class ShippingDetailsDTO {
   @JsonProperty(value ="address")
   private String address;
 
-  private ShippingDetailsDTO(String address) {
-    this.address = address;
-
-  }
-
   private ShippingDetailsDTO(ShippingDetailsDTOBuilder builder) {
     this.address = builder.address;
 

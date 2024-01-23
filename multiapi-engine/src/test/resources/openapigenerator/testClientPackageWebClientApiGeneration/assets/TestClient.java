@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -121,7 +122,7 @@ public class ApiRestClient {
   }
 
   private static void createDefaultObjectMapper(final DateFormat defaultDateFormat, final AbstractJackson2HttpMessageConverter converter) {
-    final DateFormat dateFormat = defaultDateFormat;
+    DateFormat dateFormat = defaultDateFormat;
     if (Objects.isNull(defaultDateFormat)) {
       dateFormat = createDefaultDateFormat();
     }
@@ -191,20 +192,20 @@ public class ApiRestClient {
     if(collectionFormat == null) {
       result = CollectionFormat.CSV.collectionToString(values);
     } else {
-      result = collectionFormat.collectionToString(values)
+      result = collectionFormat.collectionToString(values);
     }
     return result;
   }
 
   public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-
+    CollectionFormat colFormat = collectionFormat;
     if (name == null || name.isEmpty() || value == null) {
       return params;
     }
 
-    if (collectionFormat == null) {
-      collectionFormat = CollectionFormat.CSV;
+    if (colFormat == null) {
+      colFormat = CollectionFormat.CSV;
     }
 
     if (value instanceof Map) {
@@ -228,7 +229,7 @@ public class ApiRestClient {
       return params;
     }
 
-    if (collectionFormat.equals(CollectionFormat.MULTI)) {
+    if (colFormat.equals(CollectionFormat.MULTI)) {
       for (Object item : valueCollection) {
         params.add(name, parameterToString(item));
       }
@@ -239,7 +240,7 @@ public class ApiRestClient {
     for (Object o : valueCollection) {
       values.add(parameterToString(o));
     }
-    params.add(name, collectionFormat.collectionToString(values));
+    params.add(name, colFormat.collectionToString(values));
 
     return params;
   }

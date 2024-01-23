@@ -1,0 +1,39 @@
+components:
+  messages:
+    OrderCreated:
+      payload:
+        $ref: '#/components/schemas/Order'
+  schemas:
+    CreateOrder:
+      type: object
+      properties:
+        order:
+          $ref: '#/components/schemas/Order'
+        waiter:
+          $ref: '#/components/schemas/Waiter'
+    Waiter:
+      type: object
+      properties:
+        new:
+          type: boolean
+        private:
+          type: string
+          format: 'dd/mm/yyyy hh:MM:sss'
+        abstract:
+          type: string
+    Order:
+      type: object
+      properties:
+        ref:
+          type: string
+        clientRef:
+          type: string
+        amount:
+          type: number
+          format: decimal
+        new:
+          type: string
+          enum:
+          - "one:piece:works"
+          - "two:piece:works"
+          - "three:piece:works"

@@ -35,4 +35,6 @@ public class SchemaFieldObject {
 
   private List<String> enumValues;
 
+  private Object constValue;
+
 }

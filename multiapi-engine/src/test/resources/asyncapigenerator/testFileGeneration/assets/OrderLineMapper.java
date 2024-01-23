@@ -19,18 +19,11 @@ public class OrderLineMapper {
   private final String ref;
   @JsonProperty(value ="products")
   @NotNull
-  private final List<OrderProductMapper> products;
-
-  private OrderLineMapper(String ref, List<OrderProductMapper> products) {
-    this.ref = ref;
-    this.products = products;
-
-    validateRequiredAttributes();
-  }
+  private final List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
 
   private OrderLineMapper(OrderLineMapperBuilder builder) {
     this.ref = builder.ref;
-    this.products = builder.products;
+    this.products.addAll(builder.products);
 
     validateRequiredAttributes();
   }
@@ -43,6 +36,7 @@ public class OrderLineMapper {
   public static class OrderLineMapperBuilder {
 
     private String ref;
+
     private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
 
     public OrderLineMapper.OrderLineMapperBuilder ref(String ref) {

@@ -44,74 +44,36 @@ class AsyncApiGeneratorTest {
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
-        Arguments.of(
-            "TestFileGeneration",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION,
-            AsyncApiGeneratorFixtures.validateTestFileGeneration()),
-        Arguments.of(
-            "TestIssueGeneration",
-            AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION,
-            AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
-        Arguments.of(
-            "TestReservedWordsGeneration",
-            AsyncApiGeneratorFixtures.TEST_RESERVED_WORDS_GENERATION,
-            AsyncApiGeneratorFixtures.validateTestReservedWordsGeneration()),
-        Arguments.of(
-            "TestFileGenerationIssue",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
-        Arguments.of(
-            "TestFileGenerationExternalAvro",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationExternalAvro()),
-        Arguments.of(
-            "TestFileGenerationStreamBridge",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_STREAM_BRIDGE,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationStreamBridge()),
-        Arguments.of(
-            "TestFileGenerationWithoutIds",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITHOUT_IDS,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds()),
-        Arguments.of(
-            "TestFileGenerationArrayString",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_ARRAY_STRING,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
-        Arguments.of(
-            "TestIssueGenerateSupplier",
-            AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
-            AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
-        Arguments.of(
-            "TestIssueSimpleTypeGenerate",
-            AsyncApiGeneratorFixtures.TEST_ISSUE_SIMPLE_TYPE_GENERATION,
-            AsyncApiGeneratorFixtures.validateTestIssueSimpleTypeGeneration()),
-        Arguments.of(
-            "TestIssueInfiniteLoop",
-            AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
-            AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
-        Arguments.of(
-            "TestCustomValidators",
-            AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS,
-            AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),
-        Arguments.of(
-            "TestModelClassExceptionGeneration",
-            AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
-            AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
-        Arguments.of(
-            "TestNoSchemas",
-            AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS,
-            AsyncApiGeneratorFixtures.validateNoSchemas()),
-        Arguments.of(
-            "TestNestedObjectIssue",
-            AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT,
-            AsyncApiGeneratorFixtures.validateNestedObject()),
-        Arguments.of(
-            "testPropertiesNotGeneratedIssue",
-            AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE,
-            AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),
-        Arguments.of(
-            "TestFileGenerationWithKafkaBindings",
-            AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
-            AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings()));
+        Arguments.of("TestFileGeneration", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION, AsyncApiGeneratorFixtures.validateTestFileGeneration()),
+        Arguments.of("TestIssueGeneration", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATION, AsyncApiGeneratorFixtures.validateTestIssueGeneration()),
+        Arguments.of("TestReservedWordsGeneration", AsyncApiGeneratorFixtures.TEST_RESERVED_WORDS_GENERATION, AsyncApiGeneratorFixtures.validateTestReservedWordsGeneration()),
+        Arguments.of("TestRareCharsGeneration", AsyncApiGeneratorFixtures.TEST_RARE_CHARS_GENERATION, AsyncApiGeneratorFixtures.validateTestRareCharsGeneration()),
+        Arguments.of("TestFileGenerationIssue", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_ISSUE, AsyncApiGeneratorFixtures.validateTestFileGenerationIssue()),
+        Arguments.of("TestFileGenerationExternalAvro", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_EXTERNAL_AVRO,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationExternalAvro()),
+        Arguments.of("TestFileGenerationStreamBridge", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_STREAM_BRIDGE,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationStreamBridge()),
+        Arguments.of("TestFileGenerationWithoutIds", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITHOUT_IDS,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithoutIds()),
+        Arguments.of("TestFileGenerationArrayString", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_ARRAY_STRING,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationArrayString()),
+        Arguments.of("TestIssueGenerateSupplier", AsyncApiGeneratorFixtures.TEST_ISSUE_GENERATE_SUPPLIER,
+                     AsyncApiGeneratorFixtures.validateTestIssueGenerateSupplier()),
+        Arguments.of("TestIssueSimpleTypeGenerate", AsyncApiGeneratorFixtures.TEST_ISSUE_SIMPLE_TYPE_GENERATION,
+                     AsyncApiGeneratorFixtures.validateTestIssueSimpleTypeGeneration()),
+        Arguments.of("TestIssueInfiniteLoop", AsyncApiGeneratorFixtures.TEST_ISSUE_INFINITE_LOOP,
+                     AsyncApiGeneratorFixtures.validateTestIssueInfiniteLoop()),
+        Arguments.of("TestCustomValidators", AsyncApiGeneratorFixtures.TEST_CUSTOM_VALIDATORS, AsyncApiGeneratorFixtures.validateCustomValidators(SPRING_BOOT_VERSION)),
+        Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
+                     AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
+        Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
+        Arguments.of("TestNestedObjectIssue", AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT, AsyncApiGeneratorFixtures.validateNestedObject()),
+        Arguments.of("TestConstantGeneration", AsyncApiGeneratorFixtures.TEST_CONSTANT_GENERATION, AsyncApiGeneratorFixtures.validateConstantGeneration()),
+        Arguments.of("testPropertiesNotGeneratedIssue", AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE, AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),
+        Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
+
+    );
   }
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
@@ -141,4 +103,5 @@ class AsyncApiGeneratorTest {
                     AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG))
         .isInstanceOf(InvalidAPIException.class);
   }
+
 }

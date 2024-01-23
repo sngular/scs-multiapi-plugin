@@ -15,12 +15,6 @@ public class CreateOrderEventDTO {
   @JsonProperty(value ="waiter")
   private WaiterDTO waiter;
 
-  private CreateOrderEventDTO(OrderDTO order, WaiterDTO waiter) {
-    this.order = order;
-    this.waiter = waiter;
-
-  }
-
   private CreateOrderEventDTO(CreateOrderEventDTOBuilder builder) {
     this.order = builder.order;
     this.waiter = builder.waiter;
@@ -35,6 +29,7 @@ public class CreateOrderEventDTO {
   public static class CreateOrderEventDTOBuilder {
 
     private OrderDTO order;
+
     private WaiterDTO waiter;
 
     public CreateOrderEventDTO.CreateOrderEventDTOBuilder order(OrderDTO order) {

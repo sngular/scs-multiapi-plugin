@@ -13,11 +13,6 @@ public class PaymentDetailsDTO {
   @JsonProperty(value ="creditCardNumber")
   private String creditCardNumber;
 
-  private PaymentDetailsDTO(String creditCardNumber) {
-    this.creditCardNumber = creditCardNumber;
-
-  }
-
   private PaymentDetailsDTO(PaymentDetailsDTOBuilder builder) {
     this.creditCardNumber = builder.creditCardNumber;
 

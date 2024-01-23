@@ -24,15 +24,6 @@ public class UserSignedUpPayload {
   @JsonProperty(value ="someOtherObject")
   private SomeOtherObject someOtherObject;
 
-  private UserSignedUpPayload(String firstName, String lastName, String email, LocalDateTime createdAt, SomeOtherObject someOtherObject) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.createdAt = createdAt;
-    this.someOtherObject = someOtherObject;
-
-  }
-
   private UserSignedUpPayload(UserSignedUpPayloadBuilder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
@@ -50,9 +41,13 @@ public class UserSignedUpPayload {
   public static class UserSignedUpPayloadBuilder {
 
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private LocalDateTime createdAt;
+
     private SomeOtherObject someOtherObject;
 
     public UserSignedUpPayload.UserSignedUpPayloadBuilder firstName(String firstName) {

@@ -25,15 +25,6 @@ public class OrderProductDTO {
   @NotNull
   private final String quantity;
 
-  private OrderProductDTO(String ref, String productRef, String price, String quantity) {
-    this.ref = ref;
-    this.productRef = productRef;
-    this.price = price;
-    this.quantity = quantity;
-
-    validateRequiredAttributes();
-  }
-
   private OrderProductDTO(OrderProductDTOBuilder builder) {
     this.ref = builder.ref;
     this.productRef = builder.productRef;
@@ -51,8 +42,11 @@ public class OrderProductDTO {
   public static class OrderProductDTOBuilder {
 
     private String ref;
+
     private String productRef;
+
     private String price;
+
     private String quantity;
 
     public OrderProductDTO.OrderProductDTOBuilder ref(String ref) {

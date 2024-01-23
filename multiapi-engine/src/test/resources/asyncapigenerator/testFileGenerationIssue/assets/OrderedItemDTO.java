@@ -25,15 +25,6 @@ public class OrderedItemDTO {
   @NotNull
   private final Double price;
 
-  private OrderedItemDTO(Long catalogItemId, String name, Integer quantity, Double price) {
-    this.catalogItemId = catalogItemId;
-    this.name = name;
-    this.quantity = quantity;
-    this.price = price;
-
-    validateRequiredAttributes();
-  }
-
   private OrderedItemDTO(OrderedItemDTOBuilder builder) {
     this.catalogItemId = builder.catalogItemId;
     this.name = builder.name;
@@ -51,8 +42,11 @@ public class OrderedItemDTO {
   public static class OrderedItemDTOBuilder {
 
     private Long catalogItemId;
+
     private String name;
+
     private Integer quantity;
+
     private Double price;
 
     public OrderedItemDTO.OrderedItemDTOBuilder catalogItemId(Long catalogItemId) {

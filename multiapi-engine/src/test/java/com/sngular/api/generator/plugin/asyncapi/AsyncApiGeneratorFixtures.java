@@ -114,6 +114,27 @@ public class AsyncApiGeneratorFixtures {
                       .build())
               .build());
 
+  static final List<AsyncAPISpecFile> TEST_RARE_CHARS_GENERATION =
+      List.of(
+          AsyncAPISpecFile.builder()
+              .filePath(
+                  "src/test/resources/asyncapigenerator/testRareCharsGeneration/event-api.yml")
+              .consumer(
+                  AsyncAPIOperationParameter.builder()
+                      .ids("subscribeOperationFileGeneration")
+                      .modelNameSuffix("DTO")
+                      .apiPackage("com.sngular.scsplugin.rarecharsgeneration.model.event.consumer")
+                      .modelPackage("com.sngular.scsplugin.rarecharsgeneration.model.event")
+                      .build())
+              .supplier(
+                  AsyncAPIOperationParameter.builder()
+                      .ids("publishOperationFileGeneration")
+                      .modelNameSuffix("DTO")
+                      .apiPackage("com.sngular.scsplugin.rarecharsgeneration.model.event.producer")
+                      .modelPackage("com.sngular.scsplugin.rarecharsgeneration.model.event")
+                      .build())
+              .build());
+
   static final List<AsyncAPISpecFile> TEST_CUSTOM_VALIDATORS =
       List.of(
           AsyncAPISpecFile.builder()
@@ -319,6 +340,26 @@ public class AsyncApiGeneratorFixtures {
                       .modelNameSuffix("")
                       .apiPackage("com.sngular.scsplugin.nestedobject.producer")
                       .modelPackage("com.sngular.scsplugin.nestedobject.model")
+                      .useLombokModelAnnotation(true)
+                      .build())
+              .build());
+
+  static final List<AsyncAPISpecFile> TEST_CONSTANT_GENERATION =
+      List.of(
+          AsyncAPISpecFile.builder()
+              .filePath("src/test/resources/asyncapigenerator/testConstantGeneration/event-api.yml")
+              .consumer(
+                  AsyncAPIOperationParameter.builder()
+                      .modelNameSuffix("")
+                      .apiPackage("com.sngular.scsplugin.constantgeneration.consumer")
+                      .modelPackage("com.sngular.scsplugin.constantgeneration.model")
+                      .useLombokModelAnnotation(true)
+                      .build())
+              .supplier(
+                  AsyncAPIOperationParameter.builder()
+                      .modelNameSuffix("")
+                      .apiPackage("com.sngular.scsplugin.constantgeneration.producer")
+                      .modelPackage("com.sngular.scsplugin.constantgeneration.model")
                       .useLombokModelAnnotation(true)
                       .build())
               .build());
@@ -530,6 +571,49 @@ public class AsyncApiGeneratorFixtures {
             ASSETS_PATH + "CreateOrderDTO.java",
             ASSETS_PATH + "OrderDTO.java",
             ASSETS_PATH + "OrderLineDTO.java",
+            ASSETS_PATH + "WaiterDTO.java");
+
+    final List<String> expectedExceptionFiles = List.of();
+
+    return (path) ->
+        commonTest(
+                path,
+                expectedConsumerFiles,
+                expectedProducerFiles,
+                DEFAULT_CONSUMER_FOLDER,
+                DEFAULT_PRODUCER_FOLDER,
+                expectedExceptionFiles,
+                null)
+            && modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestRareCharsGeneration() {
+    final String DEFAULT_CONSUMER_FOLDER =
+        "generated/com/sngular/scsplugin/rarecharsgeneration/model/event/consumer";
+
+    final String DEFAULT_PRODUCER_FOLDER =
+        "generated/com/sngular/scsplugin/rarecharsgeneration/model/event/producer";
+
+    final String DEFAULT_MODEL_SCHEMA_FOLDER =
+        "generated/com/sngular/scsplugin/rarecharsgeneration/model/event";
+
+    final String COMMON_PATH = "asyncapigenerator/testRareCharsGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedConsumerFiles =
+        List.of(
+            ASSETS_PATH + "ISubscribeOperationFileGeneration.java",
+            ASSETS_PATH + "Subscriber.java");
+
+    final List<String> expectedProducerFiles =
+        List.of(
+            ASSETS_PATH + "IPublishOperationFileGeneration.java", ASSETS_PATH + "Producer.java");
+
+    final List<String> expectedModelSchemaFiles =
+        List.of(
+            ASSETS_PATH + "CreateOrderDTO.java",
+            ASSETS_PATH + "OrderDTO.java",
             ASSETS_PATH + "WaiterDTO.java");
 
     final List<String> expectedExceptionFiles = List.of();
@@ -887,6 +971,23 @@ public class AsyncApiGeneratorFixtures {
         List.of(
             "asyncapigenerator/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
             "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java");
+
+    final List<String> expectedProducerFiles = List.of();
+
+    return path ->
+        modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER)
+            && modelTest(path, expectedProducerFiles, API_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateConstantGeneration() {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/constantgeneration";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/constantgeneration/model";
+
+    final List<String> expectedModelSchemaFiles =
+        List.of(
+            "asyncapigenerator/testConstantGeneration/assets/payload/SomeOtherObject.java",
+            "asyncapigenerator/testConstantGeneration/assets/payload/UserSignedUpPayload.java");
 
     final List<String> expectedProducerFiles = List.of();
 
