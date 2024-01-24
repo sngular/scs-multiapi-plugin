@@ -360,7 +360,20 @@ public class OpenApiGenerator {
       final boolean overwrite) {
     final Map<String, SchemaObject> builtSchemasMap = new HashMap<>();
     totalSchemas.forEach(
-        (schemaName, basicSchema) ->
+        (schemaName, basicSchema) -> {
+          if (ApiTool.hasType(basicSchema)) {
+            if (validType(ApiTool.getType(basicSchema))) {
+              processModel(
+                  specFile,
+                  fileModelToSave,
+                  modelPackage,
+                  totalSchemas,
+                  overwrite,
+                  schemaName,
+                  basicSchema,
+                  builtSchemasMap);
+            }
+          } else {
             processModel(
                 specFile,
                 fileModelToSave,
@@ -369,7 +382,13 @@ public class OpenApiGenerator {
                 overwrite,
                 schemaName,
                 basicSchema,
-                builtSchemasMap));
+                builtSchemasMap);
+          }
+        });
+  }
+
+  private boolean validType(final String type) {
+    return !TypeConstants.NO_PROCESS_TYPE.contains(type);
   }
 
   private void processModel(

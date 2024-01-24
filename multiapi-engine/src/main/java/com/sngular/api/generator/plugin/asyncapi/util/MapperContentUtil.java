@@ -493,6 +493,7 @@ public class MapperContentUtil {
                 .restrictions(new SchemaFieldObjectProperties())
                 .dataType(simpleType)
                 .dataTypeSimple(simpleType)
+                .constValue(MapperUtil.getConstValue(schema))
                 .build();
         setFieldProperties(fieldObject, schema);
         setFormatProperies(fieldObject, simpleType, formats);
@@ -522,6 +523,7 @@ public class MapperContentUtil {
               .dataType(simpleType)
               .dataTypeSimple(simpleType)
               .restrictions(new SchemaFieldObjectProperties())
+              .constValue(MapperUtil.getConstValue(schema))
               .build();
     }
     return fieldObject;
