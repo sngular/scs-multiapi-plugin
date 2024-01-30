@@ -6,8 +6,9 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -24,8 +25,7 @@ public class SchemaFieldObject {
 
   private String baseName;
 
-  @Default
-  private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
+  @Default private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
 
   @Default
   private SchemaFieldObjectProperties restrictionProperties = new SchemaFieldObjectProperties();
@@ -35,5 +35,4 @@ public class SchemaFieldObject {
   private boolean required;
 
   private Map<String, String> enumValues;
-
 }

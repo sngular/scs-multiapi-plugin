@@ -4,10 +4,10 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.asyncapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
+import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -24,10 +24,9 @@ public class SchemaFieldObject {
 
   private String dataTypeSimple;
 
-  @Default
-  private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
+  @Default private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
 
-  private String dataType;
+  @Default private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
 
   private String importClass;
 
@@ -36,5 +35,4 @@ public class SchemaFieldObject {
   private List<String> enumValues;
 
   private Object constValue;
-
 }

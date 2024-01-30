@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.openapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.Set;
 
@@ -50,47 +50,49 @@ public final class TypeConstants {
 
   public static final String INT_64 = "int64";
 
-  public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
+  public static final Set<String> BASIC_OBJECT_TYPE =
+      Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
 
   public static final Set<String> NO_IMPORT_TYPE = Set.of(STRING, INTEGER, OBJECT);
 
-  public static final Set<String> NO_PROCESS_TYPE = Set.of(NUMBER,
-                                                           BOOLEAN,
-                                                           BIG_DECIMAL,
-                                                           INTEGER,
-                                                           DOUBLE,
-                                                           FLOAT,
-                                                           LONG,
-                                                           STRING,
-                                                           ENUM,
-                                                           LOCALDATE,
-                                                           LOCALDATETIME,
-                                                           ZONEDDATE,
-                                                           ZONEDDATETIME,
-                                                           OFFSETDATE,
-                                                           OFFSETDATETIME);
-  public static final Set<String> ALL_TYPES = Set.of(
-      NUMBER,
-      BOOLEAN,
-      OBJECT,
-      ARRAY,
-      BIG_DECIMAL,
-      INTEGER,
-      DOUBLE,
-      FLOAT,
-      LONG,
-      STRING,
-      ENUM,
-      LOCALDATE,
-      LOCALDATETIME,
-      ZONEDDATE,
-      ZONEDDATETIME,
-      OFFSETDATE,
-      OFFSETDATETIME
-  );
+  public static final Set<String> NO_PROCESS_TYPE =
+      Set.of(
+          NUMBER,
+          BOOLEAN,
+          BIG_DECIMAL,
+          INTEGER,
+          DOUBLE,
+          FLOAT,
+          LONG,
+          STRING,
+          ENUM,
+          LOCALDATE,
+          LOCALDATETIME,
+          ZONEDDATE,
+          ZONEDDATETIME,
+          OFFSETDATE,
+          OFFSETDATETIME);
+  public static final Set<String> ALL_TYPES =
+      Set.of(
+          NUMBER,
+          BOOLEAN,
+          OBJECT,
+          ARRAY,
+          BIG_DECIMAL,
+          INTEGER,
+          DOUBLE,
+          FLOAT,
+          LONG,
+          STRING,
+          ENUM,
+          LOCALDATE,
+          LOCALDATETIME,
+          ZONEDDATE,
+          ZONEDDATETIME,
+          OFFSETDATE,
+          OFFSETDATETIME);
 
-  private TypeConstants() {
-  }
+  private TypeConstants() {}
 
   public static boolean isBoolean(final String isBoolean) {
     return Boolean.parseBoolean(isBoolean.toLowerCase());
@@ -100,6 +102,5 @@ public final class TypeConstants {
     LOCAL,
     ZONED,
     OFFSET
-
   }
 }

@@ -6,6 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi.model;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,5 @@ public class ContentObject {
 
   private String importName;
 
-  private SchemaObject schemaObject;
-
+  private OpenApiSchemaObject schemaObject;
 }

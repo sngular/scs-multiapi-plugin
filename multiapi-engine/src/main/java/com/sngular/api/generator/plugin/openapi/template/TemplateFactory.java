@@ -6,12 +6,13 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.OpenApiSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIOperationParameter;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -61,7 +62,7 @@ public class TemplateFactory {
           fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(templateSelector(useLombok, schemaObject), root, pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
+        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
           propertiesSet.add("NotNull");
         }
@@ -205,7 +206,7 @@ public class TemplateFactory {
         throw new GeneratorTemplateException(
             String.format(
                 " Error processing template %s with object %s",
-                templateName, ((SchemaObject) schema).getClassName()),
+                templateName, ((OpenApiSchemaObject) schema).getClassName()),
             exception);
       }
     } else {

@@ -7,8 +7,6 @@
 package com.sngular.api.generator.plugin.asyncapi;
 
 import static com.sngular.api.generator.plugin.common.tools.ApiTool.COMPONENTS;
-import static com.sngular.api.generator.plugin.common.tools.ApiTool.REF;
-import static com.sngular.api.generator.plugin.common.tools.ApiTool.SCHEMAS;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,19 +21,19 @@ import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIExcept
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPIOperationParameter;
 import com.sngular.api.generator.plugin.asyncapi.parameter.AsyncAPISpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
-import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TimeType;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.util.GeneratorUtil;
+import com.sngular.api.generator.plugin.common.util.MapperContentUtil;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
 import java.io.File;
@@ -184,12 +182,13 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok) {
-    if ("anyOf".equals(schema.getSchemaCombinator())
-        || "oneOf".equals(schema.getSchemaCombinator())) {
+  private void checkRequiredOrCombinatorExists(
+      final SchemaObject schemaObject, final boolean useLombok) {
+    if ("anyOf".equals(schemaObject.getSchemaCombinator())
+        || "oneOf".equals(schemaObject.getSchemaCombinator())) {
       generateExceptionTemplate = true;
-    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
-      final var fieldListIt = schema.getFieldObjectList().listIterator();
+    } else if (Objects.nonNull(schemaObject.getFieldObjectList()) && !useLombok) {
+      final var fieldListIt = schemaObject.getFieldObjectList().listIterator();
       if (fieldListIt.hasNext()) {
         do {
           final var field = fieldListIt.next();
@@ -566,8 +565,8 @@ public class AsyncApiGenerator {
       final var schemaObjectIt =
           MapperContentUtil.mapComponentToSchemaObject(
                   totalSchemas, new HashMap<>(), className, schemaToBuild, operationObject)
-              .values()
-              .iterator();
+                           .values()
+                           .iterator();
 
       if (schemaObjectIt.hasNext()) {
         final var filePath =

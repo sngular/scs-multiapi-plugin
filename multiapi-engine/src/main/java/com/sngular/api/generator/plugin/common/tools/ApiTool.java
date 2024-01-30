@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

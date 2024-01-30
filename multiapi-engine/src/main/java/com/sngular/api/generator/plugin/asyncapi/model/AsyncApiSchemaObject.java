@@ -6,9 +6,9 @@
 
 package com.sngular.api.generator.plugin.asyncapi.model;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchemaObject {
+public class AsyncApiSchemaObject {
 
   private String schemaName;
 

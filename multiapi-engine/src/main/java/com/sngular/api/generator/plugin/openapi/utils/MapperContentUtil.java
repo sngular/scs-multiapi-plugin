@@ -7,13 +7,13 @@
 package com.sngular.api.generator.plugin.openapi.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.parameter.OperationParameter;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
+import com.sngular.api.generator.plugin.openapi.model.OpenApiSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +40,9 @@ public class MapperContentUtil {
 
   private MapperContentUtil() {}
 
-  public static Map<String, SchemaObject> mapComponentToSchemaObject(
+  public static Map<String, OpenApiSchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final String schemaName,
       final JsonNode schema,
       final OperationParameter operationParameter) {
@@ -56,9 +56,9 @@ public class MapperContentUtil {
         operationParameter);
   }
 
-  private static Map<String, SchemaObject> mapComponentToSchemaObject(
+  private static Map<String, OpenApiSchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final JsonNode schema,
       final String schemaName,
@@ -80,10 +80,10 @@ public class MapperContentUtil {
   }
 
   @SuppressWarnings("checkstyle:ParameterNumber")
-  private static SchemaObject toSchemaObject(
+  private static OpenApiSchemaObject toSchemaObject(
       final String name,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final JsonNode schema,
       final String schemaName,
@@ -114,7 +114,7 @@ public class MapperContentUtil {
       schemaCombinatorType = ONE_OF_COMBINATOR;
     }
 
-    return SchemaObject.builder()
+    return OpenApiSchemaObject.builder()
         .schemaName(schemaName)
         .className(MapperUtil.getPojoName(schemaName, operationParameter))
         .importList(getImportList(listSchema, operationParameter.getModelPackage()))
@@ -197,7 +197,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schema,
       final OperationParameter operationParameter,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final String nameSchema) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
@@ -307,7 +307,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schemaList,
       final OperationParameter specFile,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
@@ -338,7 +338,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schemaList,
       final OperationParameter specFile,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
@@ -397,7 +397,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final OperationParameter specFile,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
@@ -482,7 +482,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final SchemaFieldObjectType dataType,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final OperationParameter specFile) {
     final var field = SchemaFieldObject.builder().baseName(fieldName).dataType(dataType).build();
@@ -496,10 +496,10 @@ public class MapperContentUtil {
     return field;
   }
 
-  private static SchemaObject solveRef(
+  private static OpenApiSchemaObject solveRef(
       final JsonNode schema,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final OperationParameter specFile) {
     String schemaName = MapperUtil.getRefSchemaName(schema);
@@ -523,7 +523,7 @@ public class MapperContentUtil {
   private static Consumer<Map.Entry<String, JsonNode>> processProperties(
       final String buildingSchema,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<SchemaFieldObject> fieldObjectArrayList,
       final com.sngular.api.generator.plugin.common.parameter.OperationParameter operationParameter,
       final JsonNode schema,
@@ -556,7 +556,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final String fieldName,
       final JsonNode fieldBody,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final OperationParameter specFile,
       final JsonNode schema,
       final Set<String> antiLoopList) {
@@ -704,7 +704,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final OperationParameter operationParameter,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final List<SchemaFieldObject> fieldObjectArrayList = new LinkedList<>();
 
@@ -729,7 +729,7 @@ public class MapperContentUtil {
                 operationParameter));
       } else if (ApiTool.isComposed(items)) {
         final String composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
-        SchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
+        OpenApiSchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
         if (Objects.isNull(schemaObjectComposed)) {
           schemaObjectComposed =
               createComposedSchema(
@@ -785,7 +785,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final OperationParameter specFile,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
@@ -838,7 +838,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final OperationParameter specFile,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
@@ -876,7 +876,7 @@ public class MapperContentUtil {
       final JsonNode schema,
       final OperationParameter operationParameter,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final String nameSchema) {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
@@ -949,13 +949,13 @@ public class MapperContentUtil {
         || ApiTool.hasAdditionalProperties(value));
   }
 
-  private static SchemaObject createComposedSchema(
+  private static OpenApiSchemaObject createComposedSchema(
       final String buildingSchema,
       final String fieldName,
       final JsonNode schema,
       final OperationParameter specFile,
       final Map<String, JsonNode> totalSchemas,
-      final Map<String, SchemaObject> compositedSchemas,
+      final Map<String, OpenApiSchemaObject> compositedSchemas,
       final Set<String> antiLoopList) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
     String schemaCombinatorType = "";
@@ -986,7 +986,7 @@ public class MapperContentUtil {
       schemaCombinatorType = ONE_OF_COMBINATOR;
     }
 
-    return SchemaObject.builder()
+    return OpenApiSchemaObject.builder()
         .schemaName(fieldName)
         .className(MapperUtil.getPojoName(fieldName, specFile))
         .importList(getImportList(fieldObjectArrayList, specFile.getModelPackage()))

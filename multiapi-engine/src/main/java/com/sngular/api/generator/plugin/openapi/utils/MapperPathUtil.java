@@ -7,6 +7,8 @@
 package com.sngular.api.generator.plugin.openapi.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
@@ -20,8 +22,6 @@ import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.RequestObject;
 import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIOperationParameter;
 import java.nio.file.Path;
 import java.util.ArrayList;

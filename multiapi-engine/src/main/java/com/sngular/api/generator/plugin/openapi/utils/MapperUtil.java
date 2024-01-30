@@ -6,12 +6,10 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import static com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType.OFFSET;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.parameter.OperationParameter;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
