@@ -11,23 +11,23 @@ Maven and Gradle
 - [SCS MultiApi Plugin](#scs-multiapi-plugin)
 - [Index](#index)
 - [Main Configuration](#main-configuration)
-  - [How to configure the POM file](#how-to-configure-the-pom-file)
-  - [How to configure the build.gradle file](#how-to-configure-the-build-file)
+    - [How to configure the POM file](#how-to-configure-the-pom-file)
+    - [How to configure the build.gradle file](#how-to-configure-the-build-file)
 - [AsyncApi Generator](#asyncapi-generator)
-  - [Configuration](#configuration)
-    - [Generated Sources Folder](#generated-sources-folder)
-  - [How is apiPackage set?](#how-is-apipackage-set)
-  - [How is modelPackage set?](#how-is-modelpackage-set)
-  - [Class Generation](#class-generation)
-    - [Consumer and Supplier classes](#consumer-and-supplier-classes)
-      - [Method interfaces](#method-interfaces)
-      - [Mapper](#mapper)
-        - [Implementation](#implementation)
-      - [Stream Bridge class](#stream-bridge-class)
+    - [Configuration](#configuration)
+        - [Generated Sources Folder](#generated-sources-folder)
+    - [How is apiPackage set?](#how-is-apipackage-set)
+    - [How is modelPackage set?](#how-is-modelpackage-set)
+    - [Class Generation](#class-generation)
+        - [Consumer and Supplier classes](#consumer-and-supplier-classes)
+            - [Method interfaces](#method-interfaces)
+            - [Mapper](#mapper)
+                - [Implementation](#implementation)
+            - [Stream Bridge class](#stream-bridge-class)
 - [OpenApi Generator](#openapi-generator)
-  - [Getting Started](#getting-started)
-  - [Initial Considerations](#initial-considerations)
-  - [Usage](#usage)
+    - [Getting Started](#getting-started)
+    - [Initial Considerations](#initial-considerations)
+    - [Usage](#usage)
 - [Property Validation](#property-validation)
 
 ## Main Configuration
@@ -104,6 +104,32 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
+### Mandatory dependencies
+
+These dependencies are used by generated code
+
+```
+ <dependencies>
+       <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser-core</artifactId>
+            <version>2.1.20</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.20</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+ </dependencies>
+```
+
 ### How to configure the build file
 
 To maintain the generation of the different types of classes independent, they
@@ -137,6 +163,16 @@ In case no configuration is provided but only the file to generate an exception 
 In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
+
+### Mandatory dependencies
+
+These dependencies are used by generated code
+
+```
+implementation 'io.swagger.parser.v3:swagger-parser-core:2.1.20'
+implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.20'
+implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+```
 
 ## AsyncApi Generator
 
@@ -283,7 +319,7 @@ can be configured in the plugin.
 - **filePath**: This parameter works in the same way as in the first option.
 - **consumer**, **supplier** and **streamBridge**: They are both configured in
   the same way and can receive the same parameters. These parameters are:
-  - **ids**: With this parameter you can set the operationId that you want to
+    - **ids**: With this parameter you can set the operationId that you want to
       be generated as subscriber or publisher. If this parameter is not defined for
       the `consumer` section, all the subscribe operations defined in the YML file,
       will be generated. If only one of `supplier` and `streamBridge` sections are
@@ -291,20 +327,20 @@ can be configured in the plugin.
       operations defined in the YML file will be generated. If both `supplier` and
       `streamBridge` sections are defined, it`s needed to define which operations
       belong to each category.
-  - **classNamePostfix**: This parameter receives the name of the class that
+    - **classNamePostfix**: This parameter receives the name of the class that
       it's going to be generated containing the Beans. This parameter is optional,
       and by default the classes will be called `Producer`, `StreamBridgeProducer`
       and `Subscriber`.
-  - **modelNameSuffix**: With this parameter you can set the suffix that is
+    - **modelNameSuffix**: With this parameter you can set the suffix that is
       going to be used in the entities of the generated classes. For example if
       you set this to `DTO`, and there is a class named `EntityClass`, it will
       result as `EntityClassDTO`. This parameter is optional.
-  - **apiPackage**: This parameter receive a package name, where the
+    - **apiPackage**: This parameter receive a package name, where the
       generated classes will be generated. This parameter is optional.
       Check [how is the apiPackage set](#how-is-apipackage-set) for
       more information about how this parameter works, and the values it
       could have.
-  - **modelPackage**: This parameter receives a package name, where the entities
+    - **modelPackage**: This parameter receives a package name, where the entities
       used for the generated classes are defined. As it's explained in the
       [Mapper Section](#mapper), those entities are usually auto-generated, so the
       plugin expects the modelPackage to be the package where them are included.
@@ -313,14 +349,14 @@ can be configured in the plugin.
       created by the user. As the previous parameter, this is also optional.
       Check [how is the modelPackage set](#how-is-modelpackage-set) for more
       information about how his parameter works, and the values it could have.
-  -  **dateFormat**: This parameter changes the format annotation for `LocalDate` fields.
+    - **dateFormat**: This parameter changes the format annotation for `LocalDate` fields.
       The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd`.
-  -  **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
+    - **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
       fields. The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
-  -  **useTimeType**: Enum TimeType value. Controls the types used when generating dates. Can be `LOCAL` or `ZOINED`.
-      The default value is `TimeType.LOCAL`. 
+    - **useTimeType**: Enum TimeType value. Controls the types used when generating dates. Can be `LOCAL` or `ZOINED`.
+      The default value is `TimeType.LOCAL`.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -443,8 +479,10 @@ public interface ISubscribeOperation {
 
 #### Bindings
 
-Asyncapi support a way to specify specific configuration for certain protocols. Nowadays we only support Kafka specific information to define a Key form Messages as you can find [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
-When a binding is specified in a message we will generate a generic class named as MessageWrapper which will contain the payload and the key used in to build a Message.
+Asyncapi support a way to specify specific configuration for certain protocols. Nowadays we only support Kafka specific information to
+define a Key form Messages as you can find [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
+When a binding is specified in a message we will generate a generic class named as MessageWrapper which will contain the payload and the key
+used in to build a Message.
 You will find such class by each api package you define.
 
 ##### Mapper
@@ -755,6 +793,7 @@ Here's an example configuration for the maven plugin that loads an AsyncAPI spec
 from a local JAR containing `contracts/event-api.yml` in its resources:
 
 ```xml
+
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
