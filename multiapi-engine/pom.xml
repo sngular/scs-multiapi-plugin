@@ -20,7 +20,7 @@
     <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
     <swagger-core.version>2.2.9</swagger-core.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
-
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>

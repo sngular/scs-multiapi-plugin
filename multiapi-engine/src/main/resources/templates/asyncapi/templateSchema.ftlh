@@ -182,7 +182,11 @@ public class ${schema.className} {
   private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, hasConstValue(field.constValue))}
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as value>
+  <#if value?matches("[0-9].*")>
+    ${"_"+value?upper_case?replace('[\\W]','_','r')}("${value?no_esc}")<#sep>,
+  <#else>
     ${value?upper_case?replace('[\\W]','_','r')}("${value?no_esc}")<#sep>,
+  </#if>
 </#list>;
 
     private ${field.dataType?cap_first} value;
