@@ -1,7 +1,7 @@
 <#ftl output_format="plainText">
 <#assign words = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "double", "do", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"]>
 <#function calculateSafeName propertyName ender>
-    <#if words?seq_contains(propertyName?uncap_first)>
+    <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
         <#return "_"+propertyName+ender/>
     <#else >
         <#return propertyName+ender/>
@@ -156,7 +156,11 @@ public class ${schema.className} {
     </#if>
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
+  <#if key?matches("[0-9].*")>
+    ${"_"+key}(${value})<#sep>,
+  <#else>
     ${key}(${value})<#sep>,
+  </#if>
 </#list>;
 
     private ${field.dataType.innerType?cap_first} value;

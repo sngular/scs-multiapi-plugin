@@ -125,7 +125,11 @@ public class ${schema.className} {
 
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
+  <#if key?matches("[0-9].*")>
+    ${"_"+key}(${value})<#sep>,
+  <#else>
     ${key}(${value})<#sep>,
+  </#if>
 </#list>;
 
     private ${field.dataType.innerType?cap_first} value;
