@@ -40,6 +40,12 @@ components:
         createdAt:
           type: string
           format: date-time
+        numberEnum:
+          type: string
+          enum:
+          - '1234'
+          - '2345'
+          - '3456'
         someOtherObject:
           type: object
           properties:
