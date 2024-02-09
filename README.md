@@ -702,9 +702,14 @@ openapimodel {
   specFile {
     {
       filePath = './src/main/resources/api/api.yml'
-      apiPackage = 'com.sngular.apigenerator.openapi.api'
-      modelPackage = 'com.sngular.apigenerator.openapi.api.model'
-      useTagsGroup = true
+      consumer {
+        apiPackage = 'com.sngular.apigenerator.openapi.api'
+        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
+      }
+      supplier {
+        apiPackage = 'com.sngular.apigenerator.openapi.api'
+        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
+      }
     }
     overWriteModel = true
   }
