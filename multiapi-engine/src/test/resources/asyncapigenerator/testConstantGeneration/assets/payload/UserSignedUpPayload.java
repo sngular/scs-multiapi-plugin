@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,6 +22,29 @@ public class UserSignedUpPayload {
   @JsonProperty(value ="createdAt")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime createdAt;
+  @JsonProperty(value ="numberEnum")
+  private NumberEnum numberEnum;
+  public enum NumberEnum {
+    _1234("1234"),
+    _2345("2345"),
+    _3456("3456");
+
+    private String value;
+
+    NumberEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
   @JsonProperty(value ="someOtherObject")
   private SomeOtherObject someOtherObject;
 
@@ -29,6 +53,7 @@ public class UserSignedUpPayload {
     this.lastName = builder.lastName;
     this.email = builder.email;
     this.createdAt = builder.createdAt;
+    this.numberEnum = builder.numberEnum;
     this.someOtherObject = builder.someOtherObject;
 
   }
@@ -48,10 +73,17 @@ public class UserSignedUpPayload {
 
     private LocalDateTime createdAt;
 
+    private NumberEnum numberEnum;
+
     private SomeOtherObject someOtherObject;
 
     public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(LocalDateTime createdAt) {
       this.createdAt = createdAt;
+      return this;
+    }
+
+    public UserSignedUpPayload.UserSignedUpPayloadBuilder numberEnum(NumberEnum numberEnum) {
+      this.numberEnum = numberEnum;
       return this;
     }
 
@@ -106,6 +138,18 @@ public class UserSignedUpPayload {
   }
 
   /**
+  * Get numberEnum
+  * @return numberEnum
+  */
+  @Schema(name = "numberEnum", required = false)
+  public NumberEnum getNumberEnum() {
+    return numberEnum;
+  }
+  public void setNumberEnum(NumberEnum numberEnum) {
+    this.numberEnum = numberEnum;
+  }
+
+  /**
   * Get someOtherObject
   * @return someOtherObject
   */
@@ -126,12 +170,12 @@ public class UserSignedUpPayload {
       return false;
     }
     UserSignedUpPayload userSignedUpPayload = (UserSignedUpPayload) o;
-    return Objects.equals(this.firstName, userSignedUpPayload.firstName) && Objects.equals(this.lastName, userSignedUpPayload.lastName) && Objects.equals(this.email, userSignedUpPayload.email) && Objects.equals(this.createdAt, userSignedUpPayload.createdAt) && Objects.equals(this.someOtherObject, userSignedUpPayload.someOtherObject);
+    return Objects.equals(this.firstName, userSignedUpPayload.firstName) && Objects.equals(this.lastName, userSignedUpPayload.lastName) && Objects.equals(this.email, userSignedUpPayload.email) && Objects.equals(this.createdAt, userSignedUpPayload.createdAt) && Objects.equals(this.numberEnum, userSignedUpPayload.numberEnum) && Objects.equals(this.someOtherObject, userSignedUpPayload.someOtherObject);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, email, createdAt, someOtherObject);
+    return Objects.hash(firstName, lastName, email, createdAt, numberEnum, someOtherObject);
   }
 
   @Override
@@ -142,6 +186,7 @@ public class UserSignedUpPayload {
     sb.append(" lastName:").append(lastName).append(",");
     sb.append(" email:").append(email).append(",");
     sb.append(" createdAt:").append(createdAt).append(",");
+    sb.append(" numberEnum:").append(numberEnum).append(",");
     sb.append(" someOtherObject:").append(someOtherObject);
     sb.append("}");
     return sb.toString();
