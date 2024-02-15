@@ -130,6 +130,7 @@ public class MapperPathUtil {
   private static OperationObject createOperation(
       final JsonNode operation, final String operationType, final SpecFile specFile, final GlobalObject globalObject,
       final List<String> operationIdList, final Path baseDir) {
+    Objects.requireNonNull(operation.get("tags"), "Tags element is required");
     return OperationObject.builder()
                           .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
