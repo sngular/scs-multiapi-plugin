@@ -64,17 +64,17 @@ public class MapperUtil {
         type = formatTypeOfString(format, useTimeType);
       } else if (NUMBER.equalsIgnoreCase(type)) {
         if (FLOAT.equalsIgnoreCase(format)) {
-          type = FLOAT;
+          type = StringUtils.capitalize(FLOAT);
         } else if (DOUBLE.equalsIgnoreCase(format)) {
-          type = DOUBLE;
+          type = StringUtils.capitalize(DOUBLE);
         } else {
-          type = BIG_DECIMAL;
+          type = StringUtils.capitalize(BIG_DECIMAL);
         }
       } else if (INTEGER.equalsIgnoreCase(type)) {
         if (INT_64.equalsIgnoreCase(format)) {
-          type = LONG;
+          type = StringUtils.capitalize(LONG);
         } else {
-          type = INTEGER;
+          type = StringUtils.capitalize(INTEGER);
         }
       }
     } else if (schema.has(REF)) {

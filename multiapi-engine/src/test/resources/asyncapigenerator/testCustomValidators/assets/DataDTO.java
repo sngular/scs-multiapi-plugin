@@ -41,7 +41,7 @@ public class DataDTO {
   @MinItems(minimum = 5)
   @UniqueItems
   @NotNull
-  private final List<integer> test = new ArrayList<integer>();
+  private final List<Integer> test = new ArrayList<Integer>();
 
   private DataDTO(DataDTOBuilder builder) {
     this.clientId = builder.clientId;
@@ -65,7 +65,7 @@ public class DataDTO {
 
     private String flightNumber;
 
-    private List<integer> test = new ArrayList<integer>();
+    private List<Integer> test = new ArrayList<Integer>();
 
     public DataDTO.DataDTOBuilder clientId(Integer clientId) {
       this.clientId = clientId;
@@ -82,14 +82,14 @@ public class DataDTO {
       return this;
     }
 
-    public DataDTO.DataDTOBuilder test(List<integer> test) {
+    public DataDTO.DataDTOBuilder test(List<Integer> test) {
       if (!test.isEmpty()) {
         this.test.addAll(test);
       }
       return this;
     }
 
-    public DataDTO.DataDTOBuilder test(integer test) {
+    public DataDTO.DataDTOBuilder test(Integer test) {
       if (test != null) {
         this.test.add(test);
       }
@@ -134,7 +134,7 @@ public class DataDTO {
   * @return test
   */
   @Schema(name = "test", required = true)
-  public List<integer> getTest() {
+  public List<Integer> getTest() {
     return test;
   }
 

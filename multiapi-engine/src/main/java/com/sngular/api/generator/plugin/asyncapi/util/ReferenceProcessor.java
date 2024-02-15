@@ -19,6 +19,8 @@ public final class ReferenceProcessor {
 
   private static final String YML = "yml";
 
+  private static final String YAML = "yaml";
+
   private static final String REF = "$ref";
 
   private static final String AVSC = "avsc";
@@ -78,7 +80,7 @@ public final class ReferenceProcessor {
     final String filePath = pathToFile[0];
     JsonNode returnNode = null;
 
-    if (filePath.endsWith(YML) || filePath.endsWith(JSON)) {
+    if (filePath.endsWith(YML) || filePath.endsWith(JSON) || filePath.endsWith(YAML)) {
       final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
       if (node.findValue(path[path.length - 2]).has(path[path.length - 1])) {
         returnNode = node.findValue(path[path.length - 2]).get(path[path.length - 1]);
