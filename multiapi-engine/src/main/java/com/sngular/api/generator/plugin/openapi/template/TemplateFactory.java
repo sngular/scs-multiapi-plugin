@@ -65,6 +65,10 @@ public class TemplateFactory {
     }
   }
 
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException {
+    writeTemplateToFile(templateName, root, path, true);
+  }
+
   private static String templateSelector(final Boolean useLombok, final SchemaObject schemaObject) {
     final var shouldUseLombok = Objects.requireNonNullElse(useLombok, false);
     final var shouldUseEnum = schemaObject.isEnum();
@@ -79,6 +83,21 @@ public class TemplateFactory {
     }
 
     return template;
+  }
+
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException {
+    final Template template = cfg.getTemplate(templateName);
+
+    if (!Files.exists(Path.of(path)) || checkOverwrite) {
+      try (FileWriter writer = new FileWriter(path)) {
+        template.process(root, writer);
+      } catch (IOException | TemplateException exception) {
+        final var schema = root.get("schema");
+        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject) schema).getClassName()), exception);
+      }
+    } else {
+      throw new OverwritingApiFilesException();
+    }
   }
 
   public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException {
@@ -112,6 +131,10 @@ public class TemplateFactory {
     final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
     writeTemplateToFile(createNameTemplate(authName), root, pathToSaveMainClass);
 
+  }
+
+  private String createNameTemplate(final String classNameAuth) {
+    return "template" + classNameAuth + ".ftlh";
   }
 
   public final void fillTemplateCustom(
@@ -150,30 +173,19 @@ public class TemplateFactory {
 
   }
 
+  private String getTemplateClientApi(final OpenAPISpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+  }
+
+  private String getTemplateApi(final OpenAPISpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
+  }
+
   public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
       root.put("javaEEPackage", "jakarta");
     } else {
       root.put("javaEEPackage", "javax");
-    }
-  }
-
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException {
-    writeTemplateToFile(templateName, root, path, true);
-  }
-
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException {
-    final Template template = cfg.getTemplate(templateName);
-
-    if (!Files.exists(Path.of(path)) || checkOverwrite) {
-      try (FileWriter writer = new FileWriter(path)) {
-        template.process(root, writer);
-      } catch (IOException | TemplateException exception) {
-        final var schema = root.get("schema");
-        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject) schema).getClassName()), exception);
-      }
-    } else {
-      throw new OverwritingApiFilesException();
     }
   }
 
@@ -191,18 +203,6 @@ public class TemplateFactory {
 
   public final void setAuthPackageName(final String packageName) {
     root.put("packageAuth", packageName);
-  }
-
-  private String createNameTemplate(final String classNameAuth) {
-    return "template" + classNameAuth + ".ftlh";
-  }
-
-  private String getTemplateClientApi(final OpenAPISpecFile specFile) {
-    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
-  }
-
-  private String getTemplateApi(final OpenAPISpecFile specFile) {
-    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
 }

@@ -53,23 +53,6 @@ import com.sngular.api.generator.plugin.common.model.TimeType;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -252,15 +235,15 @@ public class AsyncApiGenerator {
         });
 
     ApiTool.getComponent(node, SCHEMAS)
-        .forEachRemaining(
-            schema ->
-                totalSchemas.putIfAbsent(
-                    (SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue()));
+           .forEachRemaining(
+               schema ->
+                   totalSchemas.putIfAbsent(
+                       (SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue()));
 
     ApiTool.getComponent(node, MESSAGES)
-        .forEachRemaining(
-            message ->
-                getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas));
+           .forEachRemaining(
+               message ->
+                   getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas));
 
     getChannels(node)
         .forEachRemaining(
@@ -271,8 +254,8 @@ public class AsyncApiGenerator {
 
   private Iterator<Entry<String, JsonNode>> getChannels(final JsonNode node) {
     return ApiTool.hasNode(node, CHANNELS)
-        ? ApiTool.getNode(node, CHANNELS).fields()
-        : Collections.emptyIterator();
+               ? ApiTool.getNode(node, CHANNELS).fields()
+               : Collections.emptyIterator();
   }
 
   private void getMessageSchemas(
@@ -372,7 +355,7 @@ public class AsyncApiGenerator {
       final List<String> operationIds = operation.getOperationIds();
       result =
           operationIds.contains(operationId)
-              || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
+          || operationIds.isEmpty() && channel.has(channelType) && excludingOperationExists;
     } else {
       result = false;
     }
@@ -429,17 +412,17 @@ public class AsyncApiGenerator {
   private void processEntitiesSuffix(final AsynAPISpecFile fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(
         fileParameter.getSupplier() != null
-                && fileParameter.getSupplier().getModelNameSuffix() != null
+        && fileParameter.getSupplier().getModelNameSuffix() != null
             ? fileParameter.getSupplier().getModelNameSuffix()
             : null);
     templateFactory.setStreamBridgeEntitiesSuffix(
         fileParameter.getStreamBridge() != null
-                && fileParameter.getStreamBridge().getModelNameSuffix() != null
+        && fileParameter.getStreamBridge().getModelNameSuffix() != null
             ? fileParameter.getStreamBridge().getModelNameSuffix()
             : null);
     templateFactory.setSubscribeEntitiesSuffix(
         fileParameter.getConsumer() != null
-                && fileParameter.getConsumer().getModelNameSuffix() != null
+        && fileParameter.getConsumer().getModelNameSuffix() != null
             ? fileParameter.getConsumer().getModelNameSuffix()
             : null);
   }
@@ -450,7 +433,7 @@ public class AsyncApiGenerator {
         && apiPackage != null
         && processedApiPackages.contains(apiPackage)
         && processedClassnames.lastIndexOf(className)
-            == processedApiPackages.lastIndexOf(apiPackage)) {
+           == processedApiPackages.lastIndexOf(apiPackage)) {
       throw new DuplicateClassException(className, apiPackage);
     }
   }
@@ -464,17 +447,17 @@ public class AsyncApiGenerator {
   private void processClassNames(final AsynAPISpecFile fileParameter) {
     templateFactory.setSupplierClassName(
         fileParameter.getSupplier() != null
-                && fileParameter.getSupplier().getClassNamePostfix() != null
+        && fileParameter.getSupplier().getClassNamePostfix() != null
             ? fileParameter.getSupplier().getClassNamePostfix()
             : SUPPLIER_CLASS_NAME);
     templateFactory.setStreamBridgeClassName(
         fileParameter.getStreamBridge() != null
-                && fileParameter.getStreamBridge().getClassNamePostfix() != null
+        && fileParameter.getStreamBridge().getClassNamePostfix() != null
             ? fileParameter.getStreamBridge().getClassNamePostfix()
             : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(
         fileParameter.getConsumer() != null
-                && fileParameter.getConsumer().getClassNamePostfix() != null
+        && fileParameter.getConsumer().getClassNamePostfix() != null
             ? fileParameter.getConsumer().getClassNamePostfix()
             : CONSUMER_CLASS_NAME);
   }
@@ -612,15 +595,15 @@ public class AsyncApiGenerator {
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
           MapperContentUtil.mapComponentToSchemaObject(
-                  totalSchemas,
-                  className,
-                  schemaToBuild,
-                  null,
-                  operationObject.getModelNameSuffix(),
-                  parentPackage,
-                  operationObject.getFormats(),
-                  operationObject.getUseTimeType())
-              .iterator();
+                               totalSchemas,
+                               className,
+                               schemaToBuild,
+                               null,
+                               operationObject.getModelNameSuffix(),
+                               parentPackage,
+                               operationObject.getFormats(),
+                               operationObject.getUseTimeType())
+                           .iterator();
 
       if (schemaObjectIt.hasNext()) {
         final var filePath =
@@ -723,12 +706,12 @@ public class AsyncApiGenerator {
     }
     final var processBindingsResult = processBindingsResultBuilder.build();
     return ProcessMethodResult.builder()
-        .operationId(operationId)
-        .namespace(payloadInfo.getKey())
-        .payload(payloadInfo.getValue())
-        .bindings(processBindingsResult.getBindings())
-        .bindingType(processBindingsResult.getBindingType())
-        .build();
+                              .operationId(operationId)
+                              .namespace(payloadInfo.getKey())
+                              .payload(payloadInfo.getValue())
+                              .bindings(processBindingsResult.getBindings())
+                              .bindingType(processBindingsResult.getBindingType())
+                              .build();
   }
 
   private Pair<String, JsonNode> processPayload(
@@ -890,9 +873,9 @@ public class AsyncApiGenerator {
       final var className = splitPackage[splitPackage.length - 1];
       processedPackage =
           StringUtils.join(
-                  PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length))
-              + PACKAGE_SEPARATOR_STR
-              + StringUtils.capitalize(className);
+              PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length))
+          + PACKAGE_SEPARATOR_STR
+          + StringUtils.capitalize(className);
     } else {
       processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + capitalizeWithPrefix(extractedPackage);
     }

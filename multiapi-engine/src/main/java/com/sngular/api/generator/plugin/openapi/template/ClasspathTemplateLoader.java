@@ -53,26 +53,6 @@ public class ClasspathTemplateLoader implements TemplateLoader {
     templatesMap.putAll(getResourceFolderFiles());
   }
 
-  @Override
-  public final Object findTemplateSource(final String templateName) {
-    return templatesMap.get(templateName);
-  }
-
-  @Override
-  public final long getLastModified(final Object o) {
-    return 0;
-  }
-
-  @Override
-  public final Reader getReader(final Object template, final String charSet) {
-    return new StringReader(template.toString());
-  }
-
-  @Override
-  public void closeTemplateSource(final Object o) {
-    // Not required to implement
-  }
-
   private Map<String, String> getResourceFolderFiles() {
     final Map<String, String> templates = new HashMap<>();
     TEMPLATE_FILES.forEach(templateFile -> {
@@ -103,5 +83,25 @@ public class ClasspathTemplateLoader implements TemplateLoader {
 
   private String readFile(final InputStream file) throws IOException {
     return new String(file.readAllBytes());
+  }
+
+  @Override
+  public final Object findTemplateSource(final String templateName) {
+    return templatesMap.get(templateName);
+  }
+
+  @Override
+  public final long getLastModified(final Object o) {
+    return 0;
+  }
+
+  @Override
+  public final Reader getReader(final Object template, final String charSet) {
+    return new StringReader(template.toString());
+  }
+
+  @Override
+  public void closeTemplateSource(final Object o) {
+    // Not required to implement
   }
 }

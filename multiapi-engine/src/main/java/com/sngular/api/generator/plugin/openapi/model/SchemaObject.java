@@ -38,11 +38,11 @@ public class SchemaObject {
 
   public static final class SchemaObjectBuilder {
 
-    private boolean isEnum;
-
     private final List<String> importList = new ArrayList<>();
 
     private final Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
+
+    private boolean isEnum;
 
     public SchemaObjectBuilder importList(final List<String> importList) {
       this.importList.addAll(importList);

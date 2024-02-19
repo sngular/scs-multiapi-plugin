@@ -12,7 +12,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public final class OperationParameterObject {
 
   @Builder.Default
   private String dateFormat = "yyyy-MM-dd";
-  
+
   @Default
   private TimeType useTimeType = TimeType.LOCAL;
 
@@ -57,7 +56,7 @@ public final class OperationParameterObject {
   public List<String> getOperationIds() {
     return StringUtils.isEmpty(ids) ? List.of() : List.of(ids.replace(" ", "").split(","));
   }
-  
+
   public Map<String, String> getFormats() {
     return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
   }

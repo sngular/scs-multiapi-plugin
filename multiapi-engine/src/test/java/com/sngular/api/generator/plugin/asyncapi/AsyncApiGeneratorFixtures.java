@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.test.utils.TestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.Assertions;

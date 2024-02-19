@@ -38,5 +38,6 @@ public class OpenAPISpecFile extends SpecFile {
 
   private boolean isReactive;
 
-  @Default private TimeType useTimeType = TimeType.LOCAL;
+  @Default
+  private TimeType useTimeType = TimeType.LOCAL;
 }

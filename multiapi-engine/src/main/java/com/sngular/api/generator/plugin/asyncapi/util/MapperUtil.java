@@ -48,7 +48,8 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final String prefix, final String suffix,
+  public static String getSimpleType(
+      final JsonNode schema, final String prefix, final String suffix,
       final TimeType useTimeType) {
     String type = schema.textValue();
     if (schema.has("type")) {
@@ -113,6 +114,10 @@ public class MapperUtil {
     return splitName(schema.get(REF).textValue());
   }
 
+  public static String[] splitName(final String name) {
+    return ArrayUtils.removeAllOccurrences(name.split(DIVISOR), "");
+  }
+
   public static String getRefClass(final JsonNode schema) {
     final String[] pathObjectRef = getStrings(schema);
     return pathObjectRef[pathObjectRef.length - 1];
@@ -139,7 +144,8 @@ public class MapperUtil {
     return typeArray;
   }
 
-  private static String getCollectionType(final JsonNode mapNode, final JsonNode mapValueType, final String prefix,
+  private static String getCollectionType(
+      final JsonNode mapNode, final JsonNode mapValueType, final String prefix,
       final String suffix, final TimeType useTimeType) {
     var typeMap = mapValueType.textValue();
     if (!typeMap.contains("#")) {
@@ -157,10 +163,6 @@ public class MapperUtil {
     return StringUtils.defaultIfBlank(prefix, "")
            + StringUtils.capitalize(namePojo)
            + StringUtils.defaultIfBlank(suffix, "");
-  }
-
-  public static String[] splitName(final String name) {
-    return ArrayUtils.removeAllOccurrences(name.split(DIVISOR), "");
   }
 
   public static String buildKey(final String[] pathList) {

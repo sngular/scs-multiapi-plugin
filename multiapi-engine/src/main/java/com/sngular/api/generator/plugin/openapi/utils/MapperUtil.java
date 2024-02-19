@@ -32,21 +32,11 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getRefSchemaName(final JsonNode parameter) {
-    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
-  }
-
-  public static String getRefSchemaName(final String parameter) {
-    final String[] pathObjectRef = parameter.split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
-  }
-
   private static boolean checkIfNumber(final String nodeType) {
     return TypeConstants.NUMBER.equalsIgnoreCase(nodeType)
-        || TypeConstants.INTEGER.equalsIgnoreCase(nodeType)
-        || TypeConstants.INT_32.equalsIgnoreCase(nodeType)
-        || TypeConstants.INT_64.equalsIgnoreCase(nodeType);
+           || TypeConstants.INTEGER.equalsIgnoreCase(nodeType)
+           || TypeConstants.INT_32.equalsIgnoreCase(nodeType)
+           || TypeConstants.INT_64.equalsIgnoreCase(nodeType);
   }
 
   private static String processNumber(final JsonNode schema) {
@@ -72,6 +62,26 @@ public class MapperUtil {
     return type;
   }
 
+  public static String getPojoName(final String namePojo, final OpenAPISpecFile specFile) {
+    return (StringUtils.isNotBlank(specFile.getModelNamePrefix())
+                ? specFile.getModelNamePrefix()
+                : "")
+           + StringUtils.capitalize(namePojo)
+           + (StringUtils.isNotBlank(specFile.getModelNameSuffix())
+                  ? specFile.getModelNameSuffix()
+                  : "");
+  }
+
+  public static String getRefSchemaName(final JsonNode parameter) {
+    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
+  public static String getRefSchemaName(final String parameter) {
+    final String[] pathObjectRef = parameter.split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
   public static String getTypeArray(final JsonNode array, final OpenAPISpecFile specFile) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
@@ -82,16 +92,6 @@ public class MapperUtil {
       typeArray = getPojoName(MapperUtil.getRefSchemaName(ApiTool.getItems(array)), specFile);
     }
     return typeArray;
-  }
-
-  public static String getPojoName(final String namePojo, final OpenAPISpecFile specFile) {
-    return (StringUtils.isNotBlank(specFile.getModelNamePrefix())
-            ? specFile.getModelNamePrefix()
-            : "")
-        + StringUtils.capitalize(namePojo)
-        + (StringUtils.isNotBlank(specFile.getModelNameSuffix())
-            ? specFile.getModelNameSuffix()
-            : "");
   }
 
   public static String getRef(final JsonNode schema, final OpenAPISpecFile specFile) {

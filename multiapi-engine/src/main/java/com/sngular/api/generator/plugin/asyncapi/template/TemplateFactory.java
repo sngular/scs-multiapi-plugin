@@ -207,6 +207,14 @@ public class TemplateFactory {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
   }
 
+  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
+    final Template template = cfg.getTemplate(templateName);
+
+    final FileWriter writer = new FileWriter(path);
+    template.process(root, writer);
+    writer.close();
+  }
+
   public final void fillTemplateCustom(
       final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
       final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
@@ -293,36 +301,36 @@ public class TemplateFactory {
 
   public final void addSupplierMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
     publishMethods.add(MethodObject
-                         .builder()
-                         .operationId(operationId)
-                         .classNamespace(classNamespace)
-                         .type("publish")
-                         .keyClassNamespace(bindings)
-                         .bindingType(bindingType)
-                         .build());
+                           .builder()
+                           .operationId(operationId)
+                           .classNamespace(classNamespace)
+                           .type("publish")
+                           .keyClassNamespace(bindings)
+                           .bindingType(bindingType)
+                           .build());
   }
 
   public final void addStreamBridgeMethod(final String operationId, final String classNamespace, final String channelName, final String bindings, final String bindingType) {
     streamBridgeMethods.add(MethodObject
-                              .builder()
-                              .operationId(operationId)
-                              .channelName(channelName)
-                              .classNamespace(classNamespace)
-                              .type("streamBridge")
-                              .keyClassNamespace(bindings)
-                              .bindingType(bindingType)
-                              .build());
+                                .builder()
+                                .operationId(operationId)
+                                .channelName(channelName)
+                                .classNamespace(classNamespace)
+                                .type("streamBridge")
+                                .keyClassNamespace(bindings)
+                                .bindingType(bindingType)
+                                .build());
   }
 
   public final void addSubscribeMethod(final String operationId, final String classNamespace, final String bindings, final String bindingType) {
     subscribeMethods.add(MethodObject
-                           .builder()
-                           .operationId(operationId)
-                           .classNamespace(classNamespace)
-                           .type("subscribe")
-                           .keyClassNamespace(bindings)
-                           .bindingType(bindingType)
-                           .build());
+                             .builder()
+                             .operationId(operationId)
+                             .classNamespace(classNamespace)
+                             .type("subscribe")
+                             .keyClassNamespace(bindings)
+                             .bindingType(bindingType)
+                             .build());
   }
 
   public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath, final Path propertiesPath) {
@@ -407,14 +415,6 @@ public class TemplateFactory {
                      checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS), interfaceRoot);
       }
     }
-  }
-
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
-    final Template template = cfg.getTemplate(templateName);
-
-    final FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
   }
 
   private String checkTemplate(final String bindingType, final String defaultTemplate) {

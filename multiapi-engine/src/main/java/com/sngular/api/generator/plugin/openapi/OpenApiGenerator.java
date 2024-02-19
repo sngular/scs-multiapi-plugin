@@ -59,8 +59,6 @@ public class OpenApiGenerator {
 
   private final Boolean overwriteModel;
 
-  private boolean generateExceptionTemplate;
-
   private final FilenameFilter targetFileFilter;
 
   private final Set<String> overwriteModelList = new HashSet<>();
@@ -75,15 +73,17 @@ public class OpenApiGenerator {
 
   private final Path baseDir;
 
+  private final List<String> authentications = new ArrayList<>();
+
+  private final Integer springBootVersion;
+
+  private boolean generateExceptionTemplate;
+
   private Boolean isWebClient = false;
 
   private Boolean isRestClient = false;
 
-  private final List<String> authentications = new ArrayList<>();
-
   private boolean useLombok;
-
-  private final Integer springBootVersion;
 
   public OpenApiGenerator(
       final Integer springBootVersion,
@@ -130,7 +130,7 @@ public class OpenApiGenerator {
           StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName(
           (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE)
-              + ".auth");
+          + ".auth");
       isWebClient = specFile.isReactive();
       isRestClient = !specFile.isReactive();
     }
@@ -170,7 +170,7 @@ public class OpenApiGenerator {
     final String clientPackage = specFile.getClientPackage();
     final var authFileRoot =
         (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE)
-            + ".auth";
+        + ".auth";
     final String authFileToSave = processPath(authFileRoot, false);
 
     templateFactory.setAuthPackageName(authFileRoot);
@@ -342,7 +342,7 @@ public class OpenApiGenerator {
               basicSchemaMap,
               builtSchemasMap));
     } else if (!ApiTool.isArray(basicSchema)
-        && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
+               && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
       builtSchemasMap.putAll(
           writeModel(
               specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));

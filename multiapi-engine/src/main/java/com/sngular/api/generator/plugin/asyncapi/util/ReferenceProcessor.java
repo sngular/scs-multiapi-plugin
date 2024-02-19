@@ -25,11 +25,11 @@ public final class ReferenceProcessor {
 
   private static final String SLASH = "/";
 
-  private List<String> alreadyProcessed;
-
   private final FileLocation ymlParent;
 
   private final Map<String, JsonNode> totalSchemas;
+
+  private List<String> alreadyProcessed;
 
   @Builder
   public ReferenceProcessor(final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {

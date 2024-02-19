@@ -6,6 +6,18 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
@@ -16,10 +28,6 @@ import com.sngular.api.generator.plugin.common.model.TimeType;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MapperContentUtil {
 
@@ -150,13 +158,13 @@ public class MapperContentUtil {
     final var splitPackage = MapperUtil.splitName(component);
     final String className = splitPackage[splitPackage.length - 1];
     return SchemaObject.builder()
-        .schemaName(WordUtils.capitalizeFully(className))
-        .className(MapperUtil.getPojoName(className, prefix, suffix))
-        .importList(getImportList(listSchema))
-        .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
-        .fieldObjectList(listSchema)
-        .parentPackage(parentPackage.toLowerCase())
-        .build();
+                       .schemaName(WordUtils.capitalizeFully(className))
+                       .className(MapperUtil.getPojoName(className, prefix, suffix))
+                       .importList(getImportList(listSchema))
+                       .schemaCombinator(StringUtils.isNotBlank(schemaCombinatorType) ? schemaCombinatorType : "")
+                       .fieldObjectList(listSchema)
+                       .parentPackage(parentPackage.toLowerCase())
+                       .build();
   }
 
   private static List<String> getImportList(final List<SchemaFieldObject> schemaListToImport) {
@@ -185,8 +193,8 @@ public class MapperContentUtil {
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), MAP)) {
         importList.addAll(List.of("java.util.Map", "java.util.HashMap"));
       } else if (fieldObject.getDataTypeSimple().equals(BIG_DECIMAL)
-          || Objects.nonNull(fieldObject.getDataType())
-              && fieldObject.getDataType().equals(BIG_DECIMAL)) {
+                 || Objects.nonNull(fieldObject.getDataType())
+                    && fieldObject.getDataType().equals(BIG_DECIMAL)) {
         importList.add("java.math.BigDecimal");
       } else if (Objects.equals(fieldObject.getDataTypeSimple(), LOCAL_DATE)) {
         importList.add("java.time.LocalDate");
@@ -450,10 +458,10 @@ public class MapperContentUtil {
       if (OBJECT.equalsIgnoreCase(type)) {
         fieldObject =
             SchemaFieldObject.builder()
-                .baseName(name)
-                .restrictions(new SchemaFieldObjectProperties())
-                .dataType(MapperUtil.getSimpleType(schema, prefix, suffix, useTimeType))
-                .build();
+                             .baseName(name)
+                             .restrictions(new SchemaFieldObjectProperties())
+                             .dataType(MapperUtil.getSimpleType(schema, prefix, suffix, useTimeType))
+                             .build();
         setFieldType(
             fieldObject, schema, required, prefix, suffix, className, formats, useTimeType);
         final var schemaName = StringUtils.defaultString(className, propertyName);
@@ -471,12 +479,12 @@ public class MapperContentUtil {
         }
         fieldObject =
             SchemaFieldObject.builder()
-                .baseName(name)
-                .restrictions(new SchemaFieldObjectProperties())
-                .dataType(arrayType)
-                .dataTypeSimple(type)
-                .importClass(getImportClass(arrayType))
-                .build();
+                             .baseName(name)
+                             .restrictions(new SchemaFieldObjectProperties())
+                             .dataType(arrayType)
+                             .dataTypeSimple(type)
+                             .importClass(getImportClass(arrayType))
+                             .build();
         setFormatProperies(fieldObject, arrayType, formats);
         handleItems(schema, modelToBuildList, fieldObject, required, items);
       } else if (ApiTool.isEnum(schema)) {
@@ -528,8 +536,8 @@ public class MapperContentUtil {
   private static String createKey(
       final String modelPackage, final String className, final String separator) {
     return Objects.nonNull(modelPackage)
-        ? modelPackage.toUpperCase() + separator + className
-        : className;
+               ? modelPackage.toUpperCase() + separator + className
+               : className;
   }
 
   private static void handleItems(
@@ -682,18 +690,18 @@ public class MapperContentUtil {
     }
 
     return SchemaFieldObject.builder()
-        .baseName(name)
-        .dataTypeSimple("enum")
-        .dataType(MapperUtil.getSimpleType(value, prefix, suffix, useTimeType))
-        .required(required)
-        .enumValues(enumValues)
-        .restrictions(new SchemaFieldObjectProperties())
-        .build();
+                            .baseName(name)
+                            .dataTypeSimple("enum")
+                            .dataType(MapperUtil.getSimpleType(value, prefix, suffix, useTimeType))
+                            .required(required)
+                            .enumValues(enumValues)
+                            .restrictions(new SchemaFieldObjectProperties())
+                            .build();
   }
 
   private static String getImportClass(final String type) {
     return StringUtils.isNotBlank(type) && !"String".equals(type) && !"Integer".equals(type)
-        ? type
-        : "";
+               ? type
+               : "";
   }
 }

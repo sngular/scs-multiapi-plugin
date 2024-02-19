@@ -69,6 +69,7 @@ public final class TypeConstants {
                                                            ZONEDDATETIME,
                                                            OFFSETDATE,
                                                            OFFSETDATETIME);
+
   public static final Set<String> ALL_TYPES = Set.of(
       NUMBER,
       BOOLEAN,
