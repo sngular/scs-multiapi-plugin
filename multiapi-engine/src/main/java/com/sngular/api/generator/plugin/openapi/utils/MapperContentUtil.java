@@ -6,15 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
-import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +16,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
+import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -6,13 +6,14 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
-import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

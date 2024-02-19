@@ -6,23 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
-import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
-import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.ContentObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
-import com.sngular.api.generator.plugin.openapi.model.OperationObject;
-import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.RequestObject;
-import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +16,24 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
+import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
+import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
+import com.sngular.api.generator.plugin.openapi.model.ContentObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.model.OperationObject;
+import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.RequestObject;
+import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
+import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 

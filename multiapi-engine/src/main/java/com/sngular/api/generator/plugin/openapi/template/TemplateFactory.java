@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -49,8 +50,7 @@ public class TemplateFactory {
 
   public final void fillTemplateSchema(
       final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
-      final Set<String> propertiesSet) throws IOException,
-                                            TemplateException {
+      final Set<String> propertiesSet) throws IOException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       root.put("schema", schemaObject);
@@ -81,7 +81,7 @@ public class TemplateFactory {
     return template;
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {
+  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
@@ -90,7 +90,7 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
+  public final void fillTemplateWebClient(final String filePathToSave) throws IOException {
     final File fileToSave = new File(filePathToSave);
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiWebClient.java").toString();
@@ -98,7 +98,7 @@ public class TemplateFactory {
 
   }
 
-  public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
+  public final void fillTemplateRestClient(final String filePathToSave) throws IOException {
     final File fileToSave = new File(filePathToSave);
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiRestClient.java").toString();

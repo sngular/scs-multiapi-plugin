@@ -380,7 +380,7 @@ public class OpenApiGenerator {
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
         templateFactory.fillTemplateModelClassException(fileModelToSave, true);
-      } catch (IOException | TemplateException e) {
+      } catch (final IOException e) {
         throw new GeneratedSourcesException(fileModelToSave, e);
       }
     }
