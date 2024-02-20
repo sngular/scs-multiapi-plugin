@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.openapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.Set;
 

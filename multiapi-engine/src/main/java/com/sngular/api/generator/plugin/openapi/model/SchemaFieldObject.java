@@ -8,6 +8,7 @@ package com.sngular.api.generator.plugin.openapi.model;
 
 import java.util.Map;
 
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;

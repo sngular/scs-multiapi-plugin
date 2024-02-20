@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.asyncapi.exception.BadDefinedEnumException;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedSchemaException;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
 import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
@@ -629,79 +627,6 @@ public class MapperContentUtil {
     }
   }
 
-  private static void setFieldType(
-      final SchemaFieldObject field,
-      final JsonNode value,
-      final boolean required,
-      final String prefix,
-      final String suffix,
-      final String className,
-      final Map<String, String> formats,
-      final TimeType useTimeType) {
-    field.setRequired(required);
-    if (ApiTool.hasType(value)) {
-      if (ARRAY.equalsIgnoreCase(ApiTool.getType(value))) {
-        final var typeArray = MapperUtil.getTypeArray(value, prefix, suffix, useTimeType);
-        field.setDataType(typeArray);
-        field.setImportClass(getImportClass(typeArray));
-        setFormatProperies(field, typeArray, formats);
-      } else if (ApiTool.getType(value).equalsIgnoreCase(OBJECT)) {
-        if (value.has("additionalProperties")) {
-          final var typeMap = MapperUtil.getTypeMap(value, prefix, suffix, useTimeType);
-          field.setDataTypeSimple(MAP);
-          field.setDataType(typeMap);
-          field.setImportClass(getImportClass(typeMap));
-        } else {
-          var typeObject = "";
-          if (ApiTool.hasRef(value)) {
-            typeObject = MapperUtil.getRef(value, prefix, suffix);
-          } else {
-            if (StringUtils.isEmpty(className)) {
-              typeObject = MapperUtil.getPojoName(field.getBaseName(), prefix, suffix);
-            } else {
-              typeObject = MapperUtil.getPojoName(className, prefix, suffix);
-            }
-          }
-          field.setImportClass(getImportClass(typeObject));
-          field.setDataType(typeObject);
-          field.setDataTypeSimple(typeObject);
-        }
-      } else {
-        throw new NonSupportedSchemaException(value.toPrettyString());
-      }
-    }
-  }
-
-  private static SchemaFieldObject processEnumField(
-      final String name,
-      final boolean required,
-      final JsonNode value,
-      final String prefix,
-      final String suffix,
-      final TimeType useTimeType) {
-    final List<String> enumValues = new ArrayList<>();
-    value
-        .get("enum")
-        .elements()
-        .forEachRemaining(enumValue -> enumValues.add(enumValue.textValue()));
-
-    if (enumValues.isEmpty()) {
-      throw new BadDefinedEnumException(name);
-    }
-
-    return SchemaFieldObject.builder()
-                            .baseName(name)
-                            .dataTypeSimple("enum")
-                            .dataType(MapperUtil.getSimpleType(value, prefix, suffix, useTimeType))
-                            .required(required)
-                            .enumValues(enumValues)
-                            .restrictions(new SchemaFieldObjectProperties())
-                            .build();
-  }
-
-  private static String getImportClass(final String type) {
-    return StringUtils.isNotBlank(type) && !"String".equals(type) && !"Integer".equals(type)
-               ? type
-               : "";
-  }
+  
+  
 }

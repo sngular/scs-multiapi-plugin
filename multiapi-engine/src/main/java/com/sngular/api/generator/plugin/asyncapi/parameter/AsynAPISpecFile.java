@@ -18,10 +18,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor()
 public class AsynAPISpecFile extends SpecFile {
 
-  private String modelNamePrefix;
-
-  private String modelNameSuffix;
-
   private OperationParameterObject supplier;
 
   private OperationParameterObject consumer;

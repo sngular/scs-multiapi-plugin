@@ -7,8 +7,9 @@
 package com.sngular.api.generator.plugin.openapi.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.parameter.SpecFile;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,7 @@ public class MapperUtil {
 
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final OpenAPISpecFile specFile) {
+  public static String getSimpleType(final JsonNode schema, final SpecFile specFile) {
     final String type;
     final var nodeType = ApiTool.getType(schema);
     if (checkIfNumber(nodeType)) {
@@ -62,7 +63,7 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getPojoName(final String namePojo, final OpenAPISpecFile specFile) {
+  public static String getPojoName(final String namePojo, final SpecFile specFile) {
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix())
                 ? specFile.getModelNamePrefix()
                 : "")
@@ -95,9 +96,7 @@ public class MapperUtil {
   }
 
   public static String getRef(final JsonNode schema, final OpenAPISpecFile specFile) {
-    final String typeObject;
-    typeObject = getPojoName(getRefSchemaName(schema), specFile);
-    return typeObject;
+    return getPojoName(getRefSchemaName(schema), specFile);
   }
 
   public static String getDateType(final JsonNode schema, final OpenAPISpecFile specFile) {

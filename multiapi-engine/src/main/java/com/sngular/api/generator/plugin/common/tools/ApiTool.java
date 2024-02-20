@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;

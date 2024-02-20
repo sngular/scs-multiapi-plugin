@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
@@ -30,7 +31,6 @@ import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;

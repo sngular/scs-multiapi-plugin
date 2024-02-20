@@ -6,8 +6,8 @@
 
 package com.sngular.api.generator.plugin.openapi.parameter;
 
+import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.common.parameter.SpecFile;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder.Default;
 import lombok.Data;
@@ -23,10 +23,6 @@ public class OpenAPISpecFile extends SpecFile {
   private String apiPackage;
 
   private String modelPackage;
-
-  private String modelNamePrefix;
-
-  private String modelNameSuffix;
 
   private String clientPackage;
 

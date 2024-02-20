@@ -12,4 +12,8 @@ import lombok.experimental.SuperBuilder;
 public abstract class SpecFile {
 
   protected String filePath;
+
+  private String modelNamePrefix;
+
+  private String modelNameSuffix;
 }

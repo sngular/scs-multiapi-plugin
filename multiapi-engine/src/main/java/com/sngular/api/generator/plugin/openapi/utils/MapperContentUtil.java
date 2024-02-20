@@ -18,13 +18,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
-import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1132,60 +1131,6 @@ public class MapperContentUtil {
     return type;
   }
 
-  private static SchemaFieldObject processEnumField(
-      final String key,
-      final JsonNode value,
-      final OpenAPISpecFile specFile,
-      final List<String> enumValues,
-      final JsonNode schema) {
-    final var field =
-        SchemaFieldObject.builder()
-                         .baseName(key)
-                         .dataType(new SchemaFieldObjectType(TypeConstants.ENUM))
-                         .build();
-    field.setRequired(ApiTool.checkIfRequired(schema, key));
-    final var dataType = MapperUtil.getSimpleType(value, specFile);
-    field.getDataType().setDeepType(dataType);
-
-    final HashMap<String, String> enumValuesMap = new HashMap<>();
-
-    for (final var enumValue : enumValues) {
-      String valueName = enumValue;
-      valueName = valueName.replace(".", "_DOT_");
-
-      switch (dataType) {
-        case TypeConstants.INTEGER:
-          enumValuesMap.put("INTEGER_" + valueName, enumValue);
-          break;
-        case TypeConstants.LONG:
-          enumValuesMap.put("LONG_" + valueName, enumValue + "l");
-          break;
-        case TypeConstants.DOUBLE:
-          enumValuesMap.put("DOUBLE_" + valueName, enumValue);
-          break;
-        case TypeConstants.FLOAT:
-          enumValuesMap.put("FLOAT_" + valueName, enumValue + "f");
-          break;
-        case TypeConstants.BIG_DECIMAL:
-          enumValuesMap.put("BIG_DECIMAL_" + valueName, "new BigDecimal(\"" + enumValue + "\")");
-          break;
-        case TypeConstants.STRING:
-        default:
-          enumValuesMap.put(StringUtils.upperCase(valueName), '"' + enumValue + '"');
-          break;
-      }
-    }
-
-    if (enumValuesMap.isEmpty()) {
-      throw new BadDefinedEnumException(key);
-    }
-    field.setEnumValues(enumValuesMap);
-    return field;
-  }
-
-  private static String getImportClass(final String type) {
-    return StringUtils.isNotBlank(type) && !TypeConstants.NO_IMPORT_TYPE.contains(type)
-               ? StringUtils.capitalize(type)
-               : "";
-  }
+  
+  
 }
