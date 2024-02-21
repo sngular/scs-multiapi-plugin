@@ -374,7 +374,6 @@ public class AsyncApiGeneratorFixtures {
                                               .ids("input")
                                               .apiPackage("input.controller")
                                               .modelPackage("input.model")
-
                                               .build())
                   .supplier(
                       OperationParameterObject.builder()
