@@ -159,7 +159,7 @@ public class AsyncApiGenerator {
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     processedOperationIds.clear();
     generateExceptionTemplate = false;
-    for (SpecFile fileParameter : specsListFile) {
+    for (final SpecFile fileParameter : specsListFile) {
       final Pair<InputStream, FileLocation> ymlFileAndPath;
       try {
         ymlFileAndPath = resolveYmlLocation(fileParameter.getFilePath());
@@ -476,7 +476,7 @@ public class AsyncApiGenerator {
     final JsonNode schemaToBuild = processedMethod.getPayload();
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
-          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage,
+          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage,modelPackage,
               operationObject.getFormats(), operationObject.getUseTimeType()).iterator();
 
       if (schemaObjectIt.hasNext()) {

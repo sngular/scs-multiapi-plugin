@@ -69,14 +69,14 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestConstantGeneration", AsyncApiGeneratorFixtures.TEST_CONSTANT_GENERATION, AsyncApiGeneratorFixtures.validateConstantGeneration()),
         Arguments.of("testPropertiesNotGeneratedIssue", AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE, AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),
         Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
-                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings())
-
-    );
+                     AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings()),
+        Arguments.of("TestSubObjectSameName", AsyncApiGeneratorFixtures.TEST_SUB_OBJECT_SAME_NAME,
+                     AsyncApiGeneratorFixtures.validateTestSubObjectSameName()));
   }
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpecForTestFileGeneration(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {
+  void processFileSpecForTestFileGeneration(String type, List<SpecFile> specFileList, Function<Path, Boolean> validation) {
     asyncApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }
