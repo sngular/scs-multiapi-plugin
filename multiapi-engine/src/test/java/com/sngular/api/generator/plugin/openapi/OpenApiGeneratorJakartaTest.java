@@ -28,7 +28,7 @@ class OpenApiGeneratorJakartaTest {
 
   private static OpenApiGenerator openApiGenerator;
 
-  private static int SPRING_BOOT_VERSION = 3;
+  private static final int SPRING_BOOT_VERSION = 3;
 
   @BeforeAll
   static void setup() {
