@@ -76,7 +76,7 @@ class AsyncApiGeneratorTest {
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpecForTestFileGeneration(String type, List<SpecFile> specFileList, Function<Path, Boolean> validation) {
+  void processFileSpecForTestFileGeneration(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {
     asyncApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }
