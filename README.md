@@ -108,7 +108,7 @@ about how they work, and the parameters and configuration options they offer.
 
 These dependencies are used by generated code
 
-```
+```xml
  <dependencies>
        <dependency>
             <groupId>io.swagger.parser.v3</groupId>
@@ -164,7 +164,7 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
-#### Mandatory dependencies
+#### Mandatory gradle dependencies
 
 These dependencies are used by generated code
 
@@ -479,9 +479,12 @@ public interface ISubscribeOperation {
 
 #### Bindings
 
-Asyncapi support a way to specify specific configuration for certain protocols. Nowadays we only support Kafka specific information to
-define a Key form Messages as you can find [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
-When a binding is specified in a message we will generate a generic class named as MessageWrapper which will contain the payload and the key
+Asyncapi support a way to specify specific configuration for certain protocols.
+Nowadays we only support Kafka specific information to define a Key form 
+Messages as you can find 
+[here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
+When a binding is specified in a message we will generate a generic class 
+named as MessageWrapper which will contain the payload and the key
 used in to build a Message.
 You will find such class by each api package you define.
 
