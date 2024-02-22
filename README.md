@@ -168,7 +168,7 @@ about how they work, and the parameters and configuration options they offer.
 
 These dependencies are used by generated code
 
-```
+``` gradle
 implementation 'io.swagger.parser.v3:swagger-parser-core:2.1.20'
 implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.20'
 implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
@@ -480,9 +480,12 @@ public interface ISubscribeOperation {
 #### Bindings
 
 Asyncapi support a way to specify specific configuration for certain protocols.
-Nowadays we only support Kafka specific information to define a Key form 
+
+Nowadays, we only support Kafka specific information to define a Key form 
+
 Messages as you can find 
 [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
+
 When a binding is specified in a message we will generate a generic class 
 named as MessageWrapper which will contain the payload and the key
 used in to build a Message.
