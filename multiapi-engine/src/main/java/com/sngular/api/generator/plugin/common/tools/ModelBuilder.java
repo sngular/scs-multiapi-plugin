@@ -1,3 +1,9 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.sngular.api.generator.plugin.common.tools;
 
 import java.nio.file.Path;
@@ -129,6 +135,10 @@ public final class ModelBuilder {
 
     if (type.containsType(TypeConstants.OFFSETDATETIME)) {
       listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+    }
+
+    if (type.containsType(TypeConstants.MULTIPART_FILE)) {
+      listHashMap.computeIfAbsent(TypeConstants.MULTIPART_FILE, key -> List.of("org.springframework.web.multipart.MultipartFile"));
     }
   }
 
@@ -321,7 +331,10 @@ public final class ModelBuilder {
   }
 
   private static SchemaFieldObject processStringProperty(final String propertyName, final JsonNode schema, final CommonSpecFile specFile) {
-    final String resultingType = ApiTool.isDateTime(schema) ? MapperUtil.getDateType(schema, specFile) : TypeConstants.STRING;
+    String resultingType;
+    if (ApiTool.isDateTime(schema)) resultingType = MapperUtil.getDateType(schema, specFile);
+    else if (ApiTool.isBinary(schema)) resultingType = TypeConstants.MULTIPART_FILE;
+    else resultingType = TypeConstants.STRING;
 
     final SchemaFieldObject field = SchemaFieldObject
           .builder()

@@ -505,6 +505,14 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_FORM_DATA_MULTIPART_GENERATION = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testFormDataMultipartGeneration/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.testFormDataMultipartGeneration")
+                  .useLombokModelAnnotation(true)
+                  .build()
+  );
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
