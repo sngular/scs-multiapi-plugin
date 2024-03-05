@@ -6,17 +6,19 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
-import com.sngular.api.generator.plugin.common.parameter.SpecFile;
+import com.sngular.api.generator.plugin.common.parameter.AbstractSpecFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor()
-public class AsynAPISpecFile extends SpecFile {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class AsynAPIAbstractSpecFile extends AbstractSpecFile {
 
   private OperationParameterObject supplier;
 
@@ -24,3 +26,5 @@ public class AsynAPISpecFile extends SpecFile {
 
   private OperationParameterObject streamBridge;
 }
+
+

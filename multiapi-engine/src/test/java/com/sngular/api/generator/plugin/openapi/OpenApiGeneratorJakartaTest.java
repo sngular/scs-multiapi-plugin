@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIAbstractSpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -51,7 +51,7 @@ class OpenApiGeneratorJakartaTest {
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
-  void processFileSpec(final String type, final List<OpenAPISpecFile> specFileList, final Function<Path, Boolean> validation) {
+  void processFileSpec(final String type, final List<OpenAPIAbstractSpecFile> specFileList, final Function<Path, Boolean> validation) {
     openApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }

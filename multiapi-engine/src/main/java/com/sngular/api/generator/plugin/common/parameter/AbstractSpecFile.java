@@ -9,11 +9,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class SpecFile {
+public abstract class AbstractSpecFile {
 
-  protected String filePath;
-
-  private String modelNamePrefix;
+  private String modelNamePostFix;
 
   private String modelNameSuffix;
+
+  private String filePath;
 }

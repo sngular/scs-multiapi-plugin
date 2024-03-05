@@ -50,19 +50,31 @@ public final class ApiTool {
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
 
+  public static final String TYPE = "type";
+
+  public static final String ITEMS = "items";
+
+  public static final String REF = "$ref";
+
+  public static final String PROPERTIES = "properties";
+
   private ApiTool() {
   }
 
   public static Iterator<Entry<String, JsonNode>> getProperties(final JsonNode schema) {
-    return getNode(schema, "properties").fields();
+    return getNode(schema, PROPERTIES).fields();
   }
 
   public static JsonNode getNode(final JsonNode schema, final String nodeName) {
     return schema.get(nodeName);
   }
 
+  public static JsonNode getRef(final JsonNode schema) {
+    return getNode(schema, REF);
+  } 
+  
   public static String getRefValue(final JsonNode schema) {
-    return getNode(schema, "$ref").textValue();
+    return getRef(schema).textValue();
   }
 
   public static JsonNode getAdditionalProperties(final JsonNode schema) {
@@ -71,10 +83,6 @@ public final class ApiTool {
 
   public static String getFormat(final JsonNode schema) {
     return getNodeAsString(schema, FORMAT);
-  }
-
-  public static String getNodeAsString(final JsonNode schema, final String nodeName) {
-    return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
   }
 
   public static boolean hasNode(final JsonNode schema, final String nodeName) {
@@ -123,11 +131,18 @@ public final class ApiTool {
     return Objects.nonNull(schema) ? schema.textValue() : null;
   }
 
+  public static String getNodeAsString(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
+  }
+
   public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema) {
     return Objects.nonNull(schema) ? schema.fields() : IteratorUtils.emptyIterator();
   }
 
   public static String getName(final JsonNode node) {
+    if (Objects.isNull(node)) {
+      throw new IllegalArgumentException("Node is null");
+    }
     return hasNode(node, "name") ? getNodeAsString(node, "name") : node.textValue();
   }
 
@@ -142,13 +157,22 @@ public final class ApiTool {
   }
 
   public static JsonNode getItems(final JsonNode schema) {
-    return getNode(schema, "items");
+    return getNode(schema, ITEMS);
   }
 
   public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
     return getComponentSchemasByType(openApi, SCHEMAS);
   }
+  
+  public static Map<String, JsonNode> getComponentMessages(final JsonNode openApi) {
+    return getComponentSchemasByType(openApi, "messages");
+  }
 
+
+  public static JsonNode getComponents(final JsonNode schema) {
+    return hasNode(schema, COMPONENTS) ? getNode(schema, COMPONENTS) : null;
+  }
+  
   private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
     final var schemasMap = new HashMap<String, JsonNode>();
 
@@ -210,15 +234,15 @@ public final class ApiTool {
   }
 
   public static boolean hasType(final JsonNode schema) {
-    return hasNode(schema, "type");
+    return hasNode(schema, TYPE);
   }
 
   public static String getType(final JsonNode schema) {
-    return hasType(schema) ? getNodeAsString(schema, "type") : "";
+    return hasType(schema) ? getNodeAsString(schema, TYPE) : "";
   }
 
   public static boolean hasItems(final JsonNode schema) {
-    return hasNode(schema, "items");
+    return hasNode(schema, ITEMS);
   }
 
   public static boolean hasRequired(final JsonNode schema) {
@@ -226,19 +250,35 @@ public final class ApiTool {
   }
 
   public static boolean hasRef(final JsonNode schema) {
-    return (hasNode(schema, "$ref") || schema.fieldNames().hasNext()) && schema.fieldNames().next().equals("$ref");
+    if (Objects.isNull(schema)) {
+      throw new IllegalArgumentException("Node is null");
+    }
+    return (hasNode(schema, REF) || schema.fieldNames().hasNext()) && schema.fieldNames().next().equals(REF);
   }
 
   public static boolean hasProperties(final JsonNode schema) {
-    return hasNode(schema, "properties");
+    return hasNode(schema, PROPERTIES);
   }
 
   public static boolean hasContent(final JsonNode schema) {
     return hasNode(schema, "content");
   }
 
+  public static boolean hasComponents(final JsonNode schema) {
+    return hasNode(schema, COMPONENTS);
+  }
+
   public static boolean hasAdditionalProperties(final JsonNode schema) {
     return hasNode(schema, "additionalProperties");
+  }
+
+  public static boolean hasField(final JsonNode schema, final String... fieldNameArray) {
+    final var nodeNamesList = Arrays.asList(fieldNameArray);
+    return StringUtils.isNotEmpty(IteratorUtils.find(schema.fieldNames(), nodeNamesList::contains));
+  }
+
+  public static boolean hasFormat(final JsonNode schema) {
+    return hasNode(schema, FORMAT);
   }
 
   public static boolean isObject(final JsonNode schema) {
@@ -251,11 +291,6 @@ public final class ApiTool {
 
   public static boolean isComposed(final JsonNode schema) {
     return ApiTool.hasField(schema, ANY_OF, ALL_OF, ONE_OF);
-  }
-
-  public static boolean hasField(final JsonNode schema, final String... fieldNameArray) {
-    final var nodeNamesList = Arrays.asList(fieldNameArray);
-    return StringUtils.isNotEmpty(IteratorUtils.find(schema.fieldNames(), nodeNamesList::contains));
   }
 
   public static boolean isString(final JsonNode schema) {
@@ -322,14 +357,10 @@ public final class ApiTool {
 
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
     Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
-    if (hasComponents(node) && hasNode(getNode(node, "components"), componentType)) {
-      result = getNode(getNode(node, "components"), componentType).fields();
+    if (hasComponents(node) && hasNode(getComponents(node), componentType)) {
+      result = getNode(getComponents(node), componentType).fields();
     }
     return result;
-  }
-
-  public static boolean hasComponents(final JsonNode node) {
-    return hasNode(node, "components");
   }
 
   public static JsonNode nodeFromFile(final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum) throws IOException {
@@ -348,5 +379,9 @@ public final class ApiTool {
       om = new ObjectMapper();
     }
     return om.readTree(file);
+  }
+
+  public static String getSpecVersion(final JsonNode openApi) {
+    return getNodeAsString(openApi, "version");
   }
 }

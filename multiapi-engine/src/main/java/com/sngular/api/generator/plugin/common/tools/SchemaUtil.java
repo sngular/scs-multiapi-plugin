@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.openapi.utils.MapperUtil;
+import com.sngular.api.generator.plugin.common.util.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import org.apache.commons.lang3.StringUtils;
 

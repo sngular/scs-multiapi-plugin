@@ -17,13 +17,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIAbstractSpecFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -57,7 +57,7 @@ public class TemplateFactory {
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(templateSelector(useLombok, schemaObject), root, pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
+        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
           propertiesSet.add("NotNull");
         }
@@ -150,7 +150,7 @@ public class TemplateFactory {
   }
 
   public final void fillTemplate(
-      final String filePathToSave, final OpenAPISpecFile specFile, final String className,
+      final String filePathToSave, final OpenAPIAbstractSpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     root.put("className", className);
@@ -173,11 +173,11 @@ public class TemplateFactory {
 
   }
 
-  private String getTemplateClientApi(final OpenAPISpecFile specFile) {
+  private String getTemplateClientApi(final OpenAPIAbstractSpecFile specFile) {
     return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
   }
 
-  private String getTemplateApi(final OpenAPISpecFile specFile) {
+  private String getTemplateApi(final OpenAPIAbstractSpecFile specFile) {
     return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 

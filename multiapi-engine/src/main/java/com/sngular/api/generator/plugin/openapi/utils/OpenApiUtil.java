@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIAbstractSpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -92,7 +92,7 @@ public class OpenApiUtil {
     return mapByTag;
   }
 
-  public static JsonNode getPojoFromSpecFile(final Path baseDir, final OpenAPISpecFile specFile) {
+  public static JsonNode getPojoFromSpecFile(final Path baseDir, final OpenAPIAbstractSpecFile specFile) {
 
     return getPojoFromRef(baseDir, specFile.getFilePath());
   }

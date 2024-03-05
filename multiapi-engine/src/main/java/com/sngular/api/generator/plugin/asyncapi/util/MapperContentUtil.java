@@ -6,24 +6,26 @@
 
 package com.sngular.api.generator.plugin.asyncapi.util;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObjectProperties;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectProperties;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TimeType;
+import com.sngular.api.generator.plugin.common.parameter.AbstractSpecFile;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.util.MapperUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
@@ -61,15 +63,15 @@ public class MapperContentUtil {
 
   public static List<SchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas,
-      final String component,
-      final JsonNode model,
-      final String prefix,
-      final String suffix,
-      final String parentPackage,
+      final Map<String, SchemaObject> compositedSchemas,
+      final JsonNode schema,
+      final String schemaName,
+      final AbstractSpecFile specFile,
       final Map<String, String> formats,
+      final Path baseDir,
       final TimeType useTimeType) {
     final List<SchemaObject> schemasList = new ArrayList<>();
-    if (Objects.nonNull(model)) {
+    if (Objects.nonNull(schema)) {
       final List<String> alreadyBuilt = new ArrayList<>();
       final Queue<String> modelToBuildList = new ConcurrentLinkedQueue<>();
       schemasList.add(
@@ -205,7 +207,7 @@ public class MapperContentUtil {
     return importList;
   }
 
-  private static List<SchemaFieldObject> getFields(
+  private static Set<SchemaFieldObject> getFields(
       final Map<String, JsonNode> totalSchemas,
       final JsonNode model,
       final boolean required,
@@ -215,10 +217,10 @@ public class MapperContentUtil {
       final String parentPackage,
       final Map<String, String> formats,
       final TimeType useTimeType) {
-    final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
+    final var fieldObjectArrayList = new HashSet<>();
     schemaCombinatorType = null;
     if (ApiTool.hasType(model)) {
-      String objectType = model.get(TYPE).textValue();
+      final String objectType = model.get(TYPE).textValue();
       if (OBJECT.equalsIgnoreCase(objectType)) {
         fieldObjectArrayList.addAll(
             processFieldObject(
@@ -538,95 +540,5 @@ public class MapperContentUtil {
                : className;
   }
 
-  private static void handleItems(
-      final JsonNode schema,
-      final Collection<String> modelToBuildList,
-      final SchemaFieldObject fieldObject,
-      final boolean required,
-      final JsonNode items) {
-    if (ApiTool.hasRef(items)) {
-      modelToBuildList.add(MapperUtil.getLongRefClass(items));
-    }
-    final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-    Entry<String, JsonNode> current;
-    while (iterator.hasNext()) {
-      current = iterator.next();
-      switch (current.getKey()) {
-        case "maxItems":
-          fieldObject.getRestrictions().setMaxItems(current.getValue().intValue());
-          break;
-        case "minItems":
-          fieldObject.getRestrictions().setMinItems(current.getValue().intValue());
-          break;
-        case "uniqueItems":
-          fieldObject.getRestrictions().setUniqueItems(current.getValue().booleanValue());
-          break;
-        default:
-          break;
-      }
-    }
-    fieldObject.setRequired(required);
-  }
-
-  @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private static void setFieldProperties(
-      final SchemaFieldObject fieldObject, final JsonNode schema) {
-    final Iterator<Map.Entry<String, JsonNode>> iterator = schema.fields();
-    Entry<String, JsonNode> current;
-    final SchemaFieldObjectProperties props = fieldObject.getRestrictions();
-    while (iterator.hasNext()) {
-      current = iterator.next();
-      switch (current.getKey()) {
-        case "minimum":
-          props.setMinimum(current.getValue().asText());
-          break;
-        case "maximum":
-          props.setMaximum(current.getValue().asText());
-          break;
-        case "exclusiveMinimum":
-          props.setExclusiveMinimum(current.getValue().booleanValue());
-          break;
-        case "exclusiveMaximum":
-          props.setExclusiveMaximum(current.getValue().booleanValue());
-          break;
-        case "maxItems":
-          props.setMaxItems(current.getValue().intValue());
-          break;
-        case "maxLength":
-          props.setMaxLength(current.getValue().intValue());
-          break;
-        case "minItems":
-          props.setMinItems(current.getValue().intValue());
-          break;
-        case "minLength":
-          props.setMinLength(current.getValue().intValue());
-          break;
-        case "pattern":
-          props.setPattern(current.getValue().toString().replace("\"", ""));
-          break;
-        case "uniqueItems":
-          props.setUniqueItems(current.getValue().booleanValue());
-          break;
-        case "multipleOf":
-          props.setMultipleOf(current.getValue().asText());
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  private static void setFormatProperies(
-      final SchemaFieldObject fieldObject,
-      final String dataType,
-      final Map<String, String> formats) {
-    if (Objects.equals(dataType, LOCAL_DATE)) {
-      fieldObject.getRestrictions().setFormat(formats.get("DATE"));
-    } else if (Objects.equals(dataType, LOCAL_DATE_TIME)) {
-      fieldObject.getRestrictions().setFormat(formats.get("DATE_TIME"));
-    }
-  }
-
-  
-  
+ 
 }

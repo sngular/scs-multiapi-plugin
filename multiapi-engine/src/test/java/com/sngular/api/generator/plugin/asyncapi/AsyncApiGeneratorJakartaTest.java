@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPISpecFile;
+import com.sngular.api.generator.plugin.asyncapi.parameter.AsynAPIAbstractSpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.io.TempDir;
@@ -51,7 +51,7 @@ class AsyncApiGeneratorJakartaTest {
   @MethodSource("fileSpecToProcess")
   void processFileSpecForTestFileGeneration(
       final String type,
-      final List<AsynAPISpecFile> specFileList,
+      final List<AsynAPIAbstractSpecFile> specFileList,
       final Function<Path, Boolean> validation) {
     asyncApiGenerator.processFileSpec(specFileList);
     Assertions.assertThat(validation.apply(baseDir)).isTrue();

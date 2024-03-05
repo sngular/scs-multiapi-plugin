@@ -1,4 +1,4 @@
-package com.sngular.api.generator.plugin.asyncapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class SchemaFieldObjectProperties {
   private String pattern = null;
 
   private String multipleOf = null;
-
+  
   private String format = null;
 
   private Set<String> properties;
@@ -106,5 +106,4 @@ public class SchemaFieldObjectProperties {
       properties.add("Format");
     }
   }
-
 }

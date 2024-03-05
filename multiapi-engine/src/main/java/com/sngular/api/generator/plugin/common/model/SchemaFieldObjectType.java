@@ -4,13 +4,12 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.openapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
 
-import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -33,12 +32,12 @@ public class SchemaFieldObjectType {
       new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
       new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
       new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, ZONED_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, ZONED_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, OFFSET_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, OFFSET_DATE_TIME)
+      new SimpleImmutableEntry<>(TypeConstants.LOCAL_DATE, "LocalDate"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCAL_DATE_TIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONED_DATE, ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.ZONED_DATE_TIME, ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSET_DATE, OFFSET_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSET_DATE_TIME, OFFSET_DATE_TIME)
   );
 
   private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
@@ -52,12 +51,12 @@ public class SchemaFieldObjectType {
       new SimpleImmutableEntry<>(TypeConstants.LONG, "Long"),
       new SimpleImmutableEntry<>(TypeConstants.STRING, "String"),
       new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
-      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, ZONED_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, ZONED_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, OFFSET_DATE_TIME),
-      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, OFFSET_DATE_TIME)
+      new SimpleImmutableEntry<>(TypeConstants.LOCAL_DATE, "LocalDate"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCAL_DATE_TIME, "LocalDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONED_DATE, ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.ZONED_DATE_TIME, ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSET_DATE, OFFSET_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSET_DATE_TIME, OFFSET_DATE_TIME)
   );
 
   private final String baseType;

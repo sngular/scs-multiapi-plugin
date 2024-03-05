@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.openapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,6 +29,8 @@ public class SchemaObject {
   private String schemaName;
 
   private String className;
+  
+  private String parentPackage;
 
   private List<String> importList;
 

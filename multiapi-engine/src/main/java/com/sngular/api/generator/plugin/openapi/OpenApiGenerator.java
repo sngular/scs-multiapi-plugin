@@ -21,8 +21,10 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.util.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
@@ -30,14 +32,12 @@ import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassExc
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIAbstractSpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
-import com.sngular.api.generator.plugin.openapi.utils.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -103,8 +103,8 @@ public class OpenApiGenerator {
     this.springBootVersion = springBootVersion;
   }
 
-  public final void processFileSpec(final List<OpenAPISpecFile> specsListFile) {
-    for (OpenAPISpecFile specFile : specsListFile) {
+  public final void processFileSpec(final List<OpenAPIAbstractSpecFile> specsListFile) {
+    for (OpenAPIAbstractSpecFile specFile : specsListFile) {
       generateExceptionTemplate = false;
       useLombok = Boolean.TRUE.equals(specFile.isUseLombokModelAnnotation());
       try {
@@ -119,7 +119,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void processFile(final OpenAPISpecFile specFile, final String filePathToSave)
+  private void processFile(final OpenAPIAbstractSpecFile specFile, final String filePathToSave)
       throws IOException {
 
     final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, specFile);
@@ -141,7 +141,7 @@ public class OpenApiGenerator {
     createModelTemplate(specFile, openAPI, globalObject);
   }
 
-  private void createClients(final OpenAPISpecFile specFile) {
+  private void createClients(final OpenAPIAbstractSpecFile specFile) {
 
     if (isWebClient || isRestClient) {
       try {
@@ -165,7 +165,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createAuthTemplates(final OpenAPISpecFile specFile)
+  private void createAuthTemplates(final OpenAPIAbstractSpecFile specFile)
       throws TemplateException, IOException {
     final String clientPackage = specFile.getClientPackage();
     final var authFileRoot =
@@ -184,7 +184,7 @@ public class OpenApiGenerator {
   }
 
   private GlobalObject createApiTemplate(
-      final OpenAPISpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
+      final OpenAPIAbstractSpecFile specFile, final String filePathToSave, final JsonNode openAPI) {
     final MultiValuedMap<String, Map<String, JsonNode>> apis =
         OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
@@ -230,7 +230,7 @@ public class OpenApiGenerator {
   }
 
   private void createModelTemplate(
-      final OpenAPISpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject)
+      final OpenAPIAbstractSpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject)
       throws IOException {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
@@ -297,7 +297,7 @@ public class OpenApiGenerator {
   }
 
   private void processModels(
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final String fileModelToSave,
       final String modelPackage,
       final Map<String, JsonNode> basicSchemaMap,
@@ -319,7 +319,7 @@ public class OpenApiGenerator {
   }
 
   private void processModel(
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final String fileModelToSave,
       final String modelPackage,
       final Map<String, JsonNode> basicSchemaMap,
@@ -350,7 +350,7 @@ public class OpenApiGenerator {
   }
 
   private Map<String, SchemaObject> writeModel(
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final String fileModelToSave,
       final String schemaName,
       final JsonNode basicSchema,

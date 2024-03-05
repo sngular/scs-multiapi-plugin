@@ -34,17 +34,21 @@ public final class TypeConstants {
 
   public static final String ENUM = "enum";
 
-  public static final String LOCALDATE = "localdate";
+  public static final String DATE = "date";
 
-  public static final String LOCALDATETIME = "localdatetime";
+  public static final String DATE_TIME = "date-time";
 
-  public static final String ZONEDDATE = "zoneddate";
+  public static final String LOCAL_DATE = "localdate";
 
-  public static final String ZONEDDATETIME = "zoneddatetime";
+  public static final String LOCAL_DATE_TIME = "localdatetime";
 
-  public static final String OFFSETDATE = "offsetdate";
+  public static final String ZONED_DATE = "zoneddate";
 
-  public static final String OFFSETDATETIME = "offsetdatetime";
+  public static final String ZONED_DATE_TIME = "zoneddatetime";
+
+  public static final String OFFSET_DATE = "offsetdate";
+
+  public static final String OFFSET_DATE_TIME = "offsetdatetime";
 
   public static final String INT_32 = "int32";
 
@@ -63,12 +67,12 @@ public final class TypeConstants {
                                                            LONG,
                                                            STRING,
                                                            ENUM,
-                                                           LOCALDATE,
-                                                           LOCALDATETIME,
-                                                           ZONEDDATE,
-                                                           ZONEDDATETIME,
-                                                           OFFSETDATE,
-                                                           OFFSETDATETIME);
+                                                           LOCAL_DATE,
+                                                           LOCAL_DATE_TIME,
+                                                           ZONED_DATE,
+                                                           ZONED_DATE_TIME,
+                                                           OFFSET_DATE,
+                                                           OFFSET_DATE_TIME);
 
   public static final Set<String> ALL_TYPES = Set.of(
       NUMBER,
@@ -82,12 +86,12 @@ public final class TypeConstants {
       LONG,
       STRING,
       ENUM,
-      LOCALDATE,
-      LOCALDATETIME,
-      ZONEDDATE,
-      ZONEDDATETIME,
-      OFFSETDATE,
-      OFFSETDATETIME
+      LOCAL_DATE,
+      LOCAL_DATE_TIME,
+      ZONED_DATE,
+      ZONED_DATE_TIME,
+      OFFSET_DATE,
+      OFFSET_DATE_TIME
   );
 
   private TypeConstants() {

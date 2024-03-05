@@ -18,13 +18,15 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.parameter.AbstractSpecFile;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.parameter.OpenAPISpecFile;
+import com.sngular.api.generator.plugin.common.util.MapperUtil;
+import com.sngular.api.generator.plugin.openapi.parameter.OpenAPIAbstractSpecFile;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,7 +49,7 @@ public class MapperContentUtil {
       final Map<String, SchemaObject> compositedSchemas,
       final JsonNode schema,
       final String schemaName,
-      final OpenAPISpecFile specFile,
+      final AbstractSpecFile specFile,
       final Path baseDir) {
 
     return mapComponentToSchemaObject(
@@ -66,7 +68,7 @@ public class MapperContentUtil {
       final Set<String> antiLoopList,
       final JsonNode schema,
       final String schemaName,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Path baseDir) {
     final var name = StringUtils.defaultIfBlank(ApiTool.getName(schema), schemaName);
     if (!compositedSchemas.containsKey(name)) {
@@ -93,7 +95,7 @@ public class MapperContentUtil {
       final Set<String> antiLoopList,
       final JsonNode schema,
       final String schemaName,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Path baseDir) {
 
     antiLoopList.add(schemaName);
@@ -170,33 +172,33 @@ public class MapperContentUtil {
           TypeConstants.BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
     }
 
-    if (type.containsType(TypeConstants.LOCALDATE)) {
-      listHashMap.computeIfAbsent(TypeConstants.LOCALDATE, key -> List.of("java.time.LocalDate"));
+    if (type.containsType(TypeConstants.LOCAL_DATE)) {
+      listHashMap.computeIfAbsent(TypeConstants.LOCAL_DATE, key -> List.of("java.time.LocalDate"));
     }
 
-    if (type.containsType(TypeConstants.LOCALDATETIME)) {
+    if (type.containsType(TypeConstants.LOCAL_DATE_TIME)) {
       listHashMap.computeIfAbsent(
-          TypeConstants.LOCALDATETIME, key -> List.of("java.time.LocalDateTime"));
+          TypeConstants.LOCAL_DATE_TIME, key -> List.of("java.time.LocalDateTime"));
     }
 
-    if (type.containsType(TypeConstants.ZONEDDATE)) {
+    if (type.containsType(TypeConstants.ZONED_DATE)) {
       listHashMap.computeIfAbsent(
-          TypeConstants.ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+          TypeConstants.ZONED_DATE_TIME, key -> List.of("java.time.ZonedDateTime"));
     }
 
-    if (type.containsType(TypeConstants.ZONEDDATETIME)) {
+    if (type.containsType(TypeConstants.ZONED_DATE_TIME)) {
       listHashMap.computeIfAbsent(
-          TypeConstants.ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+          TypeConstants.ZONED_DATE_TIME, key -> List.of("java.time.ZonedDateTime"));
     }
 
-    if (type.containsType(TypeConstants.OFFSETDATE)) {
+    if (type.containsType(TypeConstants.OFFSET_DATE)) {
       listHashMap.computeIfAbsent(
-          TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+          TypeConstants.OFFSET_DATE_TIME, key -> List.of("java.time.OffsetDateTime"));
     }
 
-    if (type.containsType(TypeConstants.OFFSETDATETIME)) {
+    if (type.containsType(TypeConstants.OFFSET_DATE_TIME)) {
       listHashMap.computeIfAbsent(
-          TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+          TypeConstants.OFFSET_DATE_TIME, key -> List.of("java.time.OffsetDateTime"));
     }
   }
 
@@ -204,7 +206,7 @@ public class MapperContentUtil {
       final String buildingSchema,
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final String nameSchema,
@@ -317,7 +319,7 @@ public class MapperContentUtil {
   private static Set<SchemaFieldObject> processAllOf(
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schemaList,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final Path baseDir) {
@@ -350,7 +352,7 @@ public class MapperContentUtil {
       final String buildingSchema,
       final Map<String, JsonNode> totalSchemas,
       final JsonNode schemaList,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
       final Path baseDir) {
@@ -417,7 +419,7 @@ public class MapperContentUtil {
       final String fieldName,
       final String className,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -512,7 +514,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Path baseDir) {
     final var field = SchemaFieldObject.builder().baseName(fieldName).dataType(dataType).build();
     if (!antiLoopList.contains(MapperUtil.getRefSchemaName(schema))) {
@@ -530,7 +532,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Path baseDir) {
 
     final var referredSchema =
@@ -560,7 +562,7 @@ public class MapperContentUtil {
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<SchemaFieldObject> fieldObjectArrayList,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final JsonNode schema,
       final Set<String> antiLoopList,
       final Path baseDir) {
@@ -594,7 +596,7 @@ public class MapperContentUtil {
       final String fieldName,
       final JsonNode fieldBody,
       final Map<String, SchemaObject> compositedSchemas,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final JsonNode schema,
       final Set<String> antiLoopList,
       final Path baseDir) {
@@ -638,7 +640,7 @@ public class MapperContentUtil {
       }
     } else if (ApiTool.isEnum(fieldBody)) {
       fieldObjectArrayList.add(
-          processEnumField(
+          com.sngular.api.generator.plugin.common.util.MapperContentUtil.processEnumField(
               fieldName, fieldBody, specFile, ApiTool.getEnumValues(fieldBody), fieldBody));
     } else if (TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(fieldBody))) {
       field = processStringProperty(fieldName, fieldBody, specFile);
@@ -671,7 +673,7 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject processStringProperty(
-      final String propertyName, final JsonNode schema, final OpenAPISpecFile specFile) {
+      final String propertyName, final JsonNode schema, final OpenAPIAbstractSpecFile specFile) {
     final String resultingType =
         ApiTool.isDateTime(schema)
             ? MapperUtil.getDateType(schema, specFile)
@@ -686,63 +688,13 @@ public class MapperContentUtil {
     addPropertiesToFieldObject(field, schema);
     return field;
   }
-
-  @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private static void addPropertiesToFieldObject(
-      final SchemaFieldObject fieldObject, final JsonNode value) {
-    final var restrictionList = ApiTool.getFieldIterator(value);
-    while (restrictionList.hasNext()) {
-      final var restriction = restrictionList.next();
-      switch (restriction.getKey()) {
-        case "pattern":
-          fieldObject.getRestrictionProperties().setPattern(restriction.getValue().asText());
-          break;
-        case "maxItems":
-          fieldObject.getRestrictionProperties().setMaxItems(restriction.getValue().asInt());
-          break;
-        case "minItems":
-          fieldObject.getRestrictionProperties().setMinItems(restriction.getValue().asInt());
-          break;
-        case "maxLength":
-          fieldObject.getRestrictionProperties().setMaxLength(restriction.getValue().asInt());
-          break;
-        case "minLength":
-          fieldObject.getRestrictionProperties().setMinLength(restriction.getValue().asInt());
-          break;
-        case "uniqueItems":
-          fieldObject.getRestrictionProperties().setUniqueItems(restriction.getValue().asBoolean());
-          break;
-        case "exclusiveMaximum":
-          fieldObject
-              .getRestrictionProperties()
-              .setExclusiveMaximum(restriction.getValue().asBoolean());
-          break;
-        case "exclusiveMinimum":
-          fieldObject
-              .getRestrictionProperties()
-              .setExclusiveMinimum(restriction.getValue().asBoolean());
-          break;
-        case "multipleOf":
-          fieldObject.getRestrictionProperties().setMultipleOf(restriction.getValue().asText());
-          break;
-        case "maximum":
-          fieldObject.getRestrictionProperties().setMaximum(restriction.getValue().asText());
-          break;
-        case "minimum":
-          fieldObject.getRestrictionProperties().setMinimum(restriction.getValue().asText());
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
+  
   @SuppressWarnings("checkstyle:ParameterNumber")
   private static List<SchemaFieldObject> processArray(
       final String fieldName,
       final String className,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -826,7 +778,7 @@ public class MapperContentUtil {
       final String fieldName,
       final String className,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -881,7 +833,7 @@ public class MapperContentUtil {
   private static Set<SchemaFieldObject> processMap(
       final String fieldName,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -922,7 +874,7 @@ public class MapperContentUtil {
   private static List<SchemaFieldObject> processAdditionalProperties(
       final String fieldName,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -1003,7 +955,7 @@ public class MapperContentUtil {
       final String buildingSchema,
       final String fieldName,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final Map<String, JsonNode> totalSchemas,
       final Map<String, SchemaObject> compositedSchemas,
       final Set<String> antiLoopList,
@@ -1057,7 +1009,7 @@ public class MapperContentUtil {
       final SchemaFieldObject field,
       final JsonNode schemaProperty,
       final JsonNode schema,
-      final OpenAPISpecFile specFile,
+      final OpenAPIAbstractSpecFile specFile,
       final String key) {
     field.setRequired(ApiTool.hasRequired(schema) && ApiTool.checkIfRequired(schema, key));
     if (ApiTool.isArray(schemaProperty)) {
@@ -1084,52 +1036,9 @@ public class MapperContentUtil {
     }
   }
 
-  private static String getMapTypeObject(final JsonNode schema, final OpenAPISpecFile specFile) {
-    final String type;
-    if (ApiTool.isBoolean(ApiTool.getAdditionalProperties(schema))) {
-      type = TypeConstants.OBJECT;
-    } else {
-      final JsonNode additionalProperties = ApiTool.getAdditionalProperties(schema);
-      if (ApiTool.hasRef(additionalProperties)) {
-        type = MapperUtil.getRef(additionalProperties, specFile);
-      } else if (ApiTool.isObject(schema)) {
-        final var additionalPropertiesField =
-            SchemaFieldObject.builder()
-                             .baseName(ApiTool.getName(additionalProperties))
-                             .dataType(
-                                 new SchemaFieldObjectType(
-                                     MapperUtil.getSimpleType(additionalProperties, specFile)))
-                             .build();
-        setFieldType(
-            additionalPropertiesField, additionalProperties, additionalProperties, specFile, "");
-        type = getMapFieldType(additionalPropertiesField);
-      } else {
-        type = TypeConstants.OBJECT;
-      }
-    }
+  
 
-    return type;
-  }
-
-  private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
-    final String fieldType = schemaFieldObject.getDataType().toString();
-    final String type;
-    switch (fieldType) {
-      case TypeConstants.BIG_DECIMAL:
-      case TypeConstants.INTEGER:
-      case TypeConstants.DOUBLE:
-      case TypeConstants.FLOAT:
-      case TypeConstants.LONG:
-      case TypeConstants.STRING:
-        type = fieldType;
-        break;
-      default:
-        type = TypeConstants.OBJECT;
-        break;
-    }
-
-    return type;
-  }
+  
 
   
   

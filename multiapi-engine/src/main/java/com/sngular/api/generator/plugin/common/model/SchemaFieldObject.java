@@ -4,37 +4,36 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.asyncapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
-import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "baseName")
 public class SchemaFieldObject {
 
   private String baseName;
 
-  private String dataTypeSimple;
+  @Default
+  private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
 
   @Default
   private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
-
-  private String dataType;
 
   private String importClass;
 
   private boolean required;
 
-  private List<String> enumValues;
-
-  private Object constValue;
+  private Map<String, String> enumValues;
 
 }
