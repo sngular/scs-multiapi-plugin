@@ -119,6 +119,8 @@ class OpenApiGeneratorTest {
         Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
                     OpenApiGeneratorFixtures.validateRestrictionsSchema()),
         Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
+                    OpenApiGeneratorFixtures.validateSimpleBuild()),   // todo create validate method
+        Arguments.of("testFormDataMultipartGeneration", OpenApiGeneratorFixtures.TEST_FORM_DATA_MULTIPART_GENERATION,
                     OpenApiGeneratorFixtures.validateSimpleBuild())
     );
   }

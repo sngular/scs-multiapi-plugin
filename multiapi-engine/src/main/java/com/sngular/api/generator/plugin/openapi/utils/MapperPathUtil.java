@@ -213,6 +213,7 @@ public class MapperPathUtil {
       if (!ApiTool.hasRef(requestBody)) {
         requestObjects.add(RequestObject.builder()
                                         .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .isFormData(ApiTool.getNode(requestBody, CONTENT).has("multipart/form-data"))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
                                                                          "InlineObject" + operationIdWithCap, globalObject, baseDir))
                                         .build());
@@ -220,6 +221,7 @@ public class MapperPathUtil {
         final var requestBodyNode = globalObject.getRequestBodyNode(MapperUtil.getRefSchemaName(requestBody)).orElseThrow();
         requestObjects.add(RequestObject.builder()
                                         .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .isFormData(ApiTool.getNode(requestBodyNode, CONTENT).has("multipart/form-data"))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBodyNode, CONTENT),
                                                                          operationIdWithCap, globalObject, baseDir))
                                         .build());

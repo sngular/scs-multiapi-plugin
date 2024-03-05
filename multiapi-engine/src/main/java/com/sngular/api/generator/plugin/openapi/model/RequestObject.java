@@ -24,6 +24,8 @@ public class RequestObject {
 
   private List<ContentObject> contentObjects;
 
+  private Boolean isFormData;
+
   public static final class RequestObjectBuilder {
 
     private final List<ContentObject> contentObjects = new ArrayList<>();

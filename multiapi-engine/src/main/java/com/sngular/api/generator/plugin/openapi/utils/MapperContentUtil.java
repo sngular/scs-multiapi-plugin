@@ -154,6 +154,10 @@ public class MapperContentUtil {
     if (type.containsType(TypeConstants.OFFSETDATETIME)) {
       listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
     }
+
+    if (type.containsType(TypeConstants.MULTIPART_FILE)) {
+      listHashMap.computeIfAbsent(TypeConstants.MULTIPART_FILE, key -> List.of("org.springframework.web.multipart.MultipartFile"));
+    }
   }
 
   private static Set<SchemaFieldObject> getFields(final String buildingSchema,
@@ -396,7 +400,10 @@ public class MapperContentUtil {
   }
 
   private static SchemaFieldObject processStringProperty(final String propertyName, final JsonNode schema, final SpecFile specFile) {
-    final String resultingType = ApiTool.isDateTime(schema) ? MapperUtil.getDateType(schema, specFile) : TypeConstants.STRING;
+    String resultingType;
+    if (ApiTool.isDateTime(schema)) resultingType = MapperUtil.getDateType(schema, specFile);
+    else if (ApiTool.isBinary(schema)) resultingType = TypeConstants.MULTIPART_FILE;
+    else resultingType = TypeConstants.STRING;
 
     final SchemaFieldObject field = SchemaFieldObject
         .builder()

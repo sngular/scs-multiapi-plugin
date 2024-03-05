@@ -250,6 +250,9 @@ public class OpenApiGenerator {
     return FilenameUtils.concat(processedGeneratedSourcesFolder, PACKAGE_SEPARATOR.matcher(toMatch).replaceAll("/"));
   }
 
+
+  /* todo change JsonNode to custom type containing the jsonNode to know if the schema comes from multipart/form-data or
+      another requestBody content type*/
   private void processModels(
       final SpecFile specFile, final String fileModelToSave, final String modelPackage, final Map<String, JsonNode> basicSchemaMap,
       final boolean overwrite) {

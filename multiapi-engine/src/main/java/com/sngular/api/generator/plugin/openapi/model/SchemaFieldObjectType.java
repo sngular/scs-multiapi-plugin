@@ -33,7 +33,9 @@ public class SchemaFieldObjectType {
     new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
     new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
     new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.MULTIPART_FILE, "MultipartFile")
+
   );
 
   private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
@@ -52,7 +54,8 @@ public class SchemaFieldObjectType {
     new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
     new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
     new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime"),
+    new SimpleImmutableEntry<>(TypeConstants.MULTIPART_FILE, "MultipartFile")
   );
 
   private SchemaFieldObjectType innerType;

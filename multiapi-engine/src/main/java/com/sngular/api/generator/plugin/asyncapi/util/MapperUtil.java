@@ -32,6 +32,8 @@ public class MapperUtil {
 
   public static final String DATE_TIME = "date-time";
 
+  public static final String BINARY = "binary";
+
   public static final String BIG_DECIMAL = "BigDecimal";
 
   public static final String LOCAL_DATE = "LocalDate";
@@ -39,6 +41,8 @@ public class MapperUtil {
   public static final String LOCAL_DATE_TIME = "LocalDateTime";
 
   public static final String ZONED_DATE_TIME = "ZonedDateTime";
+
+  public static final String MULTIPART_FILE = "MultipartFile";
 
   public static final String REF = "$ref";
 
@@ -95,6 +99,8 @@ public class MapperUtil {
 
       } else if (DATE.equalsIgnoreCase(format)) {
         type = LOCAL_DATE;
+      } else if (BINARY.equalsIgnoreCase(format)) {
+        type = MULTIPART_FILE;
       }
     }
     return type;

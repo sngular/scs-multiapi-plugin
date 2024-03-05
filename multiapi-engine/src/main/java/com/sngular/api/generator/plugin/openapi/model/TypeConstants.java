@@ -50,6 +50,8 @@ public final class TypeConstants {
 
   public static final String INT_64 = "int64";
 
+  public static final String MULTIPART_FILE = "multipartfile";
+
   public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
 
   public static final Set<String> NO_IMPORT_TYPE = Set.of(STRING, INTEGER, OBJECT);
@@ -86,7 +88,8 @@ public final class TypeConstants {
       ZONEDDATE,
       ZONEDDATETIME,
       OFFSETDATE,
-      OFFSETDATETIME
+      OFFSETDATETIME,
+          MULTIPART_FILE
   );
 
   private TypeConstants() {
