@@ -168,7 +168,7 @@ public class AsyncApiGeneratorFixtures {
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
           .consumer(OperationParameterObject.builder()
-                                            .ids("subscribeOperationExternalAvro")
+                                            .ids("subscribeOperationExternalAvro,subscribeReceiptExternalAvro")
                                             .apiPackage("com.sngular.scsplugin.externalavro.model.event.consumer")
                                             .modelPackage("com.sngular.scsplugin.externalavro.model.event")
                                             .build())
@@ -743,6 +743,7 @@ public class AsyncApiGeneratorFixtures {
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperationExternalAvro.java",
+        ASSETS_PATH + "ISubscribeReceiptExternalAvro.java",
         ASSETS_PATH + "Subscriber.java"
     );
 

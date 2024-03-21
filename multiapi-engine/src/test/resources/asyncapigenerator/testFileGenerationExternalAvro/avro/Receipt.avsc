@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "Receipt",
+  "namespace": "com.sngular.disashop.commons",
+  "fields": [
+    {
+      "name": "ref",
+      "type": "string"
+    }
+  ]
+}

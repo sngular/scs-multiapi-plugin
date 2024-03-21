@@ -20,6 +20,12 @@ servers:
     protocol: kafka
     protocolVersion: 0.9.1
 channels:
+  order/receipt:
+    subscribe:
+      operationId: "subscribeReceiptExternalAvro"
+      message:
+        payload:
+          $ref: 'avro/Receipt.avsc'
   order/created:
     publish:
       operationId: "publishOperationExternalAvro"

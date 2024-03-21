@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.externalavro.model.event.Order;
+import com.sngular.disashop.business_model.model.event.Order;
 
 @Configuration
 public class Producer {

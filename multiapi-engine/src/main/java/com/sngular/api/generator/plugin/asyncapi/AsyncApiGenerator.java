@@ -591,8 +591,7 @@ public class AsyncApiGenerator {
     final ObjectMapper mapper = new ObjectMapper();
     try {
       final JsonNode fileTree = mapper.readTree(avroFile);
-      final String fullNamespace = fileTree.get("namespace").asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();
-      namespace = processModelPackage(fullNamespace, modelPackage);
+      namespace = fileTree.get("namespace").asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();;//processModelPackage(fullNamespace, avroPackage);
     } catch (final IOException e) {
       throw new FileSystemException(e);
     }
