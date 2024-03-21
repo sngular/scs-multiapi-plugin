@@ -368,8 +368,7 @@ order/createCommand:
       $ref: '#/components/messages/com.sngular.apigenerator.asyncapi.model.CreateOrder'
 ```
 
-- **Namespace from Avro**: If the user doesn't provide a package name, and the
-  entity is defined by an Avro Schema, the plugin will check for a `namespace`
+- **Namespace from Avro**: The plugin will check for a `namespace`
   attribute defined in the Avro file, and if there is, it will use it. The plugin
   expects to receive a relative path from the `yml` file folder.
 
