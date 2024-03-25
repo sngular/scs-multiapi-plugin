@@ -28,12 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.PluginConstants;
-import com.sngular.api.generator.plugin.asyncapi.exception.ChannelNameException;
-import com.sngular.api.generator.plugin.asyncapi.exception.DuplicateClassException;
-import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
-import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
-import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
-import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
+import com.sngular.api.generator.plugin.asyncapi.exception.*;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
@@ -591,7 +586,11 @@ public class AsyncApiGenerator {
     final ObjectMapper mapper = new ObjectMapper();
     try {
       final JsonNode fileTree = mapper.readTree(avroFile);
-      namespace = fileTree.get("namespace").asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();;//processModelPackage(fullNamespace, avroPackage);
+      final JsonNode avroNamespace = fileTree.get("namespace");
+
+      if (avroNamespace == null) throw new InvalidAvroException(avroFilePath);
+
+      namespace = avroNamespace.asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();;//processModelPackage(fullNamespace, avroPackage);
     } catch (final IOException e) {
       throw new FileSystemException(e);
     }

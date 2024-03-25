@@ -180,6 +180,23 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
+  final static List<SpecFile> TEST_ISSUE_INVALID_AVRO = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("src/test/resources/asyncapigenerator/testIssueInvalidAvro/event-api.yml")
+                  .consumer(OperationParameterObject.builder()
+                          .ids("subscribeOperationExternalAvro")
+                          .apiPackage("com.sngular.scsplugin.issueAvro.model.event.consumer")
+                          .modelPackage("com.sngular.scsplugin.issueAvro.model.event")
+                          .build())
+                  .supplier(OperationParameterObject.builder()
+                          .ids("publishOperationExternalAvro")
+                          .apiPackage("com.sngular.scsplugin.issueAvro.model.event.producer")
+                          .modelPackage("com.sngular.scsplugin.issueAvro.model.event")
+                          .build())
+                  .build()
+  );
+
   final static List<SpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
       SpecFile
           .builder()
