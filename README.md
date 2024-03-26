@@ -369,8 +369,9 @@ order/createCommand:
 ```
 
 - **Namespace from Avro**: The plugin will check for a `namespace`
-  attribute defined in the Avro file and use it, if a namespace is not defined it will throw an exception. The plugin
-  expects to receive a relative path from the `yml` file folder.
+  attribute defined in the Avro file and use it, if a namespace is
+  not defined it will throw an exception. The plugin expects to receive
+  a relative path from the `yml` file folder.
 
 ```yaml
 order/created:
