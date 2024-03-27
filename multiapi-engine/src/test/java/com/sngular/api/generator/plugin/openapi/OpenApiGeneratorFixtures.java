@@ -199,7 +199,7 @@ public final class OpenApiGeneratorFixtures {
   static final List<SpecFile> TEST_REST_CLIENT_GENERATION = List.of(
       SpecFile
           .builder()
-          .filePath("openapigenerator/testClientPackageWebClientApiGeneration/api-test.yml")
+          .filePath("openapigenerator/testRestClientApiGeneration/api-test.yml")
           .apiPackage("com.sngular.multifileplugin.restclient")
           .modelPackage("com.sngular.multifileplugin.restclient.model")
           .clientPackage("com.sngular.multifileplugin.restclient.client")

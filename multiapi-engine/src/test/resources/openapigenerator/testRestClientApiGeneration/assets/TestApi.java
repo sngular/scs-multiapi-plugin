@@ -104,4 +104,36 @@ public class TestApi {
     return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
+  /**
+   * DELETE /test/{testId}: Info for a specific test
+   * @param testId The id of the test to retrieve true
+   * @return No content response; (status code 204)
+   * @throws RestClientException if an error occurs while attempting to invoke the API
+   */
+  public void deleteTestById(Integer testId) throws RestClientException {
+    deleteTestByIdWithHttpInfo(testId);
+  }
+
+  public ResponseEntity<Void> deleteTestByIdWithHttpInfo(Integer testId) throws RestClientException {
+
+    Object postBody = null;
+    final Map<String, Object> uriVariables = new HashMap<String, Object>();
+
+    uriVariables.put("testId",  testId);
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+
+    final String[] localVarAccepts = {"application/json"};
+    final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {};
+    final MediaType localVarContentType = apiRestClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"BasicAuth"};
+
+    ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
+    return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.DELETE, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+  }
+
 }
