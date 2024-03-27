@@ -60,7 +60,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.3.5</version>
+  <version>5.4.0</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -114,7 +114,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id "java"
-  id "com.sngular.scs-multiapi-gradle-plugin' version '5.3.5"
+  id "com.sngular.scs-multiapi-gradle-plugin' version '5.4.0"
 
   openapimodel {
 
@@ -153,7 +153,7 @@ which the plugin is designed.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.3.5</version>
+  <version>5.4.0</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -368,10 +368,10 @@ order/createCommand:
       $ref: '#/components/messages/com.sngular.apigenerator.asyncapi.model.CreateOrder'
 ```
 
-- **Namespace from Avro**: If the user doesn't provide a package name, and the
-  entity is defined by an Avro Schema, the plugin will check for a `namespace`
-  attribute defined in the Avro file, and if there is, it will use it. The plugin
-  expects to receive a relative path from the `yml` file folder.
+- **Namespace from Avro**: The plugin will check for a `namespace`
+  attribute defined in the Avro file and use it, if a namespace is
+  not defined it will throw an exception. The plugin expects to receive
+  a relative path from the `yml` file folder.
 
 ```yaml
 order/created:
@@ -584,7 +584,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.3.5</version>
+  <version>5.4.0</version>
   <executions>
     <execution>
       <goals>

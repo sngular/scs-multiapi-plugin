@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAvroException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import org.assertj.core.api.Assertions;
@@ -89,6 +90,11 @@ class AsyncApiGeneratorTest {
   @Test
   void testExceptionForTestGenerationWithNoOperationConfiguration() {
     Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG)).isInstanceOf(InvalidAPIException.class);
+  }
+
+  @Test
+  void testExceptionForTestIssueInvalidAvro() {
+    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_ISSUE_INVALID_AVRO)).isInstanceOf(InvalidAvroException.class);
   }
 
 }
