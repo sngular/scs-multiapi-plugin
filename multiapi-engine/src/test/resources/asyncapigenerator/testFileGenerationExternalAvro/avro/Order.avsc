@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "Order",
-  "namespace": "com.sngular.disashop.business_model.model.event",
+  "namespace": "com.sngular.testshop.business_model.model.event",
   "fields": [
     {
       "name": "ref",

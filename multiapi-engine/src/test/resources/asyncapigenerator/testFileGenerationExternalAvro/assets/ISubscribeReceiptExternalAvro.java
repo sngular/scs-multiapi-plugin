@@ -1,6 +1,6 @@
 package com.sngular.scsplugin.externalavro.model.event.consumer;
 
-import com.sngular.disashop.commons.Receipt;
+import com.sngular.testshop.commons.Receipt;
 
 public interface ISubscribeReceiptExternalAvro {
 

@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.disashop.commons.Receipt;
+import com.sngular.testshop.commons.Receipt;
 import com.sngular.scsplugin.externalavro.model.event.CreateOrder;
 
 @Configuration
