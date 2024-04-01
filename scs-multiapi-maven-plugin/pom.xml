@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.3.6</version>
+  <version>5.4.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -201,6 +201,13 @@
       <name>Carlos Alonso Ferreira</name>
       <email>carlos.alonso@sngular.com</email>
       <organizationUrl>https://sngular.github.io/</organizationUrl>
+    </developer>
+    <developer>
+      <id>MarcosFreireSngular</id>
+      <name>Marcos Freire Patiño</name>
+      <email>marcos.freire@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
       <roles>
         <role>Software Developer - Trainee</role>
       </roles>
@@ -253,7 +260,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>5.3.6</version>
+      <version>5.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

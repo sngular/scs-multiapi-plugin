@@ -20,12 +20,6 @@ servers:
     protocol: kafka
     protocolVersion: 0.9.1
 channels:
-  order/receipt:
-    subscribe:
-      operationId: "subscribeReceiptExternalAvro"
-      message:
-        payload:
-          $ref: 'avro/Receipt.avsc'
   order/created:
     publish:
       operationId: "publishOperationExternalAvro"
@@ -78,8 +72,8 @@ components:
     OrderLine:
       type: object
       required:
-      - ref
-      - products
+        - ref
+        - products
       properties:
         ref:
           type: string
@@ -90,10 +84,10 @@ components:
     OrderProduct:
       type: object
       required:
-      - ref
-      - productRef
-      - price
-      - quantity
+        - ref
+        - productRef
+        - price
+        - quantity
       properties:
         ref:
           type: string
