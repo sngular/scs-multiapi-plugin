@@ -210,6 +210,20 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_REST_CLIENT_API_WITH_REQUEST_OBJECTS_GENERATION = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testRestClientApiWithRequestObjectGeneration/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.restclientWithRequestObjects")
+                  .modelPackage("com.sngular.multifileplugin.restclientWithRequestObjects.model")
+                  .clientPackage("com.sngular.multifileplugin.restclientWithRequestObjects.client")
+                  .modelNamePrefix("Api")
+                  .modelNameSuffix("DTO")
+                  .useLombokModelAnnotation(false)
+                  .callMode(true)
+                  .build()
+  );
+
   static final List<SpecFile> TEST_ENUMS_GENERATION = List.of(
       SpecFile
           .builder()
@@ -490,6 +504,7 @@ public final class OpenApiGeneratorFixtures {
           .useLombokModelAnnotation(true)
           .build()
   );
+
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
@@ -909,6 +924,36 @@ public final class OpenApiGeneratorFixtures {
     return (path) ->
                commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
                commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
+  }
+
+  static Function<Path, Boolean> validateRestClientWithRequestBodyGeneration() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/restclientWithRequestObjects";
+
+    final String CLIENT_TARGET_API = "generated/com/sngular/multifileplugin/restclientWithRequestObjects/client";
+
+    final String CLIENT_MODEL_API = "generated/com/sngular/multifileplugin/restclientWithRequestObjects/client/auth";
+
+    final String COMMON_PATH = "openapigenerator/testRestClientApiWithRequestObjectGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    List<String> expectedTestApiFile = List.of(
+            ASSETS_PATH + "TestApi.java"
+    );
+
+    List<String> expectedTestClientApiFile = List.of(
+            ASSETS_PATH + "client/ApiRestClient.java"
+    );
+
+    List<String> expectedTestClientAuthModelFiles = List.of(
+            ASSETS_PATH + "client/auth/Authentication.java",
+            ASSETS_PATH + "client/auth/HttpBasicAuth.java"
+    );
+
+    return (path) ->
+            commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
+                    commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateEnumsGeneration() {

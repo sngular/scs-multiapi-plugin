@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.1</version>
+  <version>5.4.2</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -213,6 +213,17 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>oscar-ares</id>
+      <name>Oscar Ares Bascon</name>
+      <email>oscar.ares@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>https://www.sngular.com</organizationUrl>
+      <roles>
+        <role>Software Developer - Trainee</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>
@@ -260,7 +271,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>5.4.1</version>
+      <version>5.4.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
