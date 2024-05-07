@@ -141,6 +141,13 @@ public class ${className?cap_first}Api {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+    <#if operation.requestObjects?has_content>
+        <#if operation.requestObjects[0].contentObjects[0].schemaObject?has_content>
+             <#list operation.requestObjects[0].contentObjects[0].schemaObject.fieldObjectList as field>
+    formParams.put("${field.baseName}", List.of(${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}.get${field.baseName?cap_first}()));
+             </#list>
+         </#if>
+    </#if>
 
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>

@@ -74,6 +74,8 @@ class OpenApiGeneratorTest {
                      OpenApiGeneratorFixtures.validateClientPackageWebClientGeneration()),
         Arguments.of("testRestClientApiGeneration", OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
                      OpenApiGeneratorFixtures.validateRestClientGeneration()),
+        Arguments.of("testRestClientApiWithRequestObjectGeneration", OpenApiGeneratorFixtures.TEST_REST_CLIENT_API_WITH_REQUEST_OBJECTS_GENERATION,
+                    OpenApiGeneratorFixtures.validateRestClientWithRequestBodyGeneration()),
         Arguments.of("testApiEnumsGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_GENERATION,
                      OpenApiGeneratorFixtures.validateEnumsGeneration()),
         Arguments.of("testApiEnumsLombokGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,

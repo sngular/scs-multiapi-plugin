@@ -6,36 +6,21 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.ContentObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.*;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
-import com.sngular.api.generator.plugin.openapi.model.OperationObject;
-import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.RequestObject;
-import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 
 public class MapperPathUtil {
 
@@ -352,17 +337,22 @@ public class MapperPathUtil {
       final Path baseDir) {
     final List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
-      for (Iterator<String> it = content.fieldNames(); it.hasNext();) {
+      for (Iterator<String> it = content.fieldNames(); it.hasNext(); ) {
         final String mediaType = it.next();
         final var schema = ApiTool.getNode(ApiTool.getNode(content, mediaType), SCHEMA);
         final String pojoName = preparePojoName(inlineObject, schema, specFile);
         final SchemaFieldObjectType dataType = getSchemaType(schema, pojoName, specFile, globalObject, baseDir);
         final String importName = getImportFromType(dataType);
+        SchemaObject schemaObject = null;
+        if (mediaType.equals("application/x-www-form-urlencoded") || mediaType.equals("multipart/form-data")) {
+          schemaObject = MapperContentUtil.mapComponentToSchemaObject(globalObject.getSchemaMap(), new HashMap<String, SchemaObject>(), schema, dataType.getBaseType(), specFile, baseDir).get("object");
+        }
         contentObjects.add(ContentObject.builder()
-                                        .dataType(dataType)
-                                        .name(mediaType)
-                                        .importName(importName)
-                                        .build());
+                .dataType(dataType)
+                .name(mediaType)
+                .importName(importName)
+                .schemaObject(schemaObject)
+                .build());
       }
     }
     return contentObjects;
