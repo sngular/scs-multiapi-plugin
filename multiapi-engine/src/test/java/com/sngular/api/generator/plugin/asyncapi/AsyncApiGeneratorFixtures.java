@@ -229,7 +229,7 @@ public class AsyncApiGeneratorFixtures {
           .streamBridge(OperationParameterObject.builder()
                                                 .apiPackage("com.sngular.scsplugin.withoutids.model.event.producer")
                                                 .modelPackage("com.sngular.scsplugin.withoutids.model.event")
-                                                .modelNameSuffix("Mapper")
+                                                .modelNameSuffix("DTO")
                                                 .build())
           .build()
   );
