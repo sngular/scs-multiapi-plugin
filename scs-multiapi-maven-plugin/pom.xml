@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.2</version>
+  <version>5.4.3</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -271,7 +271,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>5.4.2</version>
+      <version>5.4.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -438,7 +438,8 @@
               junit.jupiter.execution.parallel.mode.default=concurrent
               junit.jupiter.execution.parallel.mode.classes.default=same_thread
               junit.jupiter.execution.parallel.config.strategy=fixed
-              junit.jupiter.execution.parallel.config.fixed.parallelism=6</configurationParameters>
+              junit.jupiter.execution.parallel.config.fixed.parallelism=6
+            </configurationParameters>
           </properties>
         </configuration>
         <executions>

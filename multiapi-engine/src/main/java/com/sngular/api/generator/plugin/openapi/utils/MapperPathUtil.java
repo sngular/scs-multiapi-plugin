@@ -66,8 +66,8 @@ public class MapperPathUtil {
 
   public static List<PathObject> mapPathObjects(final SpecFile specFile, final Collection<Map<String, JsonNode>> path, final GlobalObject globalObject, final Path baseDir) {
     final List<PathObject> pathObjects = new ArrayList<>();
-    for (var pathMap : path) {
-      for (var pathItem : pathMap.entrySet()) {
+    for (final var pathMap : path) {
+      for (final var pathItem : pathMap.entrySet()) {
         final PathObject pathObject = PathObject.builder()
                                                 .pathName(pathItem.getKey())
                                                 .globalObject(globalObject)
@@ -85,7 +85,7 @@ public class MapperPathUtil {
     final List<String> operationIdList = new ArrayList<>();
     final var pathNode = path.getValue();
     final var pathParameters = new ArrayList<ParameterObject>();
-    for (Iterator<Entry<String, JsonNode>> it = pathNode.fields(); it.hasNext();) {
+    for (final Iterator<Entry<String, JsonNode>> it = pathNode.fields(); it.hasNext();) {
       final var field = it.next();
       switch (field.getKey()) {
         case "get":
@@ -218,7 +218,7 @@ public class MapperPathUtil {
       final GlobalObject globalObject, final Path baseDir) {
     final List<ParameterObject> parameterObjects = new ArrayList<>();
     if (Objects.nonNull(parameters) && !parameters.isEmpty()) {
-      for (JsonNode parameter : parameters) {
+      for (final JsonNode parameter : parameters) {
         if (ApiTool.hasRef(parameter)) {
           final JsonNode refParameter = globalObject.getParameterNode(MapperUtil.getRefSchemaName(parameter)).orElseThrow();
           parameterObjects.add(buildParameterObject(specFile, globalObject, refParameter, baseDir));
@@ -260,7 +260,7 @@ public class MapperPathUtil {
     final var content = ApiTool.getNode(parameter, CONTENT);
     final var parameterName = ApiTool.getName(parameter);
     final var parameterObjects = new ArrayList<ParameterObject>();
-    for (Iterator<JsonNode> it = content.elements(); it.hasNext();) {
+    for (final Iterator<JsonNode> it = content.elements(); it.hasNext();) {
       final var contentType = it.next();
       final String inlineParameter = INLINE_PARAMETER + safeCapitalize(contentClassName)
                                      + StringUtils.capitalize(parameterName);
@@ -337,7 +337,7 @@ public class MapperPathUtil {
       final Path baseDir) {
     final List<ContentObject> contentObjects = new ArrayList<>();
     if (Objects.nonNull(content)) {
-      for (Iterator<String> it = content.fieldNames(); it.hasNext(); ) {
+      for (final Iterator<String> it = content.fieldNames(); it.hasNext();) {
         final String mediaType = it.next();
         final var schema = ApiTool.getNode(ApiTool.getNode(content, mediaType), SCHEMA);
         final String pojoName = preparePojoName(inlineObject, schema, specFile);

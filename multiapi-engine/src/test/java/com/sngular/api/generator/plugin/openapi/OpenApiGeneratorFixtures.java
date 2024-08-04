@@ -1160,6 +1160,7 @@ public final class OpenApiGeneratorFixtures {
 
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
+
   static Function<Path, Boolean> validateRestrictionsSchema() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testRestrictionsSchema";
@@ -1201,7 +1202,7 @@ public final class OpenApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
-static Function<Path, Boolean> validateSimpleBuild() {
+  static Function<Path, Boolean> validateSimpleBuild() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testsimplebuild";
 

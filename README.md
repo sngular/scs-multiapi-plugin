@@ -60,7 +60,7 @@ As commented above, they both could be used at the same time, setting a double
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.2</version>
+  <version>5.4.3</version>
   <executions>
     <execution>
       <id>asyncapi</id>
@@ -104,6 +104,32 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
+#### Mandatory dependencies
+
+These dependencies are used by generated code
+
+```xml
+ <dependencies>
+       <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser-core</artifactId>
+            <version>2.1.20</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.20</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+ </dependencies>
+```
+
 ### How to configure the build file
 
 To maintain the generation of the different types of classes independent, they
@@ -114,7 +140,7 @@ Apply the plugin in the `build.gradle` file and invoke the task.
 ```groovy
 plugins {
   id "java"
-  id "com.sngular.scs-multiapi-gradle-plugin' version '5.4.2"
+  id "com.sngular.scs-multiapi-gradle-plugin' version '5.4.3"
 
   openapimodel {
 
@@ -138,6 +164,16 @@ In the [AsyncApi Generator](#asyncapi-generator) and the
 [OpenApi Generator](#openapi-generator) sections, you can find more information
 about how they work, and the parameters and configuration options they offer.
 
+#### Mandatory gradle dependencies
+
+These dependencies are used by generated code
+
+``` gradle
+implementation 'io.swagger.parser.v3:swagger-parser-core:2.1.20'
+implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.20'
+implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+```
+
 ## AsyncApi Generator
 
 ### Configuration
@@ -153,7 +189,7 @@ which the plugin is designed.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.2</version>
+  <version>5.4.3</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -443,8 +479,16 @@ public interface ISubscribeOperation {
 
 #### Bindings
 
-Asyncapi support a way to specify specific configuration for certain protocols. Nowadays we only support Kafka specific information to define a Key form Messages as you can find [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
-When a binding is specified in a message we will generate a generic class named as MessageWrapper which will contain the payload and the key used in to build a Message.
+Asyncapi support a way to specify specific configuration for certain protocols.
+
+Nowadays, we only support Kafka specific information to define a Key form.
+
+Messages as you can find
+[here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
+
+When a binding is specified in a message we will generate a generic class
+named as MessageWrapper which will contain the payload and the key
+used in to build a Message.
 You will find such class by each api package you define.
 
 ##### Mapper
@@ -584,7 +628,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.2</version>
+  <version>5.4.3</version>
   <executions>
     <execution>
       <goals>
@@ -664,9 +708,14 @@ openapimodel {
   specFile {
     {
       filePath = './src/main/resources/api/api.yml'
-      apiPackage = 'com.sngular.apigenerator.openapi.api'
-      modelPackage = 'com.sngular.apigenerator.openapi.api.model'
-      useTagsGroup = true
+      consumer {
+        apiPackage = 'com.sngular.apigenerator.openapi.api'
+        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
+      }
+      supplier {
+        apiPackage = 'com.sngular.apigenerator.openapi.api'
+        modelPackage = 'com.sngular.apigenerator.openapi.api.model'
+      }
     }
     overWriteModel = true
   }

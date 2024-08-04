@@ -229,7 +229,7 @@ public class AsyncApiGeneratorFixtures {
           .streamBridge(OperationParameterObject.builder()
                                                 .apiPackage("com.sngular.scsplugin.withoutids.model.event.producer")
                                                 .modelPackage("com.sngular.scsplugin.withoutids.model.event")
-                                                .modelNameSuffix("Mapper")
+                                                .modelNameSuffix("DTO")
                                                 .build())
           .build()
   );
@@ -382,6 +382,24 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_SUB_OBJECT_SAME_NAME =
+      List.of(
+          SpecFile.builder()
+                  .filePath("src/test/resources/asyncapigenerator/testSubObjectSameName/event-api.yml")
+                  .consumer(
+                      OperationParameterObject.builder()
+                                              .ids("input")
+                                              .apiPackage("input.controller")
+                                              .modelPackage("input.model")
+                                              .build())
+                  .supplier(
+                      OperationParameterObject.builder()
+                                              .ids("output")
+                                              .apiPackage("output.provider")
+                                              .modelPackage("output.model")
+                                              .build())
+                  .build());
+
   final static String TARGET = "target";
 
   final static String GENERATED = "generated/";
@@ -457,8 +475,8 @@ public class AsyncApiGeneratorFixtures {
       }
 
       if (CollectionUtils.isNotEmpty(expectedExceptionFiles)) {
-        Path pathToTargetException = pathToTarget.resolve(targetException);
-        File targetModelException = pathToTargetException.toFile();
+        final Path pathToTargetException = pathToTarget.resolve(targetException);
+        final File targetModelException = pathToTargetException.toFile();
         Assertions.assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
@@ -627,7 +645,7 @@ public class AsyncApiGeneratorFixtures {
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
-  static Function<Path, Boolean> validateCustomValidators(int springBootVersion) {
+  static Function<Path, Boolean> validateCustomValidators(final int springBootVersion) {
     final String DEFAULT_CONSUMER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/consumer";
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/customvalidator/model/event/producer";
@@ -687,7 +705,7 @@ public class AsyncApiGeneratorFixtures {
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
 
-  private static String calculateJavaEEPackage(int springBootVersion) {
+  private static String calculateJavaEEPackage(final int springBootVersion) {
     if (3 <= springBootVersion) {
       return "jakarta/";
     } else {
@@ -1024,5 +1042,49 @@ public class AsyncApiGeneratorFixtures {
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), null) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_COMMON_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestSubObjectSameName() {
+
+    final String DEFAULT_COMMON_FOLDER = "generated";
+
+    final String DEFAULT_CONSUMER_FOLDER = DEFAULT_COMMON_FOLDER + "/input/controller";
+
+    final String DEFAULT_CONSUMER_MODEL_FOLDER = DEFAULT_COMMON_FOLDER + "/input/model";
+
+    final String DEFAULT_PRODUCER_FOLDER = DEFAULT_COMMON_FOLDER + "/output/provider";
+
+    final String DEFAULT_PRODUCER_MODEL_FOLDER = DEFAULT_COMMON_FOLDER + "/output/model";
+
+    final String COMMON_PATH = "asyncapigenerator/testSubObjectSameName/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedConsumerFiles =
+        List.of(
+            ASSETS_PATH + "input/controller/IInput.java",
+            ASSETS_PATH + "input/controller/Subscriber.java");
+
+    final List<String> expectedProducerFiles =
+        List.of(
+            ASSETS_PATH + "output/provider/IOutput.java",
+            ASSETS_PATH + "output/provider/Producer.java");
+
+    final List<String> expectedConsumerModelSchemaFiles =
+        List.of(ASSETS_PATH + "input/model/Data.java", ASSETS_PATH + "input/model/Input.java");
+    final List<String> expectedProducerModelSchemaFiles =
+        List.of(ASSETS_PATH + "output/model/Data.java", ASSETS_PATH + "output/model/Output.java");
+
+    return (path) ->
+               commonTest(
+                   path,
+                   expectedConsumerFiles,
+                   expectedProducerFiles,
+                   DEFAULT_CONSUMER_FOLDER,
+                   DEFAULT_PRODUCER_FOLDER,
+                   Collections.emptyList(),
+                   null)
+               && modelTest(path, expectedConsumerModelSchemaFiles, DEFAULT_CONSUMER_MODEL_FOLDER)
+               && modelTest(path, expectedProducerModelSchemaFiles, DEFAULT_PRODUCER_MODEL_FOLDER);
   }
 }
