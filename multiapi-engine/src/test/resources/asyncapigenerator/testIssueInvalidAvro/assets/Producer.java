@@ -1,4 +1,4 @@
-package com.sngular.scsplugin.externalavro.model.event.producer;
+package com.sngular.scsplugin.issueAvro.model.event.producer;
 
 import java.util.function.Supplier;
 

@@ -107,8 +107,8 @@ public class ${className?cap_first}Api {
    */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     ${operation.responseObjects[0].contentObjects[0].dataType}
-    <#else>Void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
-    return ${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
+    <#else>void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    <#if operation.responseObjects[0].contentObjects[0]??>return </#if>${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
@@ -141,6 +141,13 @@ public class ${className?cap_first}Api {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+    <#if operation.requestObjects?has_content>
+        <#if operation.requestObjects[0].contentObjects[0].schemaObject?has_content>
+             <#list operation.requestObjects[0].contentObjects[0].schemaObject.fieldObjectList as field>
+    formParams.put("${field.baseName}", List.of(${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}.get${field.baseName?cap_first}()));
+             </#list>
+         </#if>
+    </#if>
 
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>

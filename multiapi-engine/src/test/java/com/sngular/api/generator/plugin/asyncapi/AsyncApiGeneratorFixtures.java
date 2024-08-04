@@ -168,7 +168,7 @@ public class AsyncApiGeneratorFixtures {
           .builder()
           .filePath("src/test/resources/asyncapigenerator/testFileGenerationExternalAvro/event-api.yml")
           .consumer(OperationParameterObject.builder()
-                                            .ids("subscribeOperationExternalAvro")
+                                            .ids("subscribeOperationExternalAvro,subscribeReceiptExternalAvro")
                                             .apiPackage("com.sngular.scsplugin.externalavro.model.event.consumer")
                                             .modelPackage("com.sngular.scsplugin.externalavro.model.event")
                                             .build())
@@ -178,6 +178,23 @@ public class AsyncApiGeneratorFixtures {
                                             .modelPackage("com.sngular.scsplugin.externalavro.model.event")
                                             .build())
           .build()
+  );
+
+  final static List<SpecFile> TEST_ISSUE_INVALID_AVRO = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("src/test/resources/asyncapigenerator/testIssueInvalidAvro/event-api.yml")
+                  .consumer(OperationParameterObject.builder()
+                          .ids("subscribeOperationExternalAvro")
+                          .apiPackage("com.sngular.scsplugin.issueAvro.model.event.consumer")
+                          .modelPackage("com.sngular.scsplugin.issueAvro.model.event")
+                          .build())
+                  .supplier(OperationParameterObject.builder()
+                          .ids("publishOperationExternalAvro")
+                          .apiPackage("com.sngular.scsplugin.issueAvro.model.event.producer")
+                          .modelPackage("com.sngular.scsplugin.issueAvro.model.event")
+                          .build())
+                  .build()
   );
 
   final static List<SpecFile> TEST_FILE_GENERATION_STREAM_BRIDGE = List.of(
@@ -761,6 +778,7 @@ public class AsyncApiGeneratorFixtures {
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperationExternalAvro.java",
+        ASSETS_PATH + "ISubscribeReceiptExternalAvro.java",
         ASSETS_PATH + "Subscriber.java"
     );
 
