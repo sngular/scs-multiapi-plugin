@@ -6,28 +6,16 @@
 
 package com.sngular.api.generator.plugin.openapi.parameter;
 
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpecFile {
-
-  private String filePath;
-
-  private String apiPackage;
-
-  private String modelPackage;
-
-  private String modelNamePrefix;
-
-  private String modelNameSuffix;
+@EqualsAndHashCode(callSuper = true)
+public class SpecFile extends CommonSpecFile {
 
   private String clientPackage;
 
@@ -35,10 +23,6 @@ public class SpecFile {
 
   private boolean useTagsGroup;
 
-  private boolean useLombokModelAnnotation;
-
   private boolean isReactive;
-
-  @Default
-  private TimeType useTimeType = TimeType.LOCAL;
 }
+

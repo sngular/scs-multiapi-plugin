@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
+import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
 import lombok.extern.slf4j.Slf4j;

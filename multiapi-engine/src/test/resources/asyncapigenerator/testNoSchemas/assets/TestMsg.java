@@ -38,10 +38,6 @@ public class TestMsg {
     }
   }
 
-  /**
-  * Get id
-  * @return id
-  */
   @Schema(name = "id", required = false)
   public Integer getId() {
     return id;

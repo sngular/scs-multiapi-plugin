@@ -17,12 +17,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -58,7 +58,7 @@ public class TemplateFactory {
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
       writeTemplateToFile(templateSelector(useLombok, schemaObject), root, pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        propertiesSet.addAll(fieldObject.getRestrictionProperties().getProperties());
+        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
           propertiesSet.add("NotNull");
         }

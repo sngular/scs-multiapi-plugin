@@ -38,10 +38,6 @@ public class PaymentDetailsDTO {
     }
   }
 
-  /**
-  * Get creditCardNumber
-  * @return creditCardNumber
-  */
   @Schema(name = "creditCardNumber", required = false)
   public String getCreditCardNumber() {
     return creditCardNumber;

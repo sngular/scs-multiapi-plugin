@@ -6,24 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -32,20 +14,20 @@ import com.sngular.api.generator.plugin.asyncapi.exception.*;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult.ProcessBindingsResultBuilder;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
-import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
-import com.sngular.api.generator.plugin.common.model.TimeType;
+import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +35,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class AsyncApiGenerator {
@@ -133,7 +121,7 @@ public class AsyncApiGenerator {
     this.springBootVersion = springBootVersion;
   }
 
-  public static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {
+  private static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {
     final InputStream classPathInput = AsyncApiGenerator.class.getClassLoader().getResourceAsStream(ymlFilePath);
 
     final InputStream ymlFile;
@@ -166,13 +154,13 @@ public class AsyncApiGenerator {
 
       try {
         final JsonNode openApi = om.readTree(ymlFile);
-        final JsonNode internalNode = openApi.get(CHANNELS);
+        final JsonNode channelList = openApi.get(CHANNELS);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
-        final Iterator<Entry<String, JsonNode>> iter = internalNode.fields();
+        final Iterator<Entry<String, JsonNode>> channelListIt = channelList.fields();
         setUpTemplate(fileParameter, springBootVersion);
-        while (iter.hasNext()) {
+        while (channelListIt.hasNext()) {
 
-          final Map.Entry<String, JsonNode> entry = iter.next();
+          final Map.Entry<String, JsonNode> entry = channelListIt.next();
 
           final JsonNode channel = entry.getValue();
 
@@ -194,7 +182,7 @@ public class AsyncApiGenerator {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
     } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
-      final var fieldListIt = schema.getFieldObjectList().listIterator();
+      final var fieldListIt = schema.getFieldObjectList().iterator();
       if (fieldListIt.hasNext()) {
         do {
           final var field = fieldListIt.next();
@@ -266,16 +254,19 @@ public class AsyncApiGenerator {
       final String operationId, final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
     if (isValidOperation(fileParameter.getConsumer(), operationId, channel, SUBSCRIBE, true)) {
       final var operationObject = fileParameter.getConsumer();
+      operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
       processSubscribeMethod(channelPayload, operationObject, ymlParent, totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
       final var operationObject = fileParameter.getSupplier();
+      operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
       processSupplierMethod(channelPayload, operationObject, ymlParent, totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       final var operationObject = fileParameter.getStreamBridge();
+      operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
       processStreamBridgeMethod(channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
@@ -471,8 +462,7 @@ public class AsyncApiGenerator {
     final JsonNode schemaToBuild = processedMethod.getPayload();
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
-          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, null, operationObject.getModelNameSuffix(), parentPackage, modelPackage,
-              operationObject.getFormats(), operationObject.getUseTimeType()).iterator();
+          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir.toPath()).iterator();
 
       if (schemaObjectIt.hasNext()) {
         final var filePath = writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
@@ -523,7 +513,7 @@ public class AsyncApiGenerator {
     } else if (message.has(PAYLOAD)) {
       payloadInfo = processPayload(operationObject, ApiTool.getName(message), ApiTool.getNode(message, PAYLOAD), ymlParent);
       if (ApiTool.hasNode(message, BINDINGS)) {
-        processBindings(processBindingsResultBuilder, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message, operationObject.getUseTimeType());
+        processBindings(processBindingsResultBuilder, message, operationObject);
       }
     } else {
       throw new InvalidAsyncAPIException(operationId);
@@ -556,7 +546,7 @@ public class AsyncApiGenerator {
 
     final var message = totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(messageRef)));
     if (ApiTool.hasNode(message, BINDINGS)) {
-      processBindings(bindingsResult, operationObject.getClassNamePostfix(), operationObject.getModelNameSuffix(), message, operationObject.getUseTimeType());
+      processBindings(bindingsResult, message, operationObject);
     }
     return processPayload(operationObject, MapperUtil.getRefClass(method), ApiTool.getNode(message, PAYLOAD), ymlParent);
   }
@@ -613,22 +603,21 @@ public class AsyncApiGenerator {
     }
   }
 
-  private void processBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode message, 
-      final TimeType useTimeType) {
+  private void processBindings(final ProcessBindingsResultBuilder bindingsResult, final JsonNode message,
+      final CommonSpecFile commonSpecFile) {
     if (message.has(BINDINGS)) {
       final var bindingsNode = message.get(BINDINGS);
       if (bindingsNode.has(KAFKA)) {
-        processKafkaBindings(bindingsResult, prefix, suffix, bindingsNode.get(KAFKA), useTimeType);
+        processKafkaBindings(bindingsResult, bindingsNode.get(KAFKA), commonSpecFile);
       } else {
         bindingsResult.bindingType(BindingTypeEnum.NONBINDING.getValue());
       }
     }
   }
 
-  private void processKafkaBindings(final ProcessBindingsResultBuilder bindingsResult, final String prefix, final String suffix, final JsonNode kafkaBindings, 
-      final TimeType useTimeType) {
+  private void processKafkaBindings(final ProcessBindingsResultBuilder bindingsResult, final JsonNode kafkaBindings, final CommonSpecFile specFile) {
     if (kafkaBindings.has(KEY)) {
-      bindingsResult.bindings(MapperUtil.getSimpleType(ApiTool.getNode(kafkaBindings, "key"), prefix, suffix, useTimeType))
+      bindingsResult.bindings(MapperUtil.getSimpleType(ApiTool.getNode(kafkaBindings, "key"), specFile))
                     .bindingType(BindingTypeEnum.KAFKA.getValue());
     }
   }

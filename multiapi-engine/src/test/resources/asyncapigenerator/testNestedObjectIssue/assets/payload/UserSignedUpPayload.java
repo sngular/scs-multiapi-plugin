@@ -7,29 +7,27 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonDeserialize(builder = UserSignedUpPayload.UserSignedUpPayloadBuilder.class)
 public class UserSignedUpPayload {
 
+  @JsonProperty(value ="someOtherObject")
+  private SomeOtherObject someOtherObject;
+  @JsonProperty(value ="email")
+  private String email;
   @JsonProperty(value ="firstName")
   private String firstName;
   @JsonProperty(value ="lastName")
   private String lastName;
-  @JsonProperty(value ="email")
-  private String email;
   @JsonProperty(value ="createdAt")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime createdAt;
-  @JsonProperty(value ="someOtherObject")
-  private SomeOtherObject someOtherObject;
 
   private UserSignedUpPayload(UserSignedUpPayloadBuilder builder) {
+    this.someOtherObject = builder.someOtherObject;
+    this.email = builder.email;
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
-    this.email = builder.email;
     this.createdAt = builder.createdAt;
-    this.someOtherObject = builder.someOtherObject;
 
   }
 
@@ -40,15 +38,20 @@ public class UserSignedUpPayload {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class UserSignedUpPayloadBuilder {
 
-    private String firstName;
-
-    private String lastName;
-
-    private String email;
-
-    private LocalDateTime createdAt;
-
     private SomeOtherObject someOtherObject;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private LocalDateTime createdAt;
+    public UserSignedUpPayload.UserSignedUpPayloadBuilder someOtherObject(SomeOtherObject someOtherObject) {
+      this.someOtherObject = someOtherObject;
+      return this;
+    }
+
+    public UserSignedUpPayload.UserSignedUpPayloadBuilder email(String email) {
+      this.email = email;
+      return this;
+    }
 
     public UserSignedUpPayload.UserSignedUpPayloadBuilder firstName(String firstName) {
       this.firstName = firstName;
@@ -60,18 +63,8 @@ public class UserSignedUpPayload {
       return this;
     }
 
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder email(String email) {
-      this.email = email;
-      return this;
-    }
-
     public UserSignedUpPayload.UserSignedUpPayloadBuilder createdAt(LocalDateTime createdAt) {
       this.createdAt = createdAt;
-      return this;
-    }
-
-    public UserSignedUpPayload.UserSignedUpPayloadBuilder someOtherObject(SomeOtherObject someOtherObject) {
-      this.someOtherObject = someOtherObject;
       return this;
     }
 
@@ -81,34 +74,14 @@ public class UserSignedUpPayload {
     }
   }
 
-  /**
-  * Get firstName
-  * @return firstName
-  */
-  @Schema(name = "firstName", required = false)
-  public String getFirstName() {
-    return firstName;
+  @Schema(name = "someOtherObject", required = false)
+  public SomeOtherObject getSomeOtherObject() {
+    return someOtherObject;
   }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
+  public void setSomeOtherObject(SomeOtherObject someOtherObject) {
+    this.someOtherObject = someOtherObject;
   }
 
-  /**
-  * Get lastName
-  * @return lastName
-  */
-  @Schema(name = "lastName", required = false)
-  public String getLastName() {
-    return lastName;
-  }
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  /**
-  * Get email
-  * @return email
-  */
   @Schema(name = "email", required = false)
   public String getEmail() {
     return email;
@@ -117,28 +90,28 @@ public class UserSignedUpPayload {
     this.email = email;
   }
 
-  /**
-  * Get createdAt
-  * @return createdAt
-  */
+  @Schema(name = "firstName", required = false)
+  public String getFirstName() {
+    return firstName;
+  }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  @Schema(name = "lastName", required = false)
+  public String getLastName() {
+    return lastName;
+  }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
   @Schema(name = "createdAt", required = false)
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
   public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
-  }
-
-  /**
-  * Get someOtherObject
-  * @return someOtherObject
-  */
-  @Schema(name = "someOtherObject", required = false)
-  public SomeOtherObject getSomeOtherObject() {
-    return someOtherObject;
-  }
-  public void setSomeOtherObject(SomeOtherObject someOtherObject) {
-    this.someOtherObject = someOtherObject;
   }
 
   @Override
@@ -150,23 +123,23 @@ public class UserSignedUpPayload {
       return false;
     }
     UserSignedUpPayload userSignedUpPayload = (UserSignedUpPayload) o;
-    return Objects.equals(this.firstName, userSignedUpPayload.firstName) && Objects.equals(this.lastName, userSignedUpPayload.lastName) && Objects.equals(this.email, userSignedUpPayload.email) && Objects.equals(this.createdAt, userSignedUpPayload.createdAt) && Objects.equals(this.someOtherObject, userSignedUpPayload.someOtherObject);
+    return Objects.equals(this.someOtherObject, userSignedUpPayload.someOtherObject) && Objects.equals(this.email, userSignedUpPayload.email) && Objects.equals(this.firstName, userSignedUpPayload.firstName) && Objects.equals(this.lastName, userSignedUpPayload.lastName) && Objects.equals(this.createdAt, userSignedUpPayload.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, email, createdAt, someOtherObject);
+    return Objects.hash(someOtherObject, email, firstName, lastName, createdAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("UserSignedUpPayload{");
+    sb.append(" someOtherObject:").append(someOtherObject).append(",");
+    sb.append(" email:").append(email).append(",");
     sb.append(" firstName:").append(firstName).append(",");
     sb.append(" lastName:").append(lastName).append(",");
-    sb.append(" email:").append(email).append(",");
-    sb.append(" createdAt:").append(createdAt).append(",");
-    sb.append(" someOtherObject:").append(someOtherObject);
+    sb.append(" createdAt:").append(createdAt);
     sb.append("}");
     return sb.toString();
   }

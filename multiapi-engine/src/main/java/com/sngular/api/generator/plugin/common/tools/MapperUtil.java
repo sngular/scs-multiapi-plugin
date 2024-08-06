@@ -4,20 +4,50 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.openapi.utils;
+package com.sngular.api.generator.plugin.common.tools;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
 
+  private static final String INTEGER = "integer";
+
+  private static final String DOUBLE = "double";
+
+  private static final String FLOAT = "float";
+
+  private static final String NUMBER = "number";
+
+  private static final String INT_64 = "int64";
+
+  private static final String LONG = "long";
+
+  private static final String DATE = "date";
+
+  private static final String DATE_TIME = "date-time";
+
+  private static final String BIG_DECIMAL = "BigDecimal";
+
+  private static final String LOCAL_DATE = "LocalDate";
+
+  private static final String LOCAL_DATE_TIME = "LocalDateTime";
+
+  private static final String ZONED_DATE_TIME = "ZonedDateTime";
+
+  private static final String REF = "$ref";
+
+  private static final String DIVISOR = "([./])";
+
+  private static final String SLASH = "/";
+
   private MapperUtil() {}
 
-  public static String getSimpleType(final JsonNode schema, final SpecFile specFile) {
+  public static String getSimpleType(final JsonNode schema, final CommonSpecFile specFile) {
     final String type;
     final var nodeType = ApiTool.getType(schema);
     if (checkIfNumber(nodeType)) {
@@ -32,14 +62,33 @@ public class MapperUtil {
     return type;
   }
 
+  public static String[] splitName(final String name) {
+    return ArrayUtils.removeAllOccurrences(name.split(DIVISOR), "");
+  }
+
+  public static String buildKey(final String[] pathList) {
+    final var arrayLength = pathList.length;
+    return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
+  }
+
   public static String getRefSchemaName(final JsonNode parameter) {
     final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
     return pathObjectRef[pathObjectRef.length - 1];
   }
 
+  public static String getRefSchemaKey(final JsonNode parameter) {
+    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1]);
+  }
+
   public static String getRefSchemaName(final String parameter) {
     final String[] pathObjectRef = parameter.split("/");
     return pathObjectRef[pathObjectRef.length - 1];
+  }
+
+  public static String getRefSchemaKey(final String parameter) {
+    final String[] pathObjectRef = parameter.split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1]);
   }
 
   private static boolean checkIfNumber(final String nodeType) {
@@ -70,7 +119,7 @@ public class MapperUtil {
     return type;
   }
 
-  public static String getTypeArray(final JsonNode array, final SpecFile specFile) {
+  public static String getTypeArray(final JsonNode array, final CommonSpecFile specFile) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
       typeArray = TypeConstants.STRING;
@@ -82,19 +131,19 @@ public class MapperUtil {
     return typeArray;
   }
 
-  public static String getPojoName(final String namePojo, final SpecFile specFile) {
+  public static String getPojoName(final String namePojo, final CommonSpecFile specFile) {
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
            + StringUtils.capitalize(namePojo)
            + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
   }
 
-  public static String getRef(final JsonNode schema, final SpecFile specFile) {
+  public static String getRef(final JsonNode schema, final CommonSpecFile specFile) {
     final String typeObject;
     typeObject = getPojoName(getRefSchemaName(schema), specFile);
     return typeObject;
   }
 
-  public static String getDateType(final JsonNode schema, final SpecFile specFile) {
+  public static String getDateType(final JsonNode schema, final CommonSpecFile specFile) {
     final String dateType;
     switch (ApiTool.getFormat(schema)) {
 
@@ -126,5 +175,19 @@ public class MapperUtil {
         dateType = TypeConstants.LOCALDATETIME;
     }
     return dateType;
+  }
+
+  public static String getRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = getStrings(schema);
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
+  private static String[] getStrings(final JsonNode schema) {
+    return splitName(schema.get(REF).textValue());
+  }
+
+  public static String getLongRefClass(final JsonNode schema) {
+    final String[] pathObjectRef = getStrings(schema);
+    return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
   }
 }

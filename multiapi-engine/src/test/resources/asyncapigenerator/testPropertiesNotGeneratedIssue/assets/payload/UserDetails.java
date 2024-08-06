@@ -10,17 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = UserDetails.UserDetailsBuilder.class)
 public class UserDetails {
 
+  @JsonProperty(value ="email")
+  private String email;
   @JsonProperty(value ="firstName")
   private String firstName;
   @JsonProperty(value ="lastName")
   private String lastName;
-  @JsonProperty(value ="email")
-  private String email;
 
   private UserDetails(UserDetailsBuilder builder) {
+    this.email = builder.email;
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
-    this.email = builder.email;
 
   }
 
@@ -31,11 +31,14 @@ public class UserDetails {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class UserDetailsBuilder {
 
+    private String email;
     private String firstName;
-
     private String lastName;
 
-    private String email;
+    public UserDetails.UserDetailsBuilder email(String email) {
+      this.email = email;
+      return this;
+    }
 
     public UserDetails.UserDetailsBuilder firstName(String firstName) {
       this.firstName = firstName;
@@ -47,21 +50,20 @@ public class UserDetails {
       return this;
     }
 
-    public UserDetails.UserDetailsBuilder email(String email) {
-      this.email = email;
-      return this;
-    }
-
     public UserDetails build() {
       UserDetails userDetails = new UserDetails(this);
       return userDetails;
     }
   }
 
-  /**
-  * Get firstName
-  * @return firstName
-  */
+  @Schema(name = "email", required = false)
+  public String getEmail() {
+    return email;
+  }
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   @Schema(name = "firstName", required = false)
   public String getFirstName() {
     return firstName;
@@ -70,28 +72,12 @@ public class UserDetails {
     this.firstName = firstName;
   }
 
-  /**
-  * Get lastName
-  * @return lastName
-  */
   @Schema(name = "lastName", required = false)
   public String getLastName() {
     return lastName;
   }
   public void setLastName(String lastName) {
     this.lastName = lastName;
-  }
-
-  /**
-  * Get email
-  * @return email
-  */
-  @Schema(name = "email", required = false)
-  public String getEmail() {
-    return email;
-  }
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   @Override
@@ -103,21 +89,21 @@ public class UserDetails {
       return false;
     }
     UserDetails userDetails = (UserDetails) o;
-    return Objects.equals(this.firstName, userDetails.firstName) && Objects.equals(this.lastName, userDetails.lastName) && Objects.equals(this.email, userDetails.email);
+    return Objects.equals(this.email, userDetails.email) && Objects.equals(this.firstName, userDetails.firstName) && Objects.equals(this.lastName, userDetails.lastName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, email);
+    return Objects.hash(email, firstName, lastName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("UserDetails{");
+    sb.append(" email:").append(email).append(",");
     sb.append(" firstName:").append(firstName).append(",");
-    sb.append(" lastName:").append(lastName).append(",");
-    sb.append(" email:").append(email);
+    sb.append(" lastName:").append(lastName);
     sb.append("}");
     return sb.toString();
   }

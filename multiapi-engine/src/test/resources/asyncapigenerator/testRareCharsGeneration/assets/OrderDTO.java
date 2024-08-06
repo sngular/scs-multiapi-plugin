@@ -12,18 +12,16 @@ import java.math.BigDecimal;
 @JsonDeserialize(builder = OrderDTO.OrderDTOBuilder.class)
 public class OrderDTO {
 
-  @JsonProperty(value ="ref")
-  private String ref;
   @JsonProperty(value ="clientRef")
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
-  @JsonProperty(value ="new")
+  @JsonProperty(value ="_new")
   private New _new;
   public enum New {
-    ONE_PIECE_WORKS("one:piece:works"),
-    TWO_PIECE_WORKS("two:piece:works"),
-    THREE_PIECE_WORKS("three:piece:works");
+    TWO:PIECE:WORKS("two:piece:works"),
+    THREE:PIECE:WORKS("three:piece:works"),
+    ONE:PIECE:WORKS("one:piece:works");
 
     private String value;
 
@@ -41,12 +39,14 @@ public class OrderDTO {
       return String.valueOf(value);
     }
   }
+  @JsonProperty(value ="ref")
+  private String ref;
 
   private OrderDTO(OrderDTOBuilder builder) {
-    this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
     this._new = builder._new;
+    this.ref = builder.ref;
 
   }
 
@@ -57,18 +57,10 @@ public class OrderDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderDTOBuilder {
 
-    private String ref;
-
     private String clientRef;
-
     private BigDecimal amount;
-
     private New _new;
-
-    public OrderDTO.OrderDTOBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public OrderDTO.OrderDTOBuilder clientRef(String clientRef) {
       this.clientRef = clientRef;
@@ -79,9 +71,13 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
-
-    public OrderDTO.OrderDTOBuilder _new(New _new) {
+    public OrderDTO.OrderDTOBuilder _new(New new) {
       this._new = _new;
+      return this;
+    }
+
+    public OrderDTO.OrderDTOBuilder ref(String ref) {
+      this.ref = ref;
       return this;
     }
 
@@ -91,22 +87,6 @@ public class OrderDTO {
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = false)
-  public String getRef() {
-    return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  /**
-  * Get clientRef
-  * @return clientRef
-  */
   @Schema(name = "clientRef", required = false)
   public String getClientRef() {
     return clientRef;
@@ -115,10 +95,6 @@ public class OrderDTO {
     this.clientRef = clientRef;
   }
 
-  /**
-  * Get amount
-  * @return amount
-  */
   @Schema(name = "amount", required = false)
   public BigDecimal getAmount() {
     return amount;
@@ -127,16 +103,20 @@ public class OrderDTO {
     this.amount = amount;
   }
 
-  /**
-  * Get new
-  * @return new
-  */
   @Schema(name = "new", required = false)
   public New getNew() {
     return _new;
   }
   public void setNew(New _new) {
     this._new = _new;
+  }
+
+  @Schema(name = "ref", required = false)
+  public String getRef() {
+    return ref;
+  }
+  public void setRef(String ref) {
+    this.ref = ref;
   }
 
   @Override
@@ -148,22 +128,22 @@ public class OrderDTO {
       return false;
     }
     OrderDTO orderDTO = (OrderDTO) o;
-    return Objects.equals(this.ref, orderDTO.ref) && Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this._new, orderDTO._new);
+    return Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this._new, orderDTO._new) && Objects.equals(this.ref, orderDTO.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, clientRef, amount, _new);
+    return Objects.hash(clientRef, amount, _new, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderDTO{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
     sb.append(" amount:").append(amount).append(",");
-    sb.append(" new:").append(_new);
+    sb.append(" new:").append(_new).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }

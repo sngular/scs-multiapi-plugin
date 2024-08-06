@@ -10,14 +10,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = SomeOtherObject.SomeOtherObjectBuilder.class)
 public class SomeOtherObject {
 
-  @JsonProperty(value ="property1")
-  private final Integer property1;
   @JsonProperty(value ="property2")
-  private final Integer property2;
+  private Integer property2;
+  @JsonProperty(value ="property1")
+  private Integer property1;
 
   private SomeOtherObject(SomeOtherObjectBuilder builder) {
-    this.property1 = builder.property1;
     this.property2 = builder.property2;
+    this.property1 = builder.property1;
 
   }
 
@@ -28,9 +28,18 @@ public class SomeOtherObject {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class SomeOtherObjectBuilder {
 
+    private Integer property2 = 6;
     private Integer property1 = 3;
 
-    private Integer property2 = 6;
+    public SomeOtherObject.SomeOtherObjectBuilder property2(Integer property2) {
+      this.property2 = property2;
+      return this;
+    }
+
+    public SomeOtherObject.SomeOtherObjectBuilder property1(Integer property1) {
+      this.property1 = property1;
+      return this;
+    }
 
     public SomeOtherObject build() {
       SomeOtherObject someOtherObject = new SomeOtherObject(this);
@@ -38,22 +47,20 @@ public class SomeOtherObject {
     }
   }
 
-  /**
-  * Get property1
-  * @return property1
-  */
+  @Schema(name = "property2", required = false)
+  public Integer getProperty2() {
+    return property2;
+  }
+  public void setProperty2(Integer property2) {
+    this.property2 = property2;
+  }
+
   @Schema(name = "property1", required = false)
   public Integer getProperty1() {
     return property1;
   }
-
-  /**
-  * Get property2
-  * @return property2
-  */
-  @Schema(name = "property2", required = false)
-  public Integer getProperty2() {
-    return property2;
+  public void setProperty1(Integer property1) {
+    this.property1 = property1;
   }
 
   @Override
@@ -65,20 +72,20 @@ public class SomeOtherObject {
       return false;
     }
     SomeOtherObject someOtherObject = (SomeOtherObject) o;
-    return Objects.equals(this.property1, someOtherObject.property1) && Objects.equals(this.property2, someOtherObject.property2);
+    return Objects.equals(this.property2, someOtherObject.property2) && Objects.equals(this.property1, someOtherObject.property1);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(property1, property2);
+    return Objects.hash(property2, property1);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("SomeOtherObject{");
-    sb.append(" property1:").append(property1).append(",");
-    sb.append(" property2:").append(property2);
+    sb.append(" property2:").append(property2).append(",");
+    sb.append(" property1:").append(property1);
     sb.append("}");
     return sb.toString();
   }

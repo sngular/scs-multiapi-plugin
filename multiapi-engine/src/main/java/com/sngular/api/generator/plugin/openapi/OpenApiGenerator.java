@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.exception.GeneratedSourcesException;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
@@ -29,15 +30,14 @@ import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassExc
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.SchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
-import com.sngular.api.generator.plugin.openapi.utils.MapperUtil;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -201,9 +201,9 @@ public class OpenApiGenerator {
   private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) throws IOException {
     final String fileModelToSave = processPath(specFile.getModelPackage(), true);
     final var modelPackage = processModelPackage(specFile.getModelPackage());
-    final var basicSchemaMap = OpenApiUtil.processBasicJsonNodes(openAPI, globalObject.getSchemaMap());
+    final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
-    processModels(specFile, fileModelToSave, modelPackage, basicSchemaMap, Boolean.TRUE.equals(overwriteModel));
+    processModels(specFile, fileModelToSave, modelPackage, totalSchemas, Boolean.TRUE.equals(overwriteModel));
   }
 
   private void processPackage(final String apiPackage) {
@@ -278,13 +278,13 @@ public class OpenApiGenerator {
 
     if (ApiTool.hasRef(basicSchema)) {
       final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
-      builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
+      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
     } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
-      builtSchemasMap.putAll(writeModel(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
+      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
     }
   }
 
-  private Map<String, SchemaObject> writeModel(
+  private Map<String, SchemaObject> fillTemplateFactory(
       final SpecFile specFile, final String fileModelToSave, final String schemaName, final JsonNode basicSchema, final Map<String, JsonNode> basicSchemaMap,
       final Map<String, SchemaObject> builtSchemasMap) {
     final var schemaObjectMap = MapperContentUtil

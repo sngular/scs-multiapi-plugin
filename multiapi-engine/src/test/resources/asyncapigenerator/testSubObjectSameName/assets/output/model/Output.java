@@ -11,6 +11,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = Output.OutputBuilder.class)
 public class Output {
 
+  @JsonProperty(value ="type")
+  private Type type;
+  public enum Type {
+    DELETE("delete"),
+    UPDATE("update");
+
+    private String value;
+
+    Type(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
   @JsonProperty(value ="source")
   private Source source;
   public enum Source {
@@ -32,34 +54,12 @@ public class Output {
       return String.valueOf(value);
     }
   }
-  @JsonProperty(value ="type")
-  private Type type;
-  public enum Type {
-    UPDATE("update"),
-    DELETE("delete");
-
-    private String value;
-
-    Type(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
   @JsonProperty(value ="data")
   private Data data;
 
   private Output(OutputBuilder builder) {
-    this.source = builder.source;
     this.type = builder.type;
+    this.source = builder.source;
     this.data = builder.data;
 
   }
@@ -71,22 +71,17 @@ public class Output {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OutputBuilder {
 
-    private Source source;
-
     private Type type;
-
+    private Source source;
     private Data data;
-
-    public Output.OutputBuilder source(Source source) {
-      this.source = source;
-      return this;
-    }
-
     public Output.OutputBuilder type(Type type) {
       this.type = type;
       return this;
     }
-
+    public Output.OutputBuilder source(Source source) {
+      this.source = source;
+      return this;
+    }
     public Output.OutputBuilder data(Data data) {
       this.data = data;
       return this;
@@ -98,22 +93,6 @@ public class Output {
     }
   }
 
-  /**
-  * Get source
-  * @return source
-  */
-  @Schema(name = "source", required = false)
-  public Source getSource() {
-    return source;
-  }
-  public void setSource(Source source) {
-    this.source = source;
-  }
-
-  /**
-  * Get type
-  * @return type
-  */
   @Schema(name = "type", required = false)
   public Type getType() {
     return type;
@@ -122,10 +101,14 @@ public class Output {
     this.type = type;
   }
 
-  /**
-  * Get data
-  * @return data
-  */
+  @Schema(name = "source", required = false)
+  public Source getSource() {
+    return source;
+  }
+  public void setSource(Source source) {
+    this.source = source;
+  }
+
   @Schema(name = "data", required = false)
   public Data getData() {
     return data;
@@ -143,20 +126,20 @@ public class Output {
       return false;
     }
     Output output = (Output) o;
-    return Objects.equals(this.source, output.source) && Objects.equals(this.type, output.type) && Objects.equals(this.data, output.data);
+    return Objects.equals(this.type, output.type) && Objects.equals(this.source, output.source) && Objects.equals(this.data, output.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(source, type, data);
+    return Objects.hash(type, source, data);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Output{");
-    sb.append(" source:").append(source).append(",");
     sb.append(" type:").append(type).append(",");
+    sb.append(" source:").append(source).append(",");
     sb.append(" data:").append(data);
     sb.append("}");
     return sb.toString();

@@ -19,17 +19,17 @@ public class OrderedItemDTO {
   @Size(min =3, max =250)
   @NotNull
   private final String name;
-  @JsonProperty(value ="quantity")
-  private Integer quantity;
   @JsonProperty(value ="price")
   @NotNull
   private final Double price;
+  @JsonProperty(value ="quantity")
+  private Integer quantity;
 
   private OrderedItemDTO(OrderedItemDTOBuilder builder) {
     this.catalogItemId = builder.catalogItemId;
     this.name = builder.name;
-    this.quantity = builder.quantity;
     this.price = builder.price;
+    this.quantity = builder.quantity;
 
     validateRequiredAttributes();
   }
@@ -42,12 +42,9 @@ public class OrderedItemDTO {
   public static class OrderedItemDTOBuilder {
 
     private Long catalogItemId;
-
     private String name;
-
-    private Integer quantity;
-
     private Double price;
+    private Integer quantity;
 
     public OrderedItemDTO.OrderedItemDTOBuilder catalogItemId(Long catalogItemId) {
       this.catalogItemId = catalogItemId;
@@ -59,13 +56,13 @@ public class OrderedItemDTO {
       return this;
     }
 
-    public OrderedItemDTO.OrderedItemDTOBuilder quantity(Integer quantity) {
-      this.quantity = quantity;
+    public OrderedItemDTO.OrderedItemDTOBuilder price(Double price) {
+      this.price = price;
       return this;
     }
 
-    public OrderedItemDTO.OrderedItemDTOBuilder price(Double price) {
-      this.price = price;
+    public OrderedItemDTO.OrderedItemDTOBuilder quantity(Integer quantity) {
+      this.quantity = quantity;
       return this;
     }
 
@@ -75,10 +72,6 @@ public class OrderedItemDTO {
     }
   }
 
-  /**
-  * Get catalogItemId
-  * @return catalogItemId
-  */
   @Schema(name = "catalogItemId", required = false)
   public Long getCatalogItemId() {
     return catalogItemId;
@@ -87,34 +80,22 @@ public class OrderedItemDTO {
     this.catalogItemId = catalogItemId;
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = true)
   public String getName() {
     return name;
   }
 
-  /**
-  * Get quantity
-  * @return quantity
-  */
+  @Schema(name = "price", required = true)
+  public Double getPrice() {
+    return price;
+  }
+
   @Schema(name = "quantity", required = false)
   public Integer getQuantity() {
     return quantity;
   }
   public void setQuantity(Integer quantity) {
     this.quantity = quantity;
-  }
-
-  /**
-  * Get price
-  * @return price
-  */
-  @Schema(name = "price", required = true)
-  public Double getPrice() {
-    return price;
   }
 
   @Override
@@ -126,12 +107,12 @@ public class OrderedItemDTO {
       return false;
     }
     OrderedItemDTO orderedItemDTO = (OrderedItemDTO) o;
-    return Objects.equals(this.catalogItemId, orderedItemDTO.catalogItemId) && Objects.equals(this.name, orderedItemDTO.name) && Objects.equals(this.quantity, orderedItemDTO.quantity) && Objects.equals(this.price, orderedItemDTO.price);
+    return Objects.equals(this.catalogItemId, orderedItemDTO.catalogItemId) && Objects.equals(this.name, orderedItemDTO.name) && Objects.equals(this.price, orderedItemDTO.price) && Objects.equals(this.quantity, orderedItemDTO.quantity);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(catalogItemId, name, quantity, price);
+    return Objects.hash(catalogItemId, name, price, quantity);
   }
 
   @Override
@@ -140,12 +121,11 @@ public class OrderedItemDTO {
     sb.append("OrderedItemDTO{");
     sb.append(" catalogItemId:").append(catalogItemId).append(",");
     sb.append(" name:").append(name).append(",");
-    sb.append(" quantity:").append(quantity).append(",");
-    sb.append(" price:").append(price);
+    sb.append(" price:").append(price).append(",");
+    sb.append(" quantity:").append(quantity);
     sb.append("}");
     return sb.toString();
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
@@ -160,4 +140,5 @@ public class OrderedItemDTO {
       throw new ModelClassException("OrderedItemDTO");
     }
   }
+
 }

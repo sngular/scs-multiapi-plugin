@@ -10,14 +10,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = CreateOrderMapper.CreateOrderMapperBuilder.class)
 public class CreateOrderMapper {
 
-  @JsonProperty(value ="order")
-  private OrderMapper order;
   @JsonProperty(value ="waiter")
   private WaiterMapper waiter;
+  @JsonProperty(value ="order")
+  private OrderMapper order;
 
   private CreateOrderMapper(CreateOrderMapperBuilder builder) {
-    this.order = builder.order;
     this.waiter = builder.waiter;
+    this.order = builder.order;
 
   }
 
@@ -28,17 +28,14 @@ public class CreateOrderMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CreateOrderMapperBuilder {
 
-    private OrderMapper order;
-
     private WaiterMapper waiter;
-
-    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
-      this.order = order;
-      return this;
-    }
-
+    private OrderMapper order;
     public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
       this.waiter = waiter;
+      return this;
+    }
+    public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
+      this.order = order;
       return this;
     }
 
@@ -48,28 +45,20 @@ public class CreateOrderMapper {
     }
   }
 
-  /**
-  * Get order
-  * @return order
-  */
-  @Schema(name = "order", required = false)
-  public OrderMapper getOrder() {
-    return order;
-  }
-  public void setOrder(OrderMapper order) {
-    this.order = order;
-  }
-
-  /**
-  * Get waiter
-  * @return waiter
-  */
   @Schema(name = "waiter", required = false)
   public WaiterMapper getWaiter() {
     return waiter;
   }
   public void setWaiter(WaiterMapper waiter) {
     this.waiter = waiter;
+  }
+
+  @Schema(name = "order", required = false)
+  public OrderMapper getOrder() {
+    return order;
+  }
+  public void setOrder(OrderMapper order) {
+    this.order = order;
   }
 
   @Override
@@ -81,20 +70,20 @@ public class CreateOrderMapper {
       return false;
     }
     CreateOrderMapper createOrderMapper = (CreateOrderMapper) o;
-    return Objects.equals(this.order, createOrderMapper.order) && Objects.equals(this.waiter, createOrderMapper.waiter);
+    return Objects.equals(this.waiter, createOrderMapper.waiter) && Objects.equals(this.order, createOrderMapper.order);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(order, waiter);
+    return Objects.hash(waiter, order);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CreateOrderMapper{");
-    sb.append(" order:").append(order).append(",");
-    sb.append(" waiter:").append(waiter);
+    sb.append(" waiter:").append(waiter).append(",");
+    sb.append(" order:").append(order);
     sb.append("}");
     return sb.toString();
   }

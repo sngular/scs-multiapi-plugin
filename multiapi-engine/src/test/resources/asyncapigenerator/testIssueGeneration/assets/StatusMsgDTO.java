@@ -11,13 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = StatusMsgDTO.StatusMsgDTOBuilder.class)
 public class StatusMsgDTO {
 
-  @JsonProperty(value ="clientId")
-  private Integer clientId;
   @JsonProperty(value ="status")
   private Status status;
   public enum Status {
-    OK("OK"),
-    KO("KO");
+    KO("KO"),
+    OK("OK");
 
     private String value;
 
@@ -35,10 +33,12 @@ public class StatusMsgDTO {
       return String.valueOf(value);
     }
   }
+  @JsonProperty(value ="clientId")
+  private Integer clientId;
 
   private StatusMsgDTO(StatusMsgDTOBuilder builder) {
-    this.clientId = builder.clientId;
     this.status = builder.status;
+    this.clientId = builder.clientId;
 
   }
 
@@ -49,17 +49,15 @@ public class StatusMsgDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class StatusMsgDTOBuilder {
 
-    private Integer clientId;
-
     private Status status;
-
-    public StatusMsgDTO.StatusMsgDTOBuilder clientId(Integer clientId) {
-      this.clientId = clientId;
+    private Integer clientId;
+    public StatusMsgDTO.StatusMsgDTOBuilder status(Status status) {
+      this.status = status;
       return this;
     }
 
-    public StatusMsgDTO.StatusMsgDTOBuilder status(Status status) {
-      this.status = status;
+    public StatusMsgDTO.StatusMsgDTOBuilder clientId(Integer clientId) {
+      this.clientId = clientId;
       return this;
     }
 
@@ -69,28 +67,20 @@ public class StatusMsgDTO {
     }
   }
 
-  /**
-  * Get clientId
-  * @return clientId
-  */
-  @Schema(name = "clientId", required = false)
-  public Integer getClientId() {
-    return clientId;
-  }
-  public void setClientId(Integer clientId) {
-    this.clientId = clientId;
-  }
-
-  /**
-  * Get status
-  * @return status
-  */
   @Schema(name = "status", required = false)
   public Status getStatus() {
     return status;
   }
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  @Schema(name = "clientId", required = false)
+  public Integer getClientId() {
+    return clientId;
+  }
+  public void setClientId(Integer clientId) {
+    this.clientId = clientId;
   }
 
   @Override
@@ -102,20 +92,20 @@ public class StatusMsgDTO {
       return false;
     }
     StatusMsgDTO statusMsgDTO = (StatusMsgDTO) o;
-    return Objects.equals(this.clientId, statusMsgDTO.clientId) && Objects.equals(this.status, statusMsgDTO.status);
+    return Objects.equals(this.status, statusMsgDTO.status) && Objects.equals(this.clientId, statusMsgDTO.clientId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clientId, status);
+    return Objects.hash(status, clientId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StatusMsgDTO{");
-    sb.append(" clientId:").append(clientId).append(",");
-    sb.append(" status:").append(status);
+    sb.append(" status:").append(status).append(",");
+    sb.append(" clientId:").append(clientId);
     sb.append("}");
     return sb.toString();
   }

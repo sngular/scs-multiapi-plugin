@@ -23,10 +23,10 @@ import java.util.Set;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
-import com.sngular.api.generator.plugin.asyncapi.util.MapperUtil;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -82,6 +82,8 @@ public class TemplateFactory {
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
+    cfg.setAPIBuiltinEnabled(true);
+
   }
 
   private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {

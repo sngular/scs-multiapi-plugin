@@ -130,7 +130,7 @@ public class OpenApiUtil {
     return sb.toString();
   }
 
-  public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
+  public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
     for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
@@ -138,7 +138,7 @@ public class OpenApiUtil {
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processContentForBasicJsonNodes(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
+          processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
         }
       }
     }
@@ -146,7 +146,7 @@ public class OpenApiUtil {
     return basicJsonNodeMap;
   }
 
-  private static void processContentForBasicJsonNodes(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processPathContent(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
 
     processParameters(basicJsonNodeMap, operation);
     processRequestBody(basicJsonNodeMap, operation);

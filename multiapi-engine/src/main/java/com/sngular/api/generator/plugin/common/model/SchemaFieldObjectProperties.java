@@ -1,4 +1,4 @@
-package com.sngular.api.generator.plugin.asyncapi.model;
+package com.sngular.api.generator.plugin.common.model;
 
 import java.util.HashSet;
 import java.util.Objects;

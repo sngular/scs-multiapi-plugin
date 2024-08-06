@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.asyncapi.model;
 import java.util.Objects;
 
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;

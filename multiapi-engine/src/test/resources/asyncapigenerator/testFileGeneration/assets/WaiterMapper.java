@@ -10,17 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = WaiterMapper.WaiterMapperBuilder.class)
 public class WaiterMapper {
 
-  @JsonProperty(value ="ref")
-  private String ref;
   @JsonProperty(value ="timestamp")
   private String timestamp;
   @JsonProperty(value ="table")
   private String table;
+  @JsonProperty(value ="ref")
+  private String ref;
 
   private WaiterMapper(WaiterMapperBuilder builder) {
-    this.ref = builder.ref;
     this.timestamp = builder.timestamp;
     this.table = builder.table;
+    this.ref = builder.ref;
 
   }
 
@@ -31,16 +31,9 @@ public class WaiterMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class WaiterMapperBuilder {
 
-    private String ref;
-
     private String timestamp;
-
     private String table;
-
-    public WaiterMapper.WaiterMapperBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public WaiterMapper.WaiterMapperBuilder timestamp(String timestamp) {
       this.timestamp = timestamp;
@@ -52,28 +45,17 @@ public class WaiterMapper {
       return this;
     }
 
+    public WaiterMapper.WaiterMapperBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public WaiterMapper build() {
       WaiterMapper waiterMapper = new WaiterMapper(this);
       return waiterMapper;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = false)
-  public String getRef() {
-    return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  /**
-  * Get timestamp
-  * @return timestamp
-  */
   @Schema(name = "timestamp", required = false)
   public String getTimestamp() {
     return timestamp;
@@ -82,16 +64,20 @@ public class WaiterMapper {
     this.timestamp = timestamp;
   }
 
-  /**
-  * Get table
-  * @return table
-  */
   @Schema(name = "table", required = false)
   public String getTable() {
     return table;
   }
   public void setTable(String table) {
     this.table = table;
+  }
+
+  @Schema(name = "ref", required = false)
+  public String getRef() {
+    return ref;
+  }
+  public void setRef(String ref) {
+    this.ref = ref;
   }
 
   @Override
@@ -103,21 +89,21 @@ public class WaiterMapper {
       return false;
     }
     WaiterMapper waiterMapper = (WaiterMapper) o;
-    return Objects.equals(this.ref, waiterMapper.ref) && Objects.equals(this.timestamp, waiterMapper.timestamp) && Objects.equals(this.table, waiterMapper.table);
+    return Objects.equals(this.timestamp, waiterMapper.timestamp) && Objects.equals(this.table, waiterMapper.table) && Objects.equals(this.ref, waiterMapper.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, timestamp, table);
+    return Objects.hash(timestamp, table, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("WaiterMapper{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" timestamp:").append(timestamp).append(",");
-    sb.append(" table:").append(table);
+    sb.append(" table:").append(table).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }

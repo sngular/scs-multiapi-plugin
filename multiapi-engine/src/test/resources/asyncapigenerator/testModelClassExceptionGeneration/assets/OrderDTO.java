@@ -12,20 +12,20 @@ import java.util.ArrayList;
 @JsonDeserialize(builder = OrderDTO.OrderDTOBuilder.class)
 public class OrderDTO {
 
-  @JsonProperty(value ="ref")
-  private String ref;
   @JsonProperty(value ="clientRef")
   private String clientRef;
   @JsonProperty(value ="amount")
   private String amount;
   @JsonProperty(value ="lines")
   private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+  @JsonProperty(value ="ref")
+  private String ref;
 
   private OrderDTO(OrderDTOBuilder builder) {
-    this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this.lines.addAll(builder.lines);
+    this.lines = builder.lines;
+    this.ref = builder.ref;
 
   }
 
@@ -36,18 +36,10 @@ public class OrderDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderDTOBuilder {
 
-    private String ref;
-
     private String clientRef;
-
     private String amount;
-
     private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
-
-    public OrderDTO.OrderDTOBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public OrderDTO.OrderDTOBuilder clientRef(String clientRef) {
       this.clientRef = clientRef;
@@ -58,7 +50,6 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
-
     public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
@@ -73,28 +64,17 @@ public class OrderDTO {
       return this;
     }
 
+    public OrderDTO.OrderDTOBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public OrderDTO build() {
       OrderDTO orderDTO = new OrderDTO(this);
       return orderDTO;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = false)
-  public String getRef() {
-    return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  /**
-  * Get clientRef
-  * @return clientRef
-  */
   @Schema(name = "clientRef", required = false)
   public String getClientRef() {
     return clientRef;
@@ -103,10 +83,6 @@ public class OrderDTO {
     this.clientRef = clientRef;
   }
 
-  /**
-  * Get amount
-  * @return amount
-  */
   @Schema(name = "amount", required = false)
   public String getAmount() {
     return amount;
@@ -115,16 +91,20 @@ public class OrderDTO {
     this.amount = amount;
   }
 
-  /**
-  * Get lines
-  * @return lines
-  */
   @Schema(name = "lines", required = false)
   public List<OrderLineDTO> getLines() {
     return lines;
   }
   public void setLines(List<OrderLineDTO> lines) {
     this.lines = lines;
+  }
+
+  @Schema(name = "ref", required = false)
+  public String getRef() {
+    return ref;
+  }
+  public void setRef(String ref) {
+    this.ref = ref;
   }
 
   @Override
@@ -136,22 +116,22 @@ public class OrderDTO {
       return false;
     }
     OrderDTO orderDTO = (OrderDTO) o;
-    return Objects.equals(this.ref, orderDTO.ref) && Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this.lines, orderDTO.lines);
+    return Objects.equals(this.clientRef, orderDTO.clientRef) && Objects.equals(this.amount, orderDTO.amount) && Objects.equals(this.lines, orderDTO.lines) && Objects.equals(this.ref, orderDTO.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, clientRef, amount, lines);
+    return Objects.hash(clientRef, amount, lines, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderDTO{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
     sb.append(" amount:").append(amount).append(",");
-    sb.append(" lines:").append(lines);
+    sb.append(" lines:").append(lines).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }

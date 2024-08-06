@@ -38,10 +38,6 @@ public class Data {
     }
   }
 
-  /**
-  * Get commitId
-  * @return commitId
-  */
   @Schema(name = "commitId", required = false)
   public String getCommitId() {
     return commitId;
