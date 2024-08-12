@@ -1,11 +1,26 @@
 <#ftl output_format="plainText">
 <#assign words = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "double", "do", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"]>
-<#function calculateSafeName propertyName ender>
+<#function calculateSafeName propertyName ender const="">
     <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
-        <#return "_"+propertyName+ender/>
+        <#if const?has_content>
+          <#return "_"+propertyName + " = " + const + ender/>
+        <#else>
+          <#return "_"+propertyName + ender/>
+        </#if>
     <#else >
-        <#return propertyName+ender/>
+      <#if const?has_content>
+        <#return propertyName + " = " + const + ender/>
+      <#else>
+        <#return propertyName + ender/>
+      </#if>
     </#if>
+</#function>
+<#function createSimpleType field>
+  <#if (field.constValue?has_content)>
+    ${calculateSafeName (field.baseName, ";", field.constValue)}
+  <#else >
+   ${calculateSafeName (field.baseName, ";", "")}
+  </#if>
 </#function>
 <#function singularizeName propertyName>
     <#if propertyName?matches(".*s")>
@@ -18,7 +33,7 @@
 </#function>
 <#function requireFinal field>
     <#if field.required == true || field.constValue??>
-      <#return "final "/>
+      <#return "final"/>
     <#else >
         <#return ""/>
     </#if>
@@ -225,17 +240,15 @@ public class ${schema.className} {
   private ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
     </#if>
   <#else>
-    <#if field.required>
-  private final ${field.dataType} ${calculateSafeName (field.baseName, ";")}
-    <#else>
-  private ${field.dataType} ${calculateSafeName (field.baseName, ";")}
-    </#if>
+  private ${requireFinal (field)} ${field.dataType} ${createSimpleType (field)}
   </#if>
 </#list>
 
   private ${schema.className}(${schema.className}Builder builder) {
   <#list schema.fieldObjectList as field>
-    this.${calculateSafeName (field.baseName, "")} = builder.${calculateSafeName (field.baseName, ";")}
+    <#if checkIfShouldSet(field)>
+      this.${calculateSafeName (field.baseName, "")} = builder.${calculateSafeName (field.baseName, ";")}
+    </#if>
   </#list>
 
   <#list schema.fieldObjectList as field>
@@ -265,7 +278,7 @@ public class ${schema.className} {
     private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
     private ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
-  <#else>
+  <#elseif checkIfShouldSet(field)>
     private ${field.dataType} ${calculateSafeName (field.baseName, ";")}
   </#if>
 </#list>
@@ -307,8 +320,7 @@ public class ${schema.className} {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
-  <#else>
-
+  <#elseif checkIfShouldSet(field)>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
@@ -364,7 +376,7 @@ public class ${schema.className} {
   public ${field.dataType} get${field.baseName?cap_first}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
-  <#if field.required == false>
+  <#if checkIfShouldSet (field)>
   public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }

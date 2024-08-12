@@ -1,20 +1,5 @@
 package com.sngular.api.generator.plugin.common.tools;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -25,6 +10,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class ApiTool {
 
@@ -349,4 +342,36 @@ public final class ApiTool {
     }
     return result;
   }
+
+  public static boolean hasConst(final JsonNode fieldBody) {
+    return hasNode(fieldBody, "const");
+  }
+
+  public static Object getConst(final JsonNode fieldBody) {
+    return getValue(getNode(fieldBody, "const"));
+  }
+
+  private static Object getValue(final JsonNode aConst) {
+    Object value = null;
+    if (aConst.isTextual()) {
+      value = aConst.textValue();
+    } else if (aConst.isNumber()) {
+      value = aConst.numberValue();
+    } else if (aConst.isBoolean()) {
+      value = aConst.booleanValue();
+    } else if (aConst.isFloat()) {
+      value = aConst.floatValue();
+    } else if (aConst.isDouble()) {
+      value = aConst.doubleValue();
+    } else if (aConst.isInt()) {
+      value = aConst.intValue();
+    } else if (aConst.isLong()) {
+      value = aConst.longValue();
+    } else if (aConst.isBigDecimal()) {
+      value = aConst.decimalValue();
+    }
+    return value;
+  }
+
+
 }

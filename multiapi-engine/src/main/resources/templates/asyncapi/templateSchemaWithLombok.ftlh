@@ -1,4 +1,26 @@
 <#ftl output_format="plainText">
+<#function calculateSafeName propertyName ender const="">
+    <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
+        <#if const?has_content>
+            <#return "_"+propertyName + " = " + const + ender/>
+        <#else>
+            <#return "_"+propertyName + ender/>
+        </#if>
+    <#else >
+        <#if const?has_content>
+            <#return propertyName + " = " + const + ender/>
+        <#else>
+            <#return propertyName + ender/>
+        </#if>
+    </#if>
+</#function>
+<#function createSimpleType field>
+    <#if (field.constValue?has_content)>
+        ${calculateSafeName (field.baseName, ";", field.const)}
+    <#else >
+        ${calculateSafeName (field.baseName, ";", "")}
+    </#if>
+</#function>
 package ${packageModel};
 
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
@@ -151,7 +173,7 @@ public class ${schema.className} {
     <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
         private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
     <#else>
-        private ${field.dataType} ${field.baseName?uncap_first};
+        private ${field.dataType} ${createSimpleType (field)}
     </#if>
 
 </#list>
