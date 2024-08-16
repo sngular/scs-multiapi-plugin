@@ -297,7 +297,6 @@ public final class ModelBuilder {
       final var restriction = restrictionList.next();
       switch (restriction.getKey()) {
         case "pattern":
-        case "format":
           fieldObject.getRestrictions().setPattern(restriction.getValue().asText());
           break;
         case "maxItems":

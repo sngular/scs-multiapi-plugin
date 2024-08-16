@@ -18,7 +18,7 @@ public class OrderDTO {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+  private List<OrderLineDTO> lines;
   @JsonProperty(value ="ref")
   private String ref;
 
@@ -46,7 +46,6 @@ public class OrderDTO {
       this.clientRef = clientRef;
       return this;
     }
-
     public OrderDTO.OrderDTOBuilder amount(BigDecimal amount) {
       this.amount = amount;
       return this;
@@ -64,7 +63,6 @@ public class OrderDTO {
       }
       return this;
     }
-
     public OrderDTO.OrderDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;

@@ -30,6 +30,7 @@ public class CreateOrderMapper {
 
     private WaiterMapper waiter;
     private OrderMapper order;
+
     public CreateOrderMapper.CreateOrderMapperBuilder waiter(WaiterMapper waiter) {
       this.waiter = waiter;
       return this;

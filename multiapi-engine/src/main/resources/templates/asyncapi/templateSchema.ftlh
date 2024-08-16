@@ -33,9 +33,9 @@
 </#function>
 <#function requireFinal field>
     <#if field.required == true || field.constValue??>
-      <#return "final"/>
+      <#return "final "/>
     <#else >
-        <#return ""/>
+      <#return ""/>
     </#if>
 </#function>
 <#function checkIfShouldSet field>
@@ -191,23 +191,11 @@ public class ${schema.className} {
   @NotNull
   </#if>
   <#if field.dataType.baseType == "array">
-    <#if field.required>
-  private final ${field.dataType} ${calculateSafeName (field.baseName, ";")}
-    <#else>
-  private ${field.dataType} ${calculateSafeName (field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
-    </#if>
+  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
   <#elseif field.dataType.baseType == "map">
-    <#if field.required>
-  private final ${field.dataType} ${calculateSafeName (field.baseName, ";")}
-    <#else>
-  private ${field.dataType} ${calculateSafeName (field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
-    </#if>
+  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
   <#elseif field.dataType.baseType == "enum">
-    <#if field.required>
-  private final ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
-    <#else>
-  private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
-    </#if>
+  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
   <#if key?matches("[0-9].*")>
@@ -234,21 +222,15 @@ public class ${schema.className} {
     }
   }
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-    <#if field.required>
-  private final ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
-    <#else>
-  private ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
-    </#if>
+  private ${requireFinal (field)}${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
   <#else>
-  private ${requireFinal (field)} ${field.dataType} ${createSimpleType (field)}
+  private ${requireFinal (field)}${field.dataType} ${createSimpleType (field)}
   </#if>
 </#list>
 
   private ${schema.className}(${schema.className}Builder builder) {
   <#list schema.fieldObjectList as field>
-    <#if checkIfShouldSet(field)>
-      this.${calculateSafeName (field.baseName, "")} = builder.${calculateSafeName (field.baseName, ";")}
-    </#if>
+    this.${calculateSafeName (field.baseName, "")} = builder.${calculateSafeName (field.baseName, ";")}
   </#list>
 
   <#list schema.fieldObjectList as field>
@@ -282,6 +264,7 @@ public class ${schema.className} {
     private ${field.dataType} ${calculateSafeName (field.baseName, ";")}
   </#if>
 </#list>
+
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "array">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>

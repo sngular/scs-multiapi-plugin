@@ -353,22 +353,24 @@ public final class ApiTool {
 
   private static Object getValue(final JsonNode aConst) {
     Object value = null;
-    if (aConst.isTextual()) {
-      value = aConst.textValue();
-    } else if (aConst.isNumber()) {
-      value = aConst.numberValue();
-    } else if (aConst.isBoolean()) {
-      value = aConst.booleanValue();
-    } else if (aConst.isFloat()) {
-      value = aConst.floatValue();
-    } else if (aConst.isDouble()) {
-      value = aConst.doubleValue();
-    } else if (aConst.isInt()) {
-      value = aConst.intValue();
-    } else if (aConst.isLong()) {
-      value = aConst.longValue();
-    } else if (aConst.isBigDecimal()) {
-      value = aConst.decimalValue();
+    if (Objects.nonNull(value)) {
+      if (aConst.isTextual()) {
+        value = aConst.textValue();
+      } else if (aConst.isNumber()) {
+        value = aConst.numberValue();
+      } else if (aConst.isBoolean()) {
+        value = aConst.booleanValue();
+      } else if (aConst.isFloat()) {
+        value = aConst.floatValue();
+      } else if (aConst.isDouble()) {
+        value = aConst.doubleValue();
+      } else if (aConst.isInt()) {
+        value = aConst.intValue();
+      } else if (aConst.isLong()) {
+        value = aConst.longValue();
+      } else if (aConst.isBigDecimal()) {
+        value = aConst.decimalValue();
+      }
     }
     return value;
   }
