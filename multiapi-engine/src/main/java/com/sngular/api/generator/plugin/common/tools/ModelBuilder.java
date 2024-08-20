@@ -145,7 +145,7 @@ public final class ModelBuilder {
       fieldObjectArrayList.add(processEnumField(ApiTool.getName(schema), schema, specFile, ApiTool.getEnumValues(schema), schema));
     } else if (ApiTool.hasRef(schema)) {
       final var refSchema = totalSchemas.get(MapperUtil.getRefSchemaKey(schema));
-      ApiTool.getProperties(refSchema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
+      ApiTool.getProperties(refSchema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, refSchema, antiLoopList,
             baseDir));
     } else {
       fieldObjectArrayList.add(SchemaFieldObject.builder()
@@ -281,10 +281,9 @@ public final class ModelBuilder {
     final SchemaFieldObject field = SchemaFieldObject
           .builder()
           .baseName(propertyName)
-          .required(ApiTool.checkIfRequired(schema, propertyName))
+          .required(ApiTool.checkIfRequired(schema, propertyName) || ApiTool.hasConst(schema))
           .dataType(new SchemaFieldObjectType(resultingType))
           .constValue(ApiTool.getConst(schema))
-          .required(ApiTool.hasConst(schema))
           .build();
     addPropertiesToFieldObject(field, schema);
     return field;
@@ -400,14 +399,14 @@ public final class ModelBuilder {
     if (ObjectUtils.allNull(className, fieldName)) {
       ApiTool.getProperties(schema).forEachRemaining(
             processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
-    } else if (antiLoopList.contains(className)) {
+    } else if (antiLoopList.contains(className) && compositedSchemas.containsKey(className)) {
       fieldObjectArrayList
             .add(SchemaFieldObject
                   .builder()
                   .baseName(className)
                   .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, MapperUtil.getPojoName(className, specFile)))
                   .build());
-    } else if (antiLoopList.contains(fieldName)) {
+    } else if (antiLoopList.contains(fieldName) && compositedSchemas.containsKey(className)) {
       fieldObjectArrayList
             .add(SchemaFieldObject
                   .builder()
@@ -493,7 +492,7 @@ public final class ModelBuilder {
                   .baseName(fieldName)
                   .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, type))
                   .constValue(getConst(addPropObj))
-                  .required(ApiTool.hasConst(addPropObj))
+                  .required(ApiTool.checkIfRequired(schema, fieldName) ||ApiTool.hasConst(addPropObj))
                   .build());
     }
 

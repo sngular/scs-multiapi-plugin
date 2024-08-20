@@ -27,7 +27,6 @@ import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -121,22 +120,15 @@ public class TemplateFactory {
       exceptionPackage = null;
     }
 
-    final HashSet<String> propertiesSet = new HashSet<>();
     schemaObjectMap.forEach(classTemplate -> {
       try {
-        propertiesSet.addAll(fillTemplateSchema(classTemplate, false, exceptionPackage));
+        fillTemplates(classTemplate.getPropertiesPath(), classTemplate.getModelPackage(),
+            fillTemplateSchema(classTemplate, false, exceptionPackage));
       } catch (final IOException | TemplateException exception) {
         throw new FileSystemException(exception);
       }
     });
 
-    if (!schemaObjectMap.isEmpty()) {
-      try {
-        fillTemplates(schemaObjectMap.get(0).getPropertiesPath(), schemaObjectMap.get(0).getModelPackage(), propertiesSet);
-      } catch (IOException | TemplateException e) {
-        throw new GeneratorTemplateException("Generation Error", e);
-      }
-    }
     this.generateInterfaces();
   }
 
@@ -157,12 +149,24 @@ public class TemplateFactory {
                              "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
           break;
         case "Maximum":
-          fillTemplateCustom(filePathToSave, modelPackage, "Max.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
-                             "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxInteger.java", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION,
+                             "MaxIntegerValidator.java", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxBigDecimal.java", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION,
+                             "MaxBigDecimalValidator.java", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxDouble.java", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION,
+                             "MaxDoubleValidator.java", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxFloat.java", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_ANNOTATION,
+                             "MaxFloatValidator.java", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION);
           break;
         case "Minimum":
-          fillTemplateCustom(filePathToSave, modelPackage, "Min.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
-                             "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinInteger.java", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION,
+                             "MinIntegerValidator.java", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinDouble.java", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION,
+                             "MinDoubleValidator.java", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinFloat.java", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION,
+                             "MinFloatValidator.java", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinBigDecimal.java", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION,
+                             "MinBigDecimalValidator.java", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION);
           break;
         case "MaxItems":
           fillTemplateCustom(filePathToSave, modelPackage, "MaxItems.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,

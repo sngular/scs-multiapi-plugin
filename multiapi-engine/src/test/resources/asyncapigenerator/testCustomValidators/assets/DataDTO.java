@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Size;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Max;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Min;
+import com.sngular.scsplugin.customvalidator.model.event.exception.ModelClassException;
+import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
+import com.sngular.scsplugin.customvalidator.model.event.customvalidator.NotNull;
+import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxInteger;
+import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinInteger;
+import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MultipleOf;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MaxItems;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MinItems;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.Pattern;
-import com.sngular.scsplugin.customvalidator.model.event.customvalidator.MultipleOf;
 import com.sngular.scsplugin.customvalidator.model.event.customvalidator.UniqueItems;
 
 @JsonDeserialize(builder = DataDTO.DataDTOBuilder.class)
@@ -23,19 +25,22 @@ public class DataDTO {
   @JsonProperty(value ="clientName")
   @Size(min =50, max =200)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
-  private String clientName;
+  @NotNull
+  private final String clientName;
   @JsonProperty(value ="flightNumber")
-  private String flightNumber;
+  @NotNull
+  private final String flightNumber;
   @JsonProperty(value ="clientId")
-  @Min(minimum = "10", exclusive = false)
-  @Max(maximum = "200", exclusive = true)
+  @MinInteger(minimum = "10", exclusive = false)
+  @MaxInteger(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10")
-  private Integer clientId;
+  @NotNull
+  private final Integer clientId;
   @JsonProperty(value ="test")
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
   @UniqueItems
-  private List<Integer> test = new ArrayList<Integer>();
+  private List<Integer> test;
 
   private DataDTO(DataDTOBuilder builder) {
     this.clientName = builder.clientName;
@@ -43,6 +48,7 @@ public class DataDTO {
     this.clientId = builder.clientId;
     this.test = builder.test;
 
+    validateRequiredAttributes();
   }
 
   public static DataDTO.DataDTOBuilder builder() {
@@ -71,6 +77,7 @@ public class DataDTO {
       this.clientId = clientId;
       return this;
     }
+
     public DataDTO.DataDTOBuilder test(List<Integer> test) {
       if (!test.isEmpty()) {
         this.test.addAll(test);
@@ -91,28 +98,19 @@ public class DataDTO {
     }
   }
 
-  @Schema(name = "clientName", required = false)
+  @Schema(name = "clientName", required = true)
   public String getClientName() {
     return clientName;
   }
-  public void setClientName(String clientName) {
-    this.clientName = clientName;
-  }
 
-  @Schema(name = "flightNumber", required = false)
+  @Schema(name = "flightNumber", required = true)
   public String getFlightNumber() {
     return flightNumber;
   }
-  public void setFlightNumber(String flightNumber) {
-    this.flightNumber = flightNumber;
-  }
 
-  @Schema(name = "clientId", required = false)
+  @Schema(name = "clientId", required = true)
   public Integer getClientId() {
     return clientId;
-  }
-  public void setClientId(Integer clientId) {
-    this.clientId = clientId;
   }
 
   @Schema(name = "test", required = false)
@@ -152,5 +150,20 @@ public class DataDTO {
     return sb.toString();
   }
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.clientName)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.flightNumber)) {
+      satisfiedCondition = false;
+    }    else if (!Objects.nonNull(this.clientId)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("DataDTO");
+    }
+  }
 
 }

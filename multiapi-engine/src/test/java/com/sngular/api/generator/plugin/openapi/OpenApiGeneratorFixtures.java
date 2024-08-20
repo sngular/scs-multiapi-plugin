@@ -1270,7 +1270,7 @@ public final class OpenApiGeneratorFixtures {
         CUSTOM_VALIDATOR_PATH + "MaxItems.java",
         CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MaxValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Min.java",
+        CUSTOM_VALIDATOR_PATH + "MinInteger.java",
         CUSTOM_VALIDATOR_PATH + "MinItems.java",
         CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MinValidator.java",

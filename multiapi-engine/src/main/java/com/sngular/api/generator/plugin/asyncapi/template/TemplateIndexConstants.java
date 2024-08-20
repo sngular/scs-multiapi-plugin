@@ -16,35 +16,49 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_API_SUPPLIERS = "templateSuppliers.ftlh";
 
-  public static final String TEMPLATE_API_SUPPLIERS_WITH_KAFKA_BINDINGS = "templateSuppliersWithKafkaBindings.ftlh";
-
   public static final String TEMPLATE_API_CONSUMERS = "templateConsumers.ftlh";
-
-  public static final String TEMPLATE_API_CONSUMERS_WITH_KAFKA_BINDINGS = "templateConsumersWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_API_STREAM_BRIDGE = "templateStreamBridge.ftlh";
 
-  public static final String TEMPLATE_API_STREAM_BRIDGE_WITH_KAFKA_BINDINGS = "templateStreamBridgeWithKafkaBindings.ftlh";
-
   public static final String TEMPLATE_INTERFACE_SUPPLIERS = "interfaceSupplier.ftlh";
 
-  public static final String TEMPLATE_INTERFACE_SUPPLIERS_WITH_KAFKA_BINDINGS = "interfaceSupplierWithKafkaBindings.ftlh";
-
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
-
-  public static final String TEMPLATE_INTERFACE_CONSUMERS_WITH_KAFKA_BINDINGS = "interfaceConsumerWithKafkaBindings.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION = "templateNotNullValidator.ftlh";
 
-  public static final String TEMPLATE_MIN_ANNOTATION = "templateMin.ftlh";
+  public static final String TEMPLATE_MIN_INTEGER_ANNOTATION = "templateMinInteger.ftlh";
 
-  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinValidatorAsync.ftlh";
+  public static final String TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION = "templateMinIntegerValidator.ftlh";
 
-  public static final String TEMPLATE_MAX_ANNOTATION = "templateMax.ftlh";
+  public static final String TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION = "templateMinBigDecimal.ftlh";
 
-  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidatorAsync.ftlh";
+  public static final String TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION = "templateMinBigDecimalValidator.ftlh";
+
+  public static final String TEMPLATE_MIN_DOUBLE_ANNOTATION = "templateMinDouble.ftlh";
+
+  public static final String TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION = "templateMinDoubleValidator.ftlh";
+
+  public static final String TEMPLATE_MIN_FLOAT_ANNOTATION = "templateMinFloat.ftlh";
+
+  public static final String TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION = "templateMinFloatValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_INTEGER_ANNOTATION = "templateMaxInteger.ftlh";
+
+  public static final String TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION = "templateMaxIntegerValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION = "templateMaxBigDecimal.ftlh";
+
+  public static final String TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION = "templateMaxBigDecimalValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_DOUBLE_ANNOTATION = "templateMaxDouble.ftlh";
+
+  public static final String TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION = "templateMaxDoubleValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_FLOAT_ANNOTATION = "templateMaxFloat.ftlh";
+
+  public static final String TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION = "templateMaxFloatValidator.ftlh";
 
   public static final String TEMPLATE_SIZE_ANNOTATION = "templateSize.ftlh";
 
@@ -56,7 +70,7 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_MULTIPLEOF_ANNOTATION = "templateMultipleOf.ftlh";
 
-  public static final String TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION = "templateMultipleOfValidatorAsync.ftlh";
+  public static final String TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION = "templateMultipleOfValidator.ftlh";
 
   public static final String TEMPLATE_MAX_ITEMS_ANNOTATION = "templateMaxItems.ftlh";
 

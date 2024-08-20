@@ -17,7 +17,7 @@ public class MailRequestInfiniteDTO {
   @JsonProperty(value ="config")
   private ConfigDTO config;
   @JsonProperty(value ="recipients")
-  private List<String> recipients = new ArrayList<String>();
+  private List<String> recipients;
 
   private MailRequestInfiniteDTO(MailRequestInfiniteDTOBuilder builder) {
     this.sender = builder.sender;
@@ -41,10 +41,12 @@ public class MailRequestInfiniteDTO {
       this.sender = sender;
       return this;
     }
+
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder config(ConfigDTO config) {
       this.config = config;
       return this;
     }
+
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder recipients(List<String> recipients) {
       if (!recipients.isEmpty()) {
         this.recipients.addAll(recipients);

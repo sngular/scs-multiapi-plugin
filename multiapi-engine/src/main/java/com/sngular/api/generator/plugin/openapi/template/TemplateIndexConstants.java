@@ -42,13 +42,13 @@ public class TemplateIndexConstants {
 
   public static final String TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION = "templateNotNullValidator.ftlh";
 
-  public static final String TEMPLATE_MIN_ANNOTATION = "templateMin.ftlh";
+  public static final String TEMPLATE_MIN_ANNOTATION = "templateMinInteger.ftlh";
 
-  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinValidator.ftlh";
+  public static final String TEMPLATE_MIN_VALIDATOR_ANNOTATION = "templateMinIntegerValidator.ftlh";
 
-  public static final String TEMPLATE_MAX_ANNOTATION = "templateMax.ftlh";
+  public static final String TEMPLATE_MAX_ANNOTATION = "templateMaxInteger.ftlh";
 
-  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxValidator.ftlh";
+  public static final String TEMPLATE_MAX_VALIDATOR_ANNOTATION = "templateMaxDoubleValidator.ftlh";
 
   public static final String TEMPLATE_SIZE_ANNOTATION = "templateSize.ftlh";
 

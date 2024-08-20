@@ -52,6 +52,28 @@
     <#return '\"${value}\"'>
   </#if>
 </#function>
+<#function calculateMaxAnnotation dataType>
+    <#if dataType.baseType?lower_case == "bigdecimal">
+        <#return "@MaxBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "integer">
+        <#return "@MaxInteger" >
+    <#elseif dataType.baseType?lower_case == "float">
+        <#return "@MaxFloat" >
+    <#elseif dataType.baseType?lower_case == "double">
+        <#return "@MaxDouble" >
+    </#if>
+</#function>
+<#function calculateMinAnnotation dataType>
+    <#if dataType.baseType?lower_case == "bigdecimal">
+        <#return "@MinBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "integer">
+        <#return "@MinInteger" >
+    <#elseif dataType.baseType?lower_case == "float">
+        <#return "@MinFloat" >
+    <#elseif dataType.baseType?lower_case == "double">
+        <#return "@MinDouble" >
+    </#if>
+</#function>
 package ${packageModel};
 
 import java.util.Objects;
@@ -69,71 +91,74 @@ import io.swagger.v3.oas.annotations.media.Schema;
 <#list schema.importList as import>
 import ${import};
 </#list>
+<#assign visited = "">
 <#list schema.fieldObjectList as field>
-    <#if field.restrictions.maxLength?has_content || field.restrictions.minLength?has_content>
+  <#if (field.restrictions.maxLength?has_content || field.restrictions.minLength?has_content) && !(visited?contains("size"))>
+  <#assign visited += "size," />
 import ${packageModel}.customvalidator.Size;
-        <#break>
+  </#if>
+  <#if field.restrictions.maximum?has_content>
+    <#if field.dataType.baseType?lower_case == "bigdecimal" && !(visited?contains("maxBigDecimal"))>
+      <#assign visited += "maxBigDecimal," />
+import ${packageModel}.customvalidator.MaxBigDecimal;
+    <#elseif field.dataType.baseType?lower_case == "integer" &&  !(visited?contains("maxInteger"))>
+    <#assign visited += "maxInteger," />
+import ${packageModel}.customvalidator.MaxInteger;
+    <#elseif field.dataType.baseType?lower_case == "float" &&  !(visited?contains("maxFloat"))>
+    <#assign visited += "maxFloat," />
+import ${packageModel}.customvalidator.MaxFloat;
+    <#elseif field.dataType.baseType?lower_case == "double" &&  !(visited?contains("maxDouble"))>
+    <#assign visited += "maxDouble," />
+import ${packageModel}.customvalidator.MaxDouble;
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.maximum?has_content>
-import ${packageModel}.customvalidator.Max;
-        <#break>
+  </#if>
+    <#if  field.restrictions.minimum?has_content>
+    <#if field.dataType.baseType?lower_case == "bigdecimal" &&  !(visited?contains("minBigDecimal"))>
+    <#assign visited += "minBigDecimal," />
+import ${packageModel}.customvalidator.MinBigDecimal;
+    <#elseif field.dataType.baseType?lower_case == "integer" &&  !(visited?contains("minInteger"))>
+    <#assign visited += "minInteger," />
+import ${packageModel}.customvalidator.MinInteger;
+    <#elseif field.dataType.baseType?lower_case == "float" &&  !(visited?contains("minFloat"))>
+    <#assign visited += "minFloat," />
+import ${packageModel}.customvalidator.MinFloat;
+    <#elseif field.dataType.baseType?lower_case == "double" &&  !(visited?contains("minDouble"))>
+    <#assign visited += "minDouble," />
+import ${packageModel}.customvalidator.MinDouble;
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.minimum?has_content>
-import ${packageModel}.customvalidator.Min;
-        <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.maxItems?has_content>
+    <#if  field.restrictions.maxItems?has_content && !(visited?contains("maxItems"))>
+    <#assign visited += "maxItems," />
 import ${packageModel}.customvalidator.MaxItems;
-        <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.minItems?has_content>
+    <#if  field.restrictions.minItems?has_content && !(visited?contains("minItems"))>
+      <#assign visited += "minItems," />
 import ${packageModel}.customvalidator.MinItems;
-        <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.format?has_content>
+    <#if  field.restrictions.format?has_content && !(visited?contains("format"))>
+      <#assign visited += "format,"  />
 import com.fasterxml.jackson.annotation.JsonFormat;
-        <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.required ||  schema.schemaCombinator?has_content && (schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf")>
+    <#if (field.required ||  schema.schemaCombinator?has_content && (schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf")) && !(visited?contains("schemaCombinator"))>
+      <#assign visited += "schemaCombinator," />
 import ${exceptionPackage}.exception.ModelClassException;
-        <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-  <#if field.restrictions.pattern?has_content>
+    <#if  field.restrictions.pattern?has_content && !(visited?contains("pattern"))>
+      <#assign visited +=  "pattern,"  />
 import ${packageModel}.customvalidator.Pattern;
-    <#break>
-  </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-  <#if field.restrictions.multipleOf?has_content>
+    </#if>
+    <#if  field.restrictions.multipleOf?has_content && !(visited?contains("multipleOf"))>
+      <#assign visited += "multipleOf,"  />
 import ${packageModel}.customvalidator.MultipleOf;
-    <#break>
-  </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.required?has_content && field.required == true>
+    </#if>
+    <#if  field.required?has_content && field.required == true && !(visited?contains("notNull"))>
+      <#assign visited += "notNull," />
 import ${packageModel}.customvalidator.NotNull;
-      <#break>
     </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-    <#if field.restrictions.uniqueItems?has_content && field.restrictions.uniqueItems == true>
+    <#if field.restrictions.uniqueItems?has_content && field.restrictions.uniqueItems == true && !(visited?contains("uniqueItems"))>
+      <#assign visited += "uniqueItems," />
 import ${packageModel}.customvalidator.UniqueItems;
-        <#break>
-    </#if>
+  </#if>
 </#list>
 
 @JsonDeserialize(builder = ${schema.className}.${schema.className}Builder.class)
@@ -141,17 +166,17 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${calculateSafeName (field.baseName, "")}")
-  <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content || field.restrictions.exclusiveMinimum == false)>
-  @Min(minimum = "${field.restrictions.minimum}", exclusive = false)
+  <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content)>
+  ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = false)
   </#if>
-  <#if field.restrictions.minimum?has_content && field.restrictions.exclusiveMinimum?has_content && field.restrictions.exclusiveMinimum == true>
-  @Min(minimum = "${field.restrictions.minimum}", exclusive = ${field.restrictions.exclusiveMinimum?string})
+  <#if field.restrictions.minimum?has_content && field.restrictions.exclusiveMinimum?has_content>
+  ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = ${field.restrictions.exclusiveMinimum?string})
   </#if>
-  <#if field.restrictions.maximum?has_content && (!field.restrictions.exclusiveMaximum?has_content || field.restrictions.exclusiveMaximum == false)>
-  @Max(maximum = "${field.restrictions.maximum}", exclusive = false)
+  <#if field.restrictions.maximum?has_content && (!field.restrictions.exclusiveMaximum?has_content)>
+  ${calculateMaxAnnotation (field.dataType)}(maximum = "${field.restrictions.maximum}", exclusive = false)
   </#if>
-  <#if field.restrictions.maximum?has_content && field.restrictions.exclusiveMaximum?has_content && field.restrictions.exclusiveMaximum == true>
-  @Max(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
+  <#if field.restrictions.maximum?has_content && field.restrictions.exclusiveMaximum?has_content>
+  ${calculateMaxAnnotation (field.dataType)}(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
   </#if>
   <#if field.restrictions.maxItems?has_content>
   @MaxItems(maximum = ${field.restrictions.maxItems})

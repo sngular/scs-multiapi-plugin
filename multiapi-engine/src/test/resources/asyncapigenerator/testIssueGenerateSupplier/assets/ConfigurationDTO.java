@@ -38,10 +38,6 @@ public class ConfigurationDTO {
     }
   }
 
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
