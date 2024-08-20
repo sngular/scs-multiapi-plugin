@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SomeOtherObject {
 
   @JsonProperty(value ="property2")
-  private final Integer property2 = 6;
+  private final Integer property2;
   @JsonProperty(value ="property1")
-  private final Integer property1 = 3;
+  private final Integer property1;
 
   private SomeOtherObject(SomeOtherObjectBuilder builder) {
+    this.property2 = builder.property2;
+    this.property1 = builder.property1;
 
   }
 
@@ -26,6 +28,8 @@ public class SomeOtherObject {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class SomeOtherObjectBuilder {
 
+    private Integer property2 = 6;
+    private Integer property1 = 3;
 
     public SomeOtherObject build() {
       SomeOtherObject someOtherObject = new SomeOtherObject(this);

@@ -15,7 +15,7 @@ import com.sngular.scsplugin.filegeneration.model.event.customvalidator.NotNull;
 public class OrderLineMapper {
 
   @JsonProperty(value ="products")
-  private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
+  private List<OrderProductMapper> products;
   @JsonProperty(value ="ref")
   @NotNull
   private final String ref;
@@ -36,6 +36,7 @@ public class OrderLineMapper {
 
     private List<OrderProductMapper> products = new ArrayList<OrderProductMapper>();
     private String ref;
+
     public OrderLineMapper.OrderLineMapperBuilder products(List<OrderProductMapper> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);

@@ -353,7 +353,7 @@ public final class ApiTool {
 
   private static Object getValue(final JsonNode aConst) {
     Object value = null;
-    if (Objects.nonNull(value)) {
+    if (Objects.nonNull(aConst)) {
       if (aConst.isTextual()) {
         value = aConst.textValue();
       } else if (aConst.isNumber()) {

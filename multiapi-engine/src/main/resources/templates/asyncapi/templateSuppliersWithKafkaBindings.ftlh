@@ -31,7 +31,7 @@ public class ${supplierClassName?cap_first} {
   @Bean
   public Supplier<Message<${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>>> ${method.operationId?uncap_first}() {
     final var messageWrapper =  ${method.operationId?uncap_first}.${method.operationId?uncap_first}();
-    return () -> MessageBuilder.withPayload((${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>) messageWrapper.getPayload()).setHeader(KafkaHeaders.MESSAGE_KEY, (${method.keyClassName}) messageWrapper.getKey()).build();
+    return () -> MessageBuilder.withPayload((${method.className}<#if supplierEntitiesSuffix?has_content>${supplierEntitiesSuffix}</#if>) messageWrapper.getPayload()).setHeader(KafkaHeaders.MESSAGE_KEY, (${method.keyClassName?cap_first}) messageWrapper.getKey()).build();
   }
 
   </#list>

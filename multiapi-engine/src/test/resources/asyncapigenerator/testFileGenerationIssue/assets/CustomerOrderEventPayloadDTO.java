@@ -56,10 +56,12 @@ public class CustomerOrderEventPayloadDTO {
     private EventType eventType;
     private CustomerOrderDTO customerOrder;
     private String customerOrderId;
+
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder eventType(EventType eventType) {
       this.eventType = eventType;
       return this;
     }
+
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrder(CustomerOrderDTO customerOrder) {
       this.customerOrder = customerOrder;
       return this;

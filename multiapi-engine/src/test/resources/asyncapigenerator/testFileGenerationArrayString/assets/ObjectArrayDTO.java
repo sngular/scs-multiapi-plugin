@@ -17,7 +17,7 @@ public class ObjectArrayDTO {
   @JsonProperty(value ="info")
   private String info;
   @JsonProperty(value ="players")
-  private List<String> players = new ArrayList<String>();
+  private List<String> players;
 
   private ObjectArrayDTO(ObjectArrayDTOBuilder builder) {
     this.idObject = builder.idObject;
@@ -46,6 +46,7 @@ public class ObjectArrayDTO {
       this.info = info;
       return this;
     }
+
     public ObjectArrayDTO.ObjectArrayDTOBuilder players(List<String> players) {
       if (!players.isEmpty()) {
         this.players.addAll(players);

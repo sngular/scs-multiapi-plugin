@@ -43,6 +43,7 @@ public class UserSignedUpPayload {
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
+
     public UserSignedUpPayload.UserSignedUpPayloadBuilder someOtherObject(SomeOtherObject someOtherObject) {
       this.someOtherObject = someOtherObject;
       return this;

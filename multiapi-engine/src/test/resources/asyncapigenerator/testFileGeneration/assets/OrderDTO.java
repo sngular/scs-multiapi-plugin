@@ -46,10 +46,12 @@ public class OrderDTO {
       this.clientRef = clientRef;
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder amount(BigDecimal amount) {
       this.amount = amount;
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);
@@ -63,6 +65,7 @@ public class OrderDTO {
       }
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder ref(String ref) {
       this.ref = ref;
       return this;

@@ -17,7 +17,7 @@ public class OrderDTO {
   @JsonProperty(value ="amount")
   private String amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>();
+  private List<OrderLineDTO> lines;
   @JsonProperty(value ="ref")
   private String ref;
 
@@ -50,6 +50,7 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);

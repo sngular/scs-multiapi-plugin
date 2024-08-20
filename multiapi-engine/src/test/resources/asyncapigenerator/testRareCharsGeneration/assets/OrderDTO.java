@@ -71,6 +71,7 @@ public class OrderDTO {
       this.amount = amount;
       return this;
     }
+
     public OrderDTO.OrderDTOBuilder _new(New new) {
       this._new = _new;
       return this;

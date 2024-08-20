@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -26,8 +28,8 @@ import java.util.stream.Stream;
 @Slf4j
 class AsyncApiGeneratorTest {
 
-  //@TempDir(cleanup = CleanupMode.NEVER)
-  static Path baseDir = Path.of("/Users/jegarcia/Developer/repos/generators/scs-multiapi-plugin/multiapi-engine/target");
+  @TempDir(cleanup = CleanupMode.NEVER)
+  static Path baseDir;
 
   private static AsyncApiGenerator asyncApiGenerator;
 

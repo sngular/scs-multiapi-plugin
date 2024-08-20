@@ -74,14 +74,17 @@ public class Output {
     private Type type;
     private Source source;
     private Data data;
+
     public Output.OutputBuilder type(Type type) {
       this.type = type;
       return this;
     }
+
     public Output.OutputBuilder source(Source source) {
       this.source = source;
       return this;
     }
+
     public Output.OutputBuilder data(Data data) {
       this.data = data;
       return this;

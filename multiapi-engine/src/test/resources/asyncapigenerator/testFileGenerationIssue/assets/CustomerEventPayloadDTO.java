@@ -56,6 +56,7 @@ public class CustomerEventPayloadDTO {
     private EventType eventType;
     private String customerId;
     private CustomerDTO customer;
+
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder eventType(EventType eventType) {
       this.eventType = eventType;
       return this;
@@ -65,6 +66,7 @@ public class CustomerEventPayloadDTO {
       this.customerId = customerId;
       return this;
     }
+
     public CustomerEventPayloadDTO.CustomerEventPayloadDTOBuilder customer(CustomerDTO customer) {
       this.customer = customer;
       return this;

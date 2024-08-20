@@ -6,27 +6,27 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
 @JsonDeserialize(builder = OrderMapper.OrderMapperBuilder.class)
 public class OrderMapper {
 
-  @JsonProperty(value ="ref")
-  private String ref;
   @JsonProperty(value ="clientRef")
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
+  private List<OrderLineMapper> lines;
+  @JsonProperty(value ="ref")
+  private String ref;
 
   private OrderMapper(OrderMapperBuilder builder) {
-    this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
-    this.lines.addAll(builder.lines);
+    this.lines = builder.lines;
+    this.ref = builder.ref;
 
   }
 
@@ -37,18 +37,10 @@ public class OrderMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderMapperBuilder {
 
-    private String ref;
-
     private String clientRef;
-
     private BigDecimal amount;
-
     private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
-
-    public OrderMapper.OrderMapperBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public OrderMapper.OrderMapperBuilder clientRef(String clientRef) {
       this.clientRef = clientRef;
@@ -74,28 +66,17 @@ public class OrderMapper {
       return this;
     }
 
+    public OrderMapper.OrderMapperBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public OrderMapper build() {
       OrderMapper orderMapper = new OrderMapper(this);
       return orderMapper;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = false)
-  public String getRef() {
-    return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  /**
-  * Get clientRef
-  * @return clientRef
-  */
   @Schema(name = "clientRef", required = false)
   public String getClientRef() {
     return clientRef;
@@ -104,10 +85,6 @@ public class OrderMapper {
     this.clientRef = clientRef;
   }
 
-  /**
-  * Get amount
-  * @return amount
-  */
   @Schema(name = "amount", required = false)
   public BigDecimal getAmount() {
     return amount;
@@ -116,16 +93,20 @@ public class OrderMapper {
     this.amount = amount;
   }
 
-  /**
-  * Get lines
-  * @return lines
-  */
   @Schema(name = "lines", required = false)
   public List<OrderLineMapper> getLines() {
     return lines;
   }
   public void setLines(List<OrderLineMapper> lines) {
     this.lines = lines;
+  }
+
+  @Schema(name = "ref", required = false)
+  public String getRef() {
+    return ref;
+  }
+  public void setRef(String ref) {
+    this.ref = ref;
   }
 
   @Override
@@ -137,22 +118,22 @@ public class OrderMapper {
       return false;
     }
     OrderMapper orderMapper = (OrderMapper) o;
-    return Objects.equals(this.ref, orderMapper.ref) && Objects.equals(this.clientRef, orderMapper.clientRef) && Objects.equals(this.amount, orderMapper.amount) && Objects.equals(this.lines, orderMapper.lines);
+    return Objects.equals(this.clientRef, orderMapper.clientRef) && Objects.equals(this.amount, orderMapper.amount) && Objects.equals(this.lines, orderMapper.lines) && Objects.equals(this.ref, orderMapper.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, clientRef, amount, lines);
+    return Objects.hash(clientRef, amount, lines, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderMapper{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
     sb.append(" amount:").append(amount).append(",");
-    sb.append(" lines:").append(lines);
+    sb.append(" lines:").append(lines).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }

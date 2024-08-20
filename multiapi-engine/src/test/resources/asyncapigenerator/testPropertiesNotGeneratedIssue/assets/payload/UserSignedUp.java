@@ -30,6 +30,7 @@ public class UserSignedUp {
 
     private UserDetails details;
     private String id;
+
     public UserSignedUp.UserSignedUpBuilder details(UserDetails details) {
       this.details = details;
       return this;

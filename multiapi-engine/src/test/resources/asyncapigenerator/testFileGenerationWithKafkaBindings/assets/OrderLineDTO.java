@@ -14,16 +14,15 @@ import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.customv
 @JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
 
+  @JsonProperty(value ="products")
+  private List<OrderProductDTO> products;
   @JsonProperty(value ="ref")
   @NotNull
   private final String ref;
-  @JsonProperty(value ="products")
-  @NotNull
-  private final List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
 
   private OrderLineDTO(OrderLineDTOBuilder builder) {
+    this.products = builder.products;
     this.ref = builder.ref;
-    this.products.addAll(builder.products);
 
     validateRequiredAttributes();
   }
@@ -35,14 +34,8 @@ public class OrderLineDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderLineDTOBuilder {
 
-    private String ref;
-
     private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
-
-    public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
       if (!products.isEmpty()) {
@@ -58,28 +51,28 @@ public class OrderLineDTO {
       return this;
     }
 
+    public OrderLineDTO.OrderLineDTOBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public OrderLineDTO build() {
       OrderLineDTO orderLineDTO = new OrderLineDTO(this);
       return orderLineDTO;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
+  @Schema(name = "products", required = false)
+  public List<OrderProductDTO> getProducts() {
+    return products;
+  }
+  public void setProducts(List<OrderProductDTO> products) {
+    this.products = products;
+  }
+
   @Schema(name = "ref", required = true)
   public String getRef() {
     return ref;
-  }
-
-  /**
-  * Get products
-  * @return products
-  */
-  @Schema(name = "products", required = true)
-  public List<OrderProductDTO> getProducts() {
-    return products;
   }
 
   @Override
@@ -91,31 +84,28 @@ public class OrderLineDTO {
       return false;
     }
     OrderLineDTO orderLineDTO = (OrderLineDTO) o;
-    return Objects.equals(this.ref, orderLineDTO.ref) && Objects.equals(this.products, orderLineDTO.products);
+    return Objects.equals(this.products, orderLineDTO.products) && Objects.equals(this.ref, orderLineDTO.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, products);
+    return Objects.hash(products, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderLineDTO{");
-    sb.append(" ref:").append(ref).append(",");
-    sb.append(" products:").append(products);
+    sb.append(" products:").append(products).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.ref)) {
-      satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.products)) {
       satisfiedCondition = false;
     }
 
@@ -123,4 +113,5 @@ public class OrderLineDTO {
       throw new ModelClassException("OrderLineDTO");
     }
   }
+
 }

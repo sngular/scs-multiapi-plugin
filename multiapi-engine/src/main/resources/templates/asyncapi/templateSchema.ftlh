@@ -3,24 +3,16 @@
 <#function calculateSafeName propertyName ender const="">
     <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
         <#if const?has_content>
-          <#return "_"+propertyName + " = " + const + ender/>
+          <#return getConstValue("_"+propertyName, ender, const)/>
         <#else>
-          <#return "_"+propertyName + ender/>
+          <#return getConstValue ("_"+propertyName, ender)/>
         </#if>
     <#else >
-      <#if const?has_content>
-        <#return propertyName + " = " + const + ender/>
-      <#else>
-        <#return propertyName + ender/>
-      </#if>
+      <#return getConstValue(propertyName, ender, const)/>
     </#if>
 </#function>
 <#function createSimpleType field>
-  <#if (field.constValue?has_content)>
     ${calculateSafeName (field.baseName, ";", field.constValue)}
-  <#else >
-   ${calculateSafeName (field.baseName, ";", "")}
-  </#if>
 </#function>
 <#function singularizeName propertyName>
     <#if propertyName?matches(".*s")>
@@ -31,25 +23,24 @@
         <#return propertyName/>
     </#if>
 </#function>
+<#function hasConstValue field>
+  <#return field.constValue?has_content />
+</#function>
 <#function requireFinal field>
-    <#if field.required == true || field.constValue??>
+    <#if field.required == true || hasConstValue(field)>
       <#return "final "/>
     <#else >
       <#return ""/>
     </#if>
 </#function>
 <#function checkIfShouldSet field>
-    <#if field.required == true || field.constValue??>
-        <#return false/>
-    <#else >
-        <#return true/>
-    </#if>
+    <<#return !(field.required == true || hasConstValue(field))>
 </#function>
-<#function hasConstValue value="">
+<#function getConstValue fieldName ender value="">
     <#if value?has_content>
-        <#return " = " + renderValue (value) + ";"/>
+        <#return fieldName +" = " + renderValue (value) + ender/>
     <#else >
-        <#return ";"/>
+        <#return fieldName + ender/>
     </#if>
 </#function>
 <#function renderValue value="">
@@ -224,7 +215,7 @@ public class ${schema.className} {
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
   private ${requireFinal (field)}${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
   <#else>
-  private ${requireFinal (field)}${field.dataType} ${createSimpleType (field)}
+  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
   </#if>
 </#list>
 
@@ -260,8 +251,8 @@ public class ${schema.className} {
     private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
     private ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
-  <#elseif checkIfShouldSet(field)>
-    private ${field.dataType} ${calculateSafeName (field.baseName, ";")}
+  <#else>
+    private ${field.dataType} ${calculateSafeName (field.baseName, ";", field.constValue)}
   </#if>
 </#list>
 
@@ -282,6 +273,7 @@ public class ${schema.className} {
       }
       return this;
     }
+
   <#elseif field.dataType.baseType == "map">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
@@ -293,24 +285,27 @@ public class ${schema.className} {
       this.${propName}.put(key, value);
       return this;
     }
+
   <#elseif field.dataType.baseType == "enum">
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${field.baseName}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
+
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
-  <#elseif checkIfShouldSet(field)>
+
+  <#elseif !(hasConstValue (field))>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
+
   </#if>
   </#list>
-
     public ${schema.className} build() {
       ${schema.className} ${schema.className?uncap_first} = new ${schema.className}(this);
       return ${schema.className?uncap_first};

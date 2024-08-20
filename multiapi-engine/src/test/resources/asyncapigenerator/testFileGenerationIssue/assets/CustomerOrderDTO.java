@@ -42,9 +42,9 @@ public class CustomerOrderDTO {
   @JsonProperty(value ="date")
   private LocalDateTime date;
   @JsonProperty(value ="orderedItems")
-  private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+  private List<OrderedItemDTO> orderedItems;
   @JsonProperty(value ="paymentDetails")
-  private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+  private List<PaymentDetailsDTO> paymentDetails;
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
   @JsonProperty(value ="shippingDetails")
@@ -75,6 +75,7 @@ public class CustomerOrderDTO {
     private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
     private CustomerDTO customer;
     private ShippingDetailsDTO shippingDetails;
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder status(Status status) {
       this.status = status;
       return this;
@@ -89,6 +90,7 @@ public class CustomerOrderDTO {
       this.date = date;
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
       if (!orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
@@ -102,6 +104,7 @@ public class CustomerOrderDTO {
       }
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<PaymentDetailsDTO> paymentDetails) {
       if (!paymentDetails.isEmpty()) {
         this.paymentDetails.addAll(paymentDetails);
@@ -115,10 +118,12 @@ public class CustomerOrderDTO {
       }
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder customer(CustomerDTO customer) {
       this.customer = customer;
       return this;
     }
+
     public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(ShippingDetailsDTO shippingDetails) {
       this.shippingDetails = shippingDetails;
       return this;

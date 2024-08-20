@@ -18,7 +18,7 @@ public class OrderMapper {
   @JsonProperty(value ="amount")
   private BigDecimal amount;
   @JsonProperty(value ="lines")
-  private List<OrderLineMapper> lines = new ArrayList<OrderLineMapper>();
+  private List<OrderLineMapper> lines;
   @JsonProperty(value ="ref")
   private String ref;
 
@@ -51,6 +51,7 @@ public class OrderMapper {
       this.amount = amount;
       return this;
     }
+
     public OrderMapper.OrderMapperBuilder lines(List<OrderLineMapper> lines) {
       if (!lines.isEmpty()) {
         this.lines.addAll(lines);

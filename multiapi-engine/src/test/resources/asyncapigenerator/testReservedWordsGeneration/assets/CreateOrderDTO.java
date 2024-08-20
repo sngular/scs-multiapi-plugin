@@ -30,10 +30,12 @@ public class CreateOrderDTO {
 
     private WaiterDTO waiter;
     private OrderDTO order;
+
     public CreateOrderDTO.CreateOrderDTOBuilder waiter(WaiterDTO waiter) {
       this.waiter = waiter;
       return this;
     }
+
     public CreateOrderDTO.CreateOrderDTOBuilder order(OrderDTO order) {
       this.order = order;
       return this;

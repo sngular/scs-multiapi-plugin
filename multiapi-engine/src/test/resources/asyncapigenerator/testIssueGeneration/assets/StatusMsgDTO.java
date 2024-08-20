@@ -51,6 +51,7 @@ public class StatusMsgDTO {
 
     private Status status;
     private Integer clientId;
+
     public StatusMsgDTO.StatusMsgDTOBuilder status(Status status) {
       this.status = status;
       return this;

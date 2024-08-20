@@ -50,10 +50,12 @@ public class Input {
 
     private Source source;
     private Data data;
+
     public Input.InputBuilder source(Source source) {
       this.source = source;
       return this;
     }
+
     public Input.InputBuilder data(Data data) {
       this.data = data;
       return this;

@@ -36,6 +36,7 @@ public class OrderLineDTO {
 
     private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
     private String ref;
+
     public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);

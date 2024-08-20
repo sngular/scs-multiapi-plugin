@@ -15,7 +15,7 @@ import com.sngular.scsplugin.modelclass.model.event.customvalidator.NotNull;
 public class OrderLineDTO {
 
   @JsonProperty(value ="products")
-  private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
+  private List<OrderProductDTO> products;
   @JsonProperty(value ="ref")
   @NotNull
   private final String ref;
@@ -36,6 +36,7 @@ public class OrderLineDTO {
 
     private List<OrderProductDTO> products = new ArrayList<OrderProductDTO>();
     private String ref;
+
     public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
       if (!products.isEmpty()) {
         this.products.addAll(products);

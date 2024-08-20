@@ -35,6 +35,7 @@ public class CreateOrderMapper {
       this.waiter = waiter;
       return this;
     }
+
     public CreateOrderMapper.CreateOrderMapperBuilder order(OrderMapper order) {
       this.order = order;
       return this;
