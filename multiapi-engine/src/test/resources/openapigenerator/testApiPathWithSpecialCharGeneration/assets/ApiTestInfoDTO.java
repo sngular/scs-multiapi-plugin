@@ -15,17 +15,10 @@ import com.sngular.multifileplugin.pathwithspecialchar.model.customvalidator.Not
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private List<String> testers;
   @JsonProperty(value ="testName")
   @NotNull
   private final String testName;
-
-  private ApiTestInfoDTO(List<String> testers, String testName) {
-    this.testers = testers;
-    this.testName = testName;
-
-    validateRequiredAttributes();
-  }
 
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
     this.testers = builder.testers;

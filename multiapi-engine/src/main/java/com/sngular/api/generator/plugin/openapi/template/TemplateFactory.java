@@ -28,10 +28,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.lang3.StringUtils;
 
 public class TemplateFactory {
 
-  public static final String JAVA_EXTENSION = ".java";
+  private static final String JAVA_EXTENSION = ".java";
+
+  private static final String EXCEPTION_PACKAGE = "exceptionPackage";
 
   private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 
@@ -82,7 +85,7 @@ public class TemplateFactory {
     return template;
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled) throws IOException, TemplateException {
+  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled, String modelPackage) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
@@ -139,6 +142,7 @@ public class TemplateFactory {
     }
     if (Objects.nonNull(specFile.getModelPackage())) {
       root.put("packageModel", specFile.getModelPackage());
+      root.put("exceptionPackage", specFile.getModelPackage());
     }
     final File fileToSave = new File(filePathToSave);
 

@@ -13,7 +13,7 @@ public class ApiTestDTO {
 
   @JsonProperty(value ="testers")
   @NonNull
-  private List<String> testers = new ArrayList<String>();
+  private List<String> testers;
 
   @JsonProperty(value ="testName")
   @NonNull

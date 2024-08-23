@@ -20,10 +20,13 @@ import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 
+  private static final List<String> TEMPLATE_MODEL_FILES = List.of( "templateSchema.ftlh",
+          "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh");
+
+
   private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
-                                                             "interfaceSupplier.ftlh", "templateStreamBridge.ftlh", "templateSchema.ftlh",
-                                                             "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh",
-                                                             "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
+                                                             "interfaceSupplier.ftlh", "templateStreamBridge.ftlh",
+          "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
                                                              "interfaceConsumerWithKafkaBindings.ftlh", "templateConsumersWithKafkaBindings.ftlh",
                                                              "templateStreamBridgeWithKafkaBindings.ftlh", "templateMessageWrapper.ftlh");
 
@@ -80,6 +83,10 @@ public class ClasspathTemplateLoader implements TemplateLoader {
   private Map<String, String> getResourceFolderFiles() {
     final Map<String, String> templates = new HashMap<>();
     try {
+      for (var templateFile : TEMPLATE_MODEL_FILES) {
+        templates.put(templateFile,
+                readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/model/" + templateFile)).getContent()));
+      }
       for (var templateFile : TEMPLATE_FILES) {
         templates.put(templateFile,
                       readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/asyncapi/" + templateFile)).getContent()));

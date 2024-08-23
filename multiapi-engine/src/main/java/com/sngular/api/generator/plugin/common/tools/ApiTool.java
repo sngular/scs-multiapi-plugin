@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.CaseUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -140,7 +141,8 @@ public final class ApiTool {
       if (hasNode(components, schemaType)) {
         final var schemas = getNode(components, schemaType);
         final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
+        schemasIt.forEachRemaining(name -> schemasMap.put(schemaType.toUpperCase() + "/"+ StringCaseUtils.titleToSnakeCase(name),
+                getNode(schemas, name)));
       }
     }
 

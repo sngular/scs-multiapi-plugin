@@ -2,46 +2,75 @@ package com.sngular.multifileplugin.testapi.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.ArrayList;
+import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
+import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
-public class ApiTestsDTO {
+@JsonDeserialize(builder = ApiTestDTO.ApiTestDTOBuilder.class)
+public class ApiTestDTO {
 
-  @JsonProperty(value ="apiTestDTO")
-  private ApiTestDTO apiTestDTO;
+  @JsonProperty(value ="testers")
+  @NotNull
+  private final List<String> testers;
+  @JsonProperty(value ="testName")
+  @NotNull
+  private final String testName;
 
-  private ApiTestsDTO(ApiTestDTO apiTestDTO) {
-    this.apiTestDTO = apiTestDTO;
+  private ApiTestDTO(ApiTestDTOBuilder builder) {
+    this.testers = builder.testers;
+    this.testName = builder.testName;
 
+    validateRequiredAttributes();
   }
 
-  private ApiTestsDTO(ApiTestsDTOBuilder builder) {
-    this.apiTestDTO = builder.apiTestDTO;
-
+  public static ApiTestDTO.ApiTestDTOBuilder builder() {
+    return new ApiTestDTO.ApiTestDTOBuilder();
   }
 
-  public static class ApiTestsDTOBuilder {
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
+  public static class ApiTestDTOBuilder {
 
-    private ApiTestDTO apiTestDTO;
+    private List<String> testers = new ArrayList<String>();
+    private String testName;
 
-    public ApiTestsDTO.ApiTestsDTOBuilder apiTestDTO(ApiTestDTO apiTestDTO) {
-      this.apiTestDTO = apiTestDTO;
+    public ApiTestDTO.ApiTestDTOBuilder testers(List<String> testers) {
+      if (!testers.isEmpty()) {
+        this.testers.addAll(testers);
+      }
       return this;
     }
 
-    public ApiTestsDTO build() {
-      ApiTestsDTO apiTestsDTO = new ApiTestsDTO(this);
-      return apiTestsDTO;
+    public ApiTestDTO.ApiTestDTOBuilder tester(String tester) {
+      if (tester != null) {
+        this.testers.add(tester);
+      }
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder testName(String testName) {
+      this.testName = testName;
+      return this;
+    }
+
+    public ApiTestDTO build() {
+      ApiTestDTO apiTestDTO = new ApiTestDTO(this);
+      return apiTestDTO;
     }
   }
 
-
-  @Schema(name = "apiTestDTO", required = false)
-  public ApiTestDTO getApiTestDTO() {
-    return apiTestDTO;
+  @Schema(name = "testers", required = true)
+  public List<String> getTesters() {
+    return testers;
   }
-  public void setApiTestDTO(ApiTestDTO apiTestDTO) {
-    this.apiTestDTO = apiTestDTO;
+
+  @Schema(name = "testName", required = true)
+  public String getTestName() {
+    return testName;
   }
 
   @Override
@@ -52,26 +81,37 @@ public class ApiTestsDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiTestsDTO apiTestsDTO = (ApiTestsDTO) o;
-    return Objects.equals(this.apiTestDTO, apiTestsDTO.apiTestDTO);
+    ApiTestDTO apiTestDTO = (ApiTestDTO) o;
+    return Objects.equals(this.testers, apiTestDTO.testers) && Objects.equals(this.testName, apiTestDTO.testName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(apiTestDTO);
+    return Objects.hash(testers, testName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("ApiTestsDTO{");
-    sb.append(" apiTestDTO:").append(apiTestDTO);
+    sb.append("ApiTestDTO{");
+    sb.append(" testers:").append(testers).append(",");
+    sb.append(" testName:").append(testName);
     sb.append("}");
     return sb.toString();
   }
 
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
 
+    if (!Objects.nonNull(this.testers)) {
+      satisfiedCondition = false;
+    } else if (!Objects.nonNull(this.testName)) {
+      satisfiedCondition = false;
+    }
 
-
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestDTO");
+    }
+  }
 
 }

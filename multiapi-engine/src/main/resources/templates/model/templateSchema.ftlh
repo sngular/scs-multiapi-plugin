@@ -444,7 +444,7 @@ public class ${schema.className} {
     <#if field?index == 0>
     if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
     <#else>
-    else if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
+ else if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
     </#if>
       satisfiedCondition = false;
     }</#list>

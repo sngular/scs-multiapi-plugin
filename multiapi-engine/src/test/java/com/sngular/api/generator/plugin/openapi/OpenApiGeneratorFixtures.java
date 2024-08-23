@@ -1266,7 +1266,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     final List<String> expectedValidatorFiles = List.of(
-        CUSTOM_VALIDATOR_PATH + "Max.java",
+        CUSTOM_VALIDATOR_PATH + "MaxInteger.java",
         CUSTOM_VALIDATOR_PATH + "MaxItems.java",
         CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MaxValidator.java",

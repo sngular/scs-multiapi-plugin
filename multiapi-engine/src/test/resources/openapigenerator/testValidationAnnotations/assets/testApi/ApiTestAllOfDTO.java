@@ -13,15 +13,9 @@ import java.util.ArrayList;
 public class ApiTestAllOfDTO {
 
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private List<String> testers;
   @JsonProperty(value ="testName")
   private String testName;
-
-  private ApiTestAllOfDTO(List<String> testers, String testName) {
-    this.testers = testers;
-    this.testName = testName;
-
-  }
 
   private ApiTestAllOfDTO(ApiTestAllOfDTOBuilder builder) {
     this.testers = builder.testers;

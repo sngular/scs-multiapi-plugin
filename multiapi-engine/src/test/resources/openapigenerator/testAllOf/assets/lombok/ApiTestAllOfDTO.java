@@ -11,7 +11,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ApiTestAllOfDTO {
 
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private List<String> testers;
 
   @JsonProperty(value ="testName")
   private String testName;

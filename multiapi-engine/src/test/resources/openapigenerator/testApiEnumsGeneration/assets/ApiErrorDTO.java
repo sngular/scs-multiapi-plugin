@@ -19,13 +19,6 @@ public class ApiErrorDTO {
   @NotNull
   private final String message;
 
-  private ApiErrorDTO(Integer code, String message) {
-    this.code = code;
-    this.message = message;
-
-    validateRequiredAttributes();
-  }
-
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.code = builder.code;
     this.message = builder.message;

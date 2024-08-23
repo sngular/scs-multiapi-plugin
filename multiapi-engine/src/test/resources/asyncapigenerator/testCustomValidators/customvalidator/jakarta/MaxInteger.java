@@ -7,9 +7,9 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
 ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MaxValidator.class)
+@Constraint(validatedBy = MaxIntegerValidator.class)
 @Documented
-public @interface Max {
+public @interface MaxInteger {
     String maximum();
     boolean exclusive();
     String message() default "Value is bigger than the maximum.";

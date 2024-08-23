@@ -155,9 +155,9 @@ public class DataDTO {
 
     if (!Objects.nonNull(this.clientName)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.flightNumber)) {
+    } else if (!Objects.nonNull(this.flightNumber)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.clientId)) {
+    } else if (!Objects.nonNull(this.clientId)) {
       satisfiedCondition = false;
     }
 

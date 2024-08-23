@@ -166,13 +166,13 @@ public class CustomerDTO {
 
     if (!Objects.nonNull(this.email)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.username)) {
+    } else if (!Objects.nonNull(this.username)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.firstName)) {
+    } else if (!Objects.nonNull(this.firstName)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.lastName)) {
+    } else if (!Objects.nonNull(this.lastName)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.password)) {
+    } else if (!Objects.nonNull(this.password)) {
       satisfiedCondition = false;
     }
 

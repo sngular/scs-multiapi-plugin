@@ -21,7 +21,7 @@
     <swagger-core.version>2.2.9</swagger-core.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
-    <commons-text.version>1.10.0</commons-text.version>
+    <commons-text.version>1.12.0</commons-text.version>
     <lombok.version>1.18.30</lombok.version>
     <slf4j-api.version>2.0.11</slf4j-api.version>
     <commons-codec.version>1.16.0</commons-codec.version>

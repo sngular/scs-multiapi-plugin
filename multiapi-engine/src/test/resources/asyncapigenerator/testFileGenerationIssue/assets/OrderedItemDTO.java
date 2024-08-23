@@ -132,7 +132,7 @@ public class OrderedItemDTO {
 
     if (!Objects.nonNull(this.name)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.price)) {
+    } else if (!Objects.nonNull(this.price)) {
       satisfiedCondition = false;
     }
 

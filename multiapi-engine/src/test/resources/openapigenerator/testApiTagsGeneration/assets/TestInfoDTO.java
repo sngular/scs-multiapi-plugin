@@ -15,17 +15,10 @@ import com.sngular.multifileplugin.tagsgeneration.model.customvalidator.NotNull;
 public class TestInfoDTO {
 
   @JsonProperty(value ="testers")
-  private List<String> testers = new ArrayList<String>();
+  private List<String> testers;
   @JsonProperty(value ="testName")
   @NotNull
   private final String testName;
-
-  private TestInfoDTO(List<String> testers, String testName) {
-    this.testers = testers;
-    this.testName = testName;
-
-    validateRequiredAttributes();
-  }
 
   private TestInfoDTO(TestInfoDTOBuilder builder) {
     this.testers = builder.testers;

@@ -34,23 +34,23 @@ import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateFactory {
 
-  public static final String SUBSCRIBE_PACKAGE = "subscribePackage";
+  private static final String SUBSCRIBE_PACKAGE = "subscribePackage";
 
-  public static final String WRAPPER_PACKAGE = "wrapperPackage";
+  private static final String WRAPPER_PACKAGE = "wrapperPackage";
 
-  public static final String SUPPLIER_PACKAGE = "supplierPackage";
+  private static final String SUPPLIER_PACKAGE = "supplierPackage";
 
-  public static final String STREAM_BRIDGE_PACKAGE = "streamBridgePackage";
+  private static final String STREAM_BRIDGE_PACKAGE = "streamBridgePackage";
 
-  public static final String SUPPLIER_ENTITIES_SUFFIX = "supplierEntitiesSuffix";
+  private static final String SUPPLIER_ENTITIES_SUFFIX = "supplierEntitiesSuffix";
 
-  public static final String STREAM_BRIDGE_ENTITIES_SUFFIX = "streamBridgeEntitiesSuffix";
+  private static final String STREAM_BRIDGE_ENTITIES_SUFFIX = "streamBridgeEntitiesSuffix";
 
-  public static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
+  private static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
 
-  public static final String FILE_TYPE_JAVA = ".java";
+  private static final String FILE_TYPE_JAVA = ".java";
 
-  public static final String EXCEPTION_PACKAGE = "exceptionPackage";
+  private static final String EXCEPTION_PACKAGE = "exceptionPackage";
 
   private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 

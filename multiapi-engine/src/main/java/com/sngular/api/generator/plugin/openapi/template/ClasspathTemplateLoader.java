@@ -19,11 +19,13 @@ import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader implements TemplateLoader {
 
-  private static final List<String> TEMPLATE_FILES = List.of(TemplateIndexConstants.TEMPLATE_INTERFACE_API, TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA,
-                                                             TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK, TemplateIndexConstants.TEMPLATE_CALL_WEB_API,
+  private static final List<String> TEMPLATE_MODEL_FILES = List.of( TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA,
+                                                                    TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK,
+                                                                    TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION);
+
+  private static final List<String> TEMPLATE_FILES = List.of(TemplateIndexConstants.TEMPLATE_INTERFACE_API, TemplateIndexConstants.TEMPLATE_CALL_WEB_API,
                                                              TemplateIndexConstants.TEMPLATE_WEB_CLIENT, TemplateIndexConstants.TEMPLATE_CALL_REST_API,
-                                                             TemplateIndexConstants.TEMPLATE_REST_CLIENT, TemplateIndexConstants.TEMPLATE_REACTIVE_API,
-                                                             TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, TemplateIndexConstants.TEMPLATE_CONTENT_ENUM_SCHEMA);
+                                                             TemplateIndexConstants.TEMPLATE_REST_CLIENT, TemplateIndexConstants.TEMPLATE_REACTIVE_API);
 
   private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
@@ -75,6 +77,13 @@ public class ClasspathTemplateLoader implements TemplateLoader {
 
   private Map<String, String> getResourceFolderFiles() {
     final Map<String, String> templates = new HashMap<>();
+    TEMPLATE_MODEL_FILES.forEach(templateFile -> {
+      try {
+        templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/model/" + templateFile)).getContent()));
+      } catch (final IOException e) {
+        e.printStackTrace();
+      }
+    });
     TEMPLATE_FILES.forEach(templateFile -> {
       try {
         templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/" + templateFile)).getContent()));

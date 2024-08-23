@@ -257,10 +257,10 @@ public class OpenApiGenerator {
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (ApiTool.hasType(basicSchema)) {
         if (validType(ApiTool.getType(basicSchema))) {
-          processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap);
+          processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, MapperUtil.getKeySchemaName(schemaName), basicSchema, builtSchemasMap);
         }
       } else {
-        processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, schemaName, basicSchema, builtSchemasMap);
+        processModel(specFile, fileModelToSave, modelPackage, basicSchemaMap, overwrite, MapperUtil.getKeySchemaName(schemaName), basicSchema, builtSchemasMap);
       }
     });
   }
@@ -278,18 +278,19 @@ public class OpenApiGenerator {
 
     if (ApiTool.hasRef(basicSchema)) {
       final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
-      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap));
+      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap, modelPackage));
     } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
-      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap));
+      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap, modelPackage));
     }
   }
 
   private Map<String, SchemaObject> fillTemplateFactory(
-      final SpecFile specFile, final String fileModelToSave, final String schemaName, final JsonNode basicSchema, final Map<String, JsonNode> basicSchemaMap,
-      final Map<String, SchemaObject> builtSchemasMap) {
+          final SpecFile specFile, final String fileModelToSave, final String schemaName, final JsonNode basicSchema, final Map<String, JsonNode> basicSchemaMap,
+          final Map<String, SchemaObject> builtSchemasMap, String modelPackage) {
     final var schemaObjectMap = MapperContentUtil
         .mapComponentToSchemaObject(basicSchemaMap, builtSchemasMap, basicSchema, schemaName, specFile, baseDir);
     checkRequiredOrCombinatorExists(schemaObjectMap);
+    //TODO: Create only required classes
     schemaObjectMap.values().forEach(schemaObject -> {
       try {
         final Set<String> propertiesSet = new HashSet<>();
@@ -302,7 +303,7 @@ public class OpenApiGenerator {
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
-        templateFactory.fillTemplateModelClassException(fileModelToSave, true);
+        templateFactory.fillTemplateModelClassException(fileModelToSave, true, modelPackage);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(fileModelToSave, e);
       }

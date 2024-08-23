@@ -126,11 +126,11 @@ public class OrderProductMapper {
 
     if (!Objects.nonNull(this.productRef)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.price)) {
+    } else if (!Objects.nonNull(this.price)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.quantity)) {
+    } else if (!Objects.nonNull(this.quantity)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.ref)) {
+    } else if (!Objects.nonNull(this.ref)) {
       satisfiedCondition = false;
     }
 

@@ -12,6 +12,7 @@ import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.CaseUtils;
 
 public class MapperUtil {
 
@@ -78,17 +79,17 @@ public class MapperUtil {
 
   public static String getRefSchemaKey(final JsonNode parameter) {
     final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1]);
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
   }
 
-  public static String getRefSchemaName(final String parameter) {
+  public static String getKeySchemaName(final String parameter) {
     final String[] pathObjectRef = parameter.split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
+    return StringCaseUtils.toCamelCase(pathObjectRef[pathObjectRef.length - 1]);
   }
 
   public static String getRefSchemaKey(final String parameter) {
     final String[] pathObjectRef = parameter.split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1]);
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
   }
 
   private static boolean checkIfNumber(final String nodeType) {

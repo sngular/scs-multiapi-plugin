@@ -21,13 +21,6 @@ public class ApiTestDTO {
   @NotNull
   private final String testName;
 
-  private ApiTestDTO(List<String> testers, String testName) {
-    this.testers = testers;
-    this.testName = testName;
-
-    validateRequiredAttributes();
-  }
-
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.testers = builder.testers;
     this.testName = builder.testName;
