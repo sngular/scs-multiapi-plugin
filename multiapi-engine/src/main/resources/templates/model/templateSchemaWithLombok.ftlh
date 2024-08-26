@@ -96,7 +96,7 @@ import lombok.extern.jackson.Jacksonized;
     import ${packageModel}.exception.ModelClassException;
 </#if>
 
-@Data
+@Value
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
@@ -139,9 +139,13 @@ public class ${schema.className} {
         @NonNull
     </#if>
     <#if field.dataType.baseType == "array">
-        private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
+        <#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+        @Singular(${singName})
+        private ${field.dataType} ${field.baseName?uncap_first};
     <#elseif field.dataType.baseType == "map">
-        private ${field.dataType} ${field.baseName?uncap_first} = new ${field.dataType?api.getImplementationTypeString()}();
+        <#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+        @Singular(${singName})
+        private ${field.dataType} ${field.baseName?uncap_first};
     <#elseif field.dataType.baseType == "enum">
         private ${field.baseName?cap_first} ${field.baseName?uncap_first};
 
