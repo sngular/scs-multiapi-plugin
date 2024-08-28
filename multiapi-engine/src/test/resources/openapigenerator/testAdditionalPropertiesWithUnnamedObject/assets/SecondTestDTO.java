@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SecondTestDTO {
 
   @JsonProperty(value ="additionalProperties")

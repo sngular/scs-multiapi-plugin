@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SequenceFieldDTO {
 
   @JsonProperty(value ="elements")
@@ -18,10 +18,12 @@ public class SequenceFieldDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  private List<FieldDTO> properties = new ArrayList<FieldDTO>();
+  @Singular("property")
+  private List<FieldDTO> properties;
 
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  @Singular("defaultValue")
+  private List<Object> defaultValues;
 
   @JsonProperty(value ="seqEnum")
   private SeqEnum seqEnum;

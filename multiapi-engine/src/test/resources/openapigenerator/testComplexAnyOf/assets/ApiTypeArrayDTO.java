@@ -31,7 +31,7 @@ public class ApiTypeArrayDTO {
   @JsonProperty(value ="keyType")
   private String keyType;
   @JsonProperty(value ="requiredValues")
-  private List<String> requiredValues = new ArrayList<String>();
+  private List<String> requiredValues;
   @JsonProperty(value ="optionalUnion")
   private Boolean optionalUnion;
   @JsonProperty(value ="initialValue")
@@ -43,11 +43,11 @@ public class ApiTypeArrayDTO {
   @JsonProperty(value ="defaultValue")
   private Boolean defaultValue;
   @JsonProperty(value ="enumValues")
-  private List<String> enumValues = new ArrayList<String>();
+  private List<String> enumValues;
   @JsonProperty(value ="properties")
-  private List<String> properties = new ArrayList<String>();
+  private List<String> properties;
   @JsonProperty(value ="defaultValues")
-  private List<String> defaultValues = new ArrayList<String>();
+  private List<String> defaultValues;
   @JsonProperty(value ="unionEnum")
   private UnionEnum unionEnum;
   public enum UnionEnum {
@@ -104,7 +104,7 @@ public class ApiTypeArrayDTO {
   @JsonProperty(value ="mapSize")
   private Integer mapSize;
   @JsonProperty(value ="mapTypes")
-  private List<ApiTypeArrayDTO> mapTypes = new ArrayList<ApiTypeArrayDTO>();
+  private List<ApiTypeArrayDTO> mapTypes;
   @JsonProperty(value ="format")
   private Integer format;
   @JsonProperty(value ="generatedFlag")
@@ -122,7 +122,7 @@ public class ApiTypeArrayDTO {
   @JsonProperty(value ="minItems")
   private Integer minItems;
   @JsonProperty(value ="values")
-  private List<ApiTypeArrayDTO> values = new ArrayList<ApiTypeArrayDTO>();
+  private List<ApiTypeArrayDTO> values;
   @JsonProperty(value ="minimum")
   private Integer minimum;
   @JsonProperty(value ="numberEnum")

@@ -13,11 +13,13 @@ import java.util.ArrayList;
 public class ApiEnumFieldDTO {
 
   @JsonProperty(value ="enumValues")
-  private List<String> enumValues = new ArrayList<String>();
+  @Singular("enumValue")
+  private List<String> enumValues;
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  private List<String> defaultValues = new ArrayList<String>();
+  @Singular("defaultValue")
+  private List<String> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="defaultValue")

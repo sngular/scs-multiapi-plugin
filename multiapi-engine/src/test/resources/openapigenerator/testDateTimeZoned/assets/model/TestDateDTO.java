@@ -3,10 +3,10 @@ package com.sngular.multifileplugin.testDateTimeZoned.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class TestDateDTO {
 
   @JsonProperty(value ="someDate")

@@ -31,7 +31,7 @@ public class ApiSchemaDTO {
   @NotNull
   private final String subjectName;
   @JsonProperty(value ="requiredFields")
-  private List<ApiTypeArrayDTO> requiredFields = new ArrayList<ApiTypeArrayDTO>();
+  private List<ApiTypeArrayDTO> requiredFields;
 
   private ApiSchemaDTO(String type, List<ApiTypeArrayDTO> properties, String name, String id, String subjectName, List<ApiTypeArrayDTO> requiredFields) {
     this.type = type;

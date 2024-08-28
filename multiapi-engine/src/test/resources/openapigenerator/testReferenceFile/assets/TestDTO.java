@@ -2,10 +2,10 @@ package com.sngular.multifileplugin.testReferenceFile.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class TestDTO {
 
   @JsonProperty(value ="something")

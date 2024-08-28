@@ -1,24 +1,25 @@
 package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class MaxValidator implements ConstraintValidator<MaxBigDecimal, Integer> {
+public class MaxBigDecimalValidator implements ConstraintValidator<MaxBigDecimal, BigDecimal> {
 
-    private int maximum;
+    private BigDecimal maximum;
     private boolean exclusive;
 
     @Override
-    public void initialize(Max constraintAnnotation) {
+    public void initialize(MaxBigDecimal constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        this.maximum = Integer.parseInt(constraintAnnotation.maximum());
+        this.maximum = new BigDecimal(constraintAnnotation.maximum());
         this.exclusive = constraintAnnotation.exclusive();
     }
 
     @Override
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        return Objects.isNull(value) || (value.intValue() < this.maximum || (!exclusive && value.intValue() == this.maximum));
+    public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
+        return Objects.isNull(value) || (value.compareTo(this.maximum) < 0 || (!exclusive && value.compareTo(this.maximum) == 0);
     }
 }

@@ -5,7 +5,7 @@ import java.util.Objects;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class MinValidator implements ConstraintValidator<MinFloat, Float> {
+public class MinFloatValidator implements ConstraintValidator<MinFloat, Float> {
 
     private float minimum;
     private boolean exclusive;

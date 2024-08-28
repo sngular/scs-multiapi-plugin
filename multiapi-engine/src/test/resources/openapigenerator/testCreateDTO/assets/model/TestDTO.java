@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class TestDTO {
 
   @JsonProperty(value ="properties")
-  private List<PropertiesDTO> properties = new ArrayList<PropertiesDTO>();
+  @Singular("property")
+  private List<PropertiesDTO> properties;
 
   @JsonProperty(value ="id")
   @NonNull

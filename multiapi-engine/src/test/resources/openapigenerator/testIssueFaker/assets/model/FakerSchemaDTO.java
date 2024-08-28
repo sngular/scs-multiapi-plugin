@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
+import lombok.Singular;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class FakerSchemaDTO {
 
   @JsonProperty(value ="type")
   private String type;
 
   @JsonProperty(value ="properties")
-  private List<FakerFieldDTO> properties = new ArrayList<FakerFieldDTO>();
+  @Singular("property")
+  private List<FakerFieldDTO> properties;
 
   @JsonProperty(value ="name")
   @NonNull
@@ -25,14 +27,16 @@ public class FakerSchemaDTO {
   private String id;
 
   @JsonProperty(value ="definitions")
-  private List<FakerFieldDTO> definitions = new ArrayList<FakerFieldDTO>();
+  @Singular("definition")
+  private List<FakerFieldDTO> definitions;
 
   @JsonProperty(value ="subjectName")
   @NonNull
   private String subjectName;
 
   @JsonProperty(value ="requiredFields")
-  private List<String> requiredFields = new ArrayList<String>();
+  @Singular("requiredField")
+  private List<String> requiredFields;
 
   @JsonProperty(value ="original")
   private Boolean original;

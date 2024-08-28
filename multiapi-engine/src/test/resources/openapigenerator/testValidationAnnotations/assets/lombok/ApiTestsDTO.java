@@ -2,9 +2,9 @@ package com.sngular.multifileplugin.lombok.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class ApiTestsDTO {
 
   @JsonProperty(value ="apiTestDTO")

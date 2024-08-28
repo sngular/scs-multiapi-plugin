@@ -5,7 +5,7 @@ import java.util.Objects;
 import ${javaEEPackage}.validation.ConstraintValidator;
 import ${javaEEPackage}.validation.ConstraintValidatorContext;
 
-public class MinValidator implements ConstraintValidator<MinInteger, Integer> {
+public class MinIntegerValidator implements ConstraintValidator<MinInteger, Integer> {
 
     private int minimum;
     private boolean exclusive;

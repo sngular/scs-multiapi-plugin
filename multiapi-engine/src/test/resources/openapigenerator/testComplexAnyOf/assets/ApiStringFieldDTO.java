@@ -17,9 +17,9 @@ public class ApiStringFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
-  private List<String> properties = new ArrayList<String>();
+  private List<String> properties;
   @JsonProperty(value ="defaultValues")
-  private List<String> defaultValues = new ArrayList<String>();
+  private List<String> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="regex")

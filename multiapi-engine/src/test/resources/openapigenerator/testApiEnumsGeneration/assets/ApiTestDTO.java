@@ -91,16 +91,6 @@ public class ApiTestDTO {
     }
   }
 
-  private ApiTestDTO(UnionEnum unionEnum, String name, Integer id, UnionIntegerEnum unionIntegerEnum, UnionNumberEnum unionNumberEnum) {
-    this.unionEnum = unionEnum;
-    this.name = name;
-    this.id = id;
-    this.unionIntegerEnum = unionIntegerEnum;
-    this.unionNumberEnum = unionNumberEnum;
-
-    validateRequiredAttributes();
-  }
-
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.unionEnum = builder.unionEnum;
     this.name = builder.name;

@@ -12,11 +12,11 @@ import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxItems
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinItems;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.UniqueItems;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class ApiErrorDTO {
 
   @JsonProperty(value ="intCode")

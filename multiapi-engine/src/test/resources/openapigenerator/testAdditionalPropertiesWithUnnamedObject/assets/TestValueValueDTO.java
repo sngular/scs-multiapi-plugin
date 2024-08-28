@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class TestValueValueDTO {
 
   @JsonProperty(value ="additionalProperties")

@@ -5,14 +5,16 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
+import lombok.Singular;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class ConfigurationDTO {
 
   @JsonProperty(value ="configuration")
-  private Map<String, BigDecimal> configuration = new HashMap<String, BigDecimal>();
+  @Singular("_configuration")
+  private Map<String, BigDecimal> configuration;
 
   @JsonProperty(value ="numberToGenerate")
   private Integer numberToGenerate;

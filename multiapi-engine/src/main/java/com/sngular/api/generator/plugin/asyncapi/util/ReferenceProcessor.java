@@ -47,7 +47,7 @@ public final class ReferenceProcessor {
     }
     final String[] path = MapperUtil.splitName(referenceLink);
     final JsonNode component;
-    final var calculatedKey = calculateKey(path);
+    final var calculatedKey = MapperUtil.getRefSchemaKey(referenceLink);
     if (!totalSchemas.containsKey(calculatedKey) && !alreadyProcessed.contains(calculatedKey)) {
       alreadyProcessed.add(calculatedKey);
       try {
@@ -70,10 +70,6 @@ public final class ReferenceProcessor {
         totalSchemas.put(calculatedKey, component);
       }
     }
-  }
-
-  private String calculateKey(final String[] path) {
-    return (path[path.length - 2] + SLASH + path[path.length - 1]).toUpperCase();
   }
 
   private JsonNode solveRef(final FileLocation ymlParent, final String[] path, final String reference, final Map<String, JsonNode> totalSchemas) throws IOException {

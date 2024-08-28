@@ -5,14 +5,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class UnionFieldDTO {
 
   @JsonProperty(value ="defaultItem")
-  private List<FieldDTO> defaultItem = new ArrayList<FieldDTO>();
+  @Singular("defaultItem")
+  private List<FieldDTO> defaultItem;
 
   @JsonProperty(value ="generatedFlag")
   private Boolean generatedFlag;

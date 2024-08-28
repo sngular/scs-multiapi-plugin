@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testRestrictionsSchema.model.exception.ModelClassException;
 
-@Data
+@Value
 public class FieldValueDTO {
 
   @JsonProperty(value ="mandatory")

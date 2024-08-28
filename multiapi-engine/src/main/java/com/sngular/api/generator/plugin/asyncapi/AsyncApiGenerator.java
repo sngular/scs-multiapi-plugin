@@ -204,7 +204,7 @@ public class AsyncApiGenerator {
     });
 
     ApiTool.getComponent(node, SCHEMAS).forEachRemaining(
-        schema -> totalSchemas.putIfAbsent((SCHEMAS + SLASH + schema.getKey()).toUpperCase(), schema.getValue())
+        schema -> totalSchemas.putIfAbsent(SCHEMAS.toUpperCase() + SLASH + MapperUtil.getSchemaKey(schema.getKey()), schema.getValue())
     );
 
     ApiTool.getComponent(node, MESSAGES).forEachRemaining(
@@ -227,7 +227,7 @@ public class AsyncApiGenerator {
     if (ApiTool.hasNode(message, PAYLOAD)) {
       final JsonNode payload = message.get(PAYLOAD);
       if (!payload.has(REF)) {
-        final String key = (EVENT + SLASH + calculateMessageName(messageName, message)).toUpperCase();
+        final String key = EVENT.toUpperCase() + SLASH + MapperUtil.getSchemaKey(calculateMessageName(messageName, message));
         totalSchemas.putIfAbsent(key, payload);
       }
     } else if (ApiTool.hasRef(message)) {
@@ -237,7 +237,7 @@ public class AsyncApiGenerator {
   }
 
   private String calculateMessageName(final String messageName, final JsonNode message) {
-    return StringUtils.defaultString(ApiTool.getName(message), messageName);
+    return Objects.toString(ApiTool.getName(message), messageName);
   }
 
   private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent) {
@@ -544,7 +544,7 @@ public class AsyncApiGenerator {
       final ProcessBindingsResultBuilder bindingsResult, final String messageRef, final OperationParameterObject operationObject,
       final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas, final JsonNode method) throws IOException {
 
-    final var message = totalSchemas.get(MapperUtil.buildKey(MapperUtil.splitName(messageRef)));
+    final var message = totalSchemas.get(MapperUtil.getRefSchemaKey(messageRef));
     if (ApiTool.hasNode(message, BINDINGS)) {
       processBindings(bindingsResult, message, operationObject);
     }

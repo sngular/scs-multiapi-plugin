@@ -13,13 +13,13 @@ import java.util.ArrayList;
 public class ApiObjectFieldDTO {
 
   @JsonProperty(value ="requiredValues")
-  private List<String> requiredValues = new ArrayList<String>();
+  private List<String> requiredValues;
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
-  private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
+  private List<ApiTypeArrayDTO> properties;
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  private List<Object> defaultValues;
   @JsonProperty(value ="name")
   private String name;
 

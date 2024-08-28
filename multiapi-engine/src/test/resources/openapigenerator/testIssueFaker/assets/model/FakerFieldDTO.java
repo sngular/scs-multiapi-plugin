@@ -2,11 +2,12 @@ package com.sngular.multifileplugin.testissuefaker.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
+import lombok.Singular;
 import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class FakerFieldDTO {
 
   @JsonProperty(value ="value")

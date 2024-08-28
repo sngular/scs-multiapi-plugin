@@ -18,9 +18,9 @@ public class ApiSequenceFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
-  private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
+  private List<ApiTypeArrayDTO> properties;
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  private List<Object> defaultValues;
   @JsonProperty(value ="seqEnum")
   private SeqEnum seqEnum;
   public enum SeqEnum {

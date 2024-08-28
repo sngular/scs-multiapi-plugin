@@ -20,7 +20,8 @@ public class ApiNumberFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  @Singular("defaultValue")
+  private List<Object> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="multipleOf")

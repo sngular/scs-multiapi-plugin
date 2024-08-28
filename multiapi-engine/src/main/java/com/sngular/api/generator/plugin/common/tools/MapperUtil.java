@@ -89,7 +89,11 @@ public class MapperUtil {
 
   public static String getRefSchemaKey(final String parameter) {
     final String[] pathObjectRef = parameter.split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + getSchemaKey(pathObjectRef[pathObjectRef.length - 1]));
+  }
+
+  public static String getSchemaKey(final String schemaName) {
+    return StringCaseUtils.titleToSnakeCase(schemaName);
   }
 
   private static boolean checkIfNumber(final String nodeType) {

@@ -6,13 +6,13 @@ import java.util.Objects;
 import ${javaEEPackage}.validation.ConstraintValidator;
 import ${javaEEPackage}.validation.ConstraintValidatorContext;
 
-public class MinValidator implements ConstraintValidator<MinBigDecimal, BigDecimal> {
+public class MinBigDecimalValidator implements ConstraintValidator<MinBigDecimal, BigDecimal> {
 
     private BigDecimal minimum;
     private boolean exclusive;
 
     @Override
-    public void initialize(Min constraintAnnotation) {
+    public void initialize(MinBigDecimal constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
         this.minimum = new BigDecimal(constraintAnnotation.minimum());
         this.exclusive = constraintAnnotation.exclusive();
@@ -20,6 +20,6 @@ public class MinValidator implements ConstraintValidator<MinBigDecimal, BigDecim
 
     @Override
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        return Objects.isNull(value) || (value > this.minimum || (!exclusive && value == this.minimum));
+        return Objects.isNull(value) || (value.compareTo(this.minimum) > 0 || (!exclusive && value.compareTo(this.minimum) == 0);
     }
 }

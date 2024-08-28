@@ -15,7 +15,9 @@
     ${calculateSafeName (field.baseName, ";", field.constValue)}
 </#function>
 <#function singularizeName propertyName>
-    <#if propertyName?matches(".*s")>
+    <#if propertyName?matches(".*ies")>
+        <#return propertyName?remove_ending("ies")+"y"/>
+    <#elseif propertyName?matches(".*s")>
         <#return propertyName?remove_ending("s")/>
     <#elseif propertyName?matches(".*List")>
         <#return propertyName?remove_ending("List")/>
@@ -139,7 +141,7 @@ import ${packageModel}.customvalidator.MinItems;
       <#assign visited += "format,"  />
 import com.fasterxml.jackson.annotation.JsonFormat;
     </#if>
-    <#if (field.required ||  schema.schemaCombinator?has_content && (schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf")) && !(visited?contains("schemaCombinator"))>
+    <#if (field.required || schema.schemaCombinator?has_content && (schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf")) && !(visited?contains("schemaCombinator"))>
       <#assign visited += "schemaCombinator," />
 import ${exceptionPackage}.exception.ModelClassException;
     </#if>

@@ -6,18 +6,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testCoconutSchema.model.exception.ModelClassException;
 
-@Data
+@Value
 public class FieldDTO {
 
   @JsonProperty(value ="precision")
   private Integer precision;
 
   @JsonProperty(value ="defaultItem")
-  private List<FieldDTO> defaultItem = new ArrayList<FieldDTO>();
+  @Singular("defaultItem")
+  private List<FieldDTO> defaultItem);
 
   @JsonProperty(value ="maximum")
   private Integer maximum;
@@ -38,7 +39,8 @@ public class FieldDTO {
   private String keyType;
 
   @JsonProperty(value ="requiredValues")
-  private List<String> requiredValues = new ArrayList<String>();
+  @Singular("requiredValue")
+  private List<String> requiredValues;
 
   @JsonProperty(value ="optionalUnion")
   private Boolean optionalUnion;
@@ -56,13 +58,16 @@ public class FieldDTO {
   private Boolean defaultValue;
 
   @JsonProperty(value ="enumValues")
-  private List<String> enumValues = new ArrayList<String>();
+  @Singular("enumValue")
+  private List<String> enumValues;
 
   @JsonProperty(value ="properties")
-  private List<String> properties = new ArrayList<String>();
+  @Singular("property")
+  private List<String> properties;
 
   @JsonProperty(value ="defaultValues")
-  private List<String> defaultValues = new ArrayList<String>();
+  @Singular("defaultValue")
+  private List<String> defaultValues;
 
   @JsonProperty(value ="unionEnum")
   private UnionEnum unionEnum;
@@ -127,7 +132,8 @@ public class FieldDTO {
   private Integer mapSize;
 
   @JsonProperty(value ="mapTypes")
-  private List<FieldDTO> mapTypes = new ArrayList<FieldDTO>();
+  @Singular("mapType")
+  private List<FieldDTO> mapTypes;
 
   @JsonProperty(value ="format")
   private String format;
@@ -154,7 +160,8 @@ public class FieldDTO {
   private Integer minItems;
 
   @JsonProperty(value ="values")
-  private List<FieldDTO> values = new ArrayList<FieldDTO>();
+  @Singular("value")
+  private List<FieldDTO> values;
 
   @JsonProperty(value ="minimum")
   private Integer minimum;
