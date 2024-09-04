@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Value;
 import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value

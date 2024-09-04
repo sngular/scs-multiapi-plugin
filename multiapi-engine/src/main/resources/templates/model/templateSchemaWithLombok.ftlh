@@ -33,6 +33,28 @@
         <#return "_"+propertyName/>
     </#if>
 </#function>
+<#function calculateMaxAnnotation dataType>
+    <#if dataType.baseType?lower_case == "bigdecimal">
+        <#return "@MaxBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "integer">
+        <#return "@MaxInteger" >
+    <#elseif dataType.baseType?lower_case == "float">
+        <#return "@MaxFloat" >
+    <#elseif dataType.baseType?lower_case == "double">
+        <#return "@MaxDouble" >
+    </#if>
+</#function>
+<#function calculateMinAnnotation dataType>
+    <#if dataType.baseType?lower_case == "bigdecimal">
+        <#return "@MinBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "integer">
+        <#return "@MinInteger" >
+    <#elseif dataType.baseType?lower_case == "float">
+        <#return "@MinFloat" >
+    <#elseif dataType.baseType?lower_case == "double">
+        <#return "@MinDouble" >
+    </#if>
+</#function>
 package ${packageModel};
 
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
@@ -114,14 +136,19 @@ import ${packageModel}.customvalidator.UniqueItems;
   </#if>
 </#list>
 import lombok.Builder;
-import lombok.Value;
-import lombok.Singular;
 <#list schema.fieldObjectList as field>
-  <#if field.required>
+    <#if field.required>
 import lombok.NonNull;
-  <#break>
+        <#break>
+    </#if>
+</#list>
+<#list schema.fieldObjectList as field>
+<#if field.dataType.baseType == "array" || field.dataType.baseType == "map">
+import lombok.Singular;
+    <#break>
 </#if>
 </#list>
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import ${packageModel}.exception.ModelClassException;
@@ -184,13 +211,13 @@ public class ${schema.className} {
   private ${field.baseName?cap_first} ${field.baseName?uncap_first};
 
   public enum ${field.baseName?cap_first} {
-  <#list field.enumValues as key, value>
-    <#if key?matches("[0-9].*")>
-      ${"_"+key}(${value})<#sep>,
-    <#else>
-      ${key}(${value})<#sep>,
-    </#if>
-  </#list>;
+<#list field.enumValues as key, value>
+  <#if key?matches("[0-9].*")>
+    ${"_"+key}(${value})<#sep>,
+  <#else>
+    ${key}(${value})<#sep>,
+  </#if>
+</#list>;
 
     private ${field.dataType.innerType?cap_first} value;
 
@@ -205,7 +232,7 @@ public class ${schema.className} {
 
     @Override
     public String toString() {
-    return String.valueOf(value);
+      return String.valueOf(value);
     }
   }
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">

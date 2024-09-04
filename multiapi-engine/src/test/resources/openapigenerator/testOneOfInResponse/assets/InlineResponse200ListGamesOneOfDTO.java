@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Value;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testoneofinresponse.model.exception.ModelClassException;
 
@@ -30,7 +31,8 @@ public class InlineResponse200ListGamesOneOfDTO {
   private Integer rooms;
 
   @JsonProperty(value ="players")
-  private List<String> players = new ArrayList<String>();
+  @Singular("player")
+  private List<String> players;
 
 
   @Builder

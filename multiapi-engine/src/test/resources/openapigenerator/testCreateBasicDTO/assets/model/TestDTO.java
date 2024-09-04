@@ -3,8 +3,8 @@ package com.sngular.multifileplugin.testCreateBasicDTO.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Value;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value

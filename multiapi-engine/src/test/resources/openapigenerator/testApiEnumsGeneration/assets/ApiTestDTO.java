@@ -113,6 +113,7 @@ public class ApiTestDTO {
     private Integer id;
     private UnionIntegerEnum unionIntegerEnum;
     private UnionNumberEnum unionNumberEnum;
+
     public ApiTestDTO.ApiTestDTOBuilder unionEnum(UnionEnum unionEnum) {
       this.unionEnum = unionEnum;
       return this;
@@ -127,10 +128,12 @@ public class ApiTestDTO {
       this.id = id;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder unionIntegerEnum(UnionIntegerEnum unionIntegerEnum) {
       this.unionIntegerEnum = unionIntegerEnum;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder unionNumberEnum(UnionNumberEnum unionNumberEnum) {
       this.unionNumberEnum = unionNumberEnum;
       return this;

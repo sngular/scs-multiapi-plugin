@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Value;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value

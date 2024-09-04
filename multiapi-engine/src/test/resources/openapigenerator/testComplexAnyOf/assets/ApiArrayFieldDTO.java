@@ -17,7 +17,6 @@ public class ApiArrayFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
   private List<ApiTypeArrayDTO> defaultValues;
   @JsonProperty(value ="name")
   private String name;
@@ -28,7 +27,6 @@ public class ApiArrayFieldDTO {
   @JsonProperty(value ="minItems")
   private Integer minItems;
   @JsonProperty(value ="values")
-  @Singular("value")
   private List<ApiTypeArrayDTO> values;
 
   private ApiArrayFieldDTO(Boolean uniqueItems, String type, List<ApiTypeArrayDTO> defaultValues, String name, Integer arraySize, String regex, Integer minItems, List<ApiTypeArrayDTO> values) {

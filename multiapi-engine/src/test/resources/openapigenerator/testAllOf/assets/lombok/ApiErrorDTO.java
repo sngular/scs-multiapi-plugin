@@ -2,9 +2,8 @@ package com.sngular.multifileplugin.lombok.testapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Value;
-import lombok.Singular;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value

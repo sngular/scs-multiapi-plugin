@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Size;
-import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Max;
-import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Min;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxInteger;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinInteger;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxItems;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinItems;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.UniqueItems;
 import lombok.Builder;
-import lombok.Value;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value
@@ -23,8 +23,8 @@ public class ApiErrorDTO {
   private Integer intCode;
 
   @JsonProperty(value ="code")
-  @Min(minimum = "10", exclusive = false)
-  @Max(maximum = "200", exclusive = true)
+  @MinInteger(minimum = "10", exclusive = false)
+  @MaxInteger(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10.55")
   @NonNull
   private Integer code;
@@ -39,7 +39,7 @@ public class ApiErrorDTO {
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
   @UniqueItems
-  private List<Integer> test = new ArrayList<Integer>();
+  private List<Integer> test;
 
 
   @Builder

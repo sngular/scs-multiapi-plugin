@@ -47,11 +47,12 @@ public class ApiTestDTO {
 
     private ApiTestProcessorDTO testProcessor;
     private String description;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<String>();
     private String name;
-    private List<ApiTestTypeDTO> testTypeList;
+    private List<ApiTestTypeDTO> testTypeList = new ArrayList<ApiTestTypeDTO>();
     private Integer id;
     private Integer priority;
+
     public ApiTestDTO.ApiTestDTOBuilder testProcessor(ApiTestProcessorDTO testProcessor) {
       this.testProcessor = testProcessor;
       return this;
@@ -61,6 +62,7 @@ public class ApiTestDTO {
       this.description = description;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder tags(List<String> tags) {
       if (!tags.isEmpty()) {
         this.tags.addAll(tags);
@@ -79,6 +81,7 @@ public class ApiTestDTO {
       this.name = name;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder testTypeList(List<ApiTestTypeDTO> testTypeList) {
       if (!testTypeList.isEmpty()) {
         this.testTypeList.addAll(testTypeList);

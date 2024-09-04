@@ -19,13 +19,6 @@ public class ErrorDTO {
   @NotNull
   private final String message;
 
-  private ErrorDTO(Integer code, String message) {
-    this.code = code;
-    this.message = message;
-
-    validateRequiredAttributes();
-  }
-
   private ErrorDTO(ErrorDTOBuilder builder) {
     this.code = builder.code;
     this.message = builder.message;

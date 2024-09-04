@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testCoconutSchema.model.exception.ModelClassException;
@@ -17,8 +18,8 @@ public class FieldDTO {
   private Integer precision;
 
   @JsonProperty(value ="defaultItem")
-  @Singular("defaultItem")
-  private List<FieldDTO> defaultItem);
+  @Singular("_defaultItem")
+  private List<FieldDTO> defaultItem;
 
   @JsonProperty(value ="maximum")
   private Integer maximum;

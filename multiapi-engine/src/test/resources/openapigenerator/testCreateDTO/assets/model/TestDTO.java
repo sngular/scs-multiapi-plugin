@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Value;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value

@@ -20,7 +20,6 @@ public class ApiNumberFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
   private List<Object> defaultValues;
   @JsonProperty(value ="name")
   private String name;

@@ -425,12 +425,14 @@ public class ${schema.className} {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-  <#list schema.fieldObjectList as field>
-    <#if field == schema.fieldObjectList?first>
-    if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-    <#else> else if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-    </#if>  satisfiedCondition = true;
-    }</#list>
+<#list schema.fieldObjectList as field>
+<#if field == schema.fieldObjectList?first>
+     if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
+<#else>
+ else if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
+</#if>
+        satisfiedCondition = true;
+      }</#list>
 
     if (!satisfiedCondition) {
       throw new ModelClassException("${schema.className}");
@@ -442,12 +444,12 @@ public class ${schema.className} {
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-  <#list schema.fieldObjectList?filter(f -> f.required) as field>
-    <#if field?index == 0>
+<#list schema.fieldObjectList?filter(f -> f.required) as field>
+<#if field?index == 0>
     if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-    <#else>
+<#else>
  else if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-    </#if>
+</#if>
       satisfiedCondition = false;
     }</#list>
 

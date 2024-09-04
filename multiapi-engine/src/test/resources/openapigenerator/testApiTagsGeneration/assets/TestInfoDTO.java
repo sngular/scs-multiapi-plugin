@@ -36,6 +36,7 @@ public class TestInfoDTO {
 
     private List<String> testers = new ArrayList<String>();
     private String testName;
+
     public TestInfoDTO.TestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);

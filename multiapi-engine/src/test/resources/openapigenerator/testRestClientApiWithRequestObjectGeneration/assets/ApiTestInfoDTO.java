@@ -15,13 +15,6 @@ public class ApiTestInfoDTO {
   @JsonProperty(value ="testName")
   private final String testName;
 
-  private ApiTestInfoDTO(List<String> testers, String testName) {
-    this.testers = testers;
-    this.testName = testName;
-
-    validateRequiredAttributes();
-  }
-
   private ApiTestInfoDTO(ApiTestInfoDTOBuilder builder) {
     this.testers = builder.testers;
     this.testName = builder.testName;

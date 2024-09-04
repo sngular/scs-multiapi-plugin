@@ -13,13 +13,6 @@ public class TestDTO {
   @JsonProperty(value ="id")
   private final Integer id;
 
-  private TestDTO(String name, Integer id) {
-    this.name = name;
-    this.id = id;
-
-    validateRequiredAttributes();
-  }
-
   private TestDTO(TestDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;

@@ -17,14 +17,12 @@ public class ApiMapFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
   private List<Object> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="mapSize")
   private Integer mapSize;
   @JsonProperty(value ="mapTypes")
-  @Singular("mapType")
   private List<ApiTypeArrayDTO> mapTypes;
 
   private ApiMapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<ApiTypeArrayDTO> mapTypes) {

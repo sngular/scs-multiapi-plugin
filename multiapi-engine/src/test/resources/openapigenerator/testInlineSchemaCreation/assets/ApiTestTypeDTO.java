@@ -15,12 +15,6 @@ public class ApiTestTypeDTO {
   @JsonProperty(value ="id")
   private String id;
 
-  private ApiTestTypeDTO(String name, String id) {
-    this.name = name;
-    this.id = id;
-
-  }
-
   private ApiTestTypeDTO(ApiTestTypeDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;
