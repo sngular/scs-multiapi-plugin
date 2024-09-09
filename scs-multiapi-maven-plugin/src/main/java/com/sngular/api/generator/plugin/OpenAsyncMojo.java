@@ -44,7 +44,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
-    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
+    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir(), overwriteModel);
 
     asyncApiGenerator.processFileSpec(specFiles);
 

@@ -22,7 +22,7 @@
     <#elseif propertyName?matches(".*List")>
         <#return propertyName?remove_ending("List")/>
     <#else >
-        <#return propertyName/>
+        <#return  "_"+propertyName/>
     </#if>
 </#function>
 <#function hasConstValue field>

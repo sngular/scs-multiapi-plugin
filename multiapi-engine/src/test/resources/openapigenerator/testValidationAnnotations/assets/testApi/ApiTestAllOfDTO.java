@@ -32,6 +32,7 @@ public class ApiTestAllOfDTO {
 
     private List<String> testers = new ArrayList<String>();
     private String testName;
+
     public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);

@@ -1,17 +1,17 @@
-package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
+package com.sngular.multifileplugin.testapi.model.customvalidator;
 
 import java.util.Objects;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class MinValidator implements ConstraintValidator<Min, Integer> {
+public class MinIntegerValidator implements ConstraintValidator<MinInteger, Integer> {
 
     private int minimum;
     private boolean exclusive;
 
     @Override
-    public void initialize(Min constraintAnnotation) {
+    public void initialize(MinInteger constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
         this.minimum = Integer.parseInt(constraintAnnotation.minimum());
         this.exclusive = constraintAnnotation.exclusive();

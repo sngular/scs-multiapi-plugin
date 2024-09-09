@@ -33,7 +33,6 @@ import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
-import com.sngular.api.generator.plugin.openapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
@@ -104,6 +103,7 @@ public class OpenApiGenerator {
         final String filePathToSave = processPath(specFile.getApiPackage(), false);
         processFile(specFile, filePathToSave);
         createClients(specFile);
+        templateFactory.clearData();
       } catch (final IOException e) {
         throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
       }
@@ -203,7 +203,7 @@ public class OpenApiGenerator {
     final var modelPackage = processModelPackage(specFile.getModelPackage());
     final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap());
     templateFactory.setModelPackageName(modelPackage);
-    processModels(specFile, fileModelToSave, modelPackage, totalSchemas, Boolean.TRUE.equals(overwriteModel));
+    processModels(specFile, fileModelToSave, modelPackage, totalSchemas, overwriteModel);
   }
 
   private void processPackage(final String apiPackage) {
@@ -278,13 +278,13 @@ public class OpenApiGenerator {
 
     if (ApiTool.hasRef(basicSchema)) {
       final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
-      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap, modelPackage));
+      builtSchemasMap.putAll(writeSchemaObject(specFile, fileModelToSave, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, builtSchemasMap, modelPackage));
     } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
-      builtSchemasMap.putAll(fillTemplateFactory(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap, modelPackage));
+      builtSchemasMap.putAll(writeSchemaObject(specFile, fileModelToSave, schemaName, basicSchema, basicSchemaMap, builtSchemasMap, modelPackage));
     }
   }
 
-  private Map<String, SchemaObject> fillTemplateFactory(
+  private Map<String, SchemaObject> writeSchemaObject(
           final SpecFile specFile, final String fileModelToSave, final String schemaName, final JsonNode basicSchema, final Map<String, JsonNode> basicSchemaMap,
           final Map<String, SchemaObject> builtSchemasMap, String modelPackage) {
     final var schemaObjectMap = MapperContentUtil
@@ -295,7 +295,7 @@ public class OpenApiGenerator {
       try {
         final Set<String> propertiesSet = new HashSet<>();
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
-        fillTemplates(fileModelToSave, propertiesSet);
+        fillTemplates(fileModelToSave,  propertiesSet);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(schemaObject.getClassName(), e);
       }
@@ -309,52 +309,6 @@ public class OpenApiGenerator {
       }
     }
     return schemaObjectMap;
-  }
-
-  @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private void fillTemplates(final String filePathToSave, final Set<String> fieldProperties) throws TemplateException, IOException {
-    for (final String current : fieldProperties) {
-      switch (current) {
-        case "Size":
-          templateFactory.fillTemplateCustom(filePathToSave, "Size.java", "SizeValidator.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
-          break;
-        case "Pattern":
-          templateFactory.fillTemplateCustom(filePathToSave, "Pattern.java", "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
-          break;
-        case "MultipleOf":
-          templateFactory.fillTemplateCustom(filePathToSave, "MultipleOf.java", "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
-          break;
-        case "Maximum":
-          templateFactory.fillTemplateCustom(filePathToSave, "Max.java", "MaxValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_MAX_VALIDATOR_ANNOTATION);
-          break;
-        case "Minimum":
-          templateFactory.fillTemplateCustom(filePathToSave, "Min.java", "MinValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_MIN_VALIDATOR_ANNOTATION);
-          break;
-        case "MaxItems":
-          templateFactory.fillTemplateCustom(filePathToSave, "MaxItems.java", "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        case "MinItems":
-          templateFactory.fillTemplateCustom(filePathToSave, "MinItems.java", "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        case "NotNull":
-          templateFactory.fillTemplateCustom(filePathToSave, "NotNull.java", "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
-          break;
-        case "UniqueItems":
-          templateFactory.fillTemplateCustom(filePathToSave, "UniqueItems.java", "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
-                                             TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        default:
-          break;
-      }
-    }
   }
 
   private void checkRequiredOrCombinatorExists(final Map<String, SchemaObject> schemaList) {

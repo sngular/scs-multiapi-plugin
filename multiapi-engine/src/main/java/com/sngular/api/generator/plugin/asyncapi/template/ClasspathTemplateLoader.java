@@ -15,13 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
-import freemarker.cache.TemplateLoader;
 
-public class ClasspathTemplateLoader implements TemplateLoader {
-
-  private static final List<String> TEMPLATE_MODEL_FILES = List.of( "templateSchema.ftlh",
-          "templateSchemaWithLombok.ftlh", "templateModelClassException.ftlh");
+public class ClasspathTemplateLoader extends CommonTemplateLoader {
 
 
   private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
@@ -29,28 +26,6 @@ public class ClasspathTemplateLoader implements TemplateLoader {
           "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
                                                              "interfaceConsumerWithKafkaBindings.ftlh", "templateConsumersWithKafkaBindings.ftlh",
                                                              "templateStreamBridgeWithKafkaBindings.ftlh", "templateMessageWrapper.ftlh");
-
-  private static final List<String> TEMPLATE_ANNOTATION_FILES = List.of(TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_FLOAT_ANNOTATION, TemplateIndexConstants.TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION, TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
-                                                                        TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
 
   private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
 

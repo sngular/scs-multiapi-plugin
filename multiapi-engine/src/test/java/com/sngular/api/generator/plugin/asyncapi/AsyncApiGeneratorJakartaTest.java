@@ -34,7 +34,7 @@ class AsyncApiGeneratorJakartaTest {
     asyncApiGenerator =
         new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED,
                               "groupId",
-                              baseDir.toFile());
+                              baseDir.toFile(), overwriteModel);
   }
 
   static Stream<Arguments> fileSpecToProcess() {

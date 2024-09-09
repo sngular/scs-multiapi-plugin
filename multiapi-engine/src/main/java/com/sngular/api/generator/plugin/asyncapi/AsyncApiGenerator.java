@@ -45,7 +45,11 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AsyncApiGenerator {
 
+  private static final String PACKAGE_SEPARATOR_STR = ".";
+
   private static final String SLASH = "/";
+
+  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
   private static final String DEFAULT_ASYNCAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".asyncapi";
 
@@ -62,10 +66,6 @@ public class AsyncApiGenerator {
   private static final String PUBLISH = "publish";
 
   private static final String OPERATION_ID = "operationId";
-
-  private static final String PACKAGE_SEPARATOR_STR = ".";
-
-  public static final Pattern PACKAGE_SEPARATOR = Pattern.compile(PACKAGE_SEPARATOR_STR);
 
   private static final String AVSC = "avsc";
 
@@ -95,15 +95,9 @@ public class AsyncApiGenerator {
 
   private final List<String> processedApiPackages = new ArrayList<>();
 
-  private final File targetFolder;
-
   private final File baseDir;
 
-  private final FilenameFilter targetFileFilter;
-
   private final TemplateFactory templateFactory;
-
-  private final String processedGeneratedSourcesFolder;
 
   private final String groupId;
 
@@ -111,13 +105,15 @@ public class AsyncApiGenerator {
 
   private boolean generateExceptionTemplate;
 
-  public AsyncApiGenerator(final Integer springBootVersion, final File targetFolder, final String processedGeneratedSourcesFolder, final String groupId, final File baseDir) {
+  public AsyncApiGenerator(final Integer springBootVersion,
+                           final File targetFolder,
+                           final String processedGeneratedSourcesFolder,
+                           final String groupId,
+                           final File baseDir,
+                           boolean overwriteModel) {
     this.groupId = groupId;
-    this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
-    this.targetFolder = targetFolder;
     this.baseDir = baseDir;
-    this.templateFactory = new TemplateFactory();
-    this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
+    this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, baseDir);
     this.springBootVersion = springBootVersion;
   }
 
@@ -312,26 +308,13 @@ public class AsyncApiGenerator {
 
   private void setUpTemplate(final SpecFile fileParameter, final Integer springBootVersion) {
     processPackage(fileParameter);
-    processFilePaths(fileParameter);
+    templateFactory.processFilePaths(fileParameter, DEFAULT_ASYNCAPI_API_PACKAGE);
     processClassNames(fileParameter);
     processEntitiesSuffix(fileParameter);
     processJavaEEPackage(springBootVersion);
   }
 
-  private void processFilePaths(final SpecFile fileParameter) {
-    var pathToCreate = convertPackageToTargetPath(fileParameter.getSupplier());
-    if (Objects.nonNull(pathToCreate)) {
-      templateFactory.setSupplierFilePath(processPath(pathToCreate));
-    }
-    pathToCreate = convertPackageToTargetPath(fileParameter.getStreamBridge());
-    if (Objects.nonNull(pathToCreate)) {
-      templateFactory.setStreamBridgeFilePath(processPath(pathToCreate));
-    }
-    pathToCreate = convertPackageToTargetPath(fileParameter.getConsumer());
-    if (Objects.nonNull(pathToCreate)) {
-      templateFactory.setSubscribeFilePath(processPath(pathToCreate));
-    }
-  }
+
 
   private void processEntitiesSuffix(final SpecFile fileParameter) {
     templateFactory.setSupplierEntitiesSuffix(fileParameter.getSupplier() != null && fileParameter.getSupplier().getModelNameSuffix() != null
@@ -362,40 +345,6 @@ public class AsyncApiGenerator {
                                                  ? fileParameter.getStreamBridge().getClassNamePostfix() : STREAM_BRIDGE_CLASS_NAME);
     templateFactory.setSubscribeClassName(fileParameter.getConsumer() != null && fileParameter.getConsumer().getClassNamePostfix() != null
                                               ? fileParameter.getConsumer().getClassNamePostfix() : CONSUMER_CLASS_NAME);
-  }
-
-  private Path processPath(final String packagePath) {
-    Path path;
-    final File[] pathList = Objects.requireNonNull(baseDir.listFiles(targetFileFilter));
-    if (pathList.length > 0) {
-      path = pathList[0].toPath().resolve(packagePath);
-    } else {
-      path = targetFolder.toPath();
-      if (!path.toFile().exists() && !path.toFile().mkdirs()) {
-        throw new FileSystemException(path.toFile().getName());
-      }
-      path = path.resolve(packagePath);
-    }
-    if (!path.toFile().isDirectory() && !path.toFile().mkdirs()) {
-      throw new FileSystemException(path.toFile().getName());
-    }
-    return path;
-  }
-
-  private String convertPackageToTargetPath(final OperationParameterObject operationParameter) {
-    String path = null;
-    if (Objects.nonNull(operationParameter)) {
-      if (Objects.nonNull(operationParameter.getApiPackage())) {
-        path = getPath(operationParameter.getApiPackage());
-      } else {
-        path = getPath(DEFAULT_ASYNCAPI_API_PACKAGE);
-      }
-    }
-    return path;
-  }
-
-  private String getPath(final String pathName) {
-    return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
   }
 
   private void processJavaEEPackage(final Integer springBootVersion) {
@@ -465,11 +414,10 @@ public class AsyncApiGenerator {
           MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir.toPath()).iterator();
 
       if (schemaObjectIt.hasNext()) {
-        final var filePath = writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
+        writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
         if (Objects.nonNull(keyClassName)) {
           templateFactory.setWrapperPackageName(operationObject.getApiPackage());
-          templateFactory.fillTemplateWrapper(processPath(getPath(operationObject.getApiPackage())),
-                                              operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
+          templateFactory.fillTemplateWrapper(operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
         }
         schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
 
@@ -493,9 +441,8 @@ public class AsyncApiGenerator {
   }
 
   private Path writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
-    final var filePath = processPath(getPath(StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage())));
-    final var propertiesPath = processPath(getPath(modelPackageReceived));
-    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, filePath, propertiesPath);
+    final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
+    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage);
     checkRequiredOrCombinatorExists(schemaObject, usingLombok);
     return filePath;
   }

@@ -7,7 +7,7 @@
 package com.sngular.api.generator.plugin.asyncapi.template;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,20 +19,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
 import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-public class TemplateFactory {
+public class TemplateFactory extends CommonTemplateFactory {
 
   private static final String SUBSCRIBE_PACKAGE = "subscribePackage";
 
@@ -48,21 +51,11 @@ public class TemplateFactory {
 
   private static final String SUBSCRIBE_ENTITIES_SUFFIX = "subscribeEntitiesSuffix";
 
-  private static final String FILE_TYPE_JAVA = ".java";
-
-  private static final String EXCEPTION_PACKAGE = "exceptionPackage";
-
-  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
-
-  private final Map<String, Object> root = new HashMap<>();
-
   private final List<MethodObject> publishMethods = new ArrayList<>();
 
   private final List<MethodObject> subscribeMethods = new ArrayList<>();
 
   private final List<MethodObject> streamBridgeMethods = new ArrayList<>();
-
-  private final List<ClassTemplate> schemaObjectMap = new LinkedList<>();
 
   private String subscribeFilePath = null;
 
@@ -76,212 +69,63 @@ public class TemplateFactory {
 
   private String subscribeClassName = null;
 
-  public TemplateFactory() {
-    cfg.setTemplateLoader(new ClasspathTemplateLoader());
-    cfg.setDefaultEncoding("UTF-8");
-    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-    cfg.setLogTemplateExceptions(true);
-    cfg.setAPIBuiltinEnabled(true);
-
+  public TemplateFactory(boolean enableOverwrite,
+                         final File targetFolder,
+                         final String processedGeneratedSourcesFolder,
+                         final File baseDir) {
+    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir);
   }
 
-  private void fillTemplate(final String filePathToSave, final String className, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
-    final File fileToSave = Paths.get(filePathToSave).normalize().toFile();
-    fileToSave.mkdirs();
-    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + FILE_TYPE_JAVA).toString();
-    fillTemplate(pathToSaveMainClass, templateName, root);
-  }
-
-  private void fillTemplate(final String pathToSaveMainClass, final String templateName, final Map<String, Object> root) throws IOException, TemplateException {
-    writeTemplateToFile(templateName, root, pathToSaveMainClass);
-  }
-
-  public final void fillTemplates(final boolean generateExceptionTemplate) throws IOException, TemplateException {
-    root.put("publishMethods", publishMethods);
-    root.put("subscribeMethods", subscribeMethods);
-    root.put("streamBridgeMethods", streamBridgeMethods);
+  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
+    addToRoot("publishMethods", publishMethods);
+    addToRoot("subscribeMethods", subscribeMethods);
+    addToRoot("streamBridgeMethods", streamBridgeMethods);
 
     for (final var method : publishMethods) {
-      fillTemplate(supplierFilePath, supplierClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_SUPPLIERS), root);
+      fillTemplate(supplierFilePath, supplierClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_SUPPLIERS));
     }
 
     for (final var method : subscribeMethods) {
-      fillTemplate(subscribeFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS), root);
+      fillTemplate(subscribeFilePath, subscribeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_CONSUMERS));
     }
 
     for (final var method : streamBridgeMethods) {
-      fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE), root);
+      fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE));
     }
 
-    final String exceptionPackage;
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      exceptionPackage = getClassTemplate().getModelPackage();
-    } else {
-      exceptionPackage = null;
-    }
-
-    schemaObjectMap.forEach(classTemplate -> {
-      try {
-        fillTemplates(classTemplate.getPropertiesPath(), classTemplate.getModelPackage(),
-            fillTemplateSchema(classTemplate, false, exceptionPackage));
-      } catch (final IOException | TemplateException exception) {
-        throw new FileSystemException(exception);
-      }
-    });
+    generateTemplates(generateExceptionTemplate);
 
     this.generateInterfaces();
   }
 
-  @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
-    for (final String current : fieldProperties) {
-      switch (current) {
-        case "Size":
-          fillTemplateCustom(filePathToSave, modelPackage, "Size.java", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator.java",
-                             TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
-          break;
-        case "Pattern":
-          fillTemplateCustom(filePathToSave, modelPackage, "Pattern.java", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
-                             "PatternValidator.java", TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
-          break;
-        case "MultipleOf":
-          fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
-                             "MultipleOfValidator.java", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
-          break;
-        case "Maximum":
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxInteger.java", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION,
-                             "MaxIntegerValidator.java", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxBigDecimal.java", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION,
-                             "MaxBigDecimalValidator.java", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxDouble.java", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION,
-                             "MaxDoubleValidator.java", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxFloat.java", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_ANNOTATION,
-                             "MaxFloatValidator.java", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION);
-          break;
-        case "Minimum":
-          fillTemplateCustom(filePathToSave, modelPackage, "MinInteger.java", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION,
-                             "MinIntegerValidator.java", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinDouble.java", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION,
-                             "MinDoubleValidator.java", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinFloat.java", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION,
-                             "MinFloatValidator.java", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinBigDecimal.java", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION,
-                             "MinBigDecimalValidator.java", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION);
-          break;
-        case "MaxItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxItems.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
-                             "MaxItemsValidator.java", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        case "MinItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "MinItems.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-                             "MinItemsValidator.java", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        case "NotNull":
-          fillTemplateCustom(filePathToSave, modelPackage, "NotNull.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
-                             "NotNullValidator.java", TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
-          break;
-        case "UniqueItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "UniqueItems.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
-                             "UniqueItemsValidator.java", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  private ClassTemplate getClassTemplate() {
-    ClassTemplate ourClassTemplate = null;
-    for (ClassTemplate classTemplate : schemaObjectMap) {
-      if (classTemplate.getFilePath().endsWith("schemas")) {
-        ourClassTemplate = classTemplate;
-        break;
-      }
-    }
-    if (ourClassTemplate == null) {
-      ourClassTemplate = schemaObjectMap.get(0);
-    }
-
-    return ourClassTemplate;
-  }
-
-  public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException, TemplateException {
-    final Path pathToExceptionPackage = filePathToSave.resolve("exception");
-    pathToExceptionPackage.toFile().mkdirs();
-    root.put(EXCEPTION_PACKAGE, modelPackage);
-    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass);
-  }
-
-  public final void fillTemplateCustom(
-      final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
-      final String fileNameValidator, final String templateValidator) throws TemplateException, IOException {
-    final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
-    pathToCustomValidatorPackage.toFile().mkdirs();
-    root.put("packageModel", modelPackage);
-    final String pathToSaveAnnotationClass = pathToCustomValidatorPackage.resolve(fileNameAnnotation).toString();
-    writeTemplateToFile(templateAnnotation, root, pathToSaveAnnotationClass);
-    final String pathToSaveValidatorClass = pathToCustomValidatorPackage.resolve(fileNameValidator).toString();
-    writeTemplateToFile(templateValidator, root, pathToSaveValidatorClass);
-  }
-
-  @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final String exceptionPackage)
-      throws IOException, TemplateException {
-    final var propertiesSet = new HashSet<String>();
-    final var schemaObject = classTemplate.getClassSchema();
-    final var filePath = classTemplate.getFilePath();
-    if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
-      final Map<String, Object> rootSchema = new HashMap<>();
-      rootSchema.put("schema", schemaObject);
-      root.put("schema", schemaObject);
-      final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
-      if (Objects.nonNull(classTemplate.getModelPackage())) {
-        rootSchema.put("packageModel", classTemplate.getModelPackage());
-      }
-      if (Objects.nonNull(exceptionPackage)) {
-        rootSchema.put(EXCEPTION_PACKAGE, exceptionPackage);
-        root.put(EXCEPTION_PACKAGE, exceptionPackage);
-      }
-      fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName, rootSchema);
-      for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
-          propertiesSet.add("NotNull");
-        }
-      }
-    }
-    return propertiesSet;
-  }
-
   public final void setSubscribePackageName(final String packageName) {
-    root.put(SUBSCRIBE_PACKAGE, packageName);
+    addToRoot(SUBSCRIBE_PACKAGE, packageName);
   }
 
   public final void setWrapperPackageName(final String packageName) {
-    root.put(WRAPPER_PACKAGE, packageName);
+    addToRoot(WRAPPER_PACKAGE, packageName);
   }
 
   public final void setSupplierPackageName(final String packageName) {
-    root.put(SUPPLIER_PACKAGE, packageName);
+    addToRoot(SUPPLIER_PACKAGE, packageName);
   }
 
   public final void setStreamBridgePackageName(final String packageName) {
-    root.put(STREAM_BRIDGE_PACKAGE, packageName);
+    addToRoot(STREAM_BRIDGE_PACKAGE, packageName);
   }
 
   public final void setSubscribeClassName(final String className) {
-    root.put("subscribeClassName", className);
+    addToRoot("subscribeClassName", className);
     this.subscribeClassName = className;
   }
 
   public final void setSupplierClassName(final String className) {
-    root.put("supplierClassName", className);
+    addToRoot("supplierClassName", className);
     this.supplierClassName = className;
   }
 
   public final void setStreamBridgeClassName(final String className) {
-    root.put("streamBridgeClassName", className);
+    addToRoot("streamBridgeClassName", className);
     this.streamBridgeClassName = className;
   }
 
@@ -331,40 +175,30 @@ public class TemplateFactory {
                            .build());
   }
 
-  public final void addSchemaObject(final String modelPackage, final String keyClassName, final SchemaObject schemaObject, final Path filePath, final Path propertiesPath) {
-    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject)
-                                     .propertiesPath(propertiesPath);
-    if (Objects.nonNull(keyClassName)) {
-      builder.keyClassName(keyClassName);
-    }
-    schemaObjectMap.add(builder.build());
-  }
-
   public final void setSupplierEntitiesSuffix(final String suffix) {
-    root.put(SUPPLIER_ENTITIES_SUFFIX, suffix);
+    addToRoot(SUPPLIER_ENTITIES_SUFFIX, suffix);
   }
 
   public final void setStreamBridgeEntitiesSuffix(final String suffix) {
-    root.put(STREAM_BRIDGE_ENTITIES_SUFFIX, suffix);
+    addToRoot(STREAM_BRIDGE_ENTITIES_SUFFIX, suffix);
   }
 
   public final void setSubscribeEntitiesSuffix(final String suffix) {
-    root.put(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
+    addToRoot(SUBSCRIBE_ENTITIES_SUFFIX, suffix);
   }
 
   public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
-      root.put("javaEEPackage", "jakarta");
+      addToRoot("javaEEPackage", "jakarta");
     } else {
-      root.put("javaEEPackage", "javax");
+      addToRoot("javaEEPackage", "javax");
     }
   }
 
   public final void clearData() {
-    root.clear();
+    cleanData();
     publishMethods.clear();
     subscribeMethods.clear();
-    schemaObjectMap.clear();
     streamBridgeMethods.clear();
     subscribeFilePath = null;
     supplierFilePath = null;
@@ -375,52 +209,58 @@ public class TemplateFactory {
   }
 
   public final void fillTemplateWrapper(
-      final Path filePath,
       final String modelPackage,
       final String classFullName,
       final String className,
       final String keyClassFullName,
       final String keyClassName
-  ) throws TemplateException, IOException {
-    final Map<String, Object> context = Map.of(WRAPPER_PACKAGE, modelPackage,
-                                               "classNamespace", classFullName,
-                                               "className", className,
-                                               "keyNamespace", keyClassFullName,
-                                               "keyClassName", keyClassName);
-
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, context, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
+  ) throws IOException {
+    final var filePath = processPath(getPath(modelPackage));
+    addToRoot(Map.of(WRAPPER_PACKAGE, modelPackage,
+                 "classNamespace", classFullName,
+                 "className", className,
+                 "keyNamespace", keyClassFullName,
+                 "keyClassName", keyClassName));
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
+    clearData();
   }
 
+  public void processFilePaths(final SpecFile fileParameter, final String defaultApiPackage) {
+    var pathToCreate = convertPackageToTargetPath(fileParameter.getSupplier(), defaultApiPackage);
+    if (Objects.nonNull(pathToCreate)) {
+      setSupplierFilePath(processPath(pathToCreate));
+    }
+    pathToCreate = convertPackageToTargetPath(fileParameter.getStreamBridge(), defaultApiPackage);
+    if (Objects.nonNull(pathToCreate)) {
+      setStreamBridgeFilePath(processPath(pathToCreate));
+    }
+    pathToCreate = convertPackageToTargetPath(fileParameter.getConsumer(), defaultApiPackage);
+    if (Objects.nonNull(pathToCreate)) {
+      setSubscribeFilePath(processPath(pathToCreate));
+    }
+  }
   private void generateInterfaces() throws IOException, TemplateException {
     final ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
     allMethods.addAll(publishMethods);
 
-    final Map<String, Object> interfaceRoot = new HashMap<>();
-    interfaceRoot.put(SUBSCRIBE_PACKAGE, root.get(SUBSCRIBE_PACKAGE));
-    interfaceRoot.put(SUPPLIER_PACKAGE, root.get(SUPPLIER_PACKAGE));
+    addToRoot(SUBSCRIBE_PACKAGE, getFromRoot(SUBSCRIBE_PACKAGE));
+    addToRoot(SUPPLIER_PACKAGE, getFromRoot(SUPPLIER_PACKAGE));
 
-    interfaceRoot.put(SUPPLIER_ENTITIES_SUFFIX, root.get(SUPPLIER_ENTITIES_SUFFIX));
-    interfaceRoot.put(SUBSCRIBE_ENTITIES_SUFFIX, root.get(SUBSCRIBE_ENTITIES_SUFFIX));
+    addToRoot(SUPPLIER_ENTITIES_SUFFIX, getFromRoot(SUPPLIER_ENTITIES_SUFFIX));
+    addToRoot(SUBSCRIBE_ENTITIES_SUFFIX, getFromRoot(SUBSCRIBE_ENTITIES_SUFFIX));
 
     for (MethodObject method : allMethods) {
-      interfaceRoot.put("method", method);
+      addToRoot("method", method);
 
       if (Objects.equals(method.getType(), "publish")) {
         fillTemplate(supplierFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS), interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_SUPPLIERS));
       } else if (Objects.equals(method.getType(), "subscribe")) {
         fillTemplate(subscribeFilePath, "I" + method.getOperationId().substring(0, 1).toUpperCase() + method.getOperationId().substring(1),
-                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS), interfaceRoot);
+                     checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_INTERFACE_CONSUMERS));
       }
     }
-  }
-
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException, TemplateException {
-    final Template template = cfg.getTemplate(templateName);
-
-    final FileWriter writer = new FileWriter(path);
-    template.process(root, writer);
-    writer.close();
+    cleanData();
   }
 
   private String checkTemplate(final String bindingType, final String defaultTemplate) {

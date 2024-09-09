@@ -1,17 +1,17 @@
-package com.sngular.scsplugin.customvalidator.model.event.customvalidator;
+package com.sngular.multifileplugin.testapi.model.customvalidator;
 
 import java.util.Objects;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class MaxValidator implements ConstraintValidator<Max, Integer> {
+public class MaxIntegerValidator implements ConstraintValidator<MaxInteger, Integer> {
 
     private int maximum;
     private boolean exclusive;
 
     @Override
-    public void initialize(Max constraintAnnotation) {
+    public void initialize(MaxInteger constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
         this.maximum = Integer.parseInt(constraintAnnotation.maximum());
         this.exclusive = constraintAnnotation.exclusive();

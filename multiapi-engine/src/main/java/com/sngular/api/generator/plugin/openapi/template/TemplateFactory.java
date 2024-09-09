@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +18,7 @@ import java.util.Set;
 
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
@@ -28,27 +28,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.commons.lang3.StringUtils;
 
-public class TemplateFactory {
+public class TemplateFactory extends CommonTemplateFactory {
 
-  private static final String JAVA_EXTENSION = ".java";
-
-  private static final String EXCEPTION_PACKAGE = "exceptionPackage";
-
-  private final Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
-
-  private final Map<String, Object> root = new HashMap<>();
-
-  public TemplateFactory() {
-    cfg.setTemplateLoader(new ClasspathTemplateLoader());
-    cfg.setDefaultEncoding("UTF-8");
-    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-    cfg.setLogTemplateExceptions(true);
-    cfg.setAPIBuiltinEnabled(true);
-    final List<String> basicDataTypes = List.of("Integer", "Long", "Float", "Double", "Boolean", "String", "Char", "Byte", "Short");
-    root.put("checkBasicTypes", basicDataTypes);
-
+  public TemplateFactory(boolean enableOverwrite) {
+    super(enableOverwrite);
   }
 
   public final void fillTemplateSchema(
@@ -57,9 +41,9 @@ public class TemplateFactory {
                                             TemplateException {
     final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
-      root.put("schema", schemaObject);
+      addToRoot("schema", schemaObject);
       final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
-      writeTemplateToFile(templateSelector(useLombok, schemaObject), root, pathToSaveMainClass);
+      writeTemplateToFile(templateSelector(useLombok, schemaObject), pathToSaveMainClass);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
@@ -69,14 +53,15 @@ public class TemplateFactory {
     }
   }
 
+  public final void clearData() {
+    cleanData();
+  }
+
   private static String templateSelector(final Boolean useLombok, final SchemaObject schemaObject) {
     final var shouldUseLombok = Objects.requireNonNullElse(useLombok, false);
-    final var shouldUseEnum = schemaObject.isEnum();
     final String template;
 
-    if (shouldUseEnum) {
-      template = TemplateIndexConstants.TEMPLATE_CONTENT_ENUM_SCHEMA;
-    } else if (Boolean.TRUE.equals(shouldUseLombok)) {
+    if (Boolean.TRUE.equals(shouldUseLombok)) {
       template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
     } else {
       template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
@@ -98,7 +83,7 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiWebClient.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, root, pathToSaveMainClass);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, pathToSaveMainClass);
 
   }
 
@@ -106,7 +91,7 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiRestClient.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, root, pathToSaveMainClass);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, pathToSaveMainClass);
 
   }
 
@@ -114,7 +99,7 @@ public class TemplateFactory {
     final File fileToSave = new File(filePathToSave);
     final var nameAuthClass = authName + JAVA_EXTENSION;
     final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
-    writeTemplateToFile(createNameTemplate(authName), root, pathToSaveMainClass);
+    writeTemplateToFile(createNameTemplate(authName), pathToSaveMainClass);
 
   }
 
@@ -125,77 +110,62 @@ public class TemplateFactory {
     final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
     pathToValidatorPackage.toFile().mkdirs();
     final String pathToSaveMainClass = pathToValidatorPackage.resolve(annotationFileName).toString();
-    writeTemplateToFile(annotationTemplate, root, pathToSaveMainClass);
+    writeTemplateToFile(annotationTemplate, pathToSaveMainClass);
     final String pathToSaveMainClassValidator = pathToValidatorPackage.resolve(validatorFileName).toString();
-    writeTemplateToFile(validatorTemplate, root, pathToSaveMainClassValidator);
+    writeTemplateToFile(validatorTemplate, pathToSaveMainClassValidator);
   }
 
   public final void fillTemplate(
       final String filePathToSave, final SpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
-    root.put("className", className);
-    root.put("pathObjects", pathObjects);
+    addToRoot("className", className);
+    addToRoot("pathObjects", pathObjects);
 
     if (Objects.nonNull(specFile.getApiPackage())) {
-      root.put("packageApi", specFile.getApiPackage());
+      addToRoot("packageApi", specFile.getApiPackage());
     }
     if (Objects.nonNull(specFile.getModelPackage())) {
-      root.put("packageModel", specFile.getModelPackage());
-      root.put("exceptionPackage", specFile.getModelPackage());
+      addToRoot("packageModel", specFile.getModelPackage());
+      addToRoot("exceptionPackage", specFile.getModelPackage());
     }
     final File fileToSave = new File(filePathToSave);
 
     if (specFile.isCallMode()) {
-      root.put("authObject", authObject);
+      addToRoot("authObject", authObject);
     }
 
     final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + JAVA_EXTENSION).toString();
-    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), root, pathToSaveMainClass);
+    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), pathToSaveMainClass);
 
   }
 
   public final void calculateJavaEEPackage(final Integer springBootVersion) {
     if (3 <= springBootVersion) {
-      root.put("javaEEPackage", "jakarta");
+      addToRoot("javaEEPackage", "jakarta");
     } else {
-      root.put("javaEEPackage", "javax");
+      addToRoot("javaEEPackage", "javax");
     }
   }
 
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path) throws IOException {
-    writeTemplateToFile(templateName, root, path, true);
-  }
-
-  private void writeTemplateToFile(final String templateName, final Map<String, Object> root, final String path, final boolean checkOverwrite) throws IOException {
-    final Template template = cfg.getTemplate(templateName);
-
-    if (!Files.exists(Path.of(path)) || checkOverwrite) {
-      try (FileWriter writer = new FileWriter(path)) {
-        template.process(root, writer);
-      } catch (IOException | TemplateException exception) {
-        final var schema = root.get("schema");
-        throw new GeneratorTemplateException(String.format(" Error processing template %s with object %s", templateName, ((SchemaObject) schema).getClassName()), exception);
-      }
-    } else {
-      throw new OverwritingApiFilesException();
-    }
+  void writeTemplateToFile(final String templateName, final String path) throws IOException {
+    writeTemplateToFile(templateName, path, true);
   }
 
   public final void setPackageName(final String packageName) {
-    root.put("package", packageName);
+    addToRoot("package", packageName);
   }
 
   public final void setModelPackageName(final String packageName) {
-    root.put("packageModel", packageName);
+    addToRoot("packageModel", packageName);
   }
 
   public final void setWebClientPackageName(final String packageName) {
-    root.put("packageClient", packageName);
+    addToRoot("packageClient", packageName);
   }
 
   public final void setAuthPackageName(final String packageName) {
-    root.put("packageAuth", packageName);
+    addToRoot("packageAuth", packageName);
   }
 
   private String createNameTemplate(final String classNameAuth) {
