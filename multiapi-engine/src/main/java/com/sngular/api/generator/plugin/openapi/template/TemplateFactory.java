@@ -31,19 +31,20 @@ import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateFactory extends CommonTemplateFactory {
 
-  public TemplateFactory(boolean enableOverwrite) {
-    super(enableOverwrite);
+  public TemplateFactory(boolean enableOverwrite,
+                        final File targetFolder,
+                        final String processedGeneratedSourcesFolder,
+                        final File baseDir) {
+    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir);
   }
 
   public final void fillTemplateSchema(
       final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
       final Set<String> propertiesSet) throws IOException,
                                             TemplateException {
-    final File fileToSave = new File(filePathToSave);
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       addToRoot("schema", schemaObject);
-      final String pathToSaveMainClass = fileToSave.toPath().resolve(schemaObject.getClassName() + JAVA_EXTENSION).toString();
-      writeTemplateToFile(templateSelector(useLombok, schemaObject), pathToSaveMainClass);
+      writeTemplateToFile(templateSelector(useLombok, schemaObject), filePathToSave, schemaObject.getClassName());
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
@@ -70,21 +71,16 @@ public class TemplateFactory extends CommonTemplateFactory {
     return template;
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave, final boolean overwriteEnabled, String modelPackage) throws IOException, TemplateException {
+  public final void fillTemplateModelClassException(final String filePathToSave) throws IOException, TemplateException {
     final File fileToSave = new File(filePathToSave);
     final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
-    final String pathToSaveMainClass = pathToExceptionPackage.resolve("ModelClassException.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, root, pathToSaveMainClass, overwriteEnabled);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, pathToExceptionPackage, "ModelClassException");
 
   }
 
   public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
-    final File fileToSave = new File(filePathToSave);
-
-    final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiWebClient.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, pathToSaveMainClass);
-
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, pathToSaveMainClass, "ApiWebClient");
   }
 
   public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
@@ -129,14 +125,12 @@ public class TemplateFactory extends CommonTemplateFactory {
       addToRoot("packageModel", specFile.getModelPackage());
       addToRoot("exceptionPackage", specFile.getModelPackage());
     }
-    final File fileToSave = new File(filePathToSave);
 
     if (specFile.isCallMode()) {
       addToRoot("authObject", authObject);
     }
 
-    final String pathToSaveMainClass = fileToSave.toPath().resolve(className + "Api" + JAVA_EXTENSION).toString();
-    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), pathToSaveMainClass);
+    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), filePathToSave, className + "Api");
 
   }
 
@@ -146,10 +140,6 @@ public class TemplateFactory extends CommonTemplateFactory {
     } else {
       addToRoot("javaEEPackage", "javax");
     }
-  }
-
-  void writeTemplateToFile(final String templateName, final String path) throws IOException {
-    writeTemplateToFile(templateName, path, true);
   }
 
   public final void setPackageName(final String packageName) {

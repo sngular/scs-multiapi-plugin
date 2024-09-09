@@ -1,5 +1,6 @@
 <#ftl output_format="plainText">
-<#assign words = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "double", "do", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"]>
+<#assign words = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "double", "do", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"]/>
+<#assign collection = ["array","map"]/>
 <#function calculateSafeName propertyName ender const="">
     <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
         <#if const?has_content>
@@ -137,15 +138,14 @@ import ${packageModel}.customvalidator.UniqueItems;
 </#list>
 import lombok.Builder;
 <#list schema.fieldObjectList as field>
-    <#if field.required>
-import lombok.NonNull;
-        <#break>
-    </#if>
-</#list>
-<#list schema.fieldObjectList as field>
-<#if field.dataType.baseType == "array" || field.dataType.baseType == "map">
+  <#if collection?seq_contains(field.dataType.baseType)>
 import lombok.Singular;
-    <#break>
+  <#break>
+</#if>
+<#list schema.fieldObjectList as field>
+  <#if field.required>
+import lombok.NonNull;
+  <#break>
 </#if>
 </#list>
 import lombok.Value;
