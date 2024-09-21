@@ -36,7 +36,7 @@ public class TemplateFactory extends CommonTemplateFactory {
                         final File targetFolder,
                         final String processedGeneratedSourcesFolder,
                         final File baseDir) {
-    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir);
+    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
   public final void fillTemplateSchema(
@@ -77,13 +77,12 @@ public class TemplateFactory extends CommonTemplateFactory {
   }
 
   public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, Paths.get(filePathToSave), "ApiRestClient");
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, filePathToSave, "ApiRestClient");
 
   }
 
   public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException {
-    writeTemplateToFile(createNameTemplate(authName), Paths.get(filePathToSave), authName);
-
+    writeTemplateToFile(createNameTemplate(authName),filePathToSave, authName);
   }
 
   public final void fillTemplate(
@@ -106,6 +105,11 @@ public class TemplateFactory extends CommonTemplateFactory {
     }
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), filePathToSave, className + "Api");
+
+  }
+
+  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
+    generateTemplates(generateExceptionTemplate);
 
   }
 

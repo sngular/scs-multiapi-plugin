@@ -50,8 +50,8 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject();
-    final OpenApiGenerator openApiGenerator = new OpenApiGenerator(springBootVersion, overwriteModel, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
-                                                                   targetFolder, project.getBasedir());
+    final OpenApiGenerator openApiGenerator = new OpenApiGenerator(springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(),
+        project.getBasedir());
     if (null != specFiles && !specFiles.isEmpty()) {
       openApiGenerator.processFileSpec(specFiles);
     } else {

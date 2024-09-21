@@ -82,14 +82,18 @@ public class OpenApiGenerator {
   private final Integer springBootVersion;
 
   public OpenApiGenerator(
-      final Integer springBootVersion, final Boolean overwriteModel, final String processedGeneratedSourcesFolder, final String groupId,
-      final File targetFolder, final File basedir) {
-    templateFactory = new TemplateFactory();
+      final Integer springBootVersion,
+      final Boolean overwriteModel,
+      final File targetFolder,
+      final String processedGeneratedSourcesFolder,
+      final String groupId,
+      final File basedir) {
     this.overwriteModel = overwriteModel;
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.groupId = groupId;
     this.targetFolder = targetFolder;
     this.baseDir = basedir.toPath().toAbsolutePath();
+    this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, basedir);
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
     this.springBootVersion = springBootVersion;
   }
@@ -295,18 +299,15 @@ public class OpenApiGenerator {
       try {
         final Set<String> propertiesSet = new HashSet<>();
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
-        fillTempla(fileModelToSave, propertiesSet);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(schemaObject.getClassName(), e);
       }
     });
 
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      try {
-        templateFactory.fillTemplateModelClassException(fileModelToSave, modelPackage);
-      } catch (IOException e) {
-        throw new GeneratedSourcesException(fileModelToSave, e);
-      }
+    try {
+      templateFactory.fillTemplates(generateExceptionTemplate);
+    } catch (IOException | TemplateException e) {
+      throw new GeneratedSourcesException("Exception Class", e);
     }
     return schemaObjectMap;
   }

@@ -95,7 +95,7 @@ public class AsyncApiGenerator {
 
   private final List<String> processedApiPackages = new ArrayList<>();
 
-  private final File baseDir;
+  private final Path baseDir;
 
   private final TemplateFactory templateFactory;
 
@@ -106,13 +106,13 @@ public class AsyncApiGenerator {
   private boolean generateExceptionTemplate;
 
   public AsyncApiGenerator(final Integer springBootVersion,
+                           boolean overwriteModel,
                            final File targetFolder,
                            final String processedGeneratedSourcesFolder,
                            final String groupId,
-                           final File baseDir,
-                           boolean overwriteModel) {
+                           final File baseDir) {
     this.groupId = groupId;
-    this.baseDir = baseDir;
+    this.baseDir = baseDir.toPath().toAbsolutePath();
     this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, baseDir);
     this.springBootVersion = springBootVersion;
   }
@@ -411,7 +411,7 @@ public class AsyncApiGenerator {
     final JsonNode schemaToBuild = processedMethod.getPayload();
     if (shouldBuild(schemaToBuild)) {
       final var schemaObjectIt =
-          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir.toPath()).iterator();
+          MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir).iterator();
 
       if (schemaObjectIt.hasNext()) {
         writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
@@ -440,11 +440,10 @@ public class AsyncApiGenerator {
     return result;
   }
 
-  private Path writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
+  private void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
     final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
     templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage);
     checkRequiredOrCombinatorExists(schemaObject, usingLombok);
-    return filePath;
   }
 
   private ProcessMethodResult processMethod(
@@ -506,18 +505,18 @@ public class AsyncApiGenerator {
     } else if (messageContent.contains("#")) {
       namespace = processExternalRef(modelPackage, ymlParent, messageBody);
     } else {
-      namespace = processExternalAvro(modelPackage, ymlParent, messageContent);
+      namespace = processExternalAvro(ymlParent, messageContent);
     }
     return namespace;
   }
 
-  private String processExternalAvro(final String modelPackage, final FileLocation ymlParent, final String messageContent) {
+  private String processExternalAvro(final FileLocation ymlParent, final String messageContent) {
     String avroFilePath = messageContent;
     final String namespace;
     if (messageContent.startsWith(SLASH)) {
       avroFilePath = avroFilePath.replaceFirst(SLASH, "");
     } else if (messageContent.startsWith(".")) {
-      avroFilePath = baseDir.getAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
+      avroFilePath = baseDir.toAbsolutePath() + avroFilePath.replaceFirst("\\.", "");
     }
     final InputStream avroFile = ymlParent.getFileAtLocation(avroFilePath);
     final ObjectMapper mapper = new ObjectMapper();

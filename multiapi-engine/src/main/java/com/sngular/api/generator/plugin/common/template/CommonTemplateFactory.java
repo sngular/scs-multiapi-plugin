@@ -55,9 +55,10 @@ public abstract class CommonTemplateFactory {
   protected CommonTemplateFactory(boolean checkOverwrite,
                                final File targetFolder,
                                final String processedGeneratedSourcesFolder,
-                               final File baseDir) {
+                               final File baseDir,
+                               final CommonTemplateLoader classpathTemplateLoader) {
     this.checkOverwrite = checkOverwrite;
-    cfg.setTemplateLoader(new ClasspathTemplateLoader());
+    cfg.setTemplateLoader(classpathTemplateLoader);
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
@@ -224,6 +225,7 @@ public abstract class CommonTemplateFactory {
 
   protected void cleanData() {
     root.clear();
+    addToRoot("checkBasicTypes", BASIC_DATA_TYPES);
     classTemplateList.clear();
   }
 

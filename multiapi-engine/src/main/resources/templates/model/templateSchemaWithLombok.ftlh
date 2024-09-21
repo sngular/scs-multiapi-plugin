@@ -142,6 +142,7 @@ import lombok.Builder;
 import lombok.Singular;
   <#break>
 </#if>
+</#list>
 <#list schema.fieldObjectList as field>
   <#if field.required>
 import lombok.NonNull;
@@ -235,12 +236,11 @@ public class ${schema.className} {
       return String.valueOf(value);
     }
   }
-  <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
+<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
   private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
-  <#else>
+<#else>
   private ${field.dataType} ${createSimpleType (field)}
-  </#if>
-
+</#if>
 </#list>
 
   @Builder

@@ -34,6 +34,8 @@ public class TemplateIndexConstants extends CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_OAUTH_FLOW = "templateOAuthFlow.ftlh";
 
-  private TemplateIndexConstants() {}
+  private TemplateIndexConstants() {
+    super();
+  }
 
 }

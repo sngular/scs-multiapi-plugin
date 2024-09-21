@@ -39,12 +39,15 @@ public final class OpenAsyncMojo extends AbstractMojo {
   @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
   private Integer springBootVersion;
 
+  @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
+  private Boolean overwriteModel;
+
   @Override
   public void execute() {
     final var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
-    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir(), overwriteModel);
+    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
 
     asyncApiGenerator.processFileSpec(specFiles);
 

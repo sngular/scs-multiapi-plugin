@@ -6,34 +6,21 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
+import freemarker.template.TemplateException;
+
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
-import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
-import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.common.model.SchemaObject;
-import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateFactory extends CommonTemplateFactory {
 
@@ -73,7 +60,7 @@ public class TemplateFactory extends CommonTemplateFactory {
                          final File targetFolder,
                          final String processedGeneratedSourcesFolder,
                          final File baseDir) {
-    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir);
+    super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
   public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
@@ -200,12 +187,6 @@ public class TemplateFactory extends CommonTemplateFactory {
     publishMethods.clear();
     subscribeMethods.clear();
     streamBridgeMethods.clear();
-    subscribeFilePath = null;
-    supplierFilePath = null;
-    streamBridgeFilePath = null;
-    supplierClassName = null;
-    subscribeClassName = null;
-    streamBridgeClassName = null;
   }
 
   public final void fillTemplateWrapper(
@@ -242,12 +223,6 @@ public class TemplateFactory extends CommonTemplateFactory {
   private void generateInterfaces() throws IOException, TemplateException {
     final ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
     allMethods.addAll(publishMethods);
-
-    addToRoot(SUBSCRIBE_PACKAGE, getFromRoot(SUBSCRIBE_PACKAGE));
-    addToRoot(SUPPLIER_PACKAGE, getFromRoot(SUPPLIER_PACKAGE));
-
-    addToRoot(SUPPLIER_ENTITIES_SUFFIX, getFromRoot(SUPPLIER_ENTITIES_SUFFIX));
-    addToRoot(SUBSCRIBE_ENTITIES_SUFFIX, getFromRoot(SUBSCRIBE_ENTITIES_SUFFIX));
 
     for (MethodObject method : allMethods) {
       addToRoot("method", method);
