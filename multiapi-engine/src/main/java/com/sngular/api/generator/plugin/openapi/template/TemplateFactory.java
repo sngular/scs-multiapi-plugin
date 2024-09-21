@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class TemplateFactory extends CommonTemplateFactory {
                                             TemplateException {
     if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       addToRoot("schema", schemaObject);
-      writeTemplateToFile(templateSelector(useLombok, schemaObject), filePathToSave, schemaObject.getClassName());
+      writeTemplateToFile(templateSelector(useLombok), filePathToSave, schemaObject.getClassName());
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
         if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
@@ -58,7 +59,7 @@ public class TemplateFactory extends CommonTemplateFactory {
     cleanData();
   }
 
-  private static String templateSelector(final Boolean useLombok, final SchemaObject schemaObject) {
+  private static String templateSelector(final Boolean useLombok) {
     final var shouldUseLombok = Objects.requireNonNullElse(useLombok, false);
     final String template;
 
@@ -71,44 +72,18 @@ public class TemplateFactory extends CommonTemplateFactory {
     return template;
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave) throws IOException, TemplateException {
-    final File fileToSave = new File(filePathToSave);
-    final Path pathToExceptionPackage = fileToSave.toPath().resolve("exception");
-    pathToExceptionPackage.toFile().mkdirs();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, pathToExceptionPackage, "ModelClassException");
-
-  }
-
   public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, pathToSaveMainClass, "ApiWebClient");
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, filePathToSave, "ApiWebClient");
   }
 
   public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
-    final File fileToSave = new File(filePathToSave);
-
-    final String pathToSaveMainClass = fileToSave.toPath().resolve("ApiRestClient.java").toString();
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, pathToSaveMainClass);
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, Paths.get(filePathToSave), "ApiRestClient");
 
   }
 
   public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException {
-    final File fileToSave = new File(filePathToSave);
-    final var nameAuthClass = authName + JAVA_EXTENSION;
-    final String pathToSaveMainClass = fileToSave.toPath().resolve(nameAuthClass).toString();
-    writeTemplateToFile(createNameTemplate(authName), pathToSaveMainClass);
+    writeTemplateToFile(createNameTemplate(authName), Paths.get(filePathToSave), authName);
 
-  }
-
-  public final void fillTemplateCustom(
-      final String filePathToSave, final String annotationFileName, final String validatorFileName, final String annotationTemplate,
-      final String validatorTemplate) throws IOException {
-    final File fileToSave = new File(filePathToSave);
-    final Path pathToValidatorPackage = fileToSave.toPath().resolve("customvalidator");
-    pathToValidatorPackage.toFile().mkdirs();
-    final String pathToSaveMainClass = pathToValidatorPackage.resolve(annotationFileName).toString();
-    writeTemplateToFile(annotationTemplate, pathToSaveMainClass);
-    final String pathToSaveMainClassValidator = pathToValidatorPackage.resolve(validatorFileName).toString();
-    writeTemplateToFile(validatorTemplate, pathToSaveMainClassValidator);
   }
 
   public final void fillTemplate(

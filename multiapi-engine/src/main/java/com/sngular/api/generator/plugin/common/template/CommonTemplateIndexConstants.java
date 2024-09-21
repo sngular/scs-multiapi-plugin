@@ -66,4 +66,6 @@ public abstract class CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION = "templateUniqueItemsValidator.ftlh";
 
+  private CommonTemplateIndexConstants() {
+  }
 }

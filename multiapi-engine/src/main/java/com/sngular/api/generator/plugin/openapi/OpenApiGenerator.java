@@ -295,7 +295,7 @@ public class OpenApiGenerator {
       try {
         final Set<String> propertiesSet = new HashSet<>();
         templateFactory.fillTemplateSchema(fileModelToSave, specFile.isUseLombokModelAnnotation(), schemaObject, propertiesSet);
-        fillTemplates(fileModelToSave,  propertiesSet);
+        fillTempla(fileModelToSave, propertiesSet);
       } catch (IOException | TemplateException e) {
         throw new GeneratedSourcesException(schemaObject.getClassName(), e);
       }
@@ -303,8 +303,8 @@ public class OpenApiGenerator {
 
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
       try {
-        templateFactory.fillTemplateModelClassException(fileModelToSave, true, modelPackage);
-      } catch (IOException | TemplateException e) {
+        templateFactory.fillTemplateModelClassException(fileModelToSave, modelPackage);
+      } catch (IOException e) {
         throw new GeneratedSourcesException(fileModelToSave, e);
       }
     }

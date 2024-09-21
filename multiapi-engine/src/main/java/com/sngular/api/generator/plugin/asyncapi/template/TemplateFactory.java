@@ -221,7 +221,7 @@ public class TemplateFactory extends CommonTemplateFactory {
                  "className", className,
                  "keyNamespace", keyClassFullName,
                  "keyClassName", keyClassName));
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, filePath.resolve("MessageWrapper.java").toAbsolutePath().toString());
+    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, filePath, "MessageWrapper");
     clearData();
   }
 

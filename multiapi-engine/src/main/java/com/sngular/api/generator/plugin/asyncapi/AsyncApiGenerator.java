@@ -422,7 +422,7 @@ public class AsyncApiGenerator {
         schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
 
         if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-          templateFactory.fillTemplateModelClassException(filePath, modelPackage);
+          templateFactory.fillTemplateModelClassException(operationObject.getApiPackage(), modelPackage);
         }
       }
     }

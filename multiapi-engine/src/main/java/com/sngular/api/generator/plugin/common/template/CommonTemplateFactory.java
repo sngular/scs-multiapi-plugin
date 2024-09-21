@@ -193,11 +193,11 @@ public abstract class CommonTemplateFactory {
     return propertiesSet;
   }
 
-  public final void fillTemplateModelClassException(final Path filePathToSave, final String modelPackage) throws IOException {
-    final Path pathToExceptionPackage = filePathToSave.resolve("exception");
+  public final void fillTemplateModelClassException(final String filePathToSave, final String modelPackage) throws IOException {
+    final Path pathToExceptionPackage = Paths.get(filePathToSave).resolve("exception");
     pathToExceptionPackage.toFile().mkdirs();
     addToRoot(EXCEPTION_PACKAGE, modelPackage);
-    writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, filePathToSave, "ModelClassException");
+    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, filePathToSave, "ModelClassException");
   }
 
   private void fillTemplateCustom(
