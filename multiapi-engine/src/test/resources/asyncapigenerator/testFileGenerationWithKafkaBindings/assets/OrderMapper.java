@@ -60,7 +60,7 @@ public class OrderMapper {
     }
 
     public OrderMapper.OrderMapperBuilder line(OrderLineMapper line) {
-      if (line != null) {
+      if (Objects.nonNull(line)) {
         this.lines.add(line);
       }
       return this;

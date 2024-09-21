@@ -59,9 +59,9 @@ public class OrderDTO {
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder _new(OrderLineDTO _new) {
-      if (_new != null) {
-        this._new.add(_new);
+    public OrderDTO.OrderDTOBuilder __new(OrderLineDTO __new) {
+      if (Objects.nonNull(__new)) {
+        this._new.add(__new);
       }
       return this;
     }

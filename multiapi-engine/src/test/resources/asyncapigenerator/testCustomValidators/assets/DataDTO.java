@@ -85,9 +85,9 @@ public class DataDTO {
       return this;
     }
 
-    public DataDTO.DataDTOBuilder test(Integer test) {
-      if (test != null) {
-        this.test.add(test);
+    public DataDTO.DataDTOBuilder _test(Integer _test) {
+      if (Objects.nonNull(_test)) {
+        this.test.add(_test);
       }
       return this;
     }

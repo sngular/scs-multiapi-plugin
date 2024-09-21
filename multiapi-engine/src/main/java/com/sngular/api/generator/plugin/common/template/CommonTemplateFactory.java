@@ -7,6 +7,7 @@ import com.sngular.api.generator.plugin.asyncapi.template.ClasspathTemplateLoade
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import freemarker.template.Configuration;
@@ -195,20 +196,22 @@ public abstract class CommonTemplateFactory {
   }
 
   public final void fillTemplateModelClassException(final String filePathToSave, final String modelPackage) throws IOException {
-    final Path pathToExceptionPackage = Paths.get(filePathToSave).resolve("exception");
-    pathToExceptionPackage.toFile().mkdirs();
     addToRoot(EXCEPTION_PACKAGE, modelPackage);
-    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, filePathToSave, "ModelClassException");
+    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(filePathToSave) + SLASH + "exception", "ModelClassException");
   }
 
   private void fillTemplateCustom(
       final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
       final String fileNameValidator, final String templateValidator) throws IOException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
-    pathToCustomValidatorPackage.toFile().mkdirs();
+    if (!pathToCustomValidatorPackage.toFile().exists()) {
+      if (!pathToCustomValidatorPackage.toFile().mkdirs()) {
+        throw new RuntimeException("Can't create custom validator directory");
+      }
+    }
     root.put("packageModel", modelPackage);
-    writeTemplateToFile(templateAnnotation, filePathToSave, fileNameAnnotation);
-    writeTemplateToFile(templateValidator, filePathToSave, fileNameValidator);
+    writeTemplateToFile(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
+    writeTemplateToFile(templateValidator, pathToCustomValidatorPackage, fileNameValidator);
   }
 
   protected void addToRoot(final String key, final Object value) {
@@ -217,10 +220,6 @@ public abstract class CommonTemplateFactory {
 
   protected void addToRoot(final Map<String, Object> propertiesSet) {
     root.putAll(propertiesSet);
-  }
-
-  protected Object getFromRoot(final String key) {
-    return root.get(key);
   }
 
   protected void cleanData() {
@@ -235,8 +234,13 @@ public abstract class CommonTemplateFactory {
                                     final String destinationPackage) {
     final var filePath = processPath(getPath(destinationPackage));
     final var propertiesPath = processPath(getPath(modelPackage));
-    final var builder = ClassTemplate.builder().filePath(filePath).modelPackage(modelPackage).className(schemaObject.getClassName()).classSchema(schemaObject)
-        .propertiesPath(propertiesPath);
+    final var builder = ClassTemplate
+            .builder()
+            .filePath(filePath)
+            .modelPackage(modelPackage)
+            .className(schemaObject.getClassName())
+            .classSchema(schemaObject)
+            .propertiesPath(propertiesPath);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }
@@ -244,10 +248,15 @@ public abstract class CommonTemplateFactory {
   }
 
   protected void writeTemplateToFile(final String templateName, final String filePathToSave, final String partialPath) throws IOException {
-    writeTemplateToFile(templateName, Paths.get(filePathToSave), partialPath);
+    writeTemplateToFile(templateName, processPath(getPath(filePathToSave)), partialPath);
   }
 
   protected void writeTemplateToFile(final String templateName, final Path filePathToSave, final String partialPath) throws IOException {
+    if (!filePathToSave.toFile().exists()) {
+      if (!filePathToSave.toFile().mkdirs()) {
+        throw new IOException("Could not create directory: " + filePathToSave.toFile().getAbsolutePath());
+      }
+    }
     final String path = filePathToSave.resolve(partialPath + FILE_TYPE_JAVA).toString();
     final Template template = cfg.getTemplate(templateName);
 

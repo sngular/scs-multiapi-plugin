@@ -99,7 +99,7 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(OrderedItemDTO orderedItem) {
-      if (orderedItem != null) {
+      if (Objects.nonNull(orderedItem)) {
         this.orderedItems.add(orderedItem);
       }
       return this;
@@ -113,7 +113,7 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(PaymentDetailsDTO paymentDetail) {
-      if (paymentDetail != null) {
+      if (Objects.nonNull(paymentDetail)) {
         this.paymentDetails.add(paymentDetail);
       }
       return this;

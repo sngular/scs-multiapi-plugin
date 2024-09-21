@@ -55,7 +55,7 @@ public class ObjectArrayDTO {
     }
 
     public ObjectArrayDTO.ObjectArrayDTOBuilder player(String player) {
-      if (player != null) {
+      if (Objects.nonNull(player)) {
         this.players.add(player);
       }
       return this;

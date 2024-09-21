@@ -45,9 +45,9 @@ public class OrderLineDTO {
       return this;
     }
 
-    public OrderLineDTO.OrderLineDTOBuilder _continue(String _continue) {
-      if (_continue != null) {
-        this._continue.add(_continue);
+    public OrderLineDTO.OrderLineDTOBuilder __continue(String __continue) {
+      if (Objects.nonNull(__continue)) {
+        this._continue.add(__continue);
       }
       return this;
     }

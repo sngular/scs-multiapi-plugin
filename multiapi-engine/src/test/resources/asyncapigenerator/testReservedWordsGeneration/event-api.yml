@@ -24,10 +24,10 @@ channels:
     publish:
       operationId: "publishOperationFileGeneration"
       message:
-        $ref: './assets/path.yml#/components/messages/OrderCreated'
+        $ref: 'assets/path.yml#/components/messages/OrderCreated'
   order.createCommand:
     subscribe:
       operationId: "subscribeOperationFileGeneration"
       message:
         payload:
-          $ref: './assets/path.yml#/components/schemas/CreateOrder'
+          $ref: 'assets/path.yml#/components/schemas/CreateOrder'

@@ -67,6 +67,10 @@ public class MapperUtil {
     return ArrayUtils.removeAllOccurrences(name.split(DIVISOR), "");
   }
 
+  public static String packageToFolder(final String packageName) {
+    return StringUtils.replace(packageName, ".", SLASH);
+  }
+
   public static String buildKey(final String[] pathList) {
     final var arrayLength = pathList.length;
     return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();

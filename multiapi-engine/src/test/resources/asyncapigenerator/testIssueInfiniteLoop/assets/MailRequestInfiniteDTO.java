@@ -55,7 +55,7 @@ public class MailRequestInfiniteDTO {
     }
 
     public MailRequestInfiniteDTO.MailRequestInfiniteDTOBuilder recipient(String recipient) {
-      if (recipient != null) {
+      if (Objects.nonNull(recipient)) {
         this.recipients.add(recipient);
       }
       return this;

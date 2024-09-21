@@ -420,7 +420,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/filegeneration/model/event/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "IPublishOperationFileGeneration.java",
@@ -450,14 +452,14 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API) &&
+                                expectedExceptionFiles, List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API)) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_COMMON_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
 
   private static Boolean commonTest(
       final Path resultPath, final List<String> expectedFile, final List<String> expectedModelFiles, final String targetConsumer,
-      final String targetProducer, final List<String> expectedExceptionFiles, final String targetException) {
+      final String targetProducer, final List<String> expectedExceptionFiles, final List<String> targetExceptionList) {
     Boolean result = Boolean.TRUE;
     try {
       final Path pathToTarget = Path.of(resultPath.toString(), "target");
@@ -475,10 +477,12 @@ public class AsyncApiGeneratorFixtures {
       }
 
       if (CollectionUtils.isNotEmpty(expectedExceptionFiles)) {
-        final Path pathToTargetException = pathToTarget.resolve(targetException);
-        final File targetModelException = pathToTargetException.toFile();
-        Assertions.assertThat(targetModelException).isNotEmptyDirectory();
-        TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
+        for (final var targetException: targetExceptionList) {
+          final Path pathToTargetException = pathToTarget.resolve(targetException);
+          final File targetModelException = pathToTargetException.toFile();
+          Assertions.assertThat(targetModelException).isNotEmptyDirectory();
+          TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
+        }
       }
     } catch (final IOException e) {
       result = Boolean.FALSE;
@@ -544,10 +548,8 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "StatusMsgDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, null) &&
+                                Collections.emptyList(), Collections.emptyList()) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
@@ -575,10 +577,8 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "StatusMsgDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, null) &&
+                                Collections.emptyList(), Collections.emptyList()) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
@@ -608,9 +608,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "WaiterDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
-    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, expectedExceptionFiles, null) &&
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), Collections.emptyList()) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
@@ -639,9 +637,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "WaiterDTO.java"
     );
 
-    final List<String> expectedExceptionFiles = List.of();
-
-    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, expectedExceptionFiles, null) &&
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), Collections.emptyList()) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
   }
 
@@ -660,7 +656,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/" + calculateJavaEEPackage(springBootVersion);
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/customvalidator/model/event/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ICustomValidatorResponse.java",
@@ -712,7 +710,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API) &&
+                                expectedExceptionFiles,  List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API)) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
@@ -741,7 +739,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/filegenerationissue/model/event/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "IOnCustomerEvent.java",
@@ -772,7 +772,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API) &&
+                                expectedExceptionFiles,  List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API)) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_COMMON_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
@@ -786,8 +786,6 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/externalavro/model/event/exception";
-
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperationExternalAvro.java",
         ASSETS_PATH + "ISubscribeReceiptExternalAvro.java",
@@ -800,7 +798,7 @@ public class AsyncApiGeneratorFixtures {
     );
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                Collections.emptyList(), DEFAULT_EXCEPTION_API);
+                                Collections.emptyList(), Collections.emptyList());
   }
 
   static Function<Path, Boolean> validateTestFileGenerationStreamBridge() {
@@ -812,7 +810,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/streambridge/model/event/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperationStreamBridge.java",
@@ -827,7 +827,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+                                expectedExceptionFiles, List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API));
   }
 
   static Function<Path, Boolean> validateTestFileGenerationWithoutIds() {
@@ -839,7 +839,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/scsplugin/withoutids/model/event/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOperation.java",
@@ -854,7 +856,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+                                expectedExceptionFiles,  List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API));
   }
 
   static Function<Path, Boolean> validateTestFileGenerationArrayString() {
@@ -909,7 +911,9 @@ public class AsyncApiGeneratorFixtures {
 
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
 
-    final String DEFAULT_EXCEPTION_API = DEFAULT_COMMON_FOLDER + "/exception";
+    final String DEFAULT_CONSUMER_EXCEPTION_API = DEFAULT_CONSUMER_FOLDER + "/exception";
+
+    final String DEFAULT_PRODUCER_EXCEPTION_API = DEFAULT_PRODUCER_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
         ASSETS_PATH + "ISubscribeOrder.java",
@@ -936,7 +940,7 @@ public class AsyncApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
-                                expectedExceptionFiles, DEFAULT_EXCEPTION_API) &&
+                                expectedExceptionFiles, List.of(DEFAULT_CONSUMER_EXCEPTION_API, DEFAULT_PRODUCER_EXCEPTION_API)) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_COMMON_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
@@ -1051,7 +1055,7 @@ public class AsyncApiGeneratorFixtures {
         CUSTOM_VALIDATOR_PATH + "NotNullValidator.java"
     );
 
-    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), null) &&
+    return (path) -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER, Collections.emptyList(), Collections.emptyList()) &&
                      modelTest(path, expectedModelSchemaFiles, DEFAULT_COMMON_FOLDER) &&
                      customValidatorTest(path, expectedValidatorFiles, DEFAULT_CUSTOM_VALIDATOR_FOLDER);
   }
@@ -1095,7 +1099,7 @@ public class AsyncApiGeneratorFixtures {
                    DEFAULT_CONSUMER_FOLDER,
                    DEFAULT_PRODUCER_FOLDER,
                    Collections.emptyList(),
-                   null)
+                   Collections.emptyList())
                && modelTest(path, expectedConsumerModelSchemaFiles, DEFAULT_CONSUMER_MODEL_FOLDER)
                && modelTest(path, expectedProducerModelSchemaFiles, DEFAULT_PRODUCER_MODEL_FOLDER);
   }

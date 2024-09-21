@@ -45,7 +45,7 @@ public class OrderLineDTO {
     }
 
     public OrderLineDTO.OrderLineDTOBuilder product(OrderProductDTO product) {
-      if (product != null) {
+      if (Objects.nonNull(product)) {
         this.products.add(product);
       }
       return this;

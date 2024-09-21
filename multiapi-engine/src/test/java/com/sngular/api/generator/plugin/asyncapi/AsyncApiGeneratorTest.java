@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 @Slf4j
 class AsyncApiGeneratorTest {
 
-  @TempDir(cleanup = CleanupMode.ALWAYS)
+  @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
 
   private static AsyncApiGenerator asyncApiGenerator;

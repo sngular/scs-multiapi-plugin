@@ -295,7 +295,7 @@ public class ${schema.className} {
 
     <#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
     public ${schema.className}.${schema.className}Builder ${singName}(${field.dataType.innerType} ${singName}) {
-      if (${singName} != null) {
+      if (Objects.nonNull(${singName})) {
         this.${propName}.add(${singName});
       }
       return this;

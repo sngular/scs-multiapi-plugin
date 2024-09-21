@@ -45,7 +45,7 @@ public class OrderLineMapper {
     }
 
     public OrderLineMapper.OrderLineMapperBuilder product(OrderProductMapper product) {
-      if (product != null) {
+      if (Objects.nonNull(product)) {
         this.products.add(product);
       }
       return this;

@@ -55,7 +55,7 @@ public class MailRequestDTO {
     }
 
     public MailRequestDTO.MailRequestDTOBuilder recipient(String recipient) {
-      if (recipient != null) {
+      if (Objects.nonNull(recipient)) {
         this.recipients.add(recipient);
       }
       return this;

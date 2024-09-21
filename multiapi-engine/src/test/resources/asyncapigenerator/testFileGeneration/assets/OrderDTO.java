@@ -60,7 +60,7 @@ public class OrderDTO {
     }
 
     public OrderDTO.OrderDTOBuilder line(OrderLineDTO line) {
-      if (line != null) {
+      if (Objects.nonNull(line)) {
         this.lines.add(line);
       }
       return this;
