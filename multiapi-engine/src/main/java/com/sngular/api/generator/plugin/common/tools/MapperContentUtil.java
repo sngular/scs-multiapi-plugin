@@ -4,30 +4,20 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.sngular.api.generator.plugin.asyncapi.util;
-
+package com.sngular.api.generator.plugin.common.tools;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
-import com.sngular.api.generator.plugin.common.tools.ModelBuilder;
 
 import java.nio.file.Path;
 import java.util.*;
 
 public class MapperContentUtil {
 
-  private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
 
-  private static final String ADDITIONAL_PROPERTIES = "additionalProperties";
-
-  private static final String ANY_OF_COMBINATOR = "anyOf";
-
-  private static final String ONE_OF_COMBINATOR = "oneOf";
-
-  private static final String ALL_OF_COMBINATOR = "allOf";
-
-  private MapperContentUtil() {}
+  private MapperContentUtil() {
+  }
 
   public static List<SchemaObject> mapComponentToSchemaObject(
       final Map<String, JsonNode> totalSchemas, final String className, final JsonNode model,
@@ -40,6 +30,5 @@ public class MapperContentUtil {
     }
     return schemasList;
   }
-
 
 }

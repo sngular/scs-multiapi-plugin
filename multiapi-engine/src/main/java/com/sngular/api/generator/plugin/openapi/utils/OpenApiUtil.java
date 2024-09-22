@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
@@ -158,9 +159,9 @@ public class OpenApiUtil {
       final var content = operation.at("/requestBody/content");
       final var schema = content.findValue("schema");
       if (!ApiTool.hasRef(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(getOperationId(operation))), schema);
       } else if (ApiTool.hasItems(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), ApiTool.getItems(schema));
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId"))), ApiTool.getItems(schema));
       }
     }
   }
@@ -174,9 +175,9 @@ public class OpenApiUtil {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
             if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation))), schema);
             } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema)), schema);
             }
           }
         }
@@ -190,7 +191,7 @@ public class OpenApiUtil {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-              "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
+              StringCaseUtils.titleToSnakeCase("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter))),
               ApiTool.getNode(parameter, "schema"));
         }
       }

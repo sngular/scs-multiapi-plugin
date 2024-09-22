@@ -71,7 +71,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder tag(String tag) {
-      if (tag != null) {
+      if (Objects.nonNull(tag)) {
         this.tags.add(tag);
       }
       return this;
@@ -90,7 +90,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder testType(ApiTestTypeDTO testType) {
-      if (testType != null) {
+      if (Objects.nonNull(testType)) {
         this.testTypeList.add(testType);
       }
       return this;

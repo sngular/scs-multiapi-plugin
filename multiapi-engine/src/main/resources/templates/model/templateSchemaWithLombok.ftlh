@@ -138,14 +138,14 @@ import ${packageModel}.customvalidator.UniqueItems;
 </#list>
 import lombok.Builder;
 <#list schema.fieldObjectList as field>
-  <#if collection?seq_contains(field.dataType.baseType)>
-import lombok.Singular;
+  <#if field.required>
+import lombok.NonNull;
   <#break>
 </#if>
 </#list>
 <#list schema.fieldObjectList as field>
-  <#if field.required>
-import lombok.NonNull;
+  <#if collection?seq_contains(field.dataType.baseType)>
+import lombok.Singular;
   <#break>
 </#if>
 </#list>
@@ -241,6 +241,7 @@ public class ${schema.className} {
 <#else>
   private ${field.dataType} ${createSimpleType (field)}
 </#if>
+
 </#list>
 
   @Builder

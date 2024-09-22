@@ -94,10 +94,6 @@ components:
           type: array
           items:
             type: string
-    Tests:
-      type: array
-      items:
-        $ref: "#/components/schemas/Test"
     Error:
       type: object
       required:

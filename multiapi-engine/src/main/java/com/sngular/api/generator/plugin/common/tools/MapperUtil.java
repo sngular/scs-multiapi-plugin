@@ -16,30 +16,6 @@ import org.apache.commons.text.CaseUtils;
 
 public class MapperUtil {
 
-  private static final String INTEGER = "integer";
-
-  private static final String DOUBLE = "double";
-
-  private static final String FLOAT = "float";
-
-  private static final String NUMBER = "number";
-
-  private static final String INT_64 = "int64";
-
-  private static final String LONG = "long";
-
-  private static final String DATE = "date";
-
-  private static final String DATE_TIME = "date-time";
-
-  private static final String BIG_DECIMAL = "BigDecimal";
-
-  private static final String LOCAL_DATE = "LocalDate";
-
-  private static final String LOCAL_DATE_TIME = "LocalDateTime";
-
-  private static final String ZONED_DATE_TIME = "ZonedDateTime";
-
   private static final String REF = "$ref";
 
   private static final String DIVISOR = "([./])";
@@ -71,9 +47,9 @@ public class MapperUtil {
     return StringUtils.replace(packageName, ".", SLASH);
   }
 
-  public static String buildKey(final String[] pathList) {
-    final var arrayLength = pathList.length;
-    return (arrayLength > 2 ? pathList[arrayLength - 2] + SLASH + pathList[arrayLength - 1] : pathList[0]).toUpperCase();
+  public static String buildKey(final JsonNode parameter) {
+    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
   }
 
   public static String getRefSchemaName(final JsonNode parameter) {
@@ -87,8 +63,12 @@ public class MapperUtil {
   }
 
   public static String getKeySchemaName(final String parameter) {
-    final String[] pathObjectRef = parameter.split("/");
-    return StringCaseUtils.toCamelCase(pathObjectRef[pathObjectRef.length - 1]);
+    return StringCaseUtils.toCamelCase(getKey(parameter));
+  }
+
+  public static String getKey(final String keyString) {
+    final String[] pathObjectRef = keyString.split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
   }
 
   public static String getRefSchemaKey(final String parameter) {

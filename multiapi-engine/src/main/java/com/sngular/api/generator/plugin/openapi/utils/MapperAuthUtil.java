@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
+import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
@@ -32,11 +34,14 @@ public class MapperAuthUtil {
       final JsonNode value = entry.getValue();
       final var typeStr = ApiTool.getType(value);
       final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(ApiTool.getNodeAsString(value, "scheme"));
-      final var authSchema = AuthSchemaObject.builder()
-                                             .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value)).name(key)
-                                             .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
-                                             .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")
-                                             .bearerSchema(isHttpBearer ? ApiTool.getNodeAsString(value, "scheme") : "").build();
+      final var authSchema = AuthSchemaObject
+          .builder()
+          .name(StringCaseUtils.toCamelCase(MapperUtil.getKey(key)))
+          .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value))
+          .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
+          .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")
+          .bearerSchema(isHttpBearer ? ApiTool.getNodeAsString(value, "scheme") : "")
+          .build();
       authList.add(authSchema);
     }
     return authList;
@@ -58,7 +63,7 @@ public class MapperAuthUtil {
   public static AuthObject getApiAuthObject(final List<AuthSchemaObject> authSchemas, final List<PathObject> pathObjects) {
     final var authList = getApiAuthNames(pathObjects);
     final var authApiList = new HashSet<String>();
-    if (null != authSchemas && !authSchemas.isEmpty() && !authList.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(authSchemas) && !authList.isEmpty()) {
       authSchemas.forEach(authValue -> {
         if (authList.contains(authValue.getName())) {
           authApiList.add(authValue.getType());

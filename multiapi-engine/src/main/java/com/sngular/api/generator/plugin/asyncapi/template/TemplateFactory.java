@@ -63,7 +63,7 @@ public class TemplateFactory extends CommonTemplateFactory {
     super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
-  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
+  public final void fillTemplates() throws IOException, TemplateException {
     addToRoot("publishMethods", publishMethods);
     addToRoot("subscribeMethods", subscribeMethods);
     addToRoot("streamBridgeMethods", streamBridgeMethods);
@@ -80,7 +80,7 @@ public class TemplateFactory extends CommonTemplateFactory {
       fillTemplate(streamBridgeFilePath, streamBridgeClassName, checkTemplate(method.getBindingType(), TemplateIndexConstants.TEMPLATE_API_STREAM_BRIDGE));
     }
 
-    generateTemplates(generateExceptionTemplate);
+    generateTemplates();
 
     this.generateInterfaces();
   }

@@ -19,7 +19,7 @@ import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
-import com.sngular.api.generator.plugin.asyncapi.util.MapperContentUtil;
+import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
@@ -103,8 +103,6 @@ public class AsyncApiGenerator {
 
   private final Integer springBootVersion;
 
-  private boolean generateExceptionTemplate;
-
   public AsyncApiGenerator(final Integer springBootVersion,
                            boolean overwriteModel,
                            final File targetFolder,
@@ -137,8 +135,8 @@ public class AsyncApiGenerator {
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     processedOperationIds.clear();
-    generateExceptionTemplate = false;
-    for (final SpecFile fileParameter : specsListFile) {
+    templateFactory.setNotGenerateTemplate();
+  for (final SpecFile fileParameter : specsListFile) {
       final Pair<InputStream, FileLocation> ymlFileAndPath;
       try {
         ymlFileAndPath = resolveYmlLocation(fileParameter.getFilePath());
@@ -166,26 +164,10 @@ public class AsyncApiGenerator {
           processOperation(fileParameter, ymlParent, entry, channel, operationId, channelPayload, totalSchemas);
         }
 
-        templateFactory.fillTemplates(generateExceptionTemplate);
+        templateFactory.fillTemplates();
         templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
         throw new FileSystemException(e);
-      }
-    }
-  }
-
-  private void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok) {
-    if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
-      generateExceptionTemplate = true;
-    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
-      final var fieldListIt = schema.getFieldObjectList().iterator();
-      if (fieldListIt.hasNext()) {
-        do {
-          final var field = fieldListIt.next();
-          if (field.isRequired()) {
-            generateExceptionTemplate = true;
-          }
-        } while (fieldListIt.hasNext() && !generateExceptionTemplate);
       }
     }
   }
@@ -401,7 +383,7 @@ public class AsyncApiGenerator {
 
   private void fillTemplateFactory(
       final ProcessMethodResult processedMethod, final Map<String, JsonNode> totalSchemas, final OperationParameterObject operationObject)
-      throws TemplateException, IOException {
+      throws IOException {
     final String classFullName = processedMethod.getNamespace();
     final String keyClassFullName = processedMethod.getBindings();
     final String modelPackage = classFullName.substring(0, classFullName.lastIndexOf("."));
@@ -420,10 +402,6 @@ public class AsyncApiGenerator {
           templateFactory.fillTemplateWrapper(operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
         }
         schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
-
-        if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-          templateFactory.fillTemplateModelClassException(operationObject.getApiPackage(), modelPackage);
-        }
       }
     }
   }
@@ -442,8 +420,8 @@ public class AsyncApiGenerator {
 
   private void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
     final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
-    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage);
-    checkRequiredOrCombinatorExists(schemaObject, usingLombok);
+    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
+    templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
   }
 
   private ProcessMethodResult processMethod(

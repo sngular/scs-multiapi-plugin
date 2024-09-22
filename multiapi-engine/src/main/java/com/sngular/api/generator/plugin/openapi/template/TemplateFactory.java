@@ -39,37 +39,12 @@ public class TemplateFactory extends CommonTemplateFactory {
     super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
-  public final void fillTemplateSchema(
-      final String filePathToSave, final Boolean useLombok, final SchemaObject schemaObject,
-      final Set<String> propertiesSet) throws IOException,
-                                            TemplateException {
-    if (Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
-      addToRoot("schema", schemaObject);
-      writeTemplateToFile(templateSelector(useLombok), filePathToSave, schemaObject.getClassName());
-      for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
-        propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
-          propertiesSet.add("NotNull");
-        }
-      }
-    }
-  }
-
   public final void clearData() {
     cleanData();
   }
 
-  private static String templateSelector(final Boolean useLombok) {
-    final var shouldUseLombok = Objects.requireNonNullElse(useLombok, false);
-    final String template;
-
-    if (Boolean.TRUE.equals(shouldUseLombok)) {
-      template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK;
-    } else {
-      template = TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
-    }
-
-    return template;
+  public final void fillTemplates() {
+    generateTemplates();
   }
 
   public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
@@ -78,11 +53,10 @@ public class TemplateFactory extends CommonTemplateFactory {
 
   public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, filePathToSave, "ApiRestClient");
-
   }
 
-  public final void fillTemplateAuth(final String filePathToSave, final String authName) throws IOException {
-    writeTemplateToFile(createNameTemplate(authName),filePathToSave, authName);
+  public final void fillTemplateAuth(final String apiPackage, final String authName) throws IOException {
+    writeTemplateToFile(createNameTemplate(authName), apiPackage, authName);
   }
 
   public final void fillTemplate(
@@ -102,15 +76,10 @@ public class TemplateFactory extends CommonTemplateFactory {
 
     if (specFile.isCallMode()) {
       addToRoot("authObject", authObject);
+      addToRoot("clientPackage", specFile.getClientPackage());
     }
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), filePathToSave, className + "Api");
-
-  }
-
-  public final void fillTemplates(boolean generateExceptionTemplate) throws IOException, TemplateException {
-    generateTemplates(generateExceptionTemplate);
-
   }
 
   public final void calculateJavaEEPackage(final Integer springBootVersion) {

@@ -53,6 +53,8 @@ public abstract class CommonTemplateFactory {
 
   private final File baseDir;
 
+  protected boolean generateExceptionTemplate;
+
   protected CommonTemplateFactory(boolean checkOverwrite,
                                final File targetFolder,
                                final String processedGeneratedSourcesFolder,
@@ -71,7 +73,7 @@ public abstract class CommonTemplateFactory {
     this.baseDir = baseDir;
   }
 
-  protected void generateTemplates(boolean generateExceptionTemplate) {
+  protected void generateTemplates() {
 
     final String exceptionPackage;
     if (Boolean.TRUE.equals(generateExceptionTemplate)) {
@@ -83,7 +85,10 @@ public abstract class CommonTemplateFactory {
     classTemplateList.forEach(classTemplate -> {
       try {
         fillTemplates(classTemplate.getPropertiesPath(), classTemplate.getModelPackage(),
-            fillTemplateSchema(classTemplate, false, exceptionPackage));
+            fillTemplateSchema(classTemplate, exceptionPackage));
+        if (generateExceptionTemplate) {
+          fillTemplateModelClassException(classTemplate.getModelPackage());
+        }
       } catch (final IOException | TemplateException exception) {
         throw new FileSystemException(exception);
       }
@@ -92,10 +97,11 @@ public abstract class CommonTemplateFactory {
 
   private ClassTemplate getClassTemplate() {
     ClassTemplate ourClassTemplate = null;
-    for (ClassTemplate classTemplate : classTemplateList) {
+    final var classTemplateListIt = classTemplateList.iterator();
+    while (Objects.isNull(ourClassTemplate) && classTemplateListIt.hasNext()) {
+      final var classTemplate = classTemplateListIt.next();
       if (classTemplate.getFilePath().endsWith("schemas")) {
         ourClassTemplate = classTemplate;
-        break;
       }
     }
     if (ourClassTemplate == null) {
@@ -170,14 +176,14 @@ public abstract class CommonTemplateFactory {
   }
 
   @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final Boolean useLombok, final String exceptionPackage)
+  private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final String exceptionPackage)
       throws IOException, TemplateException {
     final var propertiesSet = new HashSet<String>();
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       addToRoot("schema", schemaObject);
-      final String templateName = null != useLombok && useLombok ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+      final String templateName = classTemplate.isUseLombok() ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         addToRoot("packageModel", classTemplate.getModelPackage());
       }
@@ -187,7 +193,7 @@ public abstract class CommonTemplateFactory {
       fillTemplate(filePath.toString(), schemaObject.getClassName(), templateName);
       for (SchemaFieldObject fieldObject : schemaObject.getFieldObjectList()) {
         propertiesSet.addAll(fieldObject.getRestrictions().getProperties());
-        if (fieldObject.isRequired() && Boolean.FALSE.equals(useLombok)) {
+        if (fieldObject.isRequired() && Boolean.FALSE.equals(classTemplate.isUseLombok())) {
           propertiesSet.add("NotNull");
         }
       }
@@ -195,9 +201,13 @@ public abstract class CommonTemplateFactory {
     return propertiesSet;
   }
 
-  public final void fillTemplateModelClassException(final String filePathToSave, final String modelPackage) throws IOException {
+  public final void fillTemplateModelClassException(final String modelPackage) throws IOException {
     addToRoot(EXCEPTION_PACKAGE, modelPackage);
-    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(filePathToSave) + SLASH + "exception", "ModelClassException");
+    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(modelPackage) + SLASH + "exception", "ModelClassException");
+  }
+
+  public void setNotGenerateTemplate() {
+    this.generateExceptionTemplate = false;
   }
 
   private void fillTemplateCustom(
@@ -231,7 +241,8 @@ public abstract class CommonTemplateFactory {
   public final void addSchemaObject(final String modelPackage,
                                     final String keyClassName,
                                     final SchemaObject schemaObject,
-                                    final String destinationPackage) {
+                                    final String destinationPackage,
+                                    final boolean useLombok) {
     final var filePath = processPath(getPath(destinationPackage));
     final var propertiesPath = processPath(getPath(modelPackage));
     final var builder = ClassTemplate
@@ -240,15 +251,16 @@ public abstract class CommonTemplateFactory {
             .modelPackage(modelPackage)
             .className(schemaObject.getClassName())
             .classSchema(schemaObject)
-            .propertiesPath(propertiesPath);
+            .propertiesPath(propertiesPath)
+        .useLombok(useLombok);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }
     classTemplateList.add(builder.build());
   }
 
-  protected void writeTemplateToFile(final String templateName, final String filePathToSave, final String partialPath) throws IOException {
-    writeTemplateToFile(templateName, processPath(getPath(filePathToSave)), partialPath);
+  protected void writeTemplateToFile(final String templateName, final String apiPackage, final String partialPath) throws IOException {
+    writeTemplateToFile(templateName, processPath(getPath(apiPackage)), partialPath);
   }
 
   protected void writeTemplateToFile(final String templateName, final Path filePathToSave, final String partialPath) throws IOException {
@@ -303,6 +315,22 @@ public abstract class CommonTemplateFactory {
   }
 
   protected String getPath(final String pathName) {
-    return processedGeneratedSourcesFolder + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
+    return processedGeneratedSourcesFolder + SLASH + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
+  }
+
+  public void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok) {
+    if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
+      generateExceptionTemplate = true;
+    } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {
+      final var fieldListIt = schema.getFieldObjectList().iterator();
+      if (fieldListIt.hasNext()) {
+        do {
+          final var field = fieldListIt.next();
+          if (field.isRequired()) {
+            generateExceptionTemplate = true;
+          }
+        } while (fieldListIt.hasNext() && !generateExceptionTemplate);
+      }
+    }
   }
 }

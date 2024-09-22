@@ -28,4 +28,6 @@ public class ClassTemplate {
 
   SchemaObject classSchema;
 
+  boolean useLombok;
+
 }

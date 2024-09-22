@@ -10,9 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
+import com.sngular.api.generator.plugin.common.tools.*;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
 import com.sngular.api.generator.plugin.openapi.model.*;
@@ -282,7 +280,7 @@ public class MapperPathUtil {
                                .dataType(SchemaFieldObjectType.fromTypeList(inlineParameterPojo))
                                .importName(inlineParameterPojo)
                                .build());
-        globalObject.getSchemaMap().put(inlineParameter, parameterSchema);
+        globalObject.getSchemaMap().put(StringCaseUtils.titleToSnakeCase(inlineParameter), parameterSchema);
       } else {
         parameterObjects.add(builder
                                .name(parameterName)
@@ -324,7 +322,7 @@ public class MapperPathUtil {
       final JsonNode response) {
     var realResponse = response;
     if (ApiTool.hasRef(response)) {
-      realResponse = globalObject.getResponseNode(MapperUtil.getRefSchemaName(response)).orElseThrow();
+      realResponse = globalObject.getResponseNode(MapperUtil.buildKey(response)).orElseThrow();
     }
     final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
     final var content = ApiTool.getNode(realResponse, CONTENT);
@@ -349,7 +347,7 @@ public class MapperPathUtil {
         final String importName = getImportFromType(dataType);
         SchemaObject schemaObject = null;
         if (mediaType.equals("application/x-www-form-urlencoded") || mediaType.equals("multipart/form-data")) {
-          schemaObject = MapperContentUtil.mapComponentToSchemaObject(globalObject.getSchemaMap(), new HashMap<String, SchemaObject>(), schema, dataType.getBaseType(), specFile, baseDir).get("object");
+          schemaObject = MapperContentUtil.mapComponentToSchemaObject(globalObject.getSchemaMap(), pojoName, schema, dataType.getBaseType(), specFile, baseDir).get(0);
         }
         contentObjects.add(ContentObject.builder()
                 .dataType(dataType)
