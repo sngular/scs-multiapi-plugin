@@ -3,16 +3,17 @@ package com.sngular.multifileplugin.lombok.testapi.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Size;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxInteger;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinInteger;
-import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MultipleOf;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Size;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxItems;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinItems;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.UniqueItems;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
@@ -39,6 +40,7 @@ public class ApiErrorDTO {
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
   @UniqueItems
+  @Singular("_test")
   private List<Integer> test;
 
 

@@ -23,15 +23,6 @@ public class ApiEnumFieldDTO {
   @JsonProperty(value ="defaultValue")
   private String defaultValue;
 
-  private ApiEnumFieldDTO(List<String> enumValues, String type, List<String> defaultValues, String name, String defaultValue) {
-    this.enumValues = enumValues;
-    this.type = type;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.defaultValue = defaultValue;
-
-  }
-
   private ApiEnumFieldDTO(ApiEnumFieldDTOBuilder builder) {
     this.enumValues = builder.enumValues;
     this.type = builder.type;
@@ -53,6 +44,7 @@ public class ApiEnumFieldDTO {
     private List<String> defaultValues = new ArrayList<String>();
     private String name;
     private String defaultValue;
+
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(List<String> enumValues) {
       if (!enumValues.isEmpty()) {
         this.enumValues.addAll(enumValues);
@@ -61,7 +53,7 @@ public class ApiEnumFieldDTO {
     }
 
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValue(String enumValue) {
-      if (enumValue != null) {
+      if (Objects.nonNull(enumValue)) {
         this.enumValues.add(enumValue);
       }
       return this;
@@ -71,6 +63,7 @@ public class ApiEnumFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(List<String> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -79,7 +72,7 @@ public class ApiEnumFieldDTO {
     }
 
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValue(String defaultValue) {
-      if (defaultValue != null) {
+      if (Objects.nonNull(defaultValue)) {
         this.defaultValues.add(defaultValue);
       }
       return this;

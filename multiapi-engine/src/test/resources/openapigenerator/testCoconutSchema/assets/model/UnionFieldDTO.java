@@ -13,7 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 public class UnionFieldDTO {
 
   @JsonProperty(value ="defaultItem")
-  @Singular("defaultItem")
+  @Singular("_defaultItem")
   private List<FieldDTO> defaultItem;
 
   @JsonProperty(value ="generatedFlag")
@@ -54,7 +54,8 @@ public class UnionFieldDTO {
   private Boolean optionalUnion;
 
   @JsonProperty(value ="values")
-  private List<FieldDTO> values = new ArrayList<FieldDTO>();
+  @Singular("value")
+  private List<FieldDTO> values;
 
 
   @Builder

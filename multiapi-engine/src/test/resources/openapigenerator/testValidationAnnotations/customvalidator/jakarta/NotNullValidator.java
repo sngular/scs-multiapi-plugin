@@ -1,7 +1,7 @@
 package com.sngular.multifileplugin.testapi.model.customvalidator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 public class NotNullValidator implements ConstraintValidator<NotNull, Object> {

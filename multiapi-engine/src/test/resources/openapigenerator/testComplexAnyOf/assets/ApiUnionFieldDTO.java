@@ -47,18 +47,7 @@ public class ApiUnionFieldDTO {
   @JsonProperty(value ="optionalUnion")
   private Boolean optionalUnion;
   @JsonProperty(value ="values")
-  private List<ApiTypeArrayDTO> values = new ArrayList<ApiTypeArrayDTO>();
-
-  private ApiUnionFieldDTO(ApiDefaultItemDTO defaultItem, Boolean generatedFlag, String type, UnionEnum unionEnum, String name, Boolean optionalUnion, List<ApiTypeArrayDTO> values) {
-    this.defaultItem = defaultItem;
-    this.generatedFlag = generatedFlag;
-    this.type = type;
-    this.unionEnum = unionEnum;
-    this.name = name;
-    this.optionalUnion = optionalUnion;
-    this.values = values;
-
-  }
+  private List<ApiTypeArrayDTO> values;
 
   private ApiUnionFieldDTO(ApiUnionFieldDTOBuilder builder) {
     this.defaultItem = builder.defaultItem;
@@ -100,6 +89,7 @@ public class ApiUnionFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder unionEnum(UnionEnum unionEnum) {
       this.unionEnum = unionEnum;
       return this;
@@ -114,6 +104,7 @@ public class ApiUnionFieldDTO {
       this.optionalUnion = optionalUnion;
       return this;
     }
+
     public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder values(List<ApiTypeArrayDTO> values) {
       if (!values.isEmpty()) {
         this.values.addAll(values);
@@ -122,7 +113,7 @@ public class ApiUnionFieldDTO {
     }
 
     public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder value(ApiTypeArrayDTO value) {
-      if (value != null) {
+      if (Objects.nonNull(value)) {
         this.values.add(value);
       }
       return this;

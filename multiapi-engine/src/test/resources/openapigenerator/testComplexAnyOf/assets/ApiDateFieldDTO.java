@@ -19,14 +19,6 @@ public class ApiDateFieldDTO {
   @JsonProperty(value ="format")
   private String format;
 
-  private ApiDateFieldDTO(String type, Object defaultValues, String name, String format) {
-    this.type = type;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.format = format;
-
-  }
-
   private ApiDateFieldDTO(ApiDateFieldDTOBuilder builder) {
     this.type = builder.type;
     this.defaultValues = builder.defaultValues;

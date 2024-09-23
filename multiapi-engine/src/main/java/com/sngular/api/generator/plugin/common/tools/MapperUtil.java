@@ -62,6 +62,11 @@ public class MapperUtil {
     return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
   }
 
+  public static String getRefSchemaKey(final String parameter) {
+    final String[] pathObjectRef = parameter.split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + getSchemaKey(pathObjectRef[pathObjectRef.length - 1]));
+  }
+
   public static String getKeySchemaName(final String parameter) {
     return StringCaseUtils.toCamelCase(getKey(parameter));
   }
@@ -69,11 +74,6 @@ public class MapperUtil {
   public static String getKey(final String keyString) {
     final String[] pathObjectRef = keyString.split("/");
     return pathObjectRef[pathObjectRef.length - 1];
-  }
-
-  public static String getRefSchemaKey(final String parameter) {
-    final String[] pathObjectRef = parameter.split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + getSchemaKey(pathObjectRef[pathObjectRef.length - 1]));
   }
 
   public static String getSchemaKey(final String schemaName) {

@@ -17,13 +17,6 @@ public class ApiBooleanFieldDTO {
   @JsonProperty(value ="defaultValue")
   private Boolean defaultValue;
 
-  private ApiBooleanFieldDTO(String type, String name, Boolean defaultValue) {
-    this.type = type;
-    this.name = name;
-    this.defaultValue = defaultValue;
-
-  }
-
   private ApiBooleanFieldDTO(ApiBooleanFieldDTOBuilder builder) {
     this.type = builder.type;
     this.name = builder.name;

@@ -239,6 +239,7 @@ public abstract class CommonTemplateFactory {
     clearRoot();
     addToRoot("checkBasicTypes", BASIC_DATA_TYPES);
     classTemplateList.clear();
+    generateExceptionTemplate = false;
   }
 
   protected abstract void clearRoot();

@@ -58,22 +58,6 @@ public class ApiNumberFieldDTO {
   @JsonProperty(value ="defaultValue")
   private Long defaultValue;
 
-  private ApiNumberFieldDTO(Integer precision, Integer maximum, String type, List<Object> defaultValues, String name, Integer multipleOf, Integer scale, Integer minimum, Boolean flagExclusiveMinimum, Boolean flagExclusiveMaximum, NumberEnum numberEnum, Long defaultValue) {
-    this.precision = precision;
-    this.maximum = maximum;
-    this.type = type;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.multipleOf = multipleOf;
-    this.scale = scale;
-    this.minimum = minimum;
-    this.flagExclusiveMinimum = flagExclusiveMinimum;
-    this.flagExclusiveMaximum = flagExclusiveMaximum;
-    this.numberEnum = numberEnum;
-    this.defaultValue = defaultValue;
-
-  }
-
   private ApiNumberFieldDTO(ApiNumberFieldDTOBuilder builder) {
     this.precision = builder.precision;
     this.maximum = builder.maximum;
@@ -124,6 +108,7 @@ public class ApiNumberFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValues(List<Object> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -167,6 +152,7 @@ public class ApiNumberFieldDTO {
       this.flagExclusiveMaximum = flagExclusiveMaximum;
       return this;
     }
+
     public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder numberEnum(NumberEnum numberEnum) {
       this.numberEnum = numberEnum;
       return this;

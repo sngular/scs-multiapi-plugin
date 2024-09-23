@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
@@ -12,6 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testers")
+  @Singular("tester")
   private List<String> testers;
 
   @JsonProperty(value ="testName")

@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
+import com.sngular.multifileplugin.testCoconutSchema.model.exception.ModelClassException;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
-import com.sngular.multifileplugin.testCoconutSchema.model.exception.ModelClassException;
 
 @Value
 public class FieldDTO {
@@ -240,80 +240,80 @@ public class FieldDTO {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-    if (Objects.nonNull(this.precision)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultItem)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.maximum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.type)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.scale)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.minLength)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.increment)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.keyType)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.requiredValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.optionalUnion)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.initialValue)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.flagExclusiveMinimum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.flagExclusiveMaximum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValue)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.enumValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.properties)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.defaultValues)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.unionEnum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.seqEnum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.arraySize)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.multipleOf)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.mapSize)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.mapTypes)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.format)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.generatedFlag)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.maxLength)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.uniqueItems)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.elements)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.regex)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.minItems)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.values)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.minimum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.numberEnum)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.valueLength)) {
-      satisfiedCondition = true;
-    }
+            if (Objects.nonNull(this.precision)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.defaultItem)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.maximum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.type)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.scale)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.minLength)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.increment)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.keyType)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.requiredValues)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.optionalUnion)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.initialValue)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.flagExclusiveMinimum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.flagExclusiveMaximum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.defaultValue)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.enumValues)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.properties)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.defaultValues)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.unionEnum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.seqEnum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.arraySize)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.multipleOf)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.mapSize)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.mapTypes)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.format)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.generatedFlag)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.maxLength)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.uniqueItems)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.elements)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.name)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.regex)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.minItems)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.values)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.minimum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.numberEnum)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.valueLength)) {
+        satisfiedCondition = true;
+        }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("FieldDTO");
+    throw new ModelClassException("FieldDTO");
     }
   }
 }

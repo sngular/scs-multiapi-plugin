@@ -167,9 +167,6 @@ import lombok.Singular;
 </#list>
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
-<#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
-import ${packageModel}.exception.ModelClassException;
-</#if>
 
 @Value
 public class ${schema.className} {

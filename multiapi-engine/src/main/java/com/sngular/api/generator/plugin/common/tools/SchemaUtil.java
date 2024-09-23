@@ -22,9 +22,8 @@ public class SchemaUtil {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
         solvedRef = OpenApiUtil.getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
-        final var refName = MapperUtil.getRefSchemaKey(refValueArr[1]);
         schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
-        solvedRef = solvedRef.findValue(refName);
+        solvedRef = solvedRef.findValue(MapperUtil.getKey(refValueArr[1]));
       }
     } else {
       solvedRef = null;

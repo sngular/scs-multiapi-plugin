@@ -29,18 +29,6 @@ public class ApiArrayFieldDTO {
   @JsonProperty(value ="values")
   private List<ApiTypeArrayDTO> values;
 
-  private ApiArrayFieldDTO(Boolean uniqueItems, String type, List<ApiTypeArrayDTO> defaultValues, String name, Integer arraySize, String regex, Integer minItems, List<ApiTypeArrayDTO> values) {
-    this.uniqueItems = uniqueItems;
-    this.type = type;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.arraySize = arraySize;
-    this.regex = regex;
-    this.minItems = minItems;
-    this.values = values;
-
-  }
-
   private ApiArrayFieldDTO(ApiArrayFieldDTOBuilder builder) {
     this.uniqueItems = builder.uniqueItems;
     this.type = builder.type;
@@ -78,6 +66,7 @@ public class ApiArrayFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValues(List<ApiTypeArrayDTO> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -86,7 +75,7 @@ public class ApiArrayFieldDTO {
     }
 
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValue(ApiTypeArrayDTO defaultValue) {
-      if (defaultValue != null) {
+      if (Objects.nonNull(defaultValue)) {
         this.defaultValues.add(defaultValue);
       }
       return this;
@@ -111,6 +100,7 @@ public class ApiArrayFieldDTO {
       this.minItems = minItems;
       return this;
     }
+
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder values(List<ApiTypeArrayDTO> values) {
       if (!values.isEmpty()) {
         this.values.addAll(values);
@@ -119,7 +109,7 @@ public class ApiArrayFieldDTO {
     }
 
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder value(ApiTypeArrayDTO value) {
-      if (value != null) {
+      if (Objects.nonNull(value)) {
         this.values.add(value);
       }
       return this;

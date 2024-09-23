@@ -54,18 +54,6 @@ public class ApiSequenceFieldDTO {
   @JsonProperty(value ="increment")
   private Integer increment;
 
-  private ApiSequenceFieldDTO(Integer elements, String type, List<ApiTypeArrayDTO> properties, List<Object> defaultValues, SeqEnum seqEnum, String name, String initialValue, Integer increment) {
-    this.elements = elements;
-    this.type = type;
-    this.properties = properties;
-    this.defaultValues = defaultValues;
-    this.seqEnum = seqEnum;
-    this.name = name;
-    this.initialValue = initialValue;
-    this.increment = increment;
-
-  }
-
   private ApiSequenceFieldDTO(ApiSequenceFieldDTOBuilder builder) {
     this.elements = builder.elements;
     this.type = builder.type;
@@ -103,6 +91,7 @@ public class ApiSequenceFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder properties(List<ApiTypeArrayDTO> properties) {
       if (!properties.isEmpty()) {
         this.properties.addAll(properties);
@@ -110,12 +99,13 @@ public class ApiSequenceFieldDTO {
       return this;
     }
 
-    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder propertie(ApiTypeArrayDTO propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder property(ApiTypeArrayDTO property) {
+      if (Objects.nonNull(property)) {
+        this.properties.add(property);
       }
       return this;
     }
+
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValues(List<Object> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -124,11 +114,12 @@ public class ApiSequenceFieldDTO {
     }
 
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
+      if (Objects.nonNull(defaultValue)) {
         this.defaultValues.add(defaultValue);
       }
       return this;
     }
+
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder seqEnum(SeqEnum seqEnum) {
       this.seqEnum = seqEnum;
       return this;

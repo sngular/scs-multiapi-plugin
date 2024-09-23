@@ -17,13 +17,6 @@ public class InlineResponse200CreateGameDTO {
   @JsonProperty(value ="message")
   private MessageDTO message;
 
-  private InlineResponse200CreateGameDTO(String description, Integer code, MessageDTO message) {
-    this.description = description;
-    this.code = code;
-    this.message = message;
-
-  }
-
   private InlineResponse200CreateGameDTO(InlineResponse200CreateGameDTOBuilder builder) {
     this.description = builder.description;
     this.code = builder.code;
@@ -51,6 +44,7 @@ public class InlineResponse200CreateGameDTO {
       this.code = code;
       return this;
     }
+
     public InlineResponse200CreateGameDTO.InlineResponse200CreateGameDTOBuilder message(MessageDTO message) {
       this.message = message;
       return this;

@@ -15,12 +15,6 @@ public class MessageDTO {
   @JsonProperty(value ="message")
   private MessageDTO message;
 
-  private MessageDTO(String description, MessageDTO message) {
-    this.description = description;
-    this.message = message;
-
-  }
-
   private MessageDTO(MessageDTOBuilder builder) {
     this.description = builder.description;
     this.message = builder.message;
@@ -41,6 +35,7 @@ public class MessageDTO {
       this.description = description;
       return this;
     }
+
     public MessageDTO.MessageDTOBuilder message(MessageDTO message) {
       this.message = message;
       return this;

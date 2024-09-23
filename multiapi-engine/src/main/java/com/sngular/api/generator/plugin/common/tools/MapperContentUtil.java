@@ -15,7 +15,6 @@ import java.util.*;
 
 public class MapperContentUtil {
 
-
   private MapperContentUtil() {
   }
 
