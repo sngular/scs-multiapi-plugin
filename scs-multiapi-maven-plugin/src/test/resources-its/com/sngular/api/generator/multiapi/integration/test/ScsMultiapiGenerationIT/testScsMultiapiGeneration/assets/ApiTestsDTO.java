@@ -10,11 +10,6 @@ public class ApiTestsDTO {
   @JsonProperty(value ="apiTestDTO")
   private ApiTestDTO apiTestDTO;
 
-  private ApiTestsDTO(ApiTestDTO apiTestDTO) {
-    this.apiTestDTO = apiTestDTO;
-
-  }
-
   private ApiTestsDTO(ApiTestsDTOBuilder builder) {
     this.apiTestDTO = builder.apiTestDTO;
 
