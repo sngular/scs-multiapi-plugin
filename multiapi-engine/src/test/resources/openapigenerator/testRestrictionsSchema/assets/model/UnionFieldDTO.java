@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
@@ -55,7 +56,8 @@ public class UnionFieldDTO {
   private Boolean optionalUnion;
 
   @JsonProperty(value ="values")
-  private List<FieldDTO> values = new ArrayList<FieldDTO>();
+  @Singular("value")
+  private List<FieldDTO> values;
 
 
   @Builder

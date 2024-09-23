@@ -4,9 +4,13 @@ public abstract class CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_CONTENT_SCHEMA = "templateSchema.ftlh";
 
+  public static final String TEMPLATE_CONTENT_ENUM = "templateContentEnum.ftlh";
+
   public static final String TEMPLATE_CONTENT_SCHEMA_LOMBOK = "templateSchemaWithLombok.ftlh";
 
   public static final String TEMPLATE_MODEL_EXCEPTION = "templateModelClassException.ftlh";
+
+  public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
 
   public static final String TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION = "templateNotNullValidator.ftlh";
 

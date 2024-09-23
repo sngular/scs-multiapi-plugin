@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
@@ -12,7 +13,8 @@ import lombok.extern.jackson.Jacksonized;
 public class SchemaDTO {
 
   @JsonProperty(value ="properties")
-  private List<FieldDTO> properties = new ArrayList<FieldDTO>();
+  @Singular("property")
+  private List<FieldDTO> properties;
 
   @JsonProperty(value ="type")
   @NonNull

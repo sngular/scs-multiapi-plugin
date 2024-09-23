@@ -6,6 +6,9 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
-import freemarker.cache.TemplateLoader;
 
 public class ClasspathTemplateLoader extends CommonTemplateLoader {
 
@@ -33,6 +33,7 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
   private final Map<String, String> templatesMap = new HashMap<>();
 
   public ClasspathTemplateLoader() {
+    super();
     templatesMap.putAll(getResourceFolderFiles());
   }
 
@@ -62,21 +63,21 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
       try {
         templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/model/" + templateFile)).getContent()));
       } catch (final IOException e) {
-        e.printStackTrace();
+        throw new GeneratorTemplateException("Error loading Model Templates", e);
       }
     });
     TEMPLATE_FILES.forEach(templateFile -> {
       try {
         templates.put(templateFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/" + templateFile)).getContent()));
       } catch (final IOException e) {
-        e.printStackTrace();
+        throw new GeneratorTemplateException("Error loading Api Templates", e);
       }
     });
     TEMPLATE_AUTH_FILES.forEach(templateAuthFile -> {
       try {
         templates.put(templateAuthFile, readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/openapi/authTemplates/" + templateAuthFile)).getContent()));
       } catch (final IOException e) {
-        e.printStackTrace();
+        throw new GeneratorTemplateException("Error loading Auth Templates", e);
       }
     });
     TEMPLATE_ANNOTATION_FILES.forEach(templateAnnotationFile -> {
@@ -84,7 +85,7 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
         templates.put(templateAnnotationFile,
                       readFile((InputStream) Objects.requireNonNull(LOADER.getResource("templates/customannotations/" + templateAnnotationFile)).getContent()));
       } catch (final IOException e) {
-        e.printStackTrace();
+        throw new GeneratorTemplateException("Error loading Annotation Templates", e);
       }
     });
 

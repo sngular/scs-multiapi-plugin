@@ -3,8 +3,8 @@ package com.sngular.multifileplugin.testapi.model.customvalidator;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class MaxItemsValidator implements ConstraintValidator<MaxItems, List<?>> {
 

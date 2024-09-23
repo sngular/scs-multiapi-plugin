@@ -20,8 +20,6 @@ public class TemplateIndexConstants extends CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_INTERFACE_CONSUMERS = "interfaceConsumer.ftlh";
 
-  public static final String TEMPLATE_NOT_NULL_ANNOTATION = "templateNotNull.ftlh";
-
   public static final String TEMPLATE_MESSAGE_WRAPPER = "templateMessageWrapper.ftlh";
 
   public static final String KAFKA_BINDINGS_FTLH = "WithKafkaBindings.ftlh";

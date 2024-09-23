@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
@@ -12,7 +13,8 @@ import lombok.extern.jackson.Jacksonized;
 public class TestDTO {
 
   @JsonProperty(value ="additionalProperties")
-  private Map<String, TestValueDTO> additionalProperties = new HashMap<String, TestValueDTO>();
+  @Singular("additionalProperty")
+  private Map<String, TestValueDTO> additionalProperties;
 
   @JsonProperty(value ="id")
   @NonNull

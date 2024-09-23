@@ -53,6 +53,10 @@ public final class ModelBuilder {
        schemaBuilder
         .fieldObjectList(listSchema)
         .parentPackage(parentPackage.toLowerCase());
+    } else {
+      schemaBuilder
+        .isEnum(true)
+        .fieldObject(processEnumField(className, model, specFile, ApiTool.getEnumValues(model), model));
     }
     cachedSchemas.putAll(compositedSchemas);
     return schemaBuilder.build();
@@ -130,7 +134,7 @@ public final class ModelBuilder {
               baseDir));
         fieldObjectArrayList.addAll(processAdditionalProperties(ADDITIONAL_PROPERTIES, schema, specFile, totalSchemas, compositedSchemas, antiLoopList, nameSchema, baseDir));
       } else {
-        ApiTool.getProperties(schema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
+        ApiTool.getProperties(schema).forEachRemaining(processProperties(nameSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList,
               baseDir));
       }
     } else if (TypeConstants.ARRAY.equalsIgnoreCase(ApiTool.getType(schema))) {
@@ -547,7 +551,7 @@ public final class ModelBuilder {
       schemaCombinatorType = ALL_OF_COMBINATOR;
     } else if (ApiTool.isAnyOf(schema)) {
       fieldObjectArrayList.addAll(
-            processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+        processAnyOfOneOf(fieldName, totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
       schemaCombinatorType = ANY_OF_COMBINATOR;
     } else if (ApiTool.isOneOf(schema)) {
       fieldObjectArrayList.addAll(
@@ -673,7 +677,10 @@ public final class ModelBuilder {
         } else if (compositedSchemas.containsKey(schemaName)) {
           fieldObjectArrayList.addAll(compositedSchemas.get(schemaName).getFieldObjectList());
         } else if (!schemaName.equalsIgnoreCase(buildingSchema)) {
-          fieldObjectArrayList.addAll(getFields(schemaName, totalSchemas, internalSchema, specFile, compositedSchemas, antiLoopList, ApiTool.getName(internalSchema), baseDir));
+          fieldObjectArrayList.add(SchemaFieldObject.builder()
+            .baseName(schemaName)
+            .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(internalSchema, specFile)))
+            .build());
         }
       } else {
         fieldObjectArrayList.addAll(getFields(buildingSchema, totalSchemas, internalSchema, specFile, compositedSchemas, antiLoopList, ApiTool.getName(internalSchema), baseDir));

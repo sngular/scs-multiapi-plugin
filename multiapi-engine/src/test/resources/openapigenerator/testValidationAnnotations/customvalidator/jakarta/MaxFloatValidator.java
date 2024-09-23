@@ -2,8 +2,8 @@ package com.sngular.multifileplugin.testapi.model.customvalidator;
 
 import java.util.Objects;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class MaxFloatValidator implements ConstraintValidator<MaxFloat, Float> {
 

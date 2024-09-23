@@ -3,7 +3,6 @@ package com.sngular.api.generator.plugin.common.template;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.template.ClassTemplate;
-import com.sngular.api.generator.plugin.asyncapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
@@ -13,7 +12,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -72,26 +70,14 @@ public abstract class CommonTemplateFactory {
     this.baseDir = baseDir;
   }
 
-  protected void generateTemplates() {
-
-    final String exceptionPackage;
-    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
-      exceptionPackage = getClassTemplate().getModelPackage();
+  private static String getTemplateName(ClassTemplate classTemplate) {
+    String templateName;
+    if (classTemplate.getClassSchema().isEnum()) {
+      templateName = CommonTemplateIndexConstants.TEMPLATE_CONTENT_ENUM;
     } else {
-      exceptionPackage = null;
+      templateName = classTemplate.isUseLombok() ? CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
     }
-
-    classTemplateList.forEach(classTemplate -> {
-      try {
-        fillTemplates(classTemplate.getPropertiesPath(), classTemplate.getModelPackage(),
-            fillTemplateSchema(classTemplate, exceptionPackage));
-        if (generateExceptionTemplate) {
-          fillTemplateModelClassException(classTemplate.getModelPackage());
-        }
-      } catch (final IOException | TemplateException exception) {
-        throw new FileSystemException(exception);
-      }
-    });
+    return templateName;
   }
 
   private ClassTemplate getClassTemplate() {
@@ -110,63 +96,85 @@ public abstract class CommonTemplateFactory {
     return ourClassTemplate;
   }
 
-  protected void fillTemplate(final String filePathToSave, final String className, final String templateName) throws IOException, TemplateException {
+  protected void generateTemplates() {
+
+    final String exceptionPackage;
+    if (Boolean.TRUE.equals(generateExceptionTemplate)) {
+      exceptionPackage = getClassTemplate().getModelPackage();
+    } else {
+      exceptionPackage = null;
+    }
+
+    classTemplateList.forEach(classTemplate -> {
+      try {
+        fillTemplates(classTemplate.getPropertiesPath(), classTemplate.getModelPackage(),
+            fillTemplateSchema(classTemplate, exceptionPackage));
+        if (generateExceptionTemplate) {
+          fillTemplateModelClassException(classTemplate.getModelPackage());
+        }
+      } catch (final IOException exception) {
+        throw new FileSystemException(exception);
+      }
+    });
+  }
+
+  protected void fillTemplate(final String filePathToSave, final String className, final String templateName) throws IOException {
     final var fileToSave = Paths.get(filePathToSave);
     fileToSave.toFile().mkdirs();
     writeTemplateToFile(templateName, fileToSave, className);
   }
 
   @SuppressWarnings("checkstyle:CyclomaticComplexity")
-  protected void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws TemplateException, IOException {
+  protected void fillTemplates(final Path filePathToSave, final String modelPackage, final Set<String> fieldProperties) throws IOException {
     for (final String current : fieldProperties) {
       switch (current) {
         case "Size":
-          fillTemplateCustom(filePathToSave, modelPackage, "Size", TemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator",
-              TemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "Size", CommonTemplateIndexConstants.TEMPLATE_SIZE_ANNOTATION, "SizeValidator",
+            CommonTemplateIndexConstants.TEMPLATE_SIZE_VALIDATOR_ANNOTATION);
           break;
         case "Pattern":
-          fillTemplateCustom(filePathToSave, modelPackage, "Pattern", TemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
-              "PatternValidator", TemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "Pattern", CommonTemplateIndexConstants.TEMPLATE_PATTERN_ANNOTATION,
+            "PatternValidator", CommonTemplateIndexConstants.TEMPLATE_PATTERN_VALIDATOR_ANNOTATION);
           break;
         case "MultipleOf":
-          fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
-              "MultipleOfValidator", TemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MultipleOf", CommonTemplateIndexConstants.TEMPLATE_MULTIPLEOF_ANNOTATION,
+            "MultipleOfValidator", CommonTemplateIndexConstants.TEMPLATE_MULTIPLEOF_VALIDATOR_ANNOTATION);
           break;
         case "Maximum":
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxInteger", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION,
-              "MaxIntegerValidator", TemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxBigDecimal", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION,
-              "MaxBigDecimalValidator", TemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxDouble", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION,
-              "MaxDoubleValidator", TemplateIndexConstants.TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxFloat", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_ANNOTATION,
-              "MaxFloatValidator", TemplateIndexConstants.TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxInteger", CommonTemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION,
+            "MaxIntegerValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxBigDecimal", CommonTemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION,
+            "MaxBigDecimalValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxDouble", CommonTemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION,
+            "MaxDoubleValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_DOUBLE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxFloat", CommonTemplateIndexConstants.TEMPLATE_MAX_FLOAT_ANNOTATION,
+            "MaxFloatValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_FLOAT_VALIDATOR_ANNOTATION);
           break;
         case "Minimum":
-          fillTemplateCustom(filePathToSave, modelPackage, "MinInteger", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION,
-              "MinIntegerValidator", TemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinDouble", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION,
-              "MinDoubleValidator", TemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinFloat", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION,
-              "MinFloatValidator", TemplateIndexConstants.TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION);
-          fillTemplateCustom(filePathToSave, modelPackage, "MinBigDecimal", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION,
-              "MinBigDecimalValidator", TemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinInteger", CommonTemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION,
+            "MinIntegerValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinDouble", CommonTemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION,
+            "MinDoubleValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinFloat", CommonTemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION,
+            "MinFloatValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_FLOAT_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinBigDecimal", CommonTemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION,
+            "MinBigDecimalValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION);
           break;
         case "MaxItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "MaxItems", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
-              "MaxItemsValidator", TemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxItems", CommonTemplateIndexConstants.TEMPLATE_MAX_ITEMS_ANNOTATION,
+            "MaxItemsValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_ITEMS_VALIDATOR_ANNOTATION);
           break;
         case "MinItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "MinItems", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
-              "MinItemsValidator", TemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinItems", CommonTemplateIndexConstants.TEMPLATE_MIN_ITEMS_ANNOTATION,
+            "MinItemsValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_ITEMS_VALIDATOR_ANNOTATION);
           break;
         case "NotNull":
-          fillTemplateCustom(filePathToSave, modelPackage, "NotNull", TemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
-              "NotNullValidator", TemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "NotNull", CommonTemplateIndexConstants.TEMPLATE_NOT_NULL_ANNOTATION,
+            "NotNullValidator", CommonTemplateIndexConstants.TEMPLATE_NOT_NULL_VALIDATOR_ANNOTATION);
           break;
         case "UniqueItems":
-          fillTemplateCustom(filePathToSave, modelPackage, "UniqueItems", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
-              "UniqueItemsValidator", TemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "UniqueItems", CommonTemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_ANNOTATION,
+            "UniqueItemsValidator", CommonTemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
           break;
         default:
           break;
@@ -176,13 +184,13 @@ public abstract class CommonTemplateFactory {
 
   @SuppressWarnings("checkstyle:CyclomaticComplexity")
   private Set<String> fillTemplateSchema(final ClassTemplate classTemplate, final String exceptionPackage)
-      throws IOException, TemplateException {
+    throws IOException {
     final var propertiesSet = new HashSet<String>();
     final var schemaObject = classTemplate.getClassSchema();
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       addToRoot("schema", schemaObject);
-      final String templateName = classTemplate.isUseLombok() ? TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK : TemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA;
+      final String templateName = getTemplateName(classTemplate);
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         addToRoot("packageModel", classTemplate.getModelPackage());
       }
@@ -215,7 +223,7 @@ public abstract class CommonTemplateFactory {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
     if (!pathToCustomValidatorPackage.toFile().exists()) {
       if (!pathToCustomValidatorPackage.toFile().mkdirs()) {
-        throw new RuntimeException("Can't create custom validator directory");
+        throw new IOException("Can't create custom validator directory");
       }
     }
     root.put("packageModel", modelPackage);

@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"schemaName", "className"})
 public class SchemaObject {
+
     private boolean isEnum;
 
     private String schemaName;
