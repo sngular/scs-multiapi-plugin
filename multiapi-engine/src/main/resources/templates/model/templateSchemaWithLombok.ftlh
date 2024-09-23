@@ -4,23 +4,39 @@
 <#function calculateSafeName propertyName ender const="">
     <#if words?seq_contains(propertyName?uncap_first) || propertyName?matches("[0-9].*")>
         <#if const?has_content>
-            <#return "_"+propertyName?uncap_first + " = " + const + ender/>
+            <#return getConstValue ("_"+propertyName?uncap_first, ender, const) />
         <#else>
-            <#return "_"+propertyName?uncap_first + ender/>
+            <#return getConstValue ("_"+propertyName?uncap_first, ender) />
         </#if>
     <#else >
         <#if const?has_content>
-            <#return propertyName?uncap_first + " = " + const + ender/>
+            <#return getConstValue( propertyName?uncap_first, ender, const) />
         <#else>
-            <#return propertyName?uncap_first + ender/>
+            <#return getConstValue( propertyName?uncap_first, ender) />
         </#if>
     </#if>
 </#function>
 <#function createSimpleType field>
     <#if (field.constValue?has_content)>
-        ${calculateSafeName (field.baseName, ";", field.const)}
+        ${calculateSafeName (field.baseName, ";", field.constValue)}
     <#else >
         ${calculateSafeName (field.baseName, ";", "")}
+    </#if>
+</#function>
+<#function getConstValue fieldName ender value="">
+    <#if value?has_content>
+        <#return fieldName +" = " + renderValue (value) + ender/>
+    <#else >
+        <#return fieldName + ender/>
+    </#if>
+</#function>
+<#function renderValue value="">
+    <#if value?is_boolean>
+        <#return value == true>
+    <#elseif value?is_number>
+        <#return value>
+    <#elseif value?is_string>
+        <#return '\"${value}\"'>
     </#if>
 </#function>
 <#function singularizeName propertyName>

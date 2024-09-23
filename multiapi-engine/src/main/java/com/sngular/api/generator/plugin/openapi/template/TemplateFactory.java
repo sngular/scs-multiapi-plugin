@@ -43,6 +43,18 @@ public class TemplateFactory extends CommonTemplateFactory {
     cleanData();
   }
 
+  @Override
+  protected void clearRoot() {
+    delFromRoot("className");
+    delFromRoot("pathObjects");
+    delFromRoot("packageApi");
+    delFromRoot("packageModel");
+    delFromRoot("exceptionPackage");
+    delFromRoot("authObject");
+    delFromRoot("clientPackage");
+    delFromRoot("javaEEPackage");
+  }
+
   public final void fillTemplates() {
     generateTemplates();
   }

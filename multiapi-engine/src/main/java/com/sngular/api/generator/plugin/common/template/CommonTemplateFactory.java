@@ -3,7 +3,6 @@ package com.sngular.api.generator.plugin.common.template;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.template.ClassTemplate;
-import com.sngular.api.generator.plugin.asyncapi.template.ClasspathTemplateLoader;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateIndexConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
@@ -228,15 +227,21 @@ public abstract class CommonTemplateFactory {
     root.put(key, value);
   }
 
+  protected void delFromRoot(final String key) {
+    root.remove(key);
+  }
+
   protected void addToRoot(final Map<String, Object> propertiesSet) {
     root.putAll(propertiesSet);
   }
 
   protected void cleanData() {
-    root.clear();
+    clearRoot();
     addToRoot("checkBasicTypes", BASIC_DATA_TYPES);
     classTemplateList.clear();
   }
+
+  protected abstract void clearRoot();
 
   public final void addSchemaObject(final String modelPackage,
                                     final String keyClassName,

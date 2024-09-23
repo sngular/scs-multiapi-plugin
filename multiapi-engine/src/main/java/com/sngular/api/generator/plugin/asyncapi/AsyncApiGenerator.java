@@ -165,10 +165,10 @@ public class AsyncApiGenerator {
         }
 
         templateFactory.fillTemplates();
-        templateFactory.clearData();
       } catch (final TemplateException | IOException e) {
         throw new FileSystemException(e);
       }
+      templateFactory.clearData();
     }
   }
 

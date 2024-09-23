@@ -260,7 +260,7 @@ public final class ModelBuilder {
             .baseName(fieldName)
             .required(isRequired || ApiTool.hasConst(fieldBody))
             .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(fieldBody, specFile)))
-            .constValue(getConst(fieldBody))
+            .constValue(ApiTool.getConst(fieldBody))
             .build();
       addPropertiesToFieldObject(field, fieldBody);
       setFieldType(field, fieldBody, schema, specFile, fieldName);

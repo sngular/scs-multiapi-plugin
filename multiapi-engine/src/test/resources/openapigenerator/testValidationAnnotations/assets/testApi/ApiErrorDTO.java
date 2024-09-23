@@ -85,7 +85,7 @@ public class ApiErrorDTO {
     }
 
     public ApiErrorDTO.ApiErrorDTOBuilder _test(Integer _test) {
-      if (_test != null) {
+      if (Objects.nonNull(_test)) {
         this.test.add(_test);
       }
       return this;

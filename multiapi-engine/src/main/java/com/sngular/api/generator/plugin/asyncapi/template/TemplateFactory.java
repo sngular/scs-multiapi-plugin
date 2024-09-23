@@ -189,6 +189,16 @@ public class TemplateFactory extends CommonTemplateFactory {
     streamBridgeMethods.clear();
   }
 
+  @Override
+  protected void clearRoot() {
+    delFromRoot("classNamespace");
+    delFromRoot("className");
+    delFromRoot("keyNamespace");
+    delFromRoot("publishMethods");
+    delFromRoot("subscribeMethods");
+    delFromRoot("streamBridgeMethods");
+  }
+
   public final void fillTemplateWrapper(
       final String modelPackage,
       final String classFullName,
@@ -203,7 +213,6 @@ public class TemplateFactory extends CommonTemplateFactory {
                  "keyNamespace", keyClassFullName,
                  "keyClassName", keyClassName));
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_MESSAGE_WRAPPER, filePath, "MessageWrapper");
-    clearData();
   }
 
   public void processFilePaths(final SpecFile fileParameter, final String defaultApiPackage) {
