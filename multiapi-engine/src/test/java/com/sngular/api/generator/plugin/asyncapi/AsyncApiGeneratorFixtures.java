@@ -313,6 +313,18 @@ public class AsyncApiGeneratorFixtures {
         .build())
       .build());
 
+  static final List<SpecFile> TEST_MESSAGE_NAMING = List.of(
+    SpecFile
+      .builder()
+      .filePath("src/test/resources/asyncapigenerator/testMessageNaming/event-api.yml")
+      .supplier(OperationParameterObject.builder()
+        .modelNameSuffix("")
+        .apiPackage("com.sngular.scsplugin.messagenaming")
+        .modelPackage("com.sngular.scsplugin.messagenaming.model")
+        .useLombokModelAnnotation(true)
+        .build())
+      .build());
+
   static final List<SpecFile> TEST_NESTED_OBJECT = List.of(
     SpecFile
       .builder()
@@ -951,6 +963,28 @@ public class AsyncApiGeneratorFixtures {
       "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
       "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
       "asyncapigenerator/testNoSchemas/assets/Producer.java"
+    );
+
+    return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
+      modelTest(path, expectedProducerFiles, API_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateMessageNaming() {
+    final String API_FOLDER = "generated/com/sngular/scsplugin/messagenaming";
+
+    final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/messagenaming/model";
+
+    final List<String> expectedModelSchemaFiles = List.of(
+      "asyncapigenerator/testMessageNaming/assets/OnTest3.java",
+      "asyncapigenerator/testMessageNaming/assets/TestMsg.java",
+      "asyncapigenerator/testMessageNaming/assets/TestMsg2.java"
+    );
+
+    final List<String> expectedProducerFiles = List.of(
+      "asyncapigenerator/testMessageNaming/assets/IOnTest.java",
+      "asyncapigenerator/testMessageNaming/assets/IOnTest2.java",
+      "asyncapigenerator/testMessageNaming/assets/IOnTest3.java",
+      "asyncapigenerator/testMessageNaming/assets/Producer.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&

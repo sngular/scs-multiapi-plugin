@@ -72,6 +72,7 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
         Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
+      Arguments.of("TestMessageNaming", AsyncApiGeneratorFixtures.TEST_MESSAGE_NAMING, AsyncApiGeneratorFixtures.validateMessageNaming()),
         Arguments.of("TestNestedObjectIssue", AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT, AsyncApiGeneratorFixtures.validateNestedObject()),
         Arguments.of("TestConstantGeneration", AsyncApiGeneratorFixtures.TEST_CONSTANT_GENERATION, AsyncApiGeneratorFixtures.validateConstantGeneration()),
         Arguments.of("testPropertiesNotGeneratedIssue", AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE, AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),

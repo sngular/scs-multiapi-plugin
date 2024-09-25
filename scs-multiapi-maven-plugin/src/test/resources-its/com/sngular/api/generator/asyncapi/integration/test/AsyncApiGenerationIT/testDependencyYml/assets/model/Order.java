@@ -11,17 +11,17 @@ import java.math.BigDecimal;
 @JsonDeserialize(builder = Order.OrderBuilder.class)
 public class Order {
 
-  @JsonProperty(value ="ref")
-  private String ref;
   @JsonProperty(value ="clientRef")
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
+  @JsonProperty(value ="ref")
+  private String ref;
 
   private Order(OrderBuilder builder) {
-    this.ref = builder.ref;
     this.clientRef = builder.clientRef;
     this.amount = builder.amount;
+    this.ref = builder.ref;
 
   }
 
@@ -32,16 +32,9 @@ public class Order {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderBuilder {
 
-    private String ref;
-
     private String clientRef;
-
     private BigDecimal amount;
-
-    public Order.OrderBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public Order.OrderBuilder clientRef(String clientRef) {
       this.clientRef = clientRef;
@@ -53,28 +46,17 @@ public class Order {
       return this;
     }
 
+    public Order.OrderBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public Order build() {
       Order order = new Order(this);
       return order;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = false)
-  public String getRef() {
-    return ref;
-  }
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  /**
-  * Get clientRef
-  * @return clientRef
-  */
   @Schema(name = "clientRef", required = false)
   public String getClientRef() {
     return clientRef;
@@ -83,16 +65,20 @@ public class Order {
     this.clientRef = clientRef;
   }
 
-  /**
-  * Get amount
-  * @return amount
-  */
   @Schema(name = "amount", required = false)
   public BigDecimal getAmount() {
     return amount;
   }
   public void setAmount(BigDecimal amount) {
     this.amount = amount;
+  }
+
+  @Schema(name = "ref", required = false)
+  public String getRef() {
+    return ref;
+  }
+  public void setRef(String ref) {
+    this.ref = ref;
   }
 
   @Override
@@ -104,21 +90,21 @@ public class Order {
       return false;
     }
     Order order = (Order) o;
-    return Objects.equals(this.ref, order.ref) && Objects.equals(this.clientRef, order.clientRef) && Objects.equals(this.amount, order.amount);
+    return Objects.equals(this.clientRef, order.clientRef) && Objects.equals(this.amount, order.amount) && Objects.equals(this.ref, order.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, clientRef, amount);
+    return Objects.hash(clientRef, amount, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Order{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" clientRef:").append(clientRef).append(",");
-    sb.append(" amount:").append(amount);
+    sb.append(" amount:").append(amount).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }

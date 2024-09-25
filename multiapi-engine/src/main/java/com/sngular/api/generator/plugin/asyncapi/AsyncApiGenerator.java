@@ -19,7 +19,6 @@ import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
-import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
@@ -27,6 +26,7 @@ import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import freemarker.template.TemplateException;
@@ -215,14 +215,23 @@ public class AsyncApiGenerator {
   }
 
   private String calculateMessageName(final String messageName, final JsonNode message) {
-    return Objects.toString(ApiTool.getName(message), messageName);
+    final String finalMessageName;
+    if (ApiTool.hasNode(message, "messageId")) {
+      finalMessageName = ApiTool.getNodeAsString(message, "messageId");
+    } else if (ApiTool.hasName(message)) {
+      finalMessageName = ApiTool.getName(message);
+    } else {
+      finalMessageName = messageName;
+    }
+    return StringUtils.capitalize(finalMessageName);
   }
 
   private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent) {
     final List<String> options = List.of(PUBLISH, SUBSCRIBE);
     options.forEach(option -> {
-      if (channel.has(option) && channel.get(option).has(MESSAGE)) {
-        getMessageSchemas(null, channel.get(option).get(MESSAGE), ymlParent, totalSchemas);
+      if (ApiTool.hasNode(channel, option) && ApiTool.hasNode(ApiTool.getNode(channel, option), MESSAGE)) {
+        final var optionNode = ApiTool.getNode(channel, option);
+        getMessageSchemas(ApiTool.getNodeAsString(optionNode, "operationId"), ApiTool.getNode(optionNode, MESSAGE), ymlParent, totalSchemas);
       }
     });
   }
@@ -427,15 +436,15 @@ public class AsyncApiGenerator {
   private ProcessMethodResult processMethod(
       final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas)
       throws IOException {
-    final JsonNode message = channel.get(MESSAGE);
-    final String operationId = channel.get(OPERATION_ID).asText();
+    final JsonNode message = ApiTool.getNode(channel, MESSAGE);
+    final String operationId = ApiTool.getNodeAsString(channel, OPERATION_ID);
     final Pair<String, JsonNode> payloadInfo;
     final var processBindingsResultBuilder = ProcessBindingsResult.builder();
     if (message.has(REF)) {
       payloadInfo = processMethodRef(processBindingsResultBuilder, ApiTool.getRefValue(message), operationObject, ymlParent, totalSchemas,
                                      message);
     } else if (message.has(PAYLOAD)) {
-      payloadInfo = processPayload(operationObject, ApiTool.getName(message), ApiTool.getNode(message, PAYLOAD), ymlParent);
+      payloadInfo = processPayload(operationObject, calculateMessageName(operationId, message), ApiTool.getNode(message, PAYLOAD), ymlParent);
       if (ApiTool.hasNode(message, BINDINGS)) {
         processBindings(processBindingsResultBuilder, message, operationObject);
       }
@@ -504,7 +513,7 @@ public class AsyncApiGenerator {
 
       if (avroNamespace == null) throw new InvalidAvroException(avroFilePath);
 
-      namespace = avroNamespace.asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();;//processModelPackage(fullNamespace, avroPackage);
+      namespace = avroNamespace.asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();//processModelPackage(fullNamespace, avroPackage);
     } catch (final IOException e) {
       throw new FileSystemException(e);
     }

@@ -1,0 +1,48 @@
+asyncapi: '2.5.0'
+info:
+  title: Test API
+  version: '1.0.0'
+  description: Some test API
+servers:
+  default:
+    url: mqtt://localhost
+    protocol: mqtt
+channels:
+  test:
+    publish:
+      summary: This is just a test.
+      operationId: onTest
+      message:
+        name: TestMsg
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+  test2:
+    publish:
+      summary: This is just a test2.
+      operationId: onTest2
+      message:
+        messageId: TestMsg2
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+  test3:
+    publish:
+      summary: This is just a test2.
+      operationId: onTest3
+      message:
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+            age:
+              type: integer
+
+

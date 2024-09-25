@@ -6,31 +6,21 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
-import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
-import com.sngular.api.generator.plugin.openapi.exception.OverwritingApiFilesException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 public class TemplateFactory extends CommonTemplateFactory {
+
+  private static final String DEFAULT_API_PACKAGE = "com.sngular.api";
 
   public TemplateFactory(boolean enableOverwrite,
                         final File targetFolder,
@@ -71,15 +61,14 @@ public class TemplateFactory extends CommonTemplateFactory {
     writeTemplateToFile(createNameTemplate(authName), apiPackage, authName);
   }
 
-  public final void fillTemplate(
-      final String filePathToSave, final SpecFile specFile, final String className,
+  public final void fillTemplate(final SpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
 
     addToRoot("className", className);
     addToRoot("pathObjects", pathObjects);
 
     if (Objects.nonNull(specFile.getApiPackage())) {
-      addToRoot("packageApi", specFile.getApiPackage());
+      addToRoot("packageApi", StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE));
     }
     if (Objects.nonNull(specFile.getModelPackage())) {
       addToRoot("packageModel", specFile.getModelPackage());
@@ -91,7 +80,8 @@ public class TemplateFactory extends CommonTemplateFactory {
       addToRoot("clientPackage", specFile.getClientPackage());
     }
 
-    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile), filePathToSave, className + "Api");
+    writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile),
+      StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE), className + "Api");
   }
 
   public final void calculateJavaEEPackage(final Integer springBootVersion) {

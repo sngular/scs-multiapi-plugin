@@ -10,7 +10,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.CaseUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -199,6 +198,10 @@ public final class ApiTool {
     return hasNode(schema, REQUIRED);
   }
 
+  public static boolean hasName(JsonNode message) {
+    return hasNode(message, "name");
+  }
+
   public static boolean hasType(final JsonNode schema) {
     return hasNode(schema, "type");
   }
@@ -376,6 +379,4 @@ public final class ApiTool {
     }
     return value;
   }
-
-
 }

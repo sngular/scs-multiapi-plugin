@@ -6,40 +6,32 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
-import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
 
 public class OpenApiGenerator {
 
@@ -51,23 +43,13 @@ public class OpenApiGenerator {
 
   private static final String DEFAULT_OPENAPI_CLIENT_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".client";
 
-  private static final Pattern PACKAGE_SEPARATOR = Pattern.compile("\\.");
-
   private final Boolean overwriteModel;
-
-  private boolean generateExceptionTemplate;
-
-  private final FilenameFilter targetFileFilter;
 
   private final Set<String> overwriteModelList = new HashSet<>();
 
   private final TemplateFactory templateFactory;
 
-  private final String processedGeneratedSourcesFolder;
-
   private final String groupId;
-
-  private final File targetFolder;
 
   private final Path baseDir;
 
@@ -87,18 +69,14 @@ public class OpenApiGenerator {
       final String groupId,
       final File basedir) {
     this.overwriteModel = overwriteModel;
-    this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;
     this.groupId = groupId;
-    this.targetFolder = targetFolder;
     this.baseDir = basedir.toPath().toAbsolutePath();
     this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, basedir);
-    this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
     this.springBootVersion = springBootVersion;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     for (SpecFile specFile : specsListFile) {
-      generateExceptionTemplate = false;
       try {
         processPackage(specFile.getApiPackage());
         processFile(specFile);
@@ -123,7 +101,7 @@ public class OpenApiGenerator {
     }
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
-    final var globalObject = createApiTemplate(specFile, specFile.getApiPackage(), openAPI);
+    final var globalObject = createApiTemplate(specFile, openAPI);
 
     createModelTemplate(specFile, openAPI, globalObject);
     templateFactory.fillTemplates();
@@ -162,7 +140,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private GlobalObject createApiTemplate(final SpecFile specFile, final String apiPackage, final JsonNode openAPI) {
+  private GlobalObject createApiTemplate(final SpecFile specFile, final JsonNode openAPI) {
     final MultiValuedMap<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
     final GlobalObject globalObject = MapperPathUtil.mapOpenApiObjectToOurModels(openAPI, authSchemaList);
@@ -173,7 +151,7 @@ public class OpenApiGenerator {
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
 
       try {
-        templateFactory.fillTemplate(apiPackage, specFile, javaFileName, pathObjects, authObject);
+        templateFactory.fillTemplate(specFile, javaFileName, pathObjects, authObject);
       } catch (IOException | TemplateException e) {
         throw new GeneratorTemplateException("Error filling the template", specFile.getFilePath(), e);
       }
@@ -272,8 +250,9 @@ public class OpenApiGenerator {
   }
 
   private void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
-    final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_OPENAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
-    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
+    final var finalModelPackageReceived = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_OPENAPI_API_PACKAGE);
+    final var destinationPackage = StringUtils.defaultIfEmpty(finalModelPackageReceived, DEFAULT_OPENAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
+    templateFactory.addSchemaObject(finalModelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
     templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
   }
 }
