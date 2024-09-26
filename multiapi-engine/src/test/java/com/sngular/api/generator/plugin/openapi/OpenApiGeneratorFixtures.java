@@ -6,20 +6,20 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-
 import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public final class OpenApiGeneratorFixtures {
@@ -1550,7 +1550,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
-    } catch (IOException | NullPointerException e) {
+    } catch (URISyntaxException | NullPointerException e) {
       result = Boolean.FALSE;
       log.error(e.getLocalizedMessage());
     }
@@ -1568,7 +1568,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
-    } catch (IOException | NullPointerException e) {
+    } catch (URISyntaxException | NullPointerException e) {
       result = Boolean.FALSE;
       log.error(e.getLocalizedMessage());
     }

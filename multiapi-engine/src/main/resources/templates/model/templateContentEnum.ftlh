@@ -60,28 +60,28 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ${schema.className} {
 <#list schema.fieldObjectList as field>
-    <#list field.enumValues as key, value>
-        <#if key?matches("[0-9].*")>
-            ${"_"+key}(${value})<#sep>,
-        <#else>
-            ${key}(${value})<#sep>,
-        </#if>
-    </#list>;
+<#list field.enumValues as key, value>
+<#if key?matches("[0-9].*")>
+  ${"_"+key}(${value})<#sep>,
+<#else>
+  ${key}(${value})<#sep>,
+</#if>
+</#list>;
 
   private ${field.dataType.innerType?cap_first} value;
 
-    ${schema.className?cap_first}(${field.dataType.innerType?cap_first} value) {
-  this.value = value;
+  ${schema.className?cap_first}(${field.dataType.innerType?cap_first} value) {
+    this.value = value;
   }
 
   @JsonValue
   public ${field.dataType.innerType?cap_first} getValue() {
-  return value;
+    return value;
   }
 
   @Override
   public String toString() {
-  return String.valueOf(value);
+    return String.valueOf(value);
   }
 </#list>
 }

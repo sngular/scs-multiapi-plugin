@@ -13,7 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.Assertions;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -492,7 +492,7 @@ public class AsyncApiGeneratorFixtures {
         Assertions.assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
-    } catch (final IOException e) {
+    } catch (final URISyntaxException e) {
       result = Boolean.FALSE;
     }
     return result;
@@ -509,7 +509,7 @@ public class AsyncApiGeneratorFixtures {
         Assertions.assertThat(targetModelFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedModelFiles, targetModelFolder);
       }
-    } catch (final IOException e) {
+    } catch (final URISyntaxException e) {
       result = Boolean.FALSE;
     }
     return result;
@@ -526,7 +526,7 @@ public class AsyncApiGeneratorFixtures {
         Assertions.assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
-    } catch (final IOException e) {
+    } catch (final URISyntaxException e) {
       result = Boolean.FALSE;
     }
     return result;
