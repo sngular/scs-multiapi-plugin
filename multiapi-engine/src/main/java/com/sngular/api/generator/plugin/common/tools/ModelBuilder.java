@@ -1,15 +1,25 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.model.*;
+import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Consumer;
 
 public final class ModelBuilder {
 

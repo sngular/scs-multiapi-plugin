@@ -7,7 +7,6 @@
 package com.sngular.api.generator.plugin.asyncapi.template;
 
 import java.nio.file.Path;
-
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import lombok.Builder;
 import lombok.Value;

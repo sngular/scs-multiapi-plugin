@@ -1,8 +1,7 @@
 package com.sngular.api.generator.plugin.common.template;
 
-import freemarker.cache.TemplateLoader;
-
 import java.util.List;
+import freemarker.cache.TemplateLoader;
 
 
 public abstract class CommonTemplateLoader implements TemplateLoader {

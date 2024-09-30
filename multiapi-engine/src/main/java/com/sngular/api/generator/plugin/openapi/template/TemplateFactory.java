@@ -6,17 +6,15 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
-import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
-import com.sngular.api.generator.plugin.openapi.model.AuthObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import freemarker.template.TemplateException;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
+import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import org.apache.commons.lang3.StringUtils;
 
 public class TemplateFactory extends CommonTemplateFactory {
 
@@ -49,11 +47,11 @@ public class TemplateFactory extends CommonTemplateFactory {
     generateTemplates();
   }
 
-  public final void fillTemplateWebClient(final String filePathToSave) throws IOException, TemplateException {
+  public final void fillTemplateWebClient(final String filePathToSave) throws IOException {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_WEB_CLIENT, filePathToSave, "ApiWebClient");
   }
 
-  public final void fillTemplateRestClient(final String filePathToSave) throws IOException, TemplateException {
+  public final void fillTemplateRestClient(final String filePathToSave) throws IOException {
     writeTemplateToFile(TemplateIndexConstants.TEMPLATE_REST_CLIENT, filePathToSave, "ApiRestClient");
   }
 
@@ -62,7 +60,7 @@ public class TemplateFactory extends CommonTemplateFactory {
   }
 
   public final void fillTemplate(final SpecFile specFile, final String className,
-      final List<PathObject> pathObjects, final AuthObject authObject) throws IOException, TemplateException {
+      final List<PathObject> pathObjects, final AuthObject authObject) throws IOException {
 
     addToRoot("className", className);
     addToRoot("pathObjects", pathObjects);

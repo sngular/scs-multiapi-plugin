@@ -6,6 +6,15 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
@@ -27,11 +36,6 @@ import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.*;
 
 public class OpenApiGenerator {
 
@@ -126,7 +130,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createAuthTemplates(final SpecFile specFile) throws TemplateException, IOException {
+  private void createAuthTemplates(final SpecFile specFile) throws IOException {
     final String clientPackage = specFile.getClientPackage();
     final var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
 
@@ -175,7 +179,7 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) throws IOException {
+  private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) {
     final var modelPackage = processModelPackage(specFile.getModelPackage());
 
     final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap());

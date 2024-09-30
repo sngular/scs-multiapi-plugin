@@ -1,5 +1,19 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -11,14 +25,6 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
-import java.util.Map.Entry;
-
 public final class ApiTool {
 
   public static final String FORMAT = "format";
@@ -28,7 +34,6 @@ public final class ApiTool {
   public static final String ANY_OF = "anyOf";
 
   public static final String ONE_OF = "oneOf";
-
   public static final String COMPONENTS = "components";
 
   public static final String SCHEMAS = "schemas";
@@ -301,7 +306,7 @@ public final class ApiTool {
   }
 
   public static boolean hasComponents(final JsonNode node) {
-    return hasNode(node, "components");
+    return hasNode(node, COMPONENTS);
   }
 
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {

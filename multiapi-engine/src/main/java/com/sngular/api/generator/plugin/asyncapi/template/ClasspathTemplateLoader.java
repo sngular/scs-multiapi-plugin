@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 

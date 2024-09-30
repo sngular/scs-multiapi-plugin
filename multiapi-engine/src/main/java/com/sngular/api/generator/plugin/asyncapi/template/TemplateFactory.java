@@ -6,14 +6,6 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
-import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
-import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import freemarker.template.TemplateException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 
 public class TemplateFactory extends CommonTemplateFactory {
 
@@ -63,7 +61,7 @@ public class TemplateFactory extends CommonTemplateFactory {
     super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
-  public final void fillTemplates() throws IOException, TemplateException {
+  public final void fillTemplates() throws IOException {
     addToRoot("publishMethods", publishMethods);
     addToRoot("subscribeMethods", subscribeMethods);
     addToRoot("streamBridgeMethods", streamBridgeMethods);
@@ -229,7 +227,7 @@ public class TemplateFactory extends CommonTemplateFactory {
       setSubscribeFilePath(processPath(pathToCreate));
     }
   }
-  private void generateInterfaces() throws IOException, TemplateException {
+  private void generateInterfaces() throws IOException {
     final ArrayList<MethodObject> allMethods = new ArrayList<>(subscribeMethods);
     allMethods.addAll(publishMethods);
 

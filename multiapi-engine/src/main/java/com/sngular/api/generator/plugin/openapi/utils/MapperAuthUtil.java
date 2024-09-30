@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;

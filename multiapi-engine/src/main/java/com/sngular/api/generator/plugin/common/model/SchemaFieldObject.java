@@ -1,8 +1,10 @@
 package com.sngular.api.generator.plugin.common.model;
 
-import lombok.*;
-
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Builder

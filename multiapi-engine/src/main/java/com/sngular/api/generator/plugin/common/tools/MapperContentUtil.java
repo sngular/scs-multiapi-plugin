@@ -6,12 +6,16 @@
 
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
-
-import java.nio.file.Path;
-import java.util.*;
 
 public class MapperContentUtil {
 

@@ -7,7 +7,10 @@
 package com.sngular.api.generator.plugin.openapi.parameter;
 
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data

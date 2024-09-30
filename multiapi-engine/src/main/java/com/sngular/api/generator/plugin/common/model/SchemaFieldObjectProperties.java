@@ -3,7 +3,6 @@ package com.sngular.api.generator.plugin.common.model;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import lombok.Data;
 
 @Data

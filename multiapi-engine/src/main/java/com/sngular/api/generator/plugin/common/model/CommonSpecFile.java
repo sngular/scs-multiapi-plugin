@@ -1,12 +1,11 @@
 package com.sngular.api.generator.plugin.common.model;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Map;
 
 @Data
 @SuperBuilder(toBuilder = true)

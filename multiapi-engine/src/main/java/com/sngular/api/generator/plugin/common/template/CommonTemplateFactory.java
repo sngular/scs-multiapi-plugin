@@ -1,5 +1,19 @@
 package com.sngular.api.generator.plugin.common.template;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.template.ClassTemplate;
@@ -12,15 +26,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 public abstract class CommonTemplateFactory {
 

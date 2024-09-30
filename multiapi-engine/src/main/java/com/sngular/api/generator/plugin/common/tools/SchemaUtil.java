@@ -2,7 +2,6 @@ package com.sngular.api.generator.plugin.common.tools;
 
 import java.nio.file.Path;
 import java.util.Map;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import org.apache.commons.lang3.StringUtils;

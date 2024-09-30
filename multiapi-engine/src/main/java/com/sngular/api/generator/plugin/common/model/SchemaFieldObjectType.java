@@ -9,7 +9,6 @@ package com.sngular.api.generator.plugin.common.model;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
-
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class SchemaFieldObjectType {
 
+  public static final String ZONED_DATE_TIME = "ZonedDateTime";
+  public static final String OFFSET_DATE_TIME = "OffsetDateTime";
   private static final Map<String, String> TYPE_MAPPINGS = Map.ofEntries(
     new SimpleImmutableEntry<>(TypeConstants.OBJECT, "Object"),
     new SimpleImmutableEntry<>(TypeConstants.ARRAY, "List<?>"),
@@ -30,10 +31,10 @@ public class SchemaFieldObjectType {
     new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
     new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
     new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, ZONED_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, ZONED_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, OFFSET_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, OFFSET_DATE_TIME)
   );
 
   private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
@@ -49,10 +50,10 @@ public class SchemaFieldObjectType {
     new SimpleImmutableEntry<>(TypeConstants.ENUM, "Enum"),
     new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "LocalDate"),
     new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "LocalDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "ZonedDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "ZonedDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "OffsetDateTime"),
-    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "OffsetDateTime")
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, ZONED_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, ZONED_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, OFFSET_DATE_TIME),
+    new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, OFFSET_DATE_TIME)
   );
 
   private SchemaFieldObjectType innerType;

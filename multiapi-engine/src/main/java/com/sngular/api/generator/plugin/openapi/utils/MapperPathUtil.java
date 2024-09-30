@@ -6,23 +6,39 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
-import com.sngular.api.generator.plugin.common.tools.*;
+import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
+import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.*;
+import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
+import com.sngular.api.generator.plugin.openapi.model.ContentObject;
+import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
+import com.sngular.api.generator.plugin.openapi.model.OperationObject;
+import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
+import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.RequestObject;
+import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.BiConsumer;
 
 public class MapperPathUtil {
 
