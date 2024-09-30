@@ -283,8 +283,8 @@ public final class ModelBuilder {
           .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(refSchema, specFile)))
           .constValue(ApiTool.getConst(refSchema))
           .build());
-      } else if (antiLoopList.contains(typeName)) {
-        if (cachedSchemas.containsKey(typeName)) {
+      } else if (antiLoopList.contains(typeName) &&
+          cachedSchemas.containsKey(typeName)) {
           fieldObjectArrayList.add(SchemaFieldObject
             .builder()
             .baseName(fieldName)
@@ -292,7 +292,6 @@ public final class ModelBuilder {
             .dataType(SchemaFieldObjectType.fromTypeList(MapperUtil.getSimpleType(refSchema, specFile),
               MapperUtil.getPojoName(typeName, specFile)))
             .build());
-        }
       }
     } else if (ApiTool.isEnum(fieldBody)) {
       fieldObjectArrayList.add(processEnumField(fieldName, fieldBody, specFile, ApiTool.getEnumValues(fieldBody), fieldBody));

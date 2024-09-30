@@ -338,7 +338,7 @@ public class MapperPathUtil {
       final JsonNode response) {
     var realResponse = response;
     if (ApiTool.hasRef(response)) {
-      realResponse = globalObject.getResponseNode(MapperUtil.buildKey(response)).orElseThrow();
+      realResponse = globalObject.getResponseNode(MapperUtil.getRefSchemaKey(response)).orElseThrow();
     }
     final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
     final var content = ApiTool.getNode(realResponse, CONTENT);

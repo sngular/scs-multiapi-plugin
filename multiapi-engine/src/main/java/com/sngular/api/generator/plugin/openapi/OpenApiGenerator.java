@@ -124,7 +124,7 @@ public class OpenApiGenerator {
           templateFactory.fillTemplateRestClient(clientPath);
         }
         createAuthTemplates(specFile);
-      } catch (IOException | TemplateException e) {
+      } catch (IOException e) {
         throw new GeneratorTemplateException("Template Generator problem", e);
       }
     }
@@ -156,7 +156,7 @@ public class OpenApiGenerator {
 
       try {
         templateFactory.fillTemplate(specFile, javaFileName, pathObjects, authObject);
-      } catch (IOException | TemplateException e) {
+      } catch (IOException e) {
         throw new GeneratorTemplateException("Error filling the template", specFile.getFilePath(), e);
       }
 

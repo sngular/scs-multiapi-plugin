@@ -46,11 +46,6 @@ public class MapperUtil {
     return StringUtils.replace(packageName, ".", SLASH);
   }
 
-  public static String buildKey(final JsonNode parameter) {
-    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
-  }
-
   public static String getRefSchemaName(final JsonNode parameter) {
     final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
     return pathObjectRef[pathObjectRef.length - 1];
