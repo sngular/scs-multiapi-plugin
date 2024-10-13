@@ -1,10 +1,27 @@
 package com.sngular.api.generator.plugin.common.template;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.sngular.api.generator.plugin.openapi.template.ClasspathTemplateLoader;
 import freemarker.cache.TemplateLoader;
 
 
 public abstract class CommonTemplateLoader implements TemplateLoader {
+
+  private final Map<String, String> templatesMap = new HashMap<>();
+
+  protected static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
+
+
+  protected String readFile(final InputStream file) throws IOException {
+    return new String(file.readAllBytes());
+  }
 
   protected static final List<String> TEMPLATE_MODEL_FILES = List.of(CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA,
     CommonTemplateIndexConstants.TEMPLATE_CONTENT_ENUM, CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK, CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION);
@@ -32,5 +49,32 @@ public abstract class CommonTemplateLoader implements TemplateLoader {
     CommonTemplateIndexConstants.TEMPLATE_UNIQUE_ITEMS_VALIDATOR_ANNOTATION);
 
   protected CommonTemplateLoader() {
+
   }
+
+  protected void init(final Map<String, String> resourceFiles) {
+    templatesMap.putAll(resourceFiles);
+  }
+
+
+  @Override
+  public final Object findTemplateSource(final String templateName) {
+    return templatesMap.get(templateName);
+  }
+
+  @Override
+  public final long getLastModified(final Object o) {
+    return 0;
+  }
+
+  @Override
+  public final Reader getReader(final Object template, final String charSet) {
+    return new StringReader(template.toString());
+  }
+
+  @Override
+  public void closeTemplateSource(final Object o) {
+    // Not required to implement
+  }
+
 }

@@ -6,16 +6,15 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
+import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
-import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 
 public class ClasspathTemplateLoader extends CommonTemplateLoader {
 
@@ -26,34 +25,9 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
   private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
                                                                   TemplateIndexConstants.TEMPLATE_OAUTH, TemplateIndexConstants.TEMPLATE_OAUTH_FLOW);
-
-  private static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
-
-  private final Map<String, String> templatesMap = new HashMap<>();
-
   public ClasspathTemplateLoader() {
     super();
-    templatesMap.putAll(getResourceFolderFiles());
-  }
-
-  @Override
-  public final Object findTemplateSource(final String templateName) {
-    return templatesMap.get(templateName);
-  }
-
-  @Override
-  public final long getLastModified(final Object o) {
-    return 0;
-  }
-
-  @Override
-  public final Reader getReader(final Object template, final String charSet) {
-    return new StringReader(template.toString());
-  }
-
-  @Override
-  public void closeTemplateSource(final Object o) {
-    // Not required to implement
+    init(getResourceFolderFiles());
   }
 
   private Map<String, String> getResourceFolderFiles() {
@@ -89,9 +63,5 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
     });
 
     return templates;
-  }
-
-  private String readFile(final InputStream file) throws IOException {
-    return new String(file.readAllBytes());
   }
 }
