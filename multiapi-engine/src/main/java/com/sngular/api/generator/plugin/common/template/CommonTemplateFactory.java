@@ -226,10 +226,8 @@ public abstract class CommonTemplateFactory {
       final Path filePathToSave, final String modelPackage, final String fileNameAnnotation, final String templateAnnotation,
       final String fileNameValidator, final String templateValidator) throws IOException {
     final Path pathToCustomValidatorPackage = filePathToSave.resolve("customvalidator");
-    if (!pathToCustomValidatorPackage.toFile().exists()) {
-      if (!pathToCustomValidatorPackage.toFile().mkdirs()) {
-        throw new IOException("Can't create custom validator directory");
-      }
+    if (!pathToCustomValidatorPackage.toFile().exists() && !pathToCustomValidatorPackage.toFile().mkdirs()) {
+      throw new IOException("Can't create custom validator directory");
     }
     root.put("packageModel", modelPackage);
     writeTemplateToFile(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
@@ -283,10 +281,8 @@ public abstract class CommonTemplateFactory {
   }
 
   protected void writeTemplateToFile(final String templateName, final Path filePathToSave, final String partialPath) throws IOException {
-    if (!filePathToSave.toFile().exists()) {
-      if (!filePathToSave.toFile().mkdirs()) {
-        throw new IOException("Could not create directory: " + filePathToSave.toFile().getAbsolutePath());
-      }
+    if (!filePathToSave.toFile().exists() && !filePathToSave.toFile().mkdirs()) {
+      throw new IOException("Could not create directory: " + filePathToSave.toFile().getAbsolutePath());
     }
     final String path = filePathToSave.resolve(partialPath + FILE_TYPE_JAVA).toString();
     final Template template = cfg.getTemplate(templateName);
