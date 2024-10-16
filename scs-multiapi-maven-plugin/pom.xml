@@ -224,6 +224,17 @@
       </roles>
       <timezone>Europe/Madrid</timezone>
     </developer>
+    <developer>
+      <id>ignaciosngular</id>
+      <name>L. Ignacio P. de Ziriza</name>
+      <email>luisignacio.perezdeziriza@sngular.com</email>
+      <organization>Sngular</organization>
+      <organizationUrl>sngular.com</organizationUrl>
+      <roles>
+        <role>Expert Software Developer</role>
+      </roles>
+      <timezone>Europe/Madrid</timezone>
+    </developer>
   </developers>
 
   <scm>
