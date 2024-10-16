@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4a9be5a4b6ab48afba293b2315edd47e)](https://app.codacy.com/gh/sngular/scs-multiapi-plugin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)[![Maven Central](https://img.shields.io/maven-central/v/com.sngular/scs-multiapi-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.sngular%22%20AND%20a:%22scs-multiapi-maven-plugin%22)
 
-This is a plugin designed to help developers automatizing the creation of
+This is a plugin designed to help developers automatize the creation of
 code classes from YML files based on AsyncApi and OpenAPI. It is presented in 2 flavours
 Maven and Gradle
 
@@ -38,7 +38,7 @@ specifications. In the latter case, many of the configuration options and classe
 that are generated are based on reimplementation or modification of the OpenAPI Generator
 models and template designs.
 
-The generation of the REST and Kafka connections is independent each other and
+The generation of the REST and Kafka connections is independent of each other and
 could be used only one, or both at the same time.
 
 Here is the documentation for these technologies:
@@ -106,7 +106,7 @@ about how they work, and the parameters and configuration options they offer.
 
 #### Mandatory dependencies
 
-These dependencies are used by generated code
+Generated code uses these dependencies
 
 ```xml
  <dependencies>
@@ -226,7 +226,7 @@ which the plugin is designed.
 
 #### Gradle
 
-In this case we have an extension model to fulfill. Similar to the Maven one.
+In this case, we have an extension model to fulfill. Similar to the Maven one.
 
 ```groovy
 openapimodel {
@@ -251,10 +251,10 @@ YML files as you want.
 1. The first one is to configure only the YML file. This is made using the
    **filePath** parameter, that expects to receive the path to the file. Using
    the plugin in this way, you can't configure the model package or the api
-   package in the pom file, neither other options, so they will be configured as
-   its explained in [apiPackage](#how-is-apipackage-set) and
+   package in the pom file, neither another option, so they will be configured as
+   it's explained in [apiPackage](#how-is-apipackage-set) and
    [modelPackage](#how-is-modelpackage-set) sections.  
-   This way it's limited to the usage of Consumer and Supplier methods.
+   This way, it's limited to the usage of Consumer and Supplier methods.
 
     ```xml
     <specFile>
@@ -325,7 +325,7 @@ can be configured in the plugin.
       will be generated. If only one of `supplier` and `streamBridge` sections are
       defined, and this parameter is not defined inside it, all the publish
       operations defined in the YML file will be generated. If both `supplier` and
-      `streamBridge` sections are defined, it`s needed to define which operations
+      `streamBridge` sections are defined, it's necessary to define which operations
       belong to each category.
   - **classNamePostfix**: This parameter receives the name of the class that
       it's going to be generated containing the Beans. This parameter is optional,
@@ -335,7 +335,7 @@ can be configured in the plugin.
       going to be used in the entities of the generated classes. For example if
       you set this to `DTO`, and there is a class named `EntityClass`, it will
       result as `EntityClassDTO`. This parameter is optional.
-  - **apiPackage**: This parameter receive a package name, where the
+  - **apiPackage**: This parameter receives a package name, where the
       generated classes will be generated. This parameter is optional.
       Check [how is the apiPackage set](#how-is-apipackage-set) for
       more information about how this parameter works, and the values it
@@ -345,15 +345,15 @@ can be configured in the plugin.
       [Mapper Section](#mapper), those entities are usually auto-generated, so the
       plugin expects the modelPackage to be the package where them are included.
       **Note that the plugin doesn't create the entities neither checks their
-      existence**, it takes their names from the YML file and assume that they are
+      existence**, it takes their names from the YML file and assumes that they are
       created by the user. As the previous parameter, this is also optional.
       Check [how is the modelPackage set](#how-is-modelpackage-set) for more
       information about how his parameter works, and the values it could have.
   -  **dateFormat**: This parameter changes the format annotation for `LocalDate` fields.
-      The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+      The syntax follows the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd`.
   -  **dateTimeFormat**: This parameter changes the format annotation for `LocalDateTime`
-      fields. The syntax follow the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+      fields. The syntax follows the [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
   -  **useTimeType**: Enum TimeType value. Controls the types used when generating dates. Can be `LOCAL` or `ZOINED`.
       The default value is `TimeType.LOCAL`. 
@@ -364,7 +364,7 @@ generated.
 
 #### Generated Sources Folder
 
-There is also an independent parameter that affects to all the *specFiles*
+There is also an independent parameter that affects all the *specFiles*
 generated, which is called **generatedSourcesFolder**. This parameter expects
 to receive a string, that could include letters, numbers and `-`, with the
 name of the folder where generated sources by the plugin will be located.
@@ -383,7 +383,7 @@ The api package could be set in three different ways.
 - **GroupID from YML**: If the user doesn't provide a package name, the plugin
   will try to use the `groupId` attribute from the YML file that is in use.
 - **Default package name**: If neither of the previous options were given, the
-  plugin will use a default package name, that is stablished as
+  plugin will use a default package name, that is established as
   `com.sngular.apigenerator.asyncapi`.
 
 ### How is modelPackage set?
@@ -418,7 +418,7 @@ order/created:
 ```
 
 - **Default package name**: If neither of the previous options were given, the
-  plugin will use a default package name, that is stablished as
+  plugin will use a default package name, that is established as
   `com.sngular.apigenerator.asyncapi.model`.
 
 ### Class Generation
@@ -450,7 +450,7 @@ public class StreamTopicListenerConsumer {
 }
 ```
 
-This sample class, is related to the previously used YML file, and in it, you
+This sample class is related to the previously used YML file, and in it, you
 could see that it came fully implemented, based on the related Interface that
 lets the personalization and implementation to the user. Also, in this example
 is possible to see how the YML attribute 'operationId' is used to name the
@@ -486,10 +486,10 @@ Nowadays, we only support Kafka specific information to define a Key form.
 Messages as you can find
 [here](<https://github.com/asyncapi/bindings/blob/master/kafka/README.md>).
 
-When a binding is specified in a message we will generate a generic class
+When a binding is specified in a message, we will generate a generic class
 named as MessageWrapper which will contain the payload and the key
 used in to build a Message.
-You will find such class by each api package you define.
+You will find such a class by each api package you define.
 
 ##### Mapper
 
@@ -552,7 +552,7 @@ public class StreamBridgeProducer {
 }
 ```
 
-This sample class, is related to the previosly used YML file, and in it you
+This sample class is related to the previously used YML file, and, in it, you
 could see that it came fully implemented.
 
 Also, it's important to note that using Stream Bridge, the *binding* where the
@@ -722,7 +722,7 @@ openapimodel {
 }
 ```
 
-To customize these specFiles tags we are going to specify them inside the
+To customize these specFiles tags, we are going to specify them inside the
 configuration tag, we must declare the specFiles tag that contains all files
 that will be used. Each specFile has their own configuration:
 
@@ -740,8 +740,8 @@ that will be used. Each specFile has their own configuration:
 | useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
 
 As the configuration options already indicate, the data model will also be
-created within the specified path.This model will be created with the indicated
-prefixes and suffixes and the instances and imports will be made to that model
+created within the specified path. This model will be created with the indicated
+prefixes and suffixes, and the instances and imports will be made to that model
 within the corresponding Api.
 
 There are two properties configured outside the specFiles, the path where the
