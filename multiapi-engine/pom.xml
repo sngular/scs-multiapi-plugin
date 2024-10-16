@@ -4,23 +4,28 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>multiapi-engine</artifactId>
-  <version>5.4.3</version>
+  <version>6.0.0</version>
   <packaging>jar</packaging>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <swagger-parser.version>2.1.12</swagger-parser.version>
-    <commons-lang3.version>3.12.0</commons-lang3.version>
-    <commons-io.version>2.11.0</commons-io.version>
+    <commons-lang3.version>3.13.0</commons-lang3.version>
+    <commons-io.version>2.13.0</commons-io.version>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <jackson.version>2.15.0</jackson.version>
+    <jackson.version>2.15.3</jackson.version>
     <freemarker.version>2.3.32</freemarker.version>
     <assertj-core.version>3.24.2</assertj-core.version>
-    <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
+    <junit-jupiter-engine.version>5.10.1</junit-jupiter-engine.version>
     <swagger-core.version>2.2.9</swagger-core.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
+    <commons-text.version>1.12.0</commons-text.version>
+    <lombok.version>1.18.30</lombok.version>
+    <slf4j-api.version>2.0.11</slf4j-api.version>
+    <commons-codec.version>1.16.0</commons-codec.version>
+    <maven-artifact.version>3.9.1</maven-artifact.version>
   </properties>
 
   <dependencies>
@@ -32,7 +37,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.10.0</version>
+      <version>${commons-text.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -63,18 +68,18 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>${lombok.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.28</version>
+      <version>${slf4j-api.version}</version>
     </dependency>
 
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.15</version>
+      <version>${commons-codec.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.parser.v3</groupId>
@@ -143,7 +148,7 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>3.9.1</version>
+      <version>${maven-artifact.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

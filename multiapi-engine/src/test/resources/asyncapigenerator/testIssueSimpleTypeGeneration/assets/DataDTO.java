@@ -10,17 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = DataDTO.DataDTOBuilder.class)
 public class DataDTO {
 
-  @JsonProperty(value ="clientId")
-  private Integer clientId;
   @JsonProperty(value ="clientName")
   private String clientName;
   @JsonProperty(value ="flightNumber")
   private String flightNumber;
+  @JsonProperty(value ="clientId")
+  private Object clientId;
 
   private DataDTO(DataDTOBuilder builder) {
-    this.clientId = builder.clientId;
     this.clientName = builder.clientName;
     this.flightNumber = builder.flightNumber;
+    this.clientId = builder.clientId;
 
   }
 
@@ -31,16 +31,9 @@ public class DataDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class DataDTOBuilder {
 
-    private Integer clientId;
-
     private String clientName;
-
     private String flightNumber;
-
-    public DataDTO.DataDTOBuilder clientId(Integer clientId) {
-      this.clientId = clientId;
-      return this;
-    }
+    private Object clientId;
 
     public DataDTO.DataDTOBuilder clientName(String clientName) {
       this.clientName = clientName;
@@ -52,28 +45,17 @@ public class DataDTO {
       return this;
     }
 
+    public DataDTO.DataDTOBuilder clientId(Object clientId) {
+      this.clientId = clientId;
+      return this;
+    }
+
     public DataDTO build() {
       DataDTO dataDTO = new DataDTO(this);
       return dataDTO;
     }
   }
 
-  /**
-  * Get clientId
-  * @return clientId
-  */
-  @Schema(name = "clientId", required = false)
-  public Integer getClientId() {
-    return clientId;
-  }
-  public void setClientId(Integer clientId) {
-    this.clientId = clientId;
-  }
-
-  /**
-  * Get clientName
-  * @return clientName
-  */
   @Schema(name = "clientName", required = false)
   public String getClientName() {
     return clientName;
@@ -82,16 +64,20 @@ public class DataDTO {
     this.clientName = clientName;
   }
 
-  /**
-  * Get flightNumber
-  * @return flightNumber
-  */
   @Schema(name = "flightNumber", required = false)
   public String getFlightNumber() {
     return flightNumber;
   }
   public void setFlightNumber(String flightNumber) {
     this.flightNumber = flightNumber;
+  }
+
+  @Schema(name = "clientId", required = false)
+  public Object getClientId() {
+    return clientId;
+  }
+  public void setClientId(Object clientId) {
+    this.clientId = clientId;
   }
 
   @Override
@@ -103,21 +89,21 @@ public class DataDTO {
       return false;
     }
     DataDTO dataDTO = (DataDTO) o;
-    return Objects.equals(this.clientId, dataDTO.clientId) && Objects.equals(this.clientName, dataDTO.clientName) && Objects.equals(this.flightNumber, dataDTO.flightNumber);
+    return Objects.equals(this.clientName, dataDTO.clientName) && Objects.equals(this.flightNumber, dataDTO.flightNumber) && Objects.equals(this.clientId, dataDTO.clientId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clientId, clientName, flightNumber);
+    return Objects.hash(clientName, flightNumber, clientId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("DataDTO{");
-    sb.append(" clientId:").append(clientId).append(",");
     sb.append(" clientName:").append(clientName).append(",");
-    sb.append(" flightNumber:").append(flightNumber);
+    sb.append(" flightNumber:").append(flightNumber).append(",");
+    sb.append(" clientId:").append(clientId);
     sb.append("}");
     return sb.toString();
   }

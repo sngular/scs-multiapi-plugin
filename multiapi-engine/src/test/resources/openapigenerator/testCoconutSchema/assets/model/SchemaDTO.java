@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SchemaDTO {
 
   @JsonProperty(value ="type")
@@ -18,7 +19,8 @@ public class SchemaDTO {
   private String type;
 
   @JsonProperty(value ="additionalProperties")
-  private Map<String, FieldDTO> additionalProperties = new HashMap<String, FieldDTO>();
+  @Singular("additionalProperty")
+  private Map<String, FieldDTO> additionalProperties;
 
   @JsonProperty(value ="name")
   @NonNull
@@ -33,7 +35,8 @@ public class SchemaDTO {
   private String subjectName;
 
   @JsonProperty(value ="requiredFields")
-  private List<String> requiredFields = new ArrayList<String>();
+  @Singular("requiredField")
+  private List<String> requiredFields;
 
 
   @Builder

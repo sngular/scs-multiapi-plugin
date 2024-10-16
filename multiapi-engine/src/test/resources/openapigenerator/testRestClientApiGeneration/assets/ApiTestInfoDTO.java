@@ -37,6 +37,7 @@ public class ApiTestInfoDTO {
 
     private List<String> testers = new ArrayList<String>();
     private String testName;
+
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder testers(List<String> testers) {
       if (!testers.isEmpty()) {
         this.testers.addAll(testers);
@@ -45,7 +46,7 @@ public class ApiTestInfoDTO {
     }
 
     public ApiTestInfoDTO.ApiTestInfoDTOBuilder tester(String tester) {
-      if (tester != null) {
+      if (Objects.nonNull(tester)) {
         this.testers.add(tester);
       }
       return this;

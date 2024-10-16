@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder.class)
 public class CustomerOrderEventPayloadDTO {
 
-  @JsonProperty(value ="customerOrderId")
-  private String customerOrderId;
   @JsonProperty(value ="eventType")
   private EventType eventType;
   public enum EventType {
@@ -38,11 +36,13 @@ public class CustomerOrderEventPayloadDTO {
   }
   @JsonProperty(value ="customerOrder")
   private CustomerOrderDTO customerOrder;
+  @JsonProperty(value ="customerOrderId")
+  private String customerOrderId;
 
   private CustomerOrderEventPayloadDTO(CustomerOrderEventPayloadDTOBuilder builder) {
-    this.customerOrderId = builder.customerOrderId;
     this.eventType = builder.eventType;
     this.customerOrder = builder.customerOrder;
+    this.customerOrderId = builder.customerOrderId;
 
   }
 
@@ -53,16 +53,9 @@ public class CustomerOrderEventPayloadDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerOrderEventPayloadDTOBuilder {
 
-    private String customerOrderId;
-
     private EventType eventType;
-
     private CustomerOrderDTO customerOrder;
-
-    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
-      this.customerOrderId = customerOrderId;
-      return this;
-    }
+    private String customerOrderId;
 
     public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder eventType(EventType eventType) {
       this.eventType = eventType;
@@ -74,28 +67,17 @@ public class CustomerOrderEventPayloadDTO {
       return this;
     }
 
+    public CustomerOrderEventPayloadDTO.CustomerOrderEventPayloadDTOBuilder customerOrderId(String customerOrderId) {
+      this.customerOrderId = customerOrderId;
+      return this;
+    }
+
     public CustomerOrderEventPayloadDTO build() {
       CustomerOrderEventPayloadDTO customerOrderEventPayloadDTO = new CustomerOrderEventPayloadDTO(this);
       return customerOrderEventPayloadDTO;
     }
   }
 
-  /**
-  * Get customerOrderId
-  * @return customerOrderId
-  */
-  @Schema(name = "customerOrderId", required = false)
-  public String getCustomerOrderId() {
-    return customerOrderId;
-  }
-  public void setCustomerOrderId(String customerOrderId) {
-    this.customerOrderId = customerOrderId;
-  }
-
-  /**
-  * Get eventType
-  * @return eventType
-  */
   @Schema(name = "eventType", required = false)
   public EventType getEventType() {
     return eventType;
@@ -104,16 +86,20 @@ public class CustomerOrderEventPayloadDTO {
     this.eventType = eventType;
   }
 
-  /**
-  * Get customerOrder
-  * @return customerOrder
-  */
   @Schema(name = "customerOrder", required = false)
   public CustomerOrderDTO getCustomerOrder() {
     return customerOrder;
   }
   public void setCustomerOrder(CustomerOrderDTO customerOrder) {
     this.customerOrder = customerOrder;
+  }
+
+  @Schema(name = "customerOrderId", required = false)
+  public String getCustomerOrderId() {
+    return customerOrderId;
+  }
+  public void setCustomerOrderId(String customerOrderId) {
+    this.customerOrderId = customerOrderId;
   }
 
   @Override
@@ -125,21 +111,21 @@ public class CustomerOrderEventPayloadDTO {
       return false;
     }
     CustomerOrderEventPayloadDTO customerOrderEventPayloadDTO = (CustomerOrderEventPayloadDTO) o;
-    return Objects.equals(this.customerOrderId, customerOrderEventPayloadDTO.customerOrderId) && Objects.equals(this.eventType, customerOrderEventPayloadDTO.eventType) && Objects.equals(this.customerOrder, customerOrderEventPayloadDTO.customerOrder);
+    return Objects.equals(this.eventType, customerOrderEventPayloadDTO.eventType) && Objects.equals(this.customerOrder, customerOrderEventPayloadDTO.customerOrder) && Objects.equals(this.customerOrderId, customerOrderEventPayloadDTO.customerOrderId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerOrderId, eventType, customerOrder);
+    return Objects.hash(eventType, customerOrder, customerOrderId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerOrderEventPayloadDTO{");
-    sb.append(" customerOrderId:").append(customerOrderId).append(",");
     sb.append(" eventType:").append(eventType).append(",");
-    sb.append(" customerOrder:").append(customerOrder);
+    sb.append(" customerOrder:").append(customerOrder).append(",");
+    sb.append(" customerOrderId:").append(customerOrderId);
     sb.append("}");
     return sb.toString();
   }

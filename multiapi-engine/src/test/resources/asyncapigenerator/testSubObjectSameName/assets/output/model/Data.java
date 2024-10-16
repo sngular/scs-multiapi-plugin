@@ -10,14 +10,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = Data.DataBuilder.class)
 public class Data {
 
-  @JsonProperty(value ="tenantId")
-  private String tenantId;
   @JsonProperty(value ="name")
   private String name;
+  @JsonProperty(value ="tenantId")
+  private String tenantId;
 
   private Data(DataBuilder builder) {
-    this.tenantId = builder.tenantId;
     this.name = builder.name;
+    this.tenantId = builder.tenantId;
 
   }
 
@@ -28,17 +28,16 @@ public class Data {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class DataBuilder {
 
-    private String tenantId;
-
     private String name;
-
-    public Data.DataBuilder tenantId(String tenantId) {
-      this.tenantId = tenantId;
-      return this;
-    }
+    private String tenantId;
 
     public Data.DataBuilder name(String name) {
       this.name = name;
+      return this;
+    }
+
+    public Data.DataBuilder tenantId(String tenantId) {
+      this.tenantId = tenantId;
       return this;
     }
 
@@ -48,28 +47,20 @@ public class Data {
     }
   }
 
-  /**
-  * Get tenantId
-  * @return tenantId
-  */
-  @Schema(name = "tenantId", required = false)
-  public String getTenantId() {
-    return tenantId;
-  }
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
-
-  /**
-  * Get name
-  * @return name
-  */
   @Schema(name = "name", required = false)
   public String getName() {
     return name;
   }
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Schema(name = "tenantId", required = false)
+  public String getTenantId() {
+    return tenantId;
+  }
+  public void setTenantId(String tenantId) {
+    this.tenantId = tenantId;
   }
 
   @Override
@@ -81,20 +72,20 @@ public class Data {
       return false;
     }
     Data data = (Data) o;
-    return Objects.equals(this.tenantId, data.tenantId) && Objects.equals(this.name, data.name);
+    return Objects.equals(this.name, data.name) && Objects.equals(this.tenantId, data.tenantId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, name);
+    return Objects.hash(name, tenantId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Data{");
-    sb.append(" tenantId:").append(tenantId).append(",");
-    sb.append(" name:").append(name);
+    sb.append(" name:").append(name).append(",");
+    sb.append(" tenantId:").append(tenantId);
     sb.append("}");
     return sb.toString();
   }

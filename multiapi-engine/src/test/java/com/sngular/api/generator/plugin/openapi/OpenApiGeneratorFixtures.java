@@ -6,20 +6,20 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants.TimeType;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public final class OpenApiGeneratorFixtures {
@@ -531,7 +531,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateAllOf() {
@@ -560,7 +560,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateComplexAnyOf() {
@@ -598,7 +598,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateAllOfLombok() {
@@ -622,7 +622,7 @@ public final class OpenApiGeneratorFixtures {
 
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateOverwriteModeTrue() {
@@ -649,7 +649,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "exception/ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
 
   }
 
@@ -672,7 +672,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -698,7 +698,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestTypeDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateParametersWithSchemaGeneration() {
@@ -720,7 +720,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validatePathWithSpecialCharGeneration() {
@@ -744,7 +744,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -768,7 +768,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -793,7 +793,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "TestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -816,7 +816,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "MessageDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -840,7 +840,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "TestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -864,7 +864,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ApiTestInfoDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
 
   }
 
@@ -892,7 +892,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
 
   }
 
@@ -921,7 +921,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "client/auth/HttpBasicAuth.java"
     );
 
-    return (path) ->
+    return path ->
                commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
                commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
@@ -951,7 +951,7 @@ public final class OpenApiGeneratorFixtures {
             ASSETS_PATH + "client/auth/HttpBasicAuth.java"
     );
 
-    return (path) ->
+    return path ->
             commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
                     commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
@@ -981,7 +981,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         "openapigenerator/testApiEnumsGeneration/assets/ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateEnumsLombokGeneration() {
@@ -1004,7 +1004,7 @@ public final class OpenApiGeneratorFixtures {
 
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateExternalRefGeneration() {
@@ -1029,7 +1029,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateAnyOfInResponse() {
@@ -1057,7 +1057,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateAdditionalProperties() {
@@ -1074,7 +1074,7 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "TestDTO.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateAdditionalPropertiesWithSchema() {
@@ -1094,7 +1094,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "TestDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateAdditionalPropertiesWithUnnamedObject() {
@@ -1119,7 +1119,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ThirdTestDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateCoconutSchema() {
@@ -1158,7 +1158,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "exception/ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateRestrictionsSchema() {
@@ -1199,7 +1199,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedExceptionFiles = List.of(
         ASSETS_PATH + "exception/ModelClassException.java");
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateSimpleBuild() {
@@ -1234,7 +1234,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/UpdateQuoteDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateValidationAnnotations(int springBootVersion) {
@@ -1266,14 +1266,26 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "ModelClassException.java");
 
     final List<String> expectedValidatorFiles = List.of(
-        CUSTOM_VALIDATOR_PATH + "Max.java",
-        CUSTOM_VALIDATOR_PATH + "MaxItems.java",
-        CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
-        CUSTOM_VALIDATOR_PATH + "MaxValidator.java",
-        CUSTOM_VALIDATOR_PATH + "Min.java",
-        CUSTOM_VALIDATOR_PATH + "MinItems.java",
-        CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
-        CUSTOM_VALIDATOR_PATH + "MinValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxBigDecimal.java",
+      CUSTOM_VALIDATOR_PATH + "MaxBigDecimalValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MaxDouble.java",
+      CUSTOM_VALIDATOR_PATH + "MaxDoubleValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MaxFloat.java",
+      CUSTOM_VALIDATOR_PATH + "MaxFloatValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MaxInteger.java",
+      CUSTOM_VALIDATOR_PATH + "MaxIntegerValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MaxItems.java",
+      CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinBigDecimal.java",
+      CUSTOM_VALIDATOR_PATH + "MinBigDecimalValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MinDouble.java",
+      CUSTOM_VALIDATOR_PATH + "MinDoubleValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MinFloat.java",
+      CUSTOM_VALIDATOR_PATH + "MinFloatValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MinInteger.java",
+      CUSTOM_VALIDATOR_PATH + "MinIntegerValidator.java",
+      CUSTOM_VALIDATOR_PATH + "MinItems.java",
+      CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MultipleOf.java",
         CUSTOM_VALIDATOR_PATH + "MultipleOfValidator.java",
         CUSTOM_VALIDATOR_PATH + "NotNull.java",
@@ -1286,7 +1298,7 @@ public final class OpenApiGeneratorFixtures {
         CUSTOM_VALIDATOR_PATH + "UniqueItemsValidator.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API)
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API)
                      && customValidatorTest(path, expectedValidatorFiles);
   }
 
@@ -1311,7 +1323,7 @@ public final class OpenApiGeneratorFixtures {
 
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_LOMBOK_TARGET_API, DEFAULT_LOMBOK_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateCreateDTO() {
@@ -1336,7 +1348,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/TestDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateCreateBasicDTO() {
@@ -1360,7 +1372,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/TestDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateIssueFaker() {
@@ -1385,7 +1397,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/SchemaDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateDateTime() {
@@ -1403,7 +1415,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testDateTime/assets/model/TestDateDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateDateTimeZoned() {
@@ -1421,7 +1433,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testDateTimeZoned/assets/model/TestDateDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateDateTimeOffset() {
@@ -1439,7 +1451,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testDateTimeOffset/assets/model/TestDateDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateListString() {
@@ -1457,7 +1469,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
     );
 
-    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateReferenceFile() {
@@ -1475,7 +1487,7 @@ public final class OpenApiGeneratorFixtures {
         "openapigenerator/testReferenceFile/assets/TestDTO.java"
     );
 
-    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateQueryParam() {
@@ -1492,7 +1504,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
     );
 
-    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
   static Function<Path, Boolean> validateApiWithNoComponents() {
@@ -1509,7 +1521,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
     );
 
-    return (path) -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
 
   }
 
@@ -1538,7 +1550,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetModelException).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedExceptionFiles, targetModelException);
       }
-    } catch (IOException | NullPointerException e) {
+    } catch (URISyntaxException | NullPointerException e) {
       result = Boolean.FALSE;
       log.error(e.getLocalizedMessage());
     }
@@ -1556,7 +1568,7 @@ public final class OpenApiGeneratorFixtures {
         assertThat(targetCustomValidatorFolder).isNotEmptyDirectory();
         TestUtils.validateFiles(expectedValidatorFiles, targetCustomValidatorFolder);
       }
-    } catch (IOException | NullPointerException e) {
+    } catch (URISyntaxException | NullPointerException e) {
       result = Boolean.FALSE;
       log.error(e.getLocalizedMessage());
     }

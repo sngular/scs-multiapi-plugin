@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class MapFieldDTO {
 
   @JsonProperty(value ="mandatory")
@@ -26,10 +27,12 @@ public class MapFieldDTO {
   private Integer mapSize;
 
   @JsonProperty(value ="mapTypes")
-  private List<FieldDTO> mapTypes = new ArrayList<FieldDTO>();
+  @Singular("mapType")
+  private List<FieldDTO> mapTypes;
 
   @JsonProperty(value ="defaultValue")
-  private List<Object> defaultValue = new ArrayList<Object>();
+  @Singular("_defaultValue")
+  private List<Object> defaultValue;
 
 
   @Builder

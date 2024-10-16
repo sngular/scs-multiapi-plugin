@@ -17,9 +17,9 @@ public class ApiStringFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="properties")
-  private List<String> properties = new ArrayList<String>();
+  private List<String> properties;
   @JsonProperty(value ="defaultValues")
-  private List<String> defaultValues = new ArrayList<String>();
+  private List<String> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="regex")
@@ -30,19 +30,6 @@ public class ApiStringFieldDTO {
   private Integer format;
   @JsonProperty(value ="valueLength")
   private Integer valueLength;
-
-  private ApiStringFieldDTO(Integer maxLength, String type, List<String> properties, List<String> defaultValues, String name, String regex, Integer minLength, Integer format, Integer valueLength) {
-    this.maxLength = maxLength;
-    this.type = type;
-    this.properties = properties;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.regex = regex;
-    this.minLength = minLength;
-    this.format = format;
-    this.valueLength = valueLength;
-
-  }
 
   private ApiStringFieldDTO(ApiStringFieldDTOBuilder builder) {
     this.maxLength = builder.maxLength;
@@ -83,6 +70,7 @@ public class ApiStringFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(List<String> properties) {
       if (!properties.isEmpty()) {
         this.properties.addAll(properties);
@@ -90,12 +78,13 @@ public class ApiStringFieldDTO {
       return this;
     }
 
-    public ApiStringFieldDTO.ApiStringFieldDTOBuilder propertie(String propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
+    public ApiStringFieldDTO.ApiStringFieldDTOBuilder property(String property) {
+      if (Objects.nonNull(property)) {
+        this.properties.add(property);
       }
       return this;
     }
+
     public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(List<String> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -104,7 +93,7 @@ public class ApiStringFieldDTO {
     }
 
     public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValue(String defaultValue) {
-      if (defaultValue != null) {
+      if (Objects.nonNull(defaultValue)) {
         this.defaultValues.add(defaultValue);
       }
       return this;

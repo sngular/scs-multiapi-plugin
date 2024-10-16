@@ -7,8 +7,7 @@
 package com.sngular.api.generator.plugin.asyncapi.template;
 
 import java.nio.file.Path;
-
-import com.sngular.api.generator.plugin.asyncapi.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import lombok.Builder;
 import lombok.Value;
 
@@ -27,5 +26,7 @@ public class ClassTemplate {
   String keyClassName;
 
   SchemaObject classSchema;
+
+  boolean useLombok;
 
 }

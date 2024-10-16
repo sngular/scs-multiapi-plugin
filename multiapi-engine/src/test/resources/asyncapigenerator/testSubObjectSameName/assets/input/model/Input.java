@@ -49,7 +49,6 @@ public class Input {
   public static class InputBuilder {
 
     private Source source;
-
     private Data data;
 
     public Input.InputBuilder source(Source source) {
@@ -68,10 +67,6 @@ public class Input {
     }
   }
 
-  /**
-  * Get source
-  * @return source
-  */
   @Schema(name = "source", required = false)
   public Source getSource() {
     return source;
@@ -80,10 +75,6 @@ public class Input {
     this.source = source;
   }
 
-  /**
-  * Get data
-  * @return data
-  */
   @Schema(name = "data", required = false)
   public Data getData() {
     return data;

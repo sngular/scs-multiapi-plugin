@@ -12,9 +12,6 @@ import com.sngular.scsplugin.filegenerationwithkafkabindings.model.event.customv
 @JsonDeserialize(builder = OrderProductMapper.OrderProductMapperBuilder.class)
 public class OrderProductMapper {
 
-  @JsonProperty(value ="ref")
-  @NotNull
-  private final String ref;
   @JsonProperty(value ="productRef")
   @NotNull
   private final String productRef;
@@ -24,12 +21,15 @@ public class OrderProductMapper {
   @JsonProperty(value ="quantity")
   @NotNull
   private final String quantity;
+  @JsonProperty(value ="ref")
+  @NotNull
+  private final String ref;
 
   private OrderProductMapper(OrderProductMapperBuilder builder) {
-    this.ref = builder.ref;
     this.productRef = builder.productRef;
     this.price = builder.price;
     this.quantity = builder.quantity;
+    this.ref = builder.ref;
 
     validateRequiredAttributes();
   }
@@ -41,18 +41,10 @@ public class OrderProductMapper {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderProductMapperBuilder {
 
-    private String ref;
-
     private String productRef;
-
     private String price;
-
     private String quantity;
-
-    public OrderProductMapper.OrderProductMapperBuilder ref(String ref) {
-      this.ref = ref;
-      return this;
-    }
+    private String ref;
 
     public OrderProductMapper.OrderProductMapperBuilder productRef(String productRef) {
       this.productRef = productRef;
@@ -69,46 +61,35 @@ public class OrderProductMapper {
       return this;
     }
 
+    public OrderProductMapper.OrderProductMapperBuilder ref(String ref) {
+      this.ref = ref;
+      return this;
+    }
+
     public OrderProductMapper build() {
       OrderProductMapper orderProductMapper = new OrderProductMapper(this);
       return orderProductMapper;
     }
   }
 
-  /**
-  * Get ref
-  * @return ref
-  */
-  @Schema(name = "ref", required = true)
-  public String getRef() {
-    return ref;
-  }
-
-  /**
-  * Get productRef
-  * @return productRef
-  */
   @Schema(name = "productRef", required = true)
   public String getProductRef() {
     return productRef;
   }
 
-  /**
-  * Get price
-  * @return price
-  */
   @Schema(name = "price", required = true)
   public String getPrice() {
     return price;
   }
 
-  /**
-  * Get quantity
-  * @return quantity
-  */
   @Schema(name = "quantity", required = true)
   public String getQuantity() {
     return quantity;
+  }
+
+  @Schema(name = "ref", required = true)
+  public String getRef() {
+    return ref;
   }
 
   @Override
@@ -120,37 +101,36 @@ public class OrderProductMapper {
       return false;
     }
     OrderProductMapper orderProductMapper = (OrderProductMapper) o;
-    return Objects.equals(this.ref, orderProductMapper.ref) && Objects.equals(this.productRef, orderProductMapper.productRef) && Objects.equals(this.price, orderProductMapper.price) && Objects.equals(this.quantity, orderProductMapper.quantity);
+    return Objects.equals(this.productRef, orderProductMapper.productRef) && Objects.equals(this.price, orderProductMapper.price) && Objects.equals(this.quantity, orderProductMapper.quantity) && Objects.equals(this.ref, orderProductMapper.ref);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, productRef, price, quantity);
+    return Objects.hash(productRef, price, quantity, ref);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderProductMapper{");
-    sb.append(" ref:").append(ref).append(",");
     sb.append(" productRef:").append(productRef).append(",");
     sb.append(" price:").append(price).append(",");
-    sb.append(" quantity:").append(quantity);
+    sb.append(" quantity:").append(quantity).append(",");
+    sb.append(" ref:").append(ref);
     sb.append("}");
     return sb.toString();
   }
 
-
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
 
-    if (!Objects.nonNull(this.ref)) {
+    if (!Objects.nonNull(this.productRef)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.productRef)) {
+    } else if (!Objects.nonNull(this.price)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.price)) {
+    } else if (!Objects.nonNull(this.quantity)) {
       satisfiedCondition = false;
-    }    else if (!Objects.nonNull(this.quantity)) {
+    } else if (!Objects.nonNull(this.ref)) {
       satisfiedCondition = false;
     }
 
@@ -158,4 +138,5 @@ public class OrderProductMapper {
       throw new ModelClassException("OrderProductMapper");
     }
   }
+
 }

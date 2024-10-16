@@ -6,8 +6,6 @@
 
 package com.sngular.api.generator.test.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 
@@ -28,10 +28,11 @@ public class TestUtils {
     outputFiles.sort(Comparator.comparing(File::getPath));
     assertThat(outputFiles).hasSize(expectedFiles.size());
     for (int i = 0; i < outputFiles.size(); i++) {
-      reader1 = new FileInputStream(outputFiles.get(i));
+      final File outputFile = outputFiles.get(i);
+      reader1 = new FileInputStream(outputFile);
       final String sourceName = expectedFiles.get(i);
       reader2 = TestUtils.resourceAsFile(sourceName);
-      assertThat(reader1).as(() -> "Unexpected content for file " + sourceName).hasSameContentAs(reader2);
+      assertThat(reader2).as(() -> "Unexpected content for file " + outputFile.getAbsolutePath()).hasSameContentAs(reader1);
     }
   }
 

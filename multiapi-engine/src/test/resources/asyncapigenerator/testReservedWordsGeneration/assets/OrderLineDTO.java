@@ -6,24 +6,24 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 import com.sngular.scsplugin.reservedwordsgeneration.model.event.exception.ModelClassException;
 import com.sngular.scsplugin.reservedwordsgeneration.model.event.customvalidator.NotNull;
 
 @JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
 
-  @JsonProperty(value ="byte")
+  @JsonProperty(value ="_continue")
+  private List<String> _continue;
+  @JsonProperty(value ="_byte")
   @NotNull
   private final BigDecimal _byte;
-  @JsonProperty(value ="continue")
-  private List<String> _continue = new ArrayList<String>();
 
   private OrderLineDTO(OrderLineDTOBuilder builder) {
+    this._continue = builder._continue;
     this._byte = builder._byte;
-    this._continue.addAll(builder._continue);
 
     validateRequiredAttributes();
   }
@@ -35,14 +35,8 @@ public class OrderLineDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class OrderLineDTOBuilder {
 
-    private BigDecimal _byte;
-
     private List<String> _continue = new ArrayList<String>();
-
-    public OrderLineDTO.OrderLineDTOBuilder _byte(BigDecimal _byte) {
-      this._byte = _byte;
-      return this;
-    }
+    private BigDecimal _byte;
 
     public OrderLineDTO.OrderLineDTOBuilder _continue(List<String> _continue) {
       if (!_continue.isEmpty()) {
@@ -51,10 +45,15 @@ public class OrderLineDTO {
       return this;
     }
 
-    public OrderLineDTO.OrderLineDTOBuilder _continue(String _continue) {
-      if (_continue != null) {
-        this._continue.add(_continue);
+    public OrderLineDTO.OrderLineDTOBuilder __continue(String __continue) {
+      if (Objects.nonNull(__continue)) {
+        this._continue.add(__continue);
       }
+      return this;
+    }
+
+    public OrderLineDTO.OrderLineDTOBuilder _byte(BigDecimal _byte) {
+      this._byte = _byte;
       return this;
     }
 
@@ -64,25 +63,17 @@ public class OrderLineDTO {
     }
   }
 
-  /**
-  * Get byte
-  * @return byte
-  */
-  @Schema(name = "byte", required = true)
-  public BigDecimal getByte() {
-    return _byte;
-  }
-
-  /**
-  * Get continue
-  * @return continue
-  */
   @Schema(name = "continue", required = false)
   public List<String> getContinue() {
     return _continue;
   }
   public void setContinue(List<String> _continue) {
     this._continue = _continue;
+  }
+
+  @Schema(name = "byte", required = true)
+  public BigDecimal getByte() {
+    return _byte;
   }
 
   @Override
@@ -94,24 +85,23 @@ public class OrderLineDTO {
       return false;
     }
     OrderLineDTO orderLineDTO = (OrderLineDTO) o;
-    return Objects.equals(this._byte, orderLineDTO._byte) && Objects.equals(this._continue, orderLineDTO._continue);
+    return Objects.equals(this._continue, orderLineDTO._continue) && Objects.equals(this._byte, orderLineDTO._byte);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_byte, _continue);
+    return Objects.hash(_continue, _byte);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("OrderLineDTO{");
-    sb.append(" byte:").append(_byte).append(",");
-    sb.append(" continue:").append(_continue);
+    sb.append(" continue:").append(_continue).append(",");
+    sb.append(" byte:").append(_byte);
     sb.append("}");
     return sb.toString();
   }
-
 
   private void validateRequiredAttributes() {
     boolean satisfiedCondition = true;
@@ -124,4 +114,5 @@ public class OrderLineDTO {
       throw new ModelClassException("OrderLineDTO");
     }
   }
+
 }

@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class StringFieldDTO {
 
   @JsonProperty(value ="mandatory")
@@ -20,7 +21,8 @@ public class StringFieldDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  private List<String> properties = new ArrayList<String>();
+  @Singular("property")
+  private List<String> properties;
 
   @JsonProperty(value ="name")
   private String name;

@@ -4,29 +4,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class ObjectFieldDTO {
 
   @JsonProperty(value ="mandatory")
   private Boolean mandatory;
 
   @JsonProperty(value ="requiredValues")
-  private List<String> requiredValues = new ArrayList<String>();
+  @Singular("requiredValue")
+  private List<String> requiredValues;
 
   @JsonProperty(value ="type")
   private String type;
 
   @JsonProperty(value ="properties")
-  private List<FieldDTO> properties = new ArrayList<FieldDTO>();
+  @Singular("property")
+  private List<FieldDTO> properties;
 
   @JsonProperty(value ="name")
   private String name;
 
   @JsonProperty(value ="defaultValue")
-  private List<Object> defaultValue = new ArrayList<Object>();
+  @Singular("_defaultValue")
+  private List<Object> defaultValue;
 
 
   @Builder

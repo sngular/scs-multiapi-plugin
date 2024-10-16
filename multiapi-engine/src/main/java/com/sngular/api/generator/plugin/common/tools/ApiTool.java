@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
-import com.sngular.api.generator.plugin.openapi.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
@@ -35,7 +34,6 @@ public final class ApiTool {
   public static final String ANY_OF = "anyOf";
 
   public static final String ONE_OF = "oneOf";
-
   public static final String COMPONENTS = "components";
 
   public static final String SCHEMAS = "schemas";
@@ -147,7 +145,8 @@ public final class ApiTool {
       if (hasNode(components, schemaType)) {
         final var schemas = getNode(components, schemaType);
         final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(name, getNode(schemas, name)));
+        schemasIt.forEachRemaining(name -> schemasMap.put(schemaType.toUpperCase() + "/"+ StringCaseUtils.titleToSnakeCase(name),
+                getNode(schemas, name)));
       }
     }
 
@@ -202,6 +201,10 @@ public final class ApiTool {
 
   public static boolean hasRequired(final JsonNode schema) {
     return hasNode(schema, REQUIRED);
+  }
+
+  public static boolean hasName(JsonNode message) {
+    return hasNode(message, "name");
   }
 
   public static boolean hasType(final JsonNode schema) {
@@ -303,7 +306,7 @@ public final class ApiTool {
   }
 
   public static boolean hasComponents(final JsonNode node) {
-    return hasNode(node, "components");
+    return hasNode(node, COMPONENTS);
   }
 
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
@@ -348,5 +351,37 @@ public final class ApiTool {
       result = node.asText();
     }
     return result;
+  }
+
+  public static boolean hasConst(final JsonNode fieldBody) {
+    return hasNode(fieldBody, "const");
+  }
+
+  public static Object getConst(final JsonNode fieldBody) {
+    return getValue(getNode(fieldBody, "const"));
+  }
+
+  private static Object getValue(final JsonNode aConst) {
+    Object value = null;
+    if (Objects.nonNull(aConst)) {
+      if (aConst.isTextual()) {
+        value = aConst.textValue();
+      } else if (aConst.isNumber()) {
+        value = aConst.numberValue();
+      } else if (aConst.isBoolean()) {
+        value = aConst.booleanValue();
+      } else if (aConst.isFloat()) {
+        value = aConst.floatValue();
+      } else if (aConst.isDouble()) {
+        value = aConst.doubleValue();
+      } else if (aConst.isInt()) {
+        value = aConst.intValue();
+      } else if (aConst.isLong()) {
+        value = aConst.longValue();
+      } else if (aConst.isBigDecimal()) {
+        value = aConst.decimalValue();
+      }
+    }
+    return value;
   }
 }

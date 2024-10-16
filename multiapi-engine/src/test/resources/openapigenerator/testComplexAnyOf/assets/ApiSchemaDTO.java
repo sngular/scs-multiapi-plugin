@@ -18,9 +18,6 @@ public class ApiSchemaDTO {
   @JsonProperty(value ="type")
   @NotNull
   private final String type;
-  @JsonProperty(value ="properties")
-  @NotNull
-  private final List<ApiTypeArrayDTO> properties;
   @JsonProperty(value ="name")
   @NotNull
   private final String name;
@@ -31,22 +28,10 @@ public class ApiSchemaDTO {
   @NotNull
   private final String subjectName;
   @JsonProperty(value ="requiredFields")
-  private List<ApiTypeArrayDTO> requiredFields = new ArrayList<ApiTypeArrayDTO>();
-
-  private ApiSchemaDTO(String type, List<ApiTypeArrayDTO> properties, String name, String id, String subjectName, List<ApiTypeArrayDTO> requiredFields) {
-    this.type = type;
-    this.properties = properties;
-    this.name = name;
-    this.id = id;
-    this.subjectName = subjectName;
-    this.requiredFields = requiredFields;
-
-    validateRequiredAttributes();
-  }
+  private List<ApiTypeArrayDTO> requiredFields;
 
   private ApiSchemaDTO(ApiSchemaDTOBuilder builder) {
     this.type = builder.type;
-    this.properties = builder.properties;
     this.name = builder.name;
     this.id = builder.id;
     this.subjectName = builder.subjectName;
@@ -63,7 +48,6 @@ public class ApiSchemaDTO {
   public static class ApiSchemaDTOBuilder {
 
     private String type;
-    private List<ApiTypeArrayDTO> properties = new ArrayList<ApiTypeArrayDTO>();
     private String name;
     private String id;
     private String subjectName;
@@ -71,19 +55,6 @@ public class ApiSchemaDTO {
 
     public ApiSchemaDTO.ApiSchemaDTOBuilder type(String type) {
       this.type = type;
-      return this;
-    }
-    public ApiSchemaDTO.ApiSchemaDTOBuilder properties(List<ApiTypeArrayDTO> properties) {
-      if (!properties.isEmpty()) {
-        this.properties.addAll(properties);
-      }
-      return this;
-    }
-
-    public ApiSchemaDTO.ApiSchemaDTOBuilder propertie(ApiTypeArrayDTO propertie) {
-      if (propertie != null) {
-        this.properties.add(propertie);
-      }
       return this;
     }
 
@@ -101,6 +72,7 @@ public class ApiSchemaDTO {
       this.subjectName = subjectName;
       return this;
     }
+
     public ApiSchemaDTO.ApiSchemaDTOBuilder requiredFields(List<ApiTypeArrayDTO> requiredFields) {
       if (!requiredFields.isEmpty()) {
         this.requiredFields.addAll(requiredFields);
@@ -109,7 +81,7 @@ public class ApiSchemaDTO {
     }
 
     public ApiSchemaDTO.ApiSchemaDTOBuilder requiredField(ApiTypeArrayDTO requiredField) {
-      if (requiredField != null) {
+      if (Objects.nonNull(requiredField)) {
         this.requiredFields.add(requiredField);
       }
       return this;
@@ -124,11 +96,6 @@ public class ApiSchemaDTO {
   @Schema(name = "type", required = true)
   public String getType() {
     return type;
-  }
-
-  @Schema(name = "properties", required = true)
-  public List<ApiTypeArrayDTO> getProperties() {
-    return properties;
   }
 
   @Schema(name = "name", required = true)
@@ -163,12 +130,12 @@ public class ApiSchemaDTO {
       return false;
     }
     ApiSchemaDTO apiSchemaDTO = (ApiSchemaDTO) o;
-    return Objects.equals(this.type, apiSchemaDTO.type) && Objects.equals(this.properties, apiSchemaDTO.properties) && Objects.equals(this.name, apiSchemaDTO.name) && Objects.equals(this.id, apiSchemaDTO.id) && Objects.equals(this.subjectName, apiSchemaDTO.subjectName) && Objects.equals(this.requiredFields, apiSchemaDTO.requiredFields);
+    return Objects.equals(this.type, apiSchemaDTO.type) && Objects.equals(this.name, apiSchemaDTO.name) && Objects.equals(this.id, apiSchemaDTO.id) && Objects.equals(this.subjectName, apiSchemaDTO.subjectName) && Objects.equals(this.requiredFields, apiSchemaDTO.requiredFields);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, properties, name, id, subjectName, requiredFields);
+    return Objects.hash(type, name, id, subjectName, requiredFields);
   }
 
   @Override
@@ -176,7 +143,6 @@ public class ApiSchemaDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("ApiSchemaDTO{");
     sb.append(" type:").append(type).append(",");
-    sb.append(" properties:").append(properties).append(",");
     sb.append(" name:").append(name).append(",");
     sb.append(" id:").append(id).append(",");
     sb.append(" subjectName:").append(subjectName).append(",");
@@ -189,8 +155,6 @@ public class ApiSchemaDTO {
     boolean satisfiedCondition = true;
 
     if (!Objects.nonNull(this.type)) {
-      satisfiedCondition = false;
-    } else if (!Objects.nonNull(this.properties)) {
       satisfiedCondition = false;
     } else if (!Objects.nonNull(this.name)) {
       satisfiedCondition = false;

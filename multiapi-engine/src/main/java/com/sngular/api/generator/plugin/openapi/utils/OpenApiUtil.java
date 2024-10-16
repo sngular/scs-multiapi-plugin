@@ -21,13 +21,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
@@ -130,7 +130,7 @@ public class OpenApiUtil {
     return sb.toString();
   }
 
-  public static Map<String, JsonNode> processBasicJsonNodes(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
+  public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
     for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
@@ -138,7 +138,7 @@ public class OpenApiUtil {
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processContentForBasicJsonNodes(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
+          processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
         }
       }
     }
@@ -146,7 +146,7 @@ public class OpenApiUtil {
     return basicJsonNodeMap;
   }
 
-  private static void processContentForBasicJsonNodes(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processPathContent(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
 
     processParameters(basicJsonNodeMap, operation);
     processRequestBody(basicJsonNodeMap, operation);
@@ -158,9 +158,9 @@ public class OpenApiUtil {
       final var content = operation.at("/requestBody/content");
       final var schema = content.findValue("schema");
       if (!ApiTool.hasRef(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(getOperationId(operation)), schema);
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(getOperationId(operation))), schema);
       } else if (ApiTool.hasItems(schema)) {
-        basicJsonNodeMap.put("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), ApiTool.getItems(schema));
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId"))), ApiTool.getItems(schema));
       }
     }
   }
@@ -174,9 +174,9 @@ public class OpenApiUtil {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
             if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation))), schema);
             } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema)), schema);
             }
           }
         }
@@ -190,7 +190,7 @@ public class OpenApiUtil {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-              "InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)),
+              StringCaseUtils.titleToSnakeCase("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter))),
               ApiTool.getNode(parameter, "schema"));
         }
       }

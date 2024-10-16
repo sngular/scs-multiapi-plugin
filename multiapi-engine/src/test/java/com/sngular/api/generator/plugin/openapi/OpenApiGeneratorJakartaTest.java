@@ -33,9 +33,8 @@ class OpenApiGeneratorJakartaTest {
   @BeforeAll
   static void setup() {
     openApiGenerator =
-        new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, OpenApiGeneratorFixtures.GENERATED, "groupId",
-                             new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
-                             baseDir.toFile());
+        new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET), OpenApiGeneratorFixtures.GENERATED, "groupId",
+            baseDir.toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {

@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SchemaDTO {
 
   @JsonProperty(value ="type")
   private String type;
 
   @JsonProperty(value ="properties")
-  private List<FieldDTO> properties = new ArrayList<FieldDTO>();
+  @Singular("property")
+  private List<FieldDTO> properties;
 
   @JsonProperty(value ="name")
   @NonNull
@@ -25,14 +27,16 @@ public class SchemaDTO {
   private String id;
 
   @JsonProperty(value ="definitions")
-  private List<FieldDTO> definitions = new ArrayList<FieldDTO>();
+  @Singular("definition")
+  private List<FieldDTO> definitions;
 
   @JsonProperty(value ="subjectName")
   @NonNull
   private String subjectName;
 
   @JsonProperty(value ="requiredFields")
-  private List<String> requiredFields = new ArrayList<String>();
+  @Singular("requiredField")
+  private List<String> requiredFields;
 
   @JsonProperty(value ="original")
   private Boolean original;

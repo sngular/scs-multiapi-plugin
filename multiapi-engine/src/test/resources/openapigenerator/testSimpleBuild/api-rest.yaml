@@ -146,10 +146,7 @@ paths:
           schema:
             type: integer
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/UpdateQuote'
+        $ref: '#/components/requestBodies/UpdateQuote'
       responses:
         '200':
           description: Successful operation
@@ -184,10 +181,7 @@ paths:
           schema:
             type: integer
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/ActivatePolicy'
+        $ref: '#/components/requestBodies/ActivatePolicy'
       responses:
         '200':
           description: Successful operation
@@ -215,10 +209,7 @@ paths:
       description: Once the debtor has paid for the insurance, we settle it using this endpoint.
       operationId: settle
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/PolicySettlement'
+        $ref: '#/components/requestBodies/PolicySettlement'
       parameters:
         - name: policyIdInProvider
           in: path

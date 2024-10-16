@@ -6,15 +6,10 @@
 
 package com.sngular.api.generator.plugin.asyncapi;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAvroException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,6 +19,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+@Slf4j
 class AsyncApiGeneratorTest {
 
   @TempDir(cleanup = CleanupMode.NEVER)
@@ -36,9 +38,13 @@ class AsyncApiGeneratorTest {
   @BeforeAll
   static void setup() {
     asyncApiGenerator =
-        new AsyncApiGenerator(SPRING_BOOT_VERSION, new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET), AsyncApiGeneratorFixtures.GENERATED,
-                              "groupId",
-                              baseDir.toFile());
+        new AsyncApiGenerator(SPRING_BOOT_VERSION,
+            true,
+            new File(baseDir.toAbsolutePath() + File.separator + AsyncApiGeneratorFixtures.TARGET),
+            AsyncApiGeneratorFixtures.GENERATED,
+            "groupId",
+            Path.of("src","test","resources").toFile()
+        );
   }
 
   static Stream<Arguments> fileSpecToProcess() {
@@ -66,6 +72,7 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestModelClassExceptionGeneration", AsyncApiGeneratorFixtures.TEST_MODEL_CLASS_EXCEPTION_GENERATION,
                      AsyncApiGeneratorFixtures.validateTestModelClassExceptionGeneration()),
         Arguments.of("TestNoSchemas", AsyncApiGeneratorFixtures.TEST_NO_SCHEMAS, AsyncApiGeneratorFixtures.validateNoSchemas()),
+      Arguments.of("TestMessageNaming", AsyncApiGeneratorFixtures.TEST_MESSAGE_NAMING, AsyncApiGeneratorFixtures.validateMessageNaming()),
         Arguments.of("TestNestedObjectIssue", AsyncApiGeneratorFixtures.TEST_NESTED_OBJECT, AsyncApiGeneratorFixtures.validateNestedObject()),
         Arguments.of("TestConstantGeneration", AsyncApiGeneratorFixtures.TEST_CONSTANT_GENERATION, AsyncApiGeneratorFixtures.validateConstantGeneration()),
         Arguments.of("testPropertiesNotGeneratedIssue", AsyncApiGeneratorFixtures.PROPERTIES_NOT_GENERATED_ISSUE, AsyncApiGeneratorFixtures.validateNotGeneratedPropertiesIssue()),

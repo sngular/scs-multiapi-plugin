@@ -17,23 +17,13 @@ public class ApiMapFieldDTO {
   @JsonProperty(value ="type")
   private String type;
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  private List<Object> defaultValues;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="mapSize")
   private Integer mapSize;
   @JsonProperty(value ="mapTypes")
-  private List<ApiTypeArrayDTO> mapTypes = new ArrayList<ApiTypeArrayDTO>();
-
-  private ApiMapFieldDTO(String keyType, String type, List<Object> defaultValues, String name, Integer mapSize, List<ApiTypeArrayDTO> mapTypes) {
-    this.keyType = keyType;
-    this.type = type;
-    this.defaultValues = defaultValues;
-    this.name = name;
-    this.mapSize = mapSize;
-    this.mapTypes = mapTypes;
-
-  }
+  private List<ApiTypeArrayDTO> mapTypes;
 
   private ApiMapFieldDTO(ApiMapFieldDTOBuilder builder) {
     this.keyType = builder.keyType;
@@ -68,6 +58,7 @@ public class ApiMapFieldDTO {
       this.type = type;
       return this;
     }
+
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValues(List<Object> defaultValues) {
       if (!defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
@@ -76,7 +67,7 @@ public class ApiMapFieldDTO {
     }
 
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValue(Object defaultValue) {
-      if (defaultValue != null) {
+      if (Objects.nonNull(defaultValue)) {
         this.defaultValues.add(defaultValue);
       }
       return this;
@@ -91,6 +82,7 @@ public class ApiMapFieldDTO {
       this.mapSize = mapSize;
       return this;
     }
+
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapTypes(List<ApiTypeArrayDTO> mapTypes) {
       if (!mapTypes.isEmpty()) {
         this.mapTypes.addAll(mapTypes);
@@ -99,7 +91,7 @@ public class ApiMapFieldDTO {
     }
 
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapType(ApiTypeArrayDTO mapType) {
-      if (mapType != null) {
+      if (Objects.nonNull(mapType)) {
         this.mapTypes.add(mapType);
       }
       return this;

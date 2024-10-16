@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class NumberFieldDTO {
 
   @JsonProperty(value ="precision")
@@ -21,7 +22,8 @@ public class NumberFieldDTO {
   private String type;
 
   @JsonProperty(value ="defaultValues")
-  private List<Object> defaultValues = new ArrayList<Object>();
+  @Singular("defaultValue")
+  private List<Object> defaultValues;
 
   @JsonProperty(value ="name")
   private String name;

@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class ArrayFieldDTO {
 
   @JsonProperty(value ="mandatory")
@@ -32,10 +33,12 @@ public class ArrayFieldDTO {
   private Integer minItems;
 
   @JsonProperty(value ="values")
-  private List<FieldDTO> values = new ArrayList<FieldDTO>();
+  @Singular("value")
+  private List<FieldDTO> values;
 
   @JsonProperty(value ="defaultValue")
-  private List<FieldDTO> defaultValue = new ArrayList<FieldDTO>();
+  @Singular("_defaultValue")
+  private List<FieldDTO> defaultValue;
 
 
   @Builder

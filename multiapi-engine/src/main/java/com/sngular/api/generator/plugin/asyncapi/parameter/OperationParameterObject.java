@@ -12,54 +12,31 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
-
 import java.util.List;
-import java.util.Map;
-
-import com.sngular.api.generator.plugin.common.model.TimeType;
+import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public final class OperationParameterObject {
+@EqualsAndHashCode(callSuper = true)
+public final class OperationParameterObject extends CommonSpecFile {
 
   private String ids;
 
-  private String apiPackage;
-
-  private String modelPackage;
-
-  private String modelNameSuffix;
-
   private String classNamePostfix;
-
-  private boolean useLombokModelAnnotation;
-
-  @Builder.Default
-  private String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
-
-  @Builder.Default
-  private String dateFormat = "yyyy-MM-dd";
-  
-  @Default
-  private TimeType useTimeType = TimeType.LOCAL;
 
   @SuppressWarnings("unused")
   private List<String> operationIds;
 
   public List<String> getOperationIds() {
     return StringUtils.isEmpty(ids) ? List.of() : List.of(ids.replace(" ", "").split(","));
-  }
-  
-  public Map<String, String> getFormats() {
-    return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
   }
 
 }

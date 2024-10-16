@@ -17,26 +17,15 @@ public class ApiTestDTO {
   @JsonProperty(value ="description")
   private String description;
   @JsonProperty(value ="tags")
-  private List<String> tags = new ArrayList<String>();
+  private List<String> tags;
   @JsonProperty(value ="name")
   private String name;
   @JsonProperty(value ="testTypeList")
-  private List<ApiTestTypeDTO> testTypeList = new ArrayList<ApiTestTypeDTO>();
+  private List<ApiTestTypeDTO> testTypeList;
   @JsonProperty(value ="id")
   private Integer id;
   @JsonProperty(value ="priority")
   private Integer priority;
-
-  private ApiTestDTO(ApiTestProcessorDTO testProcessor, String description, List<String> tags, String name, List<ApiTestTypeDTO> testTypeList, Integer id, Integer priority) {
-    this.testProcessor = testProcessor;
-    this.description = description;
-    this.tags = tags;
-    this.name = name;
-    this.testTypeList = testTypeList;
-    this.id = id;
-    this.priority = priority;
-
-  }
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.testProcessor = builder.testProcessor;
@@ -63,6 +52,7 @@ public class ApiTestDTO {
     private List<ApiTestTypeDTO> testTypeList = new ArrayList<ApiTestTypeDTO>();
     private Integer id;
     private Integer priority;
+
     public ApiTestDTO.ApiTestDTOBuilder testProcessor(ApiTestProcessorDTO testProcessor) {
       this.testProcessor = testProcessor;
       return this;
@@ -72,6 +62,7 @@ public class ApiTestDTO {
       this.description = description;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder tags(List<String> tags) {
       if (!tags.isEmpty()) {
         this.tags.addAll(tags);
@@ -80,7 +71,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder tag(String tag) {
-      if (tag != null) {
+      if (Objects.nonNull(tag)) {
         this.tags.add(tag);
       }
       return this;
@@ -90,6 +81,7 @@ public class ApiTestDTO {
       this.name = name;
       return this;
     }
+
     public ApiTestDTO.ApiTestDTOBuilder testTypeList(List<ApiTestTypeDTO> testTypeList) {
       if (!testTypeList.isEmpty()) {
         this.testTypeList.addAll(testTypeList);
@@ -98,7 +90,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder testType(ApiTestTypeDTO testType) {
-      if (testType != null) {
+      if (Objects.nonNull(testType)) {
         this.testTypeList.add(testType);
       }
       return this;

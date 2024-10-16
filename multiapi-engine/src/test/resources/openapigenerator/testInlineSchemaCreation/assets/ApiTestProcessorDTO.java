@@ -15,12 +15,6 @@ public class ApiTestProcessorDTO {
   @JsonProperty(value ="id")
   private String id;
 
-  private ApiTestProcessorDTO(String name, String id) {
-    this.name = name;
-    this.id = id;
-
-  }
-
   private ApiTestProcessorDTO(ApiTestProcessorDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;

@@ -4,13 +4,14 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.extern.jackson.Jacksonized;
 import com.sngular.multifileplugin.testanyofinresponse.model.exception.ModelClassException;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class InlineResponse200ListGamesAnyOfDTO {
 
   @JsonProperty(value ="gameName")
@@ -30,7 +31,8 @@ public class InlineResponse200ListGamesAnyOfDTO {
   private Integer rooms;
 
   @JsonProperty(value ="players")
-  private List<String> players = new ArrayList<String>();
+  @Singular("player")
+  private List<String> players;
 
 
   @Builder
@@ -48,20 +50,20 @@ public class InlineResponse200ListGamesAnyOfDTO {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-    if (Objects.nonNull(this.gameName)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.name)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.id)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.rooms)) {
-      satisfiedCondition = true;
-    } else if (Objects.nonNull(this.players)) {
-      satisfiedCondition = true;
-    }
+            if (Objects.nonNull(this.gameName)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.name)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.id)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.rooms)) {
+        satisfiedCondition = true;
+        } else if (Objects.nonNull(this.players)) {
+        satisfiedCondition = true;
+        }
 
     if (!satisfiedCondition) {
-      throw new ModelClassException("InlineResponse200ListGamesAnyOfDTO");
+    throw new ModelClassException("InlineResponse200ListGamesAnyOfDTO");
     }
   }
 }

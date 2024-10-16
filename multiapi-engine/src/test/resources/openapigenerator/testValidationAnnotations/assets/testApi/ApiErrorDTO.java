@@ -8,15 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
-import com.sngular.multifileplugin.testapi.model.customvalidator.Max;
-import com.sngular.multifileplugin.testapi.model.customvalidator.Min;
-import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
-import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxInteger;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinInteger;
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
+import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinItems;
 import com.sngular.multifileplugin.testapi.model.customvalidator.UniqueItems;
 
 @JsonDeserialize(builder = ApiErrorDTO.ApiErrorDTOBuilder.class)
@@ -25,8 +25,8 @@ public class ApiErrorDTO {
   @JsonProperty(value ="intCode")
   private Integer intCode;
   @JsonProperty(value ="code")
-  @Min(minimum = "10", exclusive = false)
-  @Max(maximum = "200", exclusive = true)
+  @MinInteger(minimum = "10", exclusive = false)
+  @MaxInteger(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10.55")
   @NotNull
   private final Integer code;
@@ -39,16 +39,7 @@ public class ApiErrorDTO {
   @MaxItems(maximum = 10)
   @MinItems(minimum = 5)
   @UniqueItems
-  private List<Integer> test = new ArrayList<Integer>();
-
-  private ApiErrorDTO(Integer intCode, Integer code, String message, List<Integer> test) {
-    this.intCode = intCode;
-    this.code = code;
-    this.message = message;
-    this.test = test;
-
-    validateRequiredAttributes();
-  }
+  private List<Integer> test;
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.intCode = builder.intCode;
@@ -85,6 +76,7 @@ public class ApiErrorDTO {
       this.message = message;
       return this;
     }
+
     public ApiErrorDTO.ApiErrorDTOBuilder test(List<Integer> test) {
       if (!test.isEmpty()) {
         this.test.addAll(test);
@@ -92,9 +84,9 @@ public class ApiErrorDTO {
       return this;
     }
 
-    public ApiErrorDTO.ApiErrorDTOBuilder test(Integer test) {
-      if (test != null) {
-        this.test.add(test);
+    public ApiErrorDTO.ApiErrorDTOBuilder _test(Integer _test) {
+      if (Objects.nonNull(_test)) {
+        this.test.add(_test);
       }
       return this;
     }

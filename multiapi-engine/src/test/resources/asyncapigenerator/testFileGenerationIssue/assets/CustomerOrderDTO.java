@@ -8,24 +8,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 
 @JsonDeserialize(builder = CustomerOrderDTO.CustomerOrderDTOBuilder.class)
 public class CustomerOrderDTO {
 
-  @JsonProperty(value ="id")
-  private String id;
-  @JsonProperty(value ="date")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  private LocalDateTime date;
-  @JsonProperty(value ="shippingDetails")
-  private ShippingDetailsDTO shippingDetails;
-  @JsonProperty(value ="orderedItems")
-  private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
-  @JsonProperty(value ="paymentDetails")
-  private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
   @JsonProperty(value ="status")
   private Status status;
   public enum Status {
@@ -49,17 +37,27 @@ public class CustomerOrderDTO {
       return String.valueOf(value);
     }
   }
+  @JsonProperty(value ="id")
+  private String id;
+  @JsonProperty(value ="date")
+  private LocalDateTime date;
+  @JsonProperty(value ="orderedItems")
+  private List<OrderedItemDTO> orderedItems;
+  @JsonProperty(value ="paymentDetails")
+  private List<PaymentDetailsDTO> paymentDetails;
   @JsonProperty(value ="customer")
   private CustomerDTO customer;
+  @JsonProperty(value ="shippingDetails")
+  private ShippingDetailsDTO shippingDetails;
 
   private CustomerOrderDTO(CustomerOrderDTOBuilder builder) {
+    this.status = builder.status;
     this.id = builder.id;
     this.date = builder.date;
-    this.shippingDetails = builder.shippingDetails;
-    this.orderedItems.addAll(builder.orderedItems);
-    this.paymentDetails.addAll(builder.paymentDetails);
-    this.status = builder.status;
+    this.orderedItems = builder.orderedItems;
+    this.paymentDetails = builder.paymentDetails;
     this.customer = builder.customer;
+    this.shippingDetails = builder.shippingDetails;
 
   }
 
@@ -70,19 +68,18 @@ public class CustomerOrderDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CustomerOrderDTOBuilder {
 
+    private Status status;
     private String id;
-
     private LocalDateTime date;
-
+    private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
+    private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
+    private CustomerDTO customer;
     private ShippingDetailsDTO shippingDetails;
 
-    private List<OrderedItemDTO> orderedItems = new ArrayList<OrderedItemDTO>();
-
-    private List<PaymentDetailsDTO> paymentDetails = new ArrayList<PaymentDetailsDTO>();
-
-    private Status status;
-
-    private CustomerDTO customer;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder status(Status status) {
+      this.status = status;
+      return this;
+    }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder id(String id) {
       this.id = id;
@@ -94,11 +91,6 @@ public class CustomerOrderDTO {
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(ShippingDetailsDTO shippingDetails) {
-      this.shippingDetails = shippingDetails;
-      return this;
-    }
-
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
       if (!orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
@@ -107,7 +99,7 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItem(OrderedItemDTO orderedItem) {
-      if (orderedItem != null) {
+      if (Objects.nonNull(orderedItem)) {
         this.orderedItems.add(orderedItem);
       }
       return this;
@@ -121,19 +113,19 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetail(PaymentDetailsDTO paymentDetail) {
-      if (paymentDetail != null) {
+      if (Objects.nonNull(paymentDetail)) {
         this.paymentDetails.add(paymentDetail);
       }
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder status(Status status) {
-      this.status = status;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder customer(CustomerDTO customer) {
+      this.customer = customer;
       return this;
     }
 
-    public CustomerOrderDTO.CustomerOrderDTOBuilder customer(CustomerDTO customer) {
-      this.customer = customer;
+    public CustomerOrderDTO.CustomerOrderDTOBuilder shippingDetails(ShippingDetailsDTO shippingDetails) {
+      this.shippingDetails = shippingDetails;
       return this;
     }
 
@@ -143,70 +135,6 @@ public class CustomerOrderDTO {
     }
   }
 
-  /**
-  * Get id
-  * @return id
-  */
-  @Schema(name = "id", required = false)
-  public String getId() {
-    return id;
-  }
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  /**
-  * Get date
-  * @return date
-  */
-  @Schema(name = "date", required = false)
-  public LocalDateTime getDate() {
-    return date;
-  }
-  public void setDate(LocalDateTime date) {
-    this.date = date;
-  }
-
-  /**
-  * Get shippingDetails
-  * @return shippingDetails
-  */
-  @Schema(name = "shippingDetails", required = false)
-  public ShippingDetailsDTO getShippingDetails() {
-    return shippingDetails;
-  }
-  public void setShippingDetails(ShippingDetailsDTO shippingDetails) {
-    this.shippingDetails = shippingDetails;
-  }
-
-  /**
-  * Get orderedItems
-  * @return orderedItems
-  */
-  @Schema(name = "orderedItems", required = false)
-  public List<OrderedItemDTO> getOrderedItems() {
-    return orderedItems;
-  }
-  public void setOrderedItems(List<OrderedItemDTO> orderedItems) {
-    this.orderedItems = orderedItems;
-  }
-
-  /**
-  * Get paymentDetails
-  * @return paymentDetails
-  */
-  @Schema(name = "paymentDetails", required = false)
-  public List<PaymentDetailsDTO> getPaymentDetails() {
-    return paymentDetails;
-  }
-  public void setPaymentDetails(List<PaymentDetailsDTO> paymentDetails) {
-    this.paymentDetails = paymentDetails;
-  }
-
-  /**
-  * Get status
-  * @return status
-  */
   @Schema(name = "status", required = false)
   public Status getStatus() {
     return status;
@@ -215,16 +143,52 @@ public class CustomerOrderDTO {
     this.status = status;
   }
 
-  /**
-  * Get customer
-  * @return customer
-  */
+  @Schema(name = "id", required = false)
+  public String getId() {
+    return id;
+  }
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  @Schema(name = "date", required = false)
+  public LocalDateTime getDate() {
+    return date;
+  }
+  public void setDate(LocalDateTime date) {
+    this.date = date;
+  }
+
+  @Schema(name = "orderedItems", required = false)
+  public List<OrderedItemDTO> getOrderedItems() {
+    return orderedItems;
+  }
+  public void setOrderedItems(List<OrderedItemDTO> orderedItems) {
+    this.orderedItems = orderedItems;
+  }
+
+  @Schema(name = "paymentDetails", required = false)
+  public List<PaymentDetailsDTO> getPaymentDetails() {
+    return paymentDetails;
+  }
+  public void setPaymentDetails(List<PaymentDetailsDTO> paymentDetails) {
+    this.paymentDetails = paymentDetails;
+  }
+
   @Schema(name = "customer", required = false)
   public CustomerDTO getCustomer() {
     return customer;
   }
   public void setCustomer(CustomerDTO customer) {
     this.customer = customer;
+  }
+
+  @Schema(name = "shippingDetails", required = false)
+  public ShippingDetailsDTO getShippingDetails() {
+    return shippingDetails;
+  }
+  public void setShippingDetails(ShippingDetailsDTO shippingDetails) {
+    this.shippingDetails = shippingDetails;
   }
 
   @Override
@@ -236,25 +200,25 @@ public class CustomerOrderDTO {
       return false;
     }
     CustomerOrderDTO customerOrderDTO = (CustomerOrderDTO) o;
-    return Objects.equals(this.id, customerOrderDTO.id) && Objects.equals(this.date, customerOrderDTO.date) && Objects.equals(this.shippingDetails, customerOrderDTO.shippingDetails) && Objects.equals(this.orderedItems, customerOrderDTO.orderedItems) && Objects.equals(this.paymentDetails, customerOrderDTO.paymentDetails) && Objects.equals(this.status, customerOrderDTO.status) && Objects.equals(this.customer, customerOrderDTO.customer);
+    return Objects.equals(this.status, customerOrderDTO.status) && Objects.equals(this.id, customerOrderDTO.id) && Objects.equals(this.date, customerOrderDTO.date) && Objects.equals(this.orderedItems, customerOrderDTO.orderedItems) && Objects.equals(this.paymentDetails, customerOrderDTO.paymentDetails) && Objects.equals(this.customer, customerOrderDTO.customer) && Objects.equals(this.shippingDetails, customerOrderDTO.shippingDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, date, shippingDetails, orderedItems, paymentDetails, status, customer);
+    return Objects.hash(status, id, date, orderedItems, paymentDetails, customer, shippingDetails);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CustomerOrderDTO{");
+    sb.append(" status:").append(status).append(",");
     sb.append(" id:").append(id).append(",");
     sb.append(" date:").append(date).append(",");
-    sb.append(" shippingDetails:").append(shippingDetails).append(",");
     sb.append(" orderedItems:").append(orderedItems).append(",");
     sb.append(" paymentDetails:").append(paymentDetails).append(",");
-    sb.append(" status:").append(status).append(",");
-    sb.append(" customer:").append(customer);
+    sb.append(" customer:").append(customer).append(",");
+    sb.append(" shippingDetails:").append(shippingDetails);
     sb.append("}");
     return sb.toString();
   }

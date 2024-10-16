@@ -15,12 +15,6 @@ public class ApiErrorDTO {
   @JsonProperty(value ="message")
   private String message;
 
-  private ApiErrorDTO(Integer code, String message) {
-    this.code = code;
-    this.message = message;
-
-  }
-
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.code = builder.code;
     this.message = builder.message;

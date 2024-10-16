@@ -4,16 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class ApiTestDTO {
 
   @JsonProperty(value ="testers")
   @NonNull
-  private List<String> testers = new ArrayList<String>();
+  @Singular("tester")
+  private List<String> testers;
 
   @JsonProperty(value ="testName")
   @NonNull

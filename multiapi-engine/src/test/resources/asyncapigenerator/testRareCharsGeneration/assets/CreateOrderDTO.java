@@ -10,14 +10,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = CreateOrderDTO.CreateOrderDTOBuilder.class)
 public class CreateOrderDTO {
 
-  @JsonProperty(value ="order")
-  private OrderDTO order;
   @JsonProperty(value ="waiter")
   private WaiterDTO waiter;
+  @JsonProperty(value ="order")
+  private OrderDTO order;
 
   private CreateOrderDTO(CreateOrderDTOBuilder builder) {
-    this.order = builder.order;
     this.waiter = builder.waiter;
+    this.order = builder.order;
 
   }
 
@@ -28,17 +28,16 @@ public class CreateOrderDTO {
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
   public static class CreateOrderDTOBuilder {
 
-    private OrderDTO order;
-
     private WaiterDTO waiter;
-
-    public CreateOrderDTO.CreateOrderDTOBuilder order(OrderDTO order) {
-      this.order = order;
-      return this;
-    }
+    private OrderDTO order;
 
     public CreateOrderDTO.CreateOrderDTOBuilder waiter(WaiterDTO waiter) {
       this.waiter = waiter;
+      return this;
+    }
+
+    public CreateOrderDTO.CreateOrderDTOBuilder order(OrderDTO order) {
+      this.order = order;
       return this;
     }
 
@@ -48,28 +47,20 @@ public class CreateOrderDTO {
     }
   }
 
-  /**
-  * Get order
-  * @return order
-  */
-  @Schema(name = "order", required = false)
-  public OrderDTO getOrder() {
-    return order;
-  }
-  public void setOrder(OrderDTO order) {
-    this.order = order;
-  }
-
-  /**
-  * Get waiter
-  * @return waiter
-  */
   @Schema(name = "waiter", required = false)
   public WaiterDTO getWaiter() {
     return waiter;
   }
   public void setWaiter(WaiterDTO waiter) {
     this.waiter = waiter;
+  }
+
+  @Schema(name = "order", required = false)
+  public OrderDTO getOrder() {
+    return order;
+  }
+  public void setOrder(OrderDTO order) {
+    this.order = order;
   }
 
   @Override
@@ -81,20 +72,20 @@ public class CreateOrderDTO {
       return false;
     }
     CreateOrderDTO createOrderDTO = (CreateOrderDTO) o;
-    return Objects.equals(this.order, createOrderDTO.order) && Objects.equals(this.waiter, createOrderDTO.waiter);
+    return Objects.equals(this.waiter, createOrderDTO.waiter) && Objects.equals(this.order, createOrderDTO.order);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(order, waiter);
+    return Objects.hash(waiter, order);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CreateOrderDTO{");
-    sb.append(" order:").append(order).append(",");
-    sb.append(" waiter:").append(waiter);
+    sb.append(" waiter:").append(waiter).append(",");
+    sb.append(" order:").append(order);
     sb.append("}");
     return sb.toString();
   }

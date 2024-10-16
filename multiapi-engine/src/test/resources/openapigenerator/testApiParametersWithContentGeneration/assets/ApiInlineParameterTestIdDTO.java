@@ -13,11 +13,6 @@ public class ApiInlineParameterTestIdDTO {
   @JsonProperty(value ="email")
   private String email;
 
-  private ApiInlineParameterTestIdDTO(String email) {
-    this.email = email;
-
-  }
-
   private ApiInlineParameterTestIdDTO(ApiInlineParameterTestIdDTOBuilder builder) {
     this.email = builder.email;
 

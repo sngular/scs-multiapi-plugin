@@ -13,13 +13,6 @@ public class ApiTestDTO {
   @JsonProperty(value ="id")
   private final Integer id;
 
-  private ApiTestDTO(String name, Integer id) {
-    this.name = name;
-    this.id = id;
-
-    validateRequiredAttributes();
-  }
-
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.name = builder.name;
     this.id = builder.id;

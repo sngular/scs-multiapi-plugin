@@ -3,11 +3,11 @@ package com.sngular.multifileplugin.testCreateBasicDTO.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class TestDTO {
 
   @JsonProperty(value ="properties")

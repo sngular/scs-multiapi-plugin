@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.HashMap;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SecondTestDTO {
 
   @JsonProperty(value ="additionalProperties")
-  private Map<String, EnumSchemaDTO> additionalProperties = new HashMap<String, EnumSchemaDTO>();
+  @Singular("additionalProperty")
+  private Map<String, EnumSchemaDTO> additionalProperties;
 
   @JsonProperty(value ="id")
   @NonNull

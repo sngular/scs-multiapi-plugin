@@ -38,10 +38,6 @@ public class ShippingDetailsDTO {
     }
   }
 
-  /**
-  * Get address
-  * @return address
-  */
   @Schema(name = "address", required = false)
   public String getAddress() {
     return address;

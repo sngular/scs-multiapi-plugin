@@ -2,11 +2,11 @@ package com.sngular.multifileplugin.testadditionalpropertiesWithSchema.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Value
 public class SubtestDTO {
 
   @JsonProperty(value ="name")
