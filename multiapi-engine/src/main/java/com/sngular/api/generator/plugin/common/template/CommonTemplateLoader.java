@@ -1,5 +1,8 @@
 package com.sngular.api.generator.plugin.common.template;
 
+import com.sngular.api.generator.plugin.openapi.template.ClasspathTemplateLoader;
+import freemarker.cache.TemplateLoader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -8,20 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sngular.api.generator.plugin.openapi.template.ClasspathTemplateLoader;
-import freemarker.cache.TemplateLoader;
-
 
 public abstract class CommonTemplateLoader implements TemplateLoader {
 
   private final Map<String, String> templatesMap = new HashMap<>();
 
   protected static final ClassLoader LOADER = ClasspathTemplateLoader.class.getClassLoader();
-
-
-  protected String readFile(final InputStream file) throws IOException {
-    return new String(file.readAllBytes());
-  }
 
   protected static final List<String> TEMPLATE_MODEL_FILES = List.of(CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA,
     CommonTemplateIndexConstants.TEMPLATE_CONTENT_ENUM, CommonTemplateIndexConstants.TEMPLATE_CONTENT_SCHEMA_LOMBOK, CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION);
@@ -50,6 +45,10 @@ public abstract class CommonTemplateLoader implements TemplateLoader {
 
   protected CommonTemplateLoader() {
 
+  }
+
+  protected String readFile(final InputStream file) throws IOException {
+    return new String(file.readAllBytes());
   }
 
   protected void init(final Map<String, String> resourceFiles) {
