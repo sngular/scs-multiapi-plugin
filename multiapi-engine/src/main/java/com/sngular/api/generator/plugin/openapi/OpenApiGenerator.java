@@ -33,7 +33,6 @@ import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
-import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
