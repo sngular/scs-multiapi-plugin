@@ -26,6 +26,8 @@ class OpenApiSpecFile {
 
   Boolean useLombokModelAnnotation
 
+  Boolean useSpringwolfAnnotations
+
   Boolean isReactive
 
 }

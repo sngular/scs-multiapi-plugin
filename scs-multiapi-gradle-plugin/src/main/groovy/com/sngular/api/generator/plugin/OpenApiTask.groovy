@@ -87,6 +87,9 @@ abstract class OpenApiTask extends DefaultTask {
     if (openApiSpecFile.useLombokModelAnnotation) {
       builder.useLombokModelAnnotation(openApiSpecFile.useLombokModelAnnotation)
     }
+    if (openApiSpecFile.useSpringwolfAnnotations) {
+      builder.useSpringwolfAnnotations(openApiSpecFile.useSpringwolfAnnotations)
+    }
     if (openApiSpecFile.isReactive) {
       builder.isReactive(openApiSpecFile.isReactive)
     }
