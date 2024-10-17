@@ -629,7 +629,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>6.0.0</version>
+  <version>7.0.0</version>
   <executions>
     <execution>
       <goals>
