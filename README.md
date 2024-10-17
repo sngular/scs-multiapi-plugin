@@ -357,6 +357,7 @@ can be configured in the plugin.
       The default value are `yyyy-MM-dd'T'HH:mm:ss`.
   -  **useTimeType**: Enum TimeType value. Controls the types used when generating dates. Can be `LOCAL` or `ZOINED`.
       The default value is `TimeType.LOCAL`. 
+  -  **useSpringwolfAnnotations**: This parameter changes the annotation format to be able to use [SpringWolf](https://www.springwolf.dev). False by default.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -628,7 +629,7 @@ file. Here is an example of a basic configuration:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>5.4.3</version>
+  <version>6.0.0</version>
   <executions>
     <execution>
       <goals>
@@ -738,6 +739,7 @@ that will be used. Each specFile has their own configuration:
 | useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
 | isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
 | useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
+| useSpringwolfAnnotations | Boolean value to decide if SpringWolf annotations are generated. **It's initialized to false by default**                                                                                           | false                                             |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path. This model will be created with the indicated

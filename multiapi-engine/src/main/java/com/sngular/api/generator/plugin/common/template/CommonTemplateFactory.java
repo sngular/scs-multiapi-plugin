@@ -259,7 +259,8 @@ public abstract class CommonTemplateFactory {
                                     final String keyClassName,
                                     final SchemaObject schemaObject,
                                     final String destinationPackage,
-                                    final boolean useLombok) {
+                                    final boolean useLombok,
+                                    final boolean useSpringwolf) {
     final var filePath = processPath(getPath(destinationPackage));
     final var propertiesPath = processPath(getPath(modelPackage));
     final var builder = ClassTemplate
@@ -269,7 +270,8 @@ public abstract class CommonTemplateFactory {
             .className(schemaObject.getClassName())
             .classSchema(schemaObject)
             .propertiesPath(propertiesPath)
-        .useLombok(useLombok);
+            .useLombok(useLombok)
+            .useSpringwolf(useSpringwolf);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }
@@ -333,7 +335,7 @@ public abstract class CommonTemplateFactory {
     return processedGeneratedSourcesFolder + SLASH + pathName.replace(PACKAGE_SEPARATOR_STR, SLASH);
   }
 
-  public void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok) {
+  public void checkRequiredOrCombinatorExists(final SchemaObject schema, final boolean useLombok, final boolean useSpringwolf) {
     if ("anyOf".equals(schema.getSchemaCombinator()) || "oneOf".equals(schema.getSchemaCombinator())) {
       generateExceptionTemplate = true;
     } else if (Objects.nonNull(schema.getFieldObjectList()) && !useLombok) {

@@ -247,16 +247,16 @@ public class OpenApiGenerator {
     final var schemaObjectIt = MapperContentUtil
         .mapComponentToSchemaObject(basicSchemaMap, schemaName, model, parentPackage, specFile, this.baseDir).iterator();
     if (schemaObjectIt.hasNext()) {
-      writeSchemaObject(specFile.isUseLombokModelAnnotation(), specFile.getModelPackage(), schemaName, schemaObjectIt.next());
+      writeSchemaObject(specFile.isUseSpringwolfAnnotations(), specFile.isUseLombokModelAnnotation(), specFile.getModelPackage(), schemaName, schemaObjectIt.next());
     }
-    schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(specFile.isUseLombokModelAnnotation(), specFile.getModelPackage(), null, schemaObj));
+    schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(specFile.isUseSpringwolfAnnotations(), specFile.isUseLombokModelAnnotation(), specFile.getModelPackage(), null, schemaObj));
 
   }
 
-  private void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
+  private void writeSchemaObject(final boolean usingSpringwolf, final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
     final var finalModelPackageReceived = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_OPENAPI_API_PACKAGE);
     final var destinationPackage = StringUtils.defaultIfEmpty(finalModelPackageReceived, DEFAULT_OPENAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
-    templateFactory.addSchemaObject(finalModelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
-    templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
+    templateFactory.addSchemaObject(finalModelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok, usingSpringwolf);
+    templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok, usingSpringwolf);
   }
 }

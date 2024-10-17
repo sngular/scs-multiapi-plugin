@@ -504,6 +504,15 @@ public final class OpenApiGeneratorFixtures {
           .useLombokModelAnnotation(true)
           .build()
   );
+// TODO: Fulfill properly
+  static final List<SpecFile> TEST_GENERATION_WITH_SPRINGWOLF_ANNOTATIONS = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testGenerationWithNoOperationId/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.testGenerationWithSpringwolf")
+                  .useSpringwolfAnnotations(true)
+                  .build()
+  );
 
 
   static Function<Path, Boolean> validateOneOfInResponse() {
@@ -1522,7 +1531,11 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
 
+  // TODO: Finish it
+  static Function<Path, Boolean> validateSpringwolf(){
+    return path -> Boolean.TRUE;
   }
 
   private static Boolean commonTest(

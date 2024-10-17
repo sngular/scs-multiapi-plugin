@@ -420,12 +420,12 @@ public class AsyncApiGenerator {
           MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir).iterator();
 
       if (schemaObjectIt.hasNext()) {
-        writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
+        writeSchemaObject(operationObject.isUseSpringwolfAnnotations(), operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
         if (Objects.nonNull(keyClassName)) {
           templateFactory.setWrapperPackageName(operationObject.getApiPackage());
           templateFactory.fillTemplateWrapper(operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
         }
-        schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
+        schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseSpringwolfAnnotations(), operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
       }
     }
   }
@@ -442,10 +442,10 @@ public class AsyncApiGenerator {
     return result;
   }
 
-  private void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
+  private void writeSchemaObject(final boolean usingSpringwolf, final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
     final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
-    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
-    templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
+    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok, usingSpringwolf);
+    templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok, usingSpringwolf);
   }
 
   private ProcessMethodResult processMethod(

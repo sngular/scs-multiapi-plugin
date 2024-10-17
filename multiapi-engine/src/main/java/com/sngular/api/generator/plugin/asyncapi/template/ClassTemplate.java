@@ -29,4 +29,6 @@ public class ClassTemplate {
 
   boolean useLombok;
 
+  boolean useSpringwolf;
+
 }

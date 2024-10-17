@@ -124,7 +124,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
                     OpenApiGeneratorFixtures.validateRestrictionsSchema()),
         Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
-                    OpenApiGeneratorFixtures.validateSimpleBuild())
+                    OpenApiGeneratorFixtures.validateSimpleBuild()),
+            Arguments.of("testSpringwolf", OpenApiGeneratorFixtures.TEST_GENERATION_WITH_SPRINGWOLF_ANNOTATIONS,
+                    OpenApiGeneratorFixtures.validateSpringwolf())
     );
   }
 
