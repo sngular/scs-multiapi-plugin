@@ -5,7 +5,7 @@
  */
 package com.sngular.api.generator.plugin;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -18,7 +18,7 @@ class ScsMultiApiTest {
     Project project = ProjectBuilder.builder().build();
     project.getPluginManager().apply("com.sngular.scs-multiapi-gradle-plugin");
 
-    assertTrue(project.getTasks().getByName("openApiTask") instanceof OpenApiTask);
+    assertInstanceOf(OpenApiTask.class, project.getTasks().getByName("openApiTask"));
   }
 
   @Test
@@ -26,7 +26,7 @@ class ScsMultiApiTest {
     Project project = ProjectBuilder.builder().build();
     project.getPluginManager().apply("com.sngular.scs-multiapi-gradle-plugin");
 
-    assertTrue(project.getTasks().getByName("asyncApiTask") instanceof AsyncApiTask);
+    assertInstanceOf(AsyncApiTask.class, project.getTasks().getByName("asyncApiTask"));
   }
 
 }
