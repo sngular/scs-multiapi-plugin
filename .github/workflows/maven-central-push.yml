@@ -72,7 +72,7 @@ jobs:
         run: |
           cd scs-multiapi-maven-plugin
           mvn -B install
-          mvn -B deploy -P production
+          mvn -B deploy -P production -s ../.m2/settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
