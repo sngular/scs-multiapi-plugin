@@ -6,12 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +17,12 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Slf4j
 class OpenApiGeneratorTest {
@@ -124,9 +124,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
                     OpenApiGeneratorFixtures.validateRestrictionsSchema()),
         Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
-                    OpenApiGeneratorFixtures.validateSimpleBuild()),   // todo create validate method
+                    OpenApiGeneratorFixtures.validateSimpleBuild()),
         Arguments.of("testFormDataMultipartGeneration", OpenApiGeneratorFixtures.TEST_FORM_DATA_MULTIPART_GENERATION,
-                    OpenApiGeneratorFixtures.validateSimpleBuild())
+                    OpenApiGeneratorFixtures.validateDataMultipartGeneration())
     );
   }
 

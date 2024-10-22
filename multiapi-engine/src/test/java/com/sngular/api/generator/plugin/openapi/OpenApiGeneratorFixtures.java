@@ -1245,6 +1245,26 @@ public final class OpenApiGeneratorFixtures {
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
+
+  static Function<Path, Boolean> validateDataMultipartGeneration() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration/model";
+
+    final String COMMON_PATH = "openapigenerator/testFormDataMultipartGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles =  Collections.emptyList();
+
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
   static Function<Path, Boolean> validateValidationAnnotations(int springBootVersion) {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testapi";
