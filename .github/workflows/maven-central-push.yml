@@ -80,6 +80,8 @@ jobs:
           SIGN_KEY: ${{ secrets.JIRAID }}
           SIGN_KEY_ID: ${{ secrets.JIRAPASS }}
           SIGN_KEY_PASS: ${{ secrets.GPG_PASSPHRASE }}
+          TOKEN_USER_NAME: ${{ secrets.TOKEN_USER_NAME }}
+          TOKEN_PASSWORD: ${{ secrets.TOKEN_PASSWORD }}
 
       - name: Maven version
         id: get-version
