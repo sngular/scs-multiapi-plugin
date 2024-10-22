@@ -34,6 +34,8 @@ public final class TypeConstants {
 
   public static final String ENUM = "enum";
 
+  public static final String BINARY = "binary";
+
   public static final String LOCALDATE = "localdate";
 
   public static final String LOCALDATETIME = "localdatetime";
