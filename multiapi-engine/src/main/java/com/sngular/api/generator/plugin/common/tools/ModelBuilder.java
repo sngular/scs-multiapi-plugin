@@ -1,25 +1,21 @@
+/*
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  * License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.sngular.api.generator.plugin.common.tools;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
-import com.sngular.api.generator.plugin.common.model.SchemaFieldObject;
-import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
-import com.sngular.api.generator.plugin.common.model.SchemaObject;
-import com.sngular.api.generator.plugin.common.model.TypeConstants;
+import com.sngular.api.generator.plugin.common.model.*;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
+
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.Consumer;
 
 public final class ModelBuilder {
 
@@ -129,6 +125,10 @@ public final class ModelBuilder {
 
     if (type.containsType(TypeConstants.OFFSETDATETIME)) {
       listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+    }
+
+    if (type.containsType(TypeConstants.MULTIPART_FILE)) {
+      listHashMap.computeIfAbsent(TypeConstants.MULTIPART_FILE, key -> List.of("org.springframework.web.multipart.MultipartFile"));
     }
   }
 
@@ -321,7 +321,16 @@ public final class ModelBuilder {
   }
 
   private static SchemaFieldObject processStringProperty(final String propertyName, final JsonNode schema, final CommonSpecFile specFile) {
-    final String resultingType = ApiTool.isDateTime(schema) ? MapperUtil.getDateType(schema, specFile) : TypeConstants.STRING;
+    String resultingType;
+    if (ApiTool.isDateTime(schema)) {
+      resultingType = MapperUtil.getDateType(schema, specFile);
+    }
+    else if (ApiTool.isBinary(schema)) {
+      resultingType = TypeConstants.MULTIPART_FILE;
+    }
+    else {
+      resultingType = TypeConstants.STRING;
+    }
 
     final SchemaFieldObject field = SchemaFieldObject
           .builder()

@@ -286,6 +286,21 @@ public final class ApiTool {
     return isDateTime;
   }
 
+  public static boolean isBinary(final JsonNode schema) {
+    final boolean isMultipartFile;
+    if (hasType(schema) && TypeConstants.STRING.equalsIgnoreCase(getType(schema))) {
+      if (hasNode(schema, FORMAT)) {
+        isMultipartFile = "binary".equalsIgnoreCase(getNode(schema, FORMAT).textValue());
+      } else {
+        isMultipartFile = false;
+      }
+    } else {
+      isMultipartFile = false;
+    }
+    return isMultipartFile;
+  }
+
+
   public static List<JsonNode> findContentSchemas(final JsonNode schema) {
     return hasNode(schema, "content") ? schema.findValues("schema") : Collections.emptyList();
   }

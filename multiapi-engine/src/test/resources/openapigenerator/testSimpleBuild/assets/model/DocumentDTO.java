@@ -1,6 +1,7 @@
 package com.sngular.multifileplugin.testsimplebuild.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.web.multipart.MultipartFile;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
@@ -12,12 +13,12 @@ public class DocumentDTO {
   private String description;
 
   @JsonProperty(value ="document")
-  private String document;
+  private MultipartFile document;
 
 
   @Builder
   @Jacksonized
-  private DocumentDTO(String description, String document) {
+  private DocumentDTO(String description, MultipartFile document) {
     this.description = description;
     this.document = document;
 

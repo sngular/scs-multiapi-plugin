@@ -34,6 +34,8 @@ public final class TypeConstants {
 
   public static final String ENUM = "enum";
 
+  public static final String BINARY = "binary";
+
   public static final String LOCALDATE = "localdate";
 
   public static final String LOCALDATETIME = "localdatetime";
@@ -49,6 +51,8 @@ public final class TypeConstants {
   public static final String INT_32 = "int32";
 
   public static final String INT_64 = "int64";
+
+  public static final String MULTIPART_FILE = "multipartfile";
 
   public static final Set<String> BASIC_OBJECT_TYPE = Set.of(NUMBER, STRING, BOOLEAN, INTEGER, ARRAY);
 
@@ -86,7 +90,8 @@ public final class TypeConstants {
       ZONEDDATE,
       ZONEDDATETIME,
       OFFSETDATE,
-      OFFSETDATETIME
+      OFFSETDATETIME,
+          MULTIPART_FILE
   );
 
   private TypeConstants() {
