@@ -1252,7 +1252,7 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration/model";
 
-    final String COMMON_PATH = "openapigenerator/testformdatamultipartgeneration/";
+    final String COMMON_PATH = "openapigenerator/testFormDataMultipartGeneration/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
