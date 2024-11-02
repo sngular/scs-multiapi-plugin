@@ -505,6 +505,14 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_FORM_DATA_MULTIPART_GENERATION = List.of(
+          SpecFile
+                  .builder()
+                  .filePath("openapigenerator/testFormDataMultipartGeneration/api-test.yml")
+                  .apiPackage("com.sngular.multifileplugin.testformdatamultipartgeneration")
+                  .useLombokModelAnnotation(true)
+                  .build()
+  );
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
@@ -1233,6 +1241,26 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "model/QuoteUpdateResponseDTO.java",
         ASSETS_PATH + "model/UpdateQuoteDTO.java"
     );
+
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+  }
+
+
+  static Function<Path, Boolean> validateDataMultipartGeneration() {
+
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration/model";
+
+    final String COMMON_PATH = "openapigenerator/testFormDataMultipartGeneration/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles =  Collections.emptyList();
 
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
