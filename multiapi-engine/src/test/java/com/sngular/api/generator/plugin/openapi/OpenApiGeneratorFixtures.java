@@ -509,7 +509,7 @@ public final class OpenApiGeneratorFixtures {
           SpecFile
                   .builder()
                   .filePath("openapigenerator/testFormDataMultipartGeneration/api-test.yml")
-                  .apiPackage("com.sngular.multifileplugin.testFormDataMultipartGeneration")
+                  .apiPackage("com.sngular.multifileplugin.testformdatamultipartgeneration")
                   .useLombokModelAnnotation(true)
                   .build()
   );
@@ -1252,7 +1252,7 @@ public final class OpenApiGeneratorFixtures {
 
     final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration/model";
 
-    final String COMMON_PATH = "openapigenerator/testFormDataMultipartGeneration/";
+    final String COMMON_PATH = "openapigenerator/testformfatafultipartgeneration/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 

@@ -1,4 +1,4 @@
-package com.sngular.multifileplugin.testFormDataMultipartGeneration;
+package com.sngular.multifileplugin.testformdatamultipartgeneration;
 
 import java.util.Optional;
 import java.util.List;
