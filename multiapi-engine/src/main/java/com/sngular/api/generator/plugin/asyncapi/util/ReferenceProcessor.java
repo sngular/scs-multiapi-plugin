@@ -12,6 +12,7 @@ import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import lombok.Builder;
+import org.apache.commons.lang3.StringUtils;
 
 public final class ReferenceProcessor {
 
@@ -78,11 +79,15 @@ public final class ReferenceProcessor {
 
     if (filePath.endsWith(YML) || filePath.endsWith(JSON) || filePath.endsWith(YAML)) {
       final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
-      if (node.findValue(path[path.length - 2]).has(path[path.length - 1])) {
-        returnNode = node.findValue(path[path.length - 2]).get(path[path.length - 1]);
-        checkReference(node, returnNode);
+      if (StringUtils.contains(reference, "#")) {
+        if (node.findValue(path[path.length - 2]).has(path[path.length - 1])) {
+          returnNode = node.findValue(path[path.length - 2]).get(path[path.length - 1]);
+          checkReference(node, returnNode);
+        } else {
+          throw new NonSupportedSchemaException(node.toPrettyString());
+        }
       } else {
-        throw new NonSupportedSchemaException(node.toPrettyString());
+        returnNode = node;
       }
     } else if (filePath.endsWith(AVSC)) {
       returnNode = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.AVRO);

@@ -1,0 +1,32 @@
+# asyncapi.yaml
+asyncapi: 2.6.0
+info:
+  title: Account Service
+  version: "1.0.0"
+channels:
+  user/signedup:
+    subscribe:
+      operationId: userSignedUp
+      message:
+        $ref: "#/components/messages/UserSignedUp"
+components:
+  messages:
+    UserSignedUp:
+      payload:
+        # this leads to the error
+        # `Cannot invoke "com.fasterxml.jackson.databind.JsonNode.get(String)" because the return value of "com.fasterxml.jackson.databind.JsonNode.findValue(String)" is null`:
+        $ref: "./user-message.yml"
+  schemas:
+    user:
+      # this works:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: "foo"
+        lastName:
+          type: string
+          description: "bar"
+      # this leads to the error
+      # `Cannot invoke "com.fasterxml.jackson.databind.JsonNode.has(String)" because "properties" is null`:
+      $ref: "./user.yml"

@@ -478,6 +478,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_REFERENCE_FILE_NO_COMPONENTS = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testReferenceFileNoComponents/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testreferencefilenocomponents")
+          .modelPackage("com.sngular.multifileplugin.testreferencefilenocomponents.model")
+          .clientPackage("com.sngular.multifileplugin.testreferencefilenocomponents.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static final List<SpecFile> TEST_QUERY_PARAM = List.of(
       SpecFile
           .builder()
@@ -1513,6 +1525,25 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedTestApiModelFiles = List.of(
         "openapigenerator/testReferenceFile/assets/TestDTO.java"
+    );
+
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+
+  static Function<Path, Boolean> validateReferenceFileNoComponents() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents/model/exception";
+
+    final List<String> expectedTestApiFiles = List.of(
+        "openapigenerator/testReferenceFileNoComponents/assets/TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        "openapigenerator/testReferenceFileNoComponents/assets/InlineResponse200TestFileDTO.java"
     );
 
     return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);

@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import static java.util.Collections.singletonList;
+
 public class AsyncApiGeneratorFixtures {
 
   static final List<SpecFile> TEST_FILE_GENERATION = List.of(
@@ -409,6 +411,18 @@ public class AsyncApiGeneratorFixtures {
             .ids("output")
             .apiPackage("output.provider")
             .modelPackage("output.model")
+            .build())
+        .build());
+
+  static final List<SpecFile> TEST_REFERENCE_FROM_LOCAL_ISSUE =
+    List.of(
+      SpecFile.builder()
+        .filePath("src/test/resources/asyncapigenerator/testReferenceFromLocalIssue/event-api.yml")
+        .consumer(
+          OperationParameterObject.builder()
+            .ids("userSignedUp")
+            .apiPackage("com.github.issue.listener")
+            .modelPackage("com.github.issue.model")
             .build())
         .build());
 
@@ -1128,5 +1142,37 @@ public class AsyncApiGeneratorFixtures {
         null)
         && modelTest(path, expectedConsumerModelSchemaFiles, DEFAULT_CONSUMER_MODEL_FOLDER)
         && modelTest(path, expectedProducerModelSchemaFiles, DEFAULT_PRODUCER_MODEL_FOLDER);
+  }
+
+  static Function<Path, Boolean> validateTestReferenceFromLocalIssue() {
+
+    final String DEFAULT_COMMON_FOLDER = "generated";
+
+    final String DEFAULT_CONSUMER_FOLDER = DEFAULT_COMMON_FOLDER + "/com/github/issue/listener";
+
+    final String DEFAULT_CONSUMER_MODEL_FOLDER = DEFAULT_COMMON_FOLDER + "/com/github/issue/model";
+
+    final String COMMON_PATH = "asyncapigenerator/testReferenceFromLocalIssue/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedConsumerFiles =
+        List.of(
+            ASSETS_PATH + "IUserSignedUp.java",
+            ASSETS_PATH + "Subscriber.java");
+
+    final List<String> expectedConsumerModelSchemaFiles =
+        singletonList(ASSETS_PATH + "/UserMessage.java");
+
+    return path ->
+        commonTest(
+            path,
+            expectedConsumerFiles,
+            Collections.emptyList(),
+            DEFAULT_CONSUMER_FOLDER,
+            null,
+            Collections.emptyList(),
+            null)
+            && modelTest(path, expectedConsumerModelSchemaFiles, DEFAULT_CONSUMER_MODEL_FOLDER);
   }
 }

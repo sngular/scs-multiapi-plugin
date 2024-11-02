@@ -33,7 +33,6 @@ import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.openapi.utils.MapperAuthUtil;
 import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
-import freemarker.template.TemplateException;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -182,7 +181,7 @@ public class OpenApiGenerator {
   private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) {
     final var modelPackage = processModelPackage(specFile.getModelPackage());
 
-    final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap());
+    final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap(), specFile);
     templateFactory.setModelPackageName(modelPackage);
     processModels(specFile, modelPackage, totalSchemas, overwriteModel);
   }
@@ -213,12 +212,20 @@ public class OpenApiGenerator {
     basicSchemaMap.forEach((schemaName, basicSchema) -> {
       if (ApiTool.hasType(basicSchema)) {
         if (validType(ApiTool.getType(basicSchema))) {
-          processModel(specFile, modelPackage, basicSchemaMap, overwrite, MapperUtil.getKeySchemaName(schemaName), basicSchema);
+          processModel(specFile, modelPackage, basicSchemaMap, overwrite, chooseRightName(schemaName), basicSchema);
         }
       } else {
-        processModel(specFile, modelPackage, basicSchemaMap, overwrite, MapperUtil.getKeySchemaName(schemaName), basicSchema);
+        processModel(specFile, modelPackage, basicSchemaMap, overwrite, chooseRightName(schemaName), basicSchema);
       }
     });
+  }
+
+  private String chooseRightName(final String schemaName) {
+    String rightName = schemaName;
+    if (!StringUtils.startsWith(schemaName, "Inline")) {
+      rightName = MapperUtil.getKeySchemaName(schemaName);
+    }
+    return rightName;
   }
 
   private boolean validType(final String type) {
@@ -233,7 +240,7 @@ public class OpenApiGenerator {
     }
 
     if (ApiTool.hasRef(basicSchema)) {
-      final var refSchema = MapperUtil.getRefSchemaName(basicSchema);
+      final var refSchema = MapperUtil.getRefSchemaName(basicSchema, schemaName);
       writeSchemaObject(specFile, refSchema, basicSchemaMap.get(refSchema), basicSchemaMap, modelPackage);
     } else if (!ApiTool.isArray(basicSchema) && !TypeConstants.STRING.equalsIgnoreCase(ApiTool.getType(basicSchema))) {
       writeSchemaObject(specFile, schemaName, basicSchema, basicSchemaMap, modelPackage);
