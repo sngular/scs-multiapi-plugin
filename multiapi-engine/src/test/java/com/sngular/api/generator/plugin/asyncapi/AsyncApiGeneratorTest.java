@@ -79,7 +79,9 @@ class AsyncApiGeneratorTest {
         Arguments.of("TestFileGenerationWithKafkaBindings", AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_WITH_KAFKA_BINDINGS,
                      AsyncApiGeneratorFixtures.validateTestFileGenerationWithKafkaBindings()),
         Arguments.of("TestSubObjectSameName", AsyncApiGeneratorFixtures.TEST_SUB_OBJECT_SAME_NAME,
-                     AsyncApiGeneratorFixtures.validateTestSubObjectSameName()));
+                     AsyncApiGeneratorFixtures.validateTestSubObjectSameName()),
+        Arguments.of("TestReferenceFromLocalIssue", AsyncApiGeneratorFixtures.TEST_REFERENCE_FROM_LOCAL_ISSUE,
+                     AsyncApiGeneratorFixtures.validateTestReferenceFromLocalIssue()));
   }
 
   @ParameterizedTest(name = "Test {index} - Process File Spec for case {0}")

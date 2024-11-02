@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
@@ -130,7 +131,7 @@ public class OpenApiUtil {
     return sb.toString();
   }
 
-  public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap) {
+  public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap, SpecFile specFile) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
     for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
@@ -138,7 +139,7 @@ public class OpenApiUtil {
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement));
+          processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
         }
       }
     }
@@ -146,26 +147,26 @@ public class OpenApiUtil {
     return basicJsonNodeMap;
   }
 
-  private static void processPathContent(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processPathContent(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
 
-    processParameters(basicJsonNodeMap, operation);
-    processRequestBody(basicJsonNodeMap, operation);
-    processResponses(basicJsonNodeMap, operation);
+    processParameters(basicJsonNodeMap, operation, specFile);
+    processRequestBody(basicJsonNodeMap, operation, specFile);
+    processResponses(basicJsonNodeMap, operation, specFile);
   }
 
-  private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "requestBody") && !operation.at("/requestBody/content").isMissingNode()) {
       final var content = operation.at("/requestBody/content");
       final var schema = content.findValue("schema");
       if (!ApiTool.hasRef(schema)) {
-        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(getOperationId(operation))), schema);
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineObject" + StringUtils.capitalize(getOperationId(operation)), specFile)), schema);
       } else if (ApiTool.hasItems(schema)) {
-        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId"))), ApiTool.getItems(schema));
+        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), specFile)), ApiTool.getItems(schema));
       }
     }
   }
 
-  private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
       for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext();) {
@@ -174,9 +175,9 @@ public class OpenApiUtil {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
             if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation))), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)), schema);
             } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema)), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), specFile)), schema);
             }
           }
         }
@@ -184,13 +185,13 @@ public class OpenApiUtil {
     }
   }
 
-  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation) {
+  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "parameters")) {
       for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext();) {
         final var parameter = it.next();
         if (ApiTool.hasNode(parameter, "content")) {
           basicJsonNodeMap.putIfAbsent(
-              StringCaseUtils.titleToSnakeCase("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter))),
+              StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)), specFile)),
               ApiTool.getNode(parameter, "schema"));
         }
       }

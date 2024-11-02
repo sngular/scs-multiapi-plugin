@@ -504,7 +504,8 @@ public class AsyncApiGenerator {
     final String messageContent = ApiTool.getRefValue(messageBody);
     if (messageContent.startsWith("#")) {
       namespace = processModelPackage(MapperUtil.getLongRefClass(messageBody), modelPackage);
-    } else if (messageContent.contains("#")) {
+    } else if (messageContent.contains("#") || StringUtils.endsWith(messageContent, "yml")
+        || StringUtils.endsWith(messageContent, "yaml") || StringUtils.endsWith(messageContent, "json")) {
       namespace = processExternalRef(modelPackage, ymlParent, messageBody);
     } else {
       namespace = processExternalAvro(ymlParent, messageContent);
@@ -538,16 +539,20 @@ public class AsyncApiGenerator {
   private String processExternalRef(final String modelPackage, final FileLocation ymlParent, final JsonNode message) throws IOException {
     final String[] pathToFile = message.get(REF).asText().split("#");
     final String filePath = pathToFile[0];
-    final String componentPath = pathToFile[1];
-    final String component;
-    final String[] path = MapperUtil.splitName(componentPath);
-    component = path[path.length - 2] + SLASH + path[path.length - 1];
-
     final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
-    if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
-      return processModelPackage(component, modelPackage);
+    if (pathToFile.length > 1) {
+      final String componentPath = pathToFile[1];
+      final String component;
+      final String[] path = MapperUtil.splitName(componentPath);
+      component = path[path.length - 2] + SLASH + path[path.length - 1];
+
+      if (Objects.nonNull(node.findValue(path[path.length - 2]).get(path[path.length - 1]))) {
+        return processModelPackage(component, modelPackage);
+      } else {
+        throw new ExternalRefComponentNotFoundException(component, filePath);
+      }
     } else {
-      throw new ExternalRefComponentNotFoundException(component, filePath);
+      return processModelPackage(MapperUtil.getNameFromFile(filePath), modelPackage);
     }
   }
 
@@ -570,18 +575,7 @@ public class AsyncApiGenerator {
     }
   }
 
-  private String capitalizeWithPrefix(final String name) {
-    final StringBuilder response = new StringBuilder();
-    if (name.contains(SLASH)) {
-      final var splitPackage = MapperUtil.splitName(name);
-      for (int i = 0; i < splitPackage.length; i++) {
-        response.append(PACKAGE_SEPARATOR_STR).append(i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));
-      }
-    } else {
-      response.append(PACKAGE_SEPARATOR_STR).append(StringUtils.capitalize(name));
-    }
-    return response.toString();
-  }
+
 
   private String processModelPackage(final String extractedPackage, final String modelPackage) {
     final String processedPackage;
@@ -591,7 +585,7 @@ public class AsyncApiGenerator {
         final var className = splitPackage[splitPackage.length - 1];
         processedPackage = modelPackage + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
       } else {
-        processedPackage = modelPackage + capitalizeWithPrefix(extractedPackage);
+        processedPackage = modelPackage + MapperUtil.capitalizeWithPrefix(extractedPackage);
       }
     } else if (extractedPackage.contains(PACKAGE_SEPARATOR_STR)) {
       final var splitPackage = MapperUtil.splitName(extractedPackage);
@@ -599,7 +593,7 @@ public class AsyncApiGenerator {
       processedPackage =
           StringUtils.join(PACKAGE_SEPARATOR_STR, Arrays.spliterator(splitPackage, 0, splitPackage.length)) + PACKAGE_SEPARATOR_STR + StringUtils.capitalize(className);
     } else {
-      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + capitalizeWithPrefix(extractedPackage);
+      processedPackage = DEFAULT_ASYNCAPI_MODEL_PACKAGE + MapperUtil.capitalizeWithPrefix(extractedPackage);
     }
 
     return processedPackage;
