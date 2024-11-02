@@ -197,31 +197,31 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_REST_CLIENT_GENERATION = List.of(
-      SpecFile
-          .builder()
-          .filePath("openapigenerator/testRestClientApiGeneration/api-test.yml")
-          .apiPackage("com.sngular.multifileplugin.restclient")
-          .modelPackage("com.sngular.multifileplugin.restclient.model")
-          .clientPackage("com.sngular.multifileplugin.restclient.client")
-          .modelNamePrefix("Api")
-          .modelNameSuffix("DTO")
-          .useLombokModelAnnotation(false)
-          .callMode(true)
-          .build()
+    SpecFile
+        .builder()
+        .filePath("openapigenerator/testRestClientApiGeneration/api-test.yml")
+        .apiPackage("com.sngular.multifileplugin.restclient")
+        .modelPackage("com.sngular.multifileplugin.restclient.model")
+        .clientPackage("com.sngular.multifileplugin.restclient.client")
+        .modelNamePrefix("Api")
+        .modelNameSuffix("DTO")
+        .useLombokModelAnnotation(false)
+        .callMode(true)
+        .build()
   );
 
   static final List<SpecFile> TEST_REST_CLIENT_API_WITH_REQUEST_OBJECTS_GENERATION = List.of(
-          SpecFile
-                  .builder()
-                  .filePath("openapigenerator/testRestClientApiWithRequestObjectGeneration/api-test.yml")
-                  .apiPackage("com.sngular.multifileplugin.restclientWithRequestObjects")
-                  .modelPackage("com.sngular.multifileplugin.restclientWithRequestObjects.model")
-                  .clientPackage("com.sngular.multifileplugin.restclientWithRequestObjects.client")
-                  .modelNamePrefix("Api")
-                  .modelNameSuffix("DTO")
-                  .useLombokModelAnnotation(false)
-                  .callMode(true)
-                  .build()
+    SpecFile
+        .builder()
+        .filePath("openapigenerator/testRestClientApiWithRequestObjectGeneration/api-test.yml")
+        .apiPackage("com.sngular.multifileplugin.restclientWithRequestObjects")
+        .modelPackage("com.sngular.multifileplugin.restclientWithRequestObjects.model")
+        .clientPackage("com.sngular.multifileplugin.restclientWithRequestObjects.client")
+        .modelNamePrefix("Api")
+        .modelNameSuffix("DTO")
+        .useLombokModelAnnotation(false)
+        .callMode(true)
+        .build()
   );
 
   static final List<SpecFile> TEST_ENUMS_GENERATION = List.of(
@@ -1532,11 +1532,11 @@ public final class OpenApiGeneratorFixtures {
 
 
   static Function<Path, Boolean> validateReferenceFileNoComponents() {
-    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents";
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testreferencefilenocomponents";
 
-    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents/model";
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testreferencefilenocomponents/model";
 
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testReferenceFileNoComponents/model/exception";
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testreferencefilenocomponents/model/exception";
 
     final List<String> expectedTestApiFiles = List.of(
         "openapigenerator/testReferenceFileNoComponents/assets/TestApi.java"
@@ -1580,7 +1580,7 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
     );
 
-    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+    return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, null, Collections.emptyList(), null);
 
   }
 
