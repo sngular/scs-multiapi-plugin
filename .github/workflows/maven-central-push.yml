@@ -77,6 +77,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.JIRAID }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.JIRAPASS }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_SIGNING_KEY }}
           SIGN_KEY: ${{ secrets.JIRAID }}
           SIGN_KEY_ID: ${{ secrets.JIRAPASS }}
           SIGN_KEY_PASS: ${{ secrets.GPG_PASSPHRASE }}
