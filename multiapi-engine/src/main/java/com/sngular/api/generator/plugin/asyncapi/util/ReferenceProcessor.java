@@ -51,7 +51,7 @@ public final class ReferenceProcessor {
     if (!totalSchemas.containsKey(calculatedKey) && !alreadyProcessed.contains(calculatedKey)) {
       alreadyProcessed.add(calculatedKey);
       try {
-        if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(JSON)) {
+        if (referenceLink.toLowerCase().contains(YML) || referenceLink.toLowerCase().contains(YAML) || referenceLink.toLowerCase().contains(JSON)) {
           component = solveRef(ymlParent, path, referenceLink, totalSchemas);
         } else {
           if (referenceLink.toLowerCase().contains(AVSC)) {
