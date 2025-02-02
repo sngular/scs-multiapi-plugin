@@ -20,6 +20,6 @@ public class MaxBigDecimalValidator implements ConstraintValidator<MaxBigDecimal
 
     @Override
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        return Objects.isNull(value) || (value.compareTo(this.maximum) < 0 || (!exclusive && value.compareTo(this.maximum) == 0);
+        return Objects.isNull(value) || (value.compareTo(this.maximum) < 0 || (!exclusive && value.compareTo(this.maximum) == 0));
     }
 }

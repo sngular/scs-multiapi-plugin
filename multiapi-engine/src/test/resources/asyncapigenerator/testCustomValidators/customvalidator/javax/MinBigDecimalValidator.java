@@ -20,6 +20,6 @@ public class MinBigDecimalValidator implements ConstraintValidator<MinBigDecimal
 
     @Override
     public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
-        return Objects.isNull(value) || (value.compareTo(this.minimum) > 0 || (!exclusive && value.compareTo(this.minimum) == 0);
+        return Objects.isNull(value) || (value.compareTo(this.minimum) > 0 || (!exclusive && value.compareTo(this.minimum) == 0));
     }
 }
