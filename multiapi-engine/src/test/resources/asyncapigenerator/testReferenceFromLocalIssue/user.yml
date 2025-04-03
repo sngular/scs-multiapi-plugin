@@ -1,8 +1,0 @@
-type: object
-properties:
-  firstName:
-    type: string
-    description: "foo"
-  lastName:
-    type: string
-    description: "bar"
