@@ -1,0 +1,90 @@
+asyncapi: 3.0.0
+info:
+  title: CheckIn Kafka API
+  version: 1.0.0
+  description: |
+    API de Check In para clientes.
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0"
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+servers:
+  local-kafka:
+    host: "localhost"
+    port: 9092
+    protocol: kafka
+    description: "Local Kafka server"
+channels:
+  clients:
+    address: clients
+    description: "Channel for client data"
+    messages:
+      dataClient:
+        $ref: "#/components/messages/dataClient"
+  response:
+    address: response
+    description: "Channel for response status"
+    messages:
+      status:
+        $ref: "#/components/messages/status"
+operations:
+  clients:
+    action: send
+    channel:
+      $ref: "#/channels/clients"
+    messages:
+      - $ref: "#/components/messages/dataClient"
+    description: "Publish client data"
+    tags:
+      - name: "client"
+  response:
+    action: receive
+    channel:
+      $ref: "#/channels/response"
+    messages:
+      - $ref: "#/components/messages/status"
+    description: "Subscribe to response status"
+    tags:
+      - name: "response"
+components:
+  messages:
+    status:
+      name: status
+      title: Envia status
+      summary: Envia el estado de la solicitud
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/statusMsg"
+    dataClient:
+      name: dataClient
+      title: Datos del cliente
+      summary: Comando que envia los datos del cliente.
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/data"
+  schemas:
+    statusMsg:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          description: Id del cliente.
+        status:
+          type: string
+          enum:
+          - OK
+          - KO
+    data:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          description: Id del cliente.
+        clientName:
+          description: Nombre del cliente.
+          type: string
+        flightNumber:
+          description: Número de vuelo.
+          type: string

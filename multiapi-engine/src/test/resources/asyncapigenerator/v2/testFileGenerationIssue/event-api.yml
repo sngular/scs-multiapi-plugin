@@ -1,0 +1,205 @@
+asyncapi: 2.4.0
+info:
+  title: Zenwave 360 Generated API
+  version: 0.0.1
+
+defaultContentType: application/json
+
+tags:
+- name: "Default"
+- name: "Customer"
+- name: "CustomerOrder"
+
+channels:
+  customer.events:
+    publish:
+      summary: Customer Domain Events
+      operationId: onCustomerEvent
+      tags:
+      - name: Customer
+      message:
+        $ref: "#/components/messages/CustomerEventMessage"
+
+  customer-order.events:
+    publish:
+      summary: CustomerOrder Domain Events
+      operationId: onCustomerOrderEvent
+      tags:
+      - name: CustomerOrder
+      message:
+        $ref: "#/components/messages/CustomerOrderEventMessage"
+
+
+components:
+  messages:
+    CustomerEventMessage:
+      name: CustomerEventMessage
+      title: Message for a Customer Event
+      summary: Message for a Customer Event
+      schemaFormat: application/vnd.aai.asyncapi;version=2.4.0
+      payload:
+        $ref: "#/components/schemas/CustomerEventPayload"
+
+    CustomerOrderEventMessage:
+      name: CustomerOrderEventMessage
+      title: Message for a CustomerOrder Event
+      summary: Message for a CustomerOrder Event
+      schemaFormat: application/vnd.aai.asyncapi;version=2.4.0
+      payload:
+        $ref: "#/components/schemas/CustomerOrderEventPayload"
+
+
+  schemas:
+    Customer:
+      type: "object"
+      x-business-entity: "Customer"
+      required:
+      - "firstName"
+      - "lastName"
+      - "password"
+      - "email"
+      - "username"
+      properties:
+        id:
+          type: "string"
+        firstName:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+        lastName:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+        password:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+        email:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+        username:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+    CustomerOrder:
+      type: "object"
+      x-business-entity: "CustomerOrder"
+      properties:
+        id:
+          type: "string"
+        date:
+          type: "string"
+          format: "date-time"
+        shippingDetails:
+          $ref: "#/components/schemas/ShippingDetails"
+        orderedItems:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OrderedItem"
+        paymentDetails:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PaymentDetails"
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        customer:
+          $ref: "#/components/schemas/Customer"
+    ShippingDetails:
+      type: "object"
+      x-business-entity: "ShippingDetails"
+      properties:
+        address:
+          type: "string"
+    CustomerOrderSearchCriteria:
+      type: "object"
+      x-business-entity: "CustomerOrderSearchCriteria"
+      properties:
+        id:
+          type: "string"
+        dateTo:
+          type: "string"
+          format: "date-time"
+        dateFrom:
+          type: "string"
+          format: "date-time"
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+    PaymentDetails:
+      type: "object"
+      x-business-entity: "PaymentDetails"
+      properties:
+        creditCardNumber:
+          type: "string"
+    OrderedItem:
+      type: "object"
+      x-business-entity: "OrderedItem"
+      required:
+      - "name"
+      - "price"
+      properties:
+        catalogItemId:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+          minLength: 3
+          maxLength: 250
+        quantity:
+          type: "integer"
+          format: "int32"
+        price:
+          type: "number"
+          format: "double"
+    CustomerCriteria:
+      type: "object"
+      x-business-entity: "CustomerCriteria"
+      properties:
+        id:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        password:
+          type: "string"
+        email:
+          type: "string"
+        username:
+          type: "string"
+    OrderStatus:
+      type: "string"
+      x-business-entity: "OrderStatus"
+      enum:
+      - "DELIVERED"
+      - "CONFIRMED"
+      - "SHIPPED"
+
+    CustomerEventPayload:
+      type: object
+      properties:
+        customerId:
+          type: string
+        eventType:
+          type: string
+          enum:
+          - "created"
+          - "updated"
+          - "deleted"
+        customer:
+          $ref: "#/components/schemas/Customer"
+
+    CustomerOrderEventPayload:
+      type: object
+      properties:
+        customerOrderId:
+          type: string
+        eventType:
+          type: string
+          enum:
+          - "created"
+          - "updated"
+          - "deleted"
+        customerOrder:
+          $ref: "#/components/schemas/CustomerOrder"
+

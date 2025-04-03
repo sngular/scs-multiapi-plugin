@@ -1,0 +1,60 @@
+asyncapi: 3.0.0
+info:
+  title: Order Service
+  version: 1.0.0
+  description: Order management Service
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  development:
+    host: development.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Development server
+  staging:
+    host: staging.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Staging server
+  production:
+    host: api.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Production server
+channels:
+  orderCreated:
+    address: order.created
+    description: "Channel for order created events"
+    messages:
+      OrderCreated:
+        $ref: 'assets/path.yml#/components/messages/OrderCreated'
+  orderCreateCommand:
+    address: order.createCommand
+    description: "Channel for order creation commands"
+    messages:
+      CreateOrder:
+        payload:
+          $ref: 'assets/path.yml#/components/schemas/CreateOrder'
+operations:
+  publishOperationFileGeneration:
+    action: send
+    channel:
+      $ref: '#/channels/orderCreated'
+    messages:
+      - $ref: '#/channels/orderCreated/messages/OrderCreated'
+    description: "Publish order created events"
+    tags:
+      - name: "order"
+  subscribeOperationFileGeneration:
+    action: receive
+    channel:
+      $ref: '#/channels/orderCreateCommand'
+    messages:
+      - $ref: '#/channels/orderCreateCommand/messages/CreateOrder'
+    description: "Subscribe to order creation commands"
+    tags:
+      - name: "order"

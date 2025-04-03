@@ -1,0 +1,61 @@
+asyncapi: '3.0.0'
+info:
+  title: Test API
+  version: '1.0.0'
+  description: Some test API
+servers:
+  default:
+    host: localhost
+    protocol: mqtt
+channels:
+  test:
+    address: test
+    messages:
+      TestMsg:
+        name: TestMsg
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+  test2:
+    address: test2
+    messages:
+      TestMsg2:
+        name: TestMsg2
+        payload:
+          $ref: "#/components/schemas/thing"
+operations:
+  onTest:
+    action: send
+    channel:
+      $ref: '#/channels/test'
+    messages:
+      - $ref: '#/components/messages/TestMsg'
+    summary: This is just a test.
+  onTest2:
+    action: send
+    channel:
+      $ref: '#/channels/test2'
+    messages:
+      - $ref: '#/components/messages/TestMsg2'
+    summary: This is just a test2.
+components:
+  messages:
+    TestMsg:
+      name: TestMsg
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
+    TestMsg2:
+      name: TestMsg2
+      payload:
+        $ref: "#/components/schemas/thing"
+  schemas:
+    thing:
+      type: object
+      properties:
+        id:
+          type: integer

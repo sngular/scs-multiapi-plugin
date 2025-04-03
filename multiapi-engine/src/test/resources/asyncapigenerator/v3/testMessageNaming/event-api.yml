@@ -1,0 +1,92 @@
+asyncapi: '3.0.0'
+info:
+  title: Test API
+  version: '1.0.0'
+  description: Some test API
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  default:
+    host: "localhost"
+    protocol: "mqtt"
+    description: "Default server"
+channels:
+  test:
+    address: test
+    description: "Test channel"
+    messages:
+      TestMsg:
+        name: TestMsg
+        title: "Test Message"
+        description: "A test message"
+        contentType: "application/json"
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+  test2:
+    address: test2
+    description: "Test channel 2"
+    messages:
+      TestMsg2:
+        messageId: TestMsg2
+        title: "Test Message 2"
+        description: "A second test message"
+        contentType: "application/json"
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+  test3:
+    address: test3
+    description: "Test channel 3"
+    messages:
+      TestMsg3:
+        title: "Test Message 3"
+        description: "A third test message"
+        contentType: "application/json"
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+            age:
+              type: integer
+operations:
+  onTest:
+    action: send
+    channel:
+      $ref: '#/channels/test'
+    messages:
+      - $ref: '#/channels/test/messages/TestMsg'
+    description: "This is just a test."
+    tags:
+      - name: "test"
+  onTest2:
+    action: send
+    channel:
+      $ref: '#/channels/test2'
+    messages:
+      - $ref: '#/channels/test2/messages/TestMsg2'
+    description: "This is just a test2."
+    tags:
+      - name: "test"
+  onTest3:
+    action: send
+    channel:
+      $ref: '#/channels/test3'
+    messages:
+      - $ref: '#/channels/test3/messages/TestMsg3'
+    description: "This is just a test3."
+    tags:
+      - name: "test"
+
+

@@ -1,0 +1,67 @@
+asyncapi: "3.0.0"
+info:
+  title: Demo API
+  version: "1.0.0"
+  description: "API for user management"
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  development:
+    host: "localhost"
+    protocol: "mqtt"
+    description: "Development server"
+channels:
+  userSignedUp:
+    address: user/signedup
+    description: "Channel for user signup events"
+    messages:
+      UserSignedUp:
+        $ref: '#/components/messages/UserSignedUp'
+operations:
+  emitUserSignUpEvent:
+    action: receive
+    channel:
+      $ref: '#/channels/userSignedUp'
+    messages:
+      - $ref: '#/components/messages/UserSignedUp'
+    description: "Handle user signup events"
+    tags:
+      - name: "user"
+components:
+  messages:
+    UserSignedUp:
+      name: userSignedUp
+      title: User signed up event
+      summary: Inform about a new user registration in the system
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/userSignedUpPayload'
+
+  schemas:
+    userSignedUpPayload:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: "foo"
+        lastName:
+          type: string
+          description: "bar"
+        email:
+          type: string
+          format: email
+          description: "baz"
+        createdAt:
+          type: string
+          format: date-time
+        someOtherObject:
+          type: object
+          properties:
+            property1:
+              type: string
+            property2:
+              type: integer

@@ -1,0 +1,66 @@
+asyncapi: 2.5.0
+info:
+  title: CheckIn Kafka API
+  version: 1.0.0
+  description: |
+    API de Check In para clientes.
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0"
+servers:
+  local-kafka:
+    url: "localhost:9092"
+    protocol: kafka
+channels:
+  clients:
+    publish:
+      operationId: clients
+      message:
+        $ref: "#/components/messages/dataClient"
+  response:
+    subscribe:
+      operationId: response
+      message:
+        $ref: "#/components/messages/status"
+components:
+  messages:
+    status:
+      name: status
+      title: Envia status
+      summary: Envia el estado de la solicitud
+      schemaFormat: application/vnd.aai.asyncapi+json;version=2.0.0
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/statusMsg"
+    dataClient:
+      name: dataClient
+      title: Datos del cliente
+      summary: Comando que envia los datos del cliente.
+      schemaFormat: application/vnd.aai.asyncapi+json;version=2.0.0
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/data"
+  schemas:
+    statusMsg:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          description: Id del cliente.
+        status:
+          type: string
+          enum:
+          - OK
+          - KO
+    data:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          description: Id del cliente.
+        clientName:
+          description: Nombre del cliente.
+          type: string
+        flightNumber:
+          description: Número de vuelo.
+          type: string

@@ -1,0 +1,66 @@
+asyncapi: 3.0.0
+info:
+  title: Object Array
+  version: 1.0.0
+  description: A little and cute yml to check a specific problem with array of strings
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  development:
+    host: cute.server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Development server
+  staging:
+    host: cute.server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Staging server
+  production:
+    host: cute.server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Production server
+channels:
+  objectArrayString:
+    address: object-array-string
+    description: "Channel for object array string events"
+    messages:
+      ObjectArrayMessage:
+        $ref: '#/components/messages/ObjectArrayMessage'
+operations:
+  objectArrayString:
+    action: send
+    channel:
+      $ref: '#/channels/objectArrayString'
+    messages:
+      - $ref: '#/components/messages/ObjectArrayMessage'
+    description: "Publish object array string events"
+    tags:
+      - name: "array"
+components:
+  messages:
+    ObjectArrayMessage:
+      name: "ObjectArrayMessage"
+      title: "Object Array Message"
+      description: "Message containing object array data"
+      contentType: "application/json"
+      payload:
+        $ref: '#/components/schemas/ObjectArray'
+  schemas:
+    ObjectArray:
+      type: object
+      properties:
+        idObject:
+          type: integer
+        players:
+          type: array
+          items:
+            type: string
+          default: [ ]
+        info:
+          type: string

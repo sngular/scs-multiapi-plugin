@@ -1,0 +1,60 @@
+# asyncapi.yaml
+asyncapi: 3.0.0
+info:
+  title: Account Service
+  version: "1.0.0"
+  description: "Service for managing user accounts"
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+    url: "https://example.com/support"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  development:
+    host: "localhost"
+    protocol: "mqtt"
+    description: "Development server"
+channels:
+  userSignedUp:
+    address: user/signedup
+    description: "Channel for user signup events"
+    messages:
+      UserSignedUp:
+        $ref: "#/components/messages/UserSignedUp"
+operations:
+  userSignedUp:
+    action: receive
+    channel:
+      $ref: "#/channels/userSignedUp"
+    messages:
+      - $ref: "#/components/messages/UserSignedUp"
+    description: "Handle user signup events"
+    tags:
+      - name: "user"
+components:
+  messages:
+    UserSignedUp:
+      name: "UserSignedUp"
+      title: "User Signup Event"
+      description: "Event triggered when a user signs up"
+      contentType: "application/json"
+      payload:
+        # this leads to the error
+        # `Cannot invoke "com.fasterxml.jackson.databind.JsonNode.get(String)" because the return value of "com.fasterxml.jackson.databind.JsonNode.findValue(String)" is null`:
+        $ref: "./user-message.yml"
+  schemas:
+    user:
+      # this works:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: "foo"
+        lastName:
+          type: string
+          description: "bar"
+      # this leads to the error
+      # `Cannot invoke "com.fasterxml.jackson.databind.JsonNode.has(String)" because "properties" is null`:
+      $ref: "./user.yml"
