@@ -34,7 +34,7 @@ channels:
     description: "Test channel 2"
     messages:
       TestMsg2:
-        messageId: TestMsg2
+        name: TestMsg2
         title: "Test Message 2"
         description: "A second test message"
         contentType: "application/json"

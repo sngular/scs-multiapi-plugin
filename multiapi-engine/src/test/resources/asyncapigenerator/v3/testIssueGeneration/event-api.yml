@@ -13,7 +13,6 @@ info:
 servers:
   local-kafka:
     host: "localhost"
-    port: 9092
     protocol: kafka
     description: "Local Kafka server"
 channels:

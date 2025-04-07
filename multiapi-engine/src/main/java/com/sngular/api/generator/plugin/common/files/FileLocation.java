@@ -6,9 +6,13 @@
 
 package com.sngular.api.generator.plugin.common.files;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 public interface FileLocation {
 
-  InputStream getFileAtLocation(String filename);
+  InputStream getFileAtLocation(String filename) throws IOException;
+
+  Path getPath();
 }

@@ -2,12 +2,12 @@ package com.sngular.api.generator.plugin.asyncapi.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.asyncapi.exception.*;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.asyncapi.util.AsyncApiUtil;
 import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.FactoryTypeEnum;
 import com.sngular.api.generator.plugin.asyncapi.util.ReferenceProcessor;
@@ -39,21 +39,18 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
 
   @Override
   public void processFileSpec(final List<SpecFile> specsListFile) {
-    final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     processedOperationIds.clear();
     templateFactory.setNotGenerateTemplate();
     for (final SpecFile fileParameter : specsListFile) {
-      final Pair<InputStream, FileLocation> ymlFileAndPath;
+      final FileLocation ymlParent;
       try {
-        ymlFileAndPath = resolveYmlLocation(fileParameter.getFilePath());
+        ymlParent = resolveYmlLocation(fileParameter.getFilePath());
       } catch (final IOException e) {
         throw new FileSystemException(e.getMessage());
       }
-      final InputStream ymlFile = ymlFileAndPath.getLeft();
-      final FileLocation ymlParent = ymlFileAndPath.getRight();
 
       try {
-        final JsonNode openApi = om.readTree(ymlFile);
+        final JsonNode openApi = AsyncApiUtil.getPojoFromSpecFile(baseDir, fileParameter);
         final JsonNode channelList = openApi.get(CHANNELS);
         final Map<String, JsonNode> totalSchemas = getAllSchemas(ymlParent, openApi);
         final Iterator<Entry<String, JsonNode>> channelListIt = channelList.fields();
@@ -106,56 +103,56 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
       final var operationObject = fileParameter.getConsumer();
       operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSubscribeMethod(channelPayload, operationObject, ymlParent, totalSchemas);
+      processSubscribeMethod(operationId, channelPayload, operationObject, ymlParent, totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), CONSUMER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getSupplier(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getStreamBridge()))) {
       final var operationObject = fileParameter.getSupplier();
       operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processSupplierMethod(channelPayload, operationObject, ymlParent, totalSchemas);
+      processSupplierMethod(operationId, channelPayload, operationObject, ymlParent, totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), SUPPLIER_CLASS_NAME);
     } else if (isValidOperation(fileParameter.getStreamBridge(), operationId, channel, PUBLISH, Objects.isNull(fileParameter.getSupplier()))) {
       final var operationObject = fileParameter.getStreamBridge();
       operationObject.setFilePath(fileParameter.getFilePath());
       checkClassPackageDuplicate(operationObject.getClassNamePostfix(), operationObject.getApiPackage());
-      processStreamBridgeMethod(channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas);
+      processStreamBridgeMethod(operationId, channelPayload, operationObject, ymlParent, entry.getKey(), totalSchemas);
       addProcessedClassesAndPackagesToGlobalVariables(operationObject.getClassNamePostfix(), operationObject.getApiPackage(), STREAM_BRIDGE_CLASS_NAME);
     }
   }
 
   @Override
   protected void processSupplierMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
-      final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
-    fillTemplateFactory(result, totalSchemas, operationObject);
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final Map<String, JsonNode> totalSchemas) throws IOException {
+    final ProcessMethodResult result = processMethod(operationId, channel, operationObject, ymlParent, totalSchemas);
+    fillTemplateFactory(operationId, result, totalSchemas, operationObject);
     templateFactory.addSupplierMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   @Override
   protected void processStreamBridgeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
-      throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
+      throws IOException {
+    final ProcessMethodResult result = processMethod(operationId, channel, operationObject, ymlParent, totalSchemas);
     final String regex = "[a-zA-Z0-9.\\-]*";
     if (!channelName.matches(regex)) {
       throw new ChannelNameException(channelName);
     }
-    fillTemplateFactory(result, totalSchemas, operationObject);
+    fillTemplateFactory(operationId, result, totalSchemas, operationObject);
     templateFactory.addStreamBridgeMethod(result.getOperationId(), result.getNamespace(), channelName, result.getBindings(), result.getBindingType());
   }
 
   @Override
   protected void processSubscribeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
-      final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
-    final ProcessMethodResult result = processMethod(channel, operationObject, ymlParent, totalSchemas);
-    fillTemplateFactory(result, totalSchemas, operationObject);
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final Map<String, JsonNode> totalSchemas) throws IOException {
+    final ProcessMethodResult result = processMethod(operationId, channel, operationObject, ymlParent, totalSchemas);
+    fillTemplateFactory(operationId, result, totalSchemas, operationObject);
     templateFactory.addSubscribeMethod(result.getOperationId(), result.getNamespace(), result.getBindings(), result.getBindingType());
   }
 
   @Override
-  protected void fillTemplateFactory(
+  protected void fillTemplateFactory(final String operationId,
       final ProcessMethodResult processedMethod, final Map<String, JsonNode> totalSchemas, final OperationParameterObject operationObject)
       throws IOException {
     final String classFullName = processedMethod.getNamespace();
@@ -182,10 +179,9 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
 
   @Override
   protected ProcessMethodResult processMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas)
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas)
       throws IOException {
     final JsonNode message = ApiTool.getNode(channel, MESSAGE);
-    final String operationId = ApiTool.getNodeAsString(channel, OPERATION_ID);
     final Pair<String, JsonNode> payloadInfo;
     final var processBindingsResultBuilder = ProcessBindingsResult.builder();
     if (message.has(REF)) {
@@ -250,7 +246,7 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
   }
 
   @Override
-  protected String processExternalAvro(final FileLocation ymlParent, final String messageContent) {
+  protected String processExternalAvro(final FileLocation ymlParent, final String messageContent) throws IOException {
     String avroFilePath = messageContent;
     final String namespace;
     if (messageContent.startsWith(SLASH)) {
@@ -412,7 +408,8 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
     return channelDefinition;
   }
 
-  private String getOperationId(final JsonNode channel) {
+  @Override
+  protected String getOperationId(final JsonNode channel) {
     final JsonNode channelDefinition = getChannelDefinition(channel);
     if (!channelDefinition.has(OPERATION_ID)) {
       throw new InvalidAsyncAPIException("Operation ID is required");
@@ -425,5 +422,10 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
 
     processedOperationIds.add(operationId);
     return operationId;
+  }
+
+  @Override
+  protected JsonNode getChannelFromOperation(final JsonNode openApi, final JsonNode operation) {
+    return operation;
   }
 }

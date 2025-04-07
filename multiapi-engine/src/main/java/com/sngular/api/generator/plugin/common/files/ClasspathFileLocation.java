@@ -6,18 +6,21 @@
 
 package com.sngular.api.generator.plugin.common.files;
 
-import java.io.InputStream;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+
+@RequiredArgsConstructor
+@Getter
 public class ClasspathFileLocation implements FileLocation {
 
-  private final String path;
-
-  public ClasspathFileLocation(final String child) {
-    path = child.substring(0, child.lastIndexOf('/') + 1);
-  }
+  private final Path path;
 
   @Override
-  public final InputStream getFileAtLocation(final String filename) {
-    return ClasspathFileLocation.class.getClassLoader().getResourceAsStream(path + filename.replace("./", ""));
+  public final InputStream getFileAtLocation(final String filename) throws IOException {
+    return path.resolve(filename).toUri().toURL().openStream();
   }
 }

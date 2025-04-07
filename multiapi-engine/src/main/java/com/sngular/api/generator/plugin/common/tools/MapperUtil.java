@@ -44,6 +44,14 @@ public class MapperUtil {
     return ArrayUtils.removeAllOccurrences(name.split("\\W+"), "");
   }
 
+  public static String[] splitReference(final String name) {
+    if (0 < StringUtils.indexOf(name, "#")) {
+      return StringUtils.split(name, "#");
+    } else {
+      return ArrayUtils.addAll(new String[] {}, "", name);
+    }
+  }
+
   public static String packageToFolder(final String packageName) {
     return StringUtils.replace(packageName, ".", SLASH);
   }
@@ -222,5 +230,17 @@ public class MapperUtil {
       response.append(StringUtils.capitalize(name));
     }
     return response.toString();
+  }
+
+  public static String getModel(String reference) {
+    return reference.substring(reference.lastIndexOf("/")+1);
+  }
+
+  public static String getPathToModel(String reference) {
+    return reference.substring(calculateStart(reference), reference.lastIndexOf("/"));
+  }
+
+  private static int calculateStart(final String reference) {
+    return StringUtils.startsWith(reference, "#") ? 1 : 0;
   }
 }

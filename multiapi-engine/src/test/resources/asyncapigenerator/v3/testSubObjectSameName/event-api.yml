@@ -1,4 +1,4 @@
-asyncapi: 2.5.0
+asyncapi: 3.0.0
 info:
   title: Component MQTT interface contract
   version: '1.0.0'
@@ -6,33 +6,52 @@ info:
     This document describe the input and output of the component
 
 defaultContentType: application/json
+servers:
+  mqtt:
+    host: localhost
+    protocol: mqtt
 channels:
   events/public/output/{organizationId}:
+    address: events/public/output/{organizationId}
     description: The output topic
     parameters:
       organizationId:
         $ref: '#/components/parameters/organizationId'
-    subscribe:
-      operationId: output
-      traits:
-      - bindings:
-          mqtt:
-            retain: true
-      message:
+    messages:
+      output:
         $ref: '#/components/messages/output'
   events/public/input/{organizationId}:
+    address: events/public/input/{organizationId}
     description: The input topic
     parameters:
       organizationId:
         $ref: '#/components/parameters/organizationId'
-    publish:
-      operationId: input
-      traits:
+    messages:
+      input:
+        $ref: '#/components/messages/input'
+operations:
+  output:
+    action: receive
+    description: Receive output messages
+    channel:
+      $ref: '#/channels/events~1public~1output~1{organizationId}'
+    messages:
+      - $ref: '#/components/messages/output'
+    traits:
       - bindings:
           mqtt:
             retain: true
-      message:
-        $ref: '#/components/messages/input'
+  input:
+    action: send
+    description: Send input messages
+    channel:
+      $ref: '#/channels/events~1public~1input~1{organizationId}'
+    messages:
+      - $ref: '#/components/messages/input'
+    traits:
+      - bindings:
+          mqtt:
+            retain: true
 components:
   messages:
     output:
@@ -90,9 +109,8 @@ components:
               - "hugues"
   parameters:
     organizationId:
-      description: The identifier of an organization
-      schema:
-        type: string
-        examples:
-        - "toto"
-        - "bob"
+    description: The identifier of an organization
+    type: string
+    examples:
+      - "toto"
+      - "bob"

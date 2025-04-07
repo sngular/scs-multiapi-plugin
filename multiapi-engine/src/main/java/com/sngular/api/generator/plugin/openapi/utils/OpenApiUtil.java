@@ -6,41 +6,26 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
+import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
-import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+
 public class OpenApiUtil {
 
   public static final String PATHS = "paths";
-
-  static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
 
   static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
 
@@ -54,6 +39,11 @@ public class OpenApiUtil {
     }
 
     return mapApis;
+  }
+
+  public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
+
+    return SchemaUtil.getPojoFromRef(baseDir, specFile.getFilePath());
   }
 
   private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {
@@ -91,44 +81,6 @@ public class OpenApiUtil {
     }
 
     return mapByUrl;
-  }
-
-  public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
-
-    return getPojoFromRef(baseDir, specFile.getFilePath());
-  }
-
-  public static JsonNode getPojoFromRef(final Path rootFilePath, final String refPath) {
-    final JsonNode openAPI;
-    try {
-      openAPI = PARSER.readTree(readFile(rootFilePath, refPath));
-    } catch (final IOException e) {
-      throw new FileParseException(refPath, e);
-    }
-
-    if (Objects.isNull(openAPI)) {
-      throw new FileParseException("empty .yml");
-    }
-
-    return openAPI;
-  }
-
-  private static String readFile(final Path rootFilePath, final String filePath) throws MalformedURLException {
-    URL fileURL = OpenApiUtil.class.getClassLoader().getResource(filePath);
-    if (Objects.isNull(fileURL)) {
-      final var parentFolder = rootFilePath.resolve(filePath);
-      fileURL = parentFolder.toUri().toURL();
-    }
-    final var sb = new StringBuilder();
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
-      String inputLine;
-      while ((inputLine = reader.readLine()) != null) {
-        sb.append(inputLine).append(System.lineSeparator());
-      }
-    } catch (final IOException e) {
-      throw new FileParseException("Error reading api file", e);
-    }
-    return sb.toString();
   }
 
   public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap, SpecFile specFile) {

@@ -1,24 +1,35 @@
-asyncapi: 2.5.0
+asyncapi: 3.0.0
 info:
   title: myTitle
   version: 1.0.0
-tags: []
 servers:
   default:
-    url: localhost
+    host: localhost
     protocol: jms
 channels:
   outgoing:
-    publish:
-      operationId: "onMailRequest"
-      message:
+    address: outgoing
+    messages:
+      mailRequestMessage:
         $ref: '#/components/messages/mailRequestMessage'
   incoming:
-    subscribe:
-      operationId: "requestMail"
-      message:
+    address: incoming
+    messages:
+      mailRequestMessage:
         $ref: '#/components/messages/mailRequestMessage'
-
+operations:
+  onMailRequest:
+    action: send
+    channel:
+      $ref: '#/channels/outgoing'
+    messages:
+      - $ref: '#/components/messages/mailRequestMessage'
+  requestMail:
+    action: receive
+    channel:
+      $ref: '#/channels/incoming'
+    messages:
+      - $ref: '#/components/messages/mailRequestMessage'
 components:
   messages:
     mailRequestMessage:

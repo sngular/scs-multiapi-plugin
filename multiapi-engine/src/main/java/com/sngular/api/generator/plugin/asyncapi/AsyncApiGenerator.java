@@ -20,13 +20,14 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 public class AsyncApiGenerator {
 
-  private static final String VERSION_PATTERN = "^\\d+\\.\\d+\\.\\d+$";
   private final Integer springBootVersion;
   private final boolean overwriteModel;
   private final File targetFolder;
@@ -61,9 +62,11 @@ public class AsyncApiGenerator {
         final JsonNode openApi = mapper.readTree(ymlLocation.getKey());
         final String version = getAsyncApiVersion(openApi);
 
-        BaseAsyncApiHandler handler = AsyncApiHandlerFactory.getInstance().getHandler(version, springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, baseDir);
+        BaseAsyncApiHandler handler = AsyncApiHandlerFactory
+                .getInstance()
+                .getHandler(version, springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, baseDir);
 
-        handler.processFileSpec(List.of(specFile));
+        handler.processFileSpec(Collections.singletonList(specFile));
       } catch (IOException e) {
         log.error("Error processing spec file: {}", specFile.getFilePath(), e);
         // Continue with next file
@@ -81,7 +84,7 @@ public class AsyncApiGenerator {
     if (Objects.nonNull(classPathInput)) {
       log.debug("Found file in classpath");
       ymlFile = classPathInput;
-      ymlParentPath = new ClasspathFileLocation(ymlFilePath);
+      ymlParentPath = new ClasspathFileLocation(Path.of(ymlFilePath));
     } else {
       log.debug("Looking for file in filesystem");
       final File f = new File(ymlFilePath);

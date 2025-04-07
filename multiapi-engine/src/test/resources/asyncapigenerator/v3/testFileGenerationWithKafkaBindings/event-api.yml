@@ -1,37 +1,50 @@
-asyncapi: 2.3.0
+asyncapi: 3.0.0
 info:
   title: Order Service
   version: 1.0.0
   description: Order management Service
 servers:
   development:
-    url: development.gigantic-server.com
+    host: development.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
     description: Development server
-    protocol: kafka
-    protocolVersion: 0.9.1
   staging:
-    url: staging.gigantic-server.com
+    host: staging.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
     description: Staging server
-    protocol: kafka
-    protocolVersion: 0.9.1
   production:
-    url: api.gigantic-server.com
-    description: Production server
+    host: api.gigantic-server.com
     protocol: kafka
     protocolVersion: 0.9.1
+    description: Production server
 channels:
   order.created:
-    publish:
-      operationId: "publishOperationFileGenerationWithKafkaBindings"
-      message:
+    address: order.created
+    messages:
+      OrderCreatedMessage:
         $ref: './assets/path.yml#/components/messages/OrderCreated'
   order.createCommand:
-    subscribe:
-      operationId: "subscribeOperationFileGenerationWithKafkaBindings"
-      message:
+    address: order.createCommand
+    messages:
+      CreateOrderMessage:
         payload:
           $ref: './assets/path.yml#/components/schemas/CreateOrder'
         bindings:
           kafka:
             key:
               type: string
+operations:
+  publishOperationFileGenerationWithKafkaBindings:
+    action: send
+    channel:
+      $ref: '#/channels/order.created'
+    messages:
+      - $ref: '#/channels/order.created/messages/OrderCreatedMessage'
+  subscribeOperationFileGenerationWithKafkaBindings:
+    action: receive
+    channel:
+      $ref: '#/channels/order.createCommand'
+    messages:
+      - $ref: '#/channels/order.createCommand/messages/CreateOrderMessage'

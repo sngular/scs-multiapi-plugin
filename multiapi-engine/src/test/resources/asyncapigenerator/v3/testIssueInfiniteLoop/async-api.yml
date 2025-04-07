@@ -1,25 +1,36 @@
-asyncapi: 2.5.0
+asyncapi: 3.0.0
 id: uri:myproject
 info:
   title: myTitle
   version: 1.0.0
-tags: []
 servers:
   default:
-    url: localhost
+    host: localhost
     protocol: jms
 channels:
   outgoing:
-    publish:
-      operationId: "onMailRequestInfinite"
-      message:
+    address: outgoing
+    messages:
+      mailRequestInfinite:
         $ref: '#/components/messages/mailRequestInfinite'
   incoming:
-    subscribe:
-      operationId: "requestMailInfinite"
-      message:
+    address: incoming
+    messages:
+      mailRequestInfinite:
         $ref: '#/components/messages/mailRequestInfinite'
-
+operations:
+  onMailRequestInfinite:
+    action: send
+    channel:
+      $ref: '#/channels/outgoing'
+    messages:
+      - $ref: '#/components/messages/mailRequestInfinite'
+  requestMailInfinite:
+    action: receive
+    channel:
+      $ref: '#/channels/incoming'
+    messages:
+      - $ref: '#/components/messages/mailRequestInfinite'
 components:
   messages:
     mailRequestInfinite:

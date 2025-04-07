@@ -18,10 +18,11 @@ import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,23 +76,15 @@ public abstract class BaseAsyncApiHandler {
     this.springBootVersion = springBootVersion;
   }
 
-  protected static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {
-    // First try to load from classpath
-    final InputStream classPathInput = BaseAsyncApiHandler.class.getClassLoader().getResourceAsStream(ymlFilePath);
+  protected static FileLocation resolveYmlLocation(final String ymlFilePath) throws IOException {
+    final var classPathInput = BaseAsyncApiHandler.class.getClassLoader().getResource(ymlFilePath);
     if (Objects.nonNull(classPathInput)) {
-      return new ImmutablePair<>(classPathInput, new ClasspathFileLocation(ymlFilePath));
+      return new ClasspathFileLocation(Path.of(classPathInput.getPath()).getParent());
     }
 
-    // If not found in classpath, try to load from test resources
-    final File testResourceFile = new File("src/test/resources/" + ymlFilePath);
-    if (testResourceFile.exists()) {
-      return new ImmutablePair<>(new FileInputStream(testResourceFile), new DirectoryFileLocation(testResourceFile.toPath().getParent()));
-    }
-
-    // If not found in test resources, try to load from file system
     final File f = new File(ymlFilePath);
     if (f.exists()) {
-      return new ImmutablePair<>(new FileInputStream(f), new DirectoryFileLocation(f.toPath().getParent()));
+      return new DirectoryFileLocation(f.toPath().getParent());
     }
 
     throw new FileNotFoundException("Could not find YAML file: " + ymlFilePath);
@@ -106,22 +99,22 @@ public abstract class BaseAsyncApiHandler {
       final String operationId, final JsonNode channelPayload, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException;
 
   protected abstract void processSupplierMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException;
 
   protected abstract void processStreamBridgeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
       throws IOException, TemplateException;
 
   protected abstract void processSubscribeMethod(
-      final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
+      final String operationId, final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException;
 
-  protected abstract void fillTemplateFactory(
+  protected abstract void fillTemplateFactory(final String operationId,
       final ProcessMethodResult processedMethod, final Map<String, JsonNode> totalSchemas, final OperationParameterObject operationObject)
       throws IOException;
 
-  protected abstract ProcessMethodResult processMethod(
+  protected abstract ProcessMethodResult processMethod(final String operationId,
       final JsonNode channel, final OperationParameterObject operationObject, final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas)
       throws IOException;
 
@@ -134,7 +127,7 @@ public abstract class BaseAsyncApiHandler {
 
   protected abstract String processMessageRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent) throws IOException;
 
-  protected abstract String processExternalAvro(final FileLocation ymlParent, final String messageContent);
+  protected abstract String processExternalAvro(final FileLocation ymlParent, final String messageContent) throws IOException;
 
   protected abstract String processExternalRef(final String modelPackage, final FileLocation ymlParent, final JsonNode message) throws IOException;
 
@@ -225,4 +218,7 @@ public abstract class BaseAsyncApiHandler {
     templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
     templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
   }
+
+  protected abstract JsonNode getChannelFromOperation(final JsonNode openApi, final JsonNode operation);
+  protected abstract String getOperationId(final JsonNode operation);
 }

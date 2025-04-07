@@ -1,34 +1,57 @@
-asyncapi: 2.5.0
+asyncapi: 3.0.0
 info:
   title: CheckIn Kafka API
   version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+    url: https://example.com/support
   description: |
     API de Check In para clientes.
   license:
     name: Apache 2.0
     url: "https://www.apache.org/licenses/LICENSE-2.0"
+  tags:
+    - name: clients
+      description: Client related operations
+    - name: status
+      description: Status related operations
 servers:
   local-kafka:
-    url: "localhost:9092"
+    host: localhost:9092
     protocol: kafka
 channels:
   clients:
-    publish:
-      operationId: customValidatorClients
-      message:
+    address: clients
+    messages:
+      dataClient:
         $ref: "#/components/messages/dataClient"
   response:
-    subscribe:
-      operationId: customValidatorResponse
-      message:
+    address: response
+    messages:
+      status:
         $ref: "#/components/messages/status"
+operations:
+  customValidatorClients:
+    action: send
+    description: "Send client data"
+    channel:
+      $ref: "#/channels/clients"
+    messages:
+      - $ref: "#/components/messages/dataClient"
+  customValidatorResponse:
+    action: receive
+    description: "Receive status response"
+    channel:
+      $ref: "#/channels/response"
+    messages:
+      - $ref: "#/components/messages/status"
 components:
   messages:
     status:
       name: status
       title: Envia status
       summary: Envia el estado de la solicitud
-      schemaFormat: application/vnd.aai.asyncapi+json;version=2.0.0
       contentType: application/json
       payload:
         $ref: "#/components/schemas/statusMsg"
@@ -36,7 +59,6 @@ components:
       name: dataClient
       title: Datos del cliente
       summary: Comando que envia los datos del cliente.
-      schemaFormat: application/vnd.aai.asyncapi+json;version=2.0.0
       contentType: application/json
       payload:
         $ref: "#/components/schemas/data"
@@ -63,9 +85,9 @@ components:
         clientId:
           type: integer
           minimum: 10
-          exclusiveMinimum: false
+          exclusiveMinimum: 10
           maximum: 200
-          exclusiveMaximum: true
+          exclusiveMaximum: 200
           multipleOf: 10
           description: Id del cliente.
         clientName:
