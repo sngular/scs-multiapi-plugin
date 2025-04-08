@@ -6,7 +6,7 @@ import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 @Value
-public class OnTest3 {
+public class TestMsg3 {
 
   @JsonProperty(value ="id")
   private Integer id;
@@ -17,7 +17,7 @@ public class OnTest3 {
 
   @Builder
   @Jacksonized
-  private OnTest3(Integer id, Integer age) {
+  private TestMsg3(Integer id, Integer age) {
     this.id = id;
     this.age = age;
 

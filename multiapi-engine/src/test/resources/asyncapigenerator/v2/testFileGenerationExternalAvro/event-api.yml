@@ -3,6 +3,13 @@ info:
   title: Order Service
   version: 1.0.0
   description: Order management Service
+  contact:
+    name: API Support
+    email: support@example.com
+    url: https://example.com/support
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
   development:
     url: development.gigantic-server.com
@@ -23,20 +30,25 @@ channels:
   order/receipt:
     subscribe:
       operationId: "subscribeReceiptExternalAvro"
+      description: "Subscribe to order receipts"
       message:
         payload:
           $ref: 'avro/Receipt.avsc'
   order/created:
     publish:
       operationId: "publishOperationExternalAvro"
+      description: "Publish order created events"
       message:
-        payload:
-          $ref: 'avro/Order.avsc'
+        oneOf:
+          - payload:
+              $ref: 'avro/Order.avsc'
   order/createCommand:
     subscribe:
       operationId: "subscribeOperationExternalAvro"
+      description: "Subscribe to order creation commands"
       message:
-        $ref: '#/components/messages/CreateOrder'
+        oneOf:
+          - $ref: '#/components/messages/CreateOrder'
 components:
   messages:
     OrderCreated:
@@ -105,3 +117,6 @@ components:
         quantity:
           type: string
           format: decimal
+tags:
+  - name: orders
+    description: Order management operations

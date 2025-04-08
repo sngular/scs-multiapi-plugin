@@ -753,7 +753,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_CUSTOM_VALIDATOR_FOLDER = DEFAULT_COMMON_FOLDER + "/customvalidator";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationIssue/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationIssue/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -800,7 +800,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = "generated/com/sngular/scsplugin/externalavro/model/event/producer";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationExternalAvro/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationExternalAvro/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -827,23 +827,23 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = DEFAULT_COMMON_FOLDER + "/producer";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationStreamBridge/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationStreamBridge/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final String DEFAULT_EXCEPTION_API = DEFAULT_COMMON_FOLDER + "/exception";
 
     final List<String> expectedConsumerFiles = List.of(
-      ASSETS_PATH + "ISubscribeOperationStreamBridge.java",
-      ASSETS_PATH + "TestClassName.java"
+      ASSETS_PATH + "consumer/" + "ISubscribeOperationStreamBridge.java",
+      ASSETS_PATH + "consumer/" + "TestClassName.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-      ASSETS_PATH + "StreamBridgeProducer.java"
+      ASSETS_PATH + "producer/" + "StreamBridgeProducer.java"
     );
 
     final List<String> expectedExceptionFiles = List.of(
-      ASSETS_PATH + "ModelClassException.java");
+      ASSETS_PATH + "exception/"  + "ModelClassException.java");
 
     return path -> commonTest(path, expectedConsumerFiles, expectedProducerFiles, DEFAULT_CONSUMER_FOLDER, DEFAULT_PRODUCER_FOLDER,
       expectedExceptionFiles, DEFAULT_EXCEPTION_API);
@@ -857,7 +857,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_FOLDER = DEFAULT_COMMON_FOLDER + "/producer";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithoutOperationIds/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationWithoutOperationIds/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -882,7 +882,7 @@ public class AsyncApiGeneratorFixtures {
   static Function<Path, Boolean> validateTestFileGenerationArrayString() {
     final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/arraywithstring/model/event";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationArrayString/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationArrayString/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -897,8 +897,8 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/company/mail/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
-      "asyncapigenerator/testIssueGenerateSupplier/assets/MailRequestDTO.java"
+      "asyncapigenerator/v3/testIssueGenerateSupplier/assets/ConfigurationDTO.java",
+      "asyncapigenerator/v3/testIssueGenerateSupplier/assets/MailRequestDTO.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
@@ -908,8 +908,8 @@ public class AsyncApiGeneratorFixtures {
     final String DEFAULT_MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/infiniteLoop/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testIssueInfiniteLoop/assets/ConfigDTO.java",
-      "asyncapigenerator/testIssueInfiniteLoop/assets/MailRequestInfiniteDTO.java"
+      "asyncapigenerator/v3/testIssueInfiniteLoop/assets/ConfigDTO.java",
+      "asyncapigenerator/v3/testIssueInfiniteLoop/assets/MailRequestInfiniteDTO.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, DEFAULT_MODEL_SCHEMA_FOLDER);
@@ -925,7 +925,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_CUSTOM_VALIDATOR_FOLDER = DEFAULT_COMMON_FOLDER + "/customvalidator";
 
-    final String COMMON_PATH = "asyncapigenerator/testModelClassExceptionGeneration/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testModelClassExceptionGeneration/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -969,14 +969,14 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/noschemas/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testNoSchemas/assets/TestMsg.java",
-      "asyncapigenerator/testNoSchemas/assets/Thing.java"
+      "asyncapigenerator/v3/testNoSchemas/assets/TestMsg.java",
+      "asyncapigenerator/v3/testNoSchemas/assets/Thing.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-      "asyncapigenerator/testNoSchemas/assets/IOnTest.java",
-      "asyncapigenerator/testNoSchemas/assets/IOnTest2.java",
-      "asyncapigenerator/testNoSchemas/assets/Producer.java"
+      "asyncapigenerator/v3/testNoSchemas/assets/IOnTest.java",
+      "asyncapigenerator/v3/testNoSchemas/assets/IOnTest2.java",
+      "asyncapigenerator/v3/testNoSchemas/assets/Producer.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
@@ -989,16 +989,16 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/messagenaming/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testMessageNaming/assets/OnTest3.java",
-      "asyncapigenerator/testMessageNaming/assets/TestMsg.java",
-      "asyncapigenerator/testMessageNaming/assets/TestMsg2.java"
+      "asyncapigenerator/v3/testMessageNaming/assets/TestMsg.java",
+      "asyncapigenerator/v3/testMessageNaming/assets/TestMsg2.java",
+      "asyncapigenerator/v3/testMessageNaming/assets/TestMsg3.java"
     );
 
     final List<String> expectedProducerFiles = List.of(
-      "asyncapigenerator/testMessageNaming/assets/IOnTest.java",
-      "asyncapigenerator/testMessageNaming/assets/IOnTest2.java",
-      "asyncapigenerator/testMessageNaming/assets/IOnTest3.java",
-      "asyncapigenerator/testMessageNaming/assets/Producer.java"
+      "asyncapigenerator/v3/testMessageNaming/assets/IOnTest.java",
+      "asyncapigenerator/v3/testMessageNaming/assets/IOnTest2.java",
+      "asyncapigenerator/v3/testMessageNaming/assets/IOnTest3.java",
+      "asyncapigenerator/v3/testMessageNaming/assets/Producer.java"
     );
 
     return path -> modelTest(path, expectedModelSchemaFiles, MODEL_SCHEMA_FOLDER) &&
@@ -1011,8 +1011,8 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/nestedobject/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
-      "asyncapigenerator/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
+      "asyncapigenerator/v3/testNestedObjectIssue/assets/payload/SomeOtherObject.java",
+      "asyncapigenerator/v3/testNestedObjectIssue/assets/payload/UserSignedUpPayload.java"
     );
 
     final List<String> expectedProducerFiles = List.of();
@@ -1027,8 +1027,8 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/constantgeneration/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testConstantGeneration/assets/payload/SomeOtherObject.java",
-      "asyncapigenerator/testConstantGeneration/assets/payload/UserSignedUpPayload.java"
+      "asyncapigenerator/v3/testConstantGeneration/assets/payload/SomeOtherObject.java",
+      "asyncapigenerator/v3/testConstantGeneration/assets/payload/UserSignedUpPayload.java"
     );
 
     final List<String> expectedProducerFiles = List.of();
@@ -1043,8 +1043,8 @@ public class AsyncApiGeneratorFixtures {
     final String MODEL_SCHEMA_FOLDER = "generated/com/sngular/scsplugin/notgeneratedproperties/model";
 
     final List<String> expectedModelSchemaFiles = List.of(
-      "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/UserDetails.java",
-      "asyncapigenerator/testPropertiesNotGeneratedIssue/assets/payload/UserSignedUp.java"
+      "asyncapigenerator/v3/testPropertiesNotGeneratedIssue/assets/payload/UserDetails.java",
+      "asyncapigenerator/v3/testPropertiesNotGeneratedIssue/assets/payload/UserSignedUp.java"
     );
 
     final List<String> expectedProducerFiles = List.of();
@@ -1063,21 +1063,20 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_CUSTOM_VALIDATOR_FOLDER = DEFAULT_COMMON_FOLDER + "/customvalidator";
 
-    final String COMMON_PATH = "asyncapigenerator/testFileGenerationWithKafkaBindings/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testFileGenerationWithKafkaBindings/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
 
     final List<String> expectedConsumerFiles = List.of(
-      ASSETS_PATH + "IPublishOperationFileGenerationWithKafkaBindings.java",
-      ASSETS_PATH + "consumer/MessageWrapper.java",
-      ASSETS_PATH + "TestClassName.java");
+      ASSETS_PATH + "consumer/IPublishOperationFileGenerationWithKafkaBindings.java",
+      ASSETS_PATH + "consumer/TestClassName.java");
 
     final List<String> expectedProducerFiles = List.of(
-      ASSETS_PATH + "ISubscribeOperationFileGenerationWithKafkaBindings.java",
+      ASSETS_PATH + "producer/ISubscribeOperationFileGenerationWithKafkaBindings.java",
       ASSETS_PATH + "producer/MessageWrapper.java",
-      ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "producer/Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
       ASSETS_PATH + "CreateOrderMapper.java",
@@ -1112,7 +1111,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_PRODUCER_MODEL_FOLDER = DEFAULT_COMMON_FOLDER + "/output/model";
 
-    final String COMMON_PATH = "asyncapigenerator/testSubObjectSameName/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testSubObjectSameName/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
@@ -1152,7 +1151,7 @@ public class AsyncApiGeneratorFixtures {
 
     final String DEFAULT_CONSUMER_MODEL_FOLDER = DEFAULT_COMMON_FOLDER + "/com/github/issue/model";
 
-    final String COMMON_PATH = "asyncapigenerator/testReferenceFromLocalIssue/";
+    final String COMMON_PATH = "asyncapigenerator/v3/testReferenceFromLocalIssue/";
 
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 

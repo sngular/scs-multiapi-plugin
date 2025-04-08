@@ -33,11 +33,14 @@ channels:
 operations:
   publishOperationStreamBridge:
     action: send
+    description: "Operation to publish order created events"
     channel:
       $ref: '#/channels/order.created'
     messages:
+
       - $ref: '#/channels/order.created/messages/OrderCreatedMessage'
   subscribeOperationStreamBridge:
+    description: "Operation to subscribe to order creation commands"
     action: receive
     channel:
       $ref: '#/channels/order.createCommand'

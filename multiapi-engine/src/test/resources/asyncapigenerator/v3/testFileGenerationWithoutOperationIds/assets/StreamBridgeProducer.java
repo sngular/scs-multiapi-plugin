@@ -14,7 +14,7 @@ public class StreamBridgeProducer {
   }
 
   public void publishOperation(final OrderDTO order) {
-    streamBridge.send("order.created", order);
+    streamBridge.send("publishOperation", order);
   }
 
 }

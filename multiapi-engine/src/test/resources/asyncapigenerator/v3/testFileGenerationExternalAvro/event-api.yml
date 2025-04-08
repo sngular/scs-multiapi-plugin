@@ -31,26 +31,26 @@ channels:
     description: "Channel for order receipt events"
     messages:
       ReceiptMessage:
-        $ref: '#/components/messages/ReceiptMessage'
+        $ref: '#/components/messages/Receipt'
   orderCreated:
     address: order/created
     description: "Channel for order created events"
     messages:
       OrderMessage:
-        $ref: '#/components/messages/OrderMessage'
+        $ref: '#/components/messages/Order'
   orderCreateCommand:
     address: order/createCommand
     description: "Channel for order creation commands"
     messages:
       CreateOrderMessage:
-        $ref: '#/components/messages/CreateOrderMessage'
+        $ref: '#/components/messages/CreateOrder'
 operations:
   subscribeReceiptExternalAvro:
     action: receive
     channel:
       $ref: '#/channels/orderReceipt'
     messages:
-      - $ref: '#/components/messages/ReceiptMessage'
+      - $ref: '#/components/messages/Receipt'
     description: "Subscribe to order receipt events"
     tags:
       - name: "order"
@@ -59,7 +59,7 @@ operations:
     channel:
       $ref: '#/channels/orderCreated'
     messages:
-      - $ref: '#/components/messages/OrderMessage'
+      - $ref: '#/components/messages/Order'
     description: "Publish order created events"
     tags:
       - name: "order"
@@ -68,20 +68,20 @@ operations:
     channel:
       $ref: '#/channels/orderCreateCommand'
     messages:
-      - $ref: '#/components/messages/CreateOrderMessage'
+      - $ref: '#/components/messages/CreateOrder'
     description: "Subscribe to order creation commands"
     tags:
       - name: "order"
 components:
   messages:
-    ReceiptMessage:
+    Receipt:
       name: "ReceiptMessage"
       title: "Order Receipt Event"
       description: "Event containing order receipt information"
       contentType: "application/avro"
       payload:
         $ref: 'avro/Receipt.avsc'
-    OrderMessage:
+    Order:
       name: "OrderMessage"
       title: "Order Created Event"
       description: "Event containing order information"
@@ -107,12 +107,7 @@ components:
             $ref: '#/components/schemas/Order'
           waiter:
             $ref: '#/components/schemas/Waiter'
-    CreateOrderMessage:
-      name: "CreateOrderMessage"
-      title: "Create Order Command Message"
-      description: "Message containing order creation command"
-      contentType: "application/json"
-      $ref: '#/components/messages/CreateOrder'
+
   schemas:
     Waiter:
       type: object

@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sngular.scsplugin.withoutids.model.event.CreateOrderDTO;
+import com.sngular.scsplugin.withoutids.model.event.CreateOrderMessageDTO;
 
 @Configuration
 public class TestClassName {
@@ -16,7 +16,7 @@ public class TestClassName {
   }
 
   @Bean
-  public Consumer<CreateOrderDTO> subscribeOperation() {
+  public Consumer<CreateOrderMessageDTO> subscribeOperation() {
     return value -> subscribeOperation.subscribeOperation(value);
   }
 

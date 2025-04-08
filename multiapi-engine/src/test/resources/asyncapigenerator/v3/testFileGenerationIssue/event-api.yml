@@ -208,4 +208,7 @@ components:
           type: string
           enum:
           - "created"
-
+          - "updated"
+          - "deleted"
+        customerOrder:
+          $ref: "#/components/schemas/CustomerOrder"

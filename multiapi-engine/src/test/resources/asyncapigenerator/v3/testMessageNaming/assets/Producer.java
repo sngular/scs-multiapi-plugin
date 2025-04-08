@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.sngular.scsplugin.messagenaming.model.TestMsg;
 import com.sngular.scsplugin.messagenaming.model.TestMsg2;
-import com.sngular.scsplugin.messagenaming.model.OnTest3;
+import com.sngular.scsplugin.messagenaming.model.TestMsg3;
 
 @Configuration
 public class Producer {
@@ -34,7 +34,7 @@ public class Producer {
   }
 
   @Bean
-  public Supplier<OnTest3> onTest3() {
+  public Supplier<TestMsg3> onTest3() {
     return () -> onTest3.onTest3();
   }
 

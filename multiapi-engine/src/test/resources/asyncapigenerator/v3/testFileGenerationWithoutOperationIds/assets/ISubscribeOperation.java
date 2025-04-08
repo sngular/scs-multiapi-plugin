@@ -1,8 +1,8 @@
 package com.sngular.scsplugin.withoutids.model.event.consumer;
 
-import com.sngular.scsplugin.withoutids.model.event.CreateOrderDTO;
+import com.sngular.scsplugin.withoutids.model.event.CreateOrderMessageDTO;
 
 public interface ISubscribeOperation {
 
-  void subscribeOperation(final CreateOrderDTO value);
+  void subscribeOperation(final CreateOrderMessageDTO value);
 }
