@@ -292,7 +292,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
     final String[] pathToFile = MapperUtil.splitReference(ApiTool.getRefValue(message));
     final String filePath = pathToFile[0];
     final JsonNode node = ApiTool.nodeFromFile(ymlParent, filePath, FactoryTypeEnum.YML);
-    if (pathToFile.length > 1) {
+    if (pathToFile.length > 1 && StringUtils.isNotEmpty(pathToFile[1])) {
       final String componentPath = pathToFile[1];
 
       if (node.at(MapperUtil.getPathToModel(componentPath)).has(MapperUtil.getModel(componentPath))) {

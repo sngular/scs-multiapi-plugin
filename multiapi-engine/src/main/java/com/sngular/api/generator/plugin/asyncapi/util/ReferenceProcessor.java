@@ -6,6 +6,7 @@ import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import lombok.Builder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,9 +74,13 @@ public final class ReferenceProcessor {
 
     if (path.endsWith(YML) || path.endsWith(JSON) || path.endsWith(YAML)) {
       final JsonNode node = ApiTool.nodeFromFile(ymlParent, path, FactoryTypeEnum.YML);
-      if (node.at(MapperUtil.getPathToModel(reference)).has(MapperUtil.getModel(reference))) {
-        returnNode = node.at(MapperUtil.getPathToModel(reference)).get(MapperUtil.getModel(reference));
-        checkReference(node, returnNode);
+      if (StringUtils.isNotEmpty(reference)) {
+        if (node.at(MapperUtil.getPathToModel(reference)).has(MapperUtil.getModel(reference))) {
+          returnNode = node.at(MapperUtil.getPathToModel(reference)).get(MapperUtil.getModel(reference));
+          checkReference(node, returnNode);
+        } else {
+          returnNode = node;
+        }
       } else {
         returnNode = node;
       }

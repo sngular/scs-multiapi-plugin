@@ -47,8 +47,10 @@ public class MapperUtil {
   public static String[] splitReference(final String name) {
     if (0 < StringUtils.indexOf(name, "#")) {
       return StringUtils.split(name, "#");
+    } else if (0 == StringUtils.indexOf(name, "#")) {
+      return StringUtils.split(name, "#");
     } else {
-      return ArrayUtils.addAll(new String[] {}, "", name);
+      return ArrayUtils.addAll(new String[] {}, name, "");
     }
   }
 
