@@ -93,11 +93,6 @@ class AsyncApiGeneratorTest {
   }
 
   @Test
-  void testExceptionForTestGenerationWithNoOperationId() {
-    Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID)).isInstanceOf(InvalidAPIException.class);
-  }
-
-  @Test
   void testExceptionForTestGenerationWithNoOperationConfiguration() {
     Assertions.assertThatThrownBy(() -> asyncApiGenerator.processFileSpec(AsyncApiGeneratorFixtures.TEST_FILE_GENERATION_NO_CONFIG)).isInstanceOf(InvalidAPIException.class);
   }

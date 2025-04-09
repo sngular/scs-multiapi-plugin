@@ -10,6 +10,7 @@ import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 
 class AsyncApiGeneratorJakartaTest {
 
-  @TempDir
+  @TempDir(cleanup = CleanupMode.ON_SUCCESS)
   static Path baseDir;
 
   private static AsyncApiGenerator asyncApiGenerator;

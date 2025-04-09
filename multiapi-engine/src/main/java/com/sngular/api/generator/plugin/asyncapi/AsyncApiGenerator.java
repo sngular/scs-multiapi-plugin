@@ -63,7 +63,6 @@ public class AsyncApiGenerator {
         final String version = getAsyncApiVersion(openApi);
 
         BaseAsyncApiHandler handler = AsyncApiHandlerFactory
-                .getInstance()
                 .getHandler(version, springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, baseDir);
 
         handler.processFileSpec(Collections.singletonList(specFile));
