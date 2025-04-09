@@ -1,19 +1,5 @@
 package com.sngular.api.generator.plugin.common.tools;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -24,6 +10,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class ApiTool {
 
@@ -105,6 +99,11 @@ public final class ApiTool {
 
   public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema) {
     return Objects.nonNull(schema) ? schema.fields() : IteratorUtils.emptyIterator();
+  }
+
+  public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema, final String nodeName) {
+    return Objects.isNull(schema) || !hasNode(schema, nodeName) ?
+            IteratorUtils.emptyIterator() : getNode(schema, nodeName).fields();
   }
 
   public static String getName(final JsonNode node) {

@@ -99,8 +99,8 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
   protected void processOperation(
       final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel,
       final String operationId, final JsonNode operation, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
-    final String action = operation.get("action").asText();
-    if (!action.equals("send") && !action.equals("receive")) {
+    final String action = ApiTool.getNodeAsString(operation, "action");
+    if (!StringUtils.endsWithIgnoreCase(action,"send") && !StringUtils.endsWithIgnoreCase(action,"receive")) {
       throw new InvalidAsyncAPIException("Operation action must be either 'send' or 'receive'");
     }
 
@@ -139,8 +139,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
       final String operationId, final JsonNode operation, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
       throws IOException {
     final ProcessMethodResult result = processMethod(operationId, operation, operationObject, ymlParent, totalSchemas);
-    final String regex = "[a-zA-Z0-9.\\-]*";
-    if (!channelName.matches(regex)) {
+    if (!channelName.matches("[a-zA-Z0-9.\\-]*")) {
       throw new ChannelNameException(channelName);
     }
     fillTemplateFactory(operationId, result, totalSchemas, operationObject);
@@ -350,7 +349,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
   }
 
   private Iterator<Entry<String, JsonNode>> getChannels(final JsonNode node) {
-    return ApiTool.hasNode(node, CHANNELS) ? ApiTool.getNode(node, CHANNELS).fields() : Collections.emptyIterator();
+    return ApiTool.hasNode(node, CHANNELS) ? ApiTool.getFieldIterator(node, CHANNELS) : Collections.emptyIterator();
   }
 
   private void getMessageSchemas(
@@ -381,9 +380,9 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
 
   private void getChannelSchemas(final JsonNode channel, final Map<String, JsonNode> totalSchemas, final FileLocation ymlParent) {
     if (ApiTool.hasNode(channel, MESSAGES)) {
-      final Iterator<Entry<String, JsonNode>> messages = channel.get(MESSAGES).fields();
-      while (messages.hasNext()) {
-        final Entry<String, JsonNode> message = messages.next();
+      final var messagesIt = ApiTool.getFieldIterator(channel, MESSAGES);
+      while (messagesIt.hasNext()) {
+        final var message = messagesIt.next();
         getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas);
       }
     }

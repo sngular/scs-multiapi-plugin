@@ -39,16 +39,14 @@ channels:
       operationId: "publishOperationExternalAvro"
       description: "Publish order created events"
       message:
-        oneOf:
-          - payload:
-              $ref: 'avro/Order.avsc'
+        payload:
+          $ref: 'avro/Order.avsc'
   order/createCommand:
     subscribe:
       operationId: "subscribeOperationExternalAvro"
       description: "Subscribe to order creation commands"
       message:
-        oneOf:
-          - $ref: '#/components/messages/CreateOrder'
+        $ref: '#/components/messages/CreateOrder'
 components:
   messages:
     OrderCreated:

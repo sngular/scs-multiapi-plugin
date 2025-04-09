@@ -1070,14 +1070,14 @@ public class AsyncApiGeneratorFixtures {
     final String CUSTOM_VALIDATOR_PATH = COMMON_PATH + "customvalidator/";
 
     final List<String> expectedConsumerFiles = List.of(
-      ASSETS_PATH + "IPublishOperationFileGenerationWithKafkaBindings.java",
+      ASSETS_PATH + "consumer/IPublishOperationFileGenerationWithKafkaBindings.java",
       ASSETS_PATH + "consumer/MessageWrapper.java",
-      ASSETS_PATH + "TestClassName.java");
+      ASSETS_PATH + "consumer/TestClassName.java");
 
     final List<String> expectedProducerFiles = List.of(
-      ASSETS_PATH + "ISubscribeOperationFileGenerationWithKafkaBindings.java",
+      ASSETS_PATH + "producer/ISubscribeOperationFileGenerationWithKafkaBindings.java",
       ASSETS_PATH + "producer/MessageWrapper.java",
-      ASSETS_PATH + "Producer.java");
+      ASSETS_PATH + "producer/Producer.java");
 
     final List<String> expectedModelSchemaFiles = List.of(
       ASSETS_PATH + "CreateOrderMapper.java",

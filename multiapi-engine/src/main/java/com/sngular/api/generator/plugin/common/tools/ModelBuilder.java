@@ -31,6 +31,9 @@ public final class ModelBuilder {
 
   private static final Map<String, SchemaObject> cachedSchemas = new HashMap<>();
 
+  private ModelBuilder() {
+  }
+
   public static SchemaObject buildSchemaObject(
         final Map<String, JsonNode> totalSchemas, final String className, final JsonNode model,
         final Set<String> antiLoopList, final Map<String, SchemaObject> compositedSchemas, final String parentPackage,
@@ -105,35 +108,35 @@ public final class ModelBuilder {
     }
 
     if (type.containsType(TypeConstants.BIG_DECIMAL)) {
-      listHashMap.computeIfAbsent(TypeConstants.BIG_DECIMAL, key -> List.of("java.math.BigDecimal"));
+      listHashMap.computeIfAbsent(TypeConstants.BIG_DECIMAL, key -> Collections.singletonList("java.math.BigDecimal"));
     }
 
     if (type.containsType(TypeConstants.LOCALDATE)) {
-      listHashMap.computeIfAbsent(TypeConstants.LOCALDATE, key -> List.of("java.time.LocalDate"));
+      listHashMap.computeIfAbsent(TypeConstants.LOCALDATE, key -> Collections.singletonList("java.time.LocalDate"));
     }
 
     if (type.containsType(TypeConstants.LOCALDATETIME)) {
-      listHashMap.computeIfAbsent(TypeConstants.LOCALDATETIME, key -> List.of("java.time.LocalDateTime"));
+      listHashMap.computeIfAbsent(TypeConstants.LOCALDATETIME, key -> Collections.singletonList("java.time.LocalDateTime"));
     }
 
     if (type.containsType(TypeConstants.ZONEDDATE)) {
-      listHashMap.computeIfAbsent(TypeConstants.ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+      listHashMap.computeIfAbsent(TypeConstants.ZONEDDATETIME, key -> Collections.singletonList("java.time.ZonedDateTime"));
     }
 
     if (type.containsType(TypeConstants.ZONEDDATETIME)) {
-      listHashMap.computeIfAbsent(TypeConstants.ZONEDDATETIME, key -> List.of("java.time.ZonedDateTime"));
+      listHashMap.computeIfAbsent(TypeConstants.ZONEDDATETIME, key -> Collections.singletonList("java.time.ZonedDateTime"));
     }
 
     if (type.containsType(TypeConstants.OFFSETDATE)) {
-      listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+      listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> Collections.singletonList("java.time.OffsetDateTime"));
     }
 
     if (type.containsType(TypeConstants.OFFSETDATETIME)) {
-      listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> List.of("java.time.OffsetDateTime"));
+      listHashMap.computeIfAbsent(TypeConstants.OFFSETDATETIME, key -> Collections.singletonList("java.time.OffsetDateTime"));
     }
 
     if (type.containsType(TypeConstants.MULTIPART_FILE)) {
-      listHashMap.computeIfAbsent(TypeConstants.MULTIPART_FILE, key -> List.of("org.springframework.web.multipart.MultipartFile"));
+      listHashMap.computeIfAbsent(TypeConstants.MULTIPART_FILE, key -> Collections.singletonList("org.springframework.web.multipart.MultipartFile"));
     }
   }
 
@@ -373,10 +376,20 @@ public final class ModelBuilder {
           fieldObject.getRestrictions().setUniqueItems(restriction.getValue().asBoolean());
           break;
         case "exclusiveMaximum":
-          fieldObject.getRestrictions().setExclusiveMaximum(restriction.getValue().asBoolean());
+          if (restriction.getValue().isBoolean()) {
+            fieldObject.getRestrictions().setExclusiveMaximum(restriction.getValue().asBoolean());
+          } else if (restriction.getValue().isNumber()) {
+            fieldObject.getRestrictions().setMaximum(restriction.getValue().asText());
+            fieldObject.getRestrictions().setExclusiveMaximum(true);
+          }
           break;
         case "exclusiveMinimum":
-          fieldObject.getRestrictions().setExclusiveMinimum(restriction.getValue().asBoolean());
+          if (restriction.getValue().isBoolean()) {
+            fieldObject.getRestrictions().setExclusiveMinimum(restriction.getValue().asBoolean());
+          } else if (restriction.getValue().isNumber()) {
+            fieldObject.getRestrictions().setMinimum(restriction.getValue().asText());
+            fieldObject.getRestrictions().setExclusiveMinimum(true);
+          }
           break;
         case "multipleOf":
           fieldObject.getRestrictions().setMultipleOf(restriction.getValue().asText());

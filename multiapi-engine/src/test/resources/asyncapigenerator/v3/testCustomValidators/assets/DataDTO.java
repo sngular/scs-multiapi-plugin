@@ -31,7 +31,7 @@ public class DataDTO {
   @NotNull
   private final String flightNumber;
   @JsonProperty(value ="clientId")
-  @MinInteger(minimum = "10", exclusive = false)
+  @MinInteger(minimum = "10", exclusive = true)
   @MaxInteger(maximum = "200", exclusive = true)
   @MultipleOf(multiple = "10")
   @NotNull

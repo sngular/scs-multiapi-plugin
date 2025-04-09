@@ -84,9 +84,7 @@ components:
       properties:
         clientId:
           type: integer
-          minimum: 10
           exclusiveMinimum: 10
-          maximum: 200
           exclusiveMaximum: 200
           multipleOf: 10
           description: Id del cliente.
