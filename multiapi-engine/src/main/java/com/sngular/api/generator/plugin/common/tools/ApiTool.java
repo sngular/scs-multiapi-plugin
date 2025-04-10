@@ -46,7 +46,7 @@ public final class ApiTool {
   }
 
   public static String getType(final JsonNode schema) {
-    return hasType(schema) ? getNodeAsString(schema, "type") : "";
+    return hasType(schema) ? StringUtils.defaultIfEmpty(getNodeAsString(schema, "type"), "") : "";
   }
 
   public static Iterator<Entry<String, JsonNode>> getProperties(final JsonNode schema) {
@@ -336,7 +336,12 @@ public final class ApiTool {
     if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
       file = ymlParent.getFileAtLocation(filePath);
     } else {
-      file = new FileInputStream(filePath);
+      if (filePath.contains(".jar!")) {
+        var resource = filePath.substring(filePath.indexOf(".jar!") + 1);
+        file = ApiTool.class.getClassLoader().getResourceAsStream(resource);
+      } else {
+        file = new FileInputStream(filePath);
+      }
     }
 
     final ObjectMapper om;
