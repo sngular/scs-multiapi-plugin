@@ -20,7 +20,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;
-import java.nio.file.Path;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -83,7 +83,7 @@ public class AsyncApiGenerator {
     if (Objects.nonNull(classPathInput)) {
       log.debug("Found file in classpath");
       ymlFile = classPathInput;
-      ymlParentPath = new ClasspathFileLocation(Path.of(ymlFilePath));
+      ymlParentPath = new ClasspathFileLocation(URI.create(ymlFilePath));
     } else {
       log.debug("Looking for file in filesystem");
       final File f = new File(ymlFilePath);

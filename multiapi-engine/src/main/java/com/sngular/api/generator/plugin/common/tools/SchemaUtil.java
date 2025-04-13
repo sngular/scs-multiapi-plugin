@@ -10,9 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,7 +22,7 @@ public class SchemaUtil {
   protected SchemaUtil() {
   }
 
-  public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final Path rootFilePath) {
+  public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final URI rootFilePath) {
     JsonNode solvedRef;
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
@@ -32,7 +31,7 @@ public class SchemaUtil {
       } else {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
-        solvedRef = getPojoFromRef(rootFilePath.toAbsolutePath(), filePath);
+        solvedRef = getPojoFromRef(rootFilePath, filePath);
         if (ApiTool.hasComponents(solvedRef)) {
           schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
           solvedRef = solvedRef.findValue(MapperUtil.getKey(refValueArr[1]));
@@ -44,7 +43,7 @@ public class SchemaUtil {
     return solvedRef;
   }
 
-  public static JsonNode getPojoFromRef(final Path rootFilePath, final String refPath) {
+  public static JsonNode getPojoFromRef(final URI rootFilePath, final String refPath) {
     final JsonNode schemaFile;
     try {
       schemaFile = PARSER.readTree(readFile(rootFilePath, refPath));
@@ -60,14 +59,14 @@ public class SchemaUtil {
   }
 
 
-  private static String readFile(final Path rootFilePath, final String filePath) throws MalformedURLException {
+  private static String readFile(final URI rootFilePath, final String filePath) throws MalformedURLException {
     if (Objects.isNull(filePath)) {
       throw new IllegalArgumentException("File Path cannot be empty");
     }
     URL fileURL = SchemaUtil.class.getClassLoader().getResource(filePath);
     if (Objects.isNull(fileURL)) {
       final var parentFolder = rootFilePath.resolve(cleanUpPath(filePath));
-      fileURL = parentFolder.toUri().toURL();
+      fileURL = parentFolder.toURL();
     }
     final var sb = new StringBuilder();
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
@@ -81,8 +80,8 @@ public class SchemaUtil {
     return sb.toString();
   }
 
-  private static Path cleanUpPath(final String filePath) {
-    return StringUtils.startsWith(filePath, "./") ? Paths.get(filePath.substring(2)) : Paths.get(filePath);
+  private static String cleanUpPath(final String filePath) {
+    return StringUtils.startsWith(filePath, "./") ? filePath.substring(2) : filePath;
   }
 
 }

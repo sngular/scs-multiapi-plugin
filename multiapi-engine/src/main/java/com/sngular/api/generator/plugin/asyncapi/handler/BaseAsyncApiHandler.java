@@ -23,7 +23,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +79,10 @@ public abstract class BaseAsyncApiHandler {
     this.springBootVersion = springBootVersion;
   }
 
-  protected static FileLocation resolveYmlLocation(final String ymlFilePath) throws IOException {
+  protected static FileLocation resolveYmlLocation(final String ymlFilePath) throws IOException, URISyntaxException {
     final var classPathInput = BaseAsyncApiHandler.class.getClassLoader().getResource(ymlFilePath);
     if (Objects.nonNull(classPathInput)) {
-      return new ClasspathFileLocation(Path.of(classPathInput.getPath()).getParent());
+      return new ClasspathFileLocation(getParentUri(classPathInput.toURI()));
     }
 
     final File f = new File(ymlFilePath);
@@ -88,6 +91,35 @@ public abstract class BaseAsyncApiHandler {
     }
 
     throw new FileNotFoundException("Could not find YAML file: " + ymlFilePath);
+  }
+
+  public static URI getParentUri(URI uri) {
+    if ("jar".equals(uri.getScheme())) {
+      // Split "jar:file:/path/to/app.jar!/dir/file.txt"
+      String[] parts = uri.getSchemeSpecificPart().split("!", 2);
+      if (parts.length != 2) {
+        throw new IllegalArgumentException("Invalid JAR URI: " + uri);
+      }
+
+      String jarPath = parts[0];
+      Path innerPath = Paths.get(parts[1]);
+      Path parentPath = innerPath.getParent();
+
+      if (parentPath == null) {
+        throw new IllegalArgumentException("No parent path inside JAR for: " + uri);
+      }
+
+      return URI.create("jar:" + jarPath + "!" + parentPath.toString().replace("\\", "/"));
+    } else if ("file".equals(uri.getScheme())) {
+      Path path = Paths.get(uri);
+      Path parent = path.getParent();
+      if (parent == null) {
+        throw new IllegalArgumentException("No parent for file URI: " + uri);
+      }
+      return parent.toUri();
+    } else {
+      throw new IllegalArgumentException("Unsupported URI scheme: " + uri.getScheme());
+    }
   }
 
   public abstract void processFileSpec(final List<SpecFile> specsListFile);

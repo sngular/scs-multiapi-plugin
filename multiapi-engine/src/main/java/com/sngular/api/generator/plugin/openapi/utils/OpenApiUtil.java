@@ -43,7 +43,7 @@ public class OpenApiUtil {
 
   public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
 
-    return SchemaUtil.getPojoFromRef(baseDir, specFile.getFilePath());
+    return SchemaUtil.getPojoFromRef(baseDir.toUri(), specFile.getFilePath());
   }
 
   private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {

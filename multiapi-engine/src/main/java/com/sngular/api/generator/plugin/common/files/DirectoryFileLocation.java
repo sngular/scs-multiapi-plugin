@@ -12,6 +12,7 @@ import lombok.Getter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Path;
 
 @Getter
@@ -30,5 +31,10 @@ public class DirectoryFileLocation implements FileLocation {
     } catch (final IOException e) {
       throw new FileSystemException(e.getMessage());
     }
+  }
+
+  @Override
+  public final URI getPath() {
+    return path.toUri();
   }
 }

@@ -24,6 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -46,7 +47,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
       final FileLocation ymlParent;
       try {
         ymlParent = resolveYmlLocation(fileParameter.getFilePath());
-      } catch (final IOException e) {
+      } catch (final IOException | URISyntaxException e) {
         throw new FileSystemException(e.getMessage());
       }
       try {

@@ -14,6 +14,6 @@ public final class AsyncApiUtil {
 
     public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
 
-        return SchemaUtil.getPojoFromRef(baseDir, specFile.getFilePath());
+        return SchemaUtil.getPojoFromRef(baseDir.toUri(), specFile.getFilePath());
     }
 }

@@ -658,22 +658,12 @@ public final class ModelBuilder {
 
   private static String getMapFieldType(final SchemaFieldObject schemaFieldObject) {
     final String fieldType = schemaFieldObject.getDataType().toString();
-    final String type;
-    switch (fieldType) {
-      case TypeConstants.BIG_DECIMAL:
-      case TypeConstants.INTEGER:
-      case TypeConstants.DOUBLE:
-      case TypeConstants.FLOAT:
-      case TypeConstants.LONG:
-      case TypeConstants.STRING:
-        type = fieldType;
-        break;
-      default:
-        type = TypeConstants.OBJECT;
-        break;
-    }
 
-    return type;
+    return switch (fieldType) {
+      case TypeConstants.BIG_DECIMAL, TypeConstants.INTEGER, TypeConstants.DOUBLE, TypeConstants.FLOAT,
+           TypeConstants.LONG, TypeConstants.STRING -> fieldType;
+      default -> TypeConstants.OBJECT;
+    };
   }
 
   private static Set<SchemaFieldObject> processAllOf(
@@ -753,7 +743,7 @@ public final class ModelBuilder {
         final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final CommonSpecFile specFile,
         final Path baseDir) {
 
-    final var referredSchema = SchemaUtil.solveRef(ApiTool.getRefValue(schema), totalSchemas, baseDir.resolve(specFile.getFilePath()).getParent());
+    final var referredSchema = SchemaUtil.solveRef(ApiTool.getRefValue(schema), totalSchemas, baseDir.resolve(specFile.getFilePath()).getParent().toUri());
 
     final var schemaObject = buildSchemaObject(totalSchemas, MapperUtil.getRefSchemaName(schema, null), referredSchema,
           antiLoopList, compositedSchemas, MapperUtil.getRefSchemaName(schema, null), specFile, baseDir);
