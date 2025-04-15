@@ -6,6 +6,13 @@
 
 package com.sngular.api.generator.plugin.asyncapi.template;
 
+import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
+import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
+import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
+import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,12 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.sngular.api.generator.plugin.asyncapi.exception.NonSupportedBindingException;
-import com.sngular.api.generator.plugin.asyncapi.model.MethodObject;
-import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
-import com.sngular.api.generator.plugin.asyncapi.util.BindingTypeEnum;
-import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 
 public class TemplateFactory extends CommonTemplateFactory {
 
@@ -252,7 +253,7 @@ public class TemplateFactory extends CommonTemplateFactory {
         templateName = defaultTemplate;
         break;
       case KAFKA:
-        templateName = MapperUtil.splitName(defaultTemplate)[0] + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
+        templateName = StringUtils.remove(defaultTemplate, ".ftlh") + TemplateIndexConstants.KAFKA_BINDINGS_FTLH;
         break;
       default:
         throw new NonSupportedBindingException(bindingType);

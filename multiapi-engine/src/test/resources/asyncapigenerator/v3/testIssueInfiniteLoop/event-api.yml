@@ -1,0 +1,62 @@
+asyncapi: 3.0.0
+id: uri:myproject
+info:
+  title: myTitle
+  version: 1.0.0
+servers:
+  default:
+    host: localhost
+    protocol: jms
+channels:
+  outgoing:
+    address: outgoing
+    messages:
+      mailRequestInfinite:
+        $ref: '#/components/messages/mailRequestInfinite'
+  incoming:
+    address: incoming
+    messages:
+      mailRequestInfinite:
+        $ref: '#/components/messages/mailRequestInfinite'
+operations:
+  onMailRequestInfinite:
+    action: send
+    channel:
+      $ref: '#/channels/outgoing'
+    messages:
+      - $ref: '#/components/messages/mailRequestInfinite'
+  requestMailInfinite:
+    action: receive
+    channel:
+      $ref: '#/channels/incoming'
+    messages:
+      - $ref: '#/components/messages/mailRequestInfinite'
+components:
+  messages:
+    mailRequestInfinite:
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/mailRequestInfinite'
+  schemas:
+    mailRequestInfinite:
+      type: object
+      additionalProperties: false
+      properties:
+        sender:
+          type: string
+          format: email
+          description: The sender mail address
+        recipients:
+          description: Email addresses of the recipients
+          type: array
+          items:
+            type: string
+            format: email
+        config:
+          $ref: '#/components/schemas/config'
+    config:
+      description: Defines the additional properties which are available for the given template in the form of a key - value pair
+      type: object
+      properties:
+        name:
+          type: string

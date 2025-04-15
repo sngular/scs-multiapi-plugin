@@ -6,12 +6,16 @@
 
 package com.sngular.api.generator.plugin.common.files;
 
+import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import lombok.Getter;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Path;
-import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 
+@Getter
 public class DirectoryFileLocation implements FileLocation {
 
   private final Path path;
@@ -27,5 +31,10 @@ public class DirectoryFileLocation implements FileLocation {
     } catch (final IOException e) {
       throw new FileSystemException(e.getMessage());
     }
+  }
+
+  @Override
+  public final URI getPath() {
+    return path.toUri();
   }
 }

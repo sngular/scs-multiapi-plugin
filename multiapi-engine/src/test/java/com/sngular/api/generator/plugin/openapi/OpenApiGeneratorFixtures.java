@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public final class OpenApiGeneratorFixtures {
 
-  final static String GENERATED = "generated";
+  static final String GENERATED = "generated";
 
-  final static String TARGET = "target";
+  static final String TARGET = "target";
 
-  final static List<SpecFile> TEST_ALL_OF = List.of(
+  static final List<SpecFile> TEST_ALL_OF = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
@@ -39,7 +39,7 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_COMPLEX_ANY_OF = List.of(
+  static final List<SpecFile> TEST_COMPLEX_ANY_OF = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testComplexAnyOf/api-test.yml")
@@ -50,7 +50,7 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_ALL_OF_LOMBOK = List.of(
+  static final List<SpecFile> TEST_ALL_OF_LOMBOK = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testAllOf/api-test.yml")
@@ -62,7 +62,7 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_OVER_WRITE_MODEL_TRUE = List.of(
+  static final List<SpecFile> TEST_OVER_WRITE_MODEL_TRUE = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testOverWriteModelTrue/api-test.yml")
@@ -357,7 +357,7 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
+  static final List<SpecFile> TEST_VALIDATION_ANNOTATIONS = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
@@ -368,7 +368,7 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
-  final static List<SpecFile> TEST_VALIDATION_ANNOTATIONS_LOMBOK = List.of(
+  static final List<SpecFile> TEST_VALIDATION_ANNOTATIONS_LOMBOK = List.of(
       SpecFile
           .builder()
           .filePath("openapigenerator/testValidationAnnotations/api-test.yml")
@@ -1568,10 +1568,6 @@ public final class OpenApiGeneratorFixtures {
 
   static Function<Path, Boolean> validateApiWithNoComponents() {
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents";
-
-    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model";
-
-    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testApiWithNoComponents/model/exception";
 
     final List<String> expectedTestApiFiles = List.of(
         "openapigenerator/testApiWithNoComponents/assets/TestApi.java"

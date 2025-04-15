@@ -12,7 +12,7 @@ jobs:
     if: github.event.review.state == 'approved'
     steps:
       - name: Warn about missing labels
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'release') && !contains(github.event.pull_request.labels.*.name, 'documentation') && !contains(github.event.pull_request.labels.*.name, 'maven') && !contains(github.event.pull_request.labels.*.name, 'gradle')}}}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'release') && !contains(github.event.pull_request.labels.*.name, 'documentation') && !contains(github.event.pull_request.labels.*.name, 'maven') && !contains(github.event.pull_request.labels.*.name, 'gradle')}}
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

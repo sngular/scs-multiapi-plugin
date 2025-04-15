@@ -1,0 +1,116 @@
+asyncapi: 3.0.0
+info:
+  title: Order Service
+  version: 1.0.0
+  description: Order management Service
+servers:
+  development:
+    host: development.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Development server
+  staging:
+    host: staging.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Staging server
+  production:
+    host: api.gigantic-server.com
+    protocol: kafka
+    protocolVersion: 0.9.1
+    description: Production server
+channels:
+  order.created:
+    address: order.created
+    messages:
+      OrderCreatedMessage:
+        $ref: '#/components/messages/OrderCreated'
+  order.createCommand:
+    address: order.createCommand
+    messages:
+      CreateOrderMessage:
+        $ref: '#/components/messages/CreateOrder'
+operations:
+  publishOperationStreamBridge:
+    action: send
+    description: "Operation to publish order created events"
+    channel:
+      $ref: '#/channels/order.created'
+    messages:
+
+      - $ref: '#/channels/order.created/messages/OrderCreatedMessage'
+  subscribeOperationStreamBridge:
+    description: "Operation to subscribe to order creation commands"
+    action: receive
+    channel:
+      $ref: '#/channels/order.createCommand'
+    messages:
+      - $ref: '#/channels/order.createCommand/messages/CreateOrderMessage'
+components:
+  messages:
+    OrderCreated:
+      payload:
+        $ref: '#/components/schemas/Order'
+    CreateOrder:
+      payload:
+        type: object
+        properties:
+          order:
+            $ref: '#/components/schemas/Order'
+          waiter:
+            $ref: '#/components/schemas/Waiter'
+  schemas:
+    Waiter:
+      type: object
+      properties:
+        ref:
+          type: string
+        timestamp:
+          type: string
+          format: 'dd/mm/yyyy hh:MM:sss'
+        table:
+          type: string
+    Order:
+      type: object
+      properties:
+        ref:
+          type: string
+        clientRef:
+          type: string
+        amount:
+          type: string
+          format: decimal
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLine'
+    OrderLine:
+      type: object
+      required:
+      - ref
+      - products
+      properties:
+        ref:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderProduct'
+    OrderProduct:
+      type: object
+      required:
+      - ref
+      - productRef
+      - price
+      - quantity
+      properties:
+        ref:
+          type: string
+        productRef:
+          type: string
+        price:
+          type: string
+          format: decimal
+        quantity:
+          type: string
+          format: decimal

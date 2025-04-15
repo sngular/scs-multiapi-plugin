@@ -6,15 +6,6 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
@@ -23,7 +14,6 @@ import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
-import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
@@ -35,6 +25,11 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
 
 public class OpenApiGenerator {
 
@@ -80,18 +75,14 @@ public class OpenApiGenerator {
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     for (SpecFile specFile : specsListFile) {
-      try {
         processPackage(specFile.getApiPackage());
         processFile(specFile);
         createClients(specFile);
         templateFactory.clearData();
-      } catch (final IOException e) {
-        throw new CodeGenerationException("Code generation failed. See above for the full exception.", e);
-      }
     }
   }
 
-  private void processFile(final SpecFile specFile) throws IOException {
+  private void processFile(final SpecFile specFile) {
 
     final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, specFile);
     final String clientPackage = specFile.getClientPackage();

@@ -19,11 +19,12 @@ import java.util.Objects;
 public class ClasspathTemplateLoader extends CommonTemplateLoader {
 
 
-  private static final List<String> TEMPLATE_FILES = List.of("templateSuppliers.ftlh", "interfaceConsumer.ftlh", "templateConsumers.ftlh",
-                                                             "interfaceSupplier.ftlh", "templateStreamBridge.ftlh",
-          "interfaceSupplierWithKafkaBindings.ftlh", "templateSuppliersWithKafkaBindings.ftlh",
-                                                             "interfaceConsumerWithKafkaBindings.ftlh", "templateConsumersWithKafkaBindings.ftlh",
-                                                             "templateStreamBridgeWithKafkaBindings.ftlh", "templateMessageWrapper.ftlh");
+  private static final List<String> TEMPLATE_FILES = List.of(
+          "interfaceConsumer.ftlh", "interfaceConsumerWithKafkaBindings.ftlh",
+          "interfaceSupplier.ftlh", "interfaceSupplierWithKafkaBindings.ftlh",
+          "templateConsumers.ftlh", "templateConsumersWithKafkaBindings.ftlh",
+          "templateMessageWrapper.ftlh", "templateStreamBridge.ftlh", "templateStreamBridgeWithKafkaBindings.ftlh",
+          "templateSuppliers.ftlh", "templateSuppliersWithKafkaBindings.ftlh");
   public ClasspathTemplateLoader() {
     super();
     init(getResourceFolderFiles());

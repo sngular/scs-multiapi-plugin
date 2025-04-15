@@ -6,39 +6,23 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BiConsumer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
-import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
-import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
+import com.sngular.api.generator.plugin.common.tools.*;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
-import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
-import com.sngular.api.generator.plugin.openapi.model.ContentObject;
-import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.*;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject.GlobalObjectBuilder;
-import com.sngular.api.generator.plugin.openapi.model.OperationObject;
-import com.sngular.api.generator.plugin.openapi.model.ParameterObject;
-import com.sngular.api.generator.plugin.openapi.model.PathObject;
-import com.sngular.api.generator.plugin.openapi.model.RequestObject;
-import com.sngular.api.generator.plugin.openapi.model.ResponseObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 
 public class MapperPathUtil {
 
@@ -422,19 +406,19 @@ public class MapperPathUtil {
     final String refValue = ApiTool.getRefValue(schema);
     if (refValue.contains("schemas")) {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getSchemaMap(),
-        baseDir.resolve(specFile.getFilePath()).getParent());
+        baseDir.resolve(specFile.getFilePath()).getParent().toUri());
     } else if (refValue.contains("requestBodies")) {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getRequestBodyMap(),
-        baseDir.resolve(specFile.getFilePath()).getParent());
+        baseDir.resolve(specFile.getFilePath()).getParent().toUri());
     } else if (refValue.contains("parameters")) {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getParameterMap(),
-        baseDir.resolve(specFile.getFilePath()).getParent());
+        baseDir.resolve(specFile.getFilePath()).getParent().toUri());
     } else if (refValue.contains("responseBodies")) {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getResponseMap(),
-        baseDir.resolve(specFile.getFilePath()).getParent());
+        baseDir.resolve(specFile.getFilePath()).getParent().toUri());
     } else {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getSchemaMap(),
-          baseDir.resolve(specFile.getFilePath()).getParent());
+          baseDir.resolve(specFile.getFilePath()).getParent().toUri());
       globalObject.getSchemaMap().put(inlinePojoName, refSchema);
     }
     return refSchema;
@@ -443,27 +427,15 @@ public class MapperPathUtil {
   private static SchemaFieldObjectType getObjectOrType(
       final JsonNode schema, final String pojoName, final SpecFile specFile, final GlobalObject globalObject,
       final Path baseDir) {
-    final SchemaFieldObjectType type;
-    switch (ApiTool.getType(schema)) {
-      case TypeConstants.OBJECT:
-        type = SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, pojoName);
-        break;
-      case TypeConstants.INTEGER:
-        type = new SchemaFieldObjectType(getIntegerFormat(schema));
-        break;
-      case TypeConstants.NUMBER:
-        type = new SchemaFieldObjectType(getNumberFormat(schema));
-        break;
-      case TypeConstants.BOOLEAN:
-        type = new SchemaFieldObjectType(TypeConstants.BOOLEAN);
-        break;
-      case TypeConstants.ARRAY:
-        type = new SchemaFieldObjectType(TypeConstants.ARRAY, getSchemaType(ApiTool.getItems(schema), pojoName, specFile, globalObject, baseDir));
-        break;
-      default:
-        type = new SchemaFieldObjectType(TypeConstants.STRING);
-    }
-    return type;
+    return switch (ApiTool.getType(schema)) {
+      case TypeConstants.OBJECT -> SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, pojoName);
+      case TypeConstants.INTEGER -> new SchemaFieldObjectType(getIntegerFormat(schema));
+      case TypeConstants.NUMBER -> new SchemaFieldObjectType(getNumberFormat(schema));
+      case TypeConstants.BOOLEAN -> new SchemaFieldObjectType(TypeConstants.BOOLEAN);
+      case TypeConstants.ARRAY ->
+          new SchemaFieldObjectType(TypeConstants.ARRAY, getSchemaType(ApiTool.getItems(schema), pojoName, specFile, globalObject, baseDir));
+      default -> new SchemaFieldObjectType(TypeConstants.STRING);
+    };
   }
 
   private static SchemaFieldObjectType getMapSchemaType(

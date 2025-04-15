@@ -1,0 +1,67 @@
+asyncapi: "3.0.0"
+info:
+  title: Demo API
+  version: "1.0.0"
+
+servers:
+  development:
+    host: development.example.com
+    protocol: kafka
+
+operations:
+  emitUserSignUpEvent:
+    action: receive
+    channel:
+      $ref: '#/channels/user~1signedup'
+    messages:
+      - $ref: '#/components/messages/UserSignedUp'
+
+channels:
+  user/signedup:
+    address: user/signedup
+
+components:
+  messages:
+    UserSignedUp:
+      name: userSignedUp
+      title: User signed up event
+      summary: Inform about a new user registration in the system
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/userSignedUpPayload'
+
+  schemas:
+    userSignedUpPayload:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: "foo"
+          const: "Jose"
+        lastName:
+          type: string
+          description: "bar"
+          const: "Garcia"
+        email:
+          type: string
+          format: email
+          description: "baz"
+          const: "je.garcia@oneemail.com"
+        createdAt:
+          type: string
+          format: date-time
+        numberEnum:
+          type: string
+          enum:
+          - '1234'
+          - '2345'
+          - '3456'
+        someOtherObject:
+          type: object
+          properties:
+            property1:
+              type: integer
+              const: 3
+            property2:
+              type: integer
+              const: 6

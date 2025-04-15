@@ -1,0 +1,107 @@
+asyncapi: 3.0.0
+info:
+  title: CheckIn Kafka API
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+    url: https://example.com/support
+  description: |
+    API de Check In para clientes.
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0"
+  tags:
+    - name: clients
+      description: Client related operations
+    - name: status
+      description: Status related operations
+servers:
+  local-kafka:
+    host: localhost:9092
+    protocol: kafka
+channels:
+  clients:
+    address: clients
+    messages:
+      dataClient:
+        $ref: "#/components/messages/dataClient"
+  response:
+    address: response
+    messages:
+      status:
+        $ref: "#/components/messages/status"
+operations:
+  customValidatorClients:
+    action: send
+    description: "Send client data"
+    channel:
+      $ref: "#/channels/clients"
+    messages:
+      - $ref: "#/components/messages/dataClient"
+  customValidatorResponse:
+    action: receive
+    description: "Receive status response"
+    channel:
+      $ref: "#/channels/response"
+    messages:
+      - $ref: "#/components/messages/status"
+components:
+  messages:
+    status:
+      name: status
+      title: Envia status
+      summary: Envia el estado de la solicitud
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/statusMsg"
+    dataClient:
+      name: dataClient
+      title: Datos del cliente
+      summary: Comando que envia los datos del cliente.
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/data"
+  schemas:
+    statusMsg:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          description: Id del cliente.
+        status:
+          type: string
+          enum:
+          - OK
+          - KO
+    data:
+      type: object
+      required:
+      - clientId
+      - clientName
+      - test
+      - flightNumber
+      properties:
+        clientId:
+          type: integer
+          exclusiveMinimum: 10
+          exclusiveMaximum: 200
+          multipleOf: 10
+          description: Id del cliente.
+        clientName:
+          description: Nombre del cliente.
+          type: string
+          minLength: 50
+          maxLength: 200
+          pattern: "^[a-zA-Z0-9_.-]*$"
+        flightNumber:
+          description: Número de vuelo.
+          type: string
+        test:
+          type: array
+          items:
+            type: integer
+          maxItems: 10
+          minItems: 5
+          uniqueItems: true
+          description: Array para probar anotaciones

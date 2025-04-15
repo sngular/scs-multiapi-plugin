@@ -1,0 +1,116 @@
+asyncapi: 3.0.0
+info:
+  title: Component MQTT interface contract
+  version: '1.0.0'
+  description: |
+    This document describe the input and output of the component
+
+defaultContentType: application/json
+servers:
+  mqtt:
+    host: localhost
+    protocol: mqtt
+channels:
+  events/public/output/{organizationId}:
+    address: events/public/output/{organizationId}
+    description: The output topic
+    parameters:
+      organizationId:
+        $ref: '#/components/parameters/organizationId'
+    messages:
+      output:
+        $ref: '#/components/messages/output'
+  events/public/input/{organizationId}:
+    address: events/public/input/{organizationId}
+    description: The input topic
+    parameters:
+      organizationId:
+        $ref: '#/components/parameters/organizationId'
+    messages:
+      input:
+        $ref: '#/components/messages/input'
+operations:
+  output:
+    action: receive
+    description: Receive output messages
+    channel:
+      $ref: '#/channels/events~1public~1output~1{organizationId}'
+    messages:
+      - $ref: '#/components/messages/output'
+    traits:
+      - bindings:
+          mqtt:
+            retain: true
+  input:
+    action: send
+    description: Send input messages
+    channel:
+      $ref: '#/channels/events~1public~1input~1{organizationId}'
+    messages:
+      - $ref: '#/components/messages/input'
+    traits:
+      - bindings:
+          mqtt:
+            retain: true
+components:
+  messages:
+    output:
+      name: output
+      title: Output message
+      summary: bob
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/output"
+    input:
+      name: inputmsg
+      title: input message
+      summary: eve
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/input"
+  schemas:
+    input:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - "input"
+        data: # DATA Object first definition
+          type: object
+          properties:
+            commitId:
+              type: string
+              examples:
+              - "toto"
+              - "tata"
+    output:
+      type: object
+      properties:
+        source:
+          type: string
+          enum:
+          - "tenant"
+        type:
+          type: string
+          enum:
+          - "update"
+          - "delete"
+        data: # DATA object second definition
+          type: object
+          properties:
+            tenantId:
+              type: string
+              examples:
+              - tenant1
+            name:
+              type: string
+              examples:
+              - "hugues"
+  parameters:
+    organizationId:
+    description: The identifier of an organization
+    type: string
+    examples:
+      - "toto"
+      - "bob"
