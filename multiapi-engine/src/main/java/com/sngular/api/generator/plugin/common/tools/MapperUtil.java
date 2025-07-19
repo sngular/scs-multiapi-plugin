@@ -22,6 +22,7 @@ public class MapperUtil {
   private static final String SLASH = "/";
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
+  public static final String JAVA_TIME = "java.time.";
 
   private MapperUtil() {}
 
@@ -154,37 +155,19 @@ public class MapperUtil {
   }
 
   public static String getDateType(final JsonNode schema, final CommonSpecFile specFile) {
-    final String dateType;
-    switch (ApiTool.getFormat(schema)) {
-
-      case "date":
-        switch (specFile.getUseTimeType()) {
-          case ZONED:
-            dateType = TypeConstants.ZONEDDATE;
-            break;
-          case OFFSET:
-            dateType = TypeConstants.OFFSETDATE;
-            break;
-          default:
-            dateType = TypeConstants.LOCALDATE;
-        }
-        break;
-      case "date-time":
-        switch (specFile.getUseTimeType()) {
-          case ZONED:
-            dateType = TypeConstants.ZONEDDATETIME;
-            break;
-          case OFFSET:
-            dateType = TypeConstants.OFFSETDATETIME;
-            break;
-          default:
-            dateType = TypeConstants.LOCALDATETIME;
-        }
-        break;
-      default:
-        dateType = TypeConstants.LOCALDATETIME;
-    }
-    return dateType;
+    return switch (ApiTool.getFormat(schema)) {
+      case "date" -> switch (specFile.getUseTimeType()) {
+        case ZONED -> TypeConstants.ZONEDDATE;
+        case OFFSET -> TypeConstants.OFFSETDATE;
+        default -> TypeConstants.LOCALDATE;
+      };
+      case "date-time" -> switch (specFile.getUseTimeType()) {
+        case ZONED -> TypeConstants.ZONEDDATETIME;
+        case OFFSET -> TypeConstants.OFFSETDATETIME;
+        default -> TypeConstants.LOCALDATETIME;
+      };
+      default -> TypeConstants.LOCALDATETIME;
+    };
   }
 
   public static String getRefClass(final JsonNode schema) {
