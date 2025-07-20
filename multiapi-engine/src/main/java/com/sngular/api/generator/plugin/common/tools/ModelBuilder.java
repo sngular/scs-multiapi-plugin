@@ -789,7 +789,8 @@ public final class ModelBuilder {
           break;
         case TypeConstants.STRING:
         default:
-          enumValuesMap.put(StringUtils.upperCase(valueName), '"' + enumValue + '"');
+          enumValuesMap.put(StringUtils.replace(StringUtils.upperCase(valueName), " ", "_"),
+                  '"' + enumValue + '"');
           break;
       }
     }
