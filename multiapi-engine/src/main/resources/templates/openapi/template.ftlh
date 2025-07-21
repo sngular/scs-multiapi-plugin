@@ -1,6 +1,52 @@
 <#ftl output_format="plainText">
 package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 
+<#assign imports=[]>
+<#assign model_imports=[]>
+<#list pathObjects as path>
+    <#list path.operationObjects as operation>
+        <#list operation.requestObjects as request>
+            <#list request.contentObjects as content>
+                <#if content.importName?? && (!imports?seq_contains(content.importName)) && (!model_imports?seq_contains(content.importName))>
+                    <#if (!checkBasicTypes?seq_contains(content.importName))>
+                        <#if (!content.importName?contains("java."))>
+                            <#assign model_imports = model_imports+[content.importName]>
+                        <#else>
+                            <#assign imports = imports+[content.importName]>
+                        </#if>
+                    </#if>
+                </#if>
+            </#list>
+        </#list>
+        <#list operation.responseObjects as response>
+            <#list response.contentObjects as content>
+                <#if content.importName?? && (!imports?seq_contains(content.importName)) && (!model_imports?seq_contains(content.importName))>
+                    <#if (!checkBasicTypes?seq_contains(content.importName))>
+                        <#if (!content.importName?contains("java."))>
+                            <#assign model_imports = model_imports+[content.importName]>
+                        <#else>
+                            <#assign imports = imports+[content.importName]>
+                        </#if>
+                    </#if>
+                </#if>
+            </#list>
+        </#list>
+        <#list operation.parameterObjects as parameter>
+            <#if parameter.importName?? && (!imports?seq_contains(parameter.importName)) && (!model_imports?seq_contains(parameter.importName))>
+                <#if (!checkBasicTypes?seq_contains(parameter.importName))>
+                    <#if (!parameter.importName?contains("java."))>
+                        <#assign model_imports = model_imports+[parameter.importName]>
+                    <#else>
+                        <#assign imports = imports+[parameter.importName]>
+                    </#if>
+                </#if>
+            </#if>
+        </#list>
+    </#list>
+</#list>
+<#list imports as import>
+import ${import};
+</#list>
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
@@ -17,37 +63,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-<#assign imports=[]>
-<#list pathObjects as path>
-  <#list path.operationObjects as operation>
-    <#list operation.requestObjects as request>
-      <#list request.contentObjects as content>
-        <#if content.importName?? && (!imports?seq_contains(content.importName))>
-          <#if (!checkBasicTypes?seq_contains(content.importName))>
-            <#assign imports = imports+[content.importName]>
-          </#if>
-        </#if>
-      </#list>
-    </#list>
-    <#list operation.responseObjects as response>
-      <#list response.contentObjects as content>
-        <#if content.importName?? && (!imports?seq_contains(content.importName))>
-          <#if (!checkBasicTypes?seq_contains(content.importName))>
-            <#assign imports = imports+[content.importName]>
-          </#if>
-        </#if>
-      </#list>
-    </#list>
-    <#list operation.parameterObjects as parameter>
-        <#if parameter.importName?? && (!imports?seq_contains(parameter.importName))>
-          <#if (!checkBasicTypes?seq_contains(parameter.importName))>
-            <#assign imports = imports+[parameter.importName]>
-          </#if>
-        </#if>
-    </#list>
-  </#list>
-</#list>
-<#list imports as import>
+<#list model_imports as import>
 import <#if packageModel??>${packageModel}<#elseif package??>${package}</#if>.${import};
 </#list>
 

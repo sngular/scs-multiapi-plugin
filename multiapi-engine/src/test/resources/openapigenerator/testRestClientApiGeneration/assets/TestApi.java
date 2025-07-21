@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.restclient;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,25 +75,29 @@ public class TestApi {
 
   /**
    * GET /test/{testId}: Info for a specific test
-   * @param testId The id of the test to retrieve true
+   * @param testId The id of the test to retrieve (required)
+   * @param pathVariableDate   (required)
+   * @param QueryParamDate   (required)
    * @return Expected response to a valid request; (status code 200)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public ApiTestInfoDTO showTestById(Integer testId) throws RestClientException {
-    return showTestByIdWithHttpInfo(testId).getBody();
+  public ApiTestInfoDTO showTestById(Integer testId, LocalDateTime pathVariableDate, LocalDateTime QueryParamDate) throws RestClientException {
+    return showTestByIdWithHttpInfo(testId, pathVariableDate, QueryParamDate).getBody();
   }
 
-  public ResponseEntity<ApiTestInfoDTO> showTestByIdWithHttpInfo(Integer testId) throws RestClientException {
+  public ResponseEntity<ApiTestInfoDTO> showTestByIdWithHttpInfo(Integer testId, LocalDateTime pathVariableDate, LocalDateTime QueryParamDate) throws RestClientException {
 
     Object postBody = null;
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
     uriVariables.put("testId",  testId);
+    uriVariables.put("pathVariableDate",  pathVariableDate);
     final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
+    queryParams.putAll(apiRestClient.parameterToMultiValueMap( null, "QueryParamDate", QueryParamDate));
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
     final String[] localVarContentTypes = {};
@@ -106,7 +111,7 @@ public class TestApi {
 
   /**
    * DELETE /test/{testId}: Info for a specific test
-   * @param testId The id of the test to retrieve true
+   * @param testId The id of the test to retrieve (required)
    * @return No content response; (status code 204)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */

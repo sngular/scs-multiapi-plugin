@@ -1,44 +1,59 @@
 <#ftl output_format="plainText">
 package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ${packageClient}.ApiWebClient;
-
 <#assign imports=[]>
+<#assign model_imports=[]>
 <#list pathObjects as path>
   <#list path.operationObjects as operation>
     <#list operation.requestObjects as request>
       <#list request.contentObjects as content>
-        <#if content.importName?? && (!imports?seq_contains(content.importName))>
+        <#if content.importName?? && (!imports?seq_contains(content.importName)) && (!model_imports?seq_contains(content.importName))>
           <#if (!checkBasicTypes?seq_contains(content.importName))>
-            <#assign imports = imports+[content.importName]>
+            <#if (!content.importName?contains("java."))>
+              <#assign model_imports = model_imports+[content.importName]>
+            <#else>
+              <#assign imports = imports+[content.importName]>
+            </#if>
           </#if>
         </#if>
       </#list>
     </#list>
     <#list operation.responseObjects as response>
       <#list response.contentObjects as content>
-        <#if content.importName?? && (!imports?seq_contains(content.importName))>
+        <#if content.importName?? && (!imports?seq_contains(content.importName)) && (!model_imports?seq_contains(content.importName))>
           <#if (!checkBasicTypes?seq_contains(content.importName))>
-            <#assign imports = imports+[content.importName]>
+            <#if (!content.importName?contains("java."))>
+              <#assign model_imports = model_imports+[content.importName]>
+            <#else>
+              <#assign imports = imports+[content.importName]>
+            </#if>
           </#if>
         </#if>
       </#list>
     </#list>
     <#list operation.parameterObjects as parameter>
-        <#if parameter.importName?? && (!imports?seq_contains(parameter.importName))>
-          <#if (!checkBasicTypes?seq_contains(parameter.importName))>
+      <#if parameter.importName?? && (!imports?seq_contains(parameter.importName)) && (!model_imports?seq_contains(parameter.importName))>
+        <#if (!checkBasicTypes?seq_contains(parameter.importName))>
+          <#if (!parameter.importName?contains("java."))>
+            <#assign model_imports = model_imports+[parameter.importName]>
+          <#else>
             <#assign imports = imports+[parameter.importName]>
           </#if>
         </#if>
+      </#if>
     </#list>
   </#list>
 </#list>
 <#list imports as import>
-import <#if packageModel??>${packageModel}<#elseif package??>${package}List<</#if>.${import};
+import ${import};
+</#list>
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ${packageClient}.ApiWebClient;
+<#list model_imports as import>
+import <#if packageModel??>${packageModel}<#elseif package??>${package}</#if>.${import};
 </#list>
 
 import ${packageAuth}.Authentication;
@@ -214,13 +229,19 @@ public class ${className?cap_first}Api {
    * ${operation.operationType} ${path.pathName}<#if operation.summary?has_content>: ${operation.summary}</#if>
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
-   * @param<#list operation.parameterObjects as parameter> ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+   <#list operation.parameterObjects as parameter>
+   * @param ${parameter.name} ${parameter.description} <#if parameter.required == true>(required)</#if>
+   </#list>
   </#if>
   <#if path.parameterObjects?has_content>
-   * <#list operation.parameterObjects as parameter>@param ${parameter.name} ${parameter.description} ${parameter.required?c}</#list>
+<#list operation.parameterObjects as parameter>
+  * @param ${parameter.name} ${parameter.description} <#if parameter.required == true>(required)</#if>
+</#list>
   </#if>
   <#if operation.requestObjects?has_content>
-   * <#list operation.requestObjects as request>@param <#list request.contentObjects as content>${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if></#list>
+<#list operation.requestObjects as request>
+   * @param <#list request.contentObjects as content>${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if>
+</#list>
   </#if>
    * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>

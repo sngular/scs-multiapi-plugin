@@ -6,12 +6,13 @@
 
 package com.sngular.api.generator.plugin.common.model;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.Map;
-import java.util.Objects;
 import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Map;
+import java.util.Objects;
 
 @Data
 public class SchemaFieldObjectType {
@@ -36,6 +37,21 @@ public class SchemaFieldObjectType {
     new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, OFFSET_DATE_TIME),
     new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, OFFSET_DATE_TIME),
     new SimpleImmutableEntry<>(TypeConstants.MULTIPART_FILE, "MultipartFile")
+  );
+
+  private static final Map<String, String> IMPORT_TYPE_MAPPINGS = Map.ofEntries(
+      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "java.util.Object"),
+      new SimpleImmutableEntry<>(TypeConstants.ARRAY, "java.util.List"),
+      new SimpleImmutableEntry<>(TypeConstants.MAP, "java.util.Map"),
+      new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "java.math.BigDecimal"),
+      new SimpleImmutableEntry<>(TypeConstants.STRING, "java.util.String"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "java.time.LocalDate"),
+      new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "java.time.LocalDateTime"),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "java.time." + ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.ZONEDDATETIME, "java.time." + ZONED_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATE, "java.time." + OFFSET_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.OFFSETDATETIME, "java.time." + OFFSET_DATE_TIME),
+      new SimpleImmutableEntry<>(TypeConstants.MULTIPART_FILE, "MultipartFile")
   );
 
   private static final Map<String, String> IMPL_TYPE_MAPPINGS = Map.ofEntries(
@@ -141,8 +157,7 @@ public class SchemaFieldObjectType {
   @Override
   public boolean equals(final Object obj) {
     boolean result = false;
-    if (obj instanceof SchemaFieldObjectType) {
-      final SchemaFieldObjectType other = (SchemaFieldObjectType) obj;
+    if (obj instanceof SchemaFieldObjectType other) {
       final boolean baseTypeIsEqual = baseType.equals(other.baseType);
       final boolean innerTypeIsEqual = Objects.isNull(innerType) ? Objects.isNull(other.innerType) : innerType.equals(other.innerType);
       result = baseTypeIsEqual && innerTypeIsEqual;
@@ -154,5 +169,9 @@ public class SchemaFieldObjectType {
   @Override
   public int hashCode() {
     return Objects.hash(Objects.isNull(innerType) ? 0 : innerType.hashCode(), baseType);
+  }
+
+  public String getImportName() {
+    return IMPORT_TYPE_MAPPINGS.get(this.baseType);
   }
 }
