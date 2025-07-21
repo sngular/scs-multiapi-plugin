@@ -48,6 +48,18 @@ paths:
         schema:
           type: integer
           format: int32
+      - name: pathVariableDate
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: QueryParamDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
       responses:
         '200':
           description: Expected response to a valid request

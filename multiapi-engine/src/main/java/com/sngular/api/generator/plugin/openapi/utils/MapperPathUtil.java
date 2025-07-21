@@ -238,13 +238,15 @@ public class MapperPathUtil {
 
   private static ParameterObject buildParameterObject(
        final SpecFile specFile, final GlobalObject globalObject, final JsonNode refParameter, final Path baseDir) {
+    final var dateType = getSchemaType(getContentOrSchema(refParameter), TypeConstants.OBJECT, specFile, globalObject, baseDir);
     return ParameterObject.builder()
                           .name(ApiTool.getName(refParameter))
                           .required(ApiTool.getNodeAsBoolean(refParameter, REQUIRED))
                           .description(ApiTool.getNodeAsString(refParameter, DESCRIPTION))
                           .in(ApiTool.getNodeAsString(refParameter, "in"))
-                          .dataType(getSchemaType(getContentOrSchema(refParameter), TypeConstants.OBJECT, specFile, globalObject, baseDir))
+                          .dataType(dateType)
                           .isCollection(ApiTool.hasItems(getContentOrSchema(refParameter)))
+                          .importName(dateType.getImportName())
                           .build();
   }
 

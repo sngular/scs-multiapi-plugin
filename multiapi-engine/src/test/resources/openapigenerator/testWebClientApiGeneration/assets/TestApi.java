@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.sngular.apigenerator.openapi.client.ApiWebClient;
-
 import com.sngular.multifileplugin.webclientapi.model.ApiTestDTO;
 import com.sngular.multifileplugin.webclientapi.model.ApiErrorDTO;
 import com.sngular.multifileplugin.webclientapi.model.ApiTestInfoDTO;
@@ -111,7 +110,7 @@ public class TestApi {
 
   /**
    * GET /test/{testId}: Info for a specific test
-   * @param testId The id of the test to retrieve true
+   * @param testId The id of the test to retrieve (required)
    * @return Expected response to a valid request; (status code 200)
    * @throws WebClientResponseException if an error occurs while attempting to invoke the API
    */
