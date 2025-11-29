@@ -1,8 +1,26 @@
 package com.sngular.api.generator.plugin.asyncapi.handler;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sngular.api.generator.plugin.asyncapi.exception.*;
+import com.sngular.api.generator.plugin.asyncapi.exception.ChannelNameException;
+import com.sngular.api.generator.plugin.asyncapi.exception.DuplicatedOperationException;
+import com.sngular.api.generator.plugin.asyncapi.exception.ExternalRefComponentNotFoundException;
+import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAsyncAPIException;
+import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAvroException;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessBindingsResult;
 import com.sngular.api.generator.plugin.asyncapi.model.ProcessMethodResult;
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject;
@@ -21,21 +39,15 @@ import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.Map.Entry;
-
 public class AsyncApi3Handler extends BaseAsyncApiHandler {
 
-  public AsyncApi3Handler(final Integer springBootVersion,
-                         boolean overwriteModel,
-                         final File targetFolder,
-                         final String processedGeneratedSourcesFolder,
-                         final String groupId,
-                         final File baseDir) {
+  public AsyncApi3Handler(
+      final Integer springBootVersion,
+      boolean overwriteModel,
+      final File targetFolder,
+      final String processedGeneratedSourcesFolder,
+      final String groupId,
+      final File baseDir) {
     super(springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, baseDir);
   }
 
@@ -83,15 +95,15 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
 
     ApiTool.getComponent(node, SCHEMAS).forEachRemaining(
         schema -> totalSchemas.putIfAbsent(SCHEMAS.toUpperCase() + SLASH + MapperUtil.getSchemaKey(schema.getKey()), schema.getValue())
-    );
+                                                        );
 
     ApiTool.getComponent(node, MESSAGES).forEachRemaining(
         message -> getMessageSchemas(message.getKey(), message.getValue(), ymlParent, totalSchemas)
-    );
+                                                         );
 
     getChannels(node).forEachRemaining(
         channel -> getChannelSchemas(channel.getValue(), totalSchemas, ymlParent)
-    );
+                                      );
 
     return totalSchemas;
   }
@@ -101,7 +113,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
       final SpecFile fileParameter, final FileLocation ymlParent, final Entry<String, JsonNode> entry, final JsonNode channel,
       final String operationId, final JsonNode operation, final Map<String, JsonNode> totalSchemas) throws IOException, TemplateException {
     final String action = ApiTool.getNodeAsString(operation, "action");
-    if (!StringUtils.endsWithIgnoreCase(action,"send") && !StringUtils.endsWithIgnoreCase(action,"receive")) {
+    if (!StringUtils.endsWithIgnoreCase(action, "send") && !StringUtils.endsWithIgnoreCase(action, "receive")) {
       throw new InvalidAsyncAPIException("Operation action must be either 'send' or 'receive'");
     }
 
@@ -137,7 +149,8 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
 
   @Override
   protected void processStreamBridgeMethod(
-      final String operationId, final JsonNode operation, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName, final Map<String, JsonNode> totalSchemas)
+      final String operationId, final JsonNode operation, final OperationParameterObject operationObject, final FileLocation ymlParent, final String channelName,
+      final Map<String, JsonNode> totalSchemas)
       throws IOException {
     final ProcessMethodResult result = processMethod(operationId, operation, operationObject, ymlParent, totalSchemas);
     if (!channelName.matches("[a-zA-Z0-9.\\-]*")) {
@@ -148,7 +161,8 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
   }
 
   @Override
-  protected void processSubscribeMethod(final String operationId,
+  protected void processSubscribeMethod(
+      final String operationId,
       final JsonNode operation, final OperationParameterObject operationObject, final FileLocation ymlParent,
       final Map<String, JsonNode> totalSchemas) throws IOException {
     final ProcessMethodResult result = processMethod(operationId, operation, operationObject, ymlParent, totalSchemas);
@@ -157,7 +171,8 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
   }
 
   @Override
-  protected void fillTemplateFactory(final String operationId,
+  protected void fillTemplateFactory(
+      final String operationId,
       final ProcessMethodResult processedMethod, final Map<String, JsonNode> totalSchemas, final OperationParameterObject operationObject)
       throws IOException {
     final String classFullName = processedMethod.getNamespace();
@@ -235,19 +250,6 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
     return processPayload(operationObject, MapperUtil.getRefClass(method), solvePayload(message, totalSchemas, ymlParent), ymlParent);
   }
 
-  private JsonNode solvePayload(final JsonNode message, Map<String, JsonNode> totalSchemas, FileLocation ymlParent) {
-    JsonNode payloadNode;
-    if (ApiTool.hasNode(message, PAYLOAD)) {
-      payloadNode = ApiTool.getNode(message, PAYLOAD);
-    } else if (ApiTool.hasRef(message)) {
-      final var solvedMessage = SchemaUtil.solveRef(ApiTool.getRefValue(message), totalSchemas, ymlParent.getPath());
-      payloadNode = solvePayload(solvedMessage, totalSchemas, ymlParent);
-    } else {
-      payloadNode = message;
-    }
-    return payloadNode;
-  }
-
   @Override
   protected String processMessageRef(final JsonNode messageBody, final String modelPackage, final FileLocation ymlParent) throws IOException {
     final String namespace;
@@ -255,7 +257,7 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
     if (messageContent.startsWith("#")) {
       namespace = processModelPackage(MapperUtil.getLongRefClass(messageBody), modelPackage);
     } else if (messageContent.contains("#") || StringUtils.endsWith(messageContent, "yml")
-        || StringUtils.endsWith(messageContent, "yaml") || StringUtils.endsWith(messageContent, "json")) {
+               || StringUtils.endsWith(messageContent, "yaml") || StringUtils.endsWith(messageContent, "json")) {
       namespace = processExternalRef(modelPackage, ymlParent, messageBody);
     } else {
       namespace = processExternalAvro(ymlParent, messageContent);
@@ -278,7 +280,9 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
       final JsonNode fileTree = mapper.readTree(avroFile);
       final JsonNode avroNamespace = fileTree.get("namespace");
 
-      if (avroNamespace == null) throw new InvalidAvroException(avroFilePath);
+      if (avroNamespace == null) {
+        throw new InvalidAvroException(avroFilePath);
+      }
 
       namespace = avroNamespace.asText() + PACKAGE_SEPARATOR + fileTree.get("name").asText();
     } catch (final IOException e) {
@@ -306,7 +310,8 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
   }
 
   @Override
-  protected void processBindings(final ProcessBindingsResult.ProcessBindingsResultBuilder bindingsResult, final JsonNode message,
+  protected void processBindings(
+      final ProcessBindingsResult.ProcessBindingsResultBuilder bindingsResult, final JsonNode message,
       final CommonSpecFile commonSpecFile) {
     if (message.has(BINDINGS)) {
       final var bindingsNode = message.get(BINDINGS);
@@ -347,6 +352,44 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
     }
 
     return processedPackage;
+  }
+
+  @Override
+  protected JsonNode getChannelFromOperation(final JsonNode openApi, final JsonNode operation) {
+    if (operation.has("channel")) {
+      final JsonNode channelRef = operation.get("channel");
+      if (channelRef.has(REF)) {
+        final String channelPath = ApiTool.getRefValue(channelRef);
+        return ApiTool.getNode(openApi, channelPath.substring(1));
+      }
+    }
+    throw new InvalidAsyncAPIException("Operation must have a channel reference");
+  }
+
+  @Override
+  protected String getOperationId(final JsonNode operation) {
+    if (!operation.has(OPERATION_ID)) {
+      throw new InvalidAsyncAPIException("Operation must have an operationId");
+    }
+    final String operationId = operation.get(OPERATION_ID).asText();
+    if (processedOperationIds.contains(operationId)) {
+      throw new DuplicatedOperationException(operationId);
+    }
+    processedOperationIds.add(operationId);
+    return operationId;
+  }
+
+  private JsonNode solvePayload(final JsonNode message, Map<String, JsonNode> totalSchemas, FileLocation ymlParent) {
+    JsonNode payloadNode;
+    if (ApiTool.hasNode(message, PAYLOAD)) {
+      payloadNode = ApiTool.getNode(message, PAYLOAD);
+    } else if (ApiTool.hasRef(message)) {
+      final var solvedMessage = SchemaUtil.solveRef(ApiTool.getRefValue(message), totalSchemas, ymlParent.path());
+      payloadNode = solvePayload(solvedMessage, totalSchemas, ymlParent);
+    } else {
+      payloadNode = message;
+    }
+    return payloadNode;
   }
 
   private Iterator<Entry<String, JsonNode>> getChannels(final JsonNode node) {
@@ -400,30 +443,5 @@ public class AsyncApi3Handler extends BaseAsyncApiHandler {
       result = false;
     }
     return result;
-  }
-
-  @Override
-  protected JsonNode getChannelFromOperation(final JsonNode openApi, final JsonNode operation) {
-    if (operation.has("channel")) {
-      final JsonNode channelRef = operation.get("channel");
-      if (channelRef.has(REF)) {
-        final String channelPath = ApiTool.getRefValue(channelRef);
-        return ApiTool.getNode(openApi, channelPath.substring(1));
-      }
-    }
-    throw new InvalidAsyncAPIException("Operation must have a channel reference");
-  }
-
-  @Override
-  protected String getOperationId(final JsonNode operation) {
-    if (!operation.has(OPERATION_ID)) {
-      throw new InvalidAsyncAPIException("Operation must have an operationId");
-    }
-    final String operationId = operation.get(OPERATION_ID).asText();
-    if (processedOperationIds.contains(operationId)) {
-      throw new DuplicatedOperationException(operationId);
-    }
-    processedOperationIds.add(operationId);
-    return operationId;
   }
 }

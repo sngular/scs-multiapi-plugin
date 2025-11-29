@@ -1,5 +1,20 @@
 package com.sngular.api.generator.plugin.common.tools;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -11,14 +26,6 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
-import java.util.Map.Entry;
-
 public final class ApiTool {
 
   public static final String FORMAT = "format";
@@ -28,6 +35,7 @@ public final class ApiTool {
   public static final String ANY_OF = "anyOf";
 
   public static final String ONE_OF = "oneOf";
+
   public static final String COMPONENTS = "components";
 
   public static final String SCHEMAS = "schemas";
@@ -45,12 +53,12 @@ public final class ApiTool {
   private ApiTool() {
   }
 
-  public static String getType(final JsonNode schema) {
-    return hasType(schema) ? StringUtils.defaultIfEmpty(getNodeAsString(schema, "type"), "") : "";
-  }
-
   public static Iterator<Entry<String, JsonNode>> getProperties(final JsonNode schema) {
     return getNode(schema, "properties").fields();
+  }
+
+  public static JsonNode getNode(final JsonNode schema, final String nodeName) {
+    return schema.get(nodeName);
   }
 
   public static String getRefValue(final JsonNode schema) {
@@ -65,6 +73,14 @@ public final class ApiTool {
     return getNodeAsString(schema, FORMAT);
   }
 
+  public static String getNodeAsString(final JsonNode schema, final String nodeName) {
+    return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
+  }
+
+  public static boolean hasNode(final JsonNode schema, final String nodeName) {
+    return Objects.nonNull(schema) && schema.has(nodeName);
+  }
+
   public static JsonNode getAllOf(final JsonNode schema) {
     return getNode(schema, ALL_OF);
   }
@@ -77,10 +93,6 @@ public final class ApiTool {
     return getNode(schema, ONE_OF);
   }
 
-  public static JsonNode getNode(final JsonNode schema, final String nodeName) {
-    return schema.get(nodeName);
-  }
-
   public static boolean getNodeAsBoolean(final JsonNode schema, final String nodeName) {
     return hasNode(schema, nodeName) && getNode(schema, nodeName).booleanValue();
   }
@@ -89,8 +101,22 @@ public final class ApiTool {
     return hasNode(schema, nodeName) ? getNodeAsType(getNode(schema, nodeName)) : null;
   }
 
-  public static String getNodeAsString(final JsonNode schema, final String nodeName) {
-    return hasNode(schema, nodeName) ? getNode(schema, nodeName).textValue() : null;
+  private static Object getNodeAsType(final JsonNode node) {
+    final Object result;
+    if (node.isBigDecimal()) {
+      result = BigDecimal.valueOf(node.asDouble());
+    } else if (node.isBigInteger()) {
+      result = BigInteger.valueOf(node.asLong());
+    } else if (node.isBoolean()) {
+      result = node.asBoolean();
+    } else if (node.isFloat() || node.isDouble()) {
+      result = node.asDouble();
+    } else if (node.isInt() || node.isNumber()) {
+      result = node.asInt();
+    } else {
+      result = node.asText();
+    }
+    return result;
   }
 
   public static String getNodeAsString(final JsonNode schema) {
@@ -103,7 +129,7 @@ public final class ApiTool {
 
   public static Iterator<Entry<String, JsonNode>> getFieldIterator(final JsonNode schema, final String nodeName) {
     return Objects.isNull(schema) || !hasNode(schema, nodeName) ?
-            IteratorUtils.emptyIterator() : getNode(schema, nodeName).fields();
+               IteratorUtils.emptyIterator() : getNode(schema, nodeName).fields();
   }
 
   public static String getName(final JsonNode node) {
@@ -112,8 +138,12 @@ public final class ApiTool {
 
   public static List<String> getEnumValues(final JsonNode schema) {
     return new ArrayList<>(CollectionUtils.collect(
-      IteratorUtils.toList(schema.get("enum").elements()),
-      getTextValue()));
+        IteratorUtils.toList(schema.get("enum").elements()),
+        getTextValue()));
+  }
+
+  private static Transformer<JsonNode, String> getTextValue() {
+    return JsonNode::asText;
   }
 
   public static JsonNode getItems(final JsonNode schema) {
@@ -122,6 +152,22 @@ public final class ApiTool {
 
   public static Map<String, JsonNode> getComponentSchemas(final JsonNode openApi) {
     return getComponentSchemasByType(openApi, SCHEMAS);
+  }
+
+  private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
+    final var schemasMap = new HashMap<String, JsonNode>();
+
+    if (hasNode(openApi, COMPONENTS)) {
+      final var components = getNode(openApi, COMPONENTS);
+      if (hasNode(components, schemaType)) {
+        final var schemas = getNode(components, schemaType);
+        final var schemasIt = schemas.fieldNames();
+        schemasIt.forEachRemaining(name -> schemasMap.put(schemaType.toUpperCase() + "/" + StringCaseUtils.titleToSnakeCase(name),
+                                                          getNode(schemas, name)));
+      }
+    }
+
+    return schemasMap;
   }
 
   public static Map<String, JsonNode> getParameterSchemas(final JsonNode openApi) {
@@ -134,22 +180,6 @@ public final class ApiTool {
 
   public static Map<String, JsonNode> getRequestBodySchemas(final JsonNode openApi) {
     return getComponentSchemasByType(openApi, REQUEST_BODIES);
-  }
-
-  private static Map<String, JsonNode> getComponentSchemasByType(final JsonNode openApi, final String schemaType) {
-    final var schemasMap = new HashMap<String, JsonNode>();
-
-    if (hasNode(openApi, COMPONENTS)) {
-      final var components = getNode(openApi, COMPONENTS);
-      if (hasNode(components, schemaType)) {
-        final var schemas = getNode(components, schemaType);
-        final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(schemaType.toUpperCase() + "/"+ StringCaseUtils.titleToSnakeCase(name),
-                getNode(schemas, name)));
-      }
-    }
-
-    return schemasMap;
   }
 
   public static Map<String, JsonNode> getComponentSecuritySchemes(final JsonNode openApi) {
@@ -185,17 +215,16 @@ public final class ApiTool {
     return type;
   }
 
+  public static boolean hasType(final JsonNode schema) {
+    return hasNode(schema, "type");
+  }
+
+  public static String getType(final JsonNode schema) {
+    return hasType(schema) ? StringUtils.defaultIfEmpty(getNodeAsString(schema, "type"), "") : "";
+  }
+
   public static boolean hasItems(final JsonNode schema) {
     return hasNode(schema, "items");
-  }
-
-  public static boolean hasNode(final JsonNode schema, final String nodeName) {
-    return Objects.nonNull(schema) && schema.has(nodeName);
-  }
-
-  public static boolean hasField(final JsonNode schema, final String... fieldNameArray) {
-    final var nodeNamesList = Arrays.asList(fieldNameArray);
-    return StringUtils.isNotEmpty(IteratorUtils.find(schema.fieldNames(), nodeNamesList::contains));
   }
 
   public static boolean hasRequired(final JsonNode schema) {
@@ -204,10 +233,6 @@ public final class ApiTool {
 
   public static boolean hasName(JsonNode message) {
     return hasNode(message, "name");
-  }
-
-  public static boolean hasType(final JsonNode schema) {
-    return hasNode(schema, "type");
   }
 
   public static boolean hasRef(final JsonNode schema) {
@@ -236,6 +261,11 @@ public final class ApiTool {
 
   public static boolean isComposed(final JsonNode schema) {
     return ApiTool.hasField(schema, ANY_OF, ALL_OF, ONE_OF);
+  }
+
+  public static boolean hasField(final JsonNode schema, final String... fieldNameArray) {
+    final var nodeNamesList = Arrays.asList(fieldNameArray);
+    return StringUtils.isNotEmpty(IteratorUtils.find(schema.fieldNames(), nodeNamesList::contains));
   }
 
   public static boolean isString(final JsonNode schema) {
@@ -299,7 +329,6 @@ public final class ApiTool {
     return isMultipartFile;
   }
 
-
   public static List<JsonNode> findContentSchemas(final JsonNode schema) {
     return hasNode(schema, "content") ? schema.findValues("schema") : Collections.emptyList();
   }
@@ -315,14 +344,6 @@ public final class ApiTool {
     return isRequired;
   }
 
-  private static Transformer<JsonNode, String> getTextValue() {
-    return JsonNode::asText;
-  }
-
-  public static boolean hasComponents(final JsonNode node) {
-    return hasNode(node, COMPONENTS);
-  }
-
   public static Iterator<Entry<String, JsonNode>> getComponent(final JsonNode node, final String componentType) {
     Iterator<Entry<String, JsonNode>> result = Collections.emptyIterator();
     if (hasComponents(node) && hasNode(getNode(node, "components"), componentType)) {
@@ -331,15 +352,25 @@ public final class ApiTool {
     return result;
   }
 
+  public static boolean hasComponents(final JsonNode node) {
+    return hasNode(node, COMPONENTS);
+  }
+
   public static JsonNode nodeFromFile(final FileLocation ymlParent, final String filePath, final FactoryTypeEnum factoryTypeEnum) throws IOException {
     final InputStream file;
-    if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
+    // Check if path is absolute first
+    if (PathUtil.isAbsolutePath(filePath)) {
+      // For absolute paths, open directly
+      file = new FileInputStream(filePath);
+    } else if (filePath.startsWith(PACKAGE_SEPARATOR_STR) || filePath.matches("^\\w.*$")) {
+      // For relative paths starting with . or alphanumeric (package-like paths)
       file = ymlParent.getFileAtLocation(filePath);
     } else {
       if (filePath.contains(".jar!")) {
         var resource = filePath.substring(filePath.indexOf(".jar!") + 1);
         file = ApiTool.class.getClassLoader().getResourceAsStream(resource);
       } else {
+        // Other paths - try as file path
         file = new FileInputStream(filePath);
       }
     }
@@ -352,24 +383,6 @@ public final class ApiTool {
       om = new ObjectMapper();
     }
     return om.readTree(file);
-  }
-
-  private static Object getNodeAsType(final JsonNode node) {
-    final Object result;
-    if (node.isBigDecimal()) {
-      result = BigDecimal.valueOf(node.asDouble());
-    } else if (node.isBigInteger()) {
-      result = BigInteger.valueOf(node.asLong());
-    } else if (node.isBoolean()) {
-      result = node.asBoolean();
-    } else if (node.isFloat() || node.isDouble()) {
-      result = node.asDouble();
-    } else if (node.isInt() || node.isNumber()) {
-      result = node.asInt();
-    } else {
-      result = node.asText();
-    }
-    return result;
   }
 
   public static boolean hasConst(final JsonNode fieldBody) {
@@ -404,3 +417,4 @@ public final class ApiTool {
     return value;
   }
 }
+

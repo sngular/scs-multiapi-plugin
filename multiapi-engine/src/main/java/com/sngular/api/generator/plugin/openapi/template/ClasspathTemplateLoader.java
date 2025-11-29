@@ -6,15 +6,15 @@
 
 package com.sngular.api.generator.plugin.openapi.template;
 
-import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
-import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.sngular.api.generator.plugin.common.template.CommonTemplateLoader;
+import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
 
 public class ClasspathTemplateLoader extends CommonTemplateLoader {
 
@@ -25,6 +25,7 @@ public class ClasspathTemplateLoader extends CommonTemplateLoader {
   private static final List<String> TEMPLATE_AUTH_FILES = List.of(TemplateIndexConstants.TEMPLATE_API_KEY, TemplateIndexConstants.TEMPLATE_AUTHENTICATION,
                                                                   TemplateIndexConstants.TEMPLATE_HTTP_BASIC, TemplateIndexConstants.TEMPLATE_HTTP_BEARER,
                                                                   TemplateIndexConstants.TEMPLATE_OAUTH, TemplateIndexConstants.TEMPLATE_OAUTH_FLOW);
+
   public ClasspathTemplateLoader() {
     super();
     init(getResourceFolderFiles());

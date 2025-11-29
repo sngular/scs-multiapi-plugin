@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+
 import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
@@ -20,10 +21,11 @@ public class TemplateFactory extends CommonTemplateFactory {
 
   private static final String DEFAULT_API_PACKAGE = "com.sngular.api";
 
-  public TemplateFactory(boolean enableOverwrite,
-                        final File targetFolder,
-                        final String processedGeneratedSourcesFolder,
-                        final File baseDir) {
+  public TemplateFactory(
+      boolean enableOverwrite,
+      final File targetFolder,
+      final String processedGeneratedSourcesFolder,
+      final File baseDir) {
     super(enableOverwrite, targetFolder, processedGeneratedSourcesFolder, baseDir, new ClasspathTemplateLoader());
   }
 
@@ -59,7 +61,12 @@ public class TemplateFactory extends CommonTemplateFactory {
     writeTemplateToFile(createNameTemplate(authName), apiPackage, authName);
   }
 
-  public final void fillTemplate(final SpecFile specFile, final String className,
+  private String createNameTemplate(final String classNameAuth) {
+    return "template" + classNameAuth + ".ftlh";
+  }
+
+  public final void fillTemplate(
+      final SpecFile specFile, final String className,
       final List<PathObject> pathObjects, final AuthObject authObject) throws IOException {
 
     addToRoot("className", className);
@@ -79,7 +86,15 @@ public class TemplateFactory extends CommonTemplateFactory {
     }
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile),
-      StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE), className + "Api");
+                        StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE), className + "Api");
+  }
+
+  private String getTemplateClientApi(final SpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+  }
+
+  private String getTemplateApi(final SpecFile specFile) {
+    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
   public final void calculateJavaEEPackage(final Integer springBootVersion) {
@@ -104,18 +119,6 @@ public class TemplateFactory extends CommonTemplateFactory {
 
   public final void setAuthPackageName(final String packageName) {
     addToRoot("packageAuth", packageName);
-  }
-
-  private String createNameTemplate(final String classNameAuth) {
-    return "template" + classNameAuth + ".ftlh";
-  }
-
-  private String getTemplateClientApi(final SpecFile specFile) {
-    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
-  }
-
-  private String getTemplateApi(final SpecFile specFile) {
-    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_REACTIVE_API : TemplateIndexConstants.TEMPLATE_INTERFACE_API;
   }
 
 }

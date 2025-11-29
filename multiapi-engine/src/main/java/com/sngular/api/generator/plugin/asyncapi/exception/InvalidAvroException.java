@@ -7,8 +7,10 @@
 package com.sngular.api.generator.plugin.asyncapi.exception;
 
 public class InvalidAvroException extends RuntimeException {
-    private static final String ERROR_MESSAGE = "AsyncApi -> Avro schema at path %s lacks a namespace.";
-    public InvalidAvroException(final String enumName) {
-        super(String.format(ERROR_MESSAGE, enumName));
-    }
+
+  private static final String ERROR_MESSAGE = "AsyncApi -> Avro schema at path %s lacks a namespace.";
+
+  public InvalidAvroException(final String enumName) {
+    super(String.format(ERROR_MESSAGE, enumName));
+  }
 }

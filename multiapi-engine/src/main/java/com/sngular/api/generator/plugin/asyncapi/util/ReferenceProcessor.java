@@ -1,5 +1,11 @@
 package com.sngular.api.generator.plugin.asyncapi.util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.asyncapi.exception.FileSystemException;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
@@ -7,12 +13,6 @@ import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public final class ReferenceProcessor {
 
@@ -26,11 +26,11 @@ public final class ReferenceProcessor {
 
   private static final String AVSC = "avsc";
 
-  private List<String> alreadyProcessed;
-
   private final FileLocation ymlParent;
 
   private final Map<String, JsonNode> totalSchemas;
+
+  private List<String> alreadyProcessed;
 
   @Builder
   public ReferenceProcessor(final FileLocation ymlParent, final Map<String, JsonNode> totalSchemas) {

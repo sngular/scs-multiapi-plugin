@@ -13,6 +13,7 @@
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
 import java.util.List;
+
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;

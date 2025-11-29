@@ -1,19 +1,20 @@
 package com.sngular.api.generator.plugin.common.tools;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.sngular.api.generator.plugin.openapi.exception.FileParseException;
+import org.apache.commons.lang3.StringUtils;
 
 public class SchemaUtil {
 
@@ -50,23 +51,28 @@ public class SchemaUtil {
     } catch (final IOException e) {
       throw new FileParseException(refPath, e);
     }
-
     if (Objects.isNull(schemaFile)) {
       throw new FileParseException("empty .yml");
     }
-
     return schemaFile;
   }
-
 
   private static String readFile(final URI rootFilePath, final String filePath) throws MalformedURLException {
     if (Objects.isNull(filePath)) {
       throw new IllegalArgumentException("File Path cannot be empty");
     }
+    // First, try to find the file in the classpath
     URL fileURL = SchemaUtil.class.getClassLoader().getResource(filePath);
     if (Objects.isNull(fileURL)) {
-      final var parentFolder = rootFilePath.resolve(cleanUpPath(filePath));
-      fileURL = parentFolder.toURL();
+      // Check if the path is absolute
+      if (PathUtil.isAbsolutePath(filePath)) {
+        // For absolute paths, convert directly to URL without resolving against rootFilePath
+        fileURL = Paths.get(filePath).toUri().toURL();
+      } else {
+        // For relative paths, resolve against the root file path
+        final var parentFolder = rootFilePath.resolve(cleanUpPath(filePath));
+        fileURL = parentFolder.toURL();
+      }
     }
     final var sb = new StringBuilder();
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileURL.openStream()))) {
@@ -83,5 +89,4 @@ public class SchemaUtil {
   private static String cleanUpPath(final String filePath) {
     return StringUtils.startsWith(filePath, "./") ? filePath.substring(2) : filePath;
   }
-
 }

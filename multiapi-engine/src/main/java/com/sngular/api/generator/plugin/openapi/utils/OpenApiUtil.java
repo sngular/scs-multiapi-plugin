@@ -6,6 +6,17 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,17 +30,14 @@ import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
-import java.util.*;
-import java.util.Map.Entry;
-
 public class OpenApiUtil {
 
   public static final String PATHS = "paths";
 
   static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
 
-  private OpenApiUtil() {}
+  private OpenApiUtil() {
+  }
 
   public static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
@@ -39,11 +47,6 @@ public class OpenApiUtil {
     }
 
     return mapApis;
-  }
-
-  public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
-
-    return SchemaUtil.getPojoFromRef(baseDir.toUri(), specFile.getFilePath());
   }
 
   private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByTags(final Iterator<Entry<String, JsonNode>> pathList) {
@@ -56,6 +59,18 @@ public class OpenApiUtil {
 
     return mapApis;
 
+  }
+
+  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
+    final var mapByUrl = new ArrayListValuedHashMap<String, Map<String, JsonNode>>();
+
+    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext(); ) {
+      final var pathUrl = it.next();
+      final String[] pathName = pathUrl.split("/");
+      mapByUrl.put(pathName[1], Map.of(pathUrl, openAPI.get(PATHS).get(pathUrl)));
+    }
+
+    return mapByUrl;
   }
 
   private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(final Entry<String, JsonNode> pathItem) {
@@ -71,24 +86,17 @@ public class OpenApiUtil {
     return mapByTag;
   }
 
-  private static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroupsByUrl(final JsonNode openAPI) {
-    final var mapByUrl = new ArrayListValuedHashMap<String, Map<String, JsonNode>>();
+  public static JsonNode getPojoFromSpecFile(final Path baseDir, final SpecFile specFile) {
 
-    for (Iterator<String> it = openAPI.get(PATHS).fieldNames(); it.hasNext();) {
-      final var pathUrl = it.next();
-      final String[] pathName = pathUrl.split("/");
-      mapByUrl.put(pathName[1], Map.of(pathUrl, openAPI.get(PATHS).get(pathUrl)));
-    }
-
-    return mapByUrl;
+    return SchemaUtil.getPojoFromRef(baseDir.toUri(), specFile.getFilePath());
   }
 
   public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap, SpecFile specFile) {
     final var basicJsonNodeMap = new HashMap<>(schemaMap);
 
-    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext();) {
+    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext(); ) {
       final var pathDefinition = pathElement.next();
-      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext();) {
+      for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
           processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
@@ -106,6 +114,20 @@ public class OpenApiUtil {
     processResponses(basicJsonNodeMap, operation, specFile);
   }
 
+  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
+    if (ApiTool.hasNode(operation, "parameters")) {
+      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext(); ) {
+        final var parameter = it.next();
+        if (ApiTool.hasNode(parameter, "content")) {
+          basicJsonNodeMap.putIfAbsent(
+              StringCaseUtils.titleToSnakeCase(
+                  MapperUtil.getPojoName("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)), specFile)),
+              ApiTool.getNode(parameter, "schema"));
+        }
+      }
+    }
+  }
+
   private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "requestBody") && !operation.at("/requestBody/content").isMissingNode()) {
       final var content = operation.at("/requestBody/content");
@@ -113,7 +135,9 @@ public class OpenApiUtil {
       if (!ApiTool.hasRef(schema)) {
         basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineObject" + StringUtils.capitalize(getOperationId(operation)), specFile)), schema);
       } else if (ApiTool.hasItems(schema)) {
-        basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), specFile)), ApiTool.getItems(schema));
+        basicJsonNodeMap.put(
+            StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineObject" + StringUtils.capitalize(ApiTool.getNodeAsString(operation, "operationId")), specFile)),
+            ApiTool.getItems(schema));
       }
     }
   }
@@ -121,30 +145,21 @@ public class OpenApiUtil {
   private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
-      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext();) {
+      for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext(); ) {
         final var response = it.next();
         if (ApiTool.hasContent(response.getValue())) {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
             if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)), schema);
+              basicJsonNodeMap.put(
+                  StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)),
+                  schema);
             } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), specFile)), schema);
+              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(
+                                       MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), specFile)),
+                                   schema);
             }
           }
-        }
-      }
-    }
-  }
-
-  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
-    if (ApiTool.hasNode(operation, "parameters")) {
-      for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext();) {
-        final var parameter = it.next();
-        if (ApiTool.hasNode(parameter, "content")) {
-          basicJsonNodeMap.putIfAbsent(
-              StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineParameter" + StringUtils.capitalize(getOperationId(operation)) + StringUtils.capitalize(ApiTool.getName(parameter)), specFile)),
-              ApiTool.getNode(parameter, "schema"));
         }
       }
     }

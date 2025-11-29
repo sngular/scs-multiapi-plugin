@@ -1,6 +1,7 @@
 package com.sngular.api.generator.plugin.common.model;
 
 import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,19 +13,19 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "baseName")
 public class SchemaFieldObject {
 
-    private String baseName;
+  private String baseName;
 
-    @Builder.Default
-    private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
+  @Builder.Default
+  private SchemaFieldObjectType dataType = new SchemaFieldObjectType(TypeConstants.OBJECT);
 
-    @Builder.Default
-    private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
+  @Builder.Default
+  private SchemaFieldObjectProperties restrictions = new SchemaFieldObjectProperties();
 
-    private String importClass;
+  private String importClass;
 
-    private boolean required;
+  private boolean required;
 
-    private Map<String, String> enumValues;
+  private Map<String, String> enumValues;
 
-    private Object constValue;
+  private Object constValue;
 }

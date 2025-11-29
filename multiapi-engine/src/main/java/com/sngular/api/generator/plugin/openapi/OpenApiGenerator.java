@@ -6,6 +6,16 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
@@ -25,11 +35,6 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.*;
 
 public class OpenApiGenerator {
 
@@ -51,13 +56,13 @@ public class OpenApiGenerator {
 
   private final Path baseDir;
 
-  private Boolean isWebClient = false;
-
-  private Boolean isRestClient = false;
-
   private final List<String> authentications = new ArrayList<>();
 
   private final Integer springBootVersion;
+
+  private Boolean isWebClient = false;
+
+  private Boolean isRestClient = false;
 
   public OpenApiGenerator(
       final Integer springBootVersion,
@@ -75,10 +80,18 @@ public class OpenApiGenerator {
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     for (SpecFile specFile : specsListFile) {
-        processPackage(specFile.getApiPackage());
-        processFile(specFile);
-        createClients(specFile);
-        templateFactory.clearData();
+      processPackage(specFile.getApiPackage());
+      processFile(specFile);
+      createClients(specFile);
+      templateFactory.clearData();
+    }
+  }
+
+  private void processPackage(final String apiPackage) {
+    if (StringUtils.isNotBlank(apiPackage)) {
+      templateFactory.setPackageName(apiPackage.trim());
+    } else {
+      templateFactory.setPackageName(Objects.requireNonNullElse(groupId, DEFAULT_OPENAPI_API_PACKAGE));
     }
   }
 
@@ -120,20 +133,6 @@ public class OpenApiGenerator {
     }
   }
 
-  private void createAuthTemplates(final SpecFile specFile) throws IOException {
-    final String clientPackage = specFile.getClientPackage();
-    final var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
-
-    templateFactory.setAuthPackageName(authFileRoot);
-    templateFactory.fillTemplateAuth(authFileRoot, "Authentication");
-
-    if (!authentications.isEmpty()) {
-      for (String authentication : authentications) {
-        templateFactory.fillTemplateAuth(authFileRoot, authentication);
-      }
-    }
-  }
-
   private GlobalObject createApiTemplate(final SpecFile specFile, final JsonNode openAPI) {
     final MultiValuedMap<String, Map<String, JsonNode>> apis = OpenApiUtil.mapApiGroups(openAPI, specFile.isUseTagsGroup());
     final var authSchemaList = MapperAuthUtil.createAuthSchemaList(openAPI);
@@ -150,23 +149,12 @@ public class OpenApiGenerator {
         throw new GeneratorTemplateException("Error filling the template", specFile.getFilePath(), e);
       }
 
-      if (Boolean.TRUE.equals(specFile.isCallMode())) {
+      if (specFile.isCallMode()) {
         addAuthentications(authObject);
       }
     }
 
     return globalObject;
-  }
-
-  private void addAuthentications(final AuthObject authObject) {
-
-    if (null != authObject.getSecurityRequirements() && !authObject.getSecurityRequirements().isEmpty()) {
-      authObject.getSecurityRequirements().forEach(authType -> {
-        if (!authentications.contains(authType)) {
-          authentications.add(authType);
-        }
-      });
-    }
   }
 
   private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) {
@@ -177,11 +165,28 @@ public class OpenApiGenerator {
     processModels(specFile, modelPackage, totalSchemas, overwriteModel);
   }
 
-  private void processPackage(final String apiPackage) {
-    if (StringUtils.isNotBlank(apiPackage)) {
-      templateFactory.setPackageName(apiPackage.trim());
-    } else {
-      templateFactory.setPackageName(Objects.requireNonNullElse(groupId, DEFAULT_OPENAPI_API_PACKAGE));
+  private void createAuthTemplates(final SpecFile specFile) throws IOException {
+    final String clientPackage = specFile.getClientPackage();
+    final var authFileRoot = (StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth";
+
+    templateFactory.setAuthPackageName(authFileRoot);
+    templateFactory.fillTemplateAuth(authFileRoot, "Authentication");
+
+    if (!authentications.isEmpty()) {
+      for (String authentication : authentications) {
+        templateFactory.fillTemplateAuth(authFileRoot, authentication);
+      }
+    }
+  }
+
+  private void addAuthentications(final AuthObject authObject) {
+
+    if (null != authObject.getSecurityRequirements() && !authObject.getSecurityRequirements().isEmpty()) {
+      authObject.getSecurityRequirements().forEach(authType -> {
+        if (!authentications.contains(authType)) {
+          authentications.add(authType);
+        }
+      });
     }
   }
 
@@ -211,14 +216,6 @@ public class OpenApiGenerator {
     });
   }
 
-  private String chooseRightName(final String schemaName) {
-    String rightName = schemaName;
-    if (!StringUtils.startsWith(schemaName, "Inline")) {
-      rightName = MapperUtil.getKeySchemaName(schemaName);
-    }
-    return rightName;
-  }
-
   private boolean validType(final String type) {
     return !TypeConstants.NO_PROCESS_TYPE.contains(type);
   }
@@ -238,12 +235,20 @@ public class OpenApiGenerator {
     }
   }
 
+  private String chooseRightName(final String schemaName) {
+    String rightName = schemaName;
+    if (!StringUtils.startsWith(schemaName, "Inline")) {
+      rightName = MapperUtil.getKeySchemaName(schemaName);
+    }
+    return rightName;
+  }
+
   private void writeSchemaObject(
       final SpecFile specFile, final String schemaName, final JsonNode model, final Map<String, JsonNode> basicSchemaMap,
       final String modelPackage) {
     final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
     final var schemaObjectIt = MapperContentUtil
-        .mapComponentToSchemaObject(basicSchemaMap, schemaName, model, parentPackage, specFile, this.baseDir).iterator();
+                                   .mapComponentToSchemaObject(basicSchemaMap, schemaName, model, parentPackage, specFile, this.baseDir).iterator();
     if (schemaObjectIt.hasNext()) {
       writeSchemaObject(specFile.isUseLombokModelAnnotation(), specFile.getModelPackage(), schemaName, schemaObjectIt.next());
     }
