@@ -19,9 +19,9 @@ public class OrderDTO {
   @JsonProperty(value ="_new")
   private New _new;
   public enum New {
-    TWO:PIECE:WORKS("two:piece:works"),
-    THREE:PIECE:WORKS("three:piece:works"),
-    ONE:PIECE:WORKS("one:piece:works");
+    ONE_PIECE_WORKS("one:piece:works"),
+    TWO_PIECE_WORKS("two:piece:works"),
+    THREE_PIECE_WORKS("three:piece:works");
 
     private String value;
 

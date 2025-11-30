@@ -287,7 +287,7 @@ public final class ModelBuilder {
           antiLoopList.add(typeName);
           fieldObjectArrayList.addAll(processFieldObjectList(buildingSchema, fieldName, typeName, refSchema, specFile, totalSchemas, compositedSchemas,
                                                              antiLoopList, baseDir));
-        }
+         }
       } else if (ApiTool.isEnum(refSchema)) {
         fieldObjectArrayList.add(processEnumField(fieldName, refSchema, specFile, ApiTool.getEnumValues(refSchema), schema));
       } else if (ApiTool.isObject(refSchema) || ApiTool.isComposed(refSchema)) {
@@ -782,31 +782,47 @@ public final class ModelBuilder {
     field.getDataType().setDeepType(dataType);
 
     final HashMap<String, String> enumValuesMap = new HashMap<>();
+    final Set<String> usedKeys = new HashSet<>();
 
     for (final var enumValue : enumValues) {
-      String valueName = enumValue;
-      valueName = valueName.replace(".", "_DOT_");
+      String rawName = enumValue == null ? "" : enumValue;
 
+      // Build a normalized, collision-free enum constant name
+      final String keyBase = normalizeEnumKeyBase(rawName);
+      String key;
       switch (dataType) {
         case TypeConstants.INTEGER:
-          enumValuesMap.put("INTEGER_" + valueName, enumValue);
+          key = ensureUnique(usedKeys, "INTEGER_" + keyBase);
+          enumValuesMap.put(key, enumValue);
           break;
         case TypeConstants.LONG:
-          enumValuesMap.put("LONG_" + valueName, enumValue + "l");
+          key = ensureUnique(usedKeys, "LONG_" + keyBase);
+          enumValuesMap.put(key, enumValue + "l");
           break;
         case TypeConstants.DOUBLE:
-          enumValuesMap.put("DOUBLE_" + valueName, enumValue);
+          key = ensureUnique(usedKeys, "DOUBLE_" + keyBase);
+          enumValuesMap.put(key, enumValue);
           break;
         case TypeConstants.FLOAT:
-          enumValuesMap.put("FLOAT_" + valueName, enumValue + "f");
+          key = ensureUnique(usedKeys, "FLOAT_" + keyBase);
+          enumValuesMap.put(key, enumValue + "f");
           break;
         case TypeConstants.BIG_DECIMAL:
-          enumValuesMap.put("BIG_DECIMAL_" + valueName, "new BigDecimal(\"" + enumValue + "\")");
+          key = ensureUnique(usedKeys, "BIG_DECIMAL_" + keyBase);
+          enumValuesMap.put(key, "new BigDecimal(\"" + enumValue + "\")");
           break;
         case TypeConstants.STRING:
         default:
-          enumValuesMap.put(StringUtils.replace(StringUtils.upperCase(valueName), " ", "_"),
-                            '"' + enumValue + '"');
+          // For string-based enums: uppercase and ensure it starts with a non-digit
+          String candidate = StringUtils.upperCase(keyBase);
+          if (candidate.isEmpty()) {
+            candidate = "EMPTY";
+          }
+          if (Character.isDigit(candidate.charAt(0))) {
+            candidate = "_" + candidate;
+          }
+          key = ensureUnique(usedKeys, candidate);
+          enumValuesMap.put(key, '"' + enumValue + '"');
           break;
       }
     }
@@ -816,6 +832,44 @@ public final class ModelBuilder {
     }
     field.setEnumValues(enumValuesMap);
     return field;
+  }
+
+  /**
+   * Normaliza una cadena para que pueda ser usada como parte de una constante Java:
+   * - reemplaza puntos por _DOT_
+   * - reemplaza cualquier caracter no alfanumérico por '_'
+   * - colapsa guiones bajos múltiples
+   * - recorta guiones bajos al inicio/fin
+   */
+  private static String normalizeEnumKeyBase(final String raw) {
+    if (raw == null) {
+      return "";
+    }
+    String s = raw.replace(".", "_DOT_");
+    // Reemplaza cualquier caracter que no sea letra o dígito por '_'
+    s = s.replaceAll("[^A-Za-z0-9]", "_");
+    // Colapsa múltiples '_' en uno solo
+    s = s.replaceAll("_+", "_");
+    // Elimina '_' iniciales o finales
+    s = s.replaceAll("^_+|_+$", "");
+    // Si queda vacío, devolver placeholder
+    if (s.isEmpty()) {
+      return "EMPTY";
+    }
+    return s;
+  }
+
+  /**
+   * Añade sufijo numérico si la clave ya existe para garantizar unicidad.
+   */
+  private static String ensureUnique(final Set<String> usedKeys, final String base) {
+    String candidate = base;
+    int idx = 1;
+    while (usedKeys.contains(candidate)) {
+      candidate = base + "_" + idx++;
+    }
+    usedKeys.add(candidate);
+    return candidate;
   }
 
   private static String getImportClass(final String type) {
