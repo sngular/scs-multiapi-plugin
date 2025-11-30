@@ -6,6 +6,12 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import lombok.extern.slf4j.Slf4j;
@@ -18,21 +24,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 @Slf4j
 class OpenApiGeneratorTest {
 
+  private static final int SPRING_BOOT_VERSION = 2;
   @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
-
   private static OpenApiGenerator openApiGenerator;
-
-  private static final int SPRING_BOOT_VERSION = 2;
 
   @BeforeAll
   static void setup() {
@@ -42,95 +40,95 @@ class OpenApiGeneratorTest {
             new File(baseDir.toAbsolutePath() + File.separator + OpenApiGeneratorFixtures.TARGET),
             OpenApiGeneratorFixtures.GENERATED,
             "groupId",
-            Path.of("src","test","resources").toFile());
+            Path.of("src", "test", "resources").toFile());
   }
 
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
         Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF,
-                     OpenApiGeneratorFixtures.validateAllOf()),
+            OpenApiGeneratorFixtures.validateAllOf()),
         Arguments.of("testComplexAnyOf", OpenApiGeneratorFixtures.TEST_COMPLEX_ANY_OF,
-                     OpenApiGeneratorFixtures.validateComplexAnyOf()),
+            OpenApiGeneratorFixtures.validateComplexAnyOf()),
         Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK,
-                     OpenApiGeneratorFixtures.validateAllOfLombok()),
+            OpenApiGeneratorFixtures.validateAllOfLombok()),
         Arguments.of("testOverWriteModelTrue", OpenApiGeneratorFixtures.TEST_OVER_WRITE_MODEL_TRUE,
-                     OpenApiGeneratorFixtures.validateOverwriteModeTrue()),
+            OpenApiGeneratorFixtures.validateOverwriteModeTrue()),
         Arguments.of("testApiClientGeneration", OpenApiGeneratorFixtures.TEST_API_CLIENT_GENERATION,
-                     OpenApiGeneratorFixtures.validateApiClientGeneration()),
+            OpenApiGeneratorFixtures.validateApiClientGeneration()),
         Arguments.of("testInlineSchemaCreation", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_CREATION,
-                     OpenApiGeneratorFixtures.validateInlineSchemaCreation()),
+            OpenApiGeneratorFixtures.validateInlineSchemaCreation()),
         Arguments.of("testApiParametersWithContentGeneration", OpenApiGeneratorFixtures.TEST_PARAMETER_WITH_CONTENT_GENERATION,
-                     OpenApiGeneratorFixtures.validateParametersWithSchemaGeneration()),
+            OpenApiGeneratorFixtures.validateParametersWithSchemaGeneration()),
         Arguments.of("testApiPathWithSpecialCharGeneration", OpenApiGeneratorFixtures.TEST_PATH_WITH_SLASH_GENERATION,
-                     OpenApiGeneratorFixtures.validatePathWithSpecialCharGeneration()),
+            OpenApiGeneratorFixtures.validatePathWithSpecialCharGeneration()),
         Arguments.of("testApiReactiveGeneration", OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
-                     OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
+            OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
         Arguments.of("testApiTagsGeneration", OpenApiGeneratorFixtures.TEST_API_TAGS_GENERATION,
-                     OpenApiGeneratorFixtures.validateTagsGeneration()),
+            OpenApiGeneratorFixtures.validateTagsGeneration()),
         Arguments.of("testMultipleRefGeneration", OpenApiGeneratorFixtures.TEST_MULTIPLE_REF_GENERATION,
-                     OpenApiGeneratorFixtures.validateMultipleRefGeneration()),
+            OpenApiGeneratorFixtures.validateMultipleRefGeneration()),
         Arguments.of("testApiPathParameterGeneration", OpenApiGeneratorFixtures.TEST_PATH_PARAMETER_GENERATION,
-                     OpenApiGeneratorFixtures.validatePathParameterGeneration()),
+            OpenApiGeneratorFixtures.validatePathParameterGeneration()),
         Arguments.of("testWebClientApiGeneration", OpenApiGeneratorFixtures.TEST_WEB_CLIENT_GENERATION,
-                     OpenApiGeneratorFixtures.validateWebClientGeneration()),
+            OpenApiGeneratorFixtures.validateWebClientGeneration()),
         Arguments.of("testClientPackageWebClientApiGeneration", OpenApiGeneratorFixtures.TEST_CLIENT_PACKAGE_WEB_CLIENT_GENERATION,
-                     OpenApiGeneratorFixtures.validateClientPackageWebClientGeneration()),
+            OpenApiGeneratorFixtures.validateClientPackageWebClientGeneration()),
         Arguments.of("testRestClientApiGeneration", OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
-                     OpenApiGeneratorFixtures.validateRestClientGeneration()),
+            OpenApiGeneratorFixtures.validateRestClientGeneration()),
         Arguments.of("testRestClientApiWithRequestObjectGeneration", OpenApiGeneratorFixtures.TEST_REST_CLIENT_API_WITH_REQUEST_OBJECTS_GENERATION,
-                    OpenApiGeneratorFixtures.validateRestClientWithRequestBodyGeneration()),
+            OpenApiGeneratorFixtures.validateRestClientWithRequestBodyGeneration()),
         Arguments.of("testApiEnumsGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_GENERATION,
-                     OpenApiGeneratorFixtures.validateEnumsGeneration()),
+            OpenApiGeneratorFixtures.validateEnumsGeneration()),
         Arguments.of("testApiEnumsLombokGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,
-                     OpenApiGeneratorFixtures.validateEnumsLombokGeneration()),
+            OpenApiGeneratorFixtures.validateEnumsLombokGeneration()),
         Arguments.of("testExternalRefsGeneration", OpenApiGeneratorFixtures.TEST_EXTERNAL_REF_GENERATION,
-                     OpenApiGeneratorFixtures.validateExternalRefGeneration()),
+            OpenApiGeneratorFixtures.validateExternalRefGeneration()),
         Arguments.of("testAnyOfInResponse", OpenApiGeneratorFixtures.TEST_ANY_OF_IN_RESPONSE,
-                     OpenApiGeneratorFixtures.validateAnyOfInResponse()),
+            OpenApiGeneratorFixtures.validateAnyOfInResponse()),
         Arguments.of("testOneOfInResponse", OpenApiGeneratorFixtures.TEST_ONE_OF_IN_RESPONSE,
-                     OpenApiGeneratorFixtures.validateOneOfInResponse()),
+            OpenApiGeneratorFixtures.validateOneOfInResponse()),
         Arguments.of("testAdditionalProperties", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES,
-                     OpenApiGeneratorFixtures.validateAdditionalProperties()),
+            OpenApiGeneratorFixtures.validateAdditionalProperties()),
         Arguments.of("testAdditionalPropertiesWithSchema", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_SCHEMA,
-                     OpenApiGeneratorFixtures.validateAdditionalPropertiesWithSchema()),
+            OpenApiGeneratorFixtures.validateAdditionalPropertiesWithSchema()),
         Arguments.of("testAdditionalPropertiesWithUnnamedObject", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_UNNAMED_OBJECT,
-                     OpenApiGeneratorFixtures.validateAdditionalPropertiesWithUnnamedObject()),
+            OpenApiGeneratorFixtures.validateAdditionalPropertiesWithUnnamedObject()),
         Arguments.of("testCoconutSchema", OpenApiGeneratorFixtures.TEST_COCONUT_SCHEMA,
-                     OpenApiGeneratorFixtures.validateCoconutSchema()),
+            OpenApiGeneratorFixtures.validateCoconutSchema()),
         Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                     OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
+            OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)),
+            OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)),
         Arguments.of("testCreateDTO", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
-                     OpenApiGeneratorFixtures.validateCreateDTO()),
+            OpenApiGeneratorFixtures.validateCreateDTO()),
         Arguments.of("testCreateDTOWithEnum", OpenApiGeneratorFixtures.TEST_CREATE_DTO_WITH_ENUM,
-                    OpenApiGeneratorFixtures.validateCreateDTOWithEnum()),
+            OpenApiGeneratorFixtures.validateCreateDTOWithEnum()),
         Arguments.of("testCreateBasicDTO", OpenApiGeneratorFixtures.TEST_CREATE_BASIC_DTO,
-                     OpenApiGeneratorFixtures.validateCreateBasicDTO()),
+            OpenApiGeneratorFixtures.validateCreateBasicDTO()),
         Arguments.of("testIssueFaker", OpenApiGeneratorFixtures.TEST_ISSUE_FAKER,
-                      OpenApiGeneratorFixtures.validateIssueFaker()),
+            OpenApiGeneratorFixtures.validateIssueFaker()),
         Arguments.of("testDateTime", OpenApiGeneratorFixtures.TEST_DATE_TIME,
-                     OpenApiGeneratorFixtures.validateDateTime()),
+            OpenApiGeneratorFixtures.validateDateTime()),
         Arguments.of("testDateTimeZoned", OpenApiGeneratorFixtures.TEST_DATE_TIME_ZONED,
-                     OpenApiGeneratorFixtures.validateDateTimeZoned()),
+            OpenApiGeneratorFixtures.validateDateTimeZoned()),
         Arguments.of("testDateTimeOffset", OpenApiGeneratorFixtures.TEST_DATE_TIME_OFFSET,
-                     OpenApiGeneratorFixtures.validateDateTimeOffset()),
+            OpenApiGeneratorFixtures.validateDateTimeOffset()),
         Arguments.of("testListString", OpenApiGeneratorFixtures.TEST_LIST_STRING,
-                     OpenApiGeneratorFixtures.validateListString()),
+            OpenApiGeneratorFixtures.validateListString()),
         Arguments.of("testReferenceFile", OpenApiGeneratorFixtures.TEST_REFERENCE_FILE,
-                     OpenApiGeneratorFixtures.validateReferenceFile()),
+            OpenApiGeneratorFixtures.validateReferenceFile()),
         Arguments.of("testReferenceFileNoComponents", OpenApiGeneratorFixtures.TEST_REFERENCE_FILE_NO_COMPONENTS,
-                     OpenApiGeneratorFixtures.validateReferenceFileNoComponents()),
+            OpenApiGeneratorFixtures.validateReferenceFileNoComponents()),
         Arguments.of("testQueryParam", OpenApiGeneratorFixtures.TEST_QUERY_PARAM,
-                     OpenApiGeneratorFixtures.validateQueryParam()),
+            OpenApiGeneratorFixtures.validateQueryParam()),
         Arguments.of("testApiWithNoComponents", OpenApiGeneratorFixtures.TEST_API_WITH_NO_COMPONENTS,
-                     OpenApiGeneratorFixtures.validateApiWithNoComponents()),
+            OpenApiGeneratorFixtures.validateApiWithNoComponents()),
         Arguments.of("testRestrictionSchema", OpenApiGeneratorFixtures.TEST_RESTRICTION_SCHEMA,
-                    OpenApiGeneratorFixtures.validateRestrictionsSchema()),
+            OpenApiGeneratorFixtures.validateRestrictionsSchema()),
         Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
-                    OpenApiGeneratorFixtures.validateSimpleBuild()),
+            OpenApiGeneratorFixtures.validateSimpleBuild()),
         Arguments.of("testFormDataMultipartGeneration", OpenApiGeneratorFixtures.TEST_FORM_DATA_MULTIPART_GENERATION,
-                    OpenApiGeneratorFixtures.validateDataMultipartGeneration())
+            OpenApiGeneratorFixtures.validateDataMultipartGeneration())
     );
   }
 
@@ -145,6 +143,6 @@ class OpenApiGeneratorTest {
   @Test
   void testExceptionForTestGenerationWithNoOperationId() {
     Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
-              .isInstanceOf(InvalidAPIException.class);
+        .isInstanceOf(InvalidAPIException.class);
   }
 }

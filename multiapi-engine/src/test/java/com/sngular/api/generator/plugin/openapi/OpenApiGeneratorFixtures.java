@@ -6,11 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi;
 
-import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
-import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import com.sngular.api.generator.test.utils.TestUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -19,7 +15,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
+import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
+import com.sngular.api.generator.test.utils.TestUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 public final class OpenApiGeneratorFixtures {
@@ -197,31 +197,31 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_REST_CLIENT_GENERATION = List.of(
-    SpecFile
-        .builder()
-        .filePath("openapigenerator/testRestClientApiGeneration/api-test.yml")
-        .apiPackage("com.sngular.multifileplugin.restclient")
-        .modelPackage("com.sngular.multifileplugin.restclient.model")
-        .clientPackage("com.sngular.multifileplugin.restclient.client")
-        .modelNamePrefix("Api")
-        .modelNameSuffix("DTO")
-        .useLombokModelAnnotation(false)
-        .callMode(true)
-        .build()
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testRestClientApiGeneration/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.restclient")
+          .modelPackage("com.sngular.multifileplugin.restclient.model")
+          .clientPackage("com.sngular.multifileplugin.restclient.client")
+          .modelNamePrefix("Api")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(false)
+          .callMode(true)
+          .build()
   );
 
   static final List<SpecFile> TEST_REST_CLIENT_API_WITH_REQUEST_OBJECTS_GENERATION = List.of(
-    SpecFile
-        .builder()
-        .filePath("openapigenerator/testRestClientApiWithRequestObjectGeneration/api-test.yml")
-        .apiPackage("com.sngular.multifileplugin.restclientWithRequestObjects")
-        .modelPackage("com.sngular.multifileplugin.restclientWithRequestObjects.model")
-        .clientPackage("com.sngular.multifileplugin.restclientWithRequestObjects.client")
-        .modelNamePrefix("Api")
-        .modelNameSuffix("DTO")
-        .useLombokModelAnnotation(false)
-        .callMode(true)
-        .build()
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testRestClientApiWithRequestObjectGeneration/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.restclientWithRequestObjects")
+          .modelPackage("com.sngular.multifileplugin.restclientWithRequestObjects.model")
+          .clientPackage("com.sngular.multifileplugin.restclientWithRequestObjects.client")
+          .modelNamePrefix("Api")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(false)
+          .callMode(true)
+          .build()
   );
 
   static final List<SpecFile> TEST_ENUMS_GENERATION = List.of(
@@ -530,13 +530,16 @@ public final class OpenApiGeneratorFixtures {
   );
 
   static final List<SpecFile> TEST_FORM_DATA_MULTIPART_GENERATION = List.of(
-          SpecFile
-                  .builder()
-                  .filePath("openapigenerator/testFormDataMultipartGeneration/api-test.yml")
-                  .apiPackage("com.sngular.multifileplugin.testformdatamultipartgeneration")
-                  .useLombokModelAnnotation(true)
-                  .build()
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testFormDataMultipartGeneration/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testformdatamultipartgeneration")
+          .useLombokModelAnnotation(true)
+          .build()
   );
+
+  private OpenApiGeneratorFixtures() {
+  }
 
   static Function<Path, Boolean> validateOneOfInResponse() {
 
@@ -954,8 +957,8 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return path ->
-               commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
-               commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
+        commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
+            commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateRestClientWithRequestBodyGeneration() {
@@ -971,21 +974,21 @@ public final class OpenApiGeneratorFixtures {
     final String ASSETS_PATH = COMMON_PATH + "assets/";
 
     List<String> expectedTestApiFile = List.of(
-            ASSETS_PATH + "TestApi.java"
+        ASSETS_PATH + "TestApi.java"
     );
 
     List<String> expectedTestClientApiFile = List.of(
-            ASSETS_PATH + "client/ApiRestClient.java"
+        ASSETS_PATH + "client/ApiRestClient.java"
     );
 
     List<String> expectedTestClientAuthModelFiles = List.of(
-            ASSETS_PATH + "client/auth/Authentication.java",
-            ASSETS_PATH + "client/auth/HttpBasicAuth.java"
+        ASSETS_PATH + "client/auth/Authentication.java",
+        ASSETS_PATH + "client/auth/HttpBasicAuth.java"
     );
 
     return path ->
-            commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
-                    commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
+        commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null, Collections.emptyList(), null) &&
+            commonTest(path, expectedTestClientApiFile, expectedTestClientAuthModelFiles, CLIENT_TARGET_API, CLIENT_MODEL_API, Collections.emptyList(), null);
   }
 
   static Function<Path, Boolean> validateEnumsGeneration() {
@@ -1269,7 +1272,6 @@ public final class OpenApiGeneratorFixtures {
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
 
-
   static Function<Path, Boolean> validateDataMultipartGeneration() {
 
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testformdatamultipartgeneration";
@@ -1284,7 +1286,7 @@ public final class OpenApiGeneratorFixtures {
         ASSETS_PATH + "TestApi.java"
     );
 
-    final List<String> expectedTestApiModelFiles =  Collections.emptyList();
+    final List<String> expectedTestApiModelFiles = Collections.emptyList();
 
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
@@ -1319,25 +1321,25 @@ public final class OpenApiGeneratorFixtures {
 
     final List<String> expectedValidatorFiles = List.of(
         CUSTOM_VALIDATOR_PATH + "MaxBigDecimal.java",
-      CUSTOM_VALIDATOR_PATH + "MaxBigDecimalValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MaxDouble.java",
-      CUSTOM_VALIDATOR_PATH + "MaxDoubleValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MaxFloat.java",
-      CUSTOM_VALIDATOR_PATH + "MaxFloatValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MaxInteger.java",
-      CUSTOM_VALIDATOR_PATH + "MaxIntegerValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MaxItems.java",
-      CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxBigDecimalValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxDouble.java",
+        CUSTOM_VALIDATOR_PATH + "MaxDoubleValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxFloat.java",
+        CUSTOM_VALIDATOR_PATH + "MaxFloatValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxInteger.java",
+        CUSTOM_VALIDATOR_PATH + "MaxIntegerValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MaxItems.java",
+        CUSTOM_VALIDATOR_PATH + "MaxItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MinBigDecimal.java",
-      CUSTOM_VALIDATOR_PATH + "MinBigDecimalValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MinDouble.java",
-      CUSTOM_VALIDATOR_PATH + "MinDoubleValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MinFloat.java",
-      CUSTOM_VALIDATOR_PATH + "MinFloatValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MinInteger.java",
-      CUSTOM_VALIDATOR_PATH + "MinIntegerValidator.java",
-      CUSTOM_VALIDATOR_PATH + "MinItems.java",
-      CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinBigDecimalValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinDouble.java",
+        CUSTOM_VALIDATOR_PATH + "MinDoubleValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinFloat.java",
+        CUSTOM_VALIDATOR_PATH + "MinFloatValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinInteger.java",
+        CUSTOM_VALIDATOR_PATH + "MinIntegerValidator.java",
+        CUSTOM_VALIDATOR_PATH + "MinItems.java",
+        CUSTOM_VALIDATOR_PATH + "MinItemsValidator.java",
         CUSTOM_VALIDATOR_PATH + "MultipleOf.java",
         CUSTOM_VALIDATOR_PATH + "MultipleOfValidator.java",
         CUSTOM_VALIDATOR_PATH + "NotNull.java",
@@ -1351,7 +1353,7 @@ public final class OpenApiGeneratorFixtures {
     );
 
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API)
-                     && customValidatorTest(path, expectedValidatorFiles);
+        && customValidatorTest(path, expectedValidatorFiles);
   }
 
   static Function<Path, Boolean> validateValidationAnnotationsLombok(int springBootTest) {
@@ -1566,7 +1568,6 @@ public final class OpenApiGeneratorFixtures {
     return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
   }
 
-
   static Function<Path, Boolean> validateReferenceFileNoComponents() {
     final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testreferencefilenocomponents";
 
@@ -1664,9 +1665,6 @@ public final class OpenApiGeneratorFixtures {
       log.error(e.getLocalizedMessage());
     }
     return result;
-  }
-
-  private OpenApiGeneratorFixtures() {
   }
 
   private static String calculateJavaEEPackage(int springBootVersion) {

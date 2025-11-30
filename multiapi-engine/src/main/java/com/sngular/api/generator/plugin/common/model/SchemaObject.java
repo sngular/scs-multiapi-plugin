@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,44 +18,44 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = {"schemaName", "className"})
 public class SchemaObject {
 
-    private boolean isEnum;
+  private boolean isEnum;
 
-    private String schemaName;
+  private String schemaName;
 
-    private String className;
+  private String className;
 
-    private List<String> importList;
+  private List<String> importList;
 
-    private Set<SchemaFieldObject> fieldObjectList;
+  private Set<SchemaFieldObject> fieldObjectList;
 
-    private String schemaCombinator;
+  private String schemaCombinator;
 
-    private String parentPackage;
+  private String parentPackage;
 
-    public static final class SchemaObjectBuilder {
+  public static final class SchemaObjectBuilder {
 
-        private final List<String> importList = new ArrayList<>();
+    private final List<String> importList = new ArrayList<>();
 
-        private final Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
+    private final Set<SchemaFieldObject> fieldObjectList = new HashSet<>();
 
-        public SchemaObjectBuilder importList(final List<String> importList) {
-            this.importList.addAll(importList);
-            return this;
-        }
-
-        public SchemaObjectBuilder importItem(final String importItem) {
-            this.importList.add(importItem);
-            return this;
-        }
-
-        public SchemaObjectBuilder fieldObjectList(final Set<SchemaFieldObject> fieldObjectList) {
-            this.fieldObjectList.addAll(fieldObjectList);
-            return this;
-        }
-
-        public SchemaObjectBuilder fieldObject(final SchemaFieldObject fieldObject) {
-            this.fieldObjectList.add(fieldObject);
-            return this;
-        }
+    public SchemaObjectBuilder importList(final List<String> importList) {
+      this.importList.addAll(importList);
+      return this;
     }
+
+    public SchemaObjectBuilder importItem(final String importItem) {
+      this.importList.add(importItem);
+      return this;
+    }
+
+    public SchemaObjectBuilder fieldObjectList(final Set<SchemaFieldObject> fieldObjectList) {
+      this.fieldObjectList.addAll(fieldObjectList);
+      return this;
+    }
+
+    public SchemaObjectBuilder fieldObject(final SchemaFieldObject fieldObject) {
+      this.fieldObjectList.add(fieldObject);
+      return this;
+    }
+  }
 }

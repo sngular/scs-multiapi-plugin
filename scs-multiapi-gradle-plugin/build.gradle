@@ -5,12 +5,13 @@ plugins {
   id 'groovy'
   id 'jvm-test-suite'
   id 'checkstyle'
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  // Actualizado a una versión compatible con Gradle 8
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
@@ -20,7 +21,7 @@ repositories {
 }
 
 group = 'com.sngular'
-version = '6.2.1'
+version = '6.3.0'
 
 def SCSMultiApiPluginGroupId = group
 def SCSMultiApiPluginVersion = version
@@ -30,7 +31,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:6.2.1'
+  implementation 'com.sngular:multiapi-engine:6.3.0'
   testImplementation 'org.assertj:assertj-core:3.24.2'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.12.3'
   testImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
@@ -99,7 +100,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:6.2.1'
+        implementation 'com.sngular:scs-multiapi-gradle-plugin:6.3.0'
         implementation 'org.assertj:assertj-core:3.24.2'
       }
 
@@ -168,4 +169,3 @@ publishing {
     }
   }
 }
-

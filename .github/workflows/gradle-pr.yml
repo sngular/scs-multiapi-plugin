@@ -16,7 +16,10 @@ jobs:
         id: get-version
         run: |
           cd scs-multiapi-gradle-plugin
-          echo "version=$(gradle properties -q | grep "version:" | awk '{print $2}')" | tee $GITHUB_OUTPUT
+          # Usar el wrapper para asegurar la versión de Gradle configurada en gradle-wrapper.properties
+          # Ejecutar con flags para salida determinista
+          version=$(./gradlew --no-daemon --console=plain properties -q | grep "version:" | awk '{print $2}')
+          echo "version=$version" | tee $GITHUB_OUTPUT
       - name: Check if plugin version has been published
         uses: lakuapik/gh-actions-http-status@v1
         id: plugin-version-check

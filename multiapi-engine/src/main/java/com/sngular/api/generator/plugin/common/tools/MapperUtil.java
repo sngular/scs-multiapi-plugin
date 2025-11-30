@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
 
+  public static final String JAVA_TIME = "java.time.";
+
   private static final String REF = "$ref";
 
   private static final String[] DIVISOR = {"/", "-", "_"};
@@ -22,9 +24,9 @@ public class MapperUtil {
   private static final String SLASH = "/";
 
   private static final String PACKAGE_SEPARATOR_STR = ".";
-  public static final String JAVA_TIME = "java.time.";
 
-  private MapperUtil() {}
+  private MapperUtil() {
+  }
 
   public static String getSimpleType(final JsonNode schema, final CommonSpecFile specFile) {
     final String type;
@@ -39,60 +41,6 @@ public class MapperUtil {
       type = ObjectUtils.defaultIfNull(nodeType, TypeConstants.OBJECT);
     }
     return type;
-  }
-
-  public static String[] splitName(final String name) {
-    return ArrayUtils.removeAllOccurrences(name.split("\\W+"), "");
-  }
-
-  public static String[] splitReference(final String name) {
-    if (0 < StringUtils.indexOf(name, "#")) {
-      return StringUtils.split(name, "#");
-    } else if (0 == StringUtils.indexOf(name, "#")) {
-      return StringUtils.split(name, "#");
-    } else {
-      return ArrayUtils.addAll(new String[] {}, name, "");
-    }
-  }
-
-  public static String packageToFolder(final String packageName) {
-    return StringUtils.replace(packageName, ".", SLASH);
-  }
-
-  public static String getRefSchemaName(final JsonNode parameter, String defaultSchemaName) {
-    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    final String schemaName;
-    if (pathObjectRef[pathObjectRef.length - 1].contains(".yml")
-        || pathObjectRef[pathObjectRef.length - 1].contains(".yaml")
-        || pathObjectRef[pathObjectRef.length - 1].contains(".json")) {
-      schemaName = StringUtils.defaultIfEmpty(defaultSchemaName, "");
-    } else {
-      schemaName = pathObjectRef[pathObjectRef.length - 1];
-    }
-    return schemaName;
-  }
-
-  public static String getRefSchemaKey(final JsonNode parameter) {
-    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
-  }
-
-  public static String getRefSchemaKey(final String parameter) {
-    final String[] pathObjectRef = parameter.split("/");
-    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + getSchemaKey(pathObjectRef[pathObjectRef.length - 1]));
-  }
-
-  public static String getKeySchemaName(final String parameter) {
-    return StringCaseUtils.toCamelCase(getKey(parameter));
-  }
-
-  public static String getKey(final String keyString) {
-    final String[] pathObjectRef = keyString.split("/");
-    return pathObjectRef[pathObjectRef.length - 1];
-  }
-
-  public static String getSchemaKey(final String schemaName) {
-    return StringCaseUtils.titleToSnakeCase(schemaName);
   }
 
   private static boolean checkIfNumber(final String nodeType) {
@@ -123,6 +71,62 @@ public class MapperUtil {
     return type;
   }
 
+  public static String getPojoName(final String namePojo, final CommonSpecFile specFile) {
+    return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
+           + StringUtils.capitalize(namePojo)
+           + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
+  }
+
+  public static String getRefSchemaName(final JsonNode parameter, String defaultSchemaName) {
+    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
+    final String schemaName;
+    if (pathObjectRef[pathObjectRef.length - 1].contains(".yml")
+        || pathObjectRef[pathObjectRef.length - 1].contains(".yaml")
+        || pathObjectRef[pathObjectRef.length - 1].contains(".json")) {
+      schemaName = StringUtils.defaultIfEmpty(defaultSchemaName, "");
+    } else {
+      schemaName = pathObjectRef[pathObjectRef.length - 1];
+    }
+    return schemaName;
+  }
+
+  public static String[] splitReference(final String name) {
+    if (0 < StringUtils.indexOf(name, "#")) {
+      return StringUtils.split(name, "#");
+    } else if (0 == StringUtils.indexOf(name, "#")) {
+      return StringUtils.split(name, "#");
+    } else {
+      return ArrayUtils.addAll(new String[]{}, name, "");
+    }
+  }
+
+  public static String packageToFolder(final String packageName) {
+    return StringUtils.replace(packageName, ".", SLASH);
+  }
+
+  public static String getRefSchemaKey(final JsonNode parameter) {
+    final String[] pathObjectRef = ApiTool.getRefValue(parameter).split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + StringCaseUtils.titleToSnakeCase(pathObjectRef[pathObjectRef.length - 1]));
+  }
+
+  public static String getRefSchemaKey(final String parameter) {
+    final String[] pathObjectRef = parameter.split("/");
+    return StringUtils.upperCase(pathObjectRef[pathObjectRef.length - 2] + "/" + getSchemaKey(pathObjectRef[pathObjectRef.length - 1]));
+  }
+
+  public static String getSchemaKey(final String schemaName) {
+    return StringCaseUtils.titleToSnakeCase(schemaName);
+  }
+
+  public static String getKeySchemaName(final String parameter) {
+    return StringCaseUtils.toCamelCase(getKey(parameter));
+  }
+
+  public static String getKey(final String keyString) {
+    final String[] pathObjectRef = keyString.split("/");
+    return pathObjectRef[pathObjectRef.length - 1];
+  }
+
   public static String getTypeArray(final JsonNode array, final CommonSpecFile specFile) {
     var typeArray = "";
     if (ApiTool.isString(ApiTool.getItems(array))) {
@@ -135,15 +139,9 @@ public class MapperUtil {
     return typeArray;
   }
 
-  public static String getPojoName(final String namePojo, final CommonSpecFile specFile) {
-    return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-           + StringUtils.capitalize(namePojo)
-           + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
-  }
-
   public static String calculatePrefixName(final String namePojo, final CommonSpecFile specFile) {
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-        + StringUtils.capitalize(namePojo);
+           + StringUtils.capitalize(namePojo);
   }
 
   public static String getPojoNameFromRef(final JsonNode schema, final CommonSpecFile specFile, String defaultPojoName) {
@@ -179,6 +177,10 @@ public class MapperUtil {
     return splitName(schema.get(REF).textValue());
   }
 
+  public static String[] splitName(final String name) {
+    return ArrayUtils.removeAllOccurrences(name.split("\\W+"), "");
+  }
+
   public static String getLongRefClass(final JsonNode schema) {
     final String[] pathObjectRef = getStrings(schema);
     return pathObjectRef[pathObjectRef.length - 2] + "/" + pathObjectRef[pathObjectRef.length - 1];
@@ -186,22 +188,9 @@ public class MapperUtil {
 
   public static String getNameFromFile(final String filePath) {
     return capitalizeFileName(StringUtils
-        .removeStart(filePath, "./")
-        .substring(0, filePath.lastIndexOf('.') - 2)
-        .replace("\\/", "."));
-  }
-
-  public static String capitalizeWithPrefix(final String name) {
-    final StringBuilder response = new StringBuilder();
-    if (StringUtils.containsAny(name, DIVISOR)) {
-      final var splitPackage = MapperUtil.splitName(name);
-      for (int i = 0; i < splitPackage.length; i++) {
-        response.append(PACKAGE_SEPARATOR_STR).append(i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));
-      }
-    } else {
-      response.append(PACKAGE_SEPARATOR_STR).append(StringUtils.capitalize(name));
-    }
-    return response.toString();
+                                  .removeStart(filePath, "./")
+                                  .substring(0, filePath.lastIndexOf('.') - 2)
+                                  .replace("\\/", "."));
   }
 
   public static String capitalizeFileName(final String name) {
@@ -217,8 +206,21 @@ public class MapperUtil {
     return response.toString();
   }
 
+  public static String capitalizeWithPrefix(final String name) {
+    final StringBuilder response = new StringBuilder();
+    if (StringUtils.containsAny(name, DIVISOR)) {
+      final var splitPackage = MapperUtil.splitName(name);
+      for (int i = 0; i < splitPackage.length; i++) {
+        response.append(PACKAGE_SEPARATOR_STR).append(i < splitPackage.length - 1 ? splitPackage[i] : StringUtils.capitalize(splitPackage[i]));
+      }
+    } else {
+      response.append(PACKAGE_SEPARATOR_STR).append(StringUtils.capitalize(name));
+    }
+    return response.toString();
+  }
+
   public static String getModel(String reference) {
-    return reference.substring(reference.lastIndexOf("/")+1);
+    return reference.substring(reference.lastIndexOf("/") + 1);
   }
 
   public static String getPathToModel(String reference) {

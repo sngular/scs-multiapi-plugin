@@ -14,5 +14,5 @@ public interface FileLocation {
 
   InputStream getFileAtLocation(String filename) throws IOException;
 
-  URI getPath();
+  URI path();
 }

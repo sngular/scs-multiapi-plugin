@@ -1,6 +1,7 @@
 package com.sngular.api.generator.plugin.common.model;
 
 import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,30 +14,30 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class CommonSpecFile {
 
-    private String filePath;
+  private String filePath;
 
-    private String apiPackage;
+  private String apiPackage;
 
-    private String modelPackage;
+  private String modelPackage;
 
-    private String modelNamePrefix;
+  private String modelNamePrefix;
 
-    private String modelNameSuffix;
+  private String modelNameSuffix;
 
-    private String classNamePostfix;
+  private String classNamePostfix;
 
-    private boolean useLombokModelAnnotation;
+  private boolean useLombokModelAnnotation;
 
-    @Builder.Default
-    private String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
+  @Builder.Default
+  private String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
-    @Builder.Default
-    private String dateFormat = "yyyy-MM-dd";
+  @Builder.Default
+  private String dateFormat = "yyyy-MM-dd";
 
-    @Builder.Default
-    private TypeConstants.TimeType useTimeType = TypeConstants.TimeType.LOCAL;
+  @Builder.Default
+  private TypeConstants.TimeType useTimeType = TypeConstants.TimeType.LOCAL;
 
-    public Map<String, String> getFormats() {
-        return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
-    }
+  public Map<String, String> getFormats() {
+    return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
+  }
 }

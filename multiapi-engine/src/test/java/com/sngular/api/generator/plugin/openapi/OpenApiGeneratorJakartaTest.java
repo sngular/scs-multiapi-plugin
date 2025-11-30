@@ -23,12 +23,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class OpenApiGeneratorJakartaTest {
 
+  private static final int SPRING_BOOT_VERSION = 3;
   @TempDir(cleanup = CleanupMode.NEVER)
   static Path baseDir;
-
   private static OpenApiGenerator openApiGenerator;
-
-  private static final int SPRING_BOOT_VERSION = 3;
 
   @BeforeAll
   static void setup() {
@@ -40,11 +38,11 @@ class OpenApiGeneratorJakartaTest {
   static Stream<Arguments> fileSpecToProcess() {
     return Stream.of(
         Arguments.of("testApiReactiveGeneration", OpenApiGeneratorFixtures.TEST_API_REACTIVE_GENERATION,
-                     OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
+            OpenApiGeneratorFixtures.validateApiReactiveGeneration(SPRING_BOOT_VERSION)),
         Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
-                     OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
+            OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,
-                     OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION))
+            OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION))
     );
   }
 

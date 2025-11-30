@@ -6,6 +6,8 @@
 
 package com.sngular.api.generator.test.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -13,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 
@@ -26,8 +26,8 @@ public class TestUtils {
     outputFiles.removeIf(File::isDirectory);
     outputFiles.sort(Comparator.comparing(File::getPath));
     assertThat(outputFiles)
-            .overridingErrorMessage("Wrong Number of files %d vs %d: %s", outputFiles.size(), expectedFiles.size(), outputFiles)
-            .hasSize(expectedFiles.size());
+        .overridingErrorMessage("Wrong Number of files %d vs %d: %s", outputFiles.size(), expectedFiles.size(), outputFiles)
+        .hasSize(expectedFiles.size());
     for (int i = 0; i < outputFiles.size(); i++) {
       reader1 = outputFiles.get(i);
       assertThat(reader1).overridingErrorMessage("Generated file %s should not be null", outputFiles.get(i)).isNotNull();
@@ -35,7 +35,7 @@ public class TestUtils {
       reader2 = TestUtils.resourceAsFile(sourceName);
       assertThat(reader2).overridingErrorMessage("Expected file %s should not be null", sourceName).isNotNull();
       assertThat(reader1)
-        .hasSameTextualContentAs(reader2);
+          .hasSameTextualContentAs(reader2);
     }
   }
 

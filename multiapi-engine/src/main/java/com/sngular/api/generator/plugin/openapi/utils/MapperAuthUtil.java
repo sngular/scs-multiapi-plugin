@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
@@ -24,7 +25,8 @@ public class MapperAuthUtil {
 
   private static final String API_KEY = "apiKey";
 
-  private MapperAuthUtil() {}
+  private MapperAuthUtil() {
+  }
 
   public static List<AuthSchemaObject> createAuthSchemaList(final JsonNode openAPI) {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
@@ -34,13 +36,13 @@ public class MapperAuthUtil {
       final var typeStr = ApiTool.getType(value);
       final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(ApiTool.getNodeAsString(value, "scheme"));
       final var authSchema = AuthSchemaObject
-          .builder()
-          .name(StringCaseUtils.toCamelCase(MapperUtil.getKey(key)))
-          .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value))
-          .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
-          .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")
-          .bearerSchema(isHttpBearer ? ApiTool.getNodeAsString(value, "scheme") : "")
-          .build();
+                                 .builder()
+                                 .name(StringCaseUtils.toCamelCase(MapperUtil.getKey(key)))
+                                 .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value))
+                                 .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
+                                 .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")
+                                 .bearerSchema(isHttpBearer ? ApiTool.getNodeAsString(value, "scheme") : "")
+                                 .build();
       authList.add(authSchema);
     }
     return authList;

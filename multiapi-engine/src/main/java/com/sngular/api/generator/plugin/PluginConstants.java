@@ -14,5 +14,6 @@ public class PluginConstants {
 
   public static final String GENERATED_SOURCES_API_GENERATOR_FOLDER = "apigenerator/";
 
-  private PluginConstants() {}
+  private PluginConstants() {
+  }
 }
