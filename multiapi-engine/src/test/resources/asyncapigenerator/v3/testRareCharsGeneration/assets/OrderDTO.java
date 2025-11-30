@@ -20,7 +20,7 @@ public class OrderDTO {
   private New _new;
   public enum New {
     ONE_PIECE_WORKS("one:piece:works"),
-    TWO_PIECE_WORKS("two:piece:works"),
+    TWO_PIECE_WORKS("two-piece-works"),
     THREE_PIECE_WORKS("three:piece:works");
 
     private String value;

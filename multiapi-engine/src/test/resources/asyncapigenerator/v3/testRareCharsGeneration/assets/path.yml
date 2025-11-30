@@ -35,5 +35,5 @@ components:
           type: string
           enum:
           - "one:piece:works"
-          - "two:piece:works"
+          - "two-piece-works"
           - "three:piece:works"
