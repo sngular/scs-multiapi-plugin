@@ -21,7 +21,7 @@ public final class PathUtil {
   }
 
   /**
-   * Checks if a file path is absolute. An absolute path is platform-dependent: - On Windows: C:\path, D:\path, \\server\share (UNC) - On Unix/Linux: /path
+   * Checks if a file path is absolute. An absolute path is platform-dependent: - On Windows: C:\\path, D:\\path, \\\\server\\share (UNC) - On Unix/Linux: /path
    *
    * @param filePath the file path to check
    * @return true if the path is absolute, false if relative or invalid

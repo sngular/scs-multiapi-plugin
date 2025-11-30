@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
@@ -69,9 +71,18 @@ public class SchemaUtil {
         // For absolute paths, convert directly to URL without resolving against rootFilePath
         fileURL = Paths.get(filePath).toUri().toURL();
       } else {
-        // For relative paths, resolve against the root file path
-        final var parentFolder = rootFilePath.resolve(cleanUpPath(filePath));
-        fileURL = parentFolder.toURL();
+        try {
+          // Resolve against the root file path using Path to handle backslashes and .. properly
+          final Path rootPath = Paths.get(rootFilePath);
+          final Path base = Files.isDirectory(rootPath) ? rootPath : (rootPath.getParent() != null ? rootPath.getParent() : rootPath);
+          final Path resolved = base.resolve(filePath).normalize();
+          fileURL = resolved.toUri().toURL();
+        } catch (final Exception e) {
+          // Fallback: try to normalize slashes and resolve via URI (less preferred)
+          final String cleaned = cleanUpPath(filePath).replace('\\', '/');
+          final URI resolvedUri = rootFilePath.resolve(cleaned);
+          fileURL = resolvedUri.toURL();
+        }
       }
     }
     final var sb = new StringBuilder();
