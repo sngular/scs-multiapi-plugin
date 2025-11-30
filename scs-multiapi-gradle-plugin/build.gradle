@@ -5,7 +5,8 @@ plugins {
   id 'groovy'
   id 'jvm-test-suite'
   id 'checkstyle'
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
+  // Actualizado a una versión compatible con Gradle 8
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 java {
@@ -168,4 +169,3 @@ publishing {
     }
   }
 }
-
