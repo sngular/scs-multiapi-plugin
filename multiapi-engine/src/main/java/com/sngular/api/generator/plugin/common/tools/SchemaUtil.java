@@ -63,23 +63,26 @@ public class SchemaUtil {
     if (Objects.isNull(filePath)) {
       throw new IllegalArgumentException("File Path cannot be empty");
     }
-    // First, try to find the file in the classpath
-    URL fileURL = SchemaUtil.class.getClassLoader().getResource(filePath);
+
+    // Normalize the incoming filePath: remove leading './' and replace backslashes with forward slashes
+    final String cleaned = cleanUpPath(filePath).replace('\\', '/');
+
+    // First, try to find the file in the classpath using the cleaned path
+    URL fileURL = SchemaUtil.class.getClassLoader().getResource(cleaned);
     if (Objects.isNull(fileURL)) {
-      // Check if the path is absolute
-      if (PathUtil.isAbsolutePath(filePath)) {
+      // Check if the path is absolute (platform specific)
+      if (PathUtil.isAbsolutePath(cleaned)) {
         // For absolute paths, convert directly to URL without resolving against rootFilePath
-        fileURL = Paths.get(filePath).toUri().toURL();
+        fileURL = Paths.get(cleaned).toUri().toURL();
       } else {
         try {
-          // Resolve against the root file path using Path to handle backslashes and .. properly
+          // Resolve against the root file path using Path to handle '..' properly
           final Path rootPath = Paths.get(rootFilePath);
           final Path base = Files.isDirectory(rootPath) ? rootPath : (rootPath.getParent() != null ? rootPath.getParent() : rootPath);
-          final Path resolved = base.resolve(filePath).normalize();
+          final Path resolved = base.resolve(Paths.get(cleaned)).normalize();
           fileURL = resolved.toUri().toURL();
         } catch (final Exception e) {
-          // Fallback: try to normalize slashes and resolve via URI (less preferred)
-          final String cleaned = cleanUpPath(filePath).replace('\\', '/');
+          // Fallback: resolve the cleaned path against the rootFilePath URI
           final URI resolvedUri = rootFilePath.resolve(cleaned);
           fileURL = resolvedUri.toURL();
         }
