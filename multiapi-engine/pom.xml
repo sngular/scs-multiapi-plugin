@@ -8,8 +8,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <swagger-parser.version>2.1.12</swagger-parser.version>
     <commons-lang3.version>3.17.0</commons-lang3.version>
     <commons-io.version>2.16.1</commons-io.version>
@@ -69,6 +69,7 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -209,10 +210,17 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.14.0</version>
         <configuration>
-          <source>${maven.compiler.target}</source>
-          <target>${maven.compiler.target}</target>
+          <!-- Usar release en lugar de source/target para fijar la API estándar del JDK -->
+          <release>${maven.compiler.target}</release>
           <debug>true</debug>
           <debuglevel>lines,vars,source</debuglevel>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>

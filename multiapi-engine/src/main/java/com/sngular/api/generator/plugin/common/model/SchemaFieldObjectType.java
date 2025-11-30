@@ -46,7 +46,7 @@ public class SchemaFieldObjectType {
       new SimpleImmutableEntry<>(TypeConstants.ARRAY, "java.util.List"),
       new SimpleImmutableEntry<>(TypeConstants.MAP, "java.util.Map"),
       new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "java.math.BigDecimal"),
-      new SimpleImmutableEntry<>(TypeConstants.STRING, "java.util.String"),
+      new SimpleImmutableEntry<>(TypeConstants.STRING, "java.lang.String"),
       new SimpleImmutableEntry<>(TypeConstants.LOCALDATE, "java.time.LocalDate"),
       new SimpleImmutableEntry<>(TypeConstants.LOCALDATETIME, "java.time.LocalDateTime"),
       new SimpleImmutableEntry<>(TypeConstants.ZONEDDATE, "java.time." + ZONED_DATE_TIME),
