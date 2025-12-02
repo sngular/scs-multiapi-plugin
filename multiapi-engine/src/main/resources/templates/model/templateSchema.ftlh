@@ -11,8 +11,12 @@
       <#return getConstValue(propertyName, ender, const)/>
     </#if>
 </#function>
+<#-- Returns a safe variable name converted to lowerCamel then checked for reserved words/digits -->
+<#function varSafeName propertyName ender const="">
+  <#return calculateSafeName(templateUtils.toLowerCamel(propertyName), ender, const)/>
+</#function>
 <#function createSimpleType field>
-    ${calculateSafeName (field.baseName, ";", field.constValue)}
+  ${varSafeName(field.baseName, ";", field.constValue)}
 </#function>
 <#function singularizeName propertyName>
     <#if propertyName?matches(".*ies")>
@@ -209,11 +213,11 @@ public class ${schema.className} {
   @NotNull
   </#if>
   <#if field.dataType.baseType == "array">
-  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.dataType} ${varSafeName(field.baseName, ";")}
   <#elseif field.dataType.baseType == "map">
-  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.dataType} ${varSafeName(field.baseName, ";")}
   <#elseif field.dataType.baseType == "enum">
-  private ${requireFinal (field)}${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.baseName?cap_first} ${varSafeName(field.baseName, ";")}
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
   <#if key?matches("[0-9].*")>
@@ -240,15 +244,15 @@ public class ${schema.className} {
     }
   }
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-  private ${requireFinal (field)}${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, ";")}
   <#else>
-  private ${requireFinal (field)}${field.dataType} ${calculateSafeName (field.baseName, ";")}
+  private ${requireFinal (field)}${field.dataType} ${varSafeName(field.baseName, ";")}
   </#if>
 </#list>
 
   private ${schema.className}(${schema.className}Builder builder) {
   <#list schema.fieldObjectList as field>
-    this.${calculateSafeName (field.baseName, "")} = builder.${calculateSafeName (field.baseName, ";")}
+    this.${varSafeName(field.baseName, "")} = builder.${varSafeName(field.baseName, ";")}
   </#list>
 
   <#list schema.fieldObjectList as field>
@@ -271,21 +275,21 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "array">
-    private ${field.dataType} ${calculateSafeName (field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
+    private ${field.dataType} ${varSafeName(field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "map">
-    private ${field.dataType} ${calculateSafeName (field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
+    private ${field.dataType} ${varSafeName(field.baseName, "")} = new ${field.dataType?api.getImplementationTypeString()}();
   <#elseif field.dataType.baseType == "enum">
-    private ${field.baseName?cap_first} ${calculateSafeName (field.baseName, ";")}
+    private ${field.baseName?cap_first} ${varSafeName(field.baseName, ";")}
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-    private ${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, ";")}
+    private ${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, ";")}
   <#else>
-    private ${field.dataType} ${calculateSafeName (field.baseName, ";", field.constValue)}
+    private ${field.dataType} ${varSafeName(field.baseName, ";", field.constValue)}
   </#if>
 </#list>
 
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "array">
-    <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
+    <#assign propName>${varSafeName(field.baseName, "")}</#assign>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
       if (!${propName}.isEmpty()) {
         this.${propName}.addAll(${propName});
@@ -293,7 +297,7 @@ public class ${schema.className} {
       return this;
     }
 
-    <#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+    <#assign singName>${singularizeName (varSafeName(field.baseName, ""))}</#assign>
     public ${schema.className}.${schema.className}Builder ${singName}(${field.dataType.innerType} ${singName}) {
       if (Objects.nonNull(${singName})) {
         this.${propName}.add(${singName});
@@ -302,7 +306,7 @@ public class ${schema.className} {
     }
 
   <#elseif field.dataType.baseType == "map">
-    <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
+    <#assign propName>${varSafeName(field.baseName, "")}</#assign>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
       this.${propName} = ${propName};
       return this;
@@ -314,20 +318,20 @@ public class ${schema.className} {
     }
 
   <#elseif field.dataType.baseType == "enum">
-    public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${field.baseName}) {
-      this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+    public ${schema.className}.${schema.className}Builder ${varSafeName(field.baseName, "")}(${field.baseName?cap_first} ${field.baseName}) {
+      this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
       return this;
     }
 
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-    public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
-      this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+    public ${schema.className}.${schema.className}Builder ${varSafeName(field.baseName, "")}(${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, "")}) {
+      this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
       return this;
     }
 
   <#elseif !(hasConstValue (field))>
-    public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
-      this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+    public ${schema.className}.${schema.className}Builder ${varSafeName(field.baseName, "")}(${field.dataType} ${varSafeName(field.baseName, "")}) {
+      this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
       return this;
     }
 
@@ -343,47 +347,47 @@ public class ${schema.className} {
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if>)
   <#if field.dataType.baseType == "array">
   public ${field.dataType} get${field.baseName?cap_first}() {
-    return ${calculateSafeName (field.baseName, ";")}
+    return ${varSafeName(field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
-    this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+  public void set${field.baseName?cap_first}(${field.dataType} ${varSafeName(field.baseName, "")}) {
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.baseType == "map">
   public ${field.dataType} get${field.baseName?cap_first}() {
-    return ${calculateSafeName (field.baseName, ";")}
+    return ${varSafeName(field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
-    this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+  public void set${field.baseName?cap_first}(${field.dataType} ${varSafeName(field.baseName, "")}) {
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.baseType == "enum">
   public ${field.baseName?cap_first} get${field.baseName?cap_first}() {
-    return ${calculateSafeName (field.baseName, ";")}
+    return ${varSafeName(field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
-    this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+  public void set${field.baseName?cap_first}(${field.baseName?cap_first} ${varSafeName(field.baseName, "")}) {
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
   public ${field.dataType.innerType?cap_first} get${field.baseName?cap_first}() {
-    return ${calculateSafeName (field.baseName, ";")}
+    return ${varSafeName(field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
-    this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+  public void set${field.baseName?cap_first}(${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, "")}) {
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
   }
   </#if>
   <#else>
   public ${field.dataType} get${field.baseName?cap_first}() {
-    return ${calculateSafeName (field.baseName, ";")}
+    return ${varSafeName(field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
-    this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
+  public void set${field.baseName?cap_first}(${field.dataType} ${varSafeName(field.baseName, "")}) {
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, ";")}
   }
   </#if>
   </#if>
@@ -398,12 +402,12 @@ public class ${schema.className} {
       return false;
     }
     ${schema.className} ${schema.className?uncap_first} = (${schema.className}) o;
-    return <#compress><#list schema.fieldObjectList as field> Objects.equals(this.${calculateSafeName (field.baseName, "")}, ${schema.className?uncap_first}.${calculateSafeName (field.baseName, "")})<#if field?has_next> && </#if></#list>;</#compress>
+    return <#compress><#list schema.fieldObjectList as field> Objects.equals(this.${varSafeName(field.baseName, "")}, ${schema.className?uncap_first}.${varSafeName(field.baseName, "")})<#if field?has_next> && </#if></#list>;</#compress>
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(<#list schema.fieldObjectList as field>${calculateSafeName (field.baseName, "")}<#if field?has_next>, </#if></#list>);
+    return Objects.hash(<#list schema.fieldObjectList as field>${varSafeName(field.baseName, "")}<#if field?has_next>, </#if></#list>);
   }
 
   @Override
@@ -411,10 +415,10 @@ public class ${schema.className} {
     StringBuilder sb = new StringBuilder();
     sb.append("${schema.className}{");
 <#list schema.fieldObjectList as field>
-  <#if field_has_next>
-    sb.append(" ${field.baseName?uncap_first}:").append(${calculateSafeName (field.baseName, "")}).append(",");
+    <#if field_has_next>
+    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")} ).append(",");
   <#else>
-    sb.append(" ${field.baseName?uncap_first}:").append(${calculateSafeName (field.baseName, "")});
+    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")} );
   </#if>
 </#list>
     sb.append("}");
@@ -427,9 +431,9 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
 <#if field == schema.fieldObjectList?first>
-     if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-<#else>
- else if (Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
+  if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+#else>
+ else if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
 </#if>
         satisfiedCondition = true;
       }</#list>
@@ -446,9 +450,9 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList?filter(f -> f.required) as field>
 <#if field?index == 0>
-    if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
-<#else>
- else if (!Objects.nonNull(this.${calculateSafeName (field.baseName, "")})) {
+  if (!Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+#else>
+ else if (!Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
 </#if>
       satisfiedCondition = false;
     }</#list>

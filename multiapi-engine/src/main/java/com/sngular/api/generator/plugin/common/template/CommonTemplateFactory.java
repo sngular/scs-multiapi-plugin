@@ -72,6 +72,8 @@ public abstract class CommonTemplateFactory {
     cfg.setLogTemplateExceptions(true);
     cfg.setAPIBuiltinEnabled(true);
     addToRoot("checkBasicTypes", BASIC_DATA_TYPES);
+    // expose template utilities to freemarker templates
+    addToRoot("templateUtils", new com.sngular.api.generator.plugin.common.tools.TemplateUtils());
     this.targetFolder = targetFolder;
     this.targetFileFilter = (dir, name) -> name.toLowerCase().contains(targetFolder.toPath().getFileName().toString());
     this.processedGeneratedSourcesFolder = processedGeneratedSourcesFolder;

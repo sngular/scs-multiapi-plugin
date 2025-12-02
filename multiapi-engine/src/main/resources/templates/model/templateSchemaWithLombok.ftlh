@@ -16,12 +16,16 @@
         </#if>
     </#if>
 </#function>
+<#-- Return a safe variable name converted to lowerCamel then checked for reserved words/digits -->
+<#function varSafeName propertyName ender const="">
+  <#return calculateSafeName(templateUtils.toLowerCamel(propertyName), ender, const)/>
+</#function>
 <#function createSimpleType field>
-    <#if (field.constValue?has_content)>
-        ${calculateSafeName (field.baseName, ";", field.constValue)}
-    <#else >
-        ${calculateSafeName (field.baseName, ";", "")}
-    </#if>
+  <#if (field.constValue?has_content)>
+    ${varSafeName(field.baseName, ";", field.constValue)}
+  <#else >
+    ${varSafeName(field.baseName, ";", "")}
+  </#if>
 </#function>
 <#function getConstValue fieldName ender value="">
     <#if value?has_content>
@@ -214,15 +218,15 @@ public class ${schema.className} {
   @NonNull
 </#if>
 <#if field.dataType.baseType == "array">
-<#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+<#assign singName>${singularizeName (varSafeName(field.baseName, ""))}</#assign>
   @Singular("${singName}")
-  private ${field.dataType} ${field.baseName?uncap_first};
+  private ${field.dataType} ${varSafeName(field.baseName, "")};
   <#elseif field.dataType.baseType == "map">
-<#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+<#assign singName>${singularizeName (varSafeName(field.baseName, ""))}</#assign>
   @Singular("${singName}")
-  private ${field.dataType} ${field.baseName?uncap_first};
+  private ${field.dataType} ${varSafeName(field.baseName, "")};
 <#elseif field.dataType.baseType == "enum">
-  private ${field.baseName?cap_first} ${field.baseName?uncap_first};
+  private ${field.baseName?cap_first} ${varSafeName(field.baseName, "")};
 
   public enum ${field.baseName?cap_first} {
 <#list field.enumValues as key, value>
@@ -250,7 +254,7 @@ public class ${schema.className} {
     }
   }
 <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-  private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
+  private ${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, "")};
 <#else>
   private ${field.dataType} ${createSimpleType (field)}
 </#if>
@@ -259,10 +263,10 @@ public class ${schema.className} {
 
   @Builder
   @Jacksonized
-  private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-      <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+    private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
+      <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${varSafeName(field.baseName, "")}<#elseif field.dataType.baseType == "array">${field.dataType} ${varSafeName(field.baseName, "")}<#elseif field.dataType.baseType == "map">${field.dataType} ${varSafeName(field.baseName, "")}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, "")}<#else>${field.dataType} ${varSafeName(field.baseName, "")}</#if><#sep>, </#list>) {</@compress>
   <#list schema.fieldObjectList as field>
-    this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
+    this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, "")};
   </#list>
 
   <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
@@ -276,7 +280,7 @@ public class ${schema.className} {
 
       <#list schema.fieldObjectList as field>
           <#if field == schema.fieldObjectList?first>
-            if (Objects.nonNull(this.${field.baseName?uncap_first})) {<#else> else if (Objects.nonNull(this.${field.baseName?uncap_first})) {</#if>
+            if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {<#else> else if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {</#if>
         satisfiedCondition = true;
         }</#list>
 
