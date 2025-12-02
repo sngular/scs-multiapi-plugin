@@ -4,7 +4,7 @@
 
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-    <version>6.3.0</version>
+    <version>6.3.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>AsyncApi - OpenApi Code Generator Maven Plugin</name>
@@ -271,7 +271,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>6.3.0</version>
+      <version>6.3.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
