@@ -30,14 +30,40 @@ public class SchemaUtil {
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
         final String refSchemaName = MapperUtil.getRefSchemaKey(refValue);
+        // try direct
         solvedRef = schemaMap.get(refSchemaName);
+        // if not found, try PascalCase variant
+        if (Objects.isNull(solvedRef)) {
+          final String pascal = toPascalCase(refSchemaName);
+          if (!Objects.equals(pascal, refSchemaName)) {
+            solvedRef = schemaMap.get(pascal);
+          }
+        }
       } else {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
-        solvedRef = getPojoFromRef(rootFilePath, filePath);
-        if (ApiTool.hasComponents(solvedRef)) {
-          schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
-          solvedRef = solvedRef.findValue(MapperUtil.getKey(refValueArr[1]));
+        final JsonNode fileNode = getPojoFromRef(rootFilePath, filePath);
+        // If the referenced file contains components, insert them into schemaMap (original and PascalCase keys)
+        if (ApiTool.hasComponents(fileNode)) {
+          final Map<String, JsonNode> components = ApiTool.getComponentSchemas(fileNode);
+          for (final Map.Entry<String, JsonNode> entry : components.entrySet()) {
+            final String originalKey = entry.getKey();
+            final JsonNode value = entry.getValue();
+            final String normalizedKey = toPascalCase(originalKey);
+            schemaMap.put(originalKey, value);
+            if (!Objects.equals(originalKey, normalizedKey)) {
+              schemaMap.put(normalizedKey, value);
+            }
+          }
+        }
+        // If a fragment is provided after '#', attempt to extract that node from the file; otherwise return the whole file
+        if (refValueArr.length > 1 && StringUtils.isNotEmpty(refValueArr[1])) {
+          final String fragment = refValueArr[1];
+          final String key = MapperUtil.getKey(fragment);
+          solvedRef = fileNode.findValue(key);
+        } else {
+          // No fragment provided: return the root document. The caller can decide how to register it.
+          solvedRef = fileNode;
         }
       }
     } else {
@@ -102,5 +128,25 @@ public class SchemaUtil {
 
   private static String cleanUpPath(final String filePath) {
     return StringUtils.startsWith(filePath, "./") ? filePath.substring(2) : filePath;
+  }
+
+  // Convierte entradas como snake_case o kebab-case o con espacios a PascalCase (CamelCase con inicial mayúscula)
+  private static String toPascalCase(final String input) {
+    if (input == null || input.isEmpty()) {
+      return input;
+    }
+    final String[] parts = input.split("[_\\-\\s]+");
+    final StringBuilder sb = new StringBuilder();
+    for (final String part : parts) {
+      if (part == null || part.isEmpty()) {
+        continue;
+      }
+      final String lower = part.toLowerCase();
+      sb.append(Character.toUpperCase(lower.charAt(0)));
+      if (lower.length() > 1) {
+        sb.append(lower.substring(1));
+      }
+    }
+    return sb.toString();
   }
 }

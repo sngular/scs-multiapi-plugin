@@ -101,6 +101,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateValidationAnnotationsLombok(SPRING_BOOT_VERSION)),
         Arguments.of("testCreateDTO", OpenApiGeneratorFixtures.TEST_CREATE_DTO,
             OpenApiGeneratorFixtures.validateCreateDTO()),
+        Arguments.of("testCreateCamelDTO", OpenApiGeneratorFixtures.TEST_CREATE_CAMEL_DTO,
+            OpenApiGeneratorFixtures.validateCreateCamelDTO()),
         Arguments.of("testCreateDTOWithEnum", OpenApiGeneratorFixtures.TEST_CREATE_DTO_WITH_ENUM,
             OpenApiGeneratorFixtures.validateCreateDTOWithEnum()),
         Arguments.of("testCreateBasicDTO", OpenApiGeneratorFixtures.TEST_CREATE_BASIC_DTO,

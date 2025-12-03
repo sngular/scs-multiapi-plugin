@@ -263,7 +263,7 @@ public class ${schema.className} {
 
   @Builder
   @Jacksonized
-    private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
+  private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
       <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${varSafeName(field.baseName, "")}<#elseif field.dataType.baseType == "array">${field.dataType} ${varSafeName(field.baseName, "")}<#elseif field.dataType.baseType == "map">${field.dataType} ${varSafeName(field.baseName, "")}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${varSafeName(field.baseName, "")}<#else>${field.dataType} ${varSafeName(field.baseName, "")}</#if><#sep>, </#list>) {</@compress>
   <#list schema.fieldObjectList as field>
     this.${varSafeName(field.baseName, "")} = ${varSafeName(field.baseName, "")};
@@ -278,14 +278,17 @@ public class ${schema.className} {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-      <#list schema.fieldObjectList as field>
-          <#if field == schema.fieldObjectList?first>
-            if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {<#else> else if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {</#if>
-        satisfiedCondition = true;
-        }</#list>
+<#list schema.fieldObjectList as field>
+  <#if field == schema.fieldObjectList?first>
+    if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+  <#else>
+ else if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+  </#if>
+      satisfiedCondition = true;
+    }</#list>
 
     if (!satisfiedCondition) {
-    throw new ModelClassException("${schema.className}");
+      throw new ModelClassException("${schema.className}");
     }
   }
 </#if>

@@ -407,7 +407,12 @@ public class MapperPathUtil {
     if (ApiTool.hasRef(schema)) {
       final String refSchemaPojoName = MapperUtil.getPojoNameFromRef(schema, specFile, pojoName);
       final JsonNode refSchema = getRefSchema(schema, specFile, globalObject, baseDir, pojoName);
-      type = getSchemaType(refSchema, refSchemaPojoName, specFile, globalObject, baseDir);
+      if (Objects.isNull(refSchema)) {
+        // External ref resolved to nothing (no components and no fragment). Treat as a reference to an object type
+        type = SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, refSchemaPojoName);
+      } else {
+        type = getSchemaType(refSchema, refSchemaPojoName, specFile, globalObject, baseDir);
+      }
     } else if (ApiTool.hasAdditionalProperties(schema)) {
       type = getMapSchemaType(schema, pojoName, specFile, globalObject, baseDir);
     } else if (ApiTool.isDateTime(schema)) {
@@ -439,7 +444,28 @@ public class MapperPathUtil {
     } else {
       refSchema = SchemaUtil.solveRef(refValue, globalObject.getSchemaMap(),
                                       baseDir.resolve(specFile.getFilePath()).getParent().toUri());
-      globalObject.getSchemaMap().put(inlinePojoName, refSchema);
+      // If we actually resolved a schema from the external file, insert it into the schemaMap
+      if (Objects.nonNull(refSchema)) {
+        globalObject.getSchemaMap().put(inlinePojoName, refSchema);
+        try {
+          final String[] parts = refValue.split("/");
+          if (parts.length >= 2) {
+            final String keyType = parts[parts.length - 2];
+            String name = parts[parts.length - 1];
+            // Only insert a map key derived from the file name if the ref contains a fragment (#) or the name has no extension
+            final boolean refHasFragment = refValue.contains("#");
+            final boolean nameHasExtension = name.contains(".");
+            if (refHasFragment || !nameHasExtension) {
+              // strip extension if present
+              final String nameWithoutExt = nameHasExtension ? name.replaceFirst("\\.[^\\.]+$", "") : name;
+              final String mapKey = StringUtils.upperCase(keyType + "/" + StringCaseUtils.titleToSnakeCase(nameWithoutExt));
+              globalObject.getSchemaMap().put(mapKey, refSchema);
+            }
+           }
+         } catch (final Exception ignored) {
+           // ignore errors in key insertion — best effort only
+         }
+       }
     }
     return refSchema;
   }
@@ -501,9 +527,7 @@ public class MapperPathUtil {
   }
 
   public static String getPojoName(final String namePojo, final SpecFile specFile) {
-    return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-           + namePojo
-           + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
+    return MapperUtil.getPojoName(namePojo, specFile);
   }
 
 }

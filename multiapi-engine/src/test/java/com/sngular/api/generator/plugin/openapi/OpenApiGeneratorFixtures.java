@@ -391,6 +391,17 @@ public final class OpenApiGeneratorFixtures {
           .useLombokModelAnnotation(true)
           .build()
   );
+  static final List<SpecFile> TEST_CREATE_CAMEL_DTO = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testCreateCamelDTO/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testCreateCamelDTO")
+          .modelPackage("com.sngular.multifileplugin.testCreateCamelDTO.model")
+          .clientPackage("com.sngular.multifileplugin.testCreateCamelDTO.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
 
   static final List<SpecFile> TEST_CREATE_DTO_WITH_ENUM = List.of(
       SpecFile
@@ -1399,6 +1410,30 @@ public final class OpenApiGeneratorFixtures {
     final List<String> expectedTestApiModelFiles = List.of(
         ASSETS_PATH + "model/AddressDTO.java",
         ASSETS_PATH + "model/PropertiesDTO.java",
+        ASSETS_PATH + "model/TestDTO.java"
+    );
+
+    return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+  }
+
+  static Function<Path, Boolean> validateCreateCamelDTO() {
+    final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testCreateCamelDTO";
+
+    final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testCreateCamelDTO/model";
+
+    final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/testCreateCamelDTO/model/exception";
+
+    final String COMMON_PATH = "openapigenerator/testCreateCamelDTO/";
+
+    final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+    final List<String> expectedTestApiFile = List.of(
+        ASSETS_PATH + "TestApi.java"
+    );
+
+    final List<String> expectedTestApiModelFiles = List.of(
+        ASSETS_PATH + "model/AddressDTO.java",
+        ASSETS_PATH + "model/ContractPropertiesDTO.java",
         ASSETS_PATH + "model/TestDTO.java"
     );
 

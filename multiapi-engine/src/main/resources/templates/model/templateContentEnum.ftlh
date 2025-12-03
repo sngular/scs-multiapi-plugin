@@ -13,7 +13,7 @@
 </#function>
 <#-- Return a safe variable name converted to lowerCamel then checked for reserved words/digits -->
 <#function varSafeName propertyName ender const="">
-    <#return calculateSafeName(templateUtils.toLowerCamel(propertyName), ender, const)/>
+  <#return calculateSafeName(templateUtils.toLowerCamel(propertyName), ender, const)/>
 </#function>
 <#function createSimpleType field>
     ${varSafeName(field.baseName, ";", field.constValue)}

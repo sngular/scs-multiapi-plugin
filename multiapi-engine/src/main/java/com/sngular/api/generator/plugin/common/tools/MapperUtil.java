@@ -72,8 +72,11 @@ public class MapperUtil {
   }
 
   public static String getPojoName(final String namePojo, final CommonSpecFile specFile) {
+    final String raw = namePojo == null ? "" : namePojo;
+    final boolean hasSeparators = raw.indexOf('_') >= 0 || raw.indexOf('-') >= 0 || raw.indexOf(' ') >= 0;
+    final String normalized = hasSeparators ? StringCaseUtils.toCamelCase(raw) : StringUtils.capitalize(raw);
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-           + StringUtils.capitalize(namePojo)
+           + normalized
            + (StringUtils.isNotBlank(specFile.getModelNameSuffix()) ? specFile.getModelNameSuffix() : "");
   }
 
@@ -140,8 +143,11 @@ public class MapperUtil {
   }
 
   public static String calculatePrefixName(final String namePojo, final CommonSpecFile specFile) {
+    final String raw = namePojo == null ? "" : namePojo;
+    final boolean hasSeparators = raw.indexOf('_') >= 0 || raw.indexOf('-') >= 0 || raw.indexOf(' ') >= 0;
+    final String normalized = hasSeparators ? StringCaseUtils.toCamelCase(raw) : StringUtils.capitalize(raw);
     return (StringUtils.isNotBlank(specFile.getModelNamePrefix()) ? specFile.getModelNamePrefix() : "")
-           + StringUtils.capitalize(namePojo);
+           + normalized;
   }
 
   public static String getPojoNameFromRef(final JsonNode schema, final CommonSpecFile specFile, String defaultPojoName) {

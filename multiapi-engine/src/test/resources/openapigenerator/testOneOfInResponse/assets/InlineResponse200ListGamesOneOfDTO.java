@@ -50,20 +50,20 @@ public class InlineResponse200ListGamesOneOfDTO {
   private void validatePartialCombinations() {
     boolean satisfiedCondition = false;
 
-            if (Objects.nonNull(this.gameName)) {
-        satisfiedCondition = true;
-        } else if (Objects.nonNull(this.name)) {
-        satisfiedCondition = true;
-        } else if (Objects.nonNull(this.id)) {
-        satisfiedCondition = true;
-        } else if (Objects.nonNull(this.rooms)) {
-        satisfiedCondition = true;
-        } else if (Objects.nonNull(this.players)) {
-        satisfiedCondition = true;
-        }
+    if (Objects.nonNull(this.gameName)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.name)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.id)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.rooms)) {
+      satisfiedCondition = true;
+    } else if (Objects.nonNull(this.players)) {
+      satisfiedCondition = true;
+    }
 
     if (!satisfiedCondition) {
-    throw new ModelClassException("InlineResponse200ListGamesOneOfDTO");
+      throw new ModelClassException("InlineResponse200ListGamesOneOfDTO");
     }
   }
 }

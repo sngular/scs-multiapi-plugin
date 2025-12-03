@@ -416,9 +416,9 @@ public class ${schema.className} {
     sb.append("${schema.className}{");
 <#list schema.fieldObjectList as field>
     <#if field_has_next>
-    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")} ).append(",");
+    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")}).append(",");
   <#else>
-    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")} );
+    sb.append(" ${field.baseName?uncap_first}:").append(${varSafeName(field.baseName, "")});
   </#if>
 </#list>
     sb.append("}");
@@ -431,12 +431,12 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
 <#if field == schema.fieldObjectList?first>
-  if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
-#else>
+    if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+<#else>
  else if (Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
 </#if>
-        satisfiedCondition = true;
-      }</#list>
+      satisfiedCondition = true;
+    }</#list>
 
     if (!satisfiedCondition) {
       throw new ModelClassException("${schema.className}");
@@ -450,8 +450,8 @@ public class ${schema.className} {
 
 <#list schema.fieldObjectList?filter(f -> f.required) as field>
 <#if field?index == 0>
-  if (!Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
-#else>
+    if (!Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
+<#else>
  else if (!Objects.nonNull(this.${varSafeName(field.baseName, "")})) {
 </#if>
       satisfiedCondition = false;

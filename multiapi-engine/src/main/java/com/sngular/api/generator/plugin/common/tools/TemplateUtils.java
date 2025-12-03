@@ -11,13 +11,21 @@ public class TemplateUtils {
     if (value == null) {
       return null;
     }
-    return CaseUtils.toCamelCase(value, false, '_');
+    // If the value contains delimiters (underscore, hyphen or space), convert to camel case.
+    // Otherwise, assume it's already in the desired camel-case style and return unchanged to preserve acronyms and casing.
+    if (value.indexOf('_') >= 0 || value.indexOf('-') >= 0 || value.indexOf(' ') >= 0) {
+      return CaseUtils.toCamelCase(value, false, '_', '-', ' ');
+    }
+    return value;
   }
 
   public String toUpperCamel(final String value) {
     if (value == null) {
       return null;
     }
-    return CaseUtils.toCamelCase(value, true, '_');
+    if (value.indexOf('_') >= 0 || value.indexOf('-') >= 0 || value.indexOf(' ') >= 0) {
+      return CaseUtils.toCamelCase(value, true, '_', '-', ' ');
+    }
+    return value;
   }
 }

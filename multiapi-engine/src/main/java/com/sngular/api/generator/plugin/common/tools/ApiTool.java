@@ -62,7 +62,21 @@ public final class ApiTool {
   }
 
   public static String getRefValue(final JsonNode schema) {
-    return getNode(schema, "$ref").textValue();
+    if (Objects.isNull(schema)) return "";
+    final JsonNode refNode = schema.get("$ref");
+    if (Objects.nonNull(refNode) && refNode.isTextual()) {
+      return refNode.textValue();
+    }
+    // Fallback: if the first field name is $ref, try to return its value
+    final var fields = schema.fieldNames();
+    if (fields.hasNext()) {
+      final String first = fields.next();
+      if ("$ref".equals(first)) {
+        final JsonNode f = schema.get(first);
+        return Objects.nonNull(f) && f.isTextual() ? f.textValue() : "";
+      }
+    }
+    return "";
   }
 
   public static JsonNode getAdditionalProperties(final JsonNode schema) {
@@ -162,7 +176,8 @@ public final class ApiTool {
       if (hasNode(components, schemaType)) {
         final var schemas = getNode(components, schemaType);
         final var schemasIt = schemas.fieldNames();
-        schemasIt.forEachRemaining(name -> schemasMap.put(schemaType.toUpperCase() + "/" + StringCaseUtils.titleToSnakeCase(name),
+        schemasIt.forEachRemaining(name -> schemasMap.put(
+                                                          StringUtils.upperCase(schemaType + "/" + StringCaseUtils.titleToSnakeCase(name)),
                                                           getNode(schemas, name)));
       }
     }
@@ -236,7 +251,11 @@ public final class ApiTool {
   }
 
   public static boolean hasRef(final JsonNode schema) {
-    return (hasNode(schema, "$ref") || schema.fieldNames().hasNext()) && schema.fieldNames().next().equals("$ref");
+    if (Objects.isNull(schema)) {
+      return false;
+    }
+    final var fields = schema.fieldNames();
+    return fields.hasNext() && "$ref".equals(fields.next());
   }
 
   public static boolean hasProperties(final JsonNode schema) {
@@ -417,4 +436,3 @@ public final class ApiTool {
     return value;
   }
 }
-

@@ -7,34 +7,34 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonDeserialize(builder = ApiInlineParameterTestIdDTO.ApiInlineParameterTestIdDTOBuilder.class)
-public class ApiInlineParameterTestIdDTO {
+@JsonDeserialize(builder = ApiInlineParameterTestIDDTO.ApiInlineParameterTestIDDTOBuilder.class)
+public class ApiInlineParameterTestIDDTO {
 
   @JsonProperty(value ="email")
   private String email;
 
-  private ApiInlineParameterTestIdDTO(ApiInlineParameterTestIdDTOBuilder builder) {
+  private ApiInlineParameterTestIDDTO(ApiInlineParameterTestIDDTOBuilder builder) {
     this.email = builder.email;
 
   }
 
-  public static ApiInlineParameterTestIdDTO.ApiInlineParameterTestIdDTOBuilder builder() {
-    return new ApiInlineParameterTestIdDTO.ApiInlineParameterTestIdDTOBuilder();
+  public static ApiInlineParameterTestIDDTO.ApiInlineParameterTestIDDTOBuilder builder() {
+    return new ApiInlineParameterTestIDDTO.ApiInlineParameterTestIDDTOBuilder();
   }
 
   @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
-  public static class ApiInlineParameterTestIdDTOBuilder {
+  public static class ApiInlineParameterTestIDDTOBuilder {
 
     private String email;
 
-    public ApiInlineParameterTestIdDTO.ApiInlineParameterTestIdDTOBuilder email(String email) {
+    public ApiInlineParameterTestIDDTO.ApiInlineParameterTestIDDTOBuilder email(String email) {
       this.email = email;
       return this;
     }
 
-    public ApiInlineParameterTestIdDTO build() {
-      ApiInlineParameterTestIdDTO apiInlineParameterTestIdDTO = new ApiInlineParameterTestIdDTO(this);
-      return apiInlineParameterTestIdDTO;
+    public ApiInlineParameterTestIDDTO build() {
+      ApiInlineParameterTestIDDTO apiInlineParameterTestIDDTO = new ApiInlineParameterTestIDDTO(this);
+      return apiInlineParameterTestIDDTO;
     }
   }
 
@@ -54,8 +54,8 @@ public class ApiInlineParameterTestIdDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiInlineParameterTestIdDTO apiInlineParameterTestIdDTO = (ApiInlineParameterTestIdDTO) o;
-    return Objects.equals(this.email, apiInlineParameterTestIdDTO.email);
+    ApiInlineParameterTestIDDTO apiInlineParameterTestIDDTO = (ApiInlineParameterTestIDDTO) o;
+    return Objects.equals(this.email, apiInlineParameterTestIDDTO.email);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class ApiInlineParameterTestIdDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("ApiInlineParameterTestIdDTO{");
+    sb.append("ApiInlineParameterTestIDDTO{");
     sb.append(" email:").append(email);
     sb.append("}");
     return sb.toString();
