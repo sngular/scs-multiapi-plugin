@@ -89,6 +89,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateOneOfInResponse()),
         Arguments.of("testAdditionalProperties", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES,
             OpenApiGeneratorFixtures.validateAdditionalProperties()),
+        Arguments.of("testAdditionalPropertiesFalse", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_FALSE,
+            OpenApiGeneratorFixtures.validateAdditionalPropertiesFalse()),
         Arguments.of("testAdditionalPropertiesWithSchema", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_SCHEMA,
             OpenApiGeneratorFixtures.validateAdditionalPropertiesWithSchema()),
         Arguments.of("testAdditionalPropertiesWithUnnamedObject", OpenApiGeneratorFixtures.TEST_ADDITIONAL_PROPERTIES_WITH_UNNAMED_OBJECT,

@@ -297,6 +297,18 @@ public final class OpenApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_ADDITIONAL_PROPERTIES_FALSE = List.of(
+      SpecFile
+          .builder()
+          .filePath("openapigenerator/testAdditionalPropertiesFalse/api-test.yml")
+          .apiPackage("com.sngular.multifileplugin.testadditionalpropertiesFalse")
+          .modelPackage("com.sngular.multifileplugin.testadditionalpropertiesFalse.model")
+          .clientPackage("com.sngular.multifileplugin.testadditionalpropertiesFalse.client")
+          .modelNameSuffix("DTO")
+          .useLombokModelAnnotation(true)
+          .build()
+  );
+
   static final List<SpecFile> TEST_ADDITIONAL_PROPERTIES_WITH_SCHEMA = List.of(
       SpecFile
           .builder()
@@ -1111,6 +1123,23 @@ public final class OpenApiGeneratorFixtures {
 
     return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
   }
+
+    static Function<Path, Boolean> validateAdditionalPropertiesFalse() {
+
+        final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesFalse";
+
+        final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesFalse/model";
+
+        final String COMMON_PATH = "openapigenerator/testAdditionalPropertiesFalse/";
+
+        final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+        final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "TestApi.java");
+
+        final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "TestDTO.java");
+
+        return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API, DEFAULT_MODEL_API, Collections.emptyList(), null);
+    }
 
   static Function<Path, Boolean> validateAdditionalPropertiesWithSchema() {
 
