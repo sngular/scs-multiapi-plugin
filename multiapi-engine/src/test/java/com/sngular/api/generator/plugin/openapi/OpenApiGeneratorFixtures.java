@@ -808,9 +808,9 @@ public final class OpenApiGeneratorFixtures {
 
 	static Function<Path, Boolean> validateAdditionalPropertiesFalse() {
 
-		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesFalse";
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesfalse";
 
-		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesFalse/model";
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testadditionalpropertiesfalse/model";
 
 		final String COMMON_PATH = "openapigenerator/testAdditionalPropertiesFalse/";
 

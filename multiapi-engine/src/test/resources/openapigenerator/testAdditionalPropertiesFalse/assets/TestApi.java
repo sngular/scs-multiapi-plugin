@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.testadditionalpropertiesFalse.model.TestDTO;
+import com.sngular.multifileplugin.testadditionalpropertiesfalse.model.TestDTO;
 
 public interface TestApi {
 
