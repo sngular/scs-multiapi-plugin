@@ -539,13 +539,17 @@ public final class ModelBuilder {
     final var fieldObjectArrayList = new ArrayList<SchemaFieldObject>();
 
     final var addPropObj = ApiTool.getAdditionalProperties(schema);
-    if (TypeConstants.isBoolean(addPropObj.asText())) {
-      fieldObjectArrayList
-          .add(SchemaFieldObject
-                   .builder()
-                   .baseName(fieldName)
-                   .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, TypeConstants.OBJECT))
-                   .build());
+    if (Objects.nonNull(addPropObj) && addPropObj.isBoolean()) {
+      if (addPropObj.asBoolean()) {
+        fieldObjectArrayList
+            .add(SchemaFieldObject
+                     .builder()
+                     .baseName(fieldName)
+                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, TypeConstants.OBJECT))
+                     .build());
+      } else {
+        return fieldObjectArrayList;
+      }
     } else if (ApiTool.hasRef(addPropObj)) {
       final String refSchemaName = MapperUtil.getPojoNameFromRef(addPropObj, specFile, null);
       fieldObjectArrayList.add(processRef(fieldName, addPropObj,
@@ -633,12 +637,20 @@ public final class ModelBuilder {
       field.setDataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, typeArray));
       field.setImportClass(getImportClass(typeArray));
     } else if (ApiTool.hasAdditionalProperties(schemaProperty)) {
-      final String typeObject = getMapTypeObject(schemaProperty, specFile);
-      field.setDataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, typeObject));
-      field.setImportClass(getImportClass(typeObject));
-
+      final JsonNode apNode = ApiTool.getAdditionalProperties(schemaProperty);
+      if (Objects.nonNull(apNode) && apNode.isBoolean()) {
+        if (apNode.asBoolean()) {
+          final String typeObject = TypeConstants.OBJECT;
+          field.setDataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, typeObject));
+          field.setImportClass(getImportClass(typeObject));
+        } // if boolean false -> do not set map type
+      } else {
+        final String typeObject = getMapTypeObject(schemaProperty, specFile);
+        field.setDataType(SchemaFieldObjectType.fromTypeList(TypeConstants.MAP, typeObject));
+        field.setImportClass(getImportClass(typeObject));
+      }
     } else if (ApiTool.isObject(schemaProperty)) {
-      var typeObject = ApiTool.getType(schemaProperty);
+      String typeObject = ApiTool.getType(schemaProperty);
       if (ApiTool.hasRef(schemaProperty)) {
         typeObject = MapperUtil.getPojoNameFromRef(schema, specFile, null);
       }
@@ -649,10 +661,10 @@ public final class ModelBuilder {
 
   private static String getMapTypeObject(final JsonNode schema, final CommonSpecFile specFile) {
     final String type;
-    if (ApiTool.isBoolean(ApiTool.getAdditionalProperties(schema))) {
+    final JsonNode additionalProperties = ApiTool.getAdditionalProperties(schema);
+    if (Objects.nonNull(additionalProperties) && additionalProperties.isBoolean()) {
       type = TypeConstants.OBJECT;
     } else {
-      final JsonNode additionalProperties = ApiTool.getAdditionalProperties(schema);
       if (ApiTool.hasRef(additionalProperties)) {
         type = MapperUtil.getPojoNameFromRef(additionalProperties, specFile, null);
       } else if (ApiTool.isObject(schema)) {
