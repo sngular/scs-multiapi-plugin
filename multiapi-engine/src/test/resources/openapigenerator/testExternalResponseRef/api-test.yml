@@ -1,0 +1,58 @@
+---
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: External Response Ref Test
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/v1
+paths:
+  /widgets:
+    get:
+      summary: List all widgets
+      operationId: listWidgets
+      tags:
+      - widgets
+      responses:
+        '200':
+          description: A list of widgets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Widget'
+        '401':
+          $ref: './responses/Unauthorized.yml'
+        '500':
+          $ref: './responses/ServerError.yml'
+  /widgets/{widgetId}:
+    delete:
+      summary: Delete a widget
+      operationId: deleteWidget
+      tags:
+      - widgets
+      parameters:
+      - name: widgetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          $ref: './responses/NoContent.yml'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Widget:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  responses:
+    NotFound:
+      description: Resource not found

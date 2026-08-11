@@ -351,30 +351,37 @@ public class MapperPathUtil {
   private static void buildResponse(
       final SpecFile specFile, final GlobalObject globalObject, final List<ResponseObject> responseObjects, final String operationId, final Path baseDir, final String responseCode,
       final JsonNode response) {
-    var realResponse = response;
+    JsonNode realResponse = response;
     if (ApiTool.hasRef(response)) {
       final String refValue = ApiTool.getRefValue(response);
       if (refValue.startsWith("#")) {
         final Optional<JsonNode> resolvedResponse = globalObject.getResponseNode(MapperUtil.getRefSchemaKey(response));
-        if (resolvedResponse.isEmpty()) {
-          return;
+        if (resolvedResponse.isPresent()) {
+          realResponse = resolvedResponse.get();
+        } else {
+          try {
+            final URI baseUri = baseDir.resolve(specFile.getFilePath()).getParent().toUri();
+            realResponse = SchemaUtil.solveRef(refValue, globalObject.getResponseMap(), baseUri);
+          } catch (final Exception e) {
+            realResponse = null;
+          }
         }
-        realResponse = resolvedResponse.get();
       } else {
         try {
           final URI baseUri = baseDir.resolve(specFile.getFilePath()).getParent().toUri();
           realResponse = SchemaUtil.getPojoFromRef(baseUri, refValue);
         } catch (final Exception e) {
-          return;
+          realResponse = null;
         }
       }
     }
     final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
-    final var content = ApiTool.getNode(realResponse, CONTENT);
+    final JsonNode content = Objects.nonNull(realResponse) ? ApiTool.getNode(realResponse, CONTENT) : null;
+    final String description = Objects.nonNull(realResponse) ? StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(realResponse, DESCRIPTION), "") : "";
     responseObjects.add(ResponseObject
                             .builder()
                             .responseName(responseCode)
-                            .description(StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(realResponse, DESCRIPTION), ""))
+                            .description(description)
                             .contentObjects(mapContentObject(specFile, content, "InlineResponse" + responseCode + operationIdWithCap, globalObject, baseDir))
                             .build());
   }
