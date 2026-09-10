@@ -28,6 +28,8 @@ class OpenApiSpecFile {
 
   Boolean useLombokModelAnnotation
 
+  Boolean usePactAnnotation
+
   Boolean isReactive
 
   TypeConstants.TimeType useTimeType

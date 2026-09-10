@@ -186,6 +186,7 @@ public abstract class CommonTemplateFactory {
     final var filePath = classTemplate.getFilePath();
     if (Objects.nonNull(schemaObject) && Objects.nonNull(schemaObject.getFieldObjectList()) && !schemaObject.getFieldObjectList().isEmpty()) {
       addToRoot("schema", schemaObject);
+      addToRoot("usePactAnnotation", classTemplate.isUsePact());
       final String templateName = getTemplateName(classTemplate);
       if (Objects.nonNull(classTemplate.getModelPackage())) {
         addToRoot("packageModel", classTemplate.getModelPackage());
@@ -308,7 +309,8 @@ public abstract class CommonTemplateFactory {
       final String keyClassName,
       final SchemaObject schemaObject,
       final String destinationPackage,
-      final boolean useLombok) {
+      final boolean useLombok,
+      final boolean usePact) {
     final var filePath = processPath(getPath(destinationPackage));
     final var propertiesPath = processPath(getPath(modelPackage));
     final var builder = ClassTemplate
@@ -318,7 +320,8 @@ public abstract class CommonTemplateFactory {
                             .className(schemaObject.getClassName())
                             .classSchema(schemaObject)
                             .propertiesPath(propertiesPath)
-                            .useLombok(useLombok);
+                            .useLombok(useLombok)
+                            .usePact(usePact);
     if (Objects.nonNull(keyClassName)) {
       builder.keyClassName(keyClassName);
     }

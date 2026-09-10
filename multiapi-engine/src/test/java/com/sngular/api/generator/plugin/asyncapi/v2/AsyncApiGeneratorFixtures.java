@@ -67,6 +67,27 @@ public class AsyncApiGeneratorFixtures {
           .build()
   );
 
+  static final List<SpecFile> TEST_GENERATE_SPRINGWOLF = List.of(
+      SpecFile
+          .builder()
+          .filePath("asyncapigenerator/v2/testFileGeneration/event-api.yml")
+          .consumer(OperationParameterObject.builder()
+              .ids("publishOperationFileGeneration")
+              .modelNameSuffix("DTO")
+              .apiPackage("com.sngular.scsplugin.springwolf.model.event.consumer")
+              .modelPackage("com.sngular.scsplugin.springwolf.model.event")
+              .generateSpringwolfAnnotations(true)
+              .build())
+          .supplier(OperationParameterObject.builder()
+              .ids("subscribeOperationFileGeneration")
+              .modelNameSuffix("DTO")
+              .apiPackage("com.sngular.scsplugin.springwolf.model.event.producer")
+              .modelPackage("com.sngular.scsplugin.springwolf.model.event")
+              .generateSpringwolfAnnotations(true)
+              .build())
+          .build()
+  );
+
   static final List<SpecFile> TEST_FILE_GENERATION_NO_CONFIG = List.of(
       SpecFile
           .builder()

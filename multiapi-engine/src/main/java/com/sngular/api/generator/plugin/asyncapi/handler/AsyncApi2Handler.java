@@ -185,12 +185,12 @@ public class AsyncApi2Handler extends BaseAsyncApiHandler {
           MapperContentUtil.mapComponentToSchemaObject(totalSchemas, className, schemaToBuild, parentPackage, operationObject, this.baseDir).iterator();
 
       if (schemaObjectIt.hasNext()) {
-        writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
+        writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.isUsePactAnnotation(), operationObject.getModelPackage(), keyClassName, schemaObjectIt.next());
         if (Objects.nonNull(keyClassName)) {
           templateFactory.setWrapperPackageName(operationObject.getApiPackage());
           templateFactory.fillTemplateWrapper(operationObject.getApiPackage(), classFullName, className, keyClassFullName, keyClassName);
         }
-        schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.getModelPackage(), null, schemaObj));
+        schemaObjectIt.forEachRemaining(schemaObj -> writeSchemaObject(operationObject.isUseLombokModelAnnotation(), operationObject.isUsePactAnnotation(), operationObject.getModelPackage(), null, schemaObj));
       }
     }
   }

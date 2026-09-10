@@ -292,9 +292,10 @@ public abstract class BaseAsyncApiHandler {
     return result;
   }
 
-  protected void writeSchemaObject(final boolean usingLombok, final String modelPackageReceived, final String keyClassName, final SchemaObject schemaObject) {
+  protected void writeSchemaObject(final boolean usingLombok, final boolean usingPact, final String modelPackageReceived, final String keyClassName,
+                                 final SchemaObject schemaObject) {
     final var destinationPackage = StringUtils.defaultIfEmpty(modelPackageReceived, DEFAULT_ASYNCAPI_API_PACKAGE + SLASH + schemaObject.getParentPackage());
-    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok);
+    templateFactory.addSchemaObject(modelPackageReceived, keyClassName, schemaObject, destinationPackage, usingLombok, usingPact);
     templateFactory.checkRequiredOrCombinatorExists(schemaObject, usingLombok);
   }
 

@@ -77,6 +77,9 @@ package ${packageModel};
 <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
 import java.util.Objects;
 </#if>
+<#if usePactAnnotation>
+import com.sngular.annotation.pact.PactDslBodyBuilder;
+</#if>
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
     <#if field.dataType.baseType == "enum">
@@ -168,6 +171,9 @@ import lombok.Singular;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+<#if usePactAnnotation>
+@PactDslBodyBuilder
+</#if>
 @Value
 public class ${schema.className} {
 

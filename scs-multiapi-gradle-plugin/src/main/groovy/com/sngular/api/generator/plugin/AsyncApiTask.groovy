@@ -117,6 +117,9 @@ abstract class AsyncApiTask extends DefaultTask {
     if (parameterObject.getGenerateSpringwolfAnnotations()) {
       builder.generateSpringwolfAnnotations(parameterObject.generateSpringwolfAnnotations)
     }
+    if (parameterObject.getUsePactAnnotation()) {
+      builder.usePactAnnotation(parameterObject.usePactAnnotation)
+    }
 
     return builder.build()
   }

@@ -30,4 +30,6 @@ public class ClassTemplate {
 
   boolean useLombok;
 
+  boolean usePact;
+
 }
