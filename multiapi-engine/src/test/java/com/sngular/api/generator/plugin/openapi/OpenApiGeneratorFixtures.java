@@ -9,7 +9,6 @@ package com.sngular.api.generator.plugin.openapi;
 import com.sngular.api.generator.plugin.common.model.TypeConstants.TimeType;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.test.utils.TestUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.File;
@@ -21,7 +20,6 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 public final class OpenApiGeneratorFixtures {
 
 	static final String GENERATED = "generated";
@@ -1789,7 +1787,7 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 			}
 		} catch (final URISyntaxException | NullPointerException e) {
 			result = Boolean.FALSE;
-			log.error(e.getLocalizedMessage());
+			System.err.println(e.getLocalizedMessage());
 		}
 		return result;
 	}
@@ -1808,7 +1806,7 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 			}
 		} catch (final URISyntaxException | NullPointerException e) {
 			result = Boolean.FALSE;
-			log.error(e.getLocalizedMessage());
+			System.err.println(e.getLocalizedMessage());
 		}
 		return result;
 	}

@@ -210,7 +210,8 @@ public abstract class CommonTemplateFactory {
 
   public final void fillTemplateModelClassException(final String modelPackage) throws IOException {
     addToRoot(EXCEPTION_PACKAGE, modelPackage);
-    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(modelPackage) + SLASH + "exception", "ModelClassException");
+    writeTemplateIfAbsent(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(modelPackage) + SLASH + "exception",
+                          "ModelClassException");
   }
 
   private void fillTemplateCustom(
@@ -221,8 +222,18 @@ public abstract class CommonTemplateFactory {
       throw new IOException("Can't create custom validator directory");
     }
     root.put("packageModel", modelPackage);
-    writeTemplateToFile(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
-    writeTemplateToFile(templateValidator, pathToCustomValidatorPackage, fileNameValidator);
+    writeTemplateIfAbsent(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
+    writeTemplateIfAbsent(templateValidator, pathToCustomValidatorPackage, fileNameValidator);
+  }
+
+  private void writeTemplateIfAbsent(final String templateName, final Path filePathToSave, final String partialPath) throws IOException {
+    if (!Files.exists(filePathToSave.resolve(partialPath + FILE_TYPE_JAVA))) {
+      writeTemplateToFile(templateName, filePathToSave, partialPath);
+    }
+  }
+
+  private void writeTemplateIfAbsent(final String templateName, final String apiPackage, final String partialPath) throws IOException {
+    writeTemplateIfAbsent(templateName, processPath(getPath(apiPackage)), partialPath);
   }
 
   private static String getTemplateName(ClassTemplate classTemplate) {

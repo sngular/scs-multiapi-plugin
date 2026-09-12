@@ -1,0 +1,13 @@
+plugins {
+  id 'java'
+  id 'com.sngular.scs-multiapi-gradle-plugin'
+}
+
+group = 'com.example.test'
+version = '1.0.0'
+
+openapimodel {
+  specFile {
+    filePath = 'PLACEHOLDER_FILEPATH'
+  }
+}

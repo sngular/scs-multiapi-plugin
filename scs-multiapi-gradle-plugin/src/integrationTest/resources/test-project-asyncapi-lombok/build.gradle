@@ -1,0 +1,23 @@
+plugins {
+  id 'java'
+  id 'com.sngular.scs-multiapi-gradle-plugin'
+}
+
+group = 'com.example.test'
+version = '1.0.0'
+
+asyncapimodel {
+  specFile {
+    filePath = 'PLACEHOLDER_FILEPATH'
+    supplier {
+      apiPackage = 'com.example.test.api'
+      modelPackage = 'com.example.test.model'
+      useLombokModelAnnotation = true
+    }
+    consumer {
+      apiPackage = 'com.example.test.consumer'
+      modelPackage = 'com.example.test.model'
+      useLombokModelAnnotation = true
+    }
+  }
+}

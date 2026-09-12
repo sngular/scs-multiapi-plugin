@@ -1,0 +1,44 @@
+asyncapi: '3.0.0'
+info:
+  title: Test API
+  version: '1.0.0'
+  description: Minimal AsyncAPI spec for integration testing the Gradle plugin
+servers:
+  default:
+    host: localhost
+    protocol: kafka
+channels:
+  test:
+    address: test
+    messages:
+      TestMsg:
+        name: TestMsg
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+operations:
+  onTest:
+    action: send
+    channel:
+      $ref: '#/channels/test'
+    messages:
+      - $ref: '#/components/messages/TestMsg'
+    summary: This is just a test.
+  onTest2:
+    action: receive
+    channel:
+      $ref: '#/channels/test'
+    messages:
+      - $ref: '#/components/messages/TestMsg'
+    summary: This is just another test.
+components:
+  messages:
+    TestMsg:
+      name: TestMsg
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
