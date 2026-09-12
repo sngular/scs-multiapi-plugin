@@ -271,7 +271,7 @@
     <dependency>
       <groupId>com.sngular</groupId>
       <artifactId>multiapi-engine</artifactId>
-      <version>6.7.4</version>
+      <version>6.7.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
