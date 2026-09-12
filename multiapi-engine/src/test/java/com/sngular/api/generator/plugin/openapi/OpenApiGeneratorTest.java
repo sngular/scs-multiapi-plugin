@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@Slf4j
 class OpenApiGeneratorTest {
 
   private static final int SPRING_BOOT_VERSION = 2;
@@ -180,7 +178,6 @@ class OpenApiGeneratorTest {
   @MethodSource("fileSpecToProcess")
   void processFileSpec(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {
     openApiGenerator.processFileSpec(specFileList);
-    log.debug(baseDir.toAbsolutePath().toString());
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
   }
 

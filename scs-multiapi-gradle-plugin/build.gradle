@@ -31,7 +31,7 @@ dependencies {
   shadow localGroovy()
   shadow gradleApi()
 
-  implementation 'com.sngular:multiapi-engine:6.7.4'
+  implementation 'com.sngular:multiapi-engine:6.7.5'
   testImplementation 'org.assertj:assertj-core:3.24.2'
   testImplementation 'com.puppycrawl.tools:checkstyle:10.12.3'
   testImplementation 'org.junit.platform:junit-platform-launcher:1.9.2'
@@ -100,7 +100,7 @@ testing {
 
     integrationTest(JvmTestSuite) {
       dependencies {
-        implementation 'com.sngular:scs-multiapi-gradle-plugin:6.7.4'
+        implementation gradleTestKit()
         implementation 'org.assertj:assertj-core:3.24.2'
       }
 
@@ -108,6 +108,10 @@ testing {
         all {
           testTask.configure {
             shouldRunAfter(test)
+            dependsOn(tasks.named('pluginUnderTestMetadata'))
+            doFirst {
+              systemProperty 'plugin-under-test-metadata-file', tasks.named('pluginUnderTestMetadata').get().outputDirectory.get().asFile.toPath().resolve('plugin-under-test-metadata.properties').toString()
+            }
           }
         }
       }
