@@ -68,6 +68,9 @@ public abstract class CommonTemplateFactory {
     this.checkOverwrite = checkOverwrite;
     cfg.setTemplateLoader(classpathTemplateLoader);
     cfg.setDefaultEncoding("UTF-8");
+    // Generated sources are Java code, never localized text: numbers must never pick up the default
+    // locale's grouping separator (e.g. 4000 -> "4.000" under es_ES), which yields non-compiling code.
+    cfg.setNumberFormat("computer");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
     cfg.setAPIBuiltinEnabled(true);

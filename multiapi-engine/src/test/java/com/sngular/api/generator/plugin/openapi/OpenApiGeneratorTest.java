@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.openapi;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -182,6 +183,23 @@ class OpenApiGeneratorTest {
     openApiGenerator.processFileSpec(specFileList);
     log.debug(baseDir.toAbsolutePath().toString());
     Assertions.assertThat(validation.apply(baseDir)).isTrue();
+  }
+
+  /**
+   * Numeric restrictions ({@code @Size}, {@code @MaxItems}, {@code @MinItems}) must be rendered as plain Java integer
+   * literals regardless of the default JVM locale. Under a locale with a grouping separator, values >= 1000 used to be
+   * written as {@code 4.000} / {@code 4,000}, which does not compile. See issue #420.
+   */
+  @Test
+  void processFileSpecIsIndependentOfDefaultLocale() {
+    final Locale previousLocale = Locale.getDefault();
+    try {
+      Locale.setDefault(Locale.forLanguageTag("es-ES"));
+      openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS);
+      Assertions.assertThat(OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION).apply(baseDir)).isTrue();
+    } finally {
+      Locale.setDefault(previousLocale);
+    }
   }
 
   @Test
