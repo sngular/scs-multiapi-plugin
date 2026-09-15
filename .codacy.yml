@@ -14,8 +14,14 @@
 #   * Generated test fixtures under src/test/resources: these are the generator's
 #     expected-output files (not hand-written source) and trip rules such as
 #     line-length that do not apply to generated code.
+#   * Integration-test fixture projects under src/integrationTest/resources: the
+#     build.gradle / settings.gradle files of the throwaway projects that TestKit
+#     builds. They are test data, not project source, and use this project's
+#     2-space Groovy convention that CodeNarc's Indentation rule flags as noise --
+#     the same reasoning already applied to src/test/resources above.
 exclude_paths:
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/*Task.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/*SpecFile.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/OperationParameter.groovy'
   - '**/src/test/resources/**'
+  - '**/src/integrationTest/resources/**'
