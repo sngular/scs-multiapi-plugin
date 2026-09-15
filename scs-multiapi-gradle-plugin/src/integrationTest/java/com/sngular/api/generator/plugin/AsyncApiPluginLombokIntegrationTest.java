@@ -3,6 +3,7 @@
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
 package com.sngular.api.generator.plugin;
 
 import static com.sngular.api.generator.plugin.PluginIntegrationTestBase.copyResourceDirectory;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 class AsyncApiPluginLombokIntegrationTest {
 
   @TempDir
-  Path testProjectDir;
+  private Path testProjectDir;
 
   @Test
   void generatesImmutableLombokModels() throws Exception {

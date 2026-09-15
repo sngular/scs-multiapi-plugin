@@ -3,6 +3,7 @@
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
 package com.sngular.api.generator.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +21,9 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 class PluginIntegrationTestBase {
+
+  private PluginIntegrationTestBase() {
+  }
 
   static void copyResourceDirectory(final String resource, final Path targetDir) throws Exception {
     final URL resourceUrl = PluginIntegrationTestBase.class.getResource(resource);
@@ -52,7 +56,7 @@ class PluginIntegrationTestBase {
     final Properties properties = new Properties();
     try (var in = Files.newInputStream(Path.of(metadataFile))) {
       properties.load(in);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new IllegalStateException("Could not read plugin-under-test metadata", e);
     }
     final String classpath = properties.getProperty("implementation-classpath");
