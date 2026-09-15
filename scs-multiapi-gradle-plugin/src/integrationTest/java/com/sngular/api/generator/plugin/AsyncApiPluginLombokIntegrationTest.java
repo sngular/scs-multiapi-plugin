@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -35,6 +36,8 @@ class AsyncApiPluginLombokIntegrationTest {
         .withArguments("asyncApiTask")
         .withPluginClasspath(pluginClasspath())
         .build();
+
+    assertThat(result.task(":asyncApiTask").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
 
     try (final var paths = Files.walk(testProjectDir.resolve("build/generated-source"))) {
       final List<Path> javaFiles = paths.filter(p -> p.toString().endsWith(".java")).toList();

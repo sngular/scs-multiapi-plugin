@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -56,7 +57,7 @@ class PluginIntegrationTestBase {
     }
     final String classpath = properties.getProperty("implementation-classpath");
     assertThat(classpath).isNotNull();
-    return java.util.Arrays.stream(classpath.split(Pattern.quote(File.pathSeparator)))
+    return Arrays.stream(classpath.split(Pattern.quote(File.pathSeparator)))
         .map(File::new)
         .toList();
   }

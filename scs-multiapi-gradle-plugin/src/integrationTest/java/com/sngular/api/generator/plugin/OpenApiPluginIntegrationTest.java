@@ -32,7 +32,7 @@ class OpenApiPluginIntegrationTest {
 
     final BuildResult result = GradleRunner.create()
         .withProjectDir(testProjectDir.toFile())
-.withArguments("openApiTask")
+        .withArguments("openApiTask")
         .withPluginClasspath(pluginClasspath())
         .build();
     assertThat(result.task(":openApiTask").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
