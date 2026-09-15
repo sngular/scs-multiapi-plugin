@@ -14,8 +14,12 @@
 #   * Generated test fixtures under src/test/resources: these are the generator's
 #     expected-output files (not hand-written source) and trip rules such as
 #     line-length that do not apply to generated code.
+#   * .opencode/plans: agent planning notes kept alongside the code. They are not
+#     project source or user-facing documentation, so markdownlint's prose rules
+#     (MD013 line length, MD043 required heading structure) do not apply.
 exclude_paths:
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/*Task.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/*SpecFile.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/OperationParameter.groovy'
   - '**/src/test/resources/**'
+  - '.opencode/**'
