@@ -70,7 +70,7 @@ api-specs/
   <artifactId>api-specs</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  
+
   <build>
     <resources>
       <resource>
@@ -152,7 +152,7 @@ mvn clean install
         <filePath>com/mycompany/user/openapi.yml</filePath>
         <apiPackage>com.mycompany.user.api</apiPackage>
       </specFile>
-      
+
       <!-- From order-api-specs JAR -->
       <specFile>
         <filePath>com/mycompany/order/openapi.yml</filePath>
@@ -222,7 +222,7 @@ Check 3: Try as filesystem path
    ```yaml
    # ✓ Correct: Relative path
    $ref: schemas/user.yml
-   
+
    # ✗ Wrong: Absolute path
    $ref: /schemas/user.yml
    ```

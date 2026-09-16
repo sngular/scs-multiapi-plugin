@@ -245,12 +245,14 @@ public class SchemaUtil {
         // For absolute paths, convert directly to URL without resolving against rootFilePath
         fileURL = Paths.get(cleaned).toUri().toURL();
       } else {
-        // Resolve against the root file path
         try {
-          final URI resolvedUri = resolveUriPath(rootFilePath, cleaned);
+          // Try to resolve against the root file path using URI resolution
+          final URI resolvedUri = resolveFileUri(rootFilePath, cleaned);
           fileURL = resolvedUri.toURL();
         } catch (final Exception e) {
-          throw new MalformedURLException("Failed to resolve " + cleaned + " relative to " + rootFilePath + ": " + e.getMessage());
+          // Fallback: resolve the cleaned path against the rootFilePath URI (original behavior)
+          final URI resolvedUri = rootFilePath.resolve(cleaned);
+          fileURL = resolvedUri.toURL();
         }
       }
     }
@@ -258,21 +260,19 @@ public class SchemaUtil {
   }
 
   /**
-   * Resolves a relative path against a base URI, handling both filesystem and JAR URIs.
-   * Supports resolving external references in specs loaded from dependency JARs.
+   * Resolves a relative path against a base URI, handling JAR URIs for external references.
+   * For filesystem URIs, falls back to original behavior.
    *
    * @param baseUri the base URI (may be jar:file:/...!/ or file:///)
    * @param relativePath the relative path to resolve (e.g., "fragments.yml")
    * @return the resolved URI
    */
-  private static URI resolveUriPath(final URI baseUri, final String relativePath) {
+  private static URI resolveFileUri(final URI baseUri, final String relativePath) {
     if ("jar".equals(baseUri.getScheme())) {
       return resolveJarPath(baseUri, relativePath);
-    } else if ("file".equals(baseUri.getScheme())) {
-      return resolveFilePath(baseUri, relativePath);
-    } else {
-      throw new IllegalArgumentException("Unsupported URI scheme for resolution: " + baseUri.getScheme());
     }
+    // For filesystem and other URIs, use standard URI resolution
+    return baseUri.resolve(relativePath);
   }
 
   /**
@@ -292,20 +292,6 @@ public class SchemaUtil {
     Path resolved = basePath.resolve(relativePath).normalize();
 
     return URI.create("jar:" + jarPath + "!" + toJarEntryPath(resolved));
-  }
-
-  /**
-   * Resolves a relative path in a filesystem URI.
-   * Example: file:///path/to/ + "fragments.yml" → file:///path/to/fragments.yml
-   */
-  private static URI resolveFilePath(final URI fileBaseUri, final String relativePath) {
-    try {
-      Path basePath = Paths.get(fileBaseUri);
-      Path resolved = basePath.resolve(relativePath).normalize();
-      return resolved.toUri();
-    } catch (final Exception e) {
-      throw new IllegalArgumentException("Failed to resolve filesystem path: " + e.getMessage(), e);
-    }
   }
 
   /**

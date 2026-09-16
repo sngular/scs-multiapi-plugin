@@ -37,7 +37,7 @@ Specify a spec path without a filesystem prefix. The plugin will search:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>6.7.7</version>
+  <version>6.7.8</version>
   <configuration>
     <specFile>
       <filePath>openapi.yml</filePath>
@@ -59,7 +59,7 @@ Specify a spec path without a filesystem prefix. The plugin will search:
 
 ```gradle
 plugins {
-  id 'com.sngular.multiapi.plugin' version '6.7.7'
+  id 'com.sngular.multiapi.plugin' version '6.7.8'
 }
 
 multiapi {
@@ -190,13 +190,13 @@ dependencies:
         <filePath>core/openapi.yml</filePath>
         <apiPackage>com.mycompany.api.core</apiPackage>
       </specFile>
-      
+
       <!-- From dependency: api-specs-extensions -->
       <specFile>
         <filePath>extensions/asyncapi.yml</filePath>
         <apiPackage>com.mycompany.api.extensions</apiPackage>
       </specFile>
-      
+
       <!-- From local filesystem -->
       <specFile>
         <filePath>specs/local-api.yml</filePath>
@@ -231,7 +231,7 @@ api-specs-core-1.0.0.jar
   <artifactId>api-specs-core</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  
+
   <build>
     <resources>
       <resource>
@@ -279,7 +279,7 @@ paths:
             application/json:
               schema:
                 $ref: schemas/user.yml
-              
+
   /users/{id}:
     $ref: paths/user-details.yml
 ```
@@ -453,13 +453,13 @@ core-api/
       <filePath>src/main/resources/local-api.yml</filePath>
       <apiPackage>com.mycompany.local</apiPackage>
     </specFile>
-    
+
     <!-- From dependency -->
     <specFile>
       <filePath>com/shared/openapi.yml</filePath>
       <apiPackage>com.mycompany.shared</apiPackage>
     </specFile>
-    
+
     <!-- From remote registry -->
     <specFile>
       <filePath>https://registry.example.com/api/openapi.yml</filePath>
@@ -519,10 +519,10 @@ FileParseException: Could not resolve $ref: schemas/user.yml
    ```yaml
    # ✓ Correct: Relative to current file
    $ref: schemas/user.yml
-   
+
    # ✗ Wrong: Absolute filesystem path
    $ref: /schemas/user.yml
-   
+
    # ✗ Wrong: HTTP reference from JAR context
    $ref: http://example.com/schemas/user.yml
    ```
@@ -555,7 +555,7 @@ FileParseException: Could not resolve $ref: schemas/user.yml
     <filePath>com/vendor1/api-v1/openapi.yml</filePath>
     <apiPackage>com.mycompany.vendor1</apiPackage>
   </specFile>
-  
+
   <specFile>
     <filePath>com/vendor2/api-v2/openapi.yml</filePath>
     <apiPackage>com.mycompany.vendor2</apiPackage>
@@ -567,7 +567,7 @@ FileParseException: Could not resolve $ref: schemas/user.yml
 
 **Cause:** Dependency not included in build.
 
-**Solution:** 
+**Solution:**
 
 1. **Verify dependency in pom.xml:**
    ```bash
@@ -657,7 +657,7 @@ URI resolved = parentUri.resolve("schemas/user.yml");
 - ✅ Added FileLocationUtil shared utility
 - ✅ Support for multiple dependency scenarios
 
-### Version 6.7.7 and Earlier
+### Version 6.7.8 and Earlier
 
 - Had issues with external references in classpath specs
 - Assumed specs were always on filesystem
