@@ -26,6 +26,7 @@ import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
 import com.sngular.api.generator.plugin.common.files.RemoteFileLocation;
 import com.sngular.api.generator.plugin.common.tools.PathUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +87,8 @@ public class AsyncApiGenerator {
 
   private static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {
     log.debug("Resolving YAML file location:{}", ymlFilePath);
+
+    // Remote URIs: fetch directly from URL
     if (PathUtil.isRemoteUri(ymlFilePath)) {
       log.debug("Loading spec from remote URL");
       try {
@@ -96,23 +99,35 @@ public class AsyncApiGenerator {
         throw new FileNotFoundException("Could not open remote YAML file: " + ymlFilePath);
       }
     }
-    final InputStream classPathInput = AsyncApiGenerator.class.getClassLoader().getResourceAsStream(ymlFilePath);
-    final InputStream ymlFile;
-    final FileLocation ymlParentPath;
-    if (Objects.nonNull(classPathInput)) {
-      log.debug("Found file in classpath");
-      ymlFile = classPathInput;
-      ymlParentPath = new ClasspathFileLocation(URI.create(ymlFilePath));
-    } else {
-      log.debug("Looking for file in filesystem");
-      final File f = new File(ymlFilePath);
-      ymlFile = new FileInputStream(f);
-      // For absolute paths, use the parent directly; otherwise, resolve relative to current directory
-      if (PathUtil.isAbsolutePath(ymlFilePath)) {
-        ymlParentPath = new DirectoryFileLocation(Paths.get(ymlFilePath).getParent());
-      } else {
-        ymlParentPath = new DirectoryFileLocation(f.toPath().getParent());
+
+    // Classpath resources: use getResource() to get actual location (including JAR path)
+    try {
+      final var classPathResource = AsyncApiGenerator.class.getClassLoader().getResource(ymlFilePath);
+      if (Objects.nonNull(classPathResource)) {
+        log.debug("Found file in classpath: {}", classPathResource);
+        final URI resourceUri = classPathResource.toURI();
+        final InputStream ymlFile = classPathResource.openStream();
+        final URI parentUri = FileLocationUtil.getParentUri(resourceUri);
+        final FileLocation ymlParentPath = new ClasspathFileLocation(parentUri);
+        return new ImmutablePair<>(ymlFile, ymlParentPath);
       }
+    } catch (final Exception e) {
+      log.debug("Classpath resolution failed, trying filesystem: {}", e.getMessage());
+    }
+
+    // Filesystem fallback
+    log.debug("Looking for file in filesystem");
+    final File f = new File(ymlFilePath);
+    if (!f.exists()) {
+      throw new FileNotFoundException("Could not find YAML file: " + ymlFilePath);
+    }
+
+    final InputStream ymlFile = new FileInputStream(f);
+    final FileLocation ymlParentPath;
+    if (PathUtil.isAbsolutePath(ymlFilePath)) {
+      ymlParentPath = new DirectoryFileLocation(Paths.get(ymlFilePath).getParent());
+    } else {
+      ymlParentPath = new DirectoryFileLocation(f.toPath().getParent());
     }
     return new ImmutablePair<>(ymlFile, ymlParentPath);
   }
