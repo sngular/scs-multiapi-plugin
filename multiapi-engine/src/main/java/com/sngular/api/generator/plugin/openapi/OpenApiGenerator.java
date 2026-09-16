@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
+import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -38,7 +39,9 @@ import com.sngular.api.generator.plugin.openapi.utils.MapperPathUtil;
 import com.sngular.api.generator.plugin.openapi.utils.OpenApiUtil;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OpenApiGenerator {
 
   private static final String SLASH = "/";
@@ -103,9 +106,9 @@ public class OpenApiGenerator {
 
     final JsonNode openAPI = OpenApiUtil.getPojoFromSpecFile(baseDir, specFile);
     OpenApiUtil.mergeWebhooksIntoPaths(openAPI);
-    final URI specBaseUri = PathUtil.isRemoteUri(specFile.getFilePath())
-                                ? URI.create(specFile.getFilePath()).resolve(".")
-                                : baseDir.resolve(specFile.getFilePath()).getParent().toUri();
+
+    // Determine the actual base URI for resolving external references
+    final URI specBaseUri = resolveSpecBaseUri(specFile);
     OpenApiUtil.solvePathRefs(openAPI, specBaseUri);
     final String clientPackage = specFile.getClientPackage();
 
@@ -180,6 +183,34 @@ public class OpenApiGenerator {
     final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap(), specFile);
     templateFactory.setModelPackageName(modelPackage);
     processModels(specFile, modelPackage, totalSchemas, overwriteModel);
+  }
+
+  /**
+   * Resolves the actual base URI for a spec file, handling classpath resources, filesystem paths, and remote URLs.
+   * This is crucial for resolving external references ($ref) correctly when the spec is loaded from a dependency JAR.
+   *
+   * @param specFile the spec file configuration
+   * @return the base URI for resolving external references
+   */
+  private URI resolveSpecBaseUri(final SpecFile specFile) {
+    final String filePath = specFile.getFilePath();
+
+    if (PathUtil.isRemoteUri(filePath)) {
+      return URI.create(filePath).resolve(".");
+    }
+
+    // Check if spec is in classpath (e.g., from a dependency JAR)
+    try {
+      final var classPathResource = OpenApiGenerator.class.getClassLoader().getResource(filePath);
+      if (Objects.nonNull(classPathResource)) {
+        return FileLocationUtil.getParentUri(classPathResource.toURI());
+      }
+    } catch (final Exception e) {
+      log.debug("Spec not found in classpath, trying filesystem: {}", e.getMessage());
+    }
+
+    // Filesystem fallback: use the actual file's directory
+    return baseDir.resolve(filePath).getParent().toUri();
   }
 
   private void createAuthTemplates(final SpecFile specFile) throws IOException {

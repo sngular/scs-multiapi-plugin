@@ -245,20 +245,90 @@ public class SchemaUtil {
         // For absolute paths, convert directly to URL without resolving against rootFilePath
         fileURL = Paths.get(cleaned).toUri().toURL();
       } else {
+        // Resolve against the root file path
         try {
-          // Resolve against the root file path using Path to handle '..' properly
-          final Path rootPath = Paths.get(rootFilePath);
-          final Path base = Files.isDirectory(rootPath) ? rootPath : (rootPath.getParent() != null ? rootPath.getParent() : rootPath);
-          final Path resolved = base.resolve(Paths.get(cleaned)).normalize();
-          fileURL = resolved.toUri().toURL();
-        } catch (final Exception e) {
-          // Fallback: resolve the cleaned path against the rootFilePath URI
-          final URI resolvedUri = rootFilePath.resolve(cleaned);
+          final URI resolvedUri = resolveUriPath(rootFilePath, cleaned);
           fileURL = resolvedUri.toURL();
+        } catch (final Exception e) {
+          throw new MalformedURLException("Failed to resolve " + cleaned + " relative to " + rootFilePath + ": " + e.getMessage());
         }
       }
     }
     return readFromUrl(fileURL);
+  }
+
+  /**
+   * Resolves a relative path against a base URI, handling both filesystem and JAR URIs.
+   * Supports resolving external references in specs loaded from dependency JARs.
+   *
+   * @param baseUri the base URI (may be jar:file:/...!/ or file:///)
+   * @param relativePath the relative path to resolve (e.g., "fragments.yml")
+   * @return the resolved URI
+   */
+  private static URI resolveUriPath(final URI baseUri, final String relativePath) {
+    if ("jar".equals(baseUri.getScheme())) {
+      return resolveJarPath(baseUri, relativePath);
+    } else if ("file".equals(baseUri.getScheme())) {
+      return resolveFilePath(baseUri, relativePath);
+    } else {
+      throw new IllegalArgumentException("Unsupported URI scheme for resolution: " + baseUri.getScheme());
+    }
+  }
+
+  /**
+   * Resolves a relative path within a JAR URI.
+   * Example: jar:file:/app/lib.jar!/com/example/ + "fragments.yml" → jar:file:/app/lib.jar!/com/example/fragments.yml
+   */
+  private static URI resolveJarPath(final URI jarBaseUri, final String relativePath) {
+    String ssp = jarBaseUri.getSchemeSpecificPart();
+    String[] parts = ssp.split("!", 2);
+
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("Invalid JAR URI: " + jarBaseUri);
+    }
+
+    String jarPath = parts[0];
+    Path basePath = Paths.get(parts[1]);
+    Path resolved = basePath.resolve(relativePath).normalize();
+
+    return URI.create("jar:" + jarPath + "!" + toJarEntryPath(resolved));
+  }
+
+  /**
+   * Resolves a relative path in a filesystem URI.
+   * Example: file:///path/to/ + "fragments.yml" → file:///path/to/fragments.yml
+   */
+  private static URI resolveFilePath(final URI fileBaseUri, final String relativePath) {
+    try {
+      Path basePath = Paths.get(fileBaseUri);
+      Path resolved = basePath.resolve(relativePath).normalize();
+      return resolved.toUri();
+    } catch (final Exception e) {
+      throw new IllegalArgumentException("Failed to resolve filesystem path: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Converts a Path to a JAR-entry-safe path string using '/' separators.
+   */
+  private static String toJarEntryPath(final Path path) {
+    int nameCount = path.getNameCount();
+
+    if (nameCount == 0) {
+      return "/";
+    }
+
+    StringBuilder sb = new StringBuilder(path.toString().length() + nameCount + 2);
+    sb.append('/');
+
+    for (int i = 0; i < nameCount; i++) {
+      sb.append(path.getName(i));
+      if (i < nameCount - 1) {
+        sb.append('/');
+      }
+    }
+
+    return sb.toString();
   }
 
   private static String readFromUrl(final URL fileURL) {
