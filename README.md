@@ -1005,3 +1005,7 @@ Load server API from one dependency, client API from another:
 ✅ Supports multiple APIs in same configuration
 ✅ Fully backward compatible
 ✅ Perfect for microservices architecture
+
+### Deep Dive
+
+For comprehensive architecture documentation, design decisions, performance characteristics, error handling, and real-world use cases, see [ARCHITECTURE_V7_1.md](docs/ARCHITECTURE_V7_1.md).
