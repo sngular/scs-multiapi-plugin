@@ -243,7 +243,7 @@ public class ${className?cap_first}Api {
     <Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if></@compress>
 
-    return apiRestClient.invokeAPI("${path.globalObject.url}","${path.pathName}", HttpMethod.${operation.operationType}, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiRestClient.invokeAPI("${path.globalObject.url!""}","${path.pathName}", HttpMethod.${operation.operationType}, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
      </#list>

@@ -171,7 +171,9 @@ class OpenApiGeneratorTest {
         Arguments.of("testSimpleBuild", OpenApiGeneratorFixtures.TEST_SIMPLE_BUILD,
             OpenApiGeneratorFixtures.validateSimpleBuild()),
         Arguments.of("testFormDataMultipartGeneration", OpenApiGeneratorFixtures.TEST_FORM_DATA_MULTIPART_GENERATION,
-            OpenApiGeneratorFixtures.validateDataMultipartGeneration())
+            OpenApiGeneratorFixtures.validateDataMultipartGeneration()),
+        Arguments.of("testConsumerSpecNoServers", OpenApiGeneratorFixtures.TEST_CONSUMER_SPEC_NO_SERVERS,
+            OpenApiGeneratorFixtures.validateConsumerSpecNoServers())
     );
   }
 
