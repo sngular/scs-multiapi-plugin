@@ -48,7 +48,7 @@ abstract class AsyncApiTask extends DefaultTask {
       def asyncApiGen = new AsyncApiGenerator(asyncApiModelExtension.getSpringBootVersion(), asyncApiModelExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<SpecFile> asyncApiSpecFiles = []
       asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {
-        asyncApiSpecFiles.add(toFileSpec(apiSpec))
+        asyncApiSpecFiles.add(toFileSpec(apiSpec, fromGroupId, fromArtifactId, fromVersion))
       })
 
       asyncApiGen.processFileSpec(asyncApiSpecFiles)
@@ -75,7 +75,11 @@ abstract class AsyncApiTask extends DefaultTask {
     return generated.absolutePath + "/"
   }
 
-  def toFileSpec(AsyncApiSpecFile apiSpecFile) {
+  static SpecFile toFileSpec(AsyncApiSpecFile apiSpecFile) {
+    toFileSpec(apiSpecFile, null, null, null)
+  }
+
+  static SpecFile toFileSpec(AsyncApiSpecFile apiSpecFile, String fromGroupId, String fromArtifactId, String fromVersion) {
     def builder = SpecFile.builder()
     if (!apiSpecFile.filePath.isEmpty()) {
       builder.filePath(apiSpecFile.getFilePath())

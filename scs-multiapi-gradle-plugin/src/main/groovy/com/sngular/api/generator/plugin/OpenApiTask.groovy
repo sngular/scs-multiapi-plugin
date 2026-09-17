@@ -47,7 +47,7 @@ abstract class OpenApiTask extends DefaultTask {
       def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
-        openApiSpecFiles.add(toFileSpec(apiSpec))
+        openApiSpecFiles.add(toFileSpec(apiSpec, fromGroupId, fromArtifactId, fromVersion))
       })
       openApiGen.processFileSpec(openApiSpecFiles)
     }
@@ -73,7 +73,11 @@ abstract class OpenApiTask extends DefaultTask {
     return generated.absolutePath
   }
 
-  def toFileSpec(OpenApiSpecFile openApiSpecFile) {
+  static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile) {
+    toFileSpec(openApiSpecFile, null, null, null)
+  }
+
+  static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile, String fromGroupId, String fromArtifactId, String fromVersion) {
     def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
