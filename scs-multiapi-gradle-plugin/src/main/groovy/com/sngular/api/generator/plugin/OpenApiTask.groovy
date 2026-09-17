@@ -13,6 +13,7 @@ import com.sngular.api.generator.plugin.openapi.OpenApiGenerator
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -25,6 +26,18 @@ abstract class OpenApiTask extends DefaultTask {
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
 
+  @Input
+  @Optional
+  String fromGroupId
+
+  @Input
+  @Optional
+  String fromArtifactId
+
+  @Input
+  @Optional
+  String fromVersion
+
   @TaskAction
   def processOpenApApiFile() {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
@@ -34,7 +47,7 @@ abstract class OpenApiTask extends DefaultTask {
       def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
-        openApiSpecFiles.add(toFileSpec(apiSpec))
+        openApiSpecFiles.add(toFileSpec(apiSpec, fromGroupId, fromArtifactId, fromVersion))
       })
       openApiGen.processFileSpec(openApiSpecFiles)
     }
@@ -60,7 +73,11 @@ abstract class OpenApiTask extends DefaultTask {
     return generated.absolutePath
   }
 
-  static def toFileSpec(OpenApiSpecFile openApiSpecFile) {
+  static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile) {
+    toFileSpec(openApiSpecFile, null, null, null)
+  }
+
+  static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile, String fromGroupId, String fromArtifactId, String fromVersion) {
     def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
@@ -97,6 +114,17 @@ abstract class OpenApiTask extends DefaultTask {
     }
     if (openApiSpecFile.useTimeType) {
       builder.useTimeType(openApiSpecFile.useTimeType)
+    }
+
+    // v7.1: Add dependency-based spec loading support
+    if (fromGroupId) {
+      builder.fromGroupId(fromGroupId)
+    }
+    if (fromArtifactId) {
+      builder.fromArtifactId(fromArtifactId)
+    }
+    if (fromVersion) {
+      builder.fromVersion(fromVersion)
     }
 
     return builder.build()

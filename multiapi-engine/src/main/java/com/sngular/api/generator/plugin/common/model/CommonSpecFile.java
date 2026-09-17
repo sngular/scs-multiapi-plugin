@@ -41,7 +41,18 @@ public class CommonSpecFile {
   @Builder.Default
   private TypeConstants.TimeType useTimeType = TypeConstants.TimeType.LOCAL;
 
+  // v7.1+: Dependency-based spec loading
+  private String fromGroupId;
+
+  private String fromArtifactId;
+
+  private String fromVersion;
+
   public Map<String, String> getFormats() {
     return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
+  }
+
+  public boolean usesExternalDependency() {
+    return fromGroupId != null && fromArtifactId != null;
   }
 }

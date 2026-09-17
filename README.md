@@ -930,3 +930,82 @@ Notes:
 - For an `https` registry using an internally-issued or self-signed
   certificate, the certificate must be trusted by the JVM running the build
   (for example imported into its truststore); validation is not disabled.
+
+## Loading Specs from Maven Dependencies (v7.1+)
+
+When you have API specifications packaged in Maven dependencies, you can load them directly using the `<fromDependency>` configuration block.
+
+### Configuration
+
+**Maven**:
+```xml
+<specFile>
+  <filePath>specs/api.yml</filePath>
+  
+  <!-- Load from specific Maven dependency -->
+  <fromDependency>
+    <groupId>com.company</groupId>
+    <artifactId>api-spec-consumidor</artifactId>
+    <version>1.0.0</version>  <!-- optional -->
+  </fromDependency>
+  
+  <apiPackage>com.example.consumer.api</apiPackage>
+  <modelPackage>com.example.consumer.model</modelPackage>
+  <callMode>false</callMode>
+</specFile>
+```
+
+**Gradle**:
+```groovy
+asyncapimodel {
+  specFile {
+    {
+      filePath = 'specs/api.yml'
+      fromGroupId = 'com.company'
+      fromArtifactId = 'api-spec-consumidor'
+      fromVersion = '1.0.0'  // optional
+    }
+    overWriteModel = true
+  }
+}
+```
+
+### Use Case: Microservices with Shared Specs
+
+Load server API from one dependency, client API from another:
+
+```xml
+<!-- Server API from consumidor JAR -->
+<specFile>
+  <filePath>specs/api.yml</filePath>
+  <fromDependency>
+    <groupId>com.company</groupId>
+    <artifactId>api-spec-consumidor</artifactId>
+  </fromDependency>
+  <apiPackage>com.example.consumer.api</apiPackage>
+  <callMode>false</callMode>
+</specFile>
+
+<!-- Client for external API from productor JAR -->
+<specFile>
+  <filePath>specs/api.yml</filePath>
+  <fromDependency>
+    <groupId>com.company</groupId>
+    <artifactId>api-spec-productor</artifactId>
+  </fromDependency>
+  <apiPackage>com.example.producer.client</apiPackage>
+  <callMode>true</callMode>
+</specFile>
+```
+
+### Benefits
+
+✅ Eliminates classpath ambiguity
+✅ Clear dependency specifications  
+✅ Supports multiple APIs in same configuration
+✅ Fully backward compatible
+✅ Perfect for microservices architecture
+
+### Deep Dive
+
+For comprehensive architecture documentation, design decisions, performance characteristics, error handling, and real-world use cases, see [ARCHITECTURE_V7_1.md](docs/ARCHITECTURE_V7_1.md).

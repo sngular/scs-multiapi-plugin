@@ -58,7 +58,7 @@ components:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>7.0.0</version>
+  <version>6.7.8</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -90,7 +90,7 @@ components:
 **Gradle (`build.gradle`)**:
 ```groovy
 plugins {
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.0.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '6.7.8'
 }
 
 asyncapimodel {
