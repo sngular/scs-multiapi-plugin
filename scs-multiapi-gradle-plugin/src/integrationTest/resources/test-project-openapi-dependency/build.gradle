@@ -1,0 +1,22 @@
+plugins {
+  id 'java'
+  id 'com.sngular.scs-multiapi-gradle-plugin'
+}
+
+group = 'com.example.test'
+version = '1.0.0'
+
+repositories {
+  maven { url 'PLACEHOLDER_REPOSITORY' }
+}
+
+openapimodel {
+  specFile {
+    filePath = 'contracts/api.yml'
+    fromGroupId = 'com.company'
+    fromArtifactId = 'api-specs'
+    fromVersion = '1.0.0'
+    apiPackage = 'com.example.test.api'
+    modelPackage = 'com.example.test.api.model'
+  }
+}

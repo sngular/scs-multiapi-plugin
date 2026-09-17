@@ -24,6 +24,9 @@ import com.sngular.api.generator.plugin.asyncapi.handler.AsyncApiHandlerFactory;
 import com.sngular.api.generator.plugin.asyncapi.handler.BaseAsyncApiHandler;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
+import com.sngular.api.generator.plugin.common.loader.DependencySpecMaterializer;
+import com.sngular.api.generator.plugin.common.loader.LocalRepositorySpecArtifactResolver;
+import com.sngular.api.generator.plugin.common.loader.SpecArtifactResolver;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
@@ -48,6 +51,10 @@ public class AsyncApiGenerator {
 
   private final File baseDir;
 
+  private SpecArtifactResolver artifactResolver = new LocalRepositorySpecArtifactResolver();
+
+  private DependencySpecMaterializer specMaterializer;
+
   public AsyncApiGenerator(
       final Integer springBootVersion,
       boolean overwriteModel,
@@ -64,25 +71,53 @@ public class AsyncApiGenerator {
     this.baseDir = baseDir;
   }
 
+  /**
+   * Installs the resolver used to fetch artifacts declared through {@code fromGroupId}/
+   * {@code fromArtifactId}. Build-tool plugins supply their own so that private repositories,
+   * mirrors and credentials configured for the build are honoured; without it only the local
+   * repository is inspected.
+   */
+  public final void setArtifactResolver(final SpecArtifactResolver artifactResolver) {
+    this.artifactResolver = Objects.requireNonNull(artifactResolver, "artifactResolver");
+    this.specMaterializer = null;
+  }
+
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     log.info("Processing {} spec files", specsListFile.size());
 
     // Process each spec file with its appropriate handler
     for (SpecFile specFile : specsListFile) {
+      final SpecFile resolvedSpecFile = resolveSpecFile(specFile);
       try {
-        final String filePath = specFile.getFilePath();
+        final String filePath = resolvedSpecFile.getFilePath();
         final Pair<InputStream, FileLocation> ymlLocation = resolveYmlLocation(filePath);
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         final JsonNode openApi = mapper.readTree(ymlLocation.getKey());
         final String version = getAsyncApiVersion(openApi);
         BaseAsyncApiHandler handler = AsyncApiHandlerFactory
                                           .getHandler(version, springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, baseDir);
-        handler.processFileSpec(Collections.singletonList(specFile));
+        handler.processFileSpec(Collections.singletonList(resolvedSpecFile));
       } catch (IOException e) {
         log.error("Error processing spec file: {}", specFile.getFilePath(), e);
         // Continue with next file
       }
     }
+  }
+
+  /**
+   * Replaces the configured {@code filePath} with the contract extracted from the declared
+   * artifact, so the rest of the pipeline reads an ordinary file. Specs without dependency
+   * coordinates are returned untouched.
+   */
+  private SpecFile resolveSpecFile(final SpecFile specFile) {
+    specFile.validateDependencyCoordinates();
+    if (!specFile.usesExternalDependency()) {
+      return specFile;
+    }
+    if (Objects.isNull(specMaterializer)) {
+      specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
+    }
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile).toString()).build();
   }
 
   private static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {

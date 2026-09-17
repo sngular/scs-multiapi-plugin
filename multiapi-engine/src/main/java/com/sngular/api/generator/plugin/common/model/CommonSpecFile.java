@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonSpecFile {
+public class CommonSpecFile implements ExternalSpecSource {
 
   private String filePath;
 
@@ -41,7 +41,10 @@ public class CommonSpecFile {
   @Builder.Default
   private TypeConstants.TimeType useTimeType = TypeConstants.TimeType.LOCAL;
 
-  // v7.1+: Dependency-based spec loading
+  /**
+   * Coordinates of the artifact that publishes the contract. When set, {@link #filePath} is read
+   * from inside that artifact instead of from the module's filesystem. See {@link ExternalSpecSource}.
+   */
   private String fromGroupId;
 
   private String fromArtifactId;
@@ -50,9 +53,5 @@ public class CommonSpecFile {
 
   public Map<String, String> getFormats() {
     return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);
-  }
-
-  public boolean usesExternalDependency() {
-    return fromGroupId != null && fromArtifactId != null;
   }
 }

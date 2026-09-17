@@ -1,0 +1,13 @@
+---
+type: object
+required:
+- id
+- age
+properties:
+  id:
+    type: string
+  age:
+    type: number
+    format: int32
+  address:
+    $ref: './address.yml'

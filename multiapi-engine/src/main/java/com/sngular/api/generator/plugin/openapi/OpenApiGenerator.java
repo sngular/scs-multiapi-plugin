@@ -20,6 +20,9 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
+import com.sngular.api.generator.plugin.common.loader.DependencySpecMaterializer;
+import com.sngular.api.generator.plugin.common.loader.LocalRepositorySpecArtifactResolver;
+import com.sngular.api.generator.plugin.common.loader.SpecArtifactResolver;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -66,6 +69,12 @@ public class OpenApiGenerator {
 
   private final Integer springBootVersion;
 
+  private final File targetFolder;
+
+  private SpecArtifactResolver artifactResolver = new LocalRepositorySpecArtifactResolver();
+
+  private DependencySpecMaterializer specMaterializer;
+
   private Boolean isWebClient = false;
 
   private Boolean isRestClient = false;
@@ -82,16 +91,45 @@ public class OpenApiGenerator {
     this.baseDir = basedir.toPath().toAbsolutePath();
     this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, basedir);
     this.springBootVersion = springBootVersion;
+    this.targetFolder = targetFolder;
+  }
+
+  /**
+   * Installs the resolver used to fetch artifacts declared through {@code fromGroupId}/
+   * {@code fromArtifactId}. Build-tool plugins supply their own so that private repositories,
+   * mirrors and credentials configured for the build are honoured; without it only the local
+   * repository is inspected.
+   */
+  public final void setArtifactResolver(final SpecArtifactResolver artifactResolver) {
+    this.artifactResolver = Objects.requireNonNull(artifactResolver, "artifactResolver");
+    this.specMaterializer = null;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     for (SpecFile specFile : specsListFile) {
+      final SpecFile resolvedSpecFile = resolveSpecFile(specFile);
       authentications.clear();
-      processPackage(specFile.getApiPackage());
-      processFile(specFile);
-      createClients(specFile);
+      processPackage(resolvedSpecFile.getApiPackage());
+      processFile(resolvedSpecFile);
+      createClients(resolvedSpecFile);
       templateFactory.clearData();
     }
+  }
+
+  /**
+   * Replaces the configured {@code filePath} with the contract extracted from the declared
+   * artifact, so the rest of the pipeline — including relative {@code $ref} resolution — reads an
+   * ordinary file. Specs without dependency coordinates are returned untouched.
+   */
+  private SpecFile resolveSpecFile(final SpecFile specFile) {
+    specFile.validateDependencyCoordinates();
+    if (!specFile.usesExternalDependency()) {
+      return specFile;
+    }
+    if (Objects.isNull(specMaterializer)) {
+      specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
+    }
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile).toString()).build();
   }
 
   private void processPackage(final String apiPackage) {

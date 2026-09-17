@@ -6,18 +6,29 @@
 
 package com.sngular.api.generator.plugin.asyncapi.parameter;
 
+import com.sngular.api.generator.plugin.common.model.ExternalSpecSource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpecFile {
+public class SpecFile implements ExternalSpecSource {
 
   private String filePath;
+
+  /**
+   * Coordinates of the artifact that publishes the contract. When set, {@link #filePath} is read
+   * from inside that artifact instead of from the module's filesystem. See {@link ExternalSpecSource}.
+   */
+  private String fromGroupId;
+
+  private String fromArtifactId;
+
+  private String fromVersion;
 
   private OperationParameterObject supplier;
 

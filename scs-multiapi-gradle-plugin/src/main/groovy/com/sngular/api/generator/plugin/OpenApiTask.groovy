@@ -11,9 +11,9 @@ import com.sngular.api.generator.plugin.model.OpenApiModelExtension
 import com.sngular.api.generator.plugin.model.OpenApiSpecFile
 import com.sngular.api.generator.plugin.openapi.OpenApiGenerator
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile
+import com.sngular.api.generator.plugin.resolver.GradleSpecArtifactResolver
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -26,18 +26,6 @@ abstract class OpenApiTask extends DefaultTask {
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
 
-  @Input
-  @Optional
-  String fromGroupId
-
-  @Input
-  @Optional
-  String fromArtifactId
-
-  @Input
-  @Optional
-  String fromVersion
-
   @TaskAction
   def processOpenApApiFile() {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
@@ -45,9 +33,10 @@ abstract class OpenApiTask extends DefaultTask {
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
     if (null != openApiExtension && !openApiExtension.getSpecFile().isEmpty()) {
       def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
+      openApiGen.setArtifactResolver(new GradleSpecArtifactResolver(project))
       List<SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
-        openApiSpecFiles.add(toFileSpec(apiSpec, fromGroupId, fromArtifactId, fromVersion))
+        openApiSpecFiles.add(toFileSpec(apiSpec))
       })
       openApiGen.processFileSpec(openApiSpecFiles)
     }
@@ -74,10 +63,6 @@ abstract class OpenApiTask extends DefaultTask {
   }
 
   static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile) {
-    toFileSpec(openApiSpecFile, null, null, null)
-  }
-
-  static SpecFile toFileSpec(OpenApiSpecFile openApiSpecFile, String fromGroupId, String fromArtifactId, String fromVersion) {
     def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
@@ -116,15 +101,15 @@ abstract class OpenApiTask extends DefaultTask {
       builder.useTimeType(openApiSpecFile.useTimeType)
     }
 
-    // v7.1: Add dependency-based spec loading support
-    if (fromGroupId) {
-      builder.fromGroupId(fromGroupId)
+    // Coordinates of the artifact publishing the contract; filePath is then read from inside it.
+    if (openApiSpecFile.fromGroupId) {
+      builder.fromGroupId(openApiSpecFile.fromGroupId)
     }
-    if (fromArtifactId) {
-      builder.fromArtifactId(fromArtifactId)
+    if (openApiSpecFile.fromArtifactId) {
+      builder.fromArtifactId(openApiSpecFile.fromArtifactId)
     }
-    if (fromVersion) {
-      builder.fromVersion(fromVersion)
+    if (openApiSpecFile.fromVersion) {
+      builder.fromVersion(openApiSpecFile.fromVersion)
     }
 
     return builder.build()

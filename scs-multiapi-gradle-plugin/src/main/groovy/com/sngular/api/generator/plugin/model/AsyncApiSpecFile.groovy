@@ -13,6 +13,12 @@ class AsyncApiSpecFile {
 
   String filePath
 
+  String fromGroupId
+
+  String fromArtifactId
+
+  String fromVersion
+
   OperationParameter supplier = new OperationParameter()
 
   OperationParameter consumer = new OperationParameter()

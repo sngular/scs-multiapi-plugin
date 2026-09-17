@@ -251,6 +251,7 @@
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-project.version>2.2.1</maven-project.version>
     <maven-core.version>3.9.1</maven-core.version>
+    <maven-resolver.version>1.9.7</maven-resolver.version>
     <maven-plugin-plugin.version>3.13.1</maven-plugin-plugin.version>
     <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
@@ -351,6 +352,12 @@
           <artifactId>plexus-utils</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <version>${maven-resolver.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
