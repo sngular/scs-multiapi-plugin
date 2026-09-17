@@ -41,6 +41,43 @@ public class DependencySpecLoader {
   }
 
   /**
+   * Loads a specification from a specific Maven dependency and returns the URLClassLoader.
+   *
+   * @param filePath path to spec file within the JAR (e.g., "specs/api.yml")
+   * @param groupId Maven groupId (e.g., "com.company")
+   * @param artifactId Maven artifactId (e.g., "api-spec-consumidor")
+   * @param version Maven version or null to use from pom.xml
+   * @return URLClassLoader for the spec JAR
+   * @throws IOException if JAR cannot be resolved
+   */
+  public static URLClassLoader loadSpecAndGetLoader(
+      final String filePath,
+      final String groupId,
+      final String artifactId,
+      final String version) throws IOException {
+
+    if (StringUtils.isBlank(groupId) || StringUtils.isBlank(artifactId)) {
+      throw new IllegalArgumentException("groupId and artifactId are required");
+    }
+
+    final File jarFile = resolveMavenArtifact(groupId, artifactId, version);
+    if (!jarFile.exists()) {
+      throw new IOException(String.format(
+          "Cannot resolve Maven artifact: %s:%s:%s (not found at %s)",
+          groupId, artifactId, StringUtils.defaultIfBlank(version, "default"), jarFile.getAbsolutePath()));
+    }
+
+    final String cacheKey = String.format("%s:%s:%s", groupId, artifactId, StringUtils.defaultIfBlank(version, "latest"));
+    return LOADER_CACHE.computeIfAbsent(cacheKey, k -> {
+      try {
+        return new URLClassLoader(new URL[]{jarFile.toURI().toURL()}, null);
+      } catch (final MalformedURLException e) {
+        throw new RuntimeException("Failed to create URLClassLoader for JAR: " + jarFile, e);
+      }
+    });
+  }
+
+  /**
    * Loads a specification from a specific Maven dependency.
    *
    * @param filePath path to spec file within the JAR (e.g., "specs/api.yml")
