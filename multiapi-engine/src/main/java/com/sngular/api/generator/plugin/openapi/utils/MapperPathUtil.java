@@ -63,8 +63,16 @@ public class MapperPathUtil {
 
   public static GlobalObject mapOpenApiObjectToOurModels(final JsonNode openAPI, final List<AuthSchemaObject> authSchemaList) {
     final var authList = getSecurityRequirementList(ApiTool.getNode(openAPI, "security"), new ArrayList<>());
+    String url = null;
+    if (ApiTool.hasNode(openAPI, "servers")) {
+      final var serversNode = ApiTool.getNode(openAPI, "servers");
+      final var urlNode = serversNode.findValue("url");
+      if (Objects.nonNull(urlNode)) {
+        url = urlNode.textValue();
+      }
+    }
     final GlobalObjectBuilder globalObject =
-        GlobalObject.builder().url(ApiTool.getNode(openAPI, "servers").findValue("url").textValue()).authSchemas(authSchemaList).authentications(authList);
+        GlobalObject.builder().url(url).authSchemas(authSchemaList).authentications(authList);
     if (ApiTool.hasNode(openAPI, "components")) {
       globalObject.schemaMap(ApiTool.getComponentSchemas(openAPI));
       globalObject.parameterMap(ApiTool.getParameterSchemas(openAPI));

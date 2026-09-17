@@ -438,6 +438,13 @@ public final class OpenApiGeneratorFixtures {
 					.apiPackage("com.sngular.multifileplugin.testformdatamultipartgeneration")
 					.useLombokModelAnnotation(true).build());
 
+	static final List<SpecFile> TEST_CONSUMER_SPEC_NO_SERVERS = List
+			.of(SpecFile.builder().filePath("openapigenerator/testConsumerSpecNoServers/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testconsumerspecnoservers")
+					.modelPackage("com.sngular.multifileplugin.testconsumerspecnoservers.model")
+					.clientPackage("com.sngular.multifileplugin.testconsumerspecnoservers.client")
+					.modelNameSuffix("DTO").useLombokModelAnnotation(true).callMode(true).build());
+
 	private OpenApiGeneratorFixtures() {
 	}
 
@@ -1758,6 +1765,20 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 				.of(COMMON_PATH + "assets/DashboardDTO.java", COMMON_PATH + "assets/SummaryDTO.java");
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateConsumerSpecNoServers() {
+		// Simple validation: check that generation succeeds without NullPointerException
+		// when servers field is missing from consumer spec
+		return path -> {
+			try {
+				final Path pathToTarget = Path.of(path.toString(), "target");
+				final Path pathToTargetApi = pathToTarget.resolve("generated/com/sngular/multifileplugin/testconsumerspecnoservers");
+				return pathToTargetApi.toFile().exists();
+			} catch (final Exception e) {
+				return Boolean.FALSE;
+			}
+		};
 	}
 
 	private static Boolean commonTest(final Path resultPath, final List<String> expectedFile,
