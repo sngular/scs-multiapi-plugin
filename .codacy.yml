@@ -8,9 +8,9 @@
 #   * Gradle task glue classes: thin DefaultTask subclasses. Codacy flags them for
 #     "missing Javadoc", but this project does not use Javadoc, so the warning is
 #     noise rather than a real defect.
-#   * Gradle DSL model classes (the *SpecFile / extension data holders): plain
-#     property containers written with this project's 2-space Groovy convention,
-#     which CodeNarc's default Indentation rule (4 spaces) flags as noise.
+#   * Gradle DSL model classes (the *SpecFile / extension data holders) and the
+#     resolver glue: written with this project's 2-space Groovy convention, which
+#     CodeNarc's default Indentation rule (4 spaces) flags as noise.
 #   * Generated test fixtures under src/test/resources: these are the generator's
 #     expected-output files (not hand-written source) and trip rules such as
 #     line-length that do not apply to generated code.
@@ -21,5 +21,6 @@ exclude_paths:
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/*Task.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/*SpecFile.groovy'
   - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/model/OperationParameter.groovy'
+  - 'scs-multiapi-gradle-plugin/src/main/groovy/com/sngular/api/generator/plugin/resolver/*.groovy'
   - '**/src/test/resources/**'
   - '.opencode/**'

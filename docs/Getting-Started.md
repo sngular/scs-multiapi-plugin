@@ -18,7 +18,7 @@
   <plugin>
     <groupId>com.sngular</groupId>
     <artifactId>scs-multiapi-maven-plugin</artifactId>
-    <version>7.1.0</version>
+    <version>7.1.3</version>
     <executions>
       <execution>
         <phase>generate-sources</phase>
@@ -67,7 +67,7 @@
 
 ```groovy
 plugins {
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.1.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.1.3'
 }
 ```
 
@@ -340,15 +340,14 @@ mvn scs-multiapi:asyncapi-generation
 </configuration>
 ```
 
-See [Configuration Reference](Configuration-Reference) for all options.
+See the [README](https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md) for all options.
 
 ## Next Steps
 
-- 📖 Read the [OpenAPI Guide](OpenAPI-Guide) for detailed REST API features
-- 📨 Check [AsyncAPI Guide](AsyncAPI-Guide) for message-based APIs
-- 🔧 See [Configuration Reference](Configuration-Reference) for advanced options
-- 🔗 Learn about [Dependency Specs](Classpath-Spec-Loading) for complex APIs
-- ⚡ Explore [Spring-Kafka Integration](Spring-Kafka-Integration) for event-driven systems
+- 📖 Read the [README](https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md) for every configuration option of both goals
+- 🔗 See [Loading specs](LOADING_SPECS) to read contracts from a published artifact, a URL or a registry
+- ⚡ Explore [Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION) for event-driven systems
+- 🧭 Browse [Additional Information](Additional-Information) for the full index
 
 ## Troubleshooting
 
@@ -362,7 +361,7 @@ Rebuild the project: `mvn clean generate-sources` or `gradle clean build`
 Check your OpenAPI spec follows OpenAPI 3.0+ standard.
 
 ### Spring Boot integration issues
-See [Troubleshooting](Troubleshooting) guide for detailed help.
+See the FAQ in [Additional Information](Additional-Information) for more help.
 
 ---
 
