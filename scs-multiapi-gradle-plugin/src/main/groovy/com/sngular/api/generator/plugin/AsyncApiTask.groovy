@@ -17,6 +17,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.Input
 import org.gradle.work.DisableCachingByDefault
 
 @DisableCachingByDefault(because = "Generation depends on external spec files not declared as cacheable inputs")
@@ -25,6 +26,18 @@ abstract class AsyncApiTask extends DefaultTask {
   @Optional
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
+
+  @Input
+  @Optional
+  String fromGroupId
+
+  @Input
+  @Optional
+  String fromArtifactId
+
+  @Input
+  @Optional
+  String fromVersion
 
   @TaskAction
   def processAsyncApiFile() {
@@ -62,7 +75,7 @@ abstract class AsyncApiTask extends DefaultTask {
     return generated.absolutePath + "/"
   }
 
-  static def toFileSpec(AsyncApiSpecFile apiSpecFile) {
+  def toFileSpec(AsyncApiSpecFile apiSpecFile) {
     def builder = SpecFile.builder()
     if (!apiSpecFile.filePath.isEmpty()) {
       builder.filePath(apiSpecFile.getFilePath())
@@ -77,6 +90,17 @@ abstract class AsyncApiTask extends DefaultTask {
       builder.supplier(toOperationParameterObject(apiSpecFile.supplier))
     }
     builder.generateModelOnly(Boolean.TRUE.equals(apiSpecFile.getGenerateModelOnly()))
+
+    // v7.1: Add dependency-based spec loading support
+    if (fromGroupId) {
+      builder.fromGroupId(fromGroupId)
+    }
+    if (fromArtifactId) {
+      builder.fromArtifactId(fromArtifactId)
+    }
+    if (fromVersion) {
+      builder.fromVersion(fromVersion)
+    }
 
     return builder.build()
   }

@@ -13,6 +13,7 @@ import com.sngular.api.generator.plugin.openapi.OpenApiGenerator
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -24,6 +25,18 @@ abstract class OpenApiTask extends DefaultTask {
   @Optional
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
+
+  @Input
+  @Optional
+  String fromGroupId
+
+  @Input
+  @Optional
+  String fromArtifactId
+
+  @Input
+  @Optional
+  String fromVersion
 
   @TaskAction
   def processOpenApApiFile() {
@@ -60,7 +73,7 @@ abstract class OpenApiTask extends DefaultTask {
     return generated.absolutePath
   }
 
-  static def toFileSpec(OpenApiSpecFile openApiSpecFile) {
+  def toFileSpec(OpenApiSpecFile openApiSpecFile) {
     def builder = SpecFile.builder()
     if (openApiSpecFile.filePath) {
       builder.filePath(openApiSpecFile.filePath)
@@ -97,6 +110,17 @@ abstract class OpenApiTask extends DefaultTask {
     }
     if (openApiSpecFile.useTimeType) {
       builder.useTimeType(openApiSpecFile.useTimeType)
+    }
+
+    // v7.1: Add dependency-based spec loading support
+    if (fromGroupId) {
+      builder.fromGroupId(fromGroupId)
+    }
+    if (fromArtifactId) {
+      builder.fromArtifactId(fromArtifactId)
+    }
+    if (fromVersion) {
+      builder.fromVersion(fromVersion)
     }
 
     return builder.build()
