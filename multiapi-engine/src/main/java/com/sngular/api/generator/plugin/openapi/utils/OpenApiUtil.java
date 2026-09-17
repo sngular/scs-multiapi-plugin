@@ -244,26 +244,10 @@ public class OpenApiUtil {
         if (ApiTool.hasContent(response.getValue())) {
           final var schemaList = ApiTool.findContentSchemas(response.getValue());
           for (var schema : schemaList) {
-            if (!ApiTool.hasRef(schema) && ApiTool.isObject(schema)) {
-              basicJsonNodeMap.put(
-                  StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)),
-                  schema);
-            } else if (ApiTool.isComposed(schema)) {
-              basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(
-                                       MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), specFile)),
-                                   schema);
-            } else if (ApiTool.isArray(schema) && ApiTool.hasItems(schema)) {
-              final var items = ApiTool.getItems(schema);
-              if (!ApiTool.hasRef(items) && ApiTool.isObject(items)) {
-                basicJsonNodeMap.put(
-                    StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)),
-                    items);
-              } else if (ApiTool.isComposed(items)) {
-                basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(
-                                         MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(items), specFile)),
-                                     items);
-              }
-            }
+            // Use unified ResponseWrapperHandler for all wrapper decisions (v7.0)
+            final var wrappers = ResponseWrapperHandler.getAllWrappers(
+                response.getKey(), getOperationId(operation), schema, specFile);
+            wrappers.forEach(wrapper -> basicJsonNodeMap.put(wrapper.getName(), wrapper.getSchema()));
           }
         }
       }
