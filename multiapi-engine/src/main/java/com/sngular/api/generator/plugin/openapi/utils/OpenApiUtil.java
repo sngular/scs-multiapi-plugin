@@ -44,9 +44,9 @@ public class OpenApiUtil {
 
   public static MultiValuedMap<String, Map<String, JsonNode>> mapApiGroups(final JsonNode openAPI, final boolean groupByTags) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapApis = new ArrayListValuedHashMap<>();
-    final var pathList = openAPI.findValue(PATHS).fields();
-    if (pathList.hasNext()) {
-      mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathList) : mapApiGroupsByUrl(openAPI));
+    final JsonNode pathsNode = openAPI.get(PATHS);
+    if (pathsNode instanceof ObjectNode && pathsNode.fields().hasNext()) {
+      mapApis.putAll(groupByTags ? mapApiGroupsByTags(pathsNode.fields()) : mapApiGroupsByUrl(openAPI));
     }
 
     return mapApis;
@@ -179,29 +179,31 @@ public class OpenApiUtil {
   }
 
   public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap, SpecFile specFile) {
-    final var basicJsonNodeMap = new HashMap<>(schemaMap);
-
-    for (final var pathElement = openApi.findValue(PATHS).elements(); pathElement.hasNext(); ) {
+    final JsonNode pathsNode = openApi.get(PATHS);
+    if (pathsNode == null) {
+      return schemaMap;
+    }
+    for (final var pathElement = pathsNode.elements(); pathElement.hasNext(); ) {
       final var pathDefinition = pathElement.next();
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processPathContent(basicJsonNodeMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
+          processPathContent(schemaMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
         }
       }
     }
 
-    return basicJsonNodeMap;
+    return schemaMap;
   }
 
-  private static void processPathContent(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
+  private static void processPathContent(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
 
     processParameters(basicJsonNodeMap, operation, specFile);
     processRequestBody(basicJsonNodeMap, operation, specFile);
     processResponses(basicJsonNodeMap, operation, specFile);
   }
 
-  private static void processParameters(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
+  private static void processParameters(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "parameters")) {
       for (Iterator<JsonNode> it = operation.findValue("parameters").elements(); it.hasNext(); ) {
         final var parameter = it.next();
@@ -215,7 +217,7 @@ public class OpenApiUtil {
     }
   }
 
-  private static void processRequestBody(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
+  private static void processRequestBody(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "requestBody") && !operation.at("/requestBody/content").isMissingNode()) {
       final var content = operation.at("/requestBody/content");
       if (content.has("multipart/form-data")) {
@@ -234,7 +236,7 @@ public class OpenApiUtil {
     }
   }
 
-  private static void processResponses(final HashMap<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
+  private static void processResponses(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
       for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext(); ) {

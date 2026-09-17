@@ -31,13 +31,13 @@ public class ApiErrorDTO {
   @NotNull
   private final Integer code;
   @JsonProperty(value ="message")
-  @Size(min =50, max =200)
+  @Size(min =1050, max =4000)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
   @NotNull
   private final String message;
   @JsonProperty(value ="test")
-  @MaxItems(maximum = 10)
-  @MinItems(minimum = 5)
+  @MaxItems(maximum = 2000)
+  @MinItems(minimum = 1000)
   @UniqueItems
   private List<Integer> test;
 

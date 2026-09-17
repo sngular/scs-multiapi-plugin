@@ -68,6 +68,9 @@ public abstract class CommonTemplateFactory {
     this.checkOverwrite = checkOverwrite;
     cfg.setTemplateLoader(classpathTemplateLoader);
     cfg.setDefaultEncoding("UTF-8");
+    // Generated sources are Java code, never localized text: numbers must never pick up the default
+    // locale's grouping separator (e.g. 4000 -> "4.000" under es_ES), which yields non-compiling code.
+    cfg.setNumberFormat("computer");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(true);
     cfg.setAPIBuiltinEnabled(true);
@@ -207,7 +210,8 @@ public abstract class CommonTemplateFactory {
 
   public final void fillTemplateModelClassException(final String modelPackage) throws IOException {
     addToRoot(EXCEPTION_PACKAGE, modelPackage);
-    writeTemplateToFile(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(modelPackage) + SLASH + "exception", "ModelClassException");
+    writeTemplateIfAbsent(CommonTemplateIndexConstants.TEMPLATE_MODEL_EXCEPTION, MapperUtil.packageToFolder(modelPackage) + SLASH + "exception",
+                          "ModelClassException");
   }
 
   private void fillTemplateCustom(
@@ -218,8 +222,18 @@ public abstract class CommonTemplateFactory {
       throw new IOException("Can't create custom validator directory");
     }
     root.put("packageModel", modelPackage);
-    writeTemplateToFile(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
-    writeTemplateToFile(templateValidator, pathToCustomValidatorPackage, fileNameValidator);
+    writeTemplateIfAbsent(templateAnnotation, pathToCustomValidatorPackage, fileNameAnnotation);
+    writeTemplateIfAbsent(templateValidator, pathToCustomValidatorPackage, fileNameValidator);
+  }
+
+  private void writeTemplateIfAbsent(final String templateName, final Path filePathToSave, final String partialPath) throws IOException {
+    if (!Files.exists(filePathToSave.resolve(partialPath + FILE_TYPE_JAVA))) {
+      writeTemplateToFile(templateName, filePathToSave, partialPath);
+    }
+  }
+
+  private void writeTemplateIfAbsent(final String templateName, final String apiPackage, final String partialPath) throws IOException {
+    writeTemplateIfAbsent(templateName, processPath(getPath(apiPackage)), partialPath);
   }
 
   private static String getTemplateName(ClassTemplate classTemplate) {

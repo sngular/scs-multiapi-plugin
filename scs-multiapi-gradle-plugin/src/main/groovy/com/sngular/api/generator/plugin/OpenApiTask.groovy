@@ -31,7 +31,7 @@ abstract class OpenApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     OpenApiModelExtension openApiExtension = getProject().getExtensions().getByType(OpenApiModelExtension.class)
     if (null != openApiExtension && !openApiExtension.getSpecFile().isEmpty()) {
-      def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), generatedDir, project.getGroup() as String, targetFolder, project.getProjectDir())
+      def openApiGen = new OpenApiGenerator(openApiExtension.getSpringBootVersion(), openApiExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       List<SpecFile> openApiSpecFiles = []
       openApiExtension.getSpecFile().forEach(apiSpec -> {
         openApiSpecFiles.add(toFileSpec(apiSpec))

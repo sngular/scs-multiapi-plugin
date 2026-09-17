@@ -21,10 +21,11 @@ import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObj
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.asyncapi.template.TemplateFactory;
 import com.sngular.api.generator.plugin.common.files.ClasspathFileLocation;
-import com.sngular.api.generator.plugin.common.files.RemoteFileLocation;
-import com.sngular.api.generator.plugin.common.tools.PathUtil;
 import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
+import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
+import com.sngular.api.generator.plugin.common.files.RemoteFileLocation;
+import com.sngular.api.generator.plugin.common.tools.PathUtil;
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -115,7 +116,7 @@ public abstract class BaseAsyncApiHandler {
     }
     final var classPathInput = BaseAsyncApiHandler.class.getClassLoader().getResource(ymlFilePath);
     if (Objects.nonNull(classPathInput)) {
-      return new ClasspathFileLocation(getParentUri(classPathInput.toURI()));
+      return new ClasspathFileLocation(FileLocationUtil.getParentUri(classPathInput.toURI()));
     }
 
     final File f = new File(ymlFilePath);
@@ -124,35 +125,6 @@ public abstract class BaseAsyncApiHandler {
     }
 
     throw new FileNotFoundException("Could not find YAML file: " + ymlFilePath);
-  }
-
-  public static URI getParentUri(URI uri) {
-    if ("jar".equals(uri.getScheme())) {
-      // Split "jar:file:/path/to/app.jar!/dir/file.txt"
-      String[] parts = uri.getSchemeSpecificPart().split("!", 2);
-      if (parts.length != 2) {
-        throw new IllegalArgumentException("Invalid JAR URI: " + uri);
-      }
-
-      String jarPath = parts[0];
-      Path innerPath = Paths.get(parts[1]);
-      Path parentPath = innerPath.getParent();
-
-      if (parentPath == null) {
-        throw new IllegalArgumentException("No parent path inside JAR for: " + uri);
-      }
-
-      return URI.create("jar:" + jarPath + "!" + parentPath.toString().replace("\\", "/"));
-    } else if ("file".equals(uri.getScheme())) {
-      Path path = Paths.get(uri);
-      Path parent = path.getParent();
-      if (parent == null) {
-        throw new IllegalArgumentException("No parent for file URI: " + uri);
-      }
-      return parent.toUri();
-    } else {
-      throw new IllegalArgumentException("Unsupported URI scheme: " + uri.getScheme());
-    }
   }
 
   public abstract void processFileSpec(final List<SpecFile> specsListFile);

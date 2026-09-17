@@ -109,13 +109,13 @@ components:
           type: integer
         message:
           type: string
-          minLength: 50
-          maxLength: 200
+          minLength: 1050
+          maxLength: 4000
           pattern: "^[a-zA-Z0-9_.-]*$"
         test:
           type: array
           items:
             type: integer
-          maxItems: 10
-          minItems: 5
+          maxItems: 2000
+          minItems: 1000
           uniqueItems: true

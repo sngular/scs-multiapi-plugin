@@ -30,7 +30,7 @@ class OperationParameter {
 
   boolean useLombokModelAnnotation
 
-boolean generateSpringwolfAnnotations
+  boolean generateSpringwolfAnnotations
 
   boolean usePactAnnotation
 
@@ -135,3 +135,4 @@ boolean generateSpringwolfAnnotations
   }
 
 }
+

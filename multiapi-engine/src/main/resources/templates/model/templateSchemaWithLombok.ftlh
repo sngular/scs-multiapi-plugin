@@ -192,10 +192,10 @@ public class ${schema.className} {
   ${calculateMaxAnnotation (field.dataType)}(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
 </#if>
 <#if field.restrictions.maxItems?has_content>
-  @MaxItems(maximum = ${field.restrictions.maxItems})
+  @MaxItems(maximum = ${field.restrictions.maxItems?c})
 </#if>
 <#if field.restrictions.minItems?has_content>
-  @MinItems(minimum = ${field.restrictions.minItems})
+  @MinItems(minimum = ${field.restrictions.minItems?c})
 </#if>
 <#if field.restrictions.format?has_content>
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${field.restrictions.format}")
@@ -204,11 +204,11 @@ public class ${schema.className} {
   @UniqueItems
 </#if>
 <#if field.restrictions.maxLength?has_content && field.restrictions.minLength?has_content>
-  @Size(min =${field.restrictions.minLength}, max =${field.restrictions.maxLength})
+  @Size(min =${field.restrictions.minLength?c}, max =${field.restrictions.maxLength?c})
 <#elseif field.restrictions.maxLength?has_content && !field.restrictions.minLength?has_content>
-  @Size(max =${field.restrictions.maxLength}, min =0)
+  @Size(max =${field.restrictions.maxLength?c}, min =0)
 <#elseif !field.restrictions.maxLength?has_content && field.restrictions.minLength?has_content>
-  @Size(max =0, min =${field.restrictions.minLength})
+  @Size(max =0, min =${field.restrictions.minLength?c})
 </#if>
 <#if field.restrictions.pattern?has_content>
   @Pattern(regex = "${field.restrictions.pattern}")

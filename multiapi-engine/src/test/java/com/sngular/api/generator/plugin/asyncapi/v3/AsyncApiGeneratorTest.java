@@ -16,7 +16,6 @@ import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
 import com.sngular.api.generator.plugin.asyncapi.exception.InvalidAvroException;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@Slf4j
 class AsyncApiGeneratorTest {
 
   private static final int SPRING_BOOT_VERSION = 2;
