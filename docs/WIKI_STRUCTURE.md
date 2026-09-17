@@ -47,9 +47,9 @@ The SCS MultiAPI Plugin is a Maven and Gradle plugin that automates the generati
 
 ## Latest Version
 
-**Current**: 7.0.0
-- Maven: `com.sngular:scs-multiapi-maven-plugin:7.0.0`
-- Gradle: `com.sngular.scs-multiapi-gradle-plugin` version `7.0.0`
+**Current**: 6.7.8
+- Maven: `com.sngular:scs-multiapi-maven-plugin:6.7.8`
+- Gradle: `com.sngular.scs-multiapi-gradle-plugin` version `6.7.8`
 ```
 
 ---
@@ -77,7 +77,7 @@ Add to your `pom.xml`:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>7.0.0</version>
+  <version>6.7.8</version>
   <executions>
     <execution>
       <phase>generate-sources</phase>
@@ -121,7 +121,7 @@ Add to your `build.gradle`:
 
 ```groovy
 plugins {
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.0.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '6.7.8'
 }
 
 dependencies {
@@ -303,7 +303,7 @@ Automatically generate Java code from OpenAPI and AsyncAPI specifications.
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>7.0.0</version>
+  <version>6.7.8</version>
   <executions>
     <execution>
       <goals>
@@ -324,7 +324,7 @@ Automatically generate Java code from OpenAPI and AsyncAPI specifications.
 ### Gradle
 ```groovy
 plugins {
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.0.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '6.7.8'
 }
 
 openapimodel {
