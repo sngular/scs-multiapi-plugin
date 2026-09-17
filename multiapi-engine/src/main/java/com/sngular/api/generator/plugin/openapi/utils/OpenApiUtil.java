@@ -252,6 +252,17 @@ public class OpenApiUtil {
               basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(
                                        MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(schema), specFile)),
                                    schema);
+            } else if (ApiTool.isArray(schema) && ApiTool.hasItems(schema)) {
+              final var items = ApiTool.getItems(schema);
+              if (!ApiTool.hasRef(items) && ApiTool.isObject(items)) {
+                basicJsonNodeMap.put(
+                    StringCaseUtils.titleToSnakeCase(MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)), specFile)),
+                    items);
+              } else if (ApiTool.isComposed(items)) {
+                basicJsonNodeMap.put(StringCaseUtils.titleToSnakeCase(
+                                         MapperUtil.getPojoName("InlineResponse" + response.getKey() + StringUtils.capitalize(getOperationId(operation)) + getComposedJsonNodeName(items), specFile)),
+                                     items);
+              }
             }
           }
         }

@@ -424,6 +424,13 @@ public class MapperPathUtil {
       pojoName = getPojoName(inlineObject + "OneOf", specFile);
     } else if (ApiTool.hasRef(schema)) {
       pojoName = getPojoName(inlineObject + MapperUtil.getRefSchemaName(schema, null), specFile);
+    } else if (ApiTool.isArray(schema) && ApiTool.hasItems(schema)) {
+      final var items = ApiTool.getItems(schema);
+      if (ApiTool.hasRef(items)) {
+        pojoName = getPojoName(inlineObject + MapperUtil.getRefSchemaName(items, null), specFile);
+      } else {
+        pojoName = getPojoName(inlineObject, specFile);
+      }
     } else {
       pojoName = getPojoName(inlineObject, specFile);
     }
