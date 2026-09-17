@@ -415,20 +415,27 @@ public class MapperPathUtil {
   }
 
   private static String preparePojoName(final String inlineObject, final JsonNode schema, final SpecFile specFile) {
-    final String pojoName;
-    if (ApiTool.isAllOf(schema)) {
-      pojoName = getPojoName(inlineObject + "AllOf", specFile);
-    } else if (ApiTool.isAnyOf(schema)) {
-      pojoName = getPojoName(inlineObject + "AnyOf", specFile);
-    } else if (ApiTool.isOneOf(schema)) {
-      pojoName = getPojoName(inlineObject + "OneOf", specFile);
-    } else if (ApiTool.hasRef(schema)) {
-      pojoName = getPojoName(inlineObject + MapperUtil.getRefSchemaName(schema, null), specFile);
-    } else {
-      pojoName = getPojoName(inlineObject, specFile);
+    // Use unified ResponseWrapperHandler for wrapper decisions (v7.0)
+    // This ensures OpenApiUtil and MapperPathUtil stay in sync
+
+    if (ResponseWrapperHandler.shouldCreateWrapper(schema)) {
+      // Wrapper will be created by ResponseWrapperHandler; use the wrapper name
+      // This is called with inlineObject = "InlineResponse{code}{operationId}"
+      // ResponseWrapperHandler will create the same name, so just use it
+      return getPojoName(inlineObject, specFile);
     }
 
-    return pojoName;
+    // No wrapper: use the schema directly
+    if (ApiTool.hasRef(schema)) {
+      return getPojoName(inlineObject + MapperUtil.getRefSchemaName(schema, null), specFile);
+    } else if (ApiTool.isArray(schema) && ApiTool.hasItems(schema)) {
+      final var items = ApiTool.getItems(schema);
+      if (ApiTool.hasRef(items)) {
+        return getPojoName(inlineObject + MapperUtil.getRefSchemaName(items, null), specFile);
+      }
+    }
+
+    return getPojoName(inlineObject, specFile);
   }
 
   private static SchemaFieldObjectType getSchemaType(

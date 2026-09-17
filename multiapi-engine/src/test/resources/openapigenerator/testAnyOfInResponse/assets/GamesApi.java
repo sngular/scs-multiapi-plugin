@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.sngular.multifileplugin.testanyofinresponse.model.InlineResponse200ListGamesAnyOfDTO;
+import com.sngular.multifileplugin.testanyofinresponse.model.InlineResponse200ListGamesDTO;
 
 public interface GamesApi {
 
@@ -30,7 +30,7 @@ public interface GamesApi {
     summary = "List all available games",
     tags = {"games"},
     responses = {
-      @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesAnyOfDTO.class)))
+      @ApiResponse(responseCode = "200", description = "A paged array of games", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200ListGamesDTO.class)))
     }
   )
   @RequestMapping(
@@ -39,7 +39,7 @@ public interface GamesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<InlineResponse200ListGamesAnyOfDTO> listGames() {
+  default ResponseEntity<InlineResponse200ListGamesDTO> listGames() {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

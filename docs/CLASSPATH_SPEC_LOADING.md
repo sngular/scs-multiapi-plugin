@@ -37,7 +37,7 @@ Specify a spec path without a filesystem prefix. The plugin will search:
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>6.7.8</version>
+  <version>7.0.0</version>
   <configuration>
     <specFile>
       <filePath>openapi.yml</filePath>
@@ -59,7 +59,7 @@ Specify a spec path without a filesystem prefix. The plugin will search:
 
 ```gradle
 plugins {
-  id 'com.sngular.multiapi.plugin' version '6.7.8'
+  id 'com.sngular.multiapi.plugin' version '7.0.0'
 }
 
 multiapi {
@@ -649,7 +649,7 @@ URI resolved = parentUri.resolve("schemas/user.yml");
 
 ## Changelog
 
-### Version 6.7.8+ (This Implementation)
+### Version 7.0.0+ (This Implementation)
 
 - ✅ Fixed AsyncApiGenerator classpath URI handling
 - ✅ Fixed OpenApiGenerator to detect actual spec location
@@ -657,7 +657,7 @@ URI resolved = parentUri.resolve("schemas/user.yml");
 - ✅ Added FileLocationUtil shared utility
 - ✅ Support for multiple dependency scenarios
 
-### Version 6.7.8 and Earlier
+### Version 7.0.0 and Earlier
 
 - Had issues with external references in classpath specs
 - Assumed specs were always on filesystem
