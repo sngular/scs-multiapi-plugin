@@ -2,10 +2,12 @@ package com.sngular.api.generator.plugin.common.tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,6 +32,17 @@ public class SchemaUtil {
   }
 
   public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final URI rootFilePath) {
+    return solveRef(refValue, schemaMap, rootFilePath, null);
+  }
+
+  public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final URI rootFilePath, final URLClassLoader jarLoader) {
+    if (jarLoader != null && !refValue.startsWith("#")) {
+      final JsonNode jarRef = solveRefFromJar(refValue, jarLoader);
+      if (jarRef != null) {
+        return jarRef;
+      }
+    }
+
     JsonNode solvedRef;
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
@@ -51,6 +64,17 @@ public class SchemaUtil {
       solvedRef = null;
     }
     return solvedRef;
+  }
+
+  private static JsonNode solveRefFromJar(final String refValue, final URLClassLoader jarLoader) {
+    try (InputStream stream = jarLoader.getResourceAsStream(refValue)) {
+      if (stream == null) {
+        return null;
+      }
+      return PARSER.readTree(stream);
+    } catch (final IOException e) {
+      return null;
+    }
   }
 
   /**
