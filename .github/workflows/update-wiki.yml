@@ -28,7 +28,7 @@ jobs:
       - name: Checkout SCS MultiApi Plugin Repository
         run: git clone https://github.com/sngular/scs-multiapi-plugin.git scs-multiapi-plugin
       - name: Checkout SCS MultiApi Plugin Wiki Repository
-        run: git clone https://github.com/sngular/scs-multiapi-plugin.wiki.git wiki
+        run: git clone "https://${{secrets.GITBOT_TOKEN}}@github.com/sngular/scs-multiapi-plugin.wiki.git" wiki
       - name: Copy docs and consolidate links
         run: |
           cp -rf scs-multiapi-plugin/docs/* wiki/
@@ -46,13 +46,17 @@ jobs:
       - name: Setup git user
         if: ${{ env.TO_BE_CANCELLED == 'false' }}
         run: |
-          git config --global user.name ${{ github.actor }}
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          cd wiki
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
       - name: Sync Wiki
         if: ${{ env.TO_BE_CANCELLED == 'false' }}
         run: |
-          cd wiki                
+          cd wiki
           git status
           git add .
           git commit -m "scs-multiapi-plugin documentation | GitHub Actions $GITHUB_WORKFLOW $GITHUB_RUN_NUMBER"
-          git remote add origin-wiki "https://${{secrets.GITBOT_TOKEN}}@github.com/sngular/scs-multiapi-plugin.wiki.git"
-          git push origin-wiki main
+          git remote set-url origin "https://${{secrets.GITBOT_TOKEN}}@github.com/sngular/scs-multiapi-plugin.wiki.git"
+          git push origin main
