@@ -153,9 +153,7 @@ public class ApiWebClient {
   }
 
   public ApiWebClient addDefaultHeader(final String name, final String value) {
-    if (defaultHeaders.containsKey(name)) {
-      defaultHeaders.remove(name);
-    }
+    defaultHeaders.remove(name);
     defaultHeaders.add(name, value);
     return this;
   }
@@ -290,7 +288,7 @@ public class ApiWebClient {
     final Object body, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams, final MultiValueMap<String, Object> formParams, final List<MediaType> accept, final MediaType contentType, final String[] authNames) {
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
 
-      final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(path);
+      final UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(basePath).path(path);
       if (queryParams != null) {
         builder.queryParams(queryParams);
       }
@@ -313,14 +311,13 @@ public class ApiWebClient {
   }
 
   protected void addHeadersToRequest(final HttpHeaders headers, final WebClient.RequestBodySpec requestBuilder) {
-    for (Entry<String, List<String>> entry : headers.entrySet()) {
-      List<String> values = entry.getValue();
+    headers.forEach((name, values) -> {
       for(String value : values) {
         if (value != null) {
-          requestBuilder.header(entry.getKey(), value);
+          requestBuilder.header(name, value);
         }
       }
-    }
+    });
   }
 
   protected void addCookiesToRequest(final MultiValueMap<String, String> cookies, final WebClient.RequestBodySpec requestBuilder) {

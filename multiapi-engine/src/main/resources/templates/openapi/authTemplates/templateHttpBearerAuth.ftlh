@@ -3,7 +3,6 @@ package ${packageAuth};
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpHeaders;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.MultiValueMap;
 
 
