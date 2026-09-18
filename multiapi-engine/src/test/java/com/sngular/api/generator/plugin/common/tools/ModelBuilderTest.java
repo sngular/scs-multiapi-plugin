@@ -43,4 +43,73 @@ public class ModelBuilderTest {
     assertThat(enumValues).containsKey("IN_COURSE");
     assertThat(enumValues).containsEntry("IN_COURSE", '"' + "in-course" + '"');
   }
+
+  @Test
+  void testArrayOfPropertylessAnyOfBecomesObjectList() throws Exception {
+    // `items: {anyOf: [{type: object}]}` describes free-form elements: no member declares a
+    // property, so there is nothing to model and the element type must degrade to Object instead
+    // of an empty class whose single field would have no name to render.
+    final String json = """
+        {"type": "object",
+         "properties": {
+           "items": {"type": "array", "items": {"anyOf": [{"type": "object"}]}}
+         }}""";
+
+    final SchemaObject schemaObject = buildSchema("Pagination", json);
+
+    assertThat(schemaObject.getFieldObjectList()).hasSize(1);
+    final SchemaFieldObject items = schemaObject.getFieldObjectList().iterator().next();
+    assertThat(items.getBaseName()).isEqualTo("items");
+    assertThat(items.getDataType()).hasToString("List<Object>");
+  }
+
+  @Test
+  void testPropertylessSchemaYieldsNoNamelessField() throws Exception {
+    // A schema with neither properties nor a name of its own (the bare `{"type": "object"}` member
+    // of an anyOf) contributes no field: every template interpolates the field name, so a nameless
+    // field fails template processing.
+    final SchemaObject schemaObject = buildSchema("Items", "{\"anyOf\": [{\"type\": \"object\"}]}");
+
+    assertThat(schemaObject.getFieldObjectList()).isEmpty();
+  }
+
+  @Test
+  void testPropertylessNamedSchemaKeepsItsOwnNameAsField() throws Exception {
+    // A component schema that is a bare type has no property name to borrow other than its own.
+    final SchemaObject schemaObject = buildSchema("Reference", "{\"type\": \"string\"}");
+
+    assertThat(schemaObject.getFieldObjectList()).hasSize(1);
+    assertThat(schemaObject.getFieldObjectList().iterator().next().getBaseName()).isEqualTo("Reference");
+  }
+
+  private SchemaObject buildSchema(final String className, final String json) throws Exception {
+    final JsonNode node = new ObjectMapper().readTree(json);
+    final CommonSpecFile specFile = CommonSpecFile.builder().modelPackage("com.sngular.test").build();
+
+    return ModelBuilder.buildSchemaObject(new HashMap<>(), className, node, new HashSet<>(), new HashMap<>(), "parent", specFile, Path.of("."));
+  }
+
+  @Test
+  void testAllOfMemberNarrowingAFreeFormPropertyWins() throws Exception {
+    // `allOf` means the value satisfies every member, so when a paged wrapper redeclares the
+    // free-form `items` it inherits, the typed declaration is the accurate one — whichever order
+    // the members are written in.
+    final String freeForm = """
+        {"type": "object", "properties": {"items": {"type": "array", "items": {"anyOf": [{"type": "object"}]}}}}""";
+    final String typed = """
+        {"type": "object", "properties": {"items": {"type": "array", "items": {"type": "string"}}}}""";
+
+    assertThat(itemsTypeOfAllOf(freeForm, typed)).hasToString("List<String>");
+    assertThat(itemsTypeOfAllOf(typed, freeForm)).hasToString("List<String>");
+  }
+
+  private Object itemsTypeOfAllOf(final String firstMember, final String secondMember) throws Exception {
+    final SchemaObject schemaObject = buildSchema("PaginatedThing", "{\"allOf\": [" + firstMember + ", " + secondMember + "]}");
+
+    return schemaObject.getFieldObjectList().stream()
+                       .filter(field -> "items".equals(field.getBaseName()))
+                       .findFirst()
+                       .orElseThrow()
+                       .getDataType();
+  }
 }
