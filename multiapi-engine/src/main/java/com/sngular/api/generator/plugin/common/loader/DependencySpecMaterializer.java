@@ -23,6 +23,7 @@ import java.util.zip.ZipFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.model.ExternalSpecSource;
+import com.sngular.api.generator.plugin.common.model.SpecConventions;
 import com.sngular.api.generator.plugin.exception.SpecDependencyException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -79,7 +80,7 @@ public class DependencySpecMaterializer {
     final Path artifactContent = extractedArtifacts.computeIfAbsent(artifact.getAbsolutePath(), key -> extract(artifact, groupId, artifactId));
 
     if (StringUtils.isBlank(filePath)) {
-      return theOnlyContractIn(artifactContent, specSource, artifact, rootMarker);
+      return defaultContractIn(artifactContent, specSource, artifact, rootMarker);
     }
 
     final Path specPath = resolveInsideArtifact(artifactContent, filePath);
@@ -93,16 +94,30 @@ public class DependencySpecMaterializer {
   }
 
   /**
-   * An artifact that publishes a single contract does not need its path repeated in every consumer,
-   * so {@code filePath} may be omitted there.
+   * Resolves a spec that declares no {@code filePath}: an artifact that follows the convention needs
+   * nothing configured beyond its coordinates.
    *
-   * <p>Counting spec <em>files</em> would not do: a multi-file contract ships its schema fragments
-   * beside the root document, and they are {@code .yml} files too. Only documents carrying the
-   * {@code openapi} or {@code asyncapi} top-level field are root contracts, which also keeps an
-   * artifact that publishes both kinds from feeding the wrong one to the wrong generator. With
-   * several root contracts it stays required, because choosing one would be a guess at which API to
-   * generate.</p>
+   * <p>{@link SpecConventions#defaultFilePath} is tried first. Failing that, an artifact carrying a
+   * single contract is unambiguous enough to use it, which keeps artifacts published before the
+   * convention working. Counting spec <em>files</em> would not do there: a multi-file contract ships
+   * its schema fragments beside the root document and they are {@code .yml} files too, so only
+   * documents carrying the {@code openapi} or {@code asyncapi} top-level field count — which also
+   * keeps an artifact publishing both kinds from feeding the wrong one to the wrong generator.</p>
    */
+  private static Path defaultContractIn(
+      final Path artifactContent, final ExternalSpecSource specSource, final File artifact, final String rootMarker) {
+
+    for (final String conventionalPath : SpecConventions.defaultFilePaths(rootMarker)) {
+      final Path conventional = artifactContent.resolve(conventionalPath);
+      if (Files.isRegularFile(conventional)) {
+        log.info("Loading spec '{}' from dependency {} ({}), the conventional location",
+            conventionalPath, specSource.getDependencyCoordinate(), artifact);
+        return conventional;
+      }
+    }
+    return theOnlyContractIn(artifactContent, specSource, artifact, rootMarker);
+  }
+
   private static Path theOnlyContractIn(
       final Path artifactContent, final ExternalSpecSource specSource, final File artifact, final String rootMarker) {
 
@@ -112,13 +127,15 @@ public class DependencySpecMaterializer {
 
     if (contracts.isEmpty()) {
       throw new SpecDependencyException(String.format(
-          "No %s contract found inside %s: no file declares a top-level '%s' field.%s",
-          rootMarker, specSource.getDependencyCoordinate(), rootMarker, describeCandidates(artifactContent)));
+          "No %s contract found inside %s: there is no %s and no file declares a top-level '%s' field.%s",
+          rootMarker, specSource.getDependencyCoordinate(), SpecConventions.defaultFilePath(rootMarker), rootMarker,
+          describeCandidates(artifactContent)));
     }
     if (contracts.size() > 1) {
       throw new SpecDependencyException(String.format(
-          "filePath is required for %s: the artifact carries %d %s contracts.%s",
-          specSource.getDependencyCoordinate(), contracts.size(), rootMarker, describe(artifactContent, contracts)));
+          "filePath is required for %s: the artifact carries %d %s contracts and none is at %s.%s",
+          specSource.getDependencyCoordinate(), contracts.size(), rootMarker, SpecConventions.defaultFilePath(rootMarker),
+          describe(artifactContent, contracts)));
     }
 
     final Path specPath = contracts.get(0);

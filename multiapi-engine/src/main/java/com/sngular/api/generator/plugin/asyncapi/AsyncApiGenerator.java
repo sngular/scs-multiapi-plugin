@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -31,13 +33,18 @@ import com.sngular.api.generator.plugin.common.files.DirectoryFileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocation;
 import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
 import com.sngular.api.generator.plugin.common.files.RemoteFileLocation;
+import com.sngular.api.generator.plugin.common.model.SpecConventions;
 import com.sngular.api.generator.plugin.common.tools.PathUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
 public class AsyncApiGenerator {
+
+  /** Top-level field marking a root AsyncAPI document, and the stem of its conventional path. */
+  private static final String ASYNCAPI_MARKER = "asyncapi";
 
   private final Integer springBootVersion;
 
@@ -112,12 +119,29 @@ public class AsyncApiGenerator {
   private SpecFile resolveSpecFile(final SpecFile specFile) {
     specFile.validateDependencyCoordinates();
     if (!specFile.usesExternalDependency()) {
-      return specFile;
+      return StringUtils.isNotBlank(specFile.getFilePath())
+          ? specFile
+          : specFile.toBuilder().filePath(defaultFilePath(ASYNCAPI_MARKER, baseDir.toPath())).build();
     }
     if (Objects.isNull(specMaterializer)) {
       specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
     }
-    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile, "asyncapi").toString()).build();
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile, ASYNCAPI_MARKER).toString()).build();
+  }
+
+  /**
+   * Applies the conventional contract location to a spec that declares no {@code filePath}. The
+   * first conventional path that exists in the module wins; when none does, the preferred spelling
+   * is used anyway so the failure names the file that was expected.
+   */
+  private String defaultFilePath(final String rootMarker, final Path moduleDir) {
+    final List<String> conventional = SpecConventions.defaultFilePaths(rootMarker);
+    final String chosen = conventional.stream()
+                                      .filter(path -> Files.isRegularFile(moduleDir.resolve(path)))
+                                      .findFirst()
+                                      .orElseGet(() -> SpecConventions.defaultFilePath(rootMarker));
+    log.info("No filePath configured, using the conventional location '{}'", chosen);
+    return chosen;
   }
 
   private static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {

@@ -93,6 +93,38 @@ class DependencySpecMaterializerTest {
   }
 
   @Test
+  @DisplayName("defaults filePath to the conventional contract/openapi.yml")
+  void defaultsToTheConventionalPath() throws IOException {
+    final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
+        "contract/openapi.yml", SPEC_CONTENT,
+        SPEC_PATH, "openapi: 3.1.0")));
+
+    final Path materialized = materializer(artifact).materialize(specFile(null, VERSION), "openapi");
+
+    assertThat(materialized).isRegularFile().hasContent(SPEC_CONTENT);
+    assertThat(materialized).hasFileName("openapi.yml");
+  }
+
+  @Test
+  @DisplayName("accepts the .yaml spelling of the conventional path")
+  void defaultsToTheConventionalPathSpeltYaml() throws IOException {
+    final File artifact = artifactContaining(Map.of("contract/openapi.yaml", SPEC_CONTENT));
+
+    assertThat(materializer(artifact).materialize(specFile(null, VERSION), "openapi")).hasFileName("openapi.yaml");
+  }
+
+  @Test
+  @DisplayName("uses the conventional asyncapi contract for the asyncapi goal")
+  void defaultsToTheConventionalAsyncApiPath() throws IOException {
+    final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
+        "contract/openapi.yml", SPEC_CONTENT,
+        "contract/asyncapi.yml", "asyncapi: 2.6.0")));
+
+    assertThat(materializer(artifact).materialize(specFile(null, VERSION), "asyncapi")).hasContent("asyncapi: 2.6.0");
+    assertThat(materializer(artifact).materialize(specFile(null, VERSION), "openapi")).hasContent(SPEC_CONTENT);
+  }
+
+  @Test
   @DisplayName("defaults filePath to the only contract the artifact carries")
   void defaultsToTheOnlyContractInTheArtifact() throws IOException {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT, "META-INF/MANIFEST.MF", "Manifest-Version: 1.0"));
@@ -136,7 +168,7 @@ class DependencySpecMaterializerTest {
     assertThatThrownBy(() -> materializer(artifact).materialize(specFile(null, VERSION), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("filePath is required for com.company:api-specs:1.0.0")
-        .hasMessageContaining("carries 2 openapi contracts")
+        .hasMessageContaining("carries 2 openapi contracts and none is at contract/openapi.yml")
         .hasMessageContaining(SPEC_PATH)
         .hasMessageContaining("specs/other.yml");
   }
@@ -149,6 +181,7 @@ class DependencySpecMaterializerTest {
     assertThatThrownBy(() -> materializer(artifact).materialize(specFile(null, VERSION), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("No openapi contract found inside com.company:api-specs:1.0.0")
+        .hasMessageContaining("there is no contract/openapi.yml")
         .hasMessageContaining("specs/schemas/user.yml");
   }
 

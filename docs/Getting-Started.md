@@ -345,6 +345,8 @@ See the [README][readme] for all options.
 ## Next Steps
 
 - 📖 Read the [README][readme] for every option of both goals
+- 📁 Put the contract at `contract/openapi.yml` and you can drop `filePath`
+  entirely — see [Loading specs](LOADING_SPECS)
 - 🔗 See [Loading specs](LOADING_SPECS) to read contracts from a published
   artifact, a URL or a registry
 - ⚡ Explore [Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION) for

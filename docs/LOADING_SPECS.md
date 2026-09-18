@@ -6,19 +6,46 @@ Where the plugin looks for a contract, and which option to pick.
 applies to both `openapi-generation` and `asyncapi-generation`, and to both build
 tools.
 
+## The conventional location
+
+Put the contract at **`contract/openapi.yml`** — or `contract/asyncapi.yml` for
+the AsyncAPI goal — and `filePath` can be left out entirely. The convention holds
+wherever the contract lives: that path is looked for in the module, and at the
+root of a published artifact. The `.yaml` spelling is accepted too.
+
+```text
+your-module/
+└── contract/
+    ├── openapi.yml          <- found with no filePath configured
+    └── schemas/
+        └── user.yml
+```
+
+```xml
+<specFile>
+  <apiPackage>com.example.api</apiPackage>
+  <modelPackage>com.example.api.model</modelPackage>
+</specFile>
+```
+
+Configure `filePath` when the contract is somewhere else, when a module or an
+artifact holds more than one contract, or when it is behind a URL.
+
 Where the contract lives, and what to configure:
 
-- **In this module** — `filePath` relative to the project directory.
+- **At `contract/openapi.yml`** — nothing to configure.
+- **Elsewhere in this module** — `filePath` relative to the project directory.
 - **In a published artifact** — `fromGroupId` and `fromArtifactId`, optionally
-  `fromVersion`, with `filePath` naming the contract inside the artifact.
-  `filePath` is optional when the artifact carries a single contract.
+  `fromVersion`. `filePath` names the contract inside the artifact, and is
+  optional when the artifact follows the convention.
 - **Behind a URL or in a registry** — `filePath` as the full `http(s)` URL.
 - **In an artifact you add to the plugin itself** — `filePath` as the resource
   path. Single-file contracts only.
 
 ## From this module
 
-The default. `filePath` is relative to the module's base directory:
+With no `filePath`, `contract/openapi.yml` is used. Otherwise `filePath` is
+relative to the module's base directory:
 
 ```xml
 <specFile>
@@ -78,12 +105,14 @@ Points worth knowing:
 - **`filePath` is the path inside the artifact**, not a path in your project. If
   you get it wrong the build fails listing the spec files the artifact does
   carry.
-- **`filePath` can be omitted when the artifact carries exactly one contract**,
-  which is the common case for a per-API artifact. A contract is a document with
-  a top-level `openapi` or `asyncapi` field, so the schema fragments of a
-  multi-file contract do not count, and an artifact publishing both an OpenAPI
-  and an AsyncAPI contract still defaults correctly for each goal. With more than
-  one contract of the same kind it is required again, and the build lists them
+- **`filePath` can be omitted** when the artifact carries `contract/openapi.yml`
+  (or `contract/asyncapi.yml` for the AsyncAPI goal). Failing that, an artifact
+  carrying a single contract is used as well, so artifacts published before the
+  convention keep working — a contract being a document with a top-level
+  `openapi` or `asyncapi` field, which is why the schema fragments of a
+  multi-file contract do not count and an artifact publishing both kinds still
+  defaults correctly for each goal. With several contracts of the same kind and
+  none at the conventional path, `filePath` is required and the build lists them
   rather than picking for you.
 - **The artifact is fetched like any other dependency**, through the
   repositories your build is configured with. A contract published to a private
@@ -206,6 +235,12 @@ build and reachable, exactly as you would for any other dependency.
 the artifact is not declared anywhere in the build. Set `fromVersion`, or declare
 the artifact as a dependency of the module.
 
-**`filePath is required for <coordinates>: the artifact carries N ... contracts`**
-— the artifact publishes more than one contract, so there is nothing to default
-to. The message lists them; name the one you want.
+**`filePath is required for <coordinates>: the artifact carries N ... contracts
+and none is at contract/openapi.yml`** — the artifact publishes more than one
+contract and does not follow the convention, so there is nothing to default to.
+The message lists them; name the one you want.
+
+**`No openapi contract found inside <coordinates>`** — the artifact has no
+`contract/openapi.yml` and no file in it declares a top-level `openapi` field.
+Either the artifact does not carry an OpenAPI contract, or it carries one under
+a name the build cannot recognise; set `filePath` explicitly.

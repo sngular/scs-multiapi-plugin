@@ -28,11 +28,12 @@ import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Generation driven from a contract published inside an artifact rather than checked into the
- * module. The fixture is a multi-file contract on purpose: the root document only names the
- * schemas, so a generated model class proves the nested {@code $ref}s were resolved inside the
- * artifact too.
+ * module, and the conventional contract location that lets a spec declare no {@code filePath} at
+ * all. The fixture is a multi-file contract on purpose: the root document only names the schemas,
+ * so a generated model class proves the nested {@code $ref}s were resolved inside the artifact
+ * too.
  */
-@DisplayName("Generating from a spec published inside an artifact")
+@DisplayName("Resolving where a contract lives")
 class OpenApiGeneratorWithDependencyTest {
 
   private static final int SPRING_BOOT_VERSION = 2;
@@ -89,6 +90,27 @@ class OpenApiGeneratorWithDependencyTest {
   }
 
   @Test
+  @DisplayName("falls back to contract/openapi.yml in the module when nothing is configured")
+  void defaultsToTheConventionalPathInTheModule() throws IOException {
+    final Path moduleDir = Files.createDirectories(tempDir.resolve("module"));
+    copyFixtureInto(moduleDir.resolve("contract"), "openapi.yml");
+    final Path targetFolder = tempDir.resolve("target");
+
+    final var generator = new OpenApiGenerator(SPRING_BOOT_VERSION, Boolean.TRUE, targetFolder.toFile(), "generated",
+        "groupId", moduleDir.toFile());
+    generator.processFileSpec(List.of(SpecFile.builder()
+                                              .apiPackage(API_PACKAGE)
+                                              .modelPackage(API_PACKAGE + ".model")
+                                              .modelNameSuffix("DTO")
+                                              .useLombokModelAnnotation(true)
+                                              .build()));
+
+    final Path api = targetFolder.resolve("generated/com/sngular/multifileplugin/fromdependency");
+    assertThat(api.resolve("ServicesApi.java")).isRegularFile();
+    assertThat(api.resolve("model/Service_typeDTO.java")).isRegularFile();
+  }
+
+  @Test
   @DisplayName("still reads the filesystem when no dependency coordinates are given")
   void keepsReadingFromTheFilesystemWithoutCoordinates() {
     final Path targetFolder = tempDir.resolve("target");
@@ -126,6 +148,22 @@ class OpenApiGeneratorWithDependencyTest {
                    .modelPackage(API_PACKAGE + ".model")
                    .modelNameSuffix("DTO")
                    .useLombokModelAnnotation(true);
+  }
+
+  /** Copies the multi-file fixture contract into {@code destination}, renaming its root document. */
+  private static void copyFixtureInto(final Path destination, final String rootName) throws IOException {
+    Files.createDirectories(destination);
+    try (var fixtureFiles = Files.walk(FIXTURE)) {
+      for (final Path file : fixtureFiles.filter(Files::isRegularFile).toList()) {
+        final String relative = FIXTURE.relativize(file).toString().replace(File.separatorChar, '/');
+        if (relative.startsWith("assets/")) {
+          continue;
+        }
+        final Path target = destination.resolve("api-test.yml".equals(relative) ? rootName : relative);
+        Files.createDirectories(target.getParent());
+        Files.copy(file, target);
+      }
+    }
   }
 
   /**

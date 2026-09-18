@@ -24,7 +24,10 @@ values. That boundary is why the engine exposes small interfaces such as
 
 ## Where a contract comes from
 
-`filePath` is resolved in this order, the first hit winning
+A spec that declares no `filePath` falls back to the conventional location,
+`contract/openapi.yml` or `contract/asyncapi.yml` (`SpecConventions`), looked for
+in the module or at the root of the artifact depending on where the contract
+lives. Otherwise `filePath` is resolved in this order, the first hit winning
 (`SchemaUtil.readFile`, `PathUtil`):
 
 1. **An artifact**, when the spec declares `fromGroupId` + `fromArtifactId`.
@@ -91,13 +94,15 @@ Details worth knowing:
   build is used — the project's dependencies, then its dependency management.
 - A `filePath` that is not in the artifact fails with the spec files the
   artifact does carry, because that error is almost always a wrong path.
-- `filePath` may be omitted when the artifact carries exactly one contract. A
-  contract is a document declaring a top-level `openapi` or `asyncapi` field —
-  counting spec *files* would not do, because a multi-file contract ships its
-  fragments beside the root document and they are `.yml` files too, and the
-  marker also keeps an artifact publishing both kinds from feeding the wrong one
-  to the wrong generator. With several, choosing one would be a guess at which
-  API to generate, so it fails listing them.
+- `filePath` may be omitted. `contract/<marker>.yml` is tried first; failing
+  that, an artifact carrying exactly one contract is unambiguous enough to use,
+  which keeps artifacts published before the convention working. A contract is a
+  document declaring a top-level `openapi` or `asyncapi` field — counting spec
+  *files* would not do, because a multi-file contract ships its fragments beside
+  the root document and they are `.yml` files too, and the marker also keeps an
+  artifact publishing both kinds from feeding the wrong one to the wrong
+  generator. With several and none at the conventional path, choosing one would
+  be a guess at which API to generate, so it fails listing them.
 
 ## OpenAPI pipeline
 
@@ -163,8 +168,9 @@ supplier/consumer/streamBridge bindings and render through
 
 ## Version history
 
-- **7.1.3** — `filePath` defaults to the artifact's single contract when it has
-  one. `fromGroupId`/`fromArtifactId`/`fromVersion` actually resolve the
+- **7.1.3** — `filePath` is optional: it defaults to `contract/openapi.yml` /
+  `contract/asyncapi.yml`, in the module or inside the artifact.
+  `fromGroupId`/`fromArtifactId`/`fromVersion` actually resolve the
   artifact, through the repositories the build is configured with, for both
   OpenAPI and AsyncAPI. Before this the fields were accepted and ignored, so the
   contract was still read from the module's filesystem. In Gradle they moved from

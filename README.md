@@ -1015,10 +1015,10 @@ could not.
 - `fromGroupId` and `fromArtifactId` go together. Setting only one fails with a
   message saying so, rather than quietly falling back to the filesystem.
 - `filePath` is the path *inside* the artifact, and it can be omitted when the
-  artifact carries exactly one contract — the schema fragments of a multi-file
-  contract are not contracts, and neither is the AsyncAPI document when you are
-  running `openapi-generation`. With more than one it is required, and the build
-  lists them rather than picking for you.
+  artifact follows the conventional layout described below. Failing that, an
+  artifact carrying a single contract is used too; with several and none at the
+  conventional path it is required, and the build lists them rather than picking
+  for you.
 - Omit `fromVersion` and the version already declared by the build is used, so
   the artifact stays pinned in one place.
 - Multi-file contracts work: the artifact is unpacked under the build directory
@@ -1026,6 +1026,31 @@ could not.
   file inside it resolves like any relative reference. Nothing is written to your
   sources.
 - A wrong `filePath` fails listing the spec files the artifact does carry.
+
+### The conventional contract location
+
+Put the contract at **`contract/openapi.yml`** — or `contract/asyncapi.yml` for
+`asyncapi-generation` — and `filePath` can be left out altogether. The same
+convention applies whether the contract sits in the module or at the root of a
+published artifact, and the `.yaml` spelling is accepted too:
+
+```text
+your-module/                       api-specs artifact/
+└── contract/                      └── contract/
+    ├── openapi.yml                    ├── openapi.yml
+    └── schemas/                       └── schemas/
+        └── user.yml                       └── user.yml
+```
+
+```xml
+<specFile>
+  <apiPackage>com.example.api</apiPackage>
+  <modelPackage>com.example.api.model</modelPackage>
+</specFile>
+```
+
+Configure `filePath` when the contract is somewhere else, when a module or an
+artifact holds more than one, or when it is behind a URL.
 
 See [Loading specs](docs/LOADING_SPECS.md) for every way a contract can be
 located, and [Architecture](docs/ARCHITECTURE.md) for how resolution fits into
