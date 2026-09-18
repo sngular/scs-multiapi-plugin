@@ -376,6 +376,18 @@ public final class OpenApiGeneratorFixtures {
 					.apiPackage("com.sngular.multifileplugin.testreservedwords")
 					.modelPackage("com.sngular.multifileplugin.testreservedwords.model").build());
 
+	static final List<SpecFile> TEST_PARAMETER_WITH_SCHEMA_REF_GENERATION = List
+			.of(SpecFile.builder().filePath("openapigenerator/testParameterWithSchemaRefGeneration/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testparameterschemaref")
+					.modelPackage("com.sngular.multifileplugin.testparameterschemaref.model").build());
+
+	static final List<SpecFile> TEST_PARAMETER_WITH_SCHEMA_REF_CLIENT_GENERATION = List
+			.of(SpecFile.builder().filePath("openapigenerator/testParameterWithSchemaRefGeneration/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testparameterschemarefclient")
+					.modelPackage("com.sngular.multifileplugin.testparameterschemarefclient.model")
+					.clientPackage("com.sngular.multifileplugin.testparameterschemarefclient.client").callMode(true)
+					.build());
+
 	static final List<SpecFile> TEST_RARE_CHARS_NAMES_GENERATION = List
 			.of(SpecFile.builder().filePath("openapigenerator/testRareCharsNamesGeneration/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testrarecharsnames")
@@ -1595,6 +1607,35 @@ public final class OpenApiGeneratorFixtures {
 
 		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateParameterWithSchemaRefGeneration() {
+
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testparameterschemaref";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testparameterschemaref/model";
+
+		final String ASSETS_PATH = "openapigenerator/testParameterWithSchemaRefGeneration/assets/";
+
+		final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "WarehousesApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "model/PageFilters.java",
+				ASSETS_PATH + "model/Warehouse.java");
+
+		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateParameterWithSchemaRefClientGeneration() {
+
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testparameterschemarefclient";
+
+		final String ASSETS_PATH = "openapigenerator/testParameterWithSchemaRefGeneration/assets/";
+
+		final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "client/WarehousesApi.java");
+
+		return path -> commonTest(path, expectedTestApiFile, Collections.emptyList(), DEFAULT_TARGET_API, null,
+				Collections.emptyList(), null);
 	}
 
 	static Function<Path, Boolean> validateRareCharsNamesGeneration() {
