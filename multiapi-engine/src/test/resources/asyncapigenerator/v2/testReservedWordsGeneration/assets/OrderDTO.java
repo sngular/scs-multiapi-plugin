@@ -17,7 +17,7 @@ public class OrderDTO {
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
-  @JsonProperty(value ="_new")
+  @JsonProperty(value ="new")
   private List<OrderLineDTO> _new;
   @JsonProperty(value ="ref")
   private String ref;
@@ -52,6 +52,7 @@ public class OrderDTO {
       return this;
     }
 
+    @JsonProperty(value ="new")
     public OrderDTO.OrderDTOBuilder _new(List<OrderLineDTO> _new) {
       if (!_new.isEmpty()) {
         this._new.addAll(_new);

@@ -15,9 +15,9 @@ import com.sngular.scsplugin.reservedwordsgeneration.model.event.customvalidator
 @JsonDeserialize(builder = OrderLineDTO.OrderLineDTOBuilder.class)
 public class OrderLineDTO {
 
-  @JsonProperty(value ="_continue")
+  @JsonProperty(value ="continue")
   private List<String> _continue;
-  @JsonProperty(value ="_byte")
+  @JsonProperty(value ="byte")
   @NotNull
   private final BigDecimal _byte;
 
@@ -38,6 +38,7 @@ public class OrderLineDTO {
     private List<String> _continue = new ArrayList<String>();
     private BigDecimal _byte;
 
+    @JsonProperty(value ="continue")
     public OrderLineDTO.OrderLineDTOBuilder _continue(List<String> _continue) {
       if (!_continue.isEmpty()) {
         this._continue.addAll(_continue);
@@ -52,6 +53,7 @@ public class OrderLineDTO {
       return this;
     }
 
+    @JsonProperty(value ="byte")
     public OrderLineDTO.OrderLineDTOBuilder _byte(BigDecimal _byte) {
       this._byte = _byte;
       return this;

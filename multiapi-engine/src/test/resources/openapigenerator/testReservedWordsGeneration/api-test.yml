@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: Reserved Words Test API
+  version: 1.0.0
+paths:
+  /shipment:
+    get:
+      operationId: getShipment
+      tags:
+        - test
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shipment'
+components:
+  schemas:
+    Shipment:
+      type: object
+      properties:
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Package'
+        interfaces:
+          type: array
+          items:
+            type: string
+        new:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        class:
+          type: string
+        final:
+          type: string
+          enum:
+            - "SENT"
+            - "DRAFT"
+    Package:
+      type: object
+      properties:
+        id:
+          type: string
+        weight:
+          type: number
+          format: double

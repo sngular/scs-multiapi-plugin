@@ -10,11 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonDeserialize(builder = WaiterDTO.WaiterDTOBuilder.class)
 public class WaiterDTO {
 
-  @JsonProperty(value ="_abstract")
+  @JsonProperty(value ="abstract")
   private String _abstract;
-  @JsonProperty(value ="_new")
+  @JsonProperty(value ="new")
   private Boolean _new;
-  @JsonProperty(value ="_private")
+  @JsonProperty(value ="private")
   private String _private;
 
   private WaiterDTO(WaiterDTOBuilder builder) {
@@ -35,16 +35,19 @@ public class WaiterDTO {
     private Boolean _new;
     private String _private;
 
+    @JsonProperty(value ="abstract")
     public WaiterDTO.WaiterDTOBuilder _abstract(String _abstract) {
       this._abstract = _abstract;
       return this;
     }
 
+    @JsonProperty(value ="new")
     public WaiterDTO.WaiterDTOBuilder _new(Boolean _new) {
       this._new = _new;
       return this;
     }
 
+    @JsonProperty(value ="private")
     public WaiterDTO.WaiterDTOBuilder _private(String _private) {
       this._private = _private;
       return this;

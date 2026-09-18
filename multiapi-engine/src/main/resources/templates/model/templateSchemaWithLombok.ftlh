@@ -50,6 +50,15 @@
         <#return "_"+propertyName/>
     </#if>
 </#function>
+<#function calculateSingularSafeName propertyName>
+    <#local pluralName = calculateSafeName (propertyName, "")>
+    <#local singularName = calculateSafeName (singularizeName (propertyName), "")>
+    <#if singularName == pluralName>
+        <#return "_" + singularName/>
+    <#else>
+        <#return singularName/>
+    </#if>
+</#function>
 <#function calculateMaxAnnotation dataType>
     <#if dataType.baseType?lower_case == "bigdecimal">
         <#return "@MaxBigDecimal" >
@@ -178,7 +187,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
-  @JsonProperty(value ="${calculateSafeName (field.baseName, "")}")
+  @JsonProperty(value ="${field.baseName?uncap_first}")
 <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content)>
   ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = false)
 </#if>
@@ -220,11 +229,11 @@ public class ${schema.className} {
   @NonNull
 </#if>
 <#if field.dataType.baseType == "array">
-<#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+<#assign singName>${calculateSingularSafeName (field.baseName)}</#assign>
   @Singular("${singName}")
   private ${field.dataType} ${field.baseName?uncap_first};
   <#elseif field.dataType.baseType == "map">
-<#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+<#assign singName>${calculateSingularSafeName (field.baseName)}</#assign>
   @Singular("${singName}")
   private ${field.dataType} ${field.baseName?uncap_first};
 <#elseif field.dataType.baseType == "enum">
