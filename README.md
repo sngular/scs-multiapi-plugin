@@ -823,6 +823,34 @@ adapts the Java side instead.
 > accessors and builder from Lombok, so the accessor and builder adjustments
 > above do not apply to them.
 
+### Names that Java cannot spell
+
+Contracts routinely name things with characters Java does not accept in an
+identifier: a header called `Idempotency-Key`, a query parameter called
+`sort-by`, a property called `client-ref` or `delivery.status`. Those names
+reach the generated code as identifiers, where they do not compile.
+
+The generator rebuilds such a name in lower camel case out of its alphanumeric
+runs, and leaves the contract name where it belongs - on the wire:
+
+- A **parameter** named `Idempotency-Key` is declared as `idempotencyKey`. The
+  binding keeps the contract name: `@RequestHeader(name = "Idempotency-Key")` on
+  the API interface, `headerParams.add("Idempotency-Key", ...)` on the client.
+  The same applies to query (`@RequestParam(name = "sort-by", ...)`), path
+  (`@PathVariable("shipment-id")`) and cookie (`@CookieValue(name = ...)`)
+  parameters.
+- A **property** named `client-ref` becomes the field `clientRef`, and keeps
+  `@JsonProperty("client-ref")` on both the field and the builder setter, so it
+  is read and written under the name the contract declares.
+- A name that would start with a digit is prefixed with an underscore
+  (`2fa-token` -> `_2faToken`).
+- A name that is already a legal Java identifier is never rewritten, so
+  `shipment_id` stays `shipment_id`.
+
+Header and cookie parameters are now bound explicitly with `@RequestHeader` and
+`@CookieValue`. Before, they were declared without a binding annotation, which
+made Spring resolve them as request parameters.
+
 ### Usage considerations
 
 This plugin has been implemented trying to behave like OpenApi Generator Tool,
