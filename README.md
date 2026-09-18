@@ -798,6 +798,31 @@ For `springBootVersion < 4` the output is unchanged and keeps targeting Jackson 
 > `@Jacksonized`, which does not yet support Jackson 3. Combining Lombok models
 > with `springBootVersion = 4` is therefore not supported.
 
+### Schemas and properties named after Java reserved words
+
+A contract is free to use names that Java cannot: a schema called `Package`, a
+property called `new` or `class`. The generator keeps the contract untouched and
+adapts the Java side instead.
+
+- A **property** whose name is a reserved word becomes an underscore-prefixed
+  Java field (`new` -> `_new`), and so do the builder method and the local
+  variables that reference it. The JSON name is **not** changed: the field and
+  the builder setter both carry `@JsonProperty("new")`, so the payload keeps
+  using the name the contract declares.
+- The **singular adder** generated for a collection is sanitized after it is
+  singularized, so `packages` yields `_package(...)`, not `package(...)`. When
+  singular and plural collapse onto the same identifier the adder takes an extra
+  underscore (`new` yields `_new(List<...>)` plus `__new(...)`).
+- A **schema** whose name is a reserved word once uncapitalized (`Package`) is
+  generated as-is; only the local variables derived from it are prefixed.
+- A property named `class` would produce `getClass()`, which cannot override
+  `Object.getClass()`. Its accessors are generated as `get_class()` /
+  `set_class()` instead. No other accessor is renamed.
+
+> **Note:** Lombok-annotated models (`useLombokModelAnnotation`) derive their
+> accessors and builder from Lombok, so the accessor and builder adjustments
+> above do not apply to them.
+
 ### Usage considerations
 
 This plugin has been implemented trying to behave like OpenApi Generator Tool,
