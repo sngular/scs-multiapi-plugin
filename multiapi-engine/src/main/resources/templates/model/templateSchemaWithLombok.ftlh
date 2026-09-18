@@ -187,7 +187,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
-  @JsonProperty(value ="${calculateSafeName (field.baseName, "")}")
+  @JsonProperty(value ="${field.baseName?uncap_first}")
 <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content)>
   ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = false)
 </#if>

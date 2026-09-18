@@ -16,7 +16,7 @@ public class OrderDTO {
   private String clientRef;
   @JsonProperty(value ="amount")
   private BigDecimal amount;
-  @JsonProperty(value ="_new")
+  @JsonProperty(value ="new")
   private New _new;
   public enum New {
     ONE_PIECE_WORKS("one:piece:works"),
@@ -72,6 +72,7 @@ public class OrderDTO {
       return this;
     }
 
+    @JsonProperty(value ="new")
     public OrderDTO.OrderDTOBuilder _new(New _new) {
       this._new = _new;
       return this;

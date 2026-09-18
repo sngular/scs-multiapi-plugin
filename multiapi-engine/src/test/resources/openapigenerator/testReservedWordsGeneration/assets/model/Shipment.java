@@ -17,11 +17,11 @@ public class Shipment {
   private List<String> tags;
   @JsonProperty(value ="packages")
   private List<Package> packages;
-  @JsonProperty(value ="_new")
+  @JsonProperty(value ="new")
   private List<String> _new;
   @JsonProperty(value ="interfaces")
   private List<String> interfaces;
-  @JsonProperty(value ="_final")
+  @JsonProperty(value ="final")
   private Final _final;
   public enum Final {
     DRAFT("DRAFT"),
@@ -94,6 +94,7 @@ public class Shipment {
       return this;
     }
 
+    @JsonProperty(value ="new")
     public Shipment.ShipmentBuilder _new(List<String> _new) {
       if (!_new.isEmpty()) {
         this._new.addAll(_new);
@@ -122,6 +123,7 @@ public class Shipment {
       return this;
     }
 
+    @JsonProperty(value ="final")
     public Shipment.ShipmentBuilder _final(Final _final) {
       this._final = _final;
       return this;

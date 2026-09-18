@@ -182,7 +182,7 @@ import ${packageModel}.customvalidator.UniqueItems;
 public class ${schema.className} {
 
 <#list schema.fieldObjectList as field>
-  @JsonProperty(value ="${calculateSafeName (field.baseName, "")}")
+  @JsonProperty(value ="${field.baseName?uncap_first}")
   <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content)>
   ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = false)
   </#if>
@@ -301,6 +301,9 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   <#if field.dataType.baseType == "array">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
+    <#if calculateSafeName (field.baseName, "") != field.baseName>
+    @JsonProperty(value ="${field.baseName?uncap_first}")
+    </#if>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
       if (!${propName}.isEmpty()) {
         this.${propName}.addAll(${propName});
@@ -318,6 +321,9 @@ public class ${schema.className} {
 
   <#elseif field.dataType.baseType == "map">
     <#assign propName>${calculateSafeName (field.baseName, "")}</#assign>
+    <#if calculateSafeName (field.baseName, "") != field.baseName>
+    @JsonProperty(value ="${field.baseName?uncap_first}")
+    </#if>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
       this.${propName} = ${propName};
       return this;
@@ -329,18 +335,27 @@ public class ${schema.className} {
     }
 
   <#elseif field.dataType.baseType == "enum">
+    <#if calculateSafeName (field.baseName, "") != field.baseName>
+    @JsonProperty(value ="${field.baseName?uncap_first}")
+    </#if>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
 
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
+    <#if calculateSafeName (field.baseName, "") != field.baseName>
+    @JsonProperty(value ="${field.baseName?uncap_first}")
+    </#if>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
 
   <#elseif !(hasConstValue (field))>
+    <#if calculateSafeName (field.baseName, "") != field.baseName>
+    @JsonProperty(value ="${field.baseName?uncap_first}")
+    </#if>
     public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
