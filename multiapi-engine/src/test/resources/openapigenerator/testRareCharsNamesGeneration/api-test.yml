@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Rare Chars Names Test API
+  version: 1.0.0
+paths:
+  /shipment/{shipment-id}:
+    parameters:
+      - name: shipment-id
+        in: path
+        required: true
+        description: the shipment to update
+        schema:
+          type: string
+    post:
+      operationId: createShipment
+      tags:
+        - test
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: the idempotency key
+          schema:
+            type: string
+        - name: sort-by
+          in: query
+          required: false
+          description: the field to sort by
+          schema:
+            type: string
+        - name: session.id
+          in: cookie
+          required: false
+          description: the session cookie
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shipment'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shipment'
+components:
+  schemas:
+    Shipment:
+      type: object
+      properties:
+        client-ref:
+          type: string
+        2fa-token:
+          type: string
+        delivery.status:
+          type: string
+          enum:
+            - "SENT"
+            - "DRAFT"
+        package-list:
+          type: array
+          items:
+            type: string

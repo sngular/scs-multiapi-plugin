@@ -7,6 +7,7 @@
 package com.sngular.api.generator.plugin.openapi.model;
 
 import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,4 +32,13 @@ public class ParameterObject {
   private SchemaFieldObjectType dataType;
 
   private String importName;
+
+  /**
+   * The name under which this parameter is declared in the generated Java code. It is the contract name whenever that name is a legal Java identifier, and a
+   * sanitized version of it otherwise - a header named {@code Idempotency-Key} is declared as {@code idempotencyKey}. The contract name stays in {@link #name}
+   * and is what the generated code sends and binds against.
+   */
+  public String getVariableName() {
+    return StringCaseUtils.toJavaVariableName(name);
+  }
 }
