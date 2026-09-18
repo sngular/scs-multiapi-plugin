@@ -46,6 +46,8 @@ class OpenApiGeneratorTest {
     return Stream.of(
         Arguments.of("testAllOf", OpenApiGeneratorFixtures.TEST_ALL_OF,
             OpenApiGeneratorFixtures.validateAllOf()),
+        Arguments.of("testReservedWordsGeneration", OpenApiGeneratorFixtures.TEST_RESERVED_WORDS_GENERATION,
+            OpenApiGeneratorFixtures.validateReservedWordsGeneration()),
         Arguments.of("testComplexAnyOf", OpenApiGeneratorFixtures.TEST_COMPLEX_ANY_OF,
             OpenApiGeneratorFixtures.validateComplexAnyOf()),
         Arguments.of("testAllOfLombok", OpenApiGeneratorFixtures.TEST_ALL_OF_LOMBOK,

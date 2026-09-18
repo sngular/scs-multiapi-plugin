@@ -371,6 +371,11 @@ public final class OpenApiGeneratorFixtures {
 					.clientPackage("com.sngular.multifileplugin.testCreateBasicDTO.client").modelNameSuffix("DTO")
 					.useLombokModelAnnotation(true).build());
 
+	static final List<SpecFile> TEST_RESERVED_WORDS_GENERATION = List
+			.of(SpecFile.builder().filePath("openapigenerator/testReservedWordsGeneration/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testreservedwords")
+					.modelPackage("com.sngular.multifileplugin.testreservedwords.model").build());
+
 	static final List<SpecFile> TEST_ISSUE_FAKER = List
 			.of(SpecFile.builder().filePath("openapigenerator/testIssueFaker/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testissuefaker")
@@ -1552,6 +1557,25 @@ public final class OpenApiGeneratorFixtures {
 
 		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), DEFAULT_EXCEPTION_API);
+	}
+
+	static Function<Path, Boolean> validateReservedWordsGeneration() {
+
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testreservedwords";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testreservedwords/model";
+
+		final String COMMON_PATH = "openapigenerator/testReservedWordsGeneration/";
+
+		final String ASSETS_PATH = COMMON_PATH + "assets/";
+
+		final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "ShipmentApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "model/Package.java",
+				ASSETS_PATH + "model/Shipment.java");
+
+		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
 	}
 
 	static Function<Path, Boolean> validateIssueFaker() {

@@ -72,7 +72,7 @@ public class OrderDTO {
       return this;
     }
 
-    public OrderDTO.OrderDTOBuilder _new(New new) {
+    public OrderDTO.OrderDTOBuilder _new(New _new) {
       this._new = _new;
       return this;
     }

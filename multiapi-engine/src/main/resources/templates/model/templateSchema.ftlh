@@ -11,6 +11,15 @@
       <#return getConstValue(propertyName, ender, const)/>
     </#if>
 </#function>
+<#function calculateSingularSafeName propertyName>
+    <#local pluralName = calculateSafeName (propertyName, "")>
+    <#local singularName = calculateSafeName (singularizeName (propertyName), "")>
+    <#if singularName == pluralName>
+        <#return "_" + singularName/>
+    <#else>
+        <#return singularName/>
+    </#if>
+</#function>
 <#function createSimpleType field>
     ${calculateSafeName (field.baseName, ";", field.constValue)}
 </#function>
@@ -299,7 +308,7 @@ public class ${schema.className} {
       return this;
     }
 
-    <#assign singName>${singularizeName (calculateSafeName (field.baseName, ""))}</#assign>
+    <#assign singName>${calculateSingularSafeName (field.baseName)}</#assign>
     public ${schema.className}.${schema.className}Builder ${singName}(${field.dataType.innerType} ${singName}) {
       if (Objects.nonNull(${singName})) {
         this.${propName}.add(${singName});
@@ -320,7 +329,7 @@ public class ${schema.className} {
     }
 
   <#elseif field.dataType.baseType == "enum">
-    public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${field.baseName}) {
+    public ${schema.className}.${schema.className}Builder ${calculateSafeName (field.baseName, "")}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
       this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
       return this;
     }
@@ -340,8 +349,8 @@ public class ${schema.className} {
   </#if>
   </#list>
     public ${schema.className} build() {
-      ${schema.className} ${schema.className?uncap_first} = new ${schema.className}(this);
-      return ${schema.className?uncap_first};
+      ${schema.className} ${calculateSafeName (schema.className?uncap_first, "")} = new ${schema.className}(this);
+      return ${calculateSafeName (schema.className?uncap_first, "")};
     }
   }
 
@@ -403,8 +412,8 @@ public class ${schema.className} {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ${schema.className} ${schema.className?uncap_first} = (${schema.className}) o;
-    return <#compress><#list schema.fieldObjectList as field> Objects.equals(this.${calculateSafeName (field.baseName, "")}, ${schema.className?uncap_first}.${calculateSafeName (field.baseName, "")})<#if field?has_next> && </#if></#list>;</#compress>
+    ${schema.className} ${calculateSafeName (schema.className?uncap_first, "")} = (${schema.className}) o;
+    return <#compress><#list schema.fieldObjectList as field> Objects.equals(this.${calculateSafeName (field.baseName, "")}, ${calculateSafeName (schema.className?uncap_first, "")}.${calculateSafeName (field.baseName, "")})<#if field?has_next> && </#if></#list>;</#compress>
   }
 
   @Override
