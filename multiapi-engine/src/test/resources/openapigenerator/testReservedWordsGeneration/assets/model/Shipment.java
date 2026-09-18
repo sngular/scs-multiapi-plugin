@@ -15,6 +15,8 @@ public class Shipment {
 
   @JsonProperty(value ="tags")
   private List<String> tags;
+  @JsonProperty(value ="class")
+  private String _class;
   @JsonProperty(value ="packages")
   private List<Package> packages;
   @JsonProperty(value ="new")
@@ -46,6 +48,7 @@ public class Shipment {
 
   private Shipment(ShipmentBuilder builder) {
     this.tags = builder.tags;
+    this._class = builder._class;
     this.packages = builder.packages;
     this._new = builder._new;
     this.interfaces = builder.interfaces;
@@ -61,6 +64,7 @@ public class Shipment {
   public static class ShipmentBuilder {
 
     private List<String> tags = new ArrayList<String>();
+    private String _class;
     private List<Package> packages = new ArrayList<Package>();
     private List<String> _new = new ArrayList<String>();
     private List<String> interfaces = new ArrayList<String>();
@@ -77,6 +81,12 @@ public class Shipment {
       if (Objects.nonNull(tag)) {
         this.tags.add(tag);
       }
+      return this;
+    }
+
+    @JsonProperty(value ="class")
+    public Shipment.ShipmentBuilder _class(String _class) {
+      this._class = _class;
       return this;
     }
 
@@ -143,6 +153,14 @@ public class Shipment {
     this.tags = tags;
   }
 
+  @Schema(name = "class", required = false)
+  public String get_class() {
+    return _class;
+  }
+  public void set_class(String _class) {
+    this._class = _class;
+  }
+
   @Schema(name = "packages", required = false)
   public List<Package> getPackages() {
     return packages;
@@ -184,12 +202,12 @@ public class Shipment {
       return false;
     }
     Shipment shipment = (Shipment) o;
-    return Objects.equals(this.tags, shipment.tags) && Objects.equals(this.packages, shipment.packages) && Objects.equals(this._new, shipment._new) && Objects.equals(this.interfaces, shipment.interfaces) && Objects.equals(this._final, shipment._final);
+    return Objects.equals(this.tags, shipment.tags) && Objects.equals(this._class, shipment._class) && Objects.equals(this.packages, shipment.packages) && Objects.equals(this._new, shipment._new) && Objects.equals(this.interfaces, shipment.interfaces) && Objects.equals(this._final, shipment._final);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tags, packages, _new, interfaces, _final);
+    return Objects.hash(tags, _class, packages, _new, interfaces, _final);
   }
 
   @Override
@@ -197,6 +215,7 @@ public class Shipment {
     StringBuilder sb = new StringBuilder();
     sb.append("Shipment{");
     sb.append(" tags:").append(tags).append(",");
+    sb.append(" class:").append(_class).append(",");
     sb.append(" packages:").append(packages).append(",");
     sb.append(" new:").append(_new).append(",");
     sb.append(" interfaces:").append(interfaces).append(",");

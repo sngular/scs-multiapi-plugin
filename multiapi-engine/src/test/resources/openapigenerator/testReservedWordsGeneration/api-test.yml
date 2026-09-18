@@ -36,6 +36,8 @@ components:
           type: array
           items:
             type: string
+        class:
+          type: string
         final:
           type: string
           enum:

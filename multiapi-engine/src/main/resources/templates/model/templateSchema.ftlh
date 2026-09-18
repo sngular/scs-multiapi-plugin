@@ -11,6 +11,13 @@
       <#return getConstValue(propertyName, ender, const)/>
     </#if>
 </#function>
+<#function calculateAccessorSuffix propertyName>
+    <#if ("get" + propertyName?cap_first) == "getClass">
+        <#return calculateSafeName (propertyName, "")/>
+    <#else>
+        <#return propertyName?cap_first/>
+    </#if>
+</#function>
 <#function calculateSingularSafeName propertyName>
     <#local pluralName = calculateSafeName (propertyName, "")>
     <#local singularName = calculateSafeName (singularizeName (propertyName), "")>
@@ -372,47 +379,47 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   @Schema(name = "${field.baseName?uncap_first}", required = <#if field.required?has_content && field.required == true>true<#else>false</#if><#if field.description?has_content>, description = "${field.description?j_string}"</#if><#if field.example?has_content>, example = "${field.example?j_string}"</#if><#if field.deprecated>, deprecated = true</#if>)
   <#if field.dataType.baseType == "array">
-  public ${field.dataType} get${field.baseName?cap_first}() {
+  public ${field.dataType} get${calculateAccessorSuffix (field.baseName)}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
+  public void set${calculateAccessorSuffix (field.baseName)}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.baseType == "map">
-  public ${field.dataType} get${field.baseName?cap_first}() {
+  public ${field.dataType} get${calculateAccessorSuffix (field.baseName)}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
+  public void set${calculateAccessorSuffix (field.baseName)}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.baseType == "enum">
-  public ${field.baseName?cap_first} get${field.baseName?cap_first}() {
+  public ${field.baseName?cap_first} get${calculateAccessorSuffix (field.baseName)}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
+  public void set${calculateAccessorSuffix (field.baseName)}(${field.baseName?cap_first} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
   </#if>
   <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-  public ${field.dataType.innerType?cap_first} get${field.baseName?cap_first}() {
+  public ${field.dataType.innerType?cap_first} get${calculateAccessorSuffix (field.baseName)}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
+  public void set${calculateAccessorSuffix (field.baseName)}(${field.dataType.innerType?cap_first} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
   </#if>
   <#else>
-  public ${field.dataType} get${field.baseName?cap_first}() {
+  public ${field.dataType} get${calculateAccessorSuffix (field.baseName)}() {
     return ${calculateSafeName (field.baseName, ";")}
   }
   <#if checkIfShouldSet (field)>
-  public void set${field.baseName?cap_first}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
+  public void set${calculateAccessorSuffix (field.baseName)}(${field.dataType} ${calculateSafeName (field.baseName, "")}) {
     this.${calculateSafeName (field.baseName, "")} = ${calculateSafeName (field.baseName, ";")}
   }
   </#if>
