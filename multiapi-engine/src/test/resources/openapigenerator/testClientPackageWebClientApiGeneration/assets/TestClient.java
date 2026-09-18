@@ -144,9 +144,7 @@ public class ApiRestClient {
   }
 
   public ApiRestClient addDefaultHeader(final String name, final String value) {
-    if (defaultHeaders.containsKey(name)) {
-      defaultHeaders.remove(name);
-    }
+    defaultHeaders.remove(name);
     defaultHeaders.add(name, value);
     return this;
   }
@@ -335,7 +333,7 @@ public class ApiRestClient {
         finalUri += "?" + queryUri;
       }
       String expandedPath = this.expandPath(finalUri, uriParams);
-      final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(expandedPath);
+      final UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(basePath).path(expandedPath);
 
       URI uri;
       try {
@@ -369,14 +367,13 @@ public class ApiRestClient {
   }
 
   protected void addHeadersToRequest(final HttpHeaders headers, final BodyBuilder requestBuilder) {
-    for (Entry<String, List<String>> entry : headers.entrySet()) {
-      List<String> values = entry.getValue();
+    headers.forEach((name, values) -> {
       for(String value : values) {
         if (value != null) {
-          requestBuilder.header(entry.getKey(), value);
+          requestBuilder.header(name, value);
         }
       }
-    }
+    });
   }
 
   protected void addCookiesToRequest(final MultiValueMap<String, String> cookies, final BodyBuilder requestBuilder) {
@@ -425,7 +422,7 @@ public class ApiRestClient {
     }
 
     private void logResponse(final ClientHttpResponse response) throws IOException {
-      log.info("HTTP Status Code: " + response.getRawStatusCode());
+      log.info("HTTP Status Code: " + response.getStatusCode().value());
       log.info("Status Text: " + response.getStatusText());
       log.info("HTTP Headers: " + headersToString(response.getHeaders()));
       log.info("Response Body: " + bodyToString(response.getBody()));
@@ -433,14 +430,14 @@ public class ApiRestClient {
 
     private String headersToString(final HttpHeaders headers) {
       final StringBuilder builder = new StringBuilder();
-      for(Entry<String, List<String>> entry : headers.entrySet()) {
-        builder.append(entry.getKey()).append("=[");
-          for(String value : entry.getValue()) {
+      headers.forEach((name, values) -> {
+        builder.append(name).append("=[");
+          for(String value : values) {
             builder.append(value).append(",");
           }
           builder.setLength(builder.length() - 1);
           builder.append("],");
-      }
+      });
       builder.setLength(builder.length() - 1);
       return builder.toString();
     }
