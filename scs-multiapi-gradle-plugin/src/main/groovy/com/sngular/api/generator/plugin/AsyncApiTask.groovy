@@ -66,7 +66,7 @@ abstract class AsyncApiTask extends DefaultTask {
 
   static SpecFile toFileSpec(AsyncApiSpecFile apiSpecFile) {
     def builder = SpecFile.builder()
-    if (!apiSpecFile.filePath.isEmpty()) {
+    if (apiSpecFile.filePath) {
       builder.filePath(apiSpecFile.getFilePath())
     }
     if (apiSpecFile.consumer) {

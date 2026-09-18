@@ -9,11 +9,13 @@ in [Version history](#version-history) at the bottom.
 
 ## Modules
 
-| Module | Language | Contents |
-| --- | --- | --- |
-| `multiapi-engine` | Java 21 | All generation logic. Knows nothing about Maven or Gradle. |
-| `scs-multiapi-maven-plugin` | Java 21 | Two mojos (`openapi-generation`, `asyncapi-generation`) that adapt Maven to the engine. Shaded, so the engine travels inside the plugin artifact. |
-| `scs-multiapi-gradle-plugin` | Groovy | `openApiTask` / `asyncApiTask` and the `openapimodel` / `asyncapimodel` extensions. |
+- **`multiapi-engine`** (Java 21) — all generation logic. Knows nothing about
+  Maven or Gradle.
+- **`scs-multiapi-maven-plugin`** (Java 21) — the `openapi-generation` and
+  `asyncapi-generation` mojos, adapting Maven to the engine. Shaded, so the
+  engine travels inside the plugin artifact.
+- **`scs-multiapi-gradle-plugin`** (Groovy) — `openApiTask` / `asyncApiTask` and
+  the `openapimodel` / `asyncapimodel` extensions.
 
 The build tools own everything environmental — where the build directory is, how
 to reach a repository, what the project declares — and hand the engine plain
@@ -53,7 +55,7 @@ instead of by path:
 
 The flow, all of it before the document is parsed:
 
-```
+```text
 SpecFile (fromGroupId/fromArtifactId/fromVersion)
    │
    ├─ ExternalSpecSource.validateDependencyCoordinates()   both fields, or neither
@@ -89,6 +91,13 @@ Details worth knowing:
   build is used — the project's dependencies, then its dependency management.
 - A `filePath` that is not in the artifact fails with the spec files the
   artifact does carry, because that error is almost always a wrong path.
+- `filePath` may be omitted when the artifact carries exactly one contract. A
+  contract is a document declaring a top-level `openapi` or `asyncapi` field —
+  counting spec *files* would not do, because a multi-file contract ships its
+  fragments beside the root document and they are `.yml` files too, and the
+  marker also keeps an artifact publishing both kinds from feeding the wrong one
+  to the wrong generator. With several, choosing one would be a guess at which
+  API to generate, so it fails listing them.
 
 ## OpenAPI pipeline
 
@@ -154,7 +163,8 @@ supplier/consumer/streamBridge bindings and render through
 
 ## Version history
 
-- **7.1.3** — `fromGroupId`/`fromArtifactId`/`fromVersion` actually resolve the
+- **7.1.3** — `filePath` defaults to the artifact's single contract when it has
+  one. `fromGroupId`/`fromArtifactId`/`fromVersion` actually resolve the
   artifact, through the repositories the build is configured with, for both
   OpenAPI and AsyncAPI. Before this the fields were accepted and ignored, so the
   contract was still read from the module's filesystem. In Gradle they moved from

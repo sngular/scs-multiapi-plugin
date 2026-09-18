@@ -62,6 +62,23 @@ class OpenApiPluginDependencyIntegrationTest {
   }
 
   @Test
+  void openApiTaskDefaultsToTheOnlyContractInTheArtifact() throws Exception {
+    prepareProject();
+    replaceInBuildFile("    filePath = 'contracts/api.yml'\n", "");
+
+    final BuildResult result = GradleRunner.create()
+        .withProjectDir(testProjectDir.toFile())
+        .withArguments("openApiTask")
+        .withPluginClasspath(pluginClasspath())
+        .build();
+
+    assertThat(result.task(":openApiTask").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
+    try (final var paths = Files.walk(testProjectDir.resolve("build/generated-source"))) {
+      assertThat(paths.map(path -> path.getFileName().toString()).toList()).contains("TestApi.java", "Address.java");
+    }
+  }
+
+  @Test
   void openApiTaskFailsNamingTheArtifactWhenThePathInsideItIsWrong() throws Exception {
     prepareProject();
     replaceInBuildFile("contracts/api.yml", "contracts/missing.yml");

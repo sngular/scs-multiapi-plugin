@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +20,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.sngular.api.generator.plugin.common.model.ExternalSpecSource;
 import com.sngular.api.generator.plugin.exception.SpecDependencyException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,9 @@ public class DependencySpecMaterializer {
 
   private static final int MAX_LISTED_CANDIDATES = 20;
 
+  /** Parses YAML and JSON alike, and is only used to tell a root contract from a fragment. */
+  private static final ObjectMapper SPEC_MAPPER = new ObjectMapper(new YAMLFactory());
+
   private final SpecArtifactResolver artifactResolver;
 
   private final Path extractionRoot;
@@ -60,23 +64,25 @@ public class DependencySpecMaterializer {
    * contract extracted from it.
    *
    * @param specSource a spec configuration whose {@code usesExternalDependency()} is {@code true}.
+   * @param rootMarker the top-level field that marks a root document of the kind being generated,
+   *                   {@code "openapi"} or {@code "asyncapi"}. Used only to default a missing
+   *                   {@code filePath}.
    * @return the absolute path of the extracted contract.
    */
-  public Path materialize(final ExternalSpecSource specSource) {
+  public Path materialize(final ExternalSpecSource specSource, final String rootMarker) {
     final String groupId = specSource.getFromGroupId();
     final String artifactId = specSource.getFromArtifactId();
     final String version = specSource.getFromVersion();
     final String filePath = specSource.getFilePath();
 
-    if (StringUtils.isBlank(filePath)) {
-      throw new SpecDependencyException(String.format(
-          "filePath is required for %s: it is the path of the contract inside the artifact.", specSource.getDependencyCoordinate()));
-    }
-
     final File artifact = artifactResolver.resolveArtifact(groupId, artifactId, version);
     final Path artifactContent = extractedArtifacts.computeIfAbsent(artifact.getAbsolutePath(), key -> extract(artifact, groupId, artifactId));
-    final Path specPath = resolveInsideArtifact(artifactContent, filePath);
 
+    if (StringUtils.isBlank(filePath)) {
+      return theOnlyContractIn(artifactContent, specSource, artifact, rootMarker);
+    }
+
+    final Path specPath = resolveInsideArtifact(artifactContent, filePath);
     if (!Files.isRegularFile(specPath)) {
       throw new SpecDependencyException(String.format(
           "Spec '%s' not found inside %s.%s", filePath, specSource.getDependencyCoordinate(), describeCandidates(artifactContent)));
@@ -84,6 +90,54 @@ public class DependencySpecMaterializer {
 
     log.info("Loading spec '{}' from dependency {} ({})", filePath, specSource.getDependencyCoordinate(), artifact);
     return specPath;
+  }
+
+  /**
+   * An artifact that publishes a single contract does not need its path repeated in every consumer,
+   * so {@code filePath} may be omitted there.
+   *
+   * <p>Counting spec <em>files</em> would not do: a multi-file contract ships its schema fragments
+   * beside the root document, and they are {@code .yml} files too. Only documents carrying the
+   * {@code openapi} or {@code asyncapi} top-level field are root contracts, which also keeps an
+   * artifact that publishes both kinds from feeding the wrong one to the wrong generator. With
+   * several root contracts it stays required, because choosing one would be a guess at which API to
+   * generate.</p>
+   */
+  private static Path theOnlyContractIn(
+      final Path artifactContent, final ExternalSpecSource specSource, final File artifact, final String rootMarker) {
+
+    final List<Path> contracts = specCandidates(artifactContent).stream()
+                                                                .filter(candidate -> isRootContract(candidate, rootMarker))
+                                                                .toList();
+
+    if (contracts.isEmpty()) {
+      throw new SpecDependencyException(String.format(
+          "No %s contract found inside %s: no file declares a top-level '%s' field.%s",
+          rootMarker, specSource.getDependencyCoordinate(), rootMarker, describeCandidates(artifactContent)));
+    }
+    if (contracts.size() > 1) {
+      throw new SpecDependencyException(String.format(
+          "filePath is required for %s: the artifact carries %d %s contracts.%s",
+          specSource.getDependencyCoordinate(), contracts.size(), rootMarker, describe(artifactContent, contracts)));
+    }
+
+    final Path specPath = contracts.get(0);
+    log.info("Loading spec '{}' from dependency {} ({}), the only {} contract it carries",
+        toEntryName(artifactContent.relativize(specPath)), specSource.getDependencyCoordinate(), artifact, rootMarker);
+    return specPath;
+  }
+
+  /**
+   * @return {@code true} when the file is a root document of the requested kind rather than a
+   *     schema fragment referenced by one. An unreadable or unparseable file is not one.
+   */
+  private static boolean isRootContract(final Path candidate, final String rootMarker) {
+    try {
+      return SPEC_MAPPER.readTree(candidate.toFile()).hasNonNull(rootMarker);
+    } catch (final IOException | RuntimeException e) {
+      log.debug("Could not read {} while looking for a root contract", candidate, e);
+      return false;
+    }
   }
 
   /**
@@ -144,25 +198,41 @@ public class DependencySpecMaterializer {
    * artifact actually carries instead of leaving the user to unzip it by hand.
    */
   private static String describeCandidates(final Path artifactContent) {
-    final List<String> candidates = new ArrayList<>();
-    try (var paths = Files.walk(artifactContent)) {
-      paths.filter(Files::isRegularFile)
-           .map(artifactContent::relativize)
-           .map(Path::toString)
-           .map(path -> path.replace('\\', '/'))
-           .filter(DependencySpecMaterializer::isSpecCandidate)
-           .sorted()
-           .limit(MAX_LISTED_CANDIDATES)
-           .forEach(candidates::add);
-    } catch (final IOException e) {
-      log.debug("Could not list the artifact content at {}", artifactContent, e);
-    }
-    return candidates.isEmpty()
-        ? " The artifact contains no .yml, .yaml or .json file."
-        : candidates.stream().collect(Collectors.joining("\n  - ", " Available specs:\n  - ", ""));
+    return describe(artifactContent, specCandidates(artifactContent));
   }
 
-  private static boolean isSpecCandidate(final String path) {
-    return StringUtils.endsWithAny(path, ".yml", ".yaml", ".json");
+  private static String describe(final Path artifactContent, final List<Path> paths) {
+    final List<String> names = paths.stream()
+                                    .limit(MAX_LISTED_CANDIDATES)
+                                    .map(artifactContent::relativize)
+                                    .map(DependencySpecMaterializer::toEntryName)
+                                    .toList();
+    return names.isEmpty()
+        ? " The artifact contains no .yml, .yaml or .json file."
+        : names.stream().collect(Collectors.joining("\n  - ", " Available specs:\n  - ", ""));
+  }
+
+  /**
+   * The spec files an artifact carries, in a stable order. Packaging metadata is skipped so that a
+   * {@code META-INF} descriptor never counts as a contract.
+   */
+  private static List<Path> specCandidates(final Path artifactContent) {
+    try (var paths = Files.walk(artifactContent)) {
+      return paths.filter(Files::isRegularFile)
+                  .filter(path -> isSpecCandidate(toEntryName(artifactContent.relativize(path))))
+                  .sorted()
+                  .toList();
+    } catch (final IOException e) {
+      log.debug("Could not list the artifact content at {}", artifactContent, e);
+      return List.of();
+    }
+  }
+
+  private static String toEntryName(final Path relativePath) {
+    return relativePath.toString().replace('\\', '/');
+  }
+
+  private static boolean isSpecCandidate(final String entryName) {
+    return StringUtils.endsWithAny(entryName, ".yml", ".yaml", ".json") && !entryName.startsWith("META-INF/");
   }
 }

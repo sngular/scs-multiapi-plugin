@@ -117,7 +117,7 @@ public class AsyncApiGenerator {
     if (Objects.isNull(specMaterializer)) {
       specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
     }
-    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile).toString()).build();
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile, "asyncapi").toString()).build();
   }
 
   private static Pair<InputStream, FileLocation> resolveYmlLocation(final String ymlFilePath) throws FileNotFoundException {

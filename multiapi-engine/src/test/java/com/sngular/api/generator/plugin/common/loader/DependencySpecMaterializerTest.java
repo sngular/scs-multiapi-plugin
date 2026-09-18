@@ -39,6 +39,8 @@ class DependencySpecMaterializerTest {
 
   private static final String SPEC_CONTENT = "openapi: 3.0.3";
 
+  private static final String FRAGMENT = "type: object";
+
   @TempDir
   Path tempDir;
 
@@ -47,7 +49,7 @@ class DependencySpecMaterializerTest {
   void materializesSpecFromArtifact() throws IOException {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT));
 
-    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION));
+    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION), "openapi");
 
     assertThat(materialized).isRegularFile().hasContent(SPEC_CONTENT);
   }
@@ -57,11 +59,11 @@ class DependencySpecMaterializerTest {
   void materializesReferencedFilesAlongsideTheSpec() throws IOException {
     final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
         SPEC_PATH, SPEC_CONTENT,
-        "specs/schemas/user.yml", "type: object")));
+        "specs/schemas/user.yml", FRAGMENT)));
 
-    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION));
+    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION), "openapi");
 
-    assertThat(materialized.getParent().resolve("schemas/user.yml")).isRegularFile().hasContent("type: object");
+    assertThat(materialized.getParent().resolve("schemas/user.yml")).isRegularFile().hasContent(FRAGMENT);
   }
 
   @Test
@@ -70,9 +72,9 @@ class DependencySpecMaterializerTest {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT));
     final DependencySpecMaterializer materializer = materializer(artifact);
 
-    final Path first = materializer.materialize(specFile(SPEC_PATH, VERSION));
+    final Path first = materializer.materialize(specFile(SPEC_PATH, VERSION), "openapi");
     Files.writeString(first, "touched by the build", StandardCharsets.UTF_8);
-    final Path second = materializer.materialize(specFile(SPEC_PATH, VERSION));
+    final Path second = materializer.materialize(specFile(SPEC_PATH, VERSION), "openapi");
 
     assertThat(second).isEqualTo(first).hasContent("touched by the build");
   }
@@ -81,13 +83,73 @@ class DependencySpecMaterializerTest {
   @DisplayName("re-unpacks when the resolved artifact changed")
   void reExtractsWhenTheArtifactChanged() throws IOException {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT));
-    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION));
+    final Path materialized = materializer(artifact).materialize(specFile(SPEC_PATH, VERSION), "openapi");
     Files.writeString(materialized, "stale", StandardCharsets.UTF_8);
 
     writeArtifact(artifact, Map.of(SPEC_PATH, "openapi: 3.1.0"));
     assertThat(artifact.setLastModified(System.currentTimeMillis() + 1000L)).isTrue();
 
-    assertThat(materializer(artifact).materialize(specFile(SPEC_PATH, VERSION))).hasContent("openapi: 3.1.0");
+    assertThat(materializer(artifact).materialize(specFile(SPEC_PATH, VERSION), "openapi")).hasContent("openapi: 3.1.0");
+  }
+
+  @Test
+  @DisplayName("defaults filePath to the only contract the artifact carries")
+  void defaultsToTheOnlyContractInTheArtifact() throws IOException {
+    final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT, "META-INF/MANIFEST.MF", "Manifest-Version: 1.0"));
+
+    final Path materialized = materializer(artifact).materialize(specFile(null, VERSION), "openapi");
+
+    assertThat(materialized).isRegularFile().hasContent(SPEC_CONTENT);
+  }
+
+  @Test
+  @DisplayName("ignores the schema fragments of a multi-file contract when defaulting filePath")
+  void defaultsPastTheFragmentsOfAMultiFileContract() throws IOException {
+    final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
+        SPEC_PATH, SPEC_CONTENT,
+        "specs/schemas/user.yml", FRAGMENT,
+        "specs/schemas/common.yml", FRAGMENT)));
+
+    final Path materialized = materializer(artifact).materialize(specFile(null, VERSION), "openapi");
+
+    assertThat(materialized).isRegularFile().hasContent(SPEC_CONTENT);
+  }
+
+  @Test
+  @DisplayName("defaults to the contract of the kind being generated, not the other one")
+  void defaultsToTheContractOfTheRequestedKind() throws IOException {
+    final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
+        SPEC_PATH, SPEC_CONTENT,
+        "specs/events.yml", "asyncapi: 2.6.0")));
+
+    assertThat(materializer(artifact).materialize(specFile(null, VERSION), "asyncapi")).hasContent("asyncapi: 2.6.0");
+    assertThat(materializer(artifact).materialize(specFile(null, VERSION), "openapi")).hasContent(SPEC_CONTENT);
+  }
+
+  @Test
+  @DisplayName("asks for filePath when the artifact carries more than one contract")
+  void requiresFilePathWhenTheArtifactCarriesSeveralContracts() throws IOException {
+    final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(
+        SPEC_PATH, SPEC_CONTENT,
+        "specs/other.yml", "openapi: 3.1.0")));
+
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile(null, VERSION), "openapi"))
+        .isInstanceOf(SpecDependencyException.class)
+        .hasMessageContaining("filePath is required for com.company:api-specs:1.0.0")
+        .hasMessageContaining("carries 2 openapi contracts")
+        .hasMessageContaining(SPEC_PATH)
+        .hasMessageContaining("specs/other.yml");
+  }
+
+  @Test
+  @DisplayName("says so when the artifact carries no contract of that kind")
+  void reportsAnArtifactWithoutContracts() throws IOException {
+    final File artifact = artifactContaining(Map.of("specs/schemas/user.yml", FRAGMENT));
+
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile(null, VERSION), "openapi"))
+        .isInstanceOf(SpecDependencyException.class)
+        .hasMessageContaining("No openapi contract found inside com.company:api-specs:1.0.0")
+        .hasMessageContaining("specs/schemas/user.yml");
   }
 
   @Test
@@ -95,7 +157,7 @@ class DependencySpecMaterializerTest {
   void reportsAvailableSpecsWhenThePathIsWrong() throws IOException {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT));
 
-    assertThatThrownBy(() -> materializer(artifact).materialize(specFile("openapi/openapi.yml", VERSION)))
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile("openapi/openapi.yml", VERSION), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("openapi/openapi.yml")
         .hasMessageContaining("com.company:api-specs:1.0.0")
@@ -107,7 +169,7 @@ class DependencySpecMaterializerTest {
   void refusesPathTraversal() throws IOException {
     final File artifact = artifactContaining(Map.of(SPEC_PATH, SPEC_CONTENT));
 
-    assertThatThrownBy(() -> materializer(artifact).materialize(specFile("../../../etc/passwd", VERSION)))
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile("../../../etc/passwd", VERSION), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("points outside the artifact");
   }
@@ -117,7 +179,7 @@ class DependencySpecMaterializerTest {
   void refusesZipSlipEntries() throws IOException {
     final File artifact = artifactContaining(Map.of("../escaped.yml", SPEC_CONTENT));
 
-    assertThatThrownBy(() -> materializer(artifact).materialize(specFile(SPEC_PATH, VERSION)))
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile(SPEC_PATH, VERSION), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("Could not unpack");
   }
@@ -144,7 +206,7 @@ class DependencySpecMaterializerTest {
     final var materializer = new DependencySpecMaterializer(
         new LocalRepositorySpecArtifactResolver(localRepository), tempDir.resolve("target").toFile());
 
-    assertThat(materializer.materialize(specFile(SPEC_PATH, VERSION))).isRegularFile().hasContent(SPEC_CONTENT);
+    assertThat(materializer.materialize(specFile(SPEC_PATH, VERSION), "openapi")).isRegularFile().hasContent(SPEC_CONTENT);
   }
 
   @Test
@@ -153,7 +215,7 @@ class DependencySpecMaterializerTest {
     final var materializer = new DependencySpecMaterializer(
         new LocalRepositorySpecArtifactResolver(tempDir.resolve("m2")), tempDir.resolve("target").toFile());
 
-    assertThatThrownBy(() -> materializer.materialize(specFile(SPEC_PATH, "9.9.9")))
+    assertThatThrownBy(() -> materializer.materialize(specFile(SPEC_PATH, "9.9.9"), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("Cannot resolve com.company:api-specs:9.9.9");
   }
@@ -164,7 +226,7 @@ class DependencySpecMaterializerTest {
     final var materializer = new DependencySpecMaterializer(
         new LocalRepositorySpecArtifactResolver(tempDir.resolve("m2")), tempDir.resolve("target").toFile());
 
-    assertThatThrownBy(() -> materializer.materialize(specFile(SPEC_PATH, null)))
+    assertThatThrownBy(() -> materializer.materialize(specFile(SPEC_PATH, null), "openapi"))
         .isInstanceOf(SpecDependencyException.class)
         .hasMessageContaining("No version available for com.company:api-specs");
   }

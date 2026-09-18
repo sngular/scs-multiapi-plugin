@@ -340,14 +340,18 @@ mvn scs-multiapi:asyncapi-generation
 </configuration>
 ```
 
-See the [README](https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md) for all options.
+See the [README][readme] for all options.
 
 ## Next Steps
 
-- 📖 Read the [README](https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md) for every configuration option of both goals
-- 🔗 See [Loading specs](LOADING_SPECS) to read contracts from a published artifact, a URL or a registry
-- ⚡ Explore [Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION) for event-driven systems
+- 📖 Read the [README][readme] for every option of both goals
+- 🔗 See [Loading specs](LOADING_SPECS) to read contracts from a published
+  artifact, a URL or a registry
+- ⚡ Explore [Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION) for
+  event-driven systems
 - 🧭 Browse [Additional Information](Additional-Information) for the full index
+
+[readme]: https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md
 
 ## Troubleshooting
 

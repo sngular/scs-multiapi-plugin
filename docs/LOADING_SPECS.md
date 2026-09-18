@@ -6,12 +6,15 @@ Where the plugin looks for a contract, and which option to pick.
 applies to both `openapi-generation` and `asyncapi-generation`, and to both build
 tools.
 
-| The contract lives... | Configure |
-| --- | --- |
-| in this module | `filePath` relative to the project directory |
-| in a published artifact | `filePath` inside the artifact + `fromGroupId`/`fromArtifactId`/`fromVersion` |
-| behind a URL or in a registry | `filePath` as the full `http(s)` URL |
-| in an artifact you add to the plugin itself | `filePath` as the resource path — single-file contracts only |
+Where the contract lives, and what to configure:
+
+- **In this module** — `filePath` relative to the project directory.
+- **In a published artifact** — `fromGroupId` and `fromArtifactId`, optionally
+  `fromVersion`, with `filePath` naming the contract inside the artifact.
+  `filePath` is optional when the artifact carries a single contract.
+- **Behind a URL or in a registry** — `filePath` as the full `http(s)` URL.
+- **In an artifact you add to the plugin itself** — `filePath` as the resource
+  path. Single-file contracts only.
 
 ## From this module
 
@@ -28,7 +31,7 @@ The default. `filePath` is relative to the module's base directory:
 Use this when a team publishes its contracts as an artifact — the usual setup
 when a producer and its consumers must not each keep their own copy.
 
-**Maven**
+### Maven
 
 ```xml
 <plugin>
@@ -55,7 +58,7 @@ when a producer and its consumers must not each keep their own copy.
 </plugin>
 ```
 
-**Gradle**
+### Gradle
 
 ```groovy
 openapimodel {
@@ -75,6 +78,13 @@ Points worth knowing:
 - **`filePath` is the path inside the artifact**, not a path in your project. If
   you get it wrong the build fails listing the spec files the artifact does
   carry.
+- **`filePath` can be omitted when the artifact carries exactly one contract**,
+  which is the common case for a per-API artifact. A contract is a document with
+  a top-level `openapi` or `asyncapi` field, so the schema fragments of a
+  multi-file contract do not count, and an artifact publishing both an OpenAPI
+  and an AsyncAPI contract still defaults correctly for each goal. With more than
+  one contract of the same kind it is required again, and the build lists them
+  rather than picking for you.
 - **The artifact is fetched like any other dependency**, through the
   repositories your build is configured with. A contract published to a private
   repository works as long as that repository is declared and its credentials
@@ -121,7 +131,7 @@ coordinates keep them apart.
 
 An ordinary resources-only module:
 
-```
+```text
 api-specs/
 ├── pom.xml
 └── src/main/resources/
@@ -195,3 +205,7 @@ build and reachable, exactly as you would for any other dependency.
 **`No version given for <groupId>:<artifactId>`** — `fromVersion` was omitted and
 the artifact is not declared anywhere in the build. Set `fromVersion`, or declare
 the artifact as a dependency of the module.
+
+**`filePath is required for <coordinates>: the artifact carries N ... contracts`**
+— the artifact publishes more than one contract, so there is nothing to default
+to. The message lists them; name the one you want.

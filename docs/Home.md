@@ -29,11 +29,16 @@ The SCS MultiAPI Plugin is a Maven and Gradle plugin that automates the generati
 ## Quick Navigation
 
 - **[Getting Started](Getting-Started)** — Installation and first API
-- **[Loading specs](LOADING_SPECS)** — Where a contract can live and how to point at it
-- **[Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION)** — Spring Cloud Stream + Kafka
+- **[Loading specs](LOADING_SPECS)** — Where a contract can live, and how to
+  point at it
+- **[Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION)** — Spring Cloud
+  Stream + Kafka
 - **[Architecture](ARCHITECTURE)** — How generation works, for contributors
-- **[Additional Information](Additional-Information)** — Every guide, FAQ and support link
-- **[Configuration reference](https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md)** — All plugin options
+- **[Additional Information](Additional-Information)** — Every guide, FAQ and
+  support link
+- **[Configuration reference][readme]** — All plugin options
+
+[readme]: https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md
 
 ## Quick Links
 

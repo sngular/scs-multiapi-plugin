@@ -32,7 +32,8 @@ Maven and Gradle
 - [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
 - [Loading specifications from a remote URL](#loading-specifications-from-a-remote-url-apicurio-registry-http)
 - [Loading Specs from a Published Artifact](#loading-specs-from-a-published-artifact)
-- [Architecture](docs/ARCHITECTURE.md) and [Loading specs](docs/LOADING_SPECS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Loading specs](docs/LOADING_SPECS.md)
 
 ## Main Configuration
 
@@ -949,7 +950,7 @@ have to be a dependency of the project.
 
 `filePath` then means *the path inside the artifact*.
 
-### Maven
+### Maven configuration for a published artifact
 
 ```xml
 <specFile>
@@ -963,7 +964,7 @@ have to be a dependency of the project.
 </specFile>
 ```
 
-### Gradle
+### Gradle configuration for a published artifact
 
 ```groovy
 openapimodel {
@@ -1013,6 +1014,11 @@ could not.
 
 - `fromGroupId` and `fromArtifactId` go together. Setting only one fails with a
   message saying so, rather than quietly falling back to the filesystem.
+- `filePath` is the path *inside* the artifact, and it can be omitted when the
+  artifact carries exactly one contract — the schema fragments of a multi-file
+  contract are not contracts, and neither is the AsyncAPI document when you are
+  running `openapi-generation`. With more than one it is required, and the build
+  lists them rather than picking for you.
 - Omit `fromVersion` and the version already declared by the build is used, so
   the artifact stays pinned in one place.
 - Multi-file contracts work: the artifact is unpacked under the build directory

@@ -129,7 +129,7 @@ public class OpenApiGenerator {
     if (Objects.isNull(specMaterializer)) {
       specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
     }
-    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile).toString()).build();
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile, "openapi").toString()).build();
   }
 
   private void processPackage(final String apiPackage) {
