@@ -6,9 +6,7 @@
 
 package com.sngular.api.generator.plugin.openapi.utils;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +19,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sngular.api.generator.plugin.common.loader.DependencySpecLoader;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
@@ -182,19 +179,6 @@ public class OpenApiUtil {
   }
 
   public static Map<String, JsonNode> processPaths(final JsonNode openApi, final Map<String, JsonNode> schemaMap, SpecFile specFile) {
-    URLClassLoader jarLoader = null;
-    if (specFile.usesExternalDependency()) {
-      try {
-        jarLoader = DependencySpecLoader.loadSpecAndGetLoader(
-            specFile.getFilePath(),
-            specFile.getFromGroupId(),
-            specFile.getFromArtifactId(),
-            specFile.getFromVersion());
-      } catch (final IOException e) {
-        throw new RuntimeException("Failed to load spec from dependency", e);
-      }
-    }
-
     final JsonNode pathsNode = openApi.get(PATHS);
     if (pathsNode == null) {
       return schemaMap;
@@ -204,7 +188,7 @@ public class OpenApiUtil {
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
         if (REST_VERB_SET.contains(pathDefElement)) {
-          processPathContent(schemaMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile, jarLoader);
+          processPathContent(schemaMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
         }
       }
     }
@@ -212,11 +196,11 @@ public class OpenApiUtil {
     return schemaMap;
   }
 
-  private static void processPathContent(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile, final URLClassLoader jarLoader) {
+  private static void processPathContent(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
 
     processParameters(basicJsonNodeMap, operation, specFile);
     processRequestBody(basicJsonNodeMap, operation, specFile);
-    processResponses(basicJsonNodeMap, operation, specFile, jarLoader);
+    processResponses(basicJsonNodeMap, operation, specFile);
   }
 
   private static void processParameters(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
@@ -252,7 +236,7 @@ public class OpenApiUtil {
     }
   }
 
-  private static void processResponses(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile, final URLClassLoader jarLoader) {
+  private static void processResponses(final Map<String, JsonNode> basicJsonNodeMap, final JsonNode operation, SpecFile specFile) {
     if (ApiTool.hasNode(operation, "responses")) {
       final var responses = ApiTool.getNode(operation, "responses");
       for (Iterator<Entry<String, JsonNode>> it = responses.fields(); it.hasNext(); ) {

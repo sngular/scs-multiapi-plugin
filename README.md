@@ -29,6 +29,11 @@ Maven and Gradle
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
 - [Property Validation](#property-validation)
+- [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
+- [Loading specifications from a remote URL](#loading-specifications-from-a-remote-url-apicurio-registry-http)
+- [Loading Specs from a Published Artifact](#loading-specs-from-a-published-artifact)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Loading specs](docs/LOADING_SPECS.md)
 
 ## Main Configuration
 
@@ -825,10 +830,14 @@ to the values a certain object can take. To validate these properties,
 we annotate the pertaining fields and generate the corresponding validators so that the user
 can later use a framework such as Hibernate to check for correctness.
 
-## Loading specifications from dependencies
+## Loading specifications from the plugin classpath
 
-The plugin supports loading API specification YMLs from the classpath. This will be the
-location it searches for them in first, falling back to the project directories otherwise.
+The plugin also searches its own classpath before falling back to the project
+directories, so a contract can be named by its resource path. The artifact has to
+be a dependency **of the plugin** — a project dependency is not on that
+classpath — and relative `$ref`s are still resolved against the module directory,
+so this only works for a single-file contract. For anything else, prefer
+[Loading Specs from a Published Artifact](#loading-specs-from-a-published-artifact).
 
 Here's an example configuration for the maven plugin that loads an AsyncAPI specification
 from a local JAR containing `contracts/event-api.yml` in its resources:
@@ -931,81 +940,118 @@ Notes:
   certificate, the certificate must be trusted by the JVM running the build
   (for example imported into its truststore); validation is not disabled.
 
-## Loading Specs from Maven Dependencies (v7.1+)
+## Loading Specs from a Published Artifact
 
-When you have API specifications packaged in Maven dependencies, you can load them directly using the `<fromDependency>` configuration block.
+When your contracts are published as an artifact — the usual setup when a
+producer and its consumers must not each keep their own copy — point at them by
+coordinates instead of by path. The artifact is fetched through the repositories
+your build is already configured with, including private ones, so it does not
+have to be a dependency of the project.
 
-### Configuration
+`filePath` then means *the path inside the artifact*.
 
-**Maven**:
+### Maven configuration for a published artifact
+
 ```xml
 <specFile>
-  <filePath>specs/api.yml</filePath>
-  
-  <!-- Load from specific Maven dependency -->
-  <fromDependency>
-    <groupId>com.company</groupId>
-    <artifactId>api-spec-consumidor</artifactId>
-    <version>1.0.0</version>  <!-- optional -->
-  </fromDependency>
-  
+  <filePath>contracts/api.yml</filePath>
+  <fromGroupId>com.company</fromGroupId>
+  <fromArtifactId>api-specs</fromArtifactId>
+  <fromVersion>1.0.0</fromVersion>   <!-- optional -->
   <apiPackage>com.example.consumer.api</apiPackage>
   <modelPackage>com.example.consumer.model</modelPackage>
   <callMode>false</callMode>
 </specFile>
 ```
 
-**Gradle**:
+### Gradle configuration for a published artifact
+
 ```groovy
-asyncapimodel {
+openapimodel {
   specFile {
-    {
-      filePath = 'specs/api.yml'
-      fromGroupId = 'com.company'
-      fromArtifactId = 'api-spec-consumidor'
-      fromVersion = '1.0.0'  // optional
-    }
-    overWriteModel = true
+    filePath = 'contracts/api.yml'
+    fromGroupId = 'com.company'
+    fromArtifactId = 'api-specs'
+    fromVersion = '1.0.0'   // optional
+    apiPackage = 'com.example.consumer.api'
+    modelPackage = 'com.example.consumer.model'
   }
+  overWriteModel = true
 }
 ```
 
-### Use Case: Microservices with Shared Specs
+The same three fields work on an `asyncapimodel` spec file and on the
+`asyncapi-generation` goal.
 
-Load server API from one dependency, client API from another:
+### Two contracts, two artifacts
+
+A service that implements one API and calls another, where both contracts happen
+to sit at the same path inside their own artifact:
 
 ```xml
-<!-- Server API from consumidor JAR -->
-<specFile>
-  <filePath>specs/api.yml</filePath>
-  <fromDependency>
-    <groupId>com.company</groupId>
-    <artifactId>api-spec-consumidor</artifactId>
-  </fromDependency>
-  <apiPackage>com.example.consumer.api</apiPackage>
-  <callMode>false</callMode>
-</specFile>
+<specFiles>
+  <specFile>
+    <filePath>contracts/api.yml</filePath>
+    <fromGroupId>com.company</fromGroupId>
+    <fromArtifactId>api-warehouse</fromArtifactId>
+    <apiPackage>com.example.infra.rest.api</apiPackage>
+    <callMode>false</callMode>
+  </specFile>
+  <specFile>
+    <filePath>contracts/api.yml</filePath>
+    <fromGroupId>com.company</fromGroupId>
+    <fromArtifactId>api-logistics</fromArtifactId>
+    <apiPackage>com.example.infra.rest.client.logistics</apiPackage>
+    <callMode>true</callMode>
+  </specFile>
+</specFiles>
+```
 
-<!-- Client for external API from productor JAR -->
+Naming the artifact per spec is what keeps the two apart; a classpath lookup
+could not.
+
+### What to expect
+
+- `fromGroupId` and `fromArtifactId` go together. Setting only one fails with a
+  message saying so, rather than quietly falling back to the filesystem.
+- `filePath` is the path *inside* the artifact, and it can be omitted when the
+  artifact follows the conventional layout described below. Failing that, an
+  artifact carrying a single contract is used too; with several and none at the
+  conventional path it is required, and the build lists them rather than picking
+  for you.
+- Omit `fromVersion` and the version already declared by the build is used, so
+  the artifact stays pinned in one place.
+- Multi-file contracts work: the artifact is unpacked under the build directory
+  (`target/generated-resources/multiapi-specs` in Maven) so a `$ref` to another
+  file inside it resolves like any relative reference. Nothing is written to your
+  sources.
+- A wrong `filePath` fails listing the spec files the artifact does carry.
+
+### The conventional contract location
+
+Put the contract at **`contract/openapi.yml`** — or `contract/asyncapi.yml` for
+`asyncapi-generation` — and `filePath` can be left out altogether. The same
+convention applies whether the contract sits in the module or at the root of a
+published artifact, and the `.yaml` spelling is accepted too:
+
+```text
+your-module/                       api-specs artifact/
+└── contract/                      └── contract/
+    ├── openapi.yml                    ├── openapi.yml
+    └── schemas/                       └── schemas/
+        └── user.yml                       └── user.yml
+```
+
+```xml
 <specFile>
-  <filePath>specs/api.yml</filePath>
-  <fromDependency>
-    <groupId>com.company</groupId>
-    <artifactId>api-spec-productor</artifactId>
-  </fromDependency>
-  <apiPackage>com.example.producer.client</apiPackage>
-  <callMode>true</callMode>
+  <apiPackage>com.example.api</apiPackage>
+  <modelPackage>com.example.api.model</modelPackage>
 </specFile>
 ```
 
-### Benefits
+Configure `filePath` when the contract is somewhere else, when a module or an
+artifact holds more than one, or when it is behind a URL.
 
-✅ Eliminates classpath ambiguity
-✅ Clear dependency specifications  
-✅ Supports multiple APIs in same configuration
-✅ Fully backward compatible
-✅ Perfect for microservices architecture
-
-### Deep Dive
-
-For comprehensive architecture documentation, design decisions, performance characteristics, error handling, and real-world use cases, see [ARCHITECTURE_V7_1.md](docs/ARCHITECTURE_V7_1.md).
+See [Loading specs](docs/LOADING_SPECS.md) for every way a contract can be
+located, and [Architecture](docs/ARCHITECTURE.md) for how resolution fits into
+the generation pipeline.

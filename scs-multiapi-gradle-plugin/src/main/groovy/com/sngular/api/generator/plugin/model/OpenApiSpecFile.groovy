@@ -12,6 +12,12 @@ class OpenApiSpecFile {
 
   String filePath
 
+  String fromGroupId
+
+  String fromArtifactId
+
+  String fromVersion
+
   String apiPackage
 
   String modelPackage

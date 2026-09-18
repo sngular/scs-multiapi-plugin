@@ -13,12 +13,17 @@ import java.util.List;
 import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
+import com.sngular.api.generator.plugin.resolver.MavenSpecArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.repository.RemoteRepository;
 
 @SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 @Mojo(name = "asyncapi-generation", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
@@ -26,6 +31,15 @@ public final class OpenAsyncMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
+
+  @Component
+  private RepositorySystem repositorySystem;
+
+  @Parameter(defaultValue = "${repositorySystemSession}", required = true, readonly = true)
+  private RepositorySystemSession repositorySession;
+
+  @Parameter(defaultValue = "${project.remoteProjectRepositories}", required = true, readonly = true)
+  private List<RemoteRepository> remoteRepositories;
 
   @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
   private File targetFolder;
@@ -48,6 +62,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
     final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
+    asyncApiGenerator.setArtifactResolver(new MavenSpecArtifactResolver(repositorySystem, repositorySession, remoteRepositories, project));
 
     asyncApiGenerator.processFileSpec(specFiles);
 

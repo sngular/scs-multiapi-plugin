@@ -1,0 +1,12 @@
+---
+type: object
+required:
+- country
+- city
+properties:
+  street:
+    type: string
+  country:
+    type: string
+  city:
+    type: string

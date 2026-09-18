@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin.openapi;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +21,11 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.PluginConstants;
 import com.sngular.api.generator.plugin.common.files.FileLocationUtil;
+import com.sngular.api.generator.plugin.common.loader.DependencySpecMaterializer;
+import com.sngular.api.generator.plugin.common.loader.LocalRepositorySpecArtifactResolver;
+import com.sngular.api.generator.plugin.common.loader.SpecArtifactResolver;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
+import com.sngular.api.generator.plugin.common.model.SpecConventions;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
@@ -46,6 +51,9 @@ public class OpenApiGenerator {
 
   private static final String SLASH = "/";
 
+  /** Top-level field marking a root OpenAPI document, and the stem of its conventional path. */
+  private static final String OPENAPI_MARKER = "openapi";
+
   private static final String DEFAULT_OPENAPI_API_PACKAGE = PluginConstants.DEFAULT_API_PACKAGE + ".openapi";
 
   private static final String DEFAULT_OPENAPI_MODEL_PACKAGE = DEFAULT_OPENAPI_API_PACKAGE + ".model";
@@ -66,6 +74,12 @@ public class OpenApiGenerator {
 
   private final Integer springBootVersion;
 
+  private final File targetFolder;
+
+  private SpecArtifactResolver artifactResolver = new LocalRepositorySpecArtifactResolver();
+
+  private DependencySpecMaterializer specMaterializer;
+
   private Boolean isWebClient = false;
 
   private Boolean isRestClient = false;
@@ -82,16 +96,62 @@ public class OpenApiGenerator {
     this.baseDir = basedir.toPath().toAbsolutePath();
     this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, basedir);
     this.springBootVersion = springBootVersion;
+    this.targetFolder = targetFolder;
+  }
+
+  /**
+   * Installs the resolver used to fetch artifacts declared through {@code fromGroupId}/
+   * {@code fromArtifactId}. Build-tool plugins supply their own so that private repositories,
+   * mirrors and credentials configured for the build are honoured; without it only the local
+   * repository is inspected.
+   */
+  public final void setArtifactResolver(final SpecArtifactResolver artifactResolver) {
+    this.artifactResolver = Objects.requireNonNull(artifactResolver, "artifactResolver");
+    this.specMaterializer = null;
   }
 
   public final void processFileSpec(final List<SpecFile> specsListFile) {
     for (SpecFile specFile : specsListFile) {
+      final SpecFile resolvedSpecFile = resolveSpecFile(specFile);
       authentications.clear();
-      processPackage(specFile.getApiPackage());
-      processFile(specFile);
-      createClients(specFile);
+      processPackage(resolvedSpecFile.getApiPackage());
+      processFile(resolvedSpecFile);
+      createClients(resolvedSpecFile);
       templateFactory.clearData();
     }
+  }
+
+  /**
+   * Replaces the configured {@code filePath} with the contract extracted from the declared
+   * artifact, so the rest of the pipeline — including relative {@code $ref} resolution — reads an
+   * ordinary file. Specs without dependency coordinates are returned untouched.
+   */
+  private SpecFile resolveSpecFile(final SpecFile specFile) {
+    specFile.validateDependencyCoordinates();
+    if (!specFile.usesExternalDependency()) {
+      return StringUtils.isNotBlank(specFile.getFilePath())
+          ? specFile
+          : specFile.toBuilder().filePath(defaultFilePath(OPENAPI_MARKER, baseDir)).build();
+    }
+    if (Objects.isNull(specMaterializer)) {
+      specMaterializer = new DependencySpecMaterializer(artifactResolver, targetFolder);
+    }
+    return specFile.toBuilder().filePath(specMaterializer.materialize(specFile, OPENAPI_MARKER).toString()).build();
+  }
+
+  /**
+   * Applies the conventional contract location to a spec that declares no {@code filePath}. The
+   * first conventional path that exists in the module wins; when none does, the preferred spelling
+   * is used anyway so the failure names the file that was expected.
+   */
+  private String defaultFilePath(final String rootMarker, final Path moduleDir) {
+    final List<String> conventional = SpecConventions.defaultFilePaths(rootMarker);
+    final String chosen = conventional.stream()
+                                      .filter(path -> Files.isRegularFile(moduleDir.resolve(path)))
+                                      .findFirst()
+                                      .orElseGet(() -> SpecConventions.defaultFilePath(rootMarker));
+    log.info("No filePath configured, using the conventional location '{}'", chosen);
+    return chosen;
   }
 
   private void processPackage(final String apiPackage) {

@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin
 import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile
+import com.sngular.api.generator.plugin.resolver.GradleSpecArtifactResolver
 import com.sngular.api.generator.plugin.model.AsyncApiModelExtension
 import com.sngular.api.generator.plugin.model.AsyncApiSpecFile
 import com.sngular.api.generator.plugin.model.OperationParameter
@@ -17,7 +18,6 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.Input
 import org.gradle.work.DisableCachingByDefault
 
 @DisableCachingByDefault(because = "Generation depends on external spec files not declared as cacheable inputs")
@@ -27,18 +27,6 @@ abstract class AsyncApiTask extends DefaultTask {
   @OutputDirectory
   abstract DirectoryProperty getOutputDir()
 
-  @Input
-  @Optional
-  String fromGroupId
-
-  @Input
-  @Optional
-  String fromArtifactId
-
-  @Input
-  @Optional
-  String fromVersion
-
   @TaskAction
   def processAsyncApiFile() {
     def targetFolder = getOrCreateTargetFolder(getOutputDir())
@@ -46,9 +34,10 @@ abstract class AsyncApiTask extends DefaultTask {
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
     if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFiles().isEmpty()) {
       def asyncApiGen = new AsyncApiGenerator(asyncApiModelExtension.getSpringBootVersion(), asyncApiModelExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
+      asyncApiGen.setArtifactResolver(new GradleSpecArtifactResolver(project))
       List<SpecFile> asyncApiSpecFiles = []
       asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {
-        asyncApiSpecFiles.add(toFileSpec(apiSpec, fromGroupId, fromArtifactId, fromVersion))
+        asyncApiSpecFiles.add(toFileSpec(apiSpec))
       })
 
       asyncApiGen.processFileSpec(asyncApiSpecFiles)
@@ -76,12 +65,8 @@ abstract class AsyncApiTask extends DefaultTask {
   }
 
   static SpecFile toFileSpec(AsyncApiSpecFile apiSpecFile) {
-    toFileSpec(apiSpecFile, null, null, null)
-  }
-
-  static SpecFile toFileSpec(AsyncApiSpecFile apiSpecFile, String fromGroupId, String fromArtifactId, String fromVersion) {
     def builder = SpecFile.builder()
-    if (!apiSpecFile.filePath.isEmpty()) {
+    if (apiSpecFile.filePath) {
       builder.filePath(apiSpecFile.getFilePath())
     }
     if (apiSpecFile.consumer) {
@@ -95,15 +80,15 @@ abstract class AsyncApiTask extends DefaultTask {
     }
     builder.generateModelOnly(Boolean.TRUE.equals(apiSpecFile.getGenerateModelOnly()))
 
-    // v7.1: Add dependency-based spec loading support
-    if (fromGroupId) {
-      builder.fromGroupId(fromGroupId)
+    // Coordinates of the artifact publishing the contract; filePath is then read from inside it.
+    if (apiSpecFile.fromGroupId) {
+      builder.fromGroupId(apiSpecFile.fromGroupId)
     }
-    if (fromArtifactId) {
-      builder.fromArtifactId(fromArtifactId)
+    if (apiSpecFile.fromArtifactId) {
+      builder.fromArtifactId(apiSpecFile.fromArtifactId)
     }
-    if (fromVersion) {
-      builder.fromVersion(fromVersion)
+    if (apiSpecFile.fromVersion) {
+      builder.fromVersion(apiSpecFile.fromVersion)
     }
 
     return builder.build()

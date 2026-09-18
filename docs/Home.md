@@ -23,17 +23,22 @@ The SCS MultiAPI Plugin is a Maven and Gradle plugin that automates the generati
 - ✅ Custom validators
 - ✅ Reactive types (Mono/Flux)
 - ✅ Load specs from classpath, filesystem, HTTP, Apicurio Registry
-- ✅ Dependency spec loading for composition
+- ✅ Contracts loaded from a published artifact by coordinates
 - ✅ Multi-file OpenAPI/AsyncAPI support
 
 ## Quick Navigation
 
 - **[Getting Started](Getting-Started)** — Installation and first API
-- **[OpenAPI Guide](OpenAPI-Guide)** — REST API generation guide
-- **[AsyncAPI Guide](AsyncAPI-Guide)** — Message producer/consumer guide
-- **[Spring-Kafka Integration](Spring-Kafka-Integration)** — Spring Cloud Stream + Kafka
-- **[Configuration Reference](Configuration-Reference)** — All plugin options
-- **[Troubleshooting](Troubleshooting)** — Common issues and solutions
+- **[Loading specs](LOADING_SPECS)** — Where a contract can live, and how to
+  point at it
+- **[Spring-Kafka Integration](SPRING_KAFKA_INTEGRATION)** — Spring Cloud
+  Stream + Kafka
+- **[Architecture](ARCHITECTURE)** — How generation works, for contributors
+- **[Additional Information](Additional-Information)** — Every guide, FAQ and
+  support link
+- **[Configuration reference][readme]** — All plugin options
+
+[readme]: https://github.com/sngular/scs-multiapi-plugin/blob/main/README.md
 
 ## Quick Links
 
@@ -44,7 +49,7 @@ The SCS MultiAPI Plugin is a Maven and Gradle plugin that automates the generati
 
 ## Current Version
 
-**Latest**: 7.1.0
+**Latest**: 7.1.3
 
 ### Installation
 
@@ -53,24 +58,25 @@ The SCS MultiAPI Plugin is a Maven and Gradle plugin that automates the generati
 <plugin>
   <groupId>com.sngular</groupId>
   <artifactId>scs-multiapi-maven-plugin</artifactId>
-  <version>7.1.0</version>
+  <version>7.1.3</version>
 </plugin>
 ```
 
 #### Gradle
 ```groovy
 plugins {
-  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.1.0'
+  id 'com.sngular.scs-multiapi-gradle-plugin' version '7.1.3'
 }
 ```
 
-## What's New in 7.1.0
+## What's New in 7.1.3
 
-- Dependency spec loading with JAR resolution
-- Enhanced multipart/form-data support
-- Improved URL-based spec loading
-- Better error messages and validation
-- Performance improvements
+- Contracts declared with `fromGroupId`/`fromArtifactId` are resolved from the
+  repositories the build is configured with, including private ones, and
+  multi-file contracts inside an artifact resolve their references. See
+  [Loading specs](LOADING_SPECS).
+- The same coordinates now work for AsyncAPI specs, and in Gradle they are set
+  per `specFile` rather than on the task.
 
 ## Getting Help
 
