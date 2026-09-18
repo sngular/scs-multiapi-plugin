@@ -283,8 +283,18 @@ public class MapperPathUtil {
                           .in(ApiTool.getNodeAsString(refParameter, "in"))
                           .dataType(dateType)
                           .isCollection(ApiTool.hasItems(getContentOrSchema(refParameter)))
-                          .importName(dateType.getImportName())
+                          .importName(getParameterImport(dateType))
                           .build();
+  }
+
+  /**
+   * The class the API has to import to declare a parameter of this type: the model the parameter resolves to, or, when the type is one the language already
+   * provides, its JDK class. A parameter typed after a schema used to report the JDK mapping of its base type, which is null for every model, so the API was
+   * generated referring to a model it never imported.
+   */
+  private static String getParameterImport(final SchemaFieldObjectType dataType) {
+    final String modelImport = getImportFromType(dataType);
+    return Objects.nonNull(modelImport) ? modelImport : dataType.getImportName();
   }
 
   private static JsonNode getContentOrSchema(final JsonNode refParameter) {
@@ -323,9 +333,11 @@ public class MapperPathUtil {
                                  .build());
         globalObject.getSchemaMap().put(StringCaseUtils.titleToSnakeCase(inlineParameterPojo), parameterSchema);
       } else {
+        final var dataType = getSchemaType(parameterSchema, inlineParameterPojo, specFile, globalObject, baseDir);
         parameterObjects.add(builder
                                  .name(parameterName)
-                                 .dataType(getSchemaType(parameterSchema, inlineParameterPojo, specFile, globalObject, baseDir))
+                                 .dataType(dataType)
+                                 .importName(getParameterImport(dataType))
                                  .build());
       }
     }

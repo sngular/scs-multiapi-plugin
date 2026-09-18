@@ -18,9 +18,9 @@
 </#function>
 <#function createSimpleType field>
     <#if (field.constValue?has_content)>
-        ${calculateSafeName (field.baseName, ";", field.constValue)}
+        ${calculateSafeName (field.fieldName, ";", field.constValue)}
     <#else >
-        ${calculateSafeName (field.baseName, ";", "")}
+        ${calculateSafeName (field.fieldName, ";", "")}
     </#if>
 </#function>
 <#function getConstValue fieldName ender value="">
@@ -229,17 +229,17 @@ public class ${schema.className} {
   @NonNull
 </#if>
 <#if field.dataType.baseType == "array">
-<#assign singName>${calculateSingularSafeName (field.baseName)}</#assign>
+<#assign singName>${calculateSingularSafeName (field.fieldName)}</#assign>
   @Singular("${singName}")
-  private ${field.dataType} ${field.baseName?uncap_first};
+  private ${field.dataType} ${field.fieldName?uncap_first};
   <#elseif field.dataType.baseType == "map">
-<#assign singName>${calculateSingularSafeName (field.baseName)}</#assign>
+<#assign singName>${calculateSingularSafeName (field.fieldName)}</#assign>
   @Singular("${singName}")
-  private ${field.dataType} ${field.baseName?uncap_first};
+  private ${field.dataType} ${field.fieldName?uncap_first};
 <#elseif field.dataType.baseType == "enum">
-  private ${field.baseName?cap_first} ${field.baseName?uncap_first};
+  private ${field.fieldName?cap_first} ${field.fieldName?uncap_first};
 
-  public enum ${field.baseName?cap_first} {
+  public enum ${field.fieldName?cap_first} {
 <#list field.enumValues as key, value>
   <#if key?matches("[0-9].*")>
     ${"_"+key}(${value})<#sep>,
@@ -250,7 +250,7 @@ public class ${schema.className} {
 
     private ${field.dataType.innerType?cap_first} value;
 
-    ${field.baseName?cap_first}(${field.dataType.innerType?cap_first} value) {
+    ${field.fieldName?cap_first}(${field.dataType.innerType?cap_first} value) {
       this.value = value;
     }
 
@@ -265,7 +265,7 @@ public class ${schema.className} {
     }
   }
 <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
-  private ${field.dataType.innerType?cap_first} ${field.baseName?uncap_first};
+  private ${field.dataType.innerType?cap_first} ${field.fieldName?uncap_first};
 <#else>
   private ${field.dataType} ${createSimpleType (field)}
 </#if>
@@ -275,9 +275,9 @@ public class ${schema.className} {
   @Builder
   @Jacksonized
   private ${schema.className}(<@compress single_line=true><#list schema.fieldObjectList as field>
-      <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.baseName?cap_first} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.baseName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.baseName?uncap_first}<#else>${field.dataType} ${field.baseName?uncap_first}</#if><#sep>, </#list>) {</@compress>
+      <#if field.required>@NonNull </#if><#if field.dataType.baseType == "enum">${field.fieldName?cap_first} ${field.fieldName?uncap_first}<#elseif field.dataType.baseType == "array">${field.dataType} ${field.fieldName?uncap_first}<#elseif field.dataType.baseType == "map">${field.dataType} ${field.fieldName?uncap_first}<#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">${field.dataType.innerType?cap_first} ${field.fieldName?uncap_first}<#else>${field.dataType} ${field.fieldName?uncap_first}</#if><#sep>, </#list>) {</@compress>
   <#list schema.fieldObjectList as field>
-    this.${field.baseName?uncap_first} = ${field.baseName?uncap_first};
+    this.${field.fieldName?uncap_first} = ${field.fieldName?uncap_first};
   </#list>
 
   <#if schema.schemaCombinator == "anyOf" || schema.schemaCombinator == "oneOf">
@@ -291,7 +291,7 @@ public class ${schema.className} {
 
       <#list schema.fieldObjectList as field>
           <#if field == schema.fieldObjectList?first>
-            if (Objects.nonNull(this.${field.baseName?uncap_first})) {<#else> else if (Objects.nonNull(this.${field.baseName?uncap_first})) {</#if>
+            if (Objects.nonNull(this.${field.fieldName?uncap_first})) {<#else> else if (Objects.nonNull(this.${field.fieldName?uncap_first})) {</#if>
         satisfiedCondition = true;
         }</#list>
 

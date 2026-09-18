@@ -104,9 +104,10 @@ public class ApiWebClient {
     return dateFormat;
   }
 
-  private static JsonMapper createDefaultObjectMapper(final DateFormat dateFormat) {
-    if (null == dateFormat) {
-     dateFormat = createDefaultDateFormat();
+  private static JsonMapper createDefaultObjectMapper(final DateFormat defaultDateFormat) {
+    DateFormat dateFormat = defaultDateFormat;
+    if (null == defaultDateFormat) {
+      dateFormat = createDefaultDateFormat();
     }
     return JsonMapper.builder()
         .defaultDateFormat(dateFormat)
@@ -168,13 +169,14 @@ public class ApiWebClient {
 
   public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    CollectionFormat colFormat = collectionFormat;
 
     if (name == null || name.isEmpty() || value == null) {
       return params;
     }
 
-    if(collectionFormat == null) {
-      collectionFormat = CollectionFormat.CSV;
+    if (colFormat == null) {
+      colFormat = CollectionFormat.CSV;
     }
 
     Collection<?> valueCollection = null;
@@ -189,7 +191,7 @@ public class ApiWebClient {
       return params;
     }
 
-    if (collectionFormat.equals(CollectionFormat.MULTI)) {
+    if (colFormat.equals(CollectionFormat.MULTI)) {
       for (Object item : valueCollection) {
         params.add(name, parameterToString(item));
       }
@@ -200,7 +202,7 @@ public class ApiWebClient {
     for(Object o : valueCollection) {
       values.add(parameterToString(o));
     }
-    params.add(name, collectionFormat.collectionToString(values));
+    params.add(name, colFormat.collectionToString(values));
 
     return params;
   }
@@ -232,7 +234,7 @@ public class ApiWebClient {
         return mediaType;
       }
     }
-    return MediaType.parseMediaType(final contentTypes[0]);
+    return MediaType.parseMediaType(contentTypes[0]);
   }
 
   protected BodyInserter<?, ? super ClientHttpRequest> selectBody(final Object obj, final MultiValueMap<String, Object> formParams, final MediaType contentType) {
@@ -321,8 +323,8 @@ public class ApiWebClient {
       return parameterToString(values);
     }
 
-    if(collectionFormat == null) {
-      collectionFormat = CollectionFormat.CSV;
+    if (collectionFormat == null) {
+      return CollectionFormat.CSV.collectionToString(values);
     }
 
     return collectionFormat.collectionToString(values);

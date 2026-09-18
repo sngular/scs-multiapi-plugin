@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: Parameter With Schema Ref Test API
+  version: 1.0.0
+paths:
+  /warehouses:
+    get:
+      operationId: searchWarehouses
+      tags:
+        - test
+      parameters:
+        - $ref: '#/components/parameters/PageFilters'
+        - name: filter
+          in: query
+          required: false
+          description: a free form filter
+          schema:
+            type: object
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+components:
+  parameters:
+    PageFilters:
+      name: page
+      in: query
+      required: false
+      description: pagination and sorting
+      schema:
+        $ref: '#/components/schemas/PageFilters'
+  schemas:
+    PageFilters:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+    Warehouse:
+      type: object
+      properties:
+        id:
+          type: string

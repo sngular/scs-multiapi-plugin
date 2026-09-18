@@ -110,12 +110,12 @@ public class ${className?cap_first}Api {
   <#if operation.responseObjects?has_content>
    <#if operation.parameterObjects?has_content>
 <#list operation.parameterObjects as parameter>
-   * @param ${parameter.name} ${parameter.description!" "} <#if parameter.required == true>(required)</#if>
+   * @param ${parameter.variableName} ${parameter.description!" "} <#if parameter.required == true>(required)</#if>
 </#list>
    </#if>
    <#if path.parameterObjects?has_content>
   <#list path.parameterObjects as parameter>
-    * @param ${parameter.name} ${parameter.description!" "} <#if parameter.required == true>(required)</#if>
+    * @param ${parameter.variableName} ${parameter.description!" "} <#if parameter.required == true>(required)</#if>
   </#list>
    </#if>
     <#if operation.requestObjects?has_content>
@@ -129,13 +129,13 @@ public class ${className?cap_first}Api {
    */
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     ${operation.responseObjects[0].contentObjects[0].dataType}
-    <#else>void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
-    <#if operation.responseObjects[0].contentObjects[0]??>return </#if>${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
+    <#else>void</#if></@compress> ${operation.operationId}<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    <#if operation.responseObjects[0].contentObjects[0]??>return </#if>${operation.operationId}WithHttpInfo(<#compress><#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)<#if operation.responseObjects[0].contentObjects[0]??>.getBody()</#if>;</#compress>
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
     ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>
-    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.name}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
+    <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>)</#compress> throws RestClientException {
 
     Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}<#else>null</#if>;
     <#if operation.requestObjects?has_content>
@@ -148,14 +148,14 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
        <#if parameter.in == "path">
-    uriVariables.put("${parameter.name}", <#if parameter.isCollection == true> apiRestClient.collectionPathParameterToString(ApiRestClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.name})<#else> ${parameter.name}</#if>);
+    uriVariables.put("${parameter.name}", <#if parameter.isCollection == true> apiRestClient.collectionPathParameterToString(ApiRestClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.variableName})<#else> ${parameter.variableName}</#if>);
        </#if>
       </#list>
     </#if>
     <#if path.parameterObjects?has_content>
       <#list path.parameterObjects as parameter>
        <#if parameter.in == "path">
-    uriVariables.put("${parameter.name}", <#if parameter.isCollection == true> apiRestClient.collectionPathParameterToString(ApiRestClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.name})<#else> ${parameter.name}</#if>);
+    uriVariables.put("${parameter.name}", <#if parameter.isCollection == true> apiRestClient.collectionPathParameterToString(ApiRestClient.CollectionFormat.valueOf("csv".toUpperCase()), ${parameter.variableName})<#else> ${parameter.variableName}</#if>);
        </#if>
       </#list>
     </#if>
@@ -166,7 +166,7 @@ public class ${className?cap_first}Api {
     <#if operation.requestObjects?has_content>
         <#if operation.requestObjects[0].contentObjects[0].schemaObject?has_content>
              <#list operation.requestObjects[0].contentObjects[0].schemaObject.fieldObjectList as field>
-    formParams.put("${field.baseName}", List.of(${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}.get${field.baseName?cap_first}()));
+    formParams.put("${field.baseName}", List.of(${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}.get${field.fieldName?cap_first}()));
              </#list>
          </#if>
     </#if>
@@ -174,7 +174,7 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "query">
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
         </#if>
       </#list>
      </#if>
@@ -182,15 +182,15 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "query">
 
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
     </#if>
       </#list>
     </#if>
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null) {
-      headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.name}));
+    if (${parameter.variableName} != null) {
+      headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.variableName}));
     }
         </#if>
       </#list>
@@ -199,7 +199,7 @@ public class ${className?cap_first}Api {
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
 
         </#if>
       </#list>
@@ -207,8 +207,8 @@ public class ${className?cap_first}Api {
     <#if path.parameterObjects?has_content>
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "header">
-    if (${parameter.name} != null) {
-      headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.name}));
+    if (${parameter.variableName} != null) {
+      headerParams.add("${parameter.name}", apiRestClient.parameterToString(${parameter.variableName}));
     }
         </#if>
       </#list>
@@ -217,7 +217,7 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.name}));
+    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
 
         </#if>
       </#list>

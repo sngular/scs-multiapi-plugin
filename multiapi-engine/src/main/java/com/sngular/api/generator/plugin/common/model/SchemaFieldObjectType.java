@@ -43,7 +43,7 @@ public class SchemaFieldObjectType {
                                                                         );
 
   private static final Map<String, String> IMPORT_TYPE_MAPPINGS = Map.ofEntries(
-      new SimpleImmutableEntry<>(TypeConstants.OBJECT, "java.util.Object"),
+      // Object is a java.lang type (implicitly imported), and java.util.Object does not exist at all, so it has no import mapping either.
       new SimpleImmutableEntry<>(TypeConstants.ARRAY, "java.util.List"),
       new SimpleImmutableEntry<>(TypeConstants.MAP, "java.util.Map"),
       new SimpleImmutableEntry<>(TypeConstants.BIG_DECIMAL, "java.math.BigDecimal"),
