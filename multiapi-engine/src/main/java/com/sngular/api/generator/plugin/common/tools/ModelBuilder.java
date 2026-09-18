@@ -25,10 +25,13 @@ import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.openapi.exception.BadDefinedEnumException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
+@Slf4j
 public final class ModelBuilder {
 
   private static final String ADDITIONAL_PROPERTY_NAME = "AdditionalProperty";
@@ -40,6 +43,9 @@ public final class ModelBuilder {
   private static final String ALL_OF_COMBINATOR = "allOf";
 
   private static final String ADDITIONAL_PROPERTIES = "additionalProperties";
+
+  /** Rendered types that say nothing about the value they hold, as a template would print them. */
+  private static final Set<String> FREE_FORM_TYPES = Set.of("Object", "List<Object>", "Map<String, Object>");
 
   private static final Map<String, SchemaObject> cachedSchemas = new HashMap<>();
 
@@ -174,7 +180,7 @@ public final class ModelBuilder {
                                                 .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, resolveArrayItemType(schema, specFile)))
                                                 .build());
     } else if (ApiTool.hasPatternProperties(schema)) {
-      fieldObjectArrayList.add(buildPatternPropertiesField(ApiTool.getName(schema), schema, specFile));
+      fieldObjectArrayList.add(buildPatternPropertiesField(resolveFieldName(schema, nameSchema), schema, specFile));
     } else if (ApiTool.isAllOf(schema)) {
       fieldObjectArrayList.addAll(processAllOf(totalSchemas, ApiTool.getAllOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isAnyOf(schema)) {
@@ -182,7 +188,7 @@ public final class ModelBuilder {
     } else if (ApiTool.isOneOf(schema)) {
       fieldObjectArrayList.addAll(processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getOneOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isEnum(schema)) {
-      fieldObjectArrayList.add(processEnumField(ApiTool.getName(schema), schema, specFile, ApiTool.getEnumValues(schema), schema));
+      fieldObjectArrayList.add(processEnumField(resolveFieldName(schema, nameSchema), schema, specFile, ApiTool.getEnumValues(schema), schema));
     } else if (ApiTool.hasRef(schema)) {
       final var refSchema = totalSchemas.get(MapperUtil.getRefSchemaKey(schema));
       ApiTool.getProperties(refSchema).forEachRemaining(processProperties(buildingSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, refSchema, antiLoopList,
@@ -191,12 +197,35 @@ public final class ModelBuilder {
       schema.fields().forEachRemaining(processProperties(nameSchema, totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, schema, antiLoopList, baseDir));
     } else {
       fieldObjectArrayList.add(SchemaFieldObject.builder()
-                                                .baseName(ApiTool.getName(schema))
+                                                .baseName(resolveFieldName(schema, nameSchema))
                                                 .dataType(new SchemaFieldObjectType(MapperUtil.getSimpleType(schema, specFile)))
                                                 .build());
     }
 
+    // Every template interpolates the field name, so a field without one cannot be rendered at all:
+    // it is a schema that contributes no named property (e.g. the bare `{"type": "object"}` member
+    // of an `anyOf`), and dropping it keeps the surrounding model generable. The consequence is
+    // reported where it becomes visible — the schema that ends up with nothing to model.
+    fieldObjectArrayList.removeIf(field -> {
+      final boolean unnamed = StringUtils.isBlank(field.getBaseName());
+      if (unnamed) {
+        log.debug("Schema {} names no property, so it contributes no field to '{}'", schema, nameSchema);
+      }
+      return unnamed;
+    });
+
     return fieldObjectArrayList;
+  }
+
+  /**
+   * Resolves the property name to give a schema that is modelled as a single field. A schema node
+   * carries no name of its own — {@code name} only exists on parameter-like nodes and
+   * {@link ApiTool#getName} degrades to {@code null} for any other object node — so the name of the
+   * schema being built is the only sensible fallback. A blank result means the schema names no
+   * property at all.
+   */
+  private static String resolveFieldName(final JsonNode schema, final String nameSchema) {
+    return StringUtils.defaultIfBlank(ApiTool.getName(schema), nameSchema);
   }
 
   @SuppressWarnings("checkstyle:CyclomaticComplexity")
@@ -236,19 +265,51 @@ public final class ModelBuilder {
       final var composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
       var schemaObjectComposed = compositedSchemas.get(composedSchemaName);
       if (Objects.isNull(schemaObjectComposed)) {
-        schemaObjectComposed = createComposedSchema(buildingSchema, StringUtils.defaultIfBlank(className, fieldName), schema, specFile,
+        schemaObjectComposed = createComposedSchema(buildingSchema, composedSchemaName, schema, specFile,
                                                     totalSchemas, compositedSchemas, antiLoopList, baseDir);
-        compositedSchemas.put(composedSchemaName, schemaObjectComposed);
       }
 
-      fieldObjectArrayList.add(SchemaFieldObject
-                                   .builder()
-                                   .baseName(fieldName)
-                                   .dataType(SchemaFieldObjectType.fromTypeList(schemaObjectComposed.getClassName(), schemaObjectComposed.getClassName()))
-                                   .build());
+      if (describesNoProperty(schemaObjectComposed)) {
+        warnAboutPropertylessComposition(fieldName, schemaObjectComposed);
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(new SchemaFieldObjectType(TypeConstants.OBJECT))
+                                     .build());
+      } else {
+        compositedSchemas.put(composedSchemaName, schemaObjectComposed);
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(schemaObjectComposed.getClassName(), schemaObjectComposed.getClassName()))
+                                     .build());
+      }
     }
 
     return fieldObjectArrayList;
+  }
+
+  /**
+   * Tells whether a composed schema ended up with nothing to model, which happens when none of its
+   * {@code allOf}/{@code anyOf}/{@code oneOf} members declares a property — as in
+   * {@code anyOf: [{type: object}]}. Generating a class for it would yield an empty type that
+   * silently drops every value, so the free-form {@code Object} is used in its place.
+   */
+  private static boolean describesNoProperty(final SchemaObject composedSchema) {
+    return Objects.isNull(composedSchema) || CollectionUtils.isEmpty(composedSchema.getFieldObjectList());
+  }
+
+  /**
+   * Reports a composition the contract cannot express as a class, so that the fallback is never a
+   * silent surprise. It describes the contract rather than the generated type, because an
+   * {@code allOf} member may still narrow the property afterwards.
+   */
+  private static void warnAboutPropertylessComposition(final String fieldName, final SchemaObject composedSchema) {
+    final String combinator = Objects.nonNull(composedSchema) && StringUtils.isNotBlank(composedSchema.getSchemaCombinator())
+                                  ? composedSchema.getSchemaCombinator()
+                                  : "composition";
+    log.warn("Property '{}' declares '{}' whose members define no property, so there is nothing to model and it falls back to a free-form value. "
+             + "Give the members properties, or a $ref to a named schema, to get a typed model.", fieldName, combinator);
   }
 
   private static Consumer<Map.Entry<String, JsonNode>> processProperties(
@@ -475,17 +536,26 @@ public final class ModelBuilder {
         final String composedSchemaName = StringUtils.defaultIfBlank(className, fieldName);
         SchemaObject schemaObjectComposed = compositedSchemas.get(composedSchemaName);
         if (Objects.isNull(schemaObjectComposed)) {
-          schemaObjectComposed = createComposedSchema("", StringUtils.defaultIfBlank(className, fieldName), items, specFile,
+          schemaObjectComposed = createComposedSchema("", composedSchemaName, items, specFile,
                                                       totalSchemas, compositedSchemas, antiLoopList, baseDir);
-          compositedSchemas.put(composedSchemaName, schemaObjectComposed);
         }
 
-        fieldObjectArrayList.add(SchemaFieldObject
-                                     .builder()
-                                     .baseName(fieldName)
-                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, schemaObjectComposed.getClassName()))
-                                     .importClass(schemaObjectComposed.getClassName())
-                                     .build());
+        if (describesNoProperty(schemaObjectComposed)) {
+          warnAboutPropertylessComposition(fieldName, schemaObjectComposed);
+          fieldObjectArrayList.add(SchemaFieldObject
+                                       .builder()
+                                       .baseName(fieldName)
+                                       .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, TypeConstants.OBJECT))
+                                       .build());
+        } else {
+          compositedSchemas.put(composedSchemaName, schemaObjectComposed);
+          fieldObjectArrayList.add(SchemaFieldObject
+                                       .builder()
+                                       .baseName(fieldName)
+                                       .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, schemaObjectComposed.getClassName()))
+                                       .importClass(schemaObjectComposed.getClassName())
+                                       .build());
+        }
       } else if (ApiTool.hasProperties(items)) {
         final var itemsObject = buildSchemaObject(totalSchemas, className, items, antiLoopList, compositedSchemas, "", specFile, baseDir);
         compositedSchemas.put(className, itemsObject);
@@ -735,20 +805,44 @@ public final class ModelBuilder {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
 
     for (JsonNode ref : schemaList) {
+      final Set<SchemaFieldObject> memberFields = new HashSet<>();
       if (ApiTool.hasRef(ref)) {
         final var schemaToProcess = totalSchemas.get(MapperUtil.getRefSchemaKey(ref));
-        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, ref, antiLoopList, baseDir));
-        for (var fieldObject : fieldObjectArrayList) {
-          fieldObject.setRequired(true);
-        }
+        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, ref, antiLoopList, baseDir));
       } else if (ApiTool.hasProperties(ref)) {
-        ApiTool.getProperties(ref).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, fieldObjectArrayList, specFile, ref, antiLoopList, baseDir));
-        for (var fieldObject : fieldObjectArrayList) {
-          fieldObject.setRequired(true);
-        }
+        ApiTool.getProperties(ref).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, ref, antiLoopList, baseDir));
       }
+      for (var fieldObject : memberFields) {
+        fieldObject.setRequired(true);
+      }
+      mergeAllOfMember(fieldObjectArrayList, memberFields);
     }
     return fieldObjectArrayList;
+  }
+
+  /**
+   * Adds the properties of one {@code allOf} member to the ones already gathered. A value has to
+   * satisfy every member, so when two members declare the same property the most specific
+   * declaration is the accurate one: a member that types a property another member left free-form
+   * (a paged wrapper narrowing its inherited {@code items} to the element type, say) replaces it.
+   * Fields are keyed by name, so any other redeclaration keeps the one already gathered.
+   */
+  private static void mergeAllOfMember(final Set<SchemaFieldObject> gatheredFields, final Set<SchemaFieldObject> memberFields) {
+    for (final var memberField : memberFields) {
+      gatheredFields.stream()
+                    .filter(gathered -> gathered.equals(memberField) && isFreeForm(gathered) && !isFreeForm(memberField))
+                    .findFirst()
+                    .ifPresent(gatheredFields::remove);
+      gatheredFields.add(memberField);
+    }
+  }
+
+  /**
+   * Tells whether a field carries no information about its content beyond "some JSON value", which
+   * is what the generator falls back to for a schema that declares nothing modellable.
+   */
+  private static boolean isFreeForm(final SchemaFieldObject field) {
+    return FREE_FORM_TYPES.contains(Objects.toString(field.getDataType(), ""));
   }
 
   private static Set<SchemaFieldObject> processAnyOfOneOf(
