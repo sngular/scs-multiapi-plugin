@@ -3,7 +3,6 @@ package ${packageAuth};
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;
 
-{{>generatedAnnotation}}
 public class OAuth implements Authentication {
   private String accessToken;
 

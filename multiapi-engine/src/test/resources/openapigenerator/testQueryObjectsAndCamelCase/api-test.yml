@@ -1,0 +1,91 @@
+# Object-typed query parameters serialized as their style/explode declare (form + explode by default),
+# security alternatives sharing a scheme, and snake_case names (for useCamelCaseNames).
+openapi: 3.0.3
+info:
+  title: Query objects and camel case
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+security:
+  - tenantId: []
+    bearerAuth: []
+  - tenantId: []
+    oAuth2: []
+paths:
+  /warehouses:
+    get:
+      operationId: searchWarehouses
+      tags: [Warehouses]
+      parameters:
+        - name: filters
+          in: query
+          schema: { $ref: '#/components/schemas/PageFilter' }
+        - name: sort_by
+          in: query
+          schema: { type: string }
+        - name: warehouse_ids
+          in: query
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: The warehouses
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WarehousePage' }
+  /warehouses/by-flat-filter:
+    get:
+      operationId: searchWarehousesFlat
+      tags: [Warehouses]
+      parameters:
+        - name: filters
+          in: query
+          style: form
+          explode: false
+          schema: { $ref: '#/components/schemas/PageFilter' }
+      responses:
+        '200':
+          description: The warehouses
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WarehousePage' }
+  /warehouses/by-deep-filter:
+    get:
+      operationId: searchWarehousesDeep
+      tags: [Warehouses]
+      parameters:
+        - name: filters
+          in: query
+          style: deepObject
+          explode: true
+          schema: { $ref: '#/components/schemas/PageFilter' }
+      responses:
+        '200':
+          description: The warehouses
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WarehousePage' }
+components:
+  securitySchemes:
+    tenantId: { type: apiKey, in: header, name: X-Tenant-Id }
+    bearerAuth: { type: http, scheme: bearer }
+    oAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes: {}
+  schemas:
+    PageFilter:
+      type: object
+      properties:
+        page_number: { type: integer, format: int32 }
+        page_size: { type: integer, format: int32 }
+    WarehousePage:
+      type: object
+      properties:
+        total_items: { type: integer, format: int64 }
+        warehouse_names:
+          type: array
+          items: { type: string }

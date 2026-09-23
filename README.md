@@ -29,6 +29,7 @@ Maven and Gradle
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
+  - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
 - [Property Validation](#property-validation)
 - [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
 - [Loading specifications from a remote URL](#loading-specifications-from-a-remote-url-apicurio-registry-http)
@@ -754,6 +755,7 @@ that will be used. Each specFile has their own configuration:
 | useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
 | clientComponent          | With `callMode`, whether the `*Api` client classes are `@Component`s. `false`: declare them yourself ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to true by default**   | false                                             |
 | useHttpExchange          | With `callMode`, generates `@HttpExchange` interfaces; needs `springBootVersion` >= 3 ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to false by default**                 | true                                              |
+| useCamelCaseNames | Camel-case Java names, JSON as-is. Default false | true |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
@@ -1061,6 +1063,30 @@ runs, and leaves the contract name where it belongs - on the wire:
 Header and cookie parameters are now bound explicitly with `@RequestHeader` and
 `@CookieValue`. Before, they were declared without a binding annotation, which
 made Spring resolve them as request parameters.
+
+### Camel case Java names (useCamelCaseNames)
+
+By default the generated Java code uses the names the contract gives, whenever
+they are legal Java identifiers: a parameter `page_num` is declared as
+`page_num`, and a property `total_items` gives `getTotal_items()`. Only names
+Java cannot spell are adapted (see above).
+
+Set `useCamelCaseNames` to `true` to declare every Java name in camel case
+instead: `pageNum`, `totalItems`, `getTotalItems()`, `setTotalItems(...)` and
+the builder's `totalItems(...)`. What goes over the wire does not change: models
+keep `@JsonProperty("total_items")`, and parameters keep
+`@RequestParam(name = "page_num")`, so the JSON and the requests still use the
+contract names.
+
+```xml
+<specFile>
+  <filePath>openapi/openapi.yml</filePath>
+  <useCamelCaseNames>true</useCamelCaseNames>
+</specFile>
+```
+
+Switching it on renames the generated getters, setters and builder methods, so
+code that uses them has to be updated once.
 
 ### Usage considerations
 

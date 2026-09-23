@@ -15,8 +15,7 @@ class AsyncApiModelExtension {
 
   Boolean overWriteModel = Boolean.FALSE
 
-  // MAJOR or MAJOR.MINOR (e.g. 4 or '3.2'): untyped so both a number and a string are accepted.
-  def springBootVersion = 2
+  Object springBootVersion = 2
 
   List<AsyncApiSpecFile> getSpecFiles() {
     return specFiles

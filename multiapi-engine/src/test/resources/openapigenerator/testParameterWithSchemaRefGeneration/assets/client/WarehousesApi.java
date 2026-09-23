@@ -90,8 +90,8 @@ public class WarehousesApi {
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap( null, "page", page));
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap( null, "filter", filter));
+    queryParams.putAll(apiRestClient.objectToQueryParams("form", true, "page", page));
+    queryParams.putAll(apiRestClient.objectToQueryParams("form", true, "filter", filter));
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
     final String[] localVarContentTypes = {};

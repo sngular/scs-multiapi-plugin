@@ -59,6 +59,18 @@ public class StringCaseUtils {
     if (isValidJavaIdentifier(name)) {
       return name;
     }
+    return toCamelCaseIdentifier(name);
+  }
+
+  /**
+   * Rebuilds any name in lower camel case out of its alphanumeric runs, whether or not it already is a legal Java identifier:
+   * {@code page_num} gives {@code pageNum}, {@code X-Correlation-Id} gives {@code xCorrelationId}. It is prefixed with {@code _}
+   * when it would start with a digit, and, like {@link #toJavaIdentifier(String)}, a reserved word is returned as it is.
+   */
+  public static String toCamelCaseIdentifier(final String name) {
+    if (name == null || name.isEmpty()) {
+      return name;
+    }
     final StringBuilder identifier = new StringBuilder();
     boolean capitalizeNext = false;
     for (int i = 0; i < name.length(); i++) {
@@ -89,6 +101,14 @@ public class StringCaseUtils {
    */
   public static String toJavaVariableName(final String name) {
     final String identifier = toJavaIdentifier(name);
+    return JAVA_RESERVED_WORDS.contains(identifier) ? "_" + identifier : identifier;
+  }
+
+  /**
+   * As {@link #toCamelCaseIdentifier(String)}, prefixing a reserved word with {@code _} so it can be declared as a variable.
+   */
+  public static String toCamelCaseVariableName(final String name) {
+    final String identifier = toCamelCaseIdentifier(name);
     return JAVA_RESERVED_WORDS.contains(identifier) ? "_" + identifier : identifier;
   }
 
