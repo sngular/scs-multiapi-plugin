@@ -298,6 +298,12 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.camelcase.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).useCamelCaseNames(true).build());
 
+	static final List<SpecFile> TEST_QUERY_OBJECTS_HTTP_EXCHANGE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testQueryObjectsAndCamelCase/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.queryobjectshttpexchange")
+					.modelPackage("com.sngular.multifileplugin.queryobjectshttpexchange.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -2041,6 +2047,22 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/camelcase/model";
 
 		final String COMMON_PATH = "openapigenerator/testQueryObjectsAndCamelCase/assets/camelcase/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "WarehousesApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "PageFilterDTO.java",
+				COMMON_PATH + "WarehousePageDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateQueryObjectsHttpExchange() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/queryobjectshttpexchange";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/queryobjectshttpexchange/model";
+
+		final String COMMON_PATH = "openapigenerator/testQueryObjectsAndCamelCase/assets/httpexchange/";
 
 		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "WarehousesApi.java");
 

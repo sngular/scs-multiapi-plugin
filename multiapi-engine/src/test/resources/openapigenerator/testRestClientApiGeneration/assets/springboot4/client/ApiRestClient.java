@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -195,6 +196,26 @@ public class ApiRestClient {
     }
     defaultCookies.add(name, value);
     return this;
+  }
+
+  /**
+   * Adds a multipart part to the form parameters: an uploaded {@code MultipartFile} through its {@code Resource}, so it is written
+   * as a file part; simple values as text; each element of a collection as its own part; any other object as is (a JSON part).
+   * A null part is left out.
+   */
+  public void addFormPart(final MultiValueMap<String, Object> formParams, final String name, final Object value) {
+    if (value instanceof Collection) {
+      for (final Object item : (Collection<?>) value) {
+        addFormPart(formParams, name, item);
+      }
+    } else if (value instanceof MultipartFile) {
+      formParams.add(name, ((MultipartFile) value).getResource());
+    } else if (value instanceof CharSequence || value instanceof Number || value instanceof Boolean || value instanceof Enum
+               || value instanceof java.time.temporal.Temporal || value instanceof Date) {
+      formParams.add(name, parameterToString(value));
+    } else if (value != null) {
+      formParams.add(name, value);
+    }
   }
 
   public String parameterToString(final Object param) {

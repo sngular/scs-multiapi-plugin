@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.sngular.multifileplugin.testparameterschemaref.model.Warehouse;
-import com.sngular.multifileplugin.testparameterschemaref.model.PageFilters;
 
 public interface WarehousesApi {
 
   /**
    * GET /warehouses
-   * @param page pagination and sorting false @param filter a free form filter false
+   * @param pageNumber false @param pageSize false @param filter a free form filter false
    * @return  ok; (status code 200)
    */
 
@@ -40,7 +39,7 @@ public interface WarehousesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<Warehouse> searchWarehouses(@Parameter(name = "page", description = "pagination and sorting", required = false, schema = @Schema(description = "")) @RequestParam(name = "page", required = false) PageFilters page , @Parameter(name = "filter", description = "a free form filter", required = false, schema = @Schema(description = "")) @RequestParam(name = "filter", required = false) Object filter) {
+  default ResponseEntity<Warehouse> searchWarehouses(@Parameter(name = "pageNumber", required = false, schema = @Schema(description = "")) @RequestParam(name = "pageNumber", required = false) Integer pageNumber , @Parameter(name = "pageSize", required = false, schema = @Schema(description = "")) @RequestParam(name = "pageSize", required = false) Integer pageSize , @Parameter(name = "filter", description = "a free form filter", required = false, schema = @Schema(description = "")) @RequestParam(name = "filter", required = false) Object filter) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

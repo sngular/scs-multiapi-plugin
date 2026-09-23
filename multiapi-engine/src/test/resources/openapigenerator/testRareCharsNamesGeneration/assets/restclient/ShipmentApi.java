@@ -78,7 +78,7 @@ public class ShipmentApi {
    * @return ok; (status code 200)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public Shipment createShipment(String idempotencyKey, String sortBy, String sessionId, String shipmentId, Shipment shipment ) throws RestClientException {
+  public Shipment createShipment(String idempotencyKey, String sortBy, String sessionId, String shipmentId, Shipment shipment) throws RestClientException {
     return createShipmentWithHttpInfo(idempotencyKey, sortBy, sessionId, shipmentId, shipment).getBody();
   }
 

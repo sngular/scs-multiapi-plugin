@@ -24,7 +24,7 @@ public interface WarehousesApi {
 
   /**
    * GET /warehouses
-   * @param filters false @param sortBy false @param warehouseIds false
+   * @param pageNumber false @param pageSize false @param sortBy false @param warehouseIds false
    * @return  The warehouses; (status code 200)
    */
 
@@ -41,7 +41,7 @@ public interface WarehousesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<WarehousePageDTO> searchWarehouses(@Parameter(name = "filters", required = false, schema = @Schema(description = "")) @RequestParam(name = "filters", required = false) PageFilterDTO filters , @Parameter(name = "sort_by", required = false, schema = @Schema(description = "")) @RequestParam(name = "sort_by", required = false) String sortBy , @Parameter(name = "warehouse_ids", required = false, schema = @Schema(description = "")) @RequestParam(name = "warehouse_ids", required = false) List<Long> warehouseIds) {
+  default ResponseEntity<WarehousePageDTO> searchWarehouses(@Parameter(name = "page_number", required = false, schema = @Schema(description = "")) @RequestParam(name = "page_number", required = false) Integer pageNumber , @Parameter(name = "page_size", required = false, schema = @Schema(description = "")) @RequestParam(name = "page_size", required = false) Integer pageSize , @Parameter(name = "sort_by", required = false, schema = @Schema(description = "")) @RequestParam(name = "sort_by", required = false) String sortBy , @Parameter(name = "warehouse_ids", required = false, schema = @Schema(description = "")) @RequestParam(name = "warehouse_ids", required = false) List<Long> warehouseIds) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
@@ -68,7 +68,7 @@ public interface WarehousesApi {
   }
   /**
    * GET /warehouses/by-deep-filter
-   * @param filters false
+   * @param filtersPageNumber false @param filtersPageSize false
    * @return  The warehouses; (status code 200)
    */
 
@@ -85,7 +85,7 @@ public interface WarehousesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<WarehousePageDTO> searchWarehousesDeep(@Parameter(name = "filters", required = false, schema = @Schema(description = "")) @RequestParam(name = "filters", required = false) PageFilterDTO filters) {
+  default ResponseEntity<WarehousePageDTO> searchWarehousesDeep(@Parameter(name = "filters[page_number]", required = false, schema = @Schema(description = "")) @RequestParam(name = "filters[page_number]", required = false) Integer filtersPageNumber , @Parameter(name = "filters[page_size]", required = false, schema = @Schema(description = "")) @RequestParam(name = "filters[page_size]", required = false) Integer filtersPageSize) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

@@ -29,6 +29,7 @@ Maven and Gradle
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
+  - [Object-typed query parameters and multipart bodies](#object-typed-query-parameters-and-multipart-bodies)
   - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
 - [Property Validation](#property-validation)
 - [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
@@ -1063,6 +1064,26 @@ runs, and leaves the contract name where it belongs - on the wire:
 Header and cookie parameters are now bound explicitly with `@RequestHeader` and
 `@CookieValue`. Before, they were declared without a binding annotation, which
 made Spring resolve them as request parameters.
+
+### Object-typed query parameters and multipart bodies
+
+A query parameter whose schema is an object travels as its properties, as
+OpenAPI serializes it by default (`style: form`, `explode: true`):
+`?page_number=1&page_size=20`, or `?filters[page_number]=1` with
+`style: deepObject`.
+
+- The server interfaces and the `@HttpExchange` interfaces declare one
+  `@RequestParam` per property (`Integer page_number, Integer page_size`), so
+  Spring binds and sends each one. A `style: form, explode: false` object, which
+  travels as a single `filters=page_number,1,page_size,20` value, keeps its
+  object type.
+- The generated client classes keep the object argument and expand it as its
+  `style`/`explode` declare.
+
+A `multipart/form-data` request body with an inline schema has no model of its
+own: every generated API takes one argument per part (`MultipartFile file,
+String comment`). A multipart body that references a component schema keeps
+taking that model.
 
 ### Camel case Java names (useCamelCaseNames)
 
