@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MapperUtil {
@@ -38,7 +37,9 @@ public class MapperUtil {
     } else if (TypeConstants.ARRAY.equalsIgnoreCase(nodeType)) {
       type = TypeConstants.ARRAY;
     } else {
-      type = ObjectUtils.defaultIfNull(nodeType, TypeConstants.OBJECT);
+      // ApiTool.getType reports a schema without `type` as "", not null — as a composition that only
+      // declares allOf/anyOf/oneOf does — and an empty type renders as no type at all.
+      type = StringUtils.defaultIfBlank(nodeType, TypeConstants.OBJECT);
     }
     return type;
   }

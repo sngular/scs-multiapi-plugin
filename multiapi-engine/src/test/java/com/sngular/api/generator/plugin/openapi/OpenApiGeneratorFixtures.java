@@ -240,6 +240,12 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.externalfragmentpathref.model")
 					.modelNameSuffix("DTO").build());
 
+	static final List<SpecFile> TEST_EXTERNAL_COMPONENT_SCHEMA_REFS = List
+			.of(SpecFile.builder().filePath("openapigenerator/testExternalComponentSchemaRefs/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.externalcomponentschemarefs")
+					.modelPackage("com.sngular.multifileplugin.externalcomponentschemarefs.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -251,6 +257,13 @@ public final class OpenApiGeneratorFixtures {
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedRefInAllOf/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedrefinallof")
 					.modelPackage("com.sngular.multifileplugin.testnestedrefinallof.model")
+					.modelNameSuffix("DTO")
+					.useLombokModelAnnotation(true).build());
+
+	static final List<SpecFile> TEST_REF_TO_ALL_OF_PROPERTY = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRefToAllOfProperty/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testreftoallofproperty")
+					.modelPackage("com.sngular.multifileplugin.testreftoallofproperty.model")
 					.modelNameSuffix("DTO")
 					.useLombokModelAnnotation(true).build());
 
@@ -1852,6 +1865,38 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		final List<String> expectedTestApiModelFiles = List
 				.of(COMMON_PATH + "assets/InlineResponse200ListProductsDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateRefToAllOfProperty() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testreftoallofproperty";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testreftoallofproperty/model";
+
+		final String COMMON_PATH = "openapigenerator/testRefToAllOfProperty/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "assets/ClientsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/ClientDTO.java",
+				COMMON_PATH + "assets/ClientDataDTO.java", COMMON_PATH + "assets/ClientSearchResultDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateExternalComponentSchemaRefs() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/externalcomponentschemarefs";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/externalcomponentschemarefs/model";
+
+		final String COMMON_PATH = "openapigenerator/testExternalComponentSchemaRefs/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "assets/SalesPointsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/OpeningSlotDTO.java",
+				COMMON_PATH + "assets/SalesPointBaseDTO.java", COMMON_PATH + "assets/SalesPointDetailDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);

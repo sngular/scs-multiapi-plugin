@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -101,6 +102,52 @@ public class ModelBuilderTest {
 
     assertThat(itemsTypeOfAllOf(freeForm, typed)).hasToString("List<String>");
     assertThat(itemsTypeOfAllOf(typed, freeForm)).hasToString("List<String>");
+  }
+
+  @Test
+  void testAllOfRequiresOnlyWhatARequiredListNames() throws Exception {
+    // `allOf` combines constraints but requires nothing by itself: only `name` is listed as required,
+    // so the property contributed by the other member stays optional.
+    final SchemaObject schemaObject = buildSchema("Client", """
+        {"allOf": [
+          {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}}},
+          {"type": "object", "properties": {"client_id": {"type": "integer", "format": "int64"}}}
+        ]}""");
+
+    assertThat(requiredFieldNames(schemaObject)).containsExactly("name");
+  }
+
+  @Test
+  void testAllOfHonoursRequiredListsOutsideTheDeclaringMember() throws Exception {
+    // A value must satisfy every member, so a `required` list binds the properties declared by the
+    // other members, and so does one on the composing schema itself.
+    final SchemaObject schemaObject = buildSchema("Client", """
+        {"required": ["code"],
+         "allOf": [
+          {"type": "object", "properties": {"name": {"type": "string"}, "code": {"type": "string"}, "note": {"type": "string"}}},
+          {"required": ["name"]}
+        ]}""");
+
+    assertThat(requiredFieldNames(schemaObject)).containsExactlyInAnyOrder("name", "code");
+  }
+
+  @Test
+  void testAllOfNeverRequiresANullableProperty() throws Exception {
+    // As for a plain object, a required but nullable property must accept null.
+    final SchemaObject schemaObject = buildSchema("Client", """
+        {"allOf": [
+          {"type": "object", "properties": {"alias": {"type": "string", "nullable": true}}},
+          {"required": ["alias"]}
+        ]}""");
+
+    assertThat(requiredFieldNames(schemaObject)).isEmpty();
+  }
+
+  private static List<String> requiredFieldNames(final SchemaObject schemaObject) {
+    return schemaObject.getFieldObjectList().stream()
+                       .filter(SchemaFieldObject::isRequired)
+                       .map(SchemaFieldObject::getBaseName)
+                       .toList();
   }
 
   private Object itemsTypeOfAllOf(final String firstMember, final String secondMember) throws Exception {

@@ -1,0 +1,21 @@
+components:
+  schemas:
+    SalesPointBase:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+    SalesPointDetail:
+      allOf:
+        - $ref: '#/components/schemas/SalesPointBase'
+        - type: object
+          properties:
+            sales_point_id:
+              type: integer
+              format: int64
+    OpeningSlot:
+      type: object
+      properties:
+        day:
+          type: string

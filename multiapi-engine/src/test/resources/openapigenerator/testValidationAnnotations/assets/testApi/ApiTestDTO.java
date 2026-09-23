@@ -8,24 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.ArrayList;
-import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
-import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
 
 @JsonDeserialize(builder = ApiTestDTO.ApiTestDTOBuilder.class)
 public class ApiTestDTO {
 
   @JsonProperty(value ="testers")
-  @NotNull
-  private final List<String> testers;
+  private List<String> testers;
   @JsonProperty(value ="testName")
-  @NotNull
-  private final String testName;
+  private String testName;
 
   private ApiTestDTO(ApiTestDTOBuilder builder) {
     this.testers = builder.testers;
     this.testName = builder.testName;
 
-    validateRequiredAttributes();
   }
 
   public static ApiTestDTO.ApiTestDTOBuilder builder() {
@@ -63,14 +58,20 @@ public class ApiTestDTO {
     }
   }
 
-  @Schema(name = "testers", required = true)
+  @Schema(name = "testers", required = false)
   public List<String> getTesters() {
     return testers;
   }
+  public void setTesters(List<String> testers) {
+    this.testers = testers;
+  }
 
-  @Schema(name = "testName", required = true)
+  @Schema(name = "testName", required = false)
   public String getTestName() {
     return testName;
+  }
+  public void setTestName(String testName) {
+    this.testName = testName;
   }
 
   @Override
@@ -100,18 +101,5 @@ public class ApiTestDTO {
     return sb.toString();
   }
 
-  private void validateRequiredAttributes() {
-    boolean satisfiedCondition = true;
-
-    if (!Objects.nonNull(this.testers)) {
-      satisfiedCondition = false;
-    } else if (!Objects.nonNull(this.testName)) {
-      satisfiedCondition = false;
-    }
-
-    if (!satisfiedCondition) {
-      throw new ModelClassException("ApiTestDTO");
-    }
-  }
 
 }

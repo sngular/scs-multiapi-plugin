@@ -10,6 +10,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -164,11 +165,15 @@ public class OpenApiUtil {
     final JsonNode pathsNode = openApi.get(PATHS);
     if (pathsNode instanceof ObjectNode) {
       final ObjectNode paths = (ObjectNode) pathsNode;
+      // Schemas the path items reference by file that the root contract also declares keep their
+      // identity, so the operations use the schema's own model rather than an Inline* copy of it.
+      final Set<String> rootSchemaNames = new HashSet<>();
+      openApi.at("/components/schemas").fieldNames().forEachRemaining(rootSchemaNames::add);
       final Map<String, JsonNode> resolvedItems = new HashMap<>();
       paths.fields().forEachRemaining(pathItem -> {
         final JsonNode pathValue = pathItem.getValue();
         if (ApiTool.hasRef(pathValue)) {
-          final JsonNode resolved = SchemaUtil.solveRef(ApiTool.getRefValue(pathValue), new HashMap<>(), rootFilePath);
+          final JsonNode resolved = SchemaUtil.solveRef(ApiTool.getRefValue(pathValue), new HashMap<>(), rootFilePath, rootSchemaNames);
           if (Objects.nonNull(resolved)) {
             resolvedItems.put(pathItem.getKey(), resolved);
           }

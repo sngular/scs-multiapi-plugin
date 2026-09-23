@@ -1,0 +1,16 @@
+# Modular contract whose path items live in their own files and reference schemas with a
+# file-level fragment into components.yml. Unlike testExternalFragmentPathRefs, the root contract
+# also declares those schemas, so the operations must use the schemas' own models rather than
+# Inline* copies of them.
+openapi: 3.0.3
+info:
+  title: External component schema refs
+  version: 1.0.0
+paths:
+  /sales-points/{id}:
+    $ref: './paths/salesPoint.yml'
+components:
+  schemas:
+    SalesPointBase: { $ref: 'components.yml#/components/schemas/SalesPointBase' }
+    SalesPointDetail: { $ref: 'components.yml#/components/schemas/SalesPointDetail' }
+    OpeningSlot: { $ref: 'components.yml#/components/schemas/OpeningSlot' }

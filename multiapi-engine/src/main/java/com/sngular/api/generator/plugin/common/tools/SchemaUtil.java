@@ -9,10 +9,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,10 +28,24 @@ public class SchemaUtil {
 
   static final ObjectMapper PARSER = new ObjectMapper(new YAMLFactory());
 
+  private static final String COMPONENT_SCHEMAS_POINTER = "/components/schemas/";
+
   protected SchemaUtil() {
   }
 
   public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final URI rootFilePath) {
+    return solveRef(refValue, schemaMap, rootFilePath, Collections.emptySet());
+  }
+
+  /**
+   * Resolves {@code refValue} like {@link #solveRef(String, Map, URI)}, except that any reference
+   * found inside the loaded file(s) that points to a component schema the root contract declares
+   * under one of {@code rootSchemaNames} is kept as a local {@code #/components/schemas/<name>}
+   * reference instead of being inlined. Inlining it would turn a named schema into an anonymous copy,
+   * which is then generated as an {@code Inline*} class that duplicates, or fails to match, the
+   * model of that schema.
+   */
+  public static JsonNode solveRef(final String refValue, final Map<String, JsonNode> schemaMap, final URI rootFilePath, final Set<String> rootSchemaNames) {
     JsonNode solvedRef;
     if (StringUtils.isNotEmpty(refValue)) {
       if (refValue.startsWith("#")) {
@@ -39,7 +55,7 @@ public class SchemaUtil {
         final var refValueArr = refValue.split("#");
         final var filePath = refValueArr[0];
         final URI actualFileBase = resolveActualBaseUri(rootFilePath, filePath);
-        solvedRef = loadAndResolveRefs(rootFilePath, filePath);
+        solvedRef = loadAndResolveRefs(rootFilePath, filePath, rootSchemaNames);
         if (ApiTool.hasComponents(solvedRef)) {
           schemaMap.putAll(ApiTool.getComponentSchemas(solvedRef));
           if (refValueArr.length > 1) {
@@ -93,81 +109,103 @@ public class SchemaUtil {
   }
 
   static void resolveNestedFileRefs(final JsonNode node, final URI baseUri) {
+    resolveNestedFileRefs(node, baseUri, Collections.emptySet());
+  }
+
+  private static void resolveNestedFileRefs(final JsonNode node, final URI baseUri, final Set<String> rootSchemaNames) {
     if (Objects.isNull(node)) {
       return;
     }
     if (node.isArray()) {
-      resolveNestedFileRefsInArray((ArrayNode) node, baseUri);
+      resolveNestedFileRefsInArray((ArrayNode) node, baseUri, rootSchemaNames);
     } else if (node.isObject()) {
-      resolveNestedFileRefsInObject(node, baseUri);
+      resolveNestedFileRefsInObject(node, baseUri, rootSchemaNames);
     }
   }
 
-  private static void resolveNestedFileRefsInArray(final ArrayNode array, final URI baseUri) {
+  private static void resolveNestedFileRefsInArray(final ArrayNode array, final URI baseUri, final Set<String> rootSchemaNames) {
     for (int i = 0; i < array.size(); i++) {
       final JsonNode element = array.get(i);
       if (element.isObject() && element.has("$ref")) {
-        final boolean resolved = resolveRefInArray(array, i, baseUri);
+        final boolean resolved = resolveRefInArray(array, i, baseUri, rootSchemaNames);
         if (!resolved) {
-          resolveNestedFileRefs(element, baseUri);
+          resolveNestedFileRefs(element, baseUri, rootSchemaNames);
         }
       } else {
-        resolveNestedFileRefs(element, baseUri);
+        resolveNestedFileRefs(element, baseUri, rootSchemaNames);
       }
     }
   }
 
-  private static void resolveNestedFileRefsInObject(final JsonNode node, final URI baseUri) {
+  private static void resolveNestedFileRefsInObject(final JsonNode node, final URI baseUri, final Set<String> rootSchemaNames) {
     final Iterator<Entry<String, JsonNode>> fields = node.fields();
     while (fields.hasNext()) {
       final Entry<String, JsonNode> field = fields.next();
       if (field.getValue().isObject() && field.getValue().has("$ref")) {
-        final boolean resolved = resolveRefInObject((ObjectNode) node, field.getKey(), baseUri);
+        final boolean resolved = resolveRefInObject((ObjectNode) node, field.getKey(), baseUri, rootSchemaNames);
         if (!resolved) {
-          resolveNestedFileRefs(field.getValue(), baseUri);
+          resolveNestedFileRefs(field.getValue(), baseUri, rootSchemaNames);
         }
       } else {
-        resolveNestedFileRefs(field.getValue(), baseUri);
+        resolveNestedFileRefs(field.getValue(), baseUri, rootSchemaNames);
       }
     }
   }
 
-  private static boolean resolveRefInArray(final ArrayNode array, final int index, final URI baseUri) {
-    final JsonNode refNode = array.get(index);
+  private static boolean resolveRefInArray(final ArrayNode array, final int index, final URI baseUri, final Set<String> rootSchemaNames) {
+    final JsonNode resolved = resolveNestedRef(array.get(index), baseUri, rootSchemaNames);
+    if (Objects.nonNull(resolved)) {
+      array.set(index, resolved);
+    }
+    return Objects.nonNull(resolved);
+  }
+
+  private static boolean resolveRefInObject(final ObjectNode parent, final String fieldName, final URI baseUri, final Set<String> rootSchemaNames) {
+    final JsonNode resolved = resolveNestedRef(parent.get(fieldName), baseUri, rootSchemaNames);
+    if (Objects.nonNull(resolved)) {
+      parent.set(fieldName, resolved);
+    }
+    return Objects.nonNull(resolved);
+  }
+
+  /**
+   * Returns what an external file reference should be replaced with: a local reference when it
+   * names a component schema the root contract declares, otherwise the referenced content with its
+   * own file references resolved. Returns {@code null} to leave the reference untouched.
+   */
+  private static JsonNode resolveNestedRef(final JsonNode refNode, final URI baseUri, final Set<String> rootSchemaNames) {
     final String refVal = refNode.get("$ref").textValue();
     if (StringUtils.isEmpty(refVal) || refVal.startsWith("#") || refVal.startsWith("http") || PathUtil.isRemoteUri(refVal)) {
-      return false;
+      return null;
+    }
+    final String rootSchemaName = rootComponentSchemaName(refVal, rootSchemaNames);
+    if (Objects.nonNull(rootSchemaName)) {
+      return PARSER.createObjectNode().put("$ref", "#" + COMPONENT_SCHEMAS_POINTER + rootSchemaName);
     }
     try {
       final URI nestedBase = resolveActualBaseUri(baseUri, refVal);
       final JsonNode resolved = resolveExternalFileRef(baseUri, refVal);
       if (Objects.nonNull(resolved)) {
-        array.set(index, resolved);
-        resolveNestedFileRefs(resolved, nestedBase);
-        return true;
+        resolveNestedFileRefs(resolved, nestedBase, rootSchemaNames);
       }
+      return resolved;
     } catch (final Exception ignored) {
+      return null;
     }
-    return false;
   }
 
-  private static boolean resolveRefInObject(final ObjectNode parent, final String fieldName, final URI baseUri) {
-    final JsonNode refNode = parent.get(fieldName);
-    final String refVal = refNode.get("$ref").textValue();
-    if (StringUtils.isEmpty(refVal) || refVal.startsWith("#") || refVal.startsWith("http") || PathUtil.isRemoteUri(refVal)) {
-      return false;
+  /**
+   * The name of the root component schema that {@code refValue} points to, as in
+   * {@code ../components.yml#/components/schemas/Client}, or {@code null} when it points elsewhere
+   * or the root contract does not declare a schema of that name.
+   */
+  private static String rootComponentSchemaName(final String refValue, final Set<String> rootSchemaNames) {
+    final String fragment = StringUtils.substringAfter(refValue, "#");
+    if (!fragment.startsWith(COMPONENT_SCHEMAS_POINTER)) {
+      return null;
     }
-    try {
-      final URI nestedBase = resolveActualBaseUri(baseUri, refVal);
-      final JsonNode resolved = resolveExternalFileRef(baseUri, refVal);
-      if (Objects.nonNull(resolved)) {
-        parent.set(fieldName, resolved);
-        resolveNestedFileRefs(resolved, nestedBase);
-        return true;
-      }
-    } catch (final Exception ignored) {
-    }
-    return false;
+    final String schemaName = fragment.substring(COMPONENT_SCHEMAS_POINTER.length());
+    return !schemaName.contains("/") && rootSchemaNames.contains(schemaName) ? schemaName : null;
   }
 
   static URI resolveActualBaseUriPublic(final URI rootFilePath, final String filePath) {
@@ -215,10 +253,14 @@ public class SchemaUtil {
   }
 
   public static JsonNode loadAndResolveRefs(final URI rootFilePath, final String refPath) {
+    return loadAndResolveRefs(rootFilePath, refPath, Collections.emptySet());
+  }
+
+  private static JsonNode loadAndResolveRefs(final URI rootFilePath, final String refPath, final Set<String> rootSchemaNames) {
     final JsonNode node = getPojoFromRef(rootFilePath, refPath);
     final URI actualBase = resolveActualBaseUri(rootFilePath, refPath);
     if (Objects.nonNull(actualBase)) {
-      resolveNestedFileRefs(node, actualBase);
+      resolveNestedFileRefs(node, actualBase, rootSchemaNames);
     }
     return node;
   }
