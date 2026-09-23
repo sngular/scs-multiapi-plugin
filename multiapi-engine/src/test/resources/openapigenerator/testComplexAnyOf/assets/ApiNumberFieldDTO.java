@@ -110,7 +110,7 @@ public class ApiNumberFieldDTO {
     }
 
     public ApiNumberFieldDTO.ApiNumberFieldDTOBuilder defaultValues(List<Object> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;

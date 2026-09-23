@@ -46,7 +46,7 @@ public class ApiEnumFieldDTO {
     private String defaultValue;
 
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder enumValues(List<String> enumValues) {
-      if (!enumValues.isEmpty()) {
+      if (Objects.nonNull(enumValues) && !enumValues.isEmpty()) {
         this.enumValues.addAll(enumValues);
       }
       return this;
@@ -65,7 +65,7 @@ public class ApiEnumFieldDTO {
     }
 
     public ApiEnumFieldDTO.ApiEnumFieldDTOBuilder defaultValues(List<String> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;

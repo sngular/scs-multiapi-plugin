@@ -13,7 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ApiTestInfoDTO {
 
   @JsonProperty(value ="testers")
-  @Singular("tester")
+  @Singular(value = "tester", ignoreNullCollections = true)
   private List<String> testers;
 
   @JsonProperty(value ="testName")

@@ -19,11 +19,11 @@ public class SequenceFieldDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<FieldDTO> properties;
 
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
+  @Singular(value = "defaultValue", ignoreNullCollections = true)
   private List<Object> defaultValues;
 
   @JsonProperty(value ="seqEnum")

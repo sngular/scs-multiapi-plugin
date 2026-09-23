@@ -252,6 +252,18 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.inlineschemanameclashes.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).build());
 
+	static final List<SpecFile> TEST_PARAMETER_BINDING = List
+			.of(SpecFile.builder().filePath("openapigenerator/testParameterBinding/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.parameterbinding")
+					.modelPackage("com.sngular.multifileplugin.parameterbinding.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_PARAMETER_BINDING_REACTIVE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testParameterBinding/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.parameterbindingreactive")
+					.modelPackage("com.sngular.multifileplugin.parameterbindingreactive.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -1921,6 +1933,21 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 				COMMON_PATH + "assets/InlineResponse200RegisterSalesPointDTO.java", COMMON_PATH + "assets/NewSalesPointDTO.java",
 				COMMON_PATH + "assets/NewSalesPointServicesDTO.java", COMMON_PATH + "assets/Response200RegisterSalesPointServicesDTO.java",
 				COMMON_PATH + "assets/SalesPointV1DTO.java", COMMON_PATH + "assets/SalesPointV1ServicesDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateParameterBinding(final String packageFolder, final String assetsFolder) {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/" + packageFolder + "/model";
+
+		final String COMMON_PATH = "openapigenerator/testParameterBinding/assets/" + assetsFolder + "/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "SalesPointsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "SalesPointPageDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);

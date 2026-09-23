@@ -53,7 +53,7 @@ public class OrderDTO {
     }
 
     public OrderDTO.OrderDTOBuilder lines(List<OrderLineDTO> lines) {
-      if (!lines.isEmpty()) {
+      if (Objects.nonNull(lines) && !lines.isEmpty()) {
         this.lines.addAll(lines);
       }
       return this;

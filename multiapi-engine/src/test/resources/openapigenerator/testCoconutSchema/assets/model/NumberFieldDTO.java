@@ -22,7 +22,7 @@ public class NumberFieldDTO {
   private String type;
 
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
+  @Singular(value = "defaultValue", ignoreNullCollections = true)
   private List<Object> defaultValues;
 
   @JsonProperty(value ="name")

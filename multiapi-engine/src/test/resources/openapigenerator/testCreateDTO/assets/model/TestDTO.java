@@ -14,7 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 public class TestDTO {
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<PropertiesDTO> properties;
 
   @JsonProperty(value ="id")

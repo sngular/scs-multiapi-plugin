@@ -72,7 +72,7 @@ public class ApiStringFieldDTO {
     }
 
     public ApiStringFieldDTO.ApiStringFieldDTOBuilder properties(List<String> properties) {
-      if (!properties.isEmpty()) {
+      if (Objects.nonNull(properties) && !properties.isEmpty()) {
         this.properties.addAll(properties);
       }
       return this;
@@ -86,7 +86,7 @@ public class ApiStringFieldDTO {
     }
 
     public ApiStringFieldDTO.ApiStringFieldDTOBuilder defaultValues(List<String> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;

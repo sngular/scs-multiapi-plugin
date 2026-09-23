@@ -38,7 +38,7 @@ public class OrderLineDTO {
     private String ref;
 
     public OrderLineDTO.OrderLineDTOBuilder products(List<OrderProductDTO> products) {
-      if (!products.isEmpty()) {
+      if (Objects.nonNull(products) && !products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;

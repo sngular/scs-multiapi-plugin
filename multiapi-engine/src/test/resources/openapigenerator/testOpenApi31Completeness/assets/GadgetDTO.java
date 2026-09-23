@@ -122,7 +122,7 @@ public class GadgetDTO {
     }
 
     public GadgetDTO.GadgetDTOBuilder coords(List<BigDecimal> coords) {
-      if (!coords.isEmpty()) {
+      if (Objects.nonNull(coords) && !coords.isEmpty()) {
         this.coords.addAll(coords);
       }
       return this;

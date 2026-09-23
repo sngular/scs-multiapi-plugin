@@ -35,7 +35,7 @@ public class SchemaDTO {
   private String subjectName;
 
   @JsonProperty(value ="requiredFields")
-  @Singular("requiredField")
+  @Singular(value = "requiredField", ignoreNullCollections = true)
   private List<String> requiredFields;
 
 

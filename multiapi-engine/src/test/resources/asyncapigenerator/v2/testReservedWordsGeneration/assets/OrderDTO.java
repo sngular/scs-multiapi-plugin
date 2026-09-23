@@ -54,7 +54,7 @@ public class OrderDTO {
 
     @JsonProperty(value ="new")
     public OrderDTO.OrderDTOBuilder _new(List<OrderLineDTO> _new) {
-      if (!_new.isEmpty()) {
+      if (Objects.nonNull(_new) && !_new.isEmpty()) {
         this._new.addAll(_new);
       }
       return this;

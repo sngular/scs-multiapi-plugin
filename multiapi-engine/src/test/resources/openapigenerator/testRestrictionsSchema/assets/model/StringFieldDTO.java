@@ -21,7 +21,7 @@ public class StringFieldDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<String> properties;
 
   @JsonProperty(value ="name")

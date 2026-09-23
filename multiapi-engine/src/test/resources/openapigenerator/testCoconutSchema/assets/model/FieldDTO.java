@@ -18,7 +18,7 @@ public class FieldDTO {
   private Integer precision;
 
   @JsonProperty(value ="defaultItem")
-  @Singular("_defaultItem")
+  @Singular(value = "_defaultItem", ignoreNullCollections = true)
   private List<FieldDTO> defaultItem;
 
   @JsonProperty(value ="maximum")
@@ -40,7 +40,7 @@ public class FieldDTO {
   private String keyType;
 
   @JsonProperty(value ="requiredValues")
-  @Singular("requiredValue")
+  @Singular(value = "requiredValue", ignoreNullCollections = true)
   private List<String> requiredValues;
 
   @JsonProperty(value ="optionalUnion")
@@ -59,15 +59,15 @@ public class FieldDTO {
   private Boolean defaultValue;
 
   @JsonProperty(value ="enumValues")
-  @Singular("enumValue")
+  @Singular(value = "enumValue", ignoreNullCollections = true)
   private List<String> enumValues;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<String> properties;
 
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
+  @Singular(value = "defaultValue", ignoreNullCollections = true)
   private List<String> defaultValues;
 
   @JsonProperty(value ="unionEnum")
@@ -133,7 +133,7 @@ public class FieldDTO {
   private Integer mapSize;
 
   @JsonProperty(value ="mapTypes")
-  @Singular("mapType")
+  @Singular(value = "mapType", ignoreNullCollections = true)
   private List<FieldDTO> mapTypes;
 
   @JsonProperty(value ="format")
@@ -161,7 +161,7 @@ public class FieldDTO {
   private Integer minItems;
 
   @JsonProperty(value ="values")
-  @Singular("value")
+  @Singular(value = "value", ignoreNullCollections = true)
   private List<FieldDTO> values;
 
   @JsonProperty(value ="minimum")

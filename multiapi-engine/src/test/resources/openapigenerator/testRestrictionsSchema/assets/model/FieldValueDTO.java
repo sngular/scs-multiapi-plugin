@@ -42,7 +42,7 @@ public class FieldValueDTO {
   private String keyType;
 
   @JsonProperty(value ="requiredValues")
-  @Singular("requiredValue")
+  @Singular(value = "requiredValue", ignoreNullCollections = true)
   private List<String> requiredValues;
 
   @JsonProperty(value ="optionalUnion")
@@ -64,11 +64,11 @@ public class FieldValueDTO {
   private FieldDTO property;
 
   @JsonProperty(value ="enumValues")
-  @Singular("enumValue")
+  @Singular(value = "enumValue", ignoreNullCollections = true)
   private List<String> enumValues;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<String> properties;
 
   @JsonProperty(value ="unionEnum")
@@ -134,7 +134,7 @@ public class FieldValueDTO {
   private Integer mapSize;
 
   @JsonProperty(value ="mapTypes")
-  @Singular("mapType")
+  @Singular(value = "mapType", ignoreNullCollections = true)
   private List<FieldDTO> mapTypes;
 
   @JsonProperty(value ="format")
@@ -162,7 +162,7 @@ public class FieldValueDTO {
   private Integer minItems;
 
   @JsonProperty(value ="values")
-  @Singular("value")
+  @Singular(value = "value", ignoreNullCollections = true)
   private List<FieldDTO> values;
 
   @JsonProperty(value ="minimum")

@@ -15,21 +15,21 @@ public class ObjectFieldDTO {
   private Boolean mandatory;
 
   @JsonProperty(value ="requiredValues")
-  @Singular("requiredValue")
+  @Singular(value = "requiredValue", ignoreNullCollections = true)
   private List<String> requiredValues;
 
   @JsonProperty(value ="type")
   private String type;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<FieldDTO> properties;
 
   @JsonProperty(value ="name")
   private String name;
 
   @JsonProperty(value ="defaultValue")
-  @Singular("_defaultValue")
+  @Singular(value = "_defaultValue", ignoreNullCollections = true)
   private List<Object> defaultValue;
 
 

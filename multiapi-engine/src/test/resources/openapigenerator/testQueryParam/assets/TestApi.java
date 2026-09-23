@@ -38,7 +38,7 @@ public interface TestApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<String> testReactiveQueryParam(@Parameter(name = "param1", description = "First test parameter", required = false, schema = @Schema(description = "")) @RequestParam(required = false) String param1 , @Parameter(name = "param2", description = "Second test parameter", required = true, schema = @Schema(description = "")) @RequestParam(required = true) String param2) {
+  default ResponseEntity<String> testReactiveQueryParam(@Parameter(name = "param1", description = "First test parameter", required = false, schema = @Schema(description = "")) @RequestParam(name = "param1", required = false) String param1 , @Parameter(name = "param2", description = "Second test parameter", required = true, schema = @Schema(description = "")) @RequestParam(name = "param2", required = true) String param2) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

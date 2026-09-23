@@ -71,7 +71,7 @@ public class Shipment {
     private Final _final;
 
     public Shipment.ShipmentBuilder tags(List<String> tags) {
-      if (!tags.isEmpty()) {
+      if (Objects.nonNull(tags) && !tags.isEmpty()) {
         this.tags.addAll(tags);
       }
       return this;
@@ -91,7 +91,7 @@ public class Shipment {
     }
 
     public Shipment.ShipmentBuilder packages(List<Package> packages) {
-      if (!packages.isEmpty()) {
+      if (Objects.nonNull(packages) && !packages.isEmpty()) {
         this.packages.addAll(packages);
       }
       return this;
@@ -106,7 +106,7 @@ public class Shipment {
 
     @JsonProperty(value ="new")
     public Shipment.ShipmentBuilder _new(List<String> _new) {
-      if (!_new.isEmpty()) {
+      if (Objects.nonNull(_new) && !_new.isEmpty()) {
         this._new.addAll(_new);
       }
       return this;
@@ -120,7 +120,7 @@ public class Shipment {
     }
 
     public Shipment.ShipmentBuilder interfaces(List<String> interfaces) {
-      if (!interfaces.isEmpty()) {
+      if (Objects.nonNull(interfaces) && !interfaces.isEmpty()) {
         this.interfaces.addAll(interfaces);
       }
       return this;

@@ -93,7 +93,7 @@ public class ApiSequenceFieldDTO {
     }
 
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder properties(List<ApiTypeArrayDTO> properties) {
-      if (!properties.isEmpty()) {
+      if (Objects.nonNull(properties) && !properties.isEmpty()) {
         this.properties.addAll(properties);
       }
       return this;
@@ -107,7 +107,7 @@ public class ApiSequenceFieldDTO {
     }
 
     public ApiSequenceFieldDTO.ApiSequenceFieldDTOBuilder defaultValues(List<Object> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;

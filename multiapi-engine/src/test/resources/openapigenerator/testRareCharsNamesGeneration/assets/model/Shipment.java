@@ -82,7 +82,7 @@ public class Shipment {
 
     @JsonProperty(value ="package-list")
     public Shipment.ShipmentBuilder packageList(List<String> packageList) {
-      if (!packageList.isEmpty()) {
+      if (Objects.nonNull(packageList) && !packageList.isEmpty()) {
         this.packageList.addAll(packageList);
       }
       return this;

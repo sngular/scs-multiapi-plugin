@@ -13,7 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 public class SchemaDTO {
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<FieldDTO> properties;
 
   @JsonProperty(value ="type")

@@ -68,7 +68,7 @@ public class ApiArrayFieldDTO {
     }
 
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder defaultValues(List<ApiTypeArrayDTO> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;
@@ -102,7 +102,7 @@ public class ApiArrayFieldDTO {
     }
 
     public ApiArrayFieldDTO.ApiArrayFieldDTOBuilder values(List<ApiTypeArrayDTO> values) {
-      if (!values.isEmpty()) {
+      if (Objects.nonNull(values) && !values.isEmpty()) {
         this.values.addAll(values);
       }
       return this;

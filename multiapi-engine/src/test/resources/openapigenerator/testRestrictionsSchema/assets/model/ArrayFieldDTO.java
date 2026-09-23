@@ -33,11 +33,11 @@ public class ArrayFieldDTO {
   private Integer minItems;
 
   @JsonProperty(value ="values")
-  @Singular("value")
+  @Singular(value = "value", ignoreNullCollections = true)
   private List<FieldDTO> values;
 
   @JsonProperty(value ="defaultValue")
-  @Singular("_defaultValue")
+  @Singular(value = "_defaultValue", ignoreNullCollections = true)
   private List<FieldDTO> defaultValue;
 
 

@@ -34,7 +34,7 @@ public class ApiTestAllOfDTO {
     private String testName;
 
     public ApiTestAllOfDTO.ApiTestAllOfDTOBuilder testers(List<String> testers) {
-      if (!testers.isEmpty()) {
+      if (Objects.nonNull(testers) && !testers.isEmpty()) {
         this.testers.addAll(testers);
       }
       return this;

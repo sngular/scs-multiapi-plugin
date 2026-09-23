@@ -284,7 +284,14 @@ public class MapperPathUtil {
                           .dataType(dateType)
                           .isCollection(ApiTool.hasItems(getContentOrSchema(refParameter)))
                           .importName(getParameterImport(dateType))
+                          .defaultValue(getDefaultValue(ApiTool.getNode(refParameter, SCHEMA)))
                           .build();
+  }
+
+  /** The parameter schema's scalar {@code default} as text, or null when it declares none. */
+  private static String getDefaultValue(final JsonNode schema) {
+    final JsonNode defaultNode = Objects.nonNull(schema) ? schema.get("default") : null;
+    return Objects.nonNull(defaultNode) && defaultNode.isValueNode() && !defaultNode.isNull() ? defaultNode.asText() : null;
   }
 
   /**

@@ -40,7 +40,7 @@ public class OrderLineDTO {
 
     @JsonProperty(value ="continue")
     public OrderLineDTO.OrderLineDTOBuilder _continue(List<String> _continue) {
-      if (!_continue.isEmpty()) {
+      if (Objects.nonNull(_continue) && !_continue.isEmpty()) {
         this._continue.addAll(_continue);
       }
       return this;

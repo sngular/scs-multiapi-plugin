@@ -74,7 +74,7 @@ public class ApiSchemaDTO {
     }
 
     public ApiSchemaDTO.ApiSchemaDTOBuilder requiredFields(List<ApiTypeArrayDTO> requiredFields) {
-      if (!requiredFields.isEmpty()) {
+      if (Objects.nonNull(requiredFields) && !requiredFields.isEmpty()) {
         this.requiredFields.addAll(requiredFields);
       }
       return this;

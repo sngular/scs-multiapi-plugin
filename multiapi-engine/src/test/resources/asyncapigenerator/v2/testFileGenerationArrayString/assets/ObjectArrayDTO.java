@@ -18,7 +18,7 @@ public class ObjectArrayDTO {
   private String info;
 
   @JsonProperty(value ="players")
-  @Singular("player")
+  @Singular(value = "player", ignoreNullCollections = true)
   private List<String> players;
 
 

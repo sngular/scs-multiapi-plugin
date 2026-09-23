@@ -12,14 +12,14 @@ import lombok.extern.jackson.Jacksonized;
 public class EnumFieldDTO {
 
   @JsonProperty(value ="enumValues")
-  @Singular("enumValue")
+  @Singular(value = "enumValue", ignoreNullCollections = true)
   private List<String> enumValues;
 
   @JsonProperty(value ="type")
   private String type;
 
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
+  @Singular(value = "defaultValue", ignoreNullCollections = true)
   private List<String> defaultValues;
 
   @JsonProperty(value ="name")

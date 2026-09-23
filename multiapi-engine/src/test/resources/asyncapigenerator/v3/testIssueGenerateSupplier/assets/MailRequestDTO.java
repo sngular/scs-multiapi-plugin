@@ -18,7 +18,7 @@ public class MailRequestDTO {
   private ConfigurationDTO config;
 
   @JsonProperty(value ="recipients")
-  @Singular("recipient")
+  @Singular(value = "recipient", ignoreNullCollections = true)
   private List<String> recipients;
 
 
