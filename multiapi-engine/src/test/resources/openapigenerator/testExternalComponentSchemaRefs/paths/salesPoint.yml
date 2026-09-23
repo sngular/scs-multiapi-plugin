@@ -1,0 +1,38 @@
+get:
+  operationId: getSalesPoint
+  tags: [SalesPoints]
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '200':
+      description: The sales point
+      content:
+        application/json:
+          schema:
+            $ref: '../components.yml#/components/schemas/SalesPointDetail'
+put:
+  operationId: saveOpeningSlots
+  tags: [SalesPoints]
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../components.yml#/components/schemas/OpeningSlot'
+  responses:
+    '200':
+      description: Saved

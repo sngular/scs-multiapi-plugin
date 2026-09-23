@@ -240,6 +240,12 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.externalfragmentpathref.model")
 					.modelNameSuffix("DTO").build());
 
+	static final List<SpecFile> TEST_EXTERNAL_COMPONENT_SCHEMA_REFS = List
+			.of(SpecFile.builder().filePath("openapigenerator/testExternalComponentSchemaRefs/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.externalcomponentschemarefs")
+					.modelPackage("com.sngular.multifileplugin.externalcomponentschemarefs.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -1875,6 +1881,22 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/ClientDTO.java",
 				COMMON_PATH + "assets/ClientDataDTO.java", COMMON_PATH + "assets/ClientSearchResultDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateExternalComponentSchemaRefs() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/externalcomponentschemarefs";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/externalcomponentschemarefs/model";
+
+		final String COMMON_PATH = "openapigenerator/testExternalComponentSchemaRefs/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "assets/SalesPointsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/OpeningSlotDTO.java",
+				COMMON_PATH + "assets/SalesPointBaseDTO.java", COMMON_PATH + "assets/SalesPointDetailDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);
