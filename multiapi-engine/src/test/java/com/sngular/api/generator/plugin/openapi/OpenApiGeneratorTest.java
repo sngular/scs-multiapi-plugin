@@ -126,6 +126,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateExternalFragmentPathRefGeneration()),
         Arguments.of("testExternalComponentSchemaRefs", OpenApiGeneratorFixtures.TEST_EXTERNAL_COMPONENT_SCHEMA_REFS,
             OpenApiGeneratorFixtures.validateExternalComponentSchemaRefs()),
+        Arguments.of("testInlineSchemaNameClashes", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_NAME_CLASHES,
+            OpenApiGeneratorFixtures.validateInlineSchemaNameClashes()),
         Arguments.of("testNestedExternalRefs", OpenApiGeneratorFixtures.TEST_NESTED_EXTERNAL_REFS,
             OpenApiGeneratorFixtures.validateNestedExternalRefs()),
         Arguments.of("testNestedRefInAllOf", OpenApiGeneratorFixtures.TEST_NESTED_REF_IN_ALLOF,

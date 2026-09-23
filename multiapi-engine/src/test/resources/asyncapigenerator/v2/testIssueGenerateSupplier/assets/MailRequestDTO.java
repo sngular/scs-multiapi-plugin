@@ -14,8 +14,8 @@ public class MailRequestDTO {
   @JsonProperty(value ="sender")
   private String sender;
 
-  @JsonProperty(value ="configuration")
-  private ConfigurationDTO configuration;
+  @JsonProperty(value ="config")
+  private ConfigurationDTO config;
 
   @JsonProperty(value ="recipients")
   @Singular("recipient")
@@ -24,9 +24,9 @@ public class MailRequestDTO {
 
   @Builder
   @Jacksonized
-  private MailRequestDTO(String sender, ConfigurationDTO configuration, List<String> recipients) {
+  private MailRequestDTO(String sender, ConfigurationDTO config, List<String> recipients) {
     this.sender = sender;
-    this.configuration = configuration;
+    this.config = config;
     this.recipients = recipients;
 
   }

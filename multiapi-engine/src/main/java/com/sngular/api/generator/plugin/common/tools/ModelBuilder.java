@@ -56,6 +56,35 @@ public final class ModelBuilder {
       final Map<String, JsonNode> totalSchemas, final String className, final JsonNode model,
       final Set<String> antiLoopList, final Map<String, SchemaObject> compositedSchemas, final String parentPackage,
       final CommonSpecFile specFile, final Path baseDir) {
+    InlineSchemaNaming.enterSchema(inlineParentName(className, specFile));
+    try {
+      return doBuildSchemaObject(totalSchemas, className, model, antiLoopList, compositedSchemas, parentPackage, specFile, baseDir);
+    } finally {
+      InlineSchemaNaming.exitSchema();
+    }
+  }
+
+  /**
+   * The name a schema lends to the inline schemas it declares when their class names clash. An
+   * {@code Inline*} wrapper's class name is already final (prefixed and suffixed), and a class named
+   * after it would keep the {@code Inline} prefix, which exempts it from the prefix and suffix its
+   * references get; so the wrapper lends its bare name instead
+   * ({@code InlineResponse200GetItemsDTO} lends {@code Response200GetItems}).
+   */
+  private static String inlineParentName(final String className, final CommonSpecFile specFile) {
+    final String inlinePrefix = MapperUtil.calculatePrefixName("Inline", specFile);
+    String parentName = StringUtils.defaultString(className);
+    if (StringUtils.startsWith(parentName, inlinePrefix)) {
+      parentName = StringUtils.removeEnd(StringUtils.removeStart(parentName, inlinePrefix), StringUtils.defaultString(specFile.getModelNameSuffix()));
+    }
+    return parentName;
+  }
+
+  @SuppressWarnings("checkstyle:ParameterNumber")
+  private static SchemaObject doBuildSchemaObject(
+      final Map<String, JsonNode> totalSchemas, final String className, final JsonNode model,
+      final Set<String> antiLoopList, final Map<String, SchemaObject> compositedSchemas, final String parentPackage,
+      final CommonSpecFile specFile, final Path baseDir) {
 
     antiLoopList.add(WordUtils.capitalizeFully(className));
     final var schemaBuilder = SchemaObject.builder()
@@ -400,7 +429,8 @@ public final class ModelBuilder {
       setFieldType(field, fieldBody, schema, specFile, fieldName);
       fieldObjectArrayList.add(field);
     } else {
-      fieldObjectArrayList.addAll(processFieldObjectList(buildingSchema, fieldName, fieldName, fieldBody, specFile, totalSchemas, compositedSchemas, antiLoopList, baseDir));
+      fieldObjectArrayList.addAll(processFieldObjectList(buildingSchema, fieldName, InlineSchemaNaming.inlineClassName(fieldName), fieldBody, specFile, totalSchemas,
+                                                         compositedSchemas, antiLoopList, baseDir));
     }
     applyMetadata(fieldObjectArrayList, fieldName, fieldBody);
     return fieldObjectArrayList;
@@ -528,7 +558,14 @@ public final class ModelBuilder {
                                    .build());
     } else {
       final var items = ApiTool.getItems(schema);
-      if (ApiTool.hasRef(items)) {
+      final String primitiveItemType = ApiTool.hasRef(items) ? primitiveRefType(items, totalSchemas, specFile) : null;
+      if (Objects.nonNull(primitiveItemType)) {
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, primitiveItemType))
+                                     .build());
+      } else if (ApiTool.hasRef(items)) {
         fieldObjectArrayList.add(
             processRef(fieldName, items, SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getSimpleType(items, specFile)), totalSchemas, compositedSchemas,
                        antiLoopList, specFile, baseDir));
@@ -562,7 +599,8 @@ public final class ModelBuilder {
         fieldObjectArrayList.add(SchemaFieldObject
                                      .builder()
                                      .baseName(fieldName)
-                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getPojoName(fieldName, specFile)))
+                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY,
+                                                                                  MapperUtil.getPojoName(StringUtils.defaultIfBlank(className, fieldName), specFile)))
                                      .build());
       } else {
         final String itemType = ApiTool.isBinary(items) ? TypeConstants.MULTIPART_FILE : MapperUtil.getSimpleType(items, specFile);
@@ -610,7 +648,7 @@ public final class ModelBuilder {
       fieldObjectArrayList
           .add(SchemaFieldObject
                    .builder()
-                   .baseName(name)
+                   .baseName(StringUtils.defaultIfBlank(fieldName, name))
                    .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.OBJECT, MapperUtil.getPojoName(name, specFile)))
                    .build());
     }
@@ -908,6 +946,30 @@ public final class ModelBuilder {
       }
     }
     return fieldObjectArrayList;
+  }
+
+  /**
+   * The Java type of a {@code $ref} to a named primitive schema, such as {@code State: {type: string}},
+   * or {@code null} when it refers to anything else. On the wire such a value is the primitive itself,
+   * so an array of them must be a list of that primitive: typing it after the named schema would make
+   * each element an object wrapping the value, which cannot be read from, or written as, the plain
+   * JSON value. Enums are left out, as they have a model of their own.
+   */
+  private static String primitiveRefType(final JsonNode refNode, final Map<String, JsonNode> totalSchemas, final CommonSpecFile specFile) {
+    final JsonNode refSchema = totalSchemas.get(MapperUtil.getRefSchemaKey(refNode));
+    final String type;
+    if (Objects.isNull(refSchema) || ApiTool.isEnum(refSchema)) {
+      type = null;
+    } else if (ApiTool.isDateTime(refSchema)) {
+      type = MapperUtil.getDateType(refSchema, specFile);
+    } else if (ApiTool.isBinary(refSchema)) {
+      type = TypeConstants.MULTIPART_FILE;
+    } else if (ApiTool.isString(refSchema) || ApiTool.isNumber(refSchema) || ApiTool.isBoolean(refSchema)) {
+      type = MapperUtil.getSimpleType(refSchema, specFile);
+    } else {
+      type = null;
+    }
+    return type;
   }
 
   private static SchemaFieldObject processRef(

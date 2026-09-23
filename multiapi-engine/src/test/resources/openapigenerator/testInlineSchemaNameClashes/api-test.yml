@@ -1,0 +1,64 @@
+# Inline schemas are named after the property that declares them. `services` declares inline
+# schemas of three different shapes (two components and an inline response), so each gets a class
+# named after its parent too; `address` declares a single shape and keeps its short name.
+openapi: 3.0.3
+info:
+  title: Inline schema name clashes
+  version: 1.0.0
+paths:
+  /sales-points:
+    post:
+      operationId: registerSalesPoint
+      tags: [SalesPoints]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSalesPoint'
+      responses:
+        '200':
+          description: The registered sales point
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        activated:
+                          type: boolean
+components:
+  schemas:
+    NewSalesPoint:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            type: object
+            required: [service_id]
+            properties:
+              service_id:
+                type: integer
+                format: int64
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+    SalesPointV1:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            type: object
+            properties:
+              serviceType:
+                type: string
+              serviceId:
+                type: integer
+                format: int64

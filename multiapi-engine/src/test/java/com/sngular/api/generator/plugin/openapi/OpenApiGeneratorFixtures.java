@@ -246,6 +246,12 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.externalcomponentschemarefs.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).build());
 
+	static final List<SpecFile> TEST_INLINE_SCHEMA_NAME_CLASHES = List
+			.of(SpecFile.builder().filePath("openapigenerator/testInlineSchemaNameClashes/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.inlineschemanameclashes")
+					.modelPackage("com.sngular.multifileplugin.inlineschemanameclashes.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -1897,6 +1903,24 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/OpeningSlotDTO.java",
 				COMMON_PATH + "assets/SalesPointBaseDTO.java", COMMON_PATH + "assets/SalesPointDetailDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateInlineSchemaNameClashes() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/inlineschemanameclashes";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/inlineschemanameclashes/model";
+
+		final String COMMON_PATH = "openapigenerator/testInlineSchemaNameClashes/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "assets/SalesPointsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/AddressDTO.java",
+				COMMON_PATH + "assets/InlineResponse200RegisterSalesPointDTO.java", COMMON_PATH + "assets/NewSalesPointDTO.java",
+				COMMON_PATH + "assets/NewSalesPointServicesDTO.java", COMMON_PATH + "assets/Response200RegisterSalesPointServicesDTO.java",
+				COMMON_PATH + "assets/SalesPointV1DTO.java", COMMON_PATH + "assets/SalesPointV1ServicesDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);

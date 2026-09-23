@@ -143,6 +143,42 @@ public class ModelBuilderTest {
     assertThat(requiredFieldNames(schemaObject)).isEmpty();
   }
 
+  @Test
+  void testArrayOfRefsToANamedPrimitiveIsAListOfThatPrimitive() throws Exception {
+    // On the wire each element is the bare value, e.g. {"states": ["ACTIVE"]}, so typing the list
+    // after the named schema would make every element an unreadable wrapper object.
+    final Map<String, JsonNode> totalSchemas = new HashMap<>();
+    totalSchemas.put("SCHEMAS/STATE", new ObjectMapper().readTree("{\"type\": \"string\"}"));
+    totalSchemas.put("SCHEMAS/DAY", new ObjectMapper().readTree("{\"type\": \"string\", \"format\": \"date\"}"));
+    totalSchemas.put("SCHEMAS/PRIORITY", new ObjectMapper().readTree("{\"type\": \"integer\", \"format\": \"int64\"}"));
+
+    final SchemaObject schemaObject = buildSchema(totalSchemas, "Filter", """
+        {"type": "object", "properties": {
+          "states": {"type": "array", "items": {"$ref": "#/components/schemas/State"}},
+          "days": {"type": "array", "items": {"$ref": "#/components/schemas/Day"}},
+          "priorities": {"type": "array", "items": {"$ref": "#/components/schemas/Priority"}}
+        }}""");
+
+    assertThat(fieldType(schemaObject, "states")).hasToString("List<String>");
+    assertThat(fieldType(schemaObject, "days")).hasToString("List<LocalDate>");
+    assertThat(fieldType(schemaObject, "priorities")).hasToString("List<Long>");
+  }
+
+  private SchemaObject buildSchema(final Map<String, JsonNode> totalSchemas, final String className, final String json) throws Exception {
+    final JsonNode node = new ObjectMapper().readTree(json);
+    final CommonSpecFile specFile = CommonSpecFile.builder().modelPackage("com.sngular.test").build();
+
+    return ModelBuilder.buildSchemaObject(totalSchemas, className, node, new HashSet<>(), new HashMap<>(), "parent", specFile, Path.of("."));
+  }
+
+  private static Object fieldType(final SchemaObject schemaObject, final String fieldName) {
+    return schemaObject.getFieldObjectList().stream()
+                       .filter(field -> fieldName.equals(field.getBaseName()))
+                       .findFirst()
+                       .orElseThrow()
+                       .getDataType();
+  }
+
   private static List<String> requiredFieldNames(final SchemaObject schemaObject) {
     return schemaObject.getFieldObjectList().stream()
                        .filter(SchemaFieldObject::isRequired)
