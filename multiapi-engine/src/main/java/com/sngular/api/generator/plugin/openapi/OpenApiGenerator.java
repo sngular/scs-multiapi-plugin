@@ -28,6 +28,7 @@ import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.SpecConventions;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
+import com.sngular.api.generator.plugin.common.tools.InlineSchemaNaming;
 import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.common.tools.PathUtil;
@@ -242,7 +243,12 @@ public class OpenApiGenerator {
 
     final var totalSchemas = OpenApiUtil.processPaths(openAPI, globalObject.getSchemaMap(), specFile);
     templateFactory.setModelPackageName(modelPackage);
-    processModels(specFile, modelPackage, totalSchemas, overwriteModel);
+    InlineSchemaNaming.prepare(totalSchemas);
+    try {
+      processModels(specFile, modelPackage, totalSchemas, overwriteModel);
+    } finally {
+      InlineSchemaNaming.clear();
+    }
   }
 
   /**
