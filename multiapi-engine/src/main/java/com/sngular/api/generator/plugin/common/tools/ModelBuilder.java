@@ -182,7 +182,7 @@ public final class ModelBuilder {
     } else if (ApiTool.hasPatternProperties(schema)) {
       fieldObjectArrayList.add(buildPatternPropertiesField(resolveFieldName(schema, nameSchema), schema, specFile));
     } else if (ApiTool.isAllOf(schema)) {
-      fieldObjectArrayList.addAll(processAllOf(totalSchemas, ApiTool.getAllOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+      fieldObjectArrayList.addAll(processAllOf(totalSchemas, schema, specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isAnyOf(schema)) {
       fieldObjectArrayList.addAll(processAnyOfOneOf(buildingSchema, totalSchemas, ApiTool.getAnyOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
     } else if (ApiTool.isOneOf(schema)) {
@@ -706,7 +706,7 @@ public final class ModelBuilder {
     String schemaCombinatorType = "";
     if (ApiTool.isAllOf(schema)) {
       fieldObjectArrayList.addAll(
-          processAllOf(totalSchemas, ApiTool.getAllOf(schema), specFile, compositedSchemas, antiLoopList, baseDir));
+          processAllOf(totalSchemas, schema, specFile, compositedSchemas, antiLoopList, baseDir));
       schemaCombinatorType = ALL_OF_COMBINATOR;
     } else if (ApiTool.isAnyOf(schema)) {
       fieldObjectArrayList.addAll(
@@ -800,24 +800,51 @@ public final class ModelBuilder {
   }
 
   private static Set<SchemaFieldObject> processAllOf(
-      final Map<String, JsonNode> totalSchemas, final JsonNode schemaList, final CommonSpecFile specFile,
+      final Map<String, JsonNode> totalSchemas, final JsonNode allOfSchema, final CommonSpecFile specFile,
       final Map<String, SchemaObject> compositedSchemas, final Set<String> antiLoopList, final Path baseDir) {
     final Set<SchemaFieldObject> fieldObjectArrayList = new HashSet<>();
+    final List<JsonNode> members = new ArrayList<>();
 
-    for (JsonNode ref : schemaList) {
+    for (JsonNode ref : ApiTool.getAllOf(allOfSchema)) {
       final Set<SchemaFieldObject> memberFields = new HashSet<>();
       if (ApiTool.hasRef(ref)) {
         final var schemaToProcess = totalSchemas.get(MapperUtil.getRefSchemaKey(ref));
-        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, ref, antiLoopList, baseDir));
-      } else if (ApiTool.hasProperties(ref)) {
-        ApiTool.getProperties(ref).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, ref, antiLoopList, baseDir));
-      }
-      for (var fieldObject : memberFields) {
-        fieldObject.setRequired(true);
+        members.add(schemaToProcess);
+        ApiTool.getProperties(schemaToProcess).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, schemaToProcess, antiLoopList,
+                                                                                  baseDir));
+      } else {
+        members.add(ref);
+        if (ApiTool.hasProperties(ref)) {
+          ApiTool.getProperties(ref).forEachRemaining(processProperties("", totalSchemas, compositedSchemas, memberFields, specFile, ref, antiLoopList, baseDir));
+        }
       }
       mergeAllOfMember(fieldObjectArrayList, memberFields);
     }
+    markAllOfRequiredFields(fieldObjectArrayList, allOfSchema, members);
     return fieldObjectArrayList;
+  }
+
+  /**
+   * Marks as required the properties that the {@code allOf} makes required. Combining schemas
+   * requires nothing by itself: a property is required only when a {@code required} list names it,
+   * and since a value must satisfy every member, that list may sit on any member (even one that does
+   * not declare the property, such as {@code allOf: [{$ref: Base}, {required: [id]}]}) or on the
+   * composing schema itself. As for any object, a nullable property is never marked required.
+   */
+  private static void markAllOfRequiredFields(final Set<SchemaFieldObject> fields, final JsonNode allOfSchema, final List<JsonNode> members) {
+    final List<JsonNode> requiringSchemas = new ArrayList<>(members);
+    requiringSchemas.add(allOfSchema);
+    for (final var field : fields) {
+      final String name = field.getBaseName();
+      if (requiringSchemas.stream().anyMatch(schema -> ApiTool.checkIfRequired(schema, name))
+          && members.stream().noneMatch(member -> isNullableProperty(member, name))) {
+        field.setRequired(true);
+      }
+    }
+  }
+
+  private static boolean isNullableProperty(final JsonNode schema, final String propertyName) {
+    return ApiTool.hasProperties(schema) && ApiTool.isNullable(ApiTool.getNode(schema, "properties").get(propertyName));
   }
 
   /**
