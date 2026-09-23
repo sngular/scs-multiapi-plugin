@@ -755,7 +755,7 @@ that will be used. Each specFile has their own configuration:
 | useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
 | clientComponent          | With `callMode`, whether the `*Api` client classes are `@Component`s. `false`: declare them yourself ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to true by default**   | false                                             |
 | useHttpExchange          | With `callMode`, generates `@HttpExchange` interfaces; needs `springBootVersion` >= 3 ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to false by default**                 | true                                              |
-| useCamelCaseNames        | Declares Java names in camel case (`page_num` as `pageNum`, `getPageNum()`); JSON and request names stay the contract's. **It´s initialized to false by default**                                   | true                                              |
+| useCamelCaseNames | Camel-case Java names, JSON as-is. Default false | true |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
