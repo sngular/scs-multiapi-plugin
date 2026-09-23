@@ -528,7 +528,14 @@ public final class ModelBuilder {
                                    .build());
     } else {
       final var items = ApiTool.getItems(schema);
-      if (ApiTool.hasRef(items)) {
+      final String primitiveItemType = ApiTool.hasRef(items) ? primitiveRefType(items, totalSchemas, specFile) : null;
+      if (Objects.nonNull(primitiveItemType)) {
+        fieldObjectArrayList.add(SchemaFieldObject
+                                     .builder()
+                                     .baseName(fieldName)
+                                     .dataType(SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, primitiveItemType))
+                                     .build());
+      } else if (ApiTool.hasRef(items)) {
         fieldObjectArrayList.add(
             processRef(fieldName, items, SchemaFieldObjectType.fromTypeList(TypeConstants.ARRAY, MapperUtil.getSimpleType(items, specFile)), totalSchemas, compositedSchemas,
                        antiLoopList, specFile, baseDir));
@@ -908,6 +915,30 @@ public final class ModelBuilder {
       }
     }
     return fieldObjectArrayList;
+  }
+
+  /**
+   * The Java type of a {@code $ref} to a named primitive schema, such as {@code State: {type: string}},
+   * or {@code null} when it refers to anything else. On the wire such a value is the primitive itself,
+   * so an array of them must be a list of that primitive: typing it after the named schema would make
+   * each element an object wrapping the value, which cannot be read from, or written as, the plain
+   * JSON value. Enums are left out, as they have a model of their own.
+   */
+  private static String primitiveRefType(final JsonNode refNode, final Map<String, JsonNode> totalSchemas, final CommonSpecFile specFile) {
+    final JsonNode refSchema = totalSchemas.get(MapperUtil.getRefSchemaKey(refNode));
+    final String type;
+    if (Objects.isNull(refSchema) || ApiTool.isEnum(refSchema)) {
+      type = null;
+    } else if (ApiTool.isDateTime(refSchema)) {
+      type = MapperUtil.getDateType(refSchema, specFile);
+    } else if (ApiTool.isBinary(refSchema)) {
+      type = TypeConstants.MULTIPART_FILE;
+    } else if (ApiTool.isString(refSchema) || ApiTool.isNumber(refSchema) || ApiTool.isBoolean(refSchema)) {
+      type = MapperUtil.getSimpleType(refSchema, specFile);
+    } else {
+      type = null;
+    }
+    return type;
   }
 
   private static SchemaFieldObject processRef(
