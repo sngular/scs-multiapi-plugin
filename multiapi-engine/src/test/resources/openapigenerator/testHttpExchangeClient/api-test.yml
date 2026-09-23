@@ -1,0 +1,100 @@
+# callMode client generated as Spring HTTP service interfaces (useHttpExchange): relative paths,
+# parameter bindings as the contract declares them, JSON and multipart bodies, and every verb.
+openapi: 3.0.3
+info:
+  title: HTTP exchange client
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /clients/{client_id}:
+    get:
+      operationId: getClient
+      tags: [Clients]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+        - name: since
+          in: query
+          schema: { type: string, format: date }
+        - name: X-Correlation-Id
+          in: header
+          schema: { type: string }
+      responses:
+        '200':
+          description: The client
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Client' }
+    delete:
+      operationId: deleteClient
+      tags: [Clients]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '204':
+          description: Deleted
+  /clients:
+    get:
+      operationId: searchClients
+      tags: [Clients]
+      parameters:
+        - name: page_num
+          in: query
+          schema: { type: integer, format: int32, default: 0 }
+      responses:
+        '200':
+          description: The clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Client' }
+    post:
+      operationId: createClient
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Client' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Client' }
+  /clients/{client_id}/document:
+    put:
+      operationId: uploadDocument
+      tags: [Clients]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary }
+                comment: { type: string }
+      responses:
+        '204':
+          description: Uploaded
+components:
+  schemas:
+    Client:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        client_id: { type: integer, format: int64 }

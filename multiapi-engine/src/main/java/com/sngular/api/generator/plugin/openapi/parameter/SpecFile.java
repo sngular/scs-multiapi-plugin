@@ -27,5 +27,23 @@ public class SpecFile extends CommonSpecFile {
   private boolean useTagsGroup;
 
   private boolean isReactive;
+
+  /**
+   * With {@code callMode}, whether the generated {@code *Api} client classes are Spring {@code @Component}s. Unset means
+   * {@code true}, as before; {@code false} leaves declaring them, with a configured client, to the service. The reactive
+   * client classes never were components.
+   */
+  private Boolean clientComponent;
+
+  /**
+   * With {@code callMode}, generates each {@code *Api} as a Spring HTTP service interface ({@code @HttpExchange}) instead of a
+   * client class, to be backed by the service's own {@code RestClient}/{@code WebClient} through
+   * {@code HttpServiceProxyFactory} (or {@code @ImportHttpServices} on Spring Boot 4). Requires Spring Boot 3 or later.
+   */
+  private boolean useHttpExchange;
+
+  public boolean shouldRegisterClientComponent() {
+    return !Boolean.FALSE.equals(clientComponent);
+  }
 }
 

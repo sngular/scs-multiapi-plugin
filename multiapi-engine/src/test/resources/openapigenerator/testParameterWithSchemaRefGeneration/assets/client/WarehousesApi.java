@@ -3,6 +3,7 @@ package com.sngular.multifileplugin.testparameterschemarefclient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.sngular.multifileplugin.testparameterschemarefclient.client.ApiRestClient;
 
@@ -30,8 +31,37 @@ public class WarehousesApi {
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "";
+
+  /**
+   * Builds its own ApiRestClient, sending requests to the contract's first server, and is the constructor Spring uses when the class is a component.
+   */
   public WarehousesApi() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured RestTemplate, to the contract's first server.
+   */
+  public WarehousesApi(final ApiRestClient apiRestClient) {
+    this.apiRestClient = Objects.requireNonNull(apiRestClient, "apiRestClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * root URI (RestTemplateBuilder.rootUri(...)).
+   */
+  public WarehousesApi(final ApiRestClient apiRestClient, final String basePath) {
+    this(apiRestClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -70,7 +100,7 @@ public class WarehousesApi {
     String[] localVarAuthNames = new String[] {};
 
     ParameterizedTypeReference<Warehouse> localVarReturnType = new ParameterizedTypeReference<Warehouse>() {};
-    return apiRestClient.invokeAPI("","/warehouses", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiRestClient.invokeAPI(basePath,"/warehouses", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
 }

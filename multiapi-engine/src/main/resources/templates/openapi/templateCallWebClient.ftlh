@@ -50,6 +50,7 @@ import ${import};
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ${packageClient}.ApiWebClient;
 <#list model_imports as import>
@@ -82,8 +83,37 @@ public class ${className?cap_first}Api {
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "${pathObjects[0].globalObject.url!""}";
+
+  /**
+   * Builds its own ApiWebClient, sending requests to the contract's first server.
+   */
   public ${className?cap_first}Api() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured WebClient, to the contract's first server.
+   */
+  public ${className?cap_first}Api(final ApiWebClient apiWebClient) {
+    this.apiWebClient = Objects.requireNonNull(apiWebClient, "apiWebClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * base URL (WebClient.Builder.baseUrl(...)).
+   */
+  public ${className?cap_first}Api(final ApiWebClient apiWebClient, final String basePath) {
+    this(apiWebClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -108,10 +138,10 @@ public class ${className?cap_first}Api {
    * ${operation.operationType} ${path.pathName}: <#if operation.summary?has_content>${operation.summary}<#else>""</#if>
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
-   * <#list operation.parameterObjects as parameter>@param ${parameter.variableName} ${parameter.description} ${parameter.required?c}</#list>
+   * <#list operation.parameterObjects as parameter>@param ${parameter.variableName} ${parameter.description!""} ${parameter.required?c}</#list>
   </#if>
   <#if path.parameterObjects?has_content>
-   * <#list path.parameterObjects as parameter>@param ${parameter.variableName} ${parameter.description} ${parameter.required?c}</#list>
+   * <#list path.parameterObjects as parameter>@param ${parameter.variableName} ${parameter.description!""} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
    * <#list operation.requestObjects as request><#list request.contentObjects as content>@param ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
@@ -221,7 +251,7 @@ public class ${className?cap_first}Api {
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
-    return apiWebClient.invokeAPI("${path.globalObject.url!""}","${path.pathName}", HttpMethod.${operation.operationType}, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiWebClient.invokeAPI(basePath,"${path.pathName}", HttpMethod.${operation.operationType}, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
 
@@ -230,12 +260,12 @@ public class ${className?cap_first}Api {
   <#if operation.responseObjects?has_content>
   <#if operation.parameterObjects?has_content>
    <#list operation.parameterObjects as parameter>
-   * @param ${parameter.variableName} ${parameter.description} <#if parameter.required == true>(required)</#if>
+   * @param ${parameter.variableName} ${parameter.description!""} <#if parameter.required == true>(required)</#if>
    </#list>
   </#if>
   <#if path.parameterObjects?has_content>
 <#list operation.parameterObjects as parameter>
-  * @param ${parameter.variableName} ${parameter.description} <#if parameter.required == true>(required)</#if>
+  * @param ${parameter.variableName} ${parameter.description!""} <#if parameter.required == true>(required)</#if>
 </#list>
   </#if>
   <#if operation.requestObjects?has_content>
@@ -271,11 +301,11 @@ public class ${className?cap_first}Api {
       <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
       <#if operation.requestObjects?has_content>
       <#list operation.requestObjects as request><#list request.contentObjects as content> ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>
-      </@compress>).<#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
+      </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
   }
 
-  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
-  <#else> ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
+  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
+  <#else> Mono<ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>
   <#list operation.requestObjects as request>
@@ -297,7 +327,7 @@ public class ${className?cap_first}Api {
 
     <#if operation.requestObjects?has_content>
     <#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>
-    </@compress>).<#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">toEntityList<#else>toEntity</#if>(localVarReturnType);
+    </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);
   }
 
     </#list>

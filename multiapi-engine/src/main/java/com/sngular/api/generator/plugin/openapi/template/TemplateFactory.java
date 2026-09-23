@@ -83,6 +83,8 @@ public class TemplateFactory extends CommonTemplateFactory {
     if (specFile.isCallMode()) {
       addToRoot("authObject", authObject);
       addToRoot("clientPackage", specFile.getClientPackage());
+      addToRoot("clientComponent", specFile.shouldRegisterClientComponent());
+      addToRoot("isReactive", specFile.isReactive());
     }
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile),
@@ -90,7 +92,13 @@ public class TemplateFactory extends CommonTemplateFactory {
   }
 
   private String getTemplateClientApi(final SpecFile specFile) {
-    return specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+    final String template;
+    if (specFile.isUseHttpExchange()) {
+      template = TemplateIndexConstants.TEMPLATE_CALL_HTTP_EXCHANGE_API;
+    } else {
+      template = specFile.isReactive() ? TemplateIndexConstants.TEMPLATE_CALL_WEB_API : TemplateIndexConstants.TEMPLATE_CALL_REST_API;
+    }
+    return template;
   }
 
   private String getTemplateApi(final SpecFile specFile) {

@@ -264,6 +264,27 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.parameterbindingreactive.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
 
+	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.httpexchange")
+					.modelPackage("com.sngular.multifileplugin.httpexchange.model")
+					.clientPackage("com.sngular.multifileplugin.httpexchange.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).build());
+
+	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT_REACTIVE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.httpexchangereactive")
+					.modelPackage("com.sngular.multifileplugin.httpexchangereactive.model")
+					.clientPackage("com.sngular.multifileplugin.httpexchangereactive.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_REST_CLIENT_WITHOUT_COMPONENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.restclientnocomponent")
+					.modelPackage("com.sngular.multifileplugin.restclientnocomponent.model")
+					.clientPackage("com.sngular.multifileplugin.restclientnocomponent.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).clientComponent(false).build());
+
 	static final List<SpecFile> TEST_NESTED_EXTERNAL_REFS = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNestedExternalRefs/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnestedexternalref")
@@ -1948,6 +1969,38 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "SalesPointsApi.java");
 
 		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "SalesPointPageDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateHttpExchangeClient(final String packageFolder, final String assetsFolder) {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/" + packageFolder + "/model";
+
+		final String COMMON_PATH = "openapigenerator/testHttpExchangeClient/assets/" + assetsFolder + "/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "ClientsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "ClientDTO.java");
+
+		// The interface is backed by the service's own client: no generated HTTP plumbing or authentication.
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null)
+				&& !path.resolve(DEFAULT_TARGET_API + "/client").toFile().exists();
+	}
+
+	static Function<Path, Boolean> validateRestClientWithoutComponent() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/restclientnocomponent";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/restclientnocomponent/model";
+
+		final String COMMON_PATH = "openapigenerator/testHttpExchangeClient/assets/nocomponent/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "ClientsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "ClientDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);

@@ -14,6 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.sngular.api.generator.plugin.exception.InvalidAPIException;
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -132,6 +133,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateParameterBinding("parameterbinding", "imperative")),
         Arguments.of("testParameterBindingReactive", OpenApiGeneratorFixtures.TEST_PARAMETER_BINDING_REACTIVE,
             OpenApiGeneratorFixtures.validateParameterBinding("parameterbindingreactive", "reactive")),
+        Arguments.of("testRestClientWithoutComponent", OpenApiGeneratorFixtures.TEST_REST_CLIENT_WITHOUT_COMPONENT,
+            OpenApiGeneratorFixtures.validateRestClientWithoutComponent()),
         Arguments.of("testNestedExternalRefs", OpenApiGeneratorFixtures.TEST_NESTED_EXTERNAL_REFS,
             OpenApiGeneratorFixtures.validateNestedExternalRefs()),
         Arguments.of("testNestedRefInAllOf", OpenApiGeneratorFixtures.TEST_NESTED_REF_IN_ALLOF,
@@ -227,5 +230,21 @@ class OpenApiGeneratorTest {
   void testExceptionForTestGenerationWithNoOperationId() {
     Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
         .isInstanceOf(InvalidAPIException.class);
+  }
+
+  @Test
+  void testHttpExchangeClientNeedsSpringBoot3() {
+    // @HttpExchange is part of Spring Framework 6, so interfaces generated for Spring Boot 2 would not compile.
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("Spring Boot 3");
+  }
+
+  @Test
+  void testHttpExchangeClientNeedsCallMode() {
+    final List<SpecFile> serverSpec = List.of(OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT.get(0).toBuilder().callMode(false).build());
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(serverSpec))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("callMode");
   }
 }

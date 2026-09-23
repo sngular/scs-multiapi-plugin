@@ -94,6 +94,25 @@ public class ApiRestClient {
     this.authentications = Collections.unmodifiableMap(authentications);
   }
 
+  /**
+   * Sends requests through the given, already configured {@link RestTemplate} (message converters, interceptors, timeouts,
+   * root URI) instead of building one. Requests with an empty base path resolve against its root URI, as set with
+   * {@code RestTemplateBuilder.rootUri(...)}.
+   */
+  public ApiRestClient(final RestTemplate restTemplate) {
+    this(restTemplate, new HashMap<String, Authentication>());
+  }
+
+  /**
+   * As {@link #ApiRestClient(RestTemplate)}, also applying the contract's security schemes with the given authentications.
+   */
+  public ApiRestClient(final RestTemplate restTemplate, final Map<String, Authentication> authentications) {
+    this.dateFormat = createDefaultDateFormat();
+    addDefaultHeader("User-Agent", "Java-SDK");
+    this.restTemplate = Objects.requireNonNull(restTemplate, "restTemplate");
+    this.authentications = Collections.unmodifiableMap(authentications);
+  }
+
   public static DateFormat createDefaultDateFormat() {
     final DateFormat dateFormat = new DateFormat() {
       private final StdDateFormat fmt = new StdDateFormat()
@@ -330,7 +349,7 @@ public class ApiRestClient {
         finalUri += "?" + queryUri;
       }
       String expandedPath = this.expandPath(finalUri, uriParams);
-      final UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(basePath).path(expandedPath);
+      final UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(resolveBasePath(basePath)).path(expandedPath);
 
       URI uri;
       try {
@@ -361,6 +380,21 @@ public class ApiRestClient {
       } else {
         throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
       }
+  }
+
+  /**
+   * The base path a request goes to: the given one or, when it is empty, the root URI of the {@link RestTemplate}, so a
+   * client configured with {@code RestTemplateBuilder.rootUri(...)} decides where requests are sent.
+   */
+  protected String resolveBasePath(final String basePath) {
+    if (basePath != null && !basePath.isEmpty()) {
+      return basePath;
+    }
+    final String rootUri = restTemplate.getUriTemplateHandler().expand("/").toString();
+    if (!URI.create(rootUri).isAbsolute()) {
+      throw new RestClientException("No base path to send the request to: set one on the API, or give its RestTemplate a root URI");
+    }
+    return rootUri.endsWith("/") ? rootUri.substring(0, rootUri.length() - 1) : rootUri;
   }
 
   protected void addHeadersToRequest(final HttpHeaders headers, final BodyBuilder requestBuilder) {

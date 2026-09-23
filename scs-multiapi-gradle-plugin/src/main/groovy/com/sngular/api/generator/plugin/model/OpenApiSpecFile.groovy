@@ -38,6 +38,10 @@ class OpenApiSpecFile {
 
   Boolean isReactive
 
+  Boolean clientComponent
+
+  Boolean useHttpExchange
+
   TypeConstants.TimeType useTimeType
 
 }

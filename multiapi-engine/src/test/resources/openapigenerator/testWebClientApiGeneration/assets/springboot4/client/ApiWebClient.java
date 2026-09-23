@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import tools.jackson.databind.DeserializationFeature;
@@ -75,6 +76,24 @@ public class ApiWebClient {
     this.dateFormat = createDefaultDateFormat();
     this.objectMapper = createDefaultObjectMapper(this.dateFormat);
     this.webClient = buildWebClient(this.objectMapper);
+    this.authentications = Collections.unmodifiableMap(authentications);
+  }
+
+  /**
+   * Sends requests through the given, already configured {@link WebClient} (codecs, filters, timeouts, base URL) instead of
+   * building one. Requests with an empty base path are relative, so the client's {@code WebClient.Builder.baseUrl(...)} applies.
+   */
+  public ApiWebClient(final WebClient webClient) {
+    this(webClient, new HashMap<String, Authentication>());
+  }
+
+  /**
+   * As {@link #ApiWebClient(WebClient)}, also applying the contract's security schemes with the given authentications.
+   */
+  public ApiWebClient(final WebClient webClient, final Map<String, Authentication> authentications) {
+    this.dateFormat = createDefaultDateFormat();
+    this.objectMapper = createDefaultObjectMapper(this.dateFormat);
+    this.webClient = Objects.requireNonNull(webClient, "webClient");
     this.authentications = Collections.unmodifiableMap(authentications);
   }
 
