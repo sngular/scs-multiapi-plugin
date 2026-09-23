@@ -3,6 +3,7 @@ package com.sngular.multifileplugin.restclientWithRequestObjects;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.sngular.multifileplugin.restclientWithRequestObjects.client.ApiRestClient;
 
@@ -30,8 +31,37 @@ public class TestApi {
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "http://localhost:8080/v1";
+
+  /**
+   * Builds its own ApiRestClient, sending requests to the contract's first server, and is the constructor Spring uses when the class is a component.
+   */
   public TestApi() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured RestTemplate, to the contract's first server.
+   */
+  public TestApi(final ApiRestClient apiRestClient) {
+    this.apiRestClient = Objects.requireNonNull(apiRestClient, "apiRestClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * root URI (RestTemplateBuilder.rootUri(...)).
+   */
+  public TestApi(final ApiRestClient apiRestClient, final String basePath) {
+    this(apiRestClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -72,7 +102,7 @@ public class TestApi {
     String[] localVarAuthNames = new String[] {};
 
     ParameterizedTypeReference<ApiTestResponseDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestResponseDTO>() {};
-    return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/form_url_encoded", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiRestClient.invokeAPI(basePath,"/test/form_url_encoded", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
   /**
@@ -108,7 +138,7 @@ public class TestApi {
     String[] localVarAuthNames = new String[] {};
 
     ParameterizedTypeReference<ApiTestResponseDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestResponseDTO>() {};
-    return apiRestClient.invokeAPI("http://localhost:8080/v1","/test/multipart", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiRestClient.invokeAPI(basePath,"/test/multipart", HttpMethod.GET, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
 }

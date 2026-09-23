@@ -50,6 +50,7 @@ import ${import};
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ${packageClient}.ApiRestClient;
 
@@ -64,7 +65,9 @@ import ${packageAuth}.${authSecurity?cap_first};
   </#list>
 </#if>
 
+<#if clientComponent>
 import org.springframework.stereotype.Component;
+</#if>
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -76,15 +79,46 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.HttpClientErrorException;
 
+<#if clientComponent>
 @Component()
+</#if>
 public class ${className?cap_first}Api {
 
   private ApiRestClient apiRestClient;
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "${pathObjects[0].globalObject.url!""}";
+
+  /**
+   * Builds its own ApiRestClient, sending requests to the contract's first server, and is the constructor Spring uses when the class is a component.
+   */
   public ${className?cap_first}Api() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured RestTemplate, to the contract's first server.
+   */
+  public ${className?cap_first}Api(final ApiRestClient apiRestClient) {
+    this.apiRestClient = Objects.requireNonNull(apiRestClient, "apiRestClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * root URI (RestTemplateBuilder.rootUri(...)).
+   */
+  public ${className?cap_first}Api(final ApiRestClient apiRestClient, final String basePath) {
+    this(apiRestClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -243,7 +277,7 @@ public class ${className?cap_first}Api {
     <Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if></@compress>
 
-    return apiRestClient.invokeAPI("${path.globalObject.url!""}","${path.pathName}", HttpMethod.${operation.operationType}, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiRestClient.invokeAPI(basePath,"${path.pathName}", HttpMethod.${operation.operationType}, uriVariables, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
   }
 
      </#list>

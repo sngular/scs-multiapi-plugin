@@ -97,6 +97,13 @@ abstract class OpenApiTask extends DefaultTask {
     if (openApiSpecFile.isReactive) {
       builder.isReactive(openApiSpecFile.isReactive)
     }
+    // Checked against null, not truthiness: `false` is the value that changes the output.
+    if (openApiSpecFile.clientComponent != null) {
+      builder.clientComponent(openApiSpecFile.clientComponent)
+    }
+    if (openApiSpecFile.useHttpExchange) {
+      builder.useHttpExchange(openApiSpecFile.useHttpExchange)
+    }
     if (openApiSpecFile.useTimeType) {
       builder.useTimeType(openApiSpecFile.useTimeType)
     }

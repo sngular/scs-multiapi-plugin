@@ -34,6 +34,7 @@ import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.common.tools.PathUtil;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.exception.GeneratorTemplateException;
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
@@ -173,11 +174,14 @@ public class OpenApiGenerator {
     OpenApiUtil.solvePathRefs(openAPI, specBaseUri);
     final String clientPackage = specFile.getClientPackage();
 
+    validateClientOptions(specFile);
+    // An HTTP service interface is backed by the consuming service's own client, so no ApiRestClient/ApiWebClient or
+    // authentication classes are generated for it.
+    isWebClient = specFile.isCallMode() && !specFile.isUseHttpExchange() && specFile.isReactive();
+    isRestClient = specFile.isCallMode() && !specFile.isUseHttpExchange() && !specFile.isReactive();
     if (specFile.isCallMode()) {
       templateFactory.setWebClientPackageName(StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE);
       templateFactory.setAuthPackageName((StringUtils.isNotBlank(clientPackage) ? clientPackage : DEFAULT_OPENAPI_CLIENT_PACKAGE) + ".auth");
-      isWebClient = specFile.isReactive();
-      isRestClient = !specFile.isReactive();
     }
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
@@ -193,6 +197,16 @@ public class OpenApiGenerator {
 
     createModelTemplate(specFile, openAPI, globalObject);
     templateFactory.fillTemplates();
+  }
+
+  private void validateClientOptions(final SpecFile specFile) {
+    if (specFile.isUseHttpExchange() && !specFile.isCallMode()) {
+      throw new CodeGenerationException("useHttpExchange generates client interfaces, so it needs callMode=true (spec " + specFile.getFilePath() + ")");
+    }
+    if (specFile.isUseHttpExchange() && Objects.nonNull(springBootVersion) && springBootVersion < 3) {
+      throw new CodeGenerationException("useHttpExchange needs Spring Boot 3 or later (@HttpExchange is part of Spring Framework 6), but springBootVersion is "
+                                        + springBootVersion + " (spec " + specFile.getFilePath() + ")");
+    }
   }
 
   private void createClients(final SpecFile specFile) {

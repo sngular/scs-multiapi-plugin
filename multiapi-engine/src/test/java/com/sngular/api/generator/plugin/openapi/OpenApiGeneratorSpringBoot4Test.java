@@ -47,7 +47,11 @@ class OpenApiGeneratorSpringBoot4Test {
         Arguments.of("testRestClientApiGeneration", OpenApiGeneratorFixtures.TEST_REST_CLIENT_GENERATION,
             OpenApiGeneratorFixtures.validateRestClientGenerationSpringBoot4()),
         Arguments.of("testWebClientApiGeneration", OpenApiGeneratorFixtures.TEST_WEB_CLIENT_GENERATION,
-            OpenApiGeneratorFixtures.validateWebClientGenerationSpringBoot4())
+            OpenApiGeneratorFixtures.validateWebClientGenerationSpringBoot4()),
+        Arguments.of("testHttpExchangeClient", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT,
+            OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchange", "imperative")),
+        Arguments.of("testHttpExchangeClientReactive", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT_REACTIVE,
+            OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchangereactive", "reactive"))
     );
   }
 

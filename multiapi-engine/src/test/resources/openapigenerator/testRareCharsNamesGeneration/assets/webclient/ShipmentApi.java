@@ -3,6 +3,7 @@ package com.sngular.multifileplugin.testrarecharsnameswebclient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.sngular.multifileplugin.testrarecharsnameswebclient.client.ApiWebClient;
 import com.sngular.multifileplugin.testrarecharsnameswebclient.model.Shipment;
@@ -28,8 +29,37 @@ public class ShipmentApi {
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "";
+
+  /**
+   * Builds its own ApiWebClient, sending requests to the contract's first server.
+   */
   public ShipmentApi() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured WebClient, to the contract's first server.
+   */
+  public ShipmentApi(final ApiWebClient apiWebClient) {
+    this.apiWebClient = Objects.requireNonNull(apiWebClient, "apiWebClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * base URL (WebClient.Builder.baseUrl(...)).
+   */
+  public ShipmentApi(final ApiWebClient apiWebClient, final String basePath) {
+    this(apiWebClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -72,7 +102,7 @@ public class ShipmentApi {
     String[] localVarAuthNames = new String[] {};
 
     ParameterizedTypeReference<Shipment> localVarReturnType = new ParameterizedTypeReference<Shipment>() {};
-    return apiWebClient.invokeAPI("","/shipment/{shipment-id}", HttpMethod.POST, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiWebClient.invokeAPI(basePath,"/shipment/{shipment-id}", HttpMethod.POST, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
 

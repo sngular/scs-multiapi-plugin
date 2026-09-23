@@ -28,6 +28,7 @@ Maven and Gradle
   - [Getting Started](#getting-started)
   - [Initial Considerations](#initial-considerations)
   - [Usage](#usage)
+  - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
 - [Property Validation](#property-validation)
 - [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
 - [Loading specifications from a remote URL](#loading-specifications-from-a-remote-url-apicurio-registry-http)
@@ -751,6 +752,8 @@ that will be used. Each specFile has their own configuration:
 | useLombokModelAnnotation | Boolean value to decide if you want your models with Lombok or not   **It´s initialized to false by default**                                                                                       | false                                             |
 | isReactive               | Boolean value to decide if you want to generate the api with responses in Mono/Flux Reactor types. If callmode = true use WebClient instead of RestClient. **It´s initialized to false by default** | false                                             |
 | useTimeType              | Enum TimeType value. Controls the types used when generating dates. Can be local, zoned, or offset. **Initialized to TimeType.LOCAL by default**                                                    | TimeType.OFFSET                                   |
+| clientComponent          | With `callMode`, whether the `*Api` client classes are `@Component`s. `false`: declare them yourself ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to true by default**   | false                                             |
+| useHttpExchange          | With `callMode`, generates `@HttpExchange` interfaces; needs `springBootVersion` >= 3 ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to false by default**                 | true                                              |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
@@ -797,6 +800,211 @@ For `springBootVersion < 4` the output is unchanged and keeps targeting Jackson 
 > **Note:** Lombok-annotated models (`useLombokModelAnnotation`) rely on Lombok's
 > `@Jacksonized`, which does not yet support Jackson 3. Combining Lombok models
 > with `springBootVersion = 4` is therefore not supported.
+
+### Calling an API from your service (callMode)
+
+With `callMode = true` the plugin generates a client for the API instead of the
+interfaces a server implements. A service that calls another one almost always
+needs to configure that client itself: the base URL changes per environment,
+and authentication, timeouts or message converters come from the service's own
+configuration, not from the contract. The generated client supports two ways of
+doing that, and both leave the choice to you:
+
+- [Generated client class](#generated-client-class-default), the default:
+  a class that calls through `ApiRestClient` (`RestTemplate`) or
+  `ApiWebClient` (`WebClient`). Works on Spring Boot 2, 3 and 4.
+- [HTTP service interface](#http-service-interface-usehttpexchange)
+  (`useHttpExchange`): an `@HttpExchange` interface that Spring implements over
+  your own `RestClient` or `WebClient`. Works on Spring Boot 3 and 4.
+
+Nothing changes unless you configure it: a project that already uses `callMode`
+gets the same generated behaviour as before.
+
+> **Only need the models?** If you call the API with code of your own and only
+> use the generated models, generate with `callMode = false`. The models are
+> identical, and the `*Api` interfaces generated alongside them register no
+> beans and make no calls unless a class implements them.
+
+#### Generated client class (default)
+
+Each `*Api` is a class that sends its requests through `ApiRestClient`
+(`RestTemplate`), or `ApiWebClient` (`WebClient`) when `isReactive = true`. It
+works with every supported Spring Boot version. Out of the box it builds its own
+HTTP client and sends requests to the **first `servers` URL** of the contract,
+and the imperative `*Api` classes are `@Component`s.
+
+To use the service's own configuration instead:
+
+1. **Give it your configured client.** `ApiRestClient(RestTemplate)` and
+   `ApiWebClient(WebClient)` use the client you pass instead of building one, so
+   its interceptors, timeouts and converters apply. There are also variants that
+   take the `Map<String, Authentication>` for the contract's security schemes,
+   when you want the generated authentication classes applied too.
+2. **Choose the base URL.** Every `*Api` has a `basePath`: the first `servers`
+   URL by default, or the one you pass to its constructor or `setBasePath`.
+   An **empty** base path sends requests relative to the client's own root,
+   as set with `RestTemplateBuilder.rootUri(...)` (or a
+   `DefaultUriBuilderFactory` base URL) or `WebClient.Builder.baseUrl(...)`.
+   That keeps the environment's URL in your configuration, whatever order the
+   contract lists its `servers` in.
+3. **Declare the beans yourself.** With `clientComponent = false` the imperative
+   `*Api` classes are no longer `@Component`s, so you register them with the
+   client you configured. (The reactive `*Api` classes never were components.)
+
+```xml
+<specFile>
+  <filePath>openapi/openapi.yml</filePath>
+  <apiPackage>com.acme.clients.api</apiPackage>
+  <modelPackage>com.acme.clients.model</modelPackage>
+  <clientPackage>com.acme.clients.client</clientPackage>
+  <callMode>true</callMode>
+  <clientComponent>false</clientComponent>
+</specFile>
+```
+
+```java
+@Configuration
+class ClientsApiConfiguration {
+
+  @Bean
+  ClientsApi clientsApi(RestTemplateBuilder builder, ClientsProperties props) {
+    RestTemplate restTemplate = builder
+        .rootUri(props.baseUrl())   // per environment
+        .setReadTimeout(Duration.ofSeconds(5))
+        .additionalInterceptors(new CorrelationIdInterceptor())
+        .build();
+    // An empty base path sends requests relative to the root URI.
+    return new ClientsApi(new ApiRestClient(restTemplate), "");
+  }
+}
+```
+
+The reactive equivalent passes
+`new ApiWebClient(webClientBuilder.baseUrl(...).build())`. The same
+constructors are available with `clientComponent` left at `true`; Spring then
+keeps creating the component with its no-argument constructor, as before.
+
+#### HTTP service interface (useHttpExchange)
+
+On Spring Boot 3 and later you can generate each `*Api` as a
+[Spring HTTP service interface](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface)
+instead. Spring implements it at runtime over the `RestClient` (or
+`WebClient`, with `isReactive = true`) you configure, so the plugin generates no
+HTTP code at all:
+
+- operations are `@GetExchange`, `@PostExchange`, `@PutExchange`,
+  `@PatchExchange` or `@DeleteExchange` methods, with paths **relative** to
+  your client's base URL;
+- parameters are bound as the contract declares them, with their names, their
+  `default` as `defaultValue`, and `@DateTimeFormat` for `format: date` and
+  `format: date-time`;
+- JSON bodies are `@RequestBody`, and `multipart/form-data` bodies become one
+  `@RequestPart` per part;
+- each method returns `ResponseEntity<T>`, or `Mono<ResponseEntity<T>>` when
+  reactive;
+- no `ApiRestClient`/`ApiWebClient`, authentication classes or `servers` URL are
+  generated. Authentication belongs to the client you configure, for example as
+  an interceptor or default header.
+
+`useHttpExchange` needs `callMode = true` and `springBootVersion` 3 or later
+(`@HttpExchange` is part of Spring Framework 6). Generation fails with a clear
+message otherwise.
+
+```xml
+<specFile>
+  <filePath>openapi/openapi.yml</filePath>
+  <apiPackage>com.acme.clients.api</apiPackage>
+  <modelPackage>com.acme.clients.model</modelPackage>
+  <callMode>true</callMode>
+  <useHttpExchange>true</useHttpExchange>
+</specFile>
+```
+
+Generated interface, for reference:
+
+```java
+@HttpExchange
+public interface ClientsApi {
+
+  @GetExchange(url = "/clients/{client_id}", accept = {"application/json"})
+  ResponseEntity<ClientDTO> getClient(
+      @PathVariable("client_id") Long client_id,
+      @RequestParam(name = "since", required = false)
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate since,
+      @RequestHeader(name = "X-Correlation-Id", required = false)
+      String xCorrelationId);
+
+  @GetExchange(url = "/clients", accept = {"application/json"})
+  ResponseEntity<List<ClientDTO>> searchClients(
+      @RequestParam(name = "page_num", required = false, defaultValue = "0")
+      Integer page_num);
+}
+```
+
+**Spring Boot 3 (and 4): with `HttpServiceProxyFactory`.** Build the interface
+over your configured client:
+
+```java
+@Configuration
+class ClientsApiConfiguration {
+
+  @Bean
+  ClientsApi clientsApi(RestClient.Builder builder, ClientsProperties props) {
+    RestClient restClient = builder
+        .baseUrl(props.baseUrl())
+        .requestInterceptor(new CorrelationIdInterceptor())
+        .build();
+    return HttpServiceProxyFactory
+        .builderFor(RestClientAdapter.create(restClient))
+        .build()
+        .createClient(ClientsApi.class);
+  }
+}
+```
+
+For the reactive variant use `WebClientAdapter.create(webClient)` instead.
+
+**Spring Boot 4: with `@ImportHttpServices`.** Spring Boot 4 can register the
+interfaces as beans and configure their clients from properties (it needs
+`spring-boot-starter-restclient`, or `spring-boot-starter-webclient` for the
+reactive variant):
+
+```java
+@Configuration
+@ImportHttpServices(group = "clients", types = ClientsApi.class)
+class ClientsApiConfiguration {
+
+  @Bean
+  RestClientHttpServiceGroupConfigurer clientsGroupConfigurer() {
+    return groups -> groups.filterByName("clients")
+        .forEachClient((group, builder) ->
+            builder.requestInterceptor(new CorrelationIdInterceptor()));
+  }
+}
+```
+
+```yaml
+spring:
+  http:
+    serviceclient:
+      clients:
+        base-url: https://clients.pre.acme.com
+        default-header:
+          X-Source: [billing-service]
+```
+
+In Gradle, both options go in the `specFile` block of `openapimodel`:
+
+```groovy
+openapimodel {
+  specFile {
+    filePath = 'openapi/openapi.yml'
+    callMode = true
+    clientComponent = false   // generated client class, declared by you
+    // useHttpExchange = true // or: HTTP service interfaces (Spring Boot 3+)
+  }
+}
+```
 
 ### Schemas and properties named after Java reserved words
 

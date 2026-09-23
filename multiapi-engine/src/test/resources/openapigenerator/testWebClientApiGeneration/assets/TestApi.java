@@ -3,6 +3,7 @@ package com.sngular.multifileplugin.webclientapi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.sngular.apigenerator.openapi.client.ApiWebClient;
 import com.sngular.multifileplugin.webclientapi.model.ApiTestDTO;
@@ -31,8 +32,37 @@ public class TestApi {
 
   private Map<String, Authentication> authenticationsApi;
 
+  private String basePath = "http://localhost:8080/v1";
+
+  /**
+   * Builds its own ApiWebClient, sending requests to the contract's first server.
+   */
   public TestApi() {
     this.init();
+  }
+
+  /**
+   * Sends requests through the given client, e.g. one built on the service's configured WebClient, to the contract's first server.
+   */
+  public TestApi(final ApiWebClient apiWebClient) {
+    this.apiWebClient = Objects.requireNonNull(apiWebClient, "apiWebClient");
+  }
+
+  /**
+   * Sends requests through the given client to {@code basePath}. An empty base path sends them relative to the client's own
+   * base URL (WebClient.Builder.baseUrl(...)).
+   */
+  public TestApi(final ApiWebClient apiWebClient, final String basePath) {
+    this(apiWebClient);
+    this.basePath = basePath;
+  }
+
+  public String getBasePath() {
+    return basePath;
+  }
+
+  public void setBasePath(final String basePath) {
+    this.basePath = basePath;
   }
 
   protected void init() {
@@ -62,7 +92,7 @@ public class TestApi {
     String[] localVarAuthNames = new String[] {"BasicAuth"};
 
     ParameterizedTypeReference<List<ApiTestDTO>> localVarReturnType = new ParameterizedTypeReference<List<ApiTestDTO>>() {};
-    return apiWebClient.invokeAPI("http://localhost:8080/v1","/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiWebClient.invokeAPI(basePath,"/test", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
 
@@ -76,7 +106,7 @@ public class TestApi {
     return listTestRequestCreation().bodyToFlux(localVarReturnType);
   }
 
-  public Flux<ResponseEntity<ApiTestDTO>> listTestWithHttpInfo() throws WebClientResponseException {
+  public Mono<ResponseEntity<List<ApiTestDTO>>> listTestWithHttpInfo() throws WebClientResponseException {
     ParameterizedTypeReference<ApiTestDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestDTO>() {};
     return listTestRequestCreation().toEntityList(localVarReturnType);
   }
@@ -104,7 +134,7 @@ public class TestApi {
     String[] localVarAuthNames = new String[] {"BasicAuth"};
 
     ParameterizedTypeReference<ApiTestInfoDTO> localVarReturnType = new ParameterizedTypeReference<ApiTestInfoDTO>() {};
-    return apiWebClient.invokeAPI("http://localhost:8080/v1","/test/{testId}", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiWebClient.invokeAPI(basePath,"/test/{testId}", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
 
