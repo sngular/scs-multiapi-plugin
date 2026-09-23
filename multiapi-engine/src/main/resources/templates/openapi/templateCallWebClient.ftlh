@@ -1,11 +1,37 @@
 <#ftl output_format="plainText">
+<#-- Request arguments: one per part for a multipart body, whose parts are sent as form parameters, or the body object otherwise. -->
+<#function requestArgDecls operation>
+  <#local args = []>
+  <#list operation.requestObjects as request>
+    <#if request.inlineMultipart>
+      <#list request.contentObjects[0].schemaObject.fieldObjectList as part><#local args = args + ["${part.dataType} ${part.fieldName}"]></#list>
+    <#else>
+      <#list request.contentObjects as content><#local args = args + ["${content.dataType} ${content.dataType?api.getVariableNameString()}"]></#list>
+    </#if>
+  </#list>
+  <#return args?join(", ")>
+</#function>
+<#function requestArgNames operation>
+  <#local args = []>
+  <#list operation.requestObjects as request>
+    <#if request.inlineMultipart>
+      <#list request.contentObjects[0].schemaObject.fieldObjectList as part><#local args = args + [part.fieldName]></#list>
+    <#else>
+      <#list request.contentObjects as content><#local args = args + [content.dataType?api.getVariableNameString()]></#list>
+    </#if>
+  </#list>
+  <#return args?join(", ")>
+</#function>
+<#function isMultipart operation>
+  <#return operation.requestObjects?has_content && operation.requestObjects[0].inlineMultipart>
+</#function>
 package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 
 <#assign imports=[]>
 <#assign model_imports=[]>
 <#list pathObjects as path>
   <#list path.operationObjects as operation>
-    <#list operation.requestObjects as request>
+    <#list operation.requestObjects?filter(request -> !request.inlineMultipart) as request>
       <#list request.contentObjects as content>
         <#if content.importName?? && (!imports?seq_contains(content.importName)) && (!model_imports?seq_contains(content.importName))>
           <#if (!checkBasicTypes?seq_contains(content.importName))>
@@ -47,6 +73,11 @@ package <#if packageApi??>${packageApi}<#elseif package??> ${package}</#if>;
 <#list imports as import>
 import ${import};
 </#list>
+<#assign useMultipartFile = false>
+<#list pathObjects as path><#list path.operationObjects as operation><#list operation.requestObjects?filter(request -> request.inlineMultipart) as request><#list request.contentObjects[0].schemaObject.fieldObjectList as part><#if part.dataType.containsType("MultipartFile")><#assign useMultipartFile = true></#if></#list></#list></#list></#list>
+<#if useMultipartFile>
+import org.springframework.web.multipart.MultipartFile;
+</#if>
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +175,7 @@ public class ${className?cap_first}Api {
    * <#list path.parameterObjects as parameter>@param ${parameter.variableName} ${parameter.description!""} ${parameter.required?c}</#list>
   </#if>
   <#if operation.requestObjects?has_content>
-   * <#list operation.requestObjects as request><#list request.contentObjects as content>@param ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#list>
+   * <#list operation.requestObjects as request><#if request.inlineMultipart><#list request.contentObjects[0].schemaObject.fieldObjectList as part>@param ${part.fieldName} multipart part "${part.baseName}" </#list><#else><#list request.contentObjects as content>@param ${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list>${request.description! ""}<#if request.required == true> (required)</#if></#if></#list>
   </#if>
    * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
   </#if>
@@ -152,9 +183,9 @@ public class ${className?cap_first}Api {
    */
   private ResponseSpec ${operation.operationId}RequestCreation(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if>
-  <#if operation.requestObjects?has_content><#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType} ${content.dataType?api.getVariableNameString()}</#list></#list></#if></@compress>) throws WebClientResponseException {
-    Object postBody = <#if operation.requestObjects?has_content>${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}<#else>null</#if>;
-    <#if operation.requestObjects?has_content>
+  <#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if></@compress>) throws WebClientResponseException {
+    Object postBody = <#if operation.requestObjects?has_content && !isMultipart(operation)>${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}<#else>null</#if>;
+    <#if operation.requestObjects?has_content && !isMultipart(operation)>
     if (${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()} == null) {
     throw new WebClientResponseException("Missing the required parameter ''${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}'' when calling ${operation.operationId}", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
   }
@@ -179,6 +210,11 @@ public class ${className?cap_first}Api {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+    <#if isMultipart(operation)>
+      <#list operation.requestObjects[0].contentObjects[0].schemaObject.fieldObjectList as part>
+    apiWebClient.addFormPart(formParams, "${part.baseName}", ${part.fieldName});
+      </#list>
+    </#if>
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "query">
@@ -270,7 +306,7 @@ public class ${className?cap_first}Api {
   </#if>
   <#if operation.requestObjects?has_content>
 <#list operation.requestObjects as request>
-   * @param <#list request.contentObjects as content>${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if>
+   * @param <#if request.inlineMultipart><#list request.contentObjects[0].schemaObject.fieldObjectList as part>${part.fieldName} <#if part?has_next>, </#if></#list> multipart parts<#else><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list> ${request.description! ""}<#if request.required == true> (required)</#if></#if>
 </#list>
   </#if>
    * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description}; (status code ${response.responseName})</#if></#list>
@@ -282,12 +318,7 @@ public class ${className?cap_first}Api {
   Flux<${operation.responseObjects[0].contentObjects[0].dataType.innerType}><#else>Mono<${operation.responseObjects[0].contentObjects[0].dataType}></#if>
   <#else>Mono<Void></#if></@compress> ${operation.operationId}(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
-  <#if operation.requestObjects?has_content>
-  <#list operation.requestObjects as request>
-  <#list request.contentObjects as content>
-  ${content.dataType}
-  ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list>
-  </#list></#if></@compress>) throws WebClientResponseException {
+  <#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if></@compress>) throws WebClientResponseException {
   <#if operation.responseObjects[0].contentObjects[0]??>
     <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
@@ -299,20 +330,14 @@ public class ${className?cap_first}Api {
   </#if>
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
       <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
-      <#if operation.requestObjects?has_content>
-      <#list operation.requestObjects as request><#list request.contentObjects as content> ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list></#list></#if>
+      <#if operation.requestObjects?has_content>${requestArgNames(operation)}</#if>
       </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
   }
 
   public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
   <#else> Mono<ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
-  <#if operation.requestObjects?has_content>
-  <#list operation.requestObjects as request>
-  <#list request.contentObjects as content>
-  ${content.dataType}
-  ${content.dataType?api.getVariableNameString()} <#if content?has_next>, </#if></#list>
-  </#list></#if></@compress>) throws WebClientResponseException {
+  <#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if></@compress>) throws WebClientResponseException {
     <#if operation.responseObjects[0].contentObjects[0]??>
       <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
@@ -325,8 +350,7 @@ public class ${className?cap_first}Api {
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
 
-    <#if operation.requestObjects?has_content>
-    <#list operation.requestObjects as request><#list request.contentObjects as content>${content.dataType?api.getVariableNameString()}<#if content?has_next>, </#if></#list></#list></#if>
+    <#if operation.requestObjects?has_content>${requestArgNames(operation)}</#if>
     </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);
   }
 

@@ -222,6 +222,11 @@ public class MapperPathUtil {
     return producesList;
   }
 
+  private static boolean isInlineMultipart(final JsonNode content) {
+    final JsonNode multipartSchema = content.path("multipart/form-data").path(SCHEMA);
+    return !multipartSchema.isMissingNode() && !ApiTool.hasRef(multipartSchema);
+  }
+
   private static List<RequestObject> mapRequestObject(
       final SpecFile specFile, final JsonNode operation,
       final GlobalObject globalObject, final Path baseDir) {
@@ -237,6 +242,7 @@ public class MapperPathUtil {
         requestObjects.add(RequestObject.builder()
                                         .required(ApiTool.hasNode(requestBody, REQUIRED))
                                         .isFormData(ApiTool.getNode(requestBody, CONTENT).has("multipart/form-data"))
+                                        .inlineMultipart(isInlineMultipart(ApiTool.getNode(requestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
                                                                          "InlineObject" + operationIdWithCap, globalObject, baseDir))
                                         .build());
@@ -249,6 +255,7 @@ public class MapperPathUtil {
         requestObjects.add(RequestObject.builder()
                                         .required(ApiTool.hasNode(requestBody, REQUIRED))
                                         .isFormData(ApiTool.getNode(actualRequestBody, CONTENT).has("multipart/form-data"))
+                                        .inlineMultipart(isInlineMultipart(ApiTool.getNode(actualRequestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(actualRequestBody, CONTENT),
                                                                          operationIdWithCap, globalObject, baseDir))
                                         .build());
@@ -268,15 +275,68 @@ public class MapperPathUtil {
           if (optRefParameter.isEmpty()) {
             continue;
           }
-          parameterObjects.add(buildParameterObject(specFile, globalObject, optRefParameter.get(), baseDir));
+          parameterObjects.addAll(buildParameterObjects(specFile, globalObject, optRefParameter.get(), baseDir));
         } else if (ApiTool.hasNode(parameter, CONTENT)) {
           parameterObjects.addAll(buildParameterContent(contentClassName, parameter, specFile, globalObject, baseDir));
         } else {
-          parameterObjects.add(buildParameterObject(specFile, globalObject, parameter, baseDir));
+          parameterObjects.addAll(buildParameterObjects(specFile, globalObject, parameter, baseDir));
         }
       }
     }
     return parameterObjects;
+  }
+
+  /**
+   * The parameters a contract parameter is declared as. An object-typed query parameter serialized as exploded {@code form}
+   * (the OpenAPI default: {@code ?page_number=1&page_size=20}) or {@code deepObject} ({@code ?filters[page_number]=1}) travels
+   * as one query parameter per property, so the server interfaces and the {@code @HttpExchange} interfaces declare one
+   * {@code @RequestParam} per property: Spring binds and sends a {@code @RequestParam} as a single value, and could not map
+   * the object from its exploded properties. The client classes keep the object, which {@code objectToQueryParams} expands.
+   */
+  private static List<ParameterObject> buildParameterObjects(
+      final SpecFile specFile, final GlobalObject globalObject, final JsonNode parameterNode, final Path baseDir) {
+    final ParameterObject parameter = buildParameterObject(specFile, globalObject, parameterNode, baseDir);
+    final boolean declaredAsInterface = !specFile.isCallMode() || specFile.isUseHttpExchange();
+    final boolean exploded = "deepObject".equals(parameter.getEffectiveStyle())
+                             || "form".equals(parameter.getEffectiveStyle()) && parameter.isEffectiveExplode();
+    List<ParameterObject> parameters = List.of(parameter);
+    if (declaredAsInterface && "query".equals(parameter.getIn()) && exploded) {
+      final JsonNode objectSchema = resolveParameterSchema(ApiTool.getNode(parameterNode, SCHEMA), specFile, globalObject, baseDir);
+      if (Objects.nonNull(objectSchema) && ApiTool.hasProperties(objectSchema) && !ApiTool.hasAdditionalProperties(objectSchema)) {
+        parameters = explodeObjectParameter(parameter, objectSchema, specFile, globalObject, baseDir);
+      }
+    }
+    return parameters;
+  }
+
+  private static JsonNode resolveParameterSchema(final JsonNode schema, final SpecFile specFile, final GlobalObject globalObject, final Path baseDir) {
+    JsonNode resolved = schema;
+    if (Objects.nonNull(schema) && ApiTool.hasRef(schema)) {
+      resolved = getRefSchema(schema, specFile, globalObject, baseDir, MapperUtil.getRefSchemaName(schema, null));
+    }
+    return resolved;
+  }
+
+  private static List<ParameterObject> explodeObjectParameter(
+      final ParameterObject parameter, final JsonNode objectSchema, final SpecFile specFile, final GlobalObject globalObject, final Path baseDir) {
+    final boolean deepObject = "deepObject".equals(parameter.getEffectiveStyle());
+    final List<ParameterObject> properties = new ArrayList<>();
+    ApiTool.getProperties(objectSchema).forEachRemaining(property -> {
+      final JsonNode propertySchema = property.getValue();
+      final var dataType = getSchemaType(propertySchema, TypeConstants.OBJECT, specFile, globalObject, baseDir);
+      properties.add(ParameterObject.builder()
+                                    .name(deepObject ? parameter.getName() + "[" + property.getKey() + "]" : property.getKey())
+                                    .in("query")
+                                    .required(Boolean.TRUE.equals(parameter.getRequired()) && ApiTool.checkIfRequired(objectSchema, property.getKey()))
+                                    .description(ApiTool.getNodeAsString(propertySchema, DESCRIPTION))
+                                    .dataType(dataType)
+                                    .isCollection(ApiTool.hasItems(propertySchema))
+                                    .importName(getParameterImport(dataType))
+                                    .defaultValue(getDefaultValue(propertySchema))
+                                    .camelCaseName(specFile.isUseCamelCaseNames())
+                                    .build());
+    });
+    return properties;
   }
 
   private static ParameterObject buildParameterObject(

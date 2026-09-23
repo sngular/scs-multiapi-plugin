@@ -51,7 +51,9 @@ class OpenApiGeneratorSpringBoot4Test {
         Arguments.of("testHttpExchangeClient", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT,
             OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchange", "imperative")),
         Arguments.of("testHttpExchangeClientReactive", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT_REACTIVE,
-            OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchangereactive", "reactive"))
+            OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchangereactive", "reactive")),
+        Arguments.of("testQueryObjectsHttpExchange", OpenApiGeneratorFixtures.TEST_QUERY_OBJECTS_HTTP_EXCHANGE,
+            OpenApiGeneratorFixtures.validateQueryObjectsHttpExchange())
     );
   }
 

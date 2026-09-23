@@ -26,6 +26,12 @@ public class RequestObject {
 
   private Boolean isFormData;
 
+  /**
+   * Whether the body is multipart with an inline schema. No model is generated for it (its parts are the operation's
+   * arguments), unlike a multipart body whose schema is a $ref to a component, which keeps its model.
+   */
+  private boolean inlineMultipart;
+
   public static final class RequestObjectBuilder {
 
     private final List<ContentObject> contentObjects = new ArrayList<>();

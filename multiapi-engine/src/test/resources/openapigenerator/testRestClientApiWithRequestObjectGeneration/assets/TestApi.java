@@ -75,7 +75,7 @@ public class TestApi {
    * @return Test response; (status code 200)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public ApiTestResponseDTO test_form_url_encoded(ApiTestInputDTO apiTestInputDTO ) throws RestClientException {
+  public ApiTestResponseDTO test_form_url_encoded(ApiTestInputDTO apiTestInputDTO) throws RestClientException {
     return test_form_url_encodedWithHttpInfo(apiTestInputDTO).getBody();
   }
 
@@ -91,8 +91,8 @@ public class TestApi {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-    formParams.put("name", List.of(apiTestInputDTO.getName()));
-    formParams.put("id", List.of(apiTestInputDTO.getId()));
+    apiRestClient.addFormPart(formParams, "name", apiTestInputDTO.getName());
+    apiRestClient.addFormPart(formParams, "id", apiTestInputDTO.getId());
 
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
@@ -111,7 +111,7 @@ public class TestApi {
    * @return Test response; (status code 200)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public ApiTestResponseDTO test_multipart(ApiTestInputDTO apiTestInputDTO ) throws RestClientException {
+  public ApiTestResponseDTO test_multipart(ApiTestInputDTO apiTestInputDTO) throws RestClientException {
     return test_multipartWithHttpInfo(apiTestInputDTO).getBody();
   }
 
@@ -127,8 +127,8 @@ public class TestApi {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-    formParams.put("name", List.of(apiTestInputDTO.getName()));
-    formParams.put("id", List.of(apiTestInputDTO.getId()));
+    apiRestClient.addFormPart(formParams, "name", apiTestInputDTO.getName());
+    apiRestClient.addFormPart(formParams, "id", apiTestInputDTO.getId());
 
     final String[] localVarAccepts = {"application/json"};
     final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);

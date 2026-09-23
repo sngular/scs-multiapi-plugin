@@ -1,6 +1,7 @@
 package com.sngular.multifileplugin.restclientnocomponent;
 
 import java.time.LocalDate;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,6 @@ import java.util.Objects;
 import com.sngular.multifileplugin.restclientnocomponent.client.ApiRestClient;
 
 import com.sngular.multifileplugin.restclientnocomponent.model.ClientDTO;
-import com.sngular.multifileplugin.restclientnocomponent.model.InlineObjectUploadDocumentDTO;
 
 import com.sngular.multifileplugin.restclientnocomponent.client.auth.Authentication;
 
@@ -176,7 +176,7 @@ public class ClientsApi {
    * @return Created; (status code 201)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public ClientDTO createClient(ClientDTO clientDTO ) throws RestClientException {
+  public ClientDTO createClient(ClientDTO clientDTO) throws RestClientException {
     return createClientWithHttpInfo(clientDTO).getBody();
   }
 
@@ -207,20 +207,18 @@ public class ClientsApi {
   /**
    * PUT /clients/{client_id}/document
    * @param client_id   (required)
-   * @param inlineObjectUploadDocumentDTO  
+   * @param file multipart part "file" (required)
+   * @param comment multipart part "comment"
    * @return Uploaded; (status code 204)
    * @throws RestClientException if an error occurs while attempting to invoke the API
    */
-  public void uploadDocument(Long client_id, InlineObjectUploadDocumentDTO inlineObjectUploadDocumentDTO ) throws RestClientException {
-    uploadDocumentWithHttpInfo(client_id, inlineObjectUploadDocumentDTO);
+  public void uploadDocument(Long client_id, MultipartFile file, String comment) throws RestClientException {
+    uploadDocumentWithHttpInfo(client_id, file, comment);
   }
 
-  public ResponseEntity<Void> uploadDocumentWithHttpInfo(Long client_id, InlineObjectUploadDocumentDTO inlineObjectUploadDocumentDTO) throws RestClientException {
+  public ResponseEntity<Void> uploadDocumentWithHttpInfo(Long client_id, MultipartFile file, String comment) throws RestClientException {
 
-    Object postBody = inlineObjectUploadDocumentDTO;
-    if (inlineObjectUploadDocumentDTO == null) {
-      throw new RestClientException(HttpStatus.BAD_REQUEST + " Missing the required parameter ''inlineObjectUploadDocumentDTO'' when calling uploadDocument");
-    }
+    Object postBody = null;
     final Map<String, Object> uriVariables = new HashMap<String, Object>();
 
     uriVariables.put("client_id",  client_id);
@@ -228,8 +226,8 @@ public class ClientsApi {
     final HttpHeaders headerParams = new HttpHeaders();
     final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
     final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-    formParams.put("file", List.of(inlineObjectUploadDocumentDTO.getFile()));
-    formParams.put("comment", List.of(inlineObjectUploadDocumentDTO.getComment()));
+    apiRestClient.addFormPart(formParams, "file", file);
+    apiRestClient.addFormPart(formParams, "comment", comment);
 
     final String[] localVarAccepts = {};
     final List<MediaType> localVarAccept = apiRestClient.selectHeaderAccept(localVarAccepts);
