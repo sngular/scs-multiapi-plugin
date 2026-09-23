@@ -820,6 +820,11 @@ doing that, and both leave the choice to you:
 Nothing changes unless you configure it: a project that already uses `callMode`
 gets the same generated behaviour as before.
 
+> **Only need the models?** If you call the API with code of your own and only
+> use the generated models, generate with `callMode = false`. The models are
+> identical, and the `*Api` interfaces generated alongside them register no
+> beans and make no calls unless a class implements them.
+
 #### Generated client class (default)
 
 Each `*Api` is a class that sends its requests through `ApiRestClient`
