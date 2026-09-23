@@ -770,7 +770,7 @@ be saved in the api of the project.
 | clientPackage                                       | Path where the RestClient and/or WebClient are located                                                                                                                                                                                                                          | com.sngular.apigenerator.openapi.client |
 | [generatedSourcesFolder](#generated-sources-folder) | Name of the folder, inside `target`, where the files will be located. By defaut it's `generated-sources`                                                                                                                                                                        | generated-sources                       |
 | overwriteModel                                      | Boolean value to decide if you want your models to be overwritten if two or more models have the same name. True means that models will be overwritten and if false is set, it will throw an exception if two models share the same name. It is initialized to false by default | false                                   |
-| springBootVersion                                   | The version of spring to target during generation. It's default value is `2`. Values `>= 3` emit `jakarta.*` imports (instead of `javax.*`); values `>= 4` additionally emit Jackson 3 (`tools.jackson.*`) and Spring Framework 7 imports (see below).                            | 4                                       |
+| springBootVersion                                   | Spring Boot version to target, `MAJOR` or `MAJOR.MINOR` (`3` means 3.0). Default `2`. `>= 3`: `jakarta.*` instead of `javax.*`; `>= 3.2`: adds `ApiRestClient(RestClient)`; `>= 4`: Jackson 3 (`tools.jackson.*`) and Spring 7 imports (see below).                             | 3.2                                     |
 
 We must clarify that the options to make calls are configured under the
 RestClient or WebClient specifications as indicated above in the configuration
@@ -837,9 +837,12 @@ To use the service's own configuration instead:
 
 1. **Give it your configured client.** `ApiRestClient(RestTemplate)` and
    `ApiWebClient(WebClient)` use the client you pass instead of building one, so
-   its interceptors, timeouts and converters apply. There are also variants that
-   take the `Map<String, Authentication>` for the contract's security schemes,
-   when you want the generated authentication classes applied too.
+   its interceptors, timeouts and converters apply. With `springBootVersion`
+   `3.2` or later (`RestClient` is part of Spring Framework 6.1), there is also
+   `ApiRestClient(RestClient)`, whose `baseUrl` applies to an empty base path.
+   There are also variants that take the `Map<String, Authentication>` for the
+   contract's security schemes, when you want the generated authentication
+   classes applied too.
 2. **Choose the base URL.** Every `*Api` has a `basePath`: the first `servers`
    URL by default, or the one you pass to its constructor or `setBasePath`.
    An **empty** base path sends requests relative to the client's own root,

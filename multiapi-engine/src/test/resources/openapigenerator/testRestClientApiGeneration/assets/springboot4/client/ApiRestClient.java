@@ -50,6 +50,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -77,6 +78,7 @@ public class ApiRestClient {
   private final HttpHeaders defaultHeaders = new HttpHeaders();
   private final MultiValueMap<String, String> defaultCookies = new LinkedMultiValueMap<String, String>();
   private final RestTemplate restTemplate;
+  private final RestClient restClient;
   private final DateFormat dateFormat;
   private final Map<String, Authentication> authentications;
 
@@ -84,6 +86,7 @@ public class ApiRestClient {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = buildRestTemplate();
+    this.restClient = null;
     authentications = Collections.unmodifiableMap(new HashMap<String, Authentication>());
   }
 
@@ -91,6 +94,7 @@ public class ApiRestClient {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = buildRestTemplate();
+    this.restClient = null;
     this.authentications = Collections.unmodifiableMap(authentications);
   }
 
@@ -110,6 +114,26 @@ public class ApiRestClient {
     this.dateFormat = createDefaultDateFormat();
     addDefaultHeader("User-Agent", "Java-SDK");
     this.restTemplate = Objects.requireNonNull(restTemplate, "restTemplate");
+    this.restClient = null;
+    this.authentications = Collections.unmodifiableMap(authentications);
+  }
+
+  /**
+   * Sends requests through the given, already configured {@link RestClient} (base URL, interceptors, timeouts, message
+   * converters). Requests with an empty base path are relative, so its {@code RestClient.Builder.baseUrl(...)} applies.
+   */
+  public ApiRestClient(final RestClient restClient) {
+    this(restClient, new HashMap<String, Authentication>());
+  }
+
+  /**
+   * As {@link #ApiRestClient(RestClient)}, also applying the contract's security schemes with the given authentications.
+   */
+  public ApiRestClient(final RestClient restClient, final Map<String, Authentication> authentications) {
+    this.dateFormat = createDefaultDateFormat();
+    addDefaultHeader("User-Agent", "Java-SDK");
+    this.restTemplate = null;
+    this.restClient = Objects.requireNonNull(restClient, "restClient");
     this.authentications = Collections.unmodifiableMap(authentications);
   }
 
@@ -339,6 +363,9 @@ public class ApiRestClient {
     final List<MediaType> accept, final MediaType contentType, final String[] authNames, final ParameterizedTypeReference<T> returnType) throws RestClientException {
 
       updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
+      if (restClient != null) {
+        return invokeWithRestClient(basePath, path, method, pathParams, queryParams, body, headerParams, cookieParams, formParams, accept, contentType, returnType);
+      }
       Map<String, Object> uriParams = new HashMap<>();
       uriParams.putAll(pathParams);
 
@@ -395,6 +422,59 @@ public class ApiRestClient {
       throw new RestClientException("No base path to send the request to: set one on the API, or give its RestTemplate a root URI");
     }
     return rootUri.endsWith("/") ? rootUri.substring(0, rootUri.length() - 1) : rootUri;
+  }
+
+  /**
+   * Sends the request through the injected {@link RestClient}. The path and every query parameter are passed as a URI template
+   * with variables, so the client encodes each value exactly once and, with an empty base path, resolves the request against
+   * its own base URL.
+   */
+  private <T> ResponseEntity<T> invokeWithRestClient(final String basePath, final String path, final HttpMethod method, final Map<String, Object> pathParams,
+    final MultiValueMap<String, String> queryParams, final Object body, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams,
+    final MultiValueMap<String, Object> formParams, final List<MediaType> accept, final MediaType contentType, final ParameterizedTypeReference<T> returnType) {
+      final Map<String, Object> uriVariables = new HashMap<>(pathParams);
+      final StringBuilder uriTemplate = new StringBuilder(basePath == null ? "" : basePath).append(path);
+      if (queryParams != null && !queryParams.isEmpty()) {
+        String separator = "?";
+        int index = 0;
+        for (final Map.Entry<String, List<String>> queryParam : queryParams.entrySet()) {
+          for (final String value : queryParam.getValue()) {
+            final String nameVariable = "queryParamName" + index;
+            uriVariables.put(nameVariable, queryParam.getKey());
+            uriTemplate.append(separator).append('{').append(nameVariable).append('}');
+            if (value != null) {
+              final String valueVariable = "queryParamValue" + index;
+              uriVariables.put(valueVariable, value);
+              uriTemplate.append("={").append(valueVariable).append('}');
+            }
+            separator = "&";
+            index++;
+          }
+        }
+      }
+
+      final RestClient.RequestBodySpec request = restClient.method(method).uri(uriTemplate.toString(), uriVariables);
+      request.headers(headers -> {
+        headerParams.forEach((name, values) -> values.stream().filter(Objects::nonNull).forEach(value -> headers.add(name, value)));
+        defaultHeaders.forEach((name, values) -> values.stream().filter(Objects::nonNull).forEach(value -> headers.add(name, value)));
+        if (!cookieParams.isEmpty()) {
+          headers.add("Cookie", buildCookieHeader(cookieParams));
+        }
+        if (!defaultCookies.isEmpty()) {
+          headers.add("Cookie", buildCookieHeader(defaultCookies));
+        }
+      });
+      if (accept != null) {
+        request.accept(accept.toArray(new MediaType[accept.size()]));
+      }
+      if (contentType != null) {
+        request.contentType(contentType);
+      }
+      final Object requestBody = selectBody(body, formParams, contentType);
+      if (requestBody != null) {
+        request.body(requestBody);
+      }
+      return request.retrieve().toEntity(returnType);
   }
 
   protected void addHeadersToRequest(final HttpHeaders headers, final BodyBuilder requestBuilder) {
