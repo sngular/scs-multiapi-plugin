@@ -42,6 +42,8 @@ class OpenApiSpecFile {
 
   Boolean useHttpExchange
 
+  Boolean useCamelCaseNames
+
   TypeConstants.TimeType useTimeType
 
 }

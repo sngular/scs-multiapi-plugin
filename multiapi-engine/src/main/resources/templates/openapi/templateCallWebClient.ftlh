@@ -183,7 +183,7 @@ public class ${className?cap_first}Api {
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "query">
 
-    queryParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    <#if parameter.dataType.baseType == "object" && parameter.dataType.innerType??>queryParams.putAll(apiWebClient.objectToQueryParams("${parameter.effectiveStyle}", ${parameter.effectiveExplode?c}, "${parameter.name}", ${parameter.variableName}));<#else>queryParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));</#if>
 
         </#if>
       </#list>
@@ -192,7 +192,7 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "query">
 
-    queryParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    <#if parameter.dataType.baseType == "object" && parameter.dataType.innerType??>queryParams.putAll(apiWebClient.objectToQueryParams("${parameter.effectiveStyle}", ${parameter.effectiveExplode?c}, "${parameter.name}", ${parameter.variableName}));<#else>queryParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));</#if>
 
         </#if>
       </#list>
@@ -219,7 +219,7 @@ public class ${className?cap_first}Api {
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    cookieParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
         </#if>
       </#list>
     </#if>
@@ -227,7 +227,7 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    cookieParams.putAll(apiWebClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiWebClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
         </#if>
       </#list>
     </#if>

@@ -208,7 +208,7 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content>
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "query">
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    <#if parameter.dataType.baseType == "object" && parameter.dataType.innerType??>queryParams.putAll(apiRestClient.objectToQueryParams("${parameter.effectiveStyle}", ${parameter.effectiveExplode?c}, "${parameter.name}", ${parameter.variableName}));<#else>queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));</#if>
         </#if>
       </#list>
      </#if>
@@ -216,7 +216,7 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "query">
 
-    queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    <#if parameter.dataType.baseType == "object" && parameter.dataType.innerType??>queryParams.putAll(apiRestClient.objectToQueryParams("${parameter.effectiveStyle}", ${parameter.effectiveExplode?c}, "${parameter.name}", ${parameter.variableName}));<#else>queryParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));</#if>
     </#if>
       </#list>
     </#if>
@@ -233,7 +233,7 @@ public class ${className?cap_first}Api {
       <#list operation.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
 
         </#if>
       </#list>
@@ -251,7 +251,7 @@ public class ${className?cap_first}Api {
       <#list path.parameterObjects as parameter>
         <#if parameter.in == "cookie">
 
-    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT))<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
+    cookieParams.putAll(apiRestClient.parameterToMultiValueMap(<#if parameter.isCollection == true> ApiRestClient.CollectionFormat.${parameter.collectionFormat}<#else> null</#if>, "${parameter.name}", ${parameter.variableName}));
 
         </#if>
       </#list>

@@ -8,13 +8,12 @@ package com.sngular.api.generator.plugin.openapi.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
-import com.sngular.api.generator.plugin.common.tools.MapperUtil;
-import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
 import com.sngular.api.generator.plugin.openapi.model.OperationObject;
@@ -30,14 +29,18 @@ public class MapperAuthUtil {
 
   public static List<AuthSchemaObject> createAuthSchemaList(final JsonNode openAPI) {
     final ArrayList<AuthSchemaObject> authList = new ArrayList<>();
-    for (Entry<String, JsonNode> entry : ApiTool.getComponentSecuritySchemes(openAPI).entrySet()) {
+    // Iterated with the names the contract gives the schemes: operations reference them by exactly that name, so a name
+    // rebuilt from a normalized key ("tenantId" -> "TenantId") would never match and the scheme would not be applied.
+    final JsonNode securitySchemes = openAPI.path("components").path("securitySchemes");
+    for (final Iterator<Entry<String, JsonNode>> it = securitySchemes.fields(); it.hasNext(); ) {
+      final Entry<String, JsonNode> entry = it.next();
       final String key = entry.getKey();
       final JsonNode value = entry.getValue();
       final var typeStr = ApiTool.getType(value);
       final var isHttpBearer = "http".equalsIgnoreCase(typeStr) && "bearer".equalsIgnoreCase(ApiTool.getNodeAsString(value, "scheme"));
       final var authSchema = AuthSchemaObject
                                  .builder()
-                                 .name(StringCaseUtils.toCamelCase(MapperUtil.getKey(key)))
+                                 .name(key)
                                  .type(isHttpBearer ? "HttpBearerAuth" : getModelTypeAuth(value))
                                  .apiKeyParam(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getName(value) : "")
                                  .apiKeyPlace(API_KEY.equalsIgnoreCase(typeStr) ? ApiTool.getNodeAsString(value, "in") : "")

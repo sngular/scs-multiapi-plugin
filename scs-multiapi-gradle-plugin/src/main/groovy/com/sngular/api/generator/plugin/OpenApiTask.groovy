@@ -104,6 +104,9 @@ abstract class OpenApiTask extends DefaultTask {
     if (openApiSpecFile.useHttpExchange) {
       builder.useHttpExchange(openApiSpecFile.useHttpExchange)
     }
+    if (openApiSpecFile.useCamelCaseNames) {
+      builder.useCamelCaseNames(openApiSpecFile.useCamelCaseNames)
+    }
     if (openApiSpecFile.useTimeType) {
       builder.useTimeType(openApiSpecFile.useTimeType)
     }

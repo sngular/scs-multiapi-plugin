@@ -87,7 +87,13 @@ public class MapperPathUtil {
     final List<String> authSecList;
     if (Objects.nonNull(securityNode) && !securityNode.isMissingNode()) {
       authSecList = new ArrayList<>();
-      securityNode.elements().forEachRemaining(securityRequirement -> authSecList.add(securityRequirement.fieldNames().next()));
+      // Every scheme of every requirement, once each: a requirement may combine several schemes, and alternatives that share one
+      // (e.g. [{tenantId, bearerAuth}, {tenantId, oAuth2}]) must not apply it twice. A scheme without credentials applies nothing.
+      securityNode.elements().forEachRemaining(securityRequirement -> securityRequirement.fieldNames().forEachRemaining(schemeName -> {
+        if (!authSecList.contains(schemeName)) {
+          authSecList.add(schemeName);
+        }
+      }));
     } else {
       authSecList = authentications;
     }
@@ -285,6 +291,9 @@ public class MapperPathUtil {
                           .isCollection(ApiTool.hasItems(getContentOrSchema(refParameter)))
                           .importName(getParameterImport(dateType))
                           .defaultValue(getDefaultValue(ApiTool.getNode(refParameter, SCHEMA)))
+                          .camelCaseName(specFile.isUseCamelCaseNames())
+                          .style(ApiTool.getNodeAsString(refParameter, "style"))
+                          .explode(refParameter.has("explode") ? refParameter.get("explode").asBoolean() : null)
                           .build();
   }
 
@@ -330,7 +339,8 @@ public class MapperPathUtil {
                                          .name(parameterName)
                                          .required(ApiTool.getNodeAsBoolean(parameter, REQUIRED))
                                          .description(ApiTool.getNodeAsString(parameter, DESCRIPTION))
-                                         .in(ApiTool.getNodeAsString(parameter, "in"));
+                                         .in(ApiTool.getNodeAsString(parameter, "in"))
+                                         .camelCaseName(specFile.isUseCamelCaseNames());
       final var parameterSchema = ApiTool.getNode(contentType, SCHEMA);
       if (TypeConstants.OBJECT.equalsIgnoreCase(ApiTool.getType(parameterSchema))) {
         parameterObjects.add(builder
@@ -429,6 +439,10 @@ public class MapperPathUtil {
         SchemaObject schemaObject = null;
         if (mediaType.equals("application/x-www-form-urlencoded") || mediaType.equals("multipart/form-data")) {
           schemaObject = MapperContentUtil.mapComponentToSchemaObject(globalObject.getSchemaMap(), pojoName, schema, dataType.getBaseType(), specFile, baseDir).get(0);
+          if (specFile.isUseCamelCaseNames() && Objects.nonNull(schemaObject.getFieldObjectList())) {
+            // The client reads the form fields through the model's getters, which are camel case too.
+            schemaObject.getFieldObjectList().forEach(field -> field.setCamelCaseName(true));
+          }
         }
         contentObjects.add(ContentObject.builder()
                                         .dataType(dataType)

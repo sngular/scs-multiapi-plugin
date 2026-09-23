@@ -184,6 +184,50 @@ public class ApiWebClient {
     return  DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime);
   }
 
+  /**
+   * Serializes an object-typed query parameter as its contract declares, with the property names it has in JSON: exploded
+   * {@code form} (the OpenAPI default) sends each property as its own parameter ({@code ?pageNumber=0&pageSize=100}),
+   * {@code form} without explode sends {@code name=pageNumber,0,pageSize,100}, and {@code deepObject} sends
+   * {@code name[pageNumber]=0&name[pageSize]=100}. Null properties are left out.
+   */
+  @SuppressWarnings("unchecked")
+  public MultiValueMap<String, String> objectToQueryParams(final String style, final boolean explode, final String name, final Object value) {
+    final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    if (value == null) {
+      return params;
+    }
+    final Map<String, Object> properties = objectMapper.convertValue(value, Map.class);
+    if ("deepObject".equals(style)) {
+      properties.forEach((property, propertyValue) -> addQueryValues(params, name + "[" + property + "]", propertyValue));
+    } else if (explode) {
+      properties.forEach((property, propertyValue) -> addQueryValues(params, property, propertyValue));
+    } else {
+      final List<String> flattened = new ArrayList<String>();
+      properties.forEach((property, propertyValue) -> {
+        if (propertyValue != null) {
+          flattened.add(property);
+          flattened.add(parameterToString(propertyValue));
+        }
+      });
+      if (!flattened.isEmpty()) {
+        params.add(name, String.join(",", flattened));
+      }
+    }
+    return params;
+  }
+
+  private void addQueryValues(final MultiValueMap<String, String> params, final String name, final Object value) {
+    if (value instanceof Collection) {
+      for (final Object item : (Collection<?>) value) {
+        if (item != null) {
+          params.add(name, parameterToString(item));
+        }
+      }
+    } else if (value != null) {
+      params.add(name, parameterToString(value));
+    }
+  }
+
   public MultiValueMap<String, String> parameterToMultiValueMap(final CollectionFormat collectionFormat, final String name, final Object value) {
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
     CollectionFormat colFormat = collectionFormat;
@@ -324,13 +368,17 @@ public class ApiWebClient {
     }
   }
 
+  /**
+   * Applies the configured authentication of each scheme the operation lists. Security alternatives are satisfied by any one
+   * of them, and a client built on a configured RestTemplate/WebClient may authenticate through its own interceptors, so a
+   * scheme with no authentication configured is skipped rather than rejected.
+   */
   private void updateParamsForAuth(final String[] authNames, final MultiValueMap<String, String> queryParams, final HttpHeaders headerParams, final MultiValueMap<String, String> cookieParams) {
     for (String authName : authNames) {
       Authentication auth = authentications.get(authName);
-      if (auth == null) {
-        throw new RestClientException("Authentication undefined: " + authName);
+      if (auth != null) {
+        auth.applyToParams(queryParams, headerParams, cookieParams);
       }
-      auth.applyToParams(queryParams, headerParams, cookieParams);
     }
   }
 

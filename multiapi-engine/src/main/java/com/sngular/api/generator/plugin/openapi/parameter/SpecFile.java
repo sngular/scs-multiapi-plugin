@@ -42,6 +42,13 @@ public class SpecFile extends CommonSpecFile {
    */
   private boolean useHttpExchange;
 
+  /**
+   * Declares every generated Java name in camel case ({@code page_num} as {@code pageNum}, {@code getPageNum()}), while the
+   * contract names keep being the ones sent and bound ({@code @JsonProperty}, {@code @RequestParam(name = ...)}). Defaults to
+   * {@code false}: Java names are the contract names whenever they are legal identifiers.
+   */
+  private boolean useCamelCaseNames;
+
   public boolean shouldRegisterClientComponent() {
     return !Boolean.FALSE.equals(clientComponent);
   }

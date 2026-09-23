@@ -421,8 +421,13 @@ public class OpenApiGenerator {
       final SpecFile specFile, final String schemaName, final JsonNode model, final Map<String, JsonNode> basicSchemaMap,
       final String modelPackage) {
     final String parentPackage = modelPackage.substring(modelPackage.lastIndexOf(".") + 1);
-    final var schemaObjectIt = MapperContentUtil
-                                   .mapComponentToSchemaObject(basicSchemaMap, schemaName, model, parentPackage, specFile, this.baseDir).iterator();
+    final var schemaObjects = MapperContentUtil.mapComponentToSchemaObject(basicSchemaMap, schemaName, model, parentPackage, specFile, this.baseDir);
+    if (specFile.isUseCamelCaseNames()) {
+      schemaObjects.stream()
+                   .filter(schemaObject -> Objects.nonNull(schemaObject.getFieldObjectList()))
+                   .forEach(schemaObject -> schemaObject.getFieldObjectList().forEach(field -> field.setCamelCaseName(true)));
+    }
+    final var schemaObjectIt = schemaObjects.iterator();
     // Write to the resolved model package only when it is derivable from the spec (explicit
     // modelPackage or apiPackage); otherwise keep the legacy default (raw modelPackage, which
     // the writer defaults to the plugin's base package).

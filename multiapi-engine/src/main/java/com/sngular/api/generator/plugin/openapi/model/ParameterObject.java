@@ -44,13 +44,65 @@ public class ParameterObject {
   /** The contract's {@code schema.default}, as the text the binding annotation's {@code defaultValue} takes, or null. */
   private String defaultValue;
 
+  /** Whether the Java name is always rebuilt in camel case ({@code useCamelCaseNames}), not only when the contract name is not a legal identifier. */
+  private boolean camelCaseName;
+
+  /** The contract's {@code style}, or null when it declares none. */
+  private String style;
+
+  /** The contract's {@code explode}, or null when it declares none. */
+  private Boolean explode;
+
+  /**
+   * The serialization style: the declared one or, as OpenAPI defines, {@code form} for query and cookie parameters and
+   * {@code simple} for path and header ones.
+   */
+  public String getEffectiveStyle() {
+    final String effectiveStyle;
+    if (Objects.nonNull(style)) {
+      effectiveStyle = style;
+    } else {
+      effectiveStyle = "query".equals(in) || "cookie".equals(in) ? "form" : "simple";
+    }
+    return effectiveStyle;
+  }
+
+  /** Whether the value is exploded: the declared {@code explode} or, as OpenAPI defines, {@code true} only for the {@code form} style. */
+  public boolean isEffectiveExplode() {
+    return Objects.nonNull(explode) ? explode : "form".equals(getEffectiveStyle());
+  }
+
+  /**
+   * The generated client's {@code CollectionFormat} for an array value, as its style and explode declare: exploded
+   * {@code form} (the default) repeats the parameter ({@code ids=1&ids=2}), {@code form} without explode joins with commas,
+   * {@code spaceDelimited} with spaces and {@code pipeDelimited} with pipes.
+   */
+  public String getCollectionFormat() {
+    final String format;
+    switch (getEffectiveStyle()) {
+      case "spaceDelimited":
+        format = "SSV";
+        break;
+      case "pipeDelimited":
+        format = "PIPES";
+        break;
+      case "form":
+        format = isEffectiveExplode() ? "MULTI" : "CSV";
+        break;
+      default:
+        format = "CSV";
+        break;
+    }
+    return format;
+  }
+
   /**
    * The name under which this parameter is declared in the generated Java code. It is the contract name whenever that name is a legal Java identifier, and a
    * sanitized version of it otherwise - a header named {@code Idempotency-Key} is declared as {@code idempotencyKey}. The contract name stays in {@link #name}
    * and is what the generated code sends and binds against.
    */
   public String getVariableName() {
-    return StringCaseUtils.toJavaVariableName(name);
+    return camelCaseName ? StringCaseUtils.toCamelCaseVariableName(name) : StringCaseUtils.toJavaVariableName(name);
   }
 
   /**
