@@ -39,7 +39,7 @@ public class NewSalesPointDTO {
     }
 
     public NewSalesPointDTO.NewSalesPointDTOBuilder services(List<NewSalesPointServicesDTO> services) {
-      if (!services.isEmpty()) {
+      if (Objects.nonNull(services) && !services.isEmpty()) {
         this.services.addAll(services);
       }
       return this;

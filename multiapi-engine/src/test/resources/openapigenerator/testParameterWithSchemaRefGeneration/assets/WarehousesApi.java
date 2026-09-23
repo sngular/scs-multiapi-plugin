@@ -40,7 +40,7 @@ public interface WarehousesApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<Warehouse> searchWarehouses(@Parameter(name = "page", description = "pagination and sorting", required = false, schema = @Schema(description = "")) @RequestParam(required = false) PageFilters page , @Parameter(name = "filter", description = "a free form filter", required = false, schema = @Schema(description = "")) @RequestParam(required = false) Object filter) {
+  default ResponseEntity<Warehouse> searchWarehouses(@Parameter(name = "page", description = "pagination and sorting", required = false, schema = @Schema(description = "")) @RequestParam(name = "page", required = false) PageFilters page , @Parameter(name = "filter", description = "a free form filter", required = false, schema = @Schema(description = "")) @RequestParam(name = "filter", required = false) Object filter) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

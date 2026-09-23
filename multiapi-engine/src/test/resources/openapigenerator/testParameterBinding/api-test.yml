@@ -1,0 +1,50 @@
+# Parameters must bind by their contract name, with the contract's default and, for dates, the
+# ISO format that `format: date` / `date-time` prescribe.
+openapi: 3.0.3
+info:
+  title: Parameter binding
+  version: 1.0.0
+paths:
+  /sales-points:
+    get:
+      operationId: searchSalesPoints
+      tags: [SalesPoints]
+      parameters:
+        - name: page_num
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: updated_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: X-Channel
+          in: header
+          schema:
+            type: string
+            default: "web"
+      responses:
+        '200':
+          description: The page of sales points
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesPointPage'
+components:
+  schemas:
+    SalesPointPage:
+      type: object
+      properties:
+        closing_days:
+          type: array
+          items:
+            type: string

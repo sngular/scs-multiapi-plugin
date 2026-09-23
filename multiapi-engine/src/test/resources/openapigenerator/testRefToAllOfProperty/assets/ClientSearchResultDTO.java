@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ClientSearchResultDTO {
 
   @JsonProperty(value ="tags")
-  @Singular("tag")
+  @Singular(value = "tag", ignoreNullCollections = true)
   private List<String> tags;
 
   @JsonProperty(value ="client_found")

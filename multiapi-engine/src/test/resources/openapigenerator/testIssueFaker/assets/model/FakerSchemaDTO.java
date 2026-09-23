@@ -16,7 +16,7 @@ public class FakerSchemaDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<FakerFieldDTO> properties;
 
   @JsonProperty(value ="name")
@@ -27,7 +27,7 @@ public class FakerSchemaDTO {
   private String id;
 
   @JsonProperty(value ="definitions")
-  @Singular("definition")
+  @Singular(value = "definition", ignoreNullCollections = true)
   private List<FakerFieldDTO> definitions;
 
   @JsonProperty(value ="subjectName")
@@ -35,7 +35,7 @@ public class FakerSchemaDTO {
   private String subjectName;
 
   @JsonProperty(value ="requiredFields")
-  @Singular("requiredField")
+  @Singular(value = "requiredField", ignoreNullCollections = true)
   private List<String> requiredFields;
 
   @JsonProperty(value ="original")

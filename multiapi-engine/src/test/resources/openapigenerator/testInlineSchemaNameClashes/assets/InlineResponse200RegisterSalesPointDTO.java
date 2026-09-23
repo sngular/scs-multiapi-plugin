@@ -30,7 +30,7 @@ public class InlineResponse200RegisterSalesPointDTO {
     private List<Response200RegisterSalesPointServicesDTO> services = new ArrayList<Response200RegisterSalesPointServicesDTO>();
 
     public InlineResponse200RegisterSalesPointDTO.InlineResponse200RegisterSalesPointDTOBuilder services(List<Response200RegisterSalesPointServicesDTO> services) {
-      if (!services.isEmpty()) {
+      if (Objects.nonNull(services) && !services.isEmpty()) {
         this.services.addAll(services);
       }
       return this;

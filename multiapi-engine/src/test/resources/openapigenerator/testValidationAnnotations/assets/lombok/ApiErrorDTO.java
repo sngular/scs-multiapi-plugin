@@ -40,7 +40,7 @@ public class ApiErrorDTO {
   @MaxItems(maximum = 2000)
   @MinItems(minimum = 1000)
   @UniqueItems
-  @Singular("_test")
+  @Singular(value = "_test", ignoreNullCollections = true)
   private List<Integer> test;
 
 

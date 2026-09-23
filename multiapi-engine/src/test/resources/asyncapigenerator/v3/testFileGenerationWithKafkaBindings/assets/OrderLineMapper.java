@@ -38,7 +38,7 @@ public class OrderLineMapper {
     private String ref;
 
     public OrderLineMapper.OrderLineMapperBuilder products(List<OrderProductMapper> products) {
-      if (!products.isEmpty()) {
+      if (Objects.nonNull(products) && !products.isEmpty()) {
         this.products.addAll(products);
       }
       return this;

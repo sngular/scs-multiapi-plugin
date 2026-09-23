@@ -27,11 +27,11 @@ public class MapFieldDTO {
   private Integer mapSize;
 
   @JsonProperty(value ="mapTypes")
-  @Singular("mapType")
+  @Singular(value = "mapType", ignoreNullCollections = true)
   private List<FieldDTO> mapTypes;
 
   @JsonProperty(value ="defaultValue")
-  @Singular("_defaultValue")
+  @Singular(value = "_defaultValue", ignoreNullCollections = true)
   private List<Object> defaultValue;
 
 

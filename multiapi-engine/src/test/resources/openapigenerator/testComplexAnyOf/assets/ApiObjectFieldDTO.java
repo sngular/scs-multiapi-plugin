@@ -46,7 +46,7 @@ public class ApiObjectFieldDTO {
     private String name;
 
     public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder requiredValues(List<String> requiredValues) {
-      if (!requiredValues.isEmpty()) {
+      if (Objects.nonNull(requiredValues) && !requiredValues.isEmpty()) {
         this.requiredValues.addAll(requiredValues);
       }
       return this;
@@ -65,7 +65,7 @@ public class ApiObjectFieldDTO {
     }
 
     public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder properties(List<ApiTypeArrayDTO> properties) {
-      if (!properties.isEmpty()) {
+      if (Objects.nonNull(properties) && !properties.isEmpty()) {
         this.properties.addAll(properties);
       }
       return this;
@@ -79,7 +79,7 @@ public class ApiObjectFieldDTO {
     }
 
     public ApiObjectFieldDTO.ApiObjectFieldDTOBuilder defaultValues(List<Object> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;

@@ -92,7 +92,7 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder orderedItems(List<OrderedItemDTO> orderedItems) {
-      if (!orderedItems.isEmpty()) {
+      if (Objects.nonNull(orderedItems) && !orderedItems.isEmpty()) {
         this.orderedItems.addAll(orderedItems);
       }
       return this;
@@ -106,7 +106,7 @@ public class CustomerOrderDTO {
     }
 
     public CustomerOrderDTO.CustomerOrderDTOBuilder paymentDetails(List<PaymentDetailsDTO> paymentDetails) {
-      if (!paymentDetails.isEmpty()) {
+      if (Objects.nonNull(paymentDetails) && !paymentDetails.isEmpty()) {
         this.paymentDetails.addAll(paymentDetails);
       }
       return this;

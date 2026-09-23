@@ -64,7 +64,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder tags(List<String> tags) {
-      if (!tags.isEmpty()) {
+      if (Objects.nonNull(tags) && !tags.isEmpty()) {
         this.tags.addAll(tags);
       }
       return this;
@@ -83,7 +83,7 @@ public class ApiTestDTO {
     }
 
     public ApiTestDTO.ApiTestDTOBuilder testTypeList(List<ApiTestTypeDTO> testTypeList) {
-      if (!testTypeList.isEmpty()) {
+      if (Objects.nonNull(testTypeList) && !testTypeList.isEmpty()) {
         this.testTypeList.addAll(testTypeList);
       }
       return this;

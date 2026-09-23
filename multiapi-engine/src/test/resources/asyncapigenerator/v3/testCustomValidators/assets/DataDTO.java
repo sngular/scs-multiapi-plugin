@@ -79,7 +79,7 @@ public class DataDTO {
     }
 
     public DataDTO.DataDTOBuilder test(List<Integer> test) {
-      if (!test.isEmpty()) {
+      if (Objects.nonNull(test) && !test.isEmpty()) {
         this.test.addAll(test);
       }
       return this;

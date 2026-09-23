@@ -31,7 +31,7 @@ public class InlineResponse200ListGamesAnyOfDTO {
   private Integer rooms;
 
   @JsonProperty(value ="players")
-  @Singular("player")
+  @Singular(value = "player", ignoreNullCollections = true)
   private List<String> players;
 
 

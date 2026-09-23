@@ -41,7 +41,7 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<InlineResponse200ExampleOperationDTO> exampleOperation(@Parameter(name = "exampleParameter", required = true, schema = @Schema(description = "")) @RequestParam(required = true) String exampleParameter , @Parameter(name = "inlineObjectExampleOperationDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody InlineObjectExampleOperationDTO inlineObjectExampleOperationDTO) {
+  default ResponseEntity<InlineResponse200ExampleOperationDTO> exampleOperation(@Parameter(name = "exampleParameter", required = true, schema = @Schema(description = "")) @RequestParam(name = "exampleParameter", required = true) String exampleParameter , @Parameter(name = "inlineObjectExampleOperationDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody InlineObjectExampleOperationDTO inlineObjectExampleOperationDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

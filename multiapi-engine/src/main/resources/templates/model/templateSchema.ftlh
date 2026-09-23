@@ -312,7 +312,7 @@ public class ${schema.className} {
     @JsonProperty(value ="${field.baseName?uncap_first}")
     </#if>
     public ${schema.className}.${schema.className}Builder ${propName}(${field.dataType} ${propName}) {
-      if (!${propName}.isEmpty()) {
+      if (Objects.nonNull(${propName}) && !${propName}.isEmpty()) {
         this.${propName}.addAll(${propName});
       }
       return this;

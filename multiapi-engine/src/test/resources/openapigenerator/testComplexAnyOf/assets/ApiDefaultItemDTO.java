@@ -241,7 +241,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder requiredValues(List<String> requiredValues) {
-      if (!requiredValues.isEmpty()) {
+      if (Objects.nonNull(requiredValues) && !requiredValues.isEmpty()) {
         this.requiredValues.addAll(requiredValues);
       }
       return this;
@@ -275,7 +275,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder enumValues(List<String> enumValues) {
-      if (!enumValues.isEmpty()) {
+      if (Objects.nonNull(enumValues) && !enumValues.isEmpty()) {
         this.enumValues.addAll(enumValues);
       }
       return this;
@@ -289,7 +289,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder properties(List<String> properties) {
-      if (!properties.isEmpty()) {
+      if (Objects.nonNull(properties) && !properties.isEmpty()) {
         this.properties.addAll(properties);
       }
       return this;
@@ -303,7 +303,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder defaultValues(List<String> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;
@@ -337,7 +337,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder mapTypes(List<ApiTypeArrayDTO> mapTypes) {
-      if (!mapTypes.isEmpty()) {
+      if (Objects.nonNull(mapTypes) && !mapTypes.isEmpty()) {
         this.mapTypes.addAll(mapTypes);
       }
       return this;
@@ -386,7 +386,7 @@ public class ApiDefaultItemDTO {
     }
 
     public ApiDefaultItemDTO.ApiDefaultItemDTOBuilder values(List<ApiTypeArrayDTO> values) {
-      if (!values.isEmpty()) {
+      if (Objects.nonNull(values) && !values.isEmpty()) {
         this.values.addAll(values);
       }
       return this;

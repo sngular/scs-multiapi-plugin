@@ -18,11 +18,11 @@ public class StringFieldDTO {
   private String type;
 
   @JsonProperty(value ="properties")
-  @Singular("property")
+  @Singular(value = "property", ignoreNullCollections = true)
   private List<String> properties;
 
   @JsonProperty(value ="defaultValues")
-  @Singular("defaultValue")
+  @Singular(value = "defaultValue", ignoreNullCollections = true)
   private List<String> defaultValues;
 
   @JsonProperty(value ="name")

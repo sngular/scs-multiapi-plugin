@@ -56,7 +56,7 @@ public class UnionFieldDTO {
   private Boolean optionalUnion;
 
   @JsonProperty(value ="values")
-  @Singular("value")
+  @Singular(value = "value", ignoreNullCollections = true)
   private List<FieldDTO> values;
 
 

@@ -230,7 +230,7 @@ public class ${schema.className} {
 </#if>
 <#if field.dataType.baseType == "array">
 <#assign singName>${calculateSingularSafeName (field.fieldName)}</#assign>
-  @Singular("${singName}")
+  @Singular(value = "${singName}", ignoreNullCollections = true)
   private ${field.dataType} ${field.fieldName?uncap_first};
   <#elseif field.dataType.baseType == "map">
 <#assign singName>${calculateSingularSafeName (field.fieldName)}</#assign>

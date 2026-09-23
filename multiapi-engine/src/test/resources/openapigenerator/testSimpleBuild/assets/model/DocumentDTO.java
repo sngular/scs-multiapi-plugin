@@ -16,7 +16,7 @@ public class DocumentDTO {
   private String description;
 
   @JsonProperty(value ="attachments")
-  @Singular("attachment")
+  @Singular(value = "attachment", ignoreNullCollections = true)
   private List<MultipartFile> attachments;
 
   @JsonProperty(value ="document")

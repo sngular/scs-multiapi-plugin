@@ -78,7 +78,7 @@ public class ApiErrorDTO {
     }
 
     public ApiErrorDTO.ApiErrorDTOBuilder test(List<Integer> test) {
-      if (!test.isEmpty()) {
+      if (Objects.nonNull(test) && !test.isEmpty()) {
         this.test.addAll(test);
       }
       return this;

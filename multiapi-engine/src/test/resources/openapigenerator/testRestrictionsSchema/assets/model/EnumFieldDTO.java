@@ -15,7 +15,7 @@ public class EnumFieldDTO {
   private Boolean mandatory;
 
   @JsonProperty(value ="enumValues")
-  @Singular("enumValue")
+  @Singular(value = "enumValue", ignoreNullCollections = true)
   private List<String> enumValues;
 
   @JsonProperty(value ="type")

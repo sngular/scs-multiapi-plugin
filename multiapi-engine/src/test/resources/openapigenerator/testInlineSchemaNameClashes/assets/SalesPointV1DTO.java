@@ -30,7 +30,7 @@ public class SalesPointV1DTO {
     private List<SalesPointV1ServicesDTO> services = new ArrayList<SalesPointV1ServicesDTO>();
 
     public SalesPointV1DTO.SalesPointV1DTOBuilder services(List<SalesPointV1ServicesDTO> services) {
-      if (!services.isEmpty()) {
+      if (Objects.nonNull(services) && !services.isEmpty()) {
         this.services.addAll(services);
       }
       return this;

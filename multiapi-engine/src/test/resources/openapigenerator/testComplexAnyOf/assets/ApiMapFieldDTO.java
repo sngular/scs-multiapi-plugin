@@ -60,7 +60,7 @@ public class ApiMapFieldDTO {
     }
 
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder defaultValues(List<Object> defaultValues) {
-      if (!defaultValues.isEmpty()) {
+      if (Objects.nonNull(defaultValues) && !defaultValues.isEmpty()) {
         this.defaultValues.addAll(defaultValues);
       }
       return this;
@@ -84,7 +84,7 @@ public class ApiMapFieldDTO {
     }
 
     public ApiMapFieldDTO.ApiMapFieldDTOBuilder mapTypes(List<ApiTypeArrayDTO> mapTypes) {
-      if (!mapTypes.isEmpty()) {
+      if (Objects.nonNull(mapTypes) && !mapTypes.isEmpty()) {
         this.mapTypes.addAll(mapTypes);
       }
       return this;

@@ -106,7 +106,7 @@ public class ApiUnionFieldDTO {
     }
 
     public ApiUnionFieldDTO.ApiUnionFieldDTOBuilder values(List<ApiTypeArrayDTO> values) {
-      if (!values.isEmpty()) {
+      if (Objects.nonNull(values) && !values.isEmpty()) {
         this.values.addAll(values);
       }
       return this;

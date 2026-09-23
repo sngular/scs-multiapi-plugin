@@ -50,7 +50,7 @@ public class ProfileDTO {
     private String nickname;
 
     public ProfileDTO.ProfileDTOBuilder tags(List<String> tags) {
-      if (!tags.isEmpty()) {
+      if (Objects.nonNull(tags) && !tags.isEmpty()) {
         this.tags.addAll(tags);
       }
       return this;
