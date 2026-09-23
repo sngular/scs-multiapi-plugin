@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator;
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile;
+import com.sngular.api.generator.plugin.common.model.SpringBootVersion;
 import com.sngular.api.generator.plugin.exception.GeneratedSourceFolderException;
 import com.sngular.api.generator.plugin.resolver.MavenSpecArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
@@ -50,8 +51,9 @@ public final class OpenAsyncMojo extends AbstractMojo {
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
 
+  /** The Spring Boot version to generate for, as {@code MAJOR} or {@code MAJOR.MINOR} (e.g. {@code 3.2}). */
   @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
-  private Integer springBootVersion;
+  private String springBootVersion;
 
   @Parameter(name = "overwriteModel", property = "overwriteModel", defaultValue = "true")
   private Boolean overwriteModel;
@@ -61,7 +63,7 @@ public final class OpenAsyncMojo extends AbstractMojo {
     final var processedGeneratedSourcesFolder = processGeneratedSourcesFolderName();
     addGeneratedSourcesToProject(processedGeneratedSourcesFolder);
 
-    final var asyncApiGenerator = new AsyncApiGenerator(springBootVersion, overwriteModel, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
+    final var asyncApiGenerator = new AsyncApiGenerator(SpringBootVersion.parse(springBootVersion).getMajor(), overwriteModel, targetFolder, processedGeneratedSourcesFolder, project.getModel().getGroupId(), project.getBasedir());
     asyncApiGenerator.setArtifactResolver(new MavenSpecArtifactResolver(repositorySystem, repositorySession, remoteRepositories, project));
 
     asyncApiGenerator.processFileSpec(specFiles);

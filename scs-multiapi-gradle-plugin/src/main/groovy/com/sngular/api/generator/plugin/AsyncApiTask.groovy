@@ -9,6 +9,7 @@ package com.sngular.api.generator.plugin
 import com.sngular.api.generator.plugin.asyncapi.AsyncApiGenerator
 import com.sngular.api.generator.plugin.asyncapi.parameter.OperationParameterObject
 import com.sngular.api.generator.plugin.asyncapi.parameter.SpecFile
+import com.sngular.api.generator.plugin.common.model.SpringBootVersion
 import com.sngular.api.generator.plugin.resolver.GradleSpecArtifactResolver
 import com.sngular.api.generator.plugin.model.AsyncApiModelExtension
 import com.sngular.api.generator.plugin.model.AsyncApiSpecFile
@@ -33,7 +34,7 @@ abstract class AsyncApiTask extends DefaultTask {
     def generatedDir = getOrCreateGenerated(getOutputDir())
     AsyncApiModelExtension asyncApiModelExtension = getProject().getExtensions().getByType(AsyncApiModelExtension.class)
     if (null != asyncApiModelExtension && !asyncApiModelExtension.getSpecFiles().isEmpty()) {
-      def asyncApiGen = new AsyncApiGenerator(asyncApiModelExtension.getSpringBootVersion(), asyncApiModelExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
+      def asyncApiGen = new AsyncApiGenerator(SpringBootVersion.parse(String.valueOf(asyncApiModelExtension.getSpringBootVersion())).getMajor(), asyncApiModelExtension.getOverWriteModel(), targetFolder, generatedDir, project.getGroup() as String, project.getProjectDir())
       asyncApiGen.setArtifactResolver(new GradleSpecArtifactResolver(project))
       List<SpecFile> asyncApiSpecFiles = []
       asyncApiModelExtension.getSpecFiles().forEach(apiSpec -> {

@@ -26,6 +26,7 @@ import com.sngular.api.generator.plugin.common.loader.LocalRepositorySpecArtifac
 import com.sngular.api.generator.plugin.common.loader.SpecArtifactResolver;
 import com.sngular.api.generator.plugin.common.model.SchemaObject;
 import com.sngular.api.generator.plugin.common.model.SpecConventions;
+import com.sngular.api.generator.plugin.common.model.SpringBootVersion;
 import com.sngular.api.generator.plugin.common.model.TypeConstants;
 import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.InlineSchemaNaming;
@@ -76,6 +77,8 @@ public class OpenApiGenerator {
 
   private final Integer springBootVersion;
 
+  private final SpringBootVersion bootVersion;
+
   private final File targetFolder;
 
   private SpecArtifactResolver artifactResolver = new LocalRepositorySpecArtifactResolver();
@@ -93,11 +96,36 @@ public class OpenApiGenerator {
       final String processedGeneratedSourcesFolder,
       final String groupId,
       final File basedir) {
+    this(SpringBootVersion.of(springBootVersion), overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, basedir);
+  }
+
+  /**
+   * As the {@code Integer} constructor, taking {@code springBootVersion} as {@code MAJOR} or {@code MAJOR.MINOR} (e.g.
+   * {@code "3.2"}), so features that need a later minor are only generated for projects on it.
+   */
+  public OpenApiGenerator(
+      final String springBootVersion,
+      final Boolean overwriteModel,
+      final File targetFolder,
+      final String processedGeneratedSourcesFolder,
+      final String groupId,
+      final File basedir) {
+    this(SpringBootVersion.parse(springBootVersion), overwriteModel, targetFolder, processedGeneratedSourcesFolder, groupId, basedir);
+  }
+
+  private OpenApiGenerator(
+      final SpringBootVersion springBootVersion,
+      final Boolean overwriteModel,
+      final File targetFolder,
+      final String processedGeneratedSourcesFolder,
+      final String groupId,
+      final File basedir) {
     this.overwriteModel = overwriteModel;
     this.groupId = groupId;
     this.baseDir = basedir.toPath().toAbsolutePath();
     this.templateFactory = new TemplateFactory(overwriteModel, targetFolder, processedGeneratedSourcesFolder, basedir);
-    this.springBootVersion = springBootVersion;
+    this.bootVersion = springBootVersion;
+    this.springBootVersion = springBootVersion.getMajor();
     this.targetFolder = targetFolder;
   }
 
@@ -186,6 +214,8 @@ public class OpenApiGenerator {
 
     templateFactory.calculateJavaEEPackage(springBootVersion);
     templateFactory.calculateJacksonPackage(springBootVersion);
+    // RestClient is part of Spring Framework 6.1, i.e. Spring Boot 3.2.
+    templateFactory.setSupportsRestClient(bootVersion.isAtLeast(3, 2));
     // Resolve the model package up front so the API interface imports models from the same
     // package they are actually written to (the interface is rendered before the models).
     // Only when a package can be derived from the spec (explicit modelPackage, or apiPackage);
@@ -203,9 +233,9 @@ public class OpenApiGenerator {
     if (specFile.isUseHttpExchange() && !specFile.isCallMode()) {
       throw new CodeGenerationException("useHttpExchange generates client interfaces, so it needs callMode=true (spec " + specFile.getFilePath() + ")");
     }
-    if (specFile.isUseHttpExchange() && Objects.nonNull(springBootVersion) && springBootVersion < 3) {
+    if (specFile.isUseHttpExchange() && !bootVersion.isAtLeast(3, 0)) {
       throw new CodeGenerationException("useHttpExchange needs Spring Boot 3 or later (@HttpExchange is part of Spring Framework 6), but springBootVersion is "
-                                        + springBootVersion + " (spec " + specFile.getFilePath() + ")");
+                                        + bootVersion + " (spec " + specFile.getFilePath() + ")");
     }
   }
 

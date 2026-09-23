@@ -55,8 +55,9 @@ public final class OpenapiMultiFileMojo extends AbstractMojo {
   @Parameter(name = "generatedSourcesFolder", property = "generatedSourcesFolder", defaultValue = PluginConstants.GENERATED_SOURCES_FOLDER)
   private String generatedSourcesFolder;
 
+  /** The Spring Boot version to generate for, as {@code MAJOR} or {@code MAJOR.MINOR} (e.g. {@code 3.2}). */
   @Parameter(name = "springBootVersion", property = "spring-boot-version", defaultValue = "2")
-  private Integer springBootVersion;
+  private String springBootVersion;
 
   private String processedGeneratedSourcesFolder;
 

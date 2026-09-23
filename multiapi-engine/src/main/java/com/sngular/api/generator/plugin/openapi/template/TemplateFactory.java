@@ -126,6 +126,10 @@ public class TemplateFactory extends CommonTemplateFactory {
     }
   }
 
+  public final void setSupportsRestClient(final boolean supportsRestClient) {
+    addToRoot("supportsRestClient", supportsRestClient);
+  }
+
   public final void setPackageName(final String packageName) {
     addToRoot("package", packageName);
   }
