@@ -254,6 +254,13 @@ public final class OpenApiGeneratorFixtures {
 					.modelNameSuffix("DTO")
 					.useLombokModelAnnotation(true).build());
 
+	static final List<SpecFile> TEST_REF_TO_ALL_OF_PROPERTY = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRefToAllOfProperty/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.testreftoallofproperty")
+					.modelPackage("com.sngular.multifileplugin.testreftoallofproperty.model")
+					.modelNameSuffix("DTO")
+					.useLombokModelAnnotation(true).build());
+
 	static final List<SpecFile> TEST_NO_CONTENT_RESPONSES = List
 			.of(SpecFile.builder().filePath("openapigenerator/testNoContentResponses/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.testnocontentresponses")
@@ -1852,6 +1859,22 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		final List<String> expectedTestApiModelFiles = List
 				.of(COMMON_PATH + "assets/InlineResponse200ListProductsDTO.java");
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateRefToAllOfProperty() {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/testreftoallofproperty";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/testreftoallofproperty/model";
+
+		final String COMMON_PATH = "openapigenerator/testRefToAllOfProperty/";
+
+		final List<String> expectedTestApiFiles = List.of(COMMON_PATH + "assets/ClientsApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(COMMON_PATH + "assets/ClientDTO.java",
+				COMMON_PATH + "assets/ClientDataDTO.java", COMMON_PATH + "assets/ClientSearchResultDTO.java");
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);

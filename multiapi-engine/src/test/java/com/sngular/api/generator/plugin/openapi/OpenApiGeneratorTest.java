@@ -128,6 +128,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateNestedExternalRefs()),
         Arguments.of("testNestedRefInAllOf", OpenApiGeneratorFixtures.TEST_NESTED_REF_IN_ALLOF,
             OpenApiGeneratorFixtures.validateNestedRefInAllOf()),
+        Arguments.of("testRefToAllOfProperty", OpenApiGeneratorFixtures.TEST_REF_TO_ALL_OF_PROPERTY,
+            OpenApiGeneratorFixtures.validateRefToAllOfProperty()),
         Arguments.of("testNoContentResponses", OpenApiGeneratorFixtures.TEST_NO_CONTENT_RESPONSES,
             OpenApiGeneratorFixtures.validateNoContentResponses()),
         Arguments.of("testExternalResponseRef", OpenApiGeneratorFixtures.TEST_EXTERNAL_RESPONSE_REF,

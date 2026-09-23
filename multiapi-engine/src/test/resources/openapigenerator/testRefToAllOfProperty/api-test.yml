@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Ref to allOf property
+  version: 1.0.0
+paths:
+  /clients/search:
+    get:
+      operationId: searchClient
+      responses:
+        '200':
+          description: The client lookup result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientSearchResult'
+components:
+  schemas:
+    ClientData:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        document_number:
+          type: string
+    Client:
+      allOf:
+        - $ref: '#/components/schemas/ClientData'
+        - type: object
+          properties:
+            client_id:
+              type: integer
+              format: int64
+    ClientSearchResult:
+      type: object
+      properties:
+        client_found:
+          $ref: '#/components/schemas/Client'
+        tags:
+          type: array
+          items:
+            type: string
