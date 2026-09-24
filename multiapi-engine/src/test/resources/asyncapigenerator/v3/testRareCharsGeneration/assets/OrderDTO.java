@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +22,8 @@ public class OrderDTO {
   public enum New {
     ONE_PIECE_WORKS("one:piece:works"),
     TWO_PIECE_WORKS("two-piece-works"),
-    THREE_PIECE_WORKS("three:piece:works");
+    THREE_PIECE_WORKS("three:piece:works"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -32,6 +34,19 @@ public class OrderDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static New fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (New constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

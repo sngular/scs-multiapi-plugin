@@ -1,5 +1,6 @@
 package com.sngular.scsplugin.constantgeneration.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDateTime;
@@ -31,7 +32,8 @@ public class UserSignedUpPayload {
   public enum NumberEnum {
     _1234("1234"),
     _2345("2345"),
-    _3456("3456");
+    _3456("3456"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -42,6 +44,19 @@ public class UserSignedUpPayload {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static NumberEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (NumberEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

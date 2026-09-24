@@ -134,6 +134,10 @@ abstract class AsyncApiTask extends DefaultTask {
     if (parameterObject.getUsePactAnnotation()) {
       builder.usePactAnnotation(parameterObject.usePactAnnotation)
     }
+    // Checked against null, not truthiness: unset means true, so `false` is the value that changes the output.
+    if (parameterObject.getUseUnknownEnumValue() != null) {
+      builder.useUnknownEnumValue(parameterObject.useUnknownEnumValue)
+    }
 
     return builder.build()
   }

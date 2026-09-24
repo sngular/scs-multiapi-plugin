@@ -1067,6 +1067,7 @@ public final class ModelBuilder {
       throw new BadDefinedEnumException(name);
     }
     field.setEnumValues(enumValuesMap);
+    field.setUnknownEnumFallback(Objects.isNull(specFile) || specFile.shouldUseUnknownEnumValue());
     // Enum fields bypass processObjectProperty's applyMetadata, so carry the schema's
     // description/example/deprecated here too for consistent @Schema annotations.
     field.setDescription(ApiTool.getDescription(value));

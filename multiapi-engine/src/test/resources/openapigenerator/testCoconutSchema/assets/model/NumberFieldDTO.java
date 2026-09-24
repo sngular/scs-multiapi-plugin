@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
@@ -48,7 +49,8 @@ public class NumberFieldDTO {
 
   public enum NumberEnum {
     FLOAT("float"),
-    INTEGER("integer");
+    INTEGER("integer"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -59,6 +61,19 @@ public class NumberFieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static NumberEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (NumberEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

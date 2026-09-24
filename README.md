@@ -31,6 +31,7 @@ Maven and Gradle
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
   - [Object-typed query parameters and multipart bodies](#object-typed-query-parameters-and-multipart-bodies)
   - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
+  - [Unknown enum values (useUnknownEnumValue)](#unknown-enum-values-useunknownenumvalue)
 - [Property Validation](#property-validation)
 - [Loading specifications from the plugin classpath](#loading-specifications-from-the-plugin-classpath)
 - [Loading specifications from a remote URL](#loading-specifications-from-a-remote-url-apicurio-registry-http)
@@ -373,6 +374,10 @@ can be configured in the plugin.
       `@AsyncListener` / `@AsyncPublisher` (with the channel name and `operationId`).
       **It's initialized to `false` by default**. Only applies to `consumer` and `supplier`
       sections (not `streamBridge`), and not in combination with Kafka bindings.
+  -  **useUnknownEnumValue**: Boolean value. When `true`, every generated enum reads
+      a value outside the contract as `UNKNOWN` instead of failing, as described in
+      [Unknown enum values](#unknown-enum-values-useunknownenumvalue).
+      **It's initialized to `true` by default**. Set it to `false` for strict enums.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -757,6 +762,7 @@ that will be used. Each specFile has their own configuration:
 | clientComponent          | With `callMode`, whether the `*Api` client classes are `@Component`s. `false`: declare them yourself ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to true by default**   | false                                             |
 | useHttpExchange          | With `callMode`, generates `@HttpExchange` interfaces; needs `springBootVersion` >= 3 ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to false by default**                 | true                                              |
 | useCamelCaseNames | Camel-case Java names, JSON as-is. Default false | true |
+| useUnknownEnumValue | Enums read values outside the contract as `UNKNOWN` instead of failing ([see](#unknown-enum-values-useunknownenumvalue)). **It´s initialized to true by default** | false |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
@@ -1108,6 +1114,51 @@ contract names.
 
 Switching it on renames the generated getters, setters and builder methods, so
 code that uses them has to be updated once.
+
+### Unknown enum values (useUnknownEnumValue)
+
+Since 8.0.0 every generated enum, in OpenAPI and AsyncAPI models alike, has an
+extra `UNKNOWN` constant. Reading a value that the contract does not list
+resolves to `UNKNOWN` instead of failing, so a provider that adds a value to an
+enum no longer breaks the services that consume it:
+
+```java
+public enum Status {
+  ACTIVE("active"),
+  BLOCKED("blocked"),
+  UNKNOWN("UNKNOWN");
+  ...
+  @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+  public static Status fromValue(String value) { ... } // "retired" -> UNKNOWN
+}
+```
+
+- `UNKNOWN` is written back as `"UNKNOWN"`, also for numeric enums, so a value
+  that was not understood shows up as such instead of being hidden.
+  `null` stays `null`.
+- Numeric enums compare by value, so `4.40` matches `4.4`. Their `getValue()`
+  returns `null` for `UNKNOWN`.
+- If the contract already declares a value named `UNKNOWN` (`unknown`,
+  `Unknown`...), that constant is the one unknown values resolve to, and no
+  extra constant is added.
+- The resolution lives in the enum itself (`@JsonCreator`), so it does not
+  depend on how the `ObjectMapper` is configured. It works the same with
+  Jackson 2 and Jackson 3.
+
+This applies to the server side too: a request body with a value outside the
+contract is accepted as `UNKNOWN`, not rejected. A `switch` over a generated
+enum that lists every constant without a `default` no longer compiles until it
+handles `UNKNOWN`.
+
+Set `useUnknownEnumValue` to `false` to generate strict enums that reject unknown
+values, as before 8.0.0:
+
+```xml
+<specFile>
+  <filePath>openapi/openapi.yml</filePath>
+  <useUnknownEnumValue>false</useUnknownEnumValue>
+</specFile>
+```
 
 ### Usage considerations
 

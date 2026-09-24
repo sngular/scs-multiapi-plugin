@@ -1,6 +1,7 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
@@ -76,7 +77,8 @@ public class FieldDTO {
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
-    ALLOF("allof");
+    ALLOF("allof"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -87,6 +89,19 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (UnionEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override
@@ -104,7 +119,8 @@ public class FieldDTO {
     HOUR("HOUR"),
     MINUTE("MINUTE"),
     SECOND("SECOND"),
-    DAY("DAY");
+    DAY("DAY"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -115,6 +131,19 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static SeqEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (SeqEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override
@@ -172,7 +201,8 @@ public class FieldDTO {
 
   public enum NumberEnum {
     FLOAT("float"),
-    INTEGER("integer");
+    INTEGER("integer"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -183,6 +213,19 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static NumberEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (NumberEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

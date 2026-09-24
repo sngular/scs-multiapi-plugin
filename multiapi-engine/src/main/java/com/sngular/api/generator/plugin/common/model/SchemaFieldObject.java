@@ -29,6 +29,9 @@ public class SchemaFieldObject {
 
   private Map<String, String> enumValues;
 
+  /** Whether the enum resolves values outside {@link #enumValues} to an {@code UNKNOWN} constant ({@code useUnknownEnumValue}). */
+  private boolean unknownEnumFallback;
+
   private Object constValue;
 
   private String description;

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +54,8 @@ public class ApiTypeArrayDTO {
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
-    ALLOF("allof");
+    ALLOF("allof"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -64,6 +66,19 @@ public class ApiTypeArrayDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (UnionEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override
@@ -79,7 +94,8 @@ public class ApiTypeArrayDTO {
     HOUR("HOUR"),
     MINUTE("MINUTE"),
     SECOND("SECOND"),
-    DAY("DAY");
+    DAY("DAY"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -90,6 +106,19 @@ public class ApiTypeArrayDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static SeqEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (SeqEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override
@@ -129,7 +158,8 @@ public class ApiTypeArrayDTO {
   private NumberEnum numberEnum;
   public enum NumberEnum {
     FLOAT("float"),
-    INTEGER("integer");
+    INTEGER("integer"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -140,6 +170,19 @@ public class ApiTypeArrayDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static NumberEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (NumberEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

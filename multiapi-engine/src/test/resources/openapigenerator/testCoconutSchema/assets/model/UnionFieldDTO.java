@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
@@ -28,7 +29,8 @@ public class UnionFieldDTO {
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
-    ALLOF("allof");
+    ALLOF("allof"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -39,6 +41,19 @@ public class UnionFieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (UnionEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

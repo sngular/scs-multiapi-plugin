@@ -56,32 +56,92 @@
 </#function>
 package ${packageModel};
 
+<#list schema.fieldObjectList as field>
+  <#if field.unknownEnumFallback>
+import com.fasterxml.jackson.annotation.JsonCreator;
+    <#break>
+  </#if>
+</#list>
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ${schema.className} {
 <#list schema.fieldObjectList as field>
+<#assign valueType = field.dataType.innerType?cap_first>
+<#assign stringEnum = valueType == "String">
+<#assign addUnknown = field.unknownEnumFallback && !field.enumValues?keys?seq_contains("UNKNOWN")>
 <#list field.enumValues as key, value>
 <#if key?matches("[0-9].*")>
   ${"_"+key}(${value})<#sep>,
 <#else>
   ${key}(${value})<#sep>,
 </#if>
-</#list>;
+</#list><#if addUnknown>,
+  UNKNOWN(<#if stringEnum>"UNKNOWN"<#else>null</#if>)</#if>;
 
-  private ${field.dataType.innerType?cap_first} value;
+  private ${valueType} value;
 
-  ${schema.className?cap_first}(${field.dataType.innerType?cap_first} value) {
+  ${schema.className?cap_first}(${valueType} value) {
     this.value = value;
   }
 
-  @JsonValue
-  public ${field.dataType.innerType?cap_first} getValue() {
+<#if field.unknownEnumFallback && !stringEnum>
+  public ${valueType} getValue() {
     return value;
   }
+
+  @JsonValue
+  public Object toJsonValue() {
+    return this == UNKNOWN ? "UNKNOWN" : value;
+  }
+
+  @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+  public static ${schema.className} fromValue(Object value) {
+    if (value == null) {
+      return null;
+    }
+    final java.math.BigDecimal number;
+    try {
+      number = new java.math.BigDecimal(value.toString());
+    } catch (NumberFormatException e) {
+      return UNKNOWN;
+    }
+    for (${schema.className} constant : values()) {
+      if (constant.value != null && number.compareTo(new java.math.BigDecimal(constant.value.toString())) == 0) {
+        return constant;
+      }
+    }
+    return UNKNOWN;
+  }
+
+  @Override
+  public String toString() {
+    return this == UNKNOWN ? "UNKNOWN" : String.valueOf(value);
+  }
+<#else>
+  @JsonValue
+  public ${valueType} getValue() {
+    return value;
+  }
+<#if field.unknownEnumFallback>
+
+  @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+  public static ${schema.className} fromValue(String value) {
+    if (value == null) {
+      return null;
+    }
+    for (${schema.className} constant : values()) {
+      if (value.equals(constant.value)) {
+        return constant;
+      }
+    }
+    return UNKNOWN;
+  }
+</#if>
 
   @Override
   public String toString() {
     return String.valueOf(value);
   }
+</#if>
 </#list>
 }

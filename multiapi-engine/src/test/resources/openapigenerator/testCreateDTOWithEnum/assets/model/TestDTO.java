@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.testCreateDTOWithEnum.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
@@ -18,7 +19,8 @@ public class TestDTO {
   public enum Properties {
     ENUM_VALUE_1("Enum Value 1"),
     ENUM_VALUE_3("Enum Value 3"),
-    ENUM_VALUE_2("Enum Value 2");
+    ENUM_VALUE_2("Enum Value 2"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -29,6 +31,19 @@ public class TestDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Properties fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Properties constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

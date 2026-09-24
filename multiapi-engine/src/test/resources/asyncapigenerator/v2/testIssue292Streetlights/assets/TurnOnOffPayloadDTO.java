@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,8 @@ public class TurnOnOffPayloadDTO {
   private Command command;
   public enum Command {
     TRUE("true"),
-    FALSE("false");
+    FALSE("false"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -26,6 +28,19 @@ public class TurnOnOffPayloadDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Command fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Command constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override
