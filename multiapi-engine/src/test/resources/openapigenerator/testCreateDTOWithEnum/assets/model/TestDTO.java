@@ -20,6 +20,7 @@ public class TestDTO {
     ENUM_VALUE_1("Enum Value 1"),
     ENUM_VALUE_3("Enum Value 3"),
     ENUM_VALUE_2("Enum Value 2"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -31,6 +32,11 @@ public class TestDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

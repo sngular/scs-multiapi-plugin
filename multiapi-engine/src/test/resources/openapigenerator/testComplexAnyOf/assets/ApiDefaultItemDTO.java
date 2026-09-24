@@ -56,6 +56,7 @@ public class ApiDefaultItemDTO {
     MINUTE("MINUTE"),
     SECOND("SECOND"),
     DAY("DAY"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -67,6 +68,11 @@ public class ApiDefaultItemDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
@@ -118,6 +124,7 @@ public class ApiDefaultItemDTO {
   public enum NumberEnum {
     FLOAT("float"),
     INTEGER("integer"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -129,6 +136,11 @@ public class ApiDefaultItemDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

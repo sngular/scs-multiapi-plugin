@@ -257,6 +257,7 @@ public class ${schema.className} {
     ${key}(${value})<#sep>,
   </#if>
 </#list><#if addUnknown>,
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}<#if !stringEnum>; {@link #getValue()} returns {@code null}</#if>. */
     UNKNOWN(<#if stringEnum>"UNKNOWN"<#else>null</#if>)</#if>;
 
     private ${valueType} value;
@@ -266,6 +267,7 @@ public class ${schema.className} {
     }
 
 <#if field.unknownEnumFallback && !stringEnum>
+    /** The contract value; {@code null} for {@link #UNKNOWN}. */
     public ${valueType} getValue() {
       return value;
     }
@@ -273,6 +275,11 @@ public class ${schema.className} {
     @JsonValue
     public Object toJsonValue() {
       return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
@@ -304,6 +311,11 @@ public class ${schema.className} {
       return value;
     }
 <#if field.unknownEnumFallback>
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static ${enumName} fromValue(String value) {

@@ -1145,6 +1145,51 @@ public enum Status {
   depend on how the `ObjectMapper` is configured. It works the same with
   Jackson 2 and Jackson 3.
 
+#### Handling UNKNOWN in your code
+
+Every enum with the fallback has `isUnknown()`, which is `true` only for the
+constant that values outside the contract resolve to. Check it instead of
+checking `getValue()` for `null`: in numeric enums `getValue()` returns `null`
+for `UNKNOWN`, so code like `e.getValue().equals(x)` or `e.getValue().intValue()`
+throws a `NullPointerException` there.
+
+- **Converting a value to the enum.** Use the generated `fromValue` instead of a
+  loop over `values()`. It matches the contract value exactly and returns
+  `UNKNOWN` when nothing matches:
+
+  ```java
+  Code code = Code.fromValue(raw);
+  if (code.isUnknown()) {
+    // the value is not in the contract
+  }
+  ```
+
+- **Looping over `values()` yourself** (for example to ignore case, or to keep
+  returning `null` when nothing matches): skip `UNKNOWN` before calling
+  `getValue()`. Otherwise an input `"UNKNOWN"` now matches the new constant.
+
+  ```java
+  for (Code c : Code.values()) {
+    if (c.isUnknown()) {
+      continue;
+    }
+    if (c.getValue().equals(raw)) {
+      return c;
+    }
+  }
+  return null;
+  ```
+
+- **Failing where the value matters.** Deserialization stays tolerant, so decide
+  at the point that needs a known value, and fail there with a clear message
+  instead of a `NullPointerException`:
+
+  ```java
+  if (dto.getCode().isUnknown()) {
+    throw new IllegalStateException("Code outside the contract for order " + dto.getId());
+  }
+  ```
+
 This applies to the server side too: a request body with a value outside the
 contract is accepted as `UNKNOWN`, not rejected. A `switch` over a generated
 enum that lists every constant without a `default` no longer compiles until it

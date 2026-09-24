@@ -17,6 +17,7 @@ public class Output {
   public enum Type {
     DELETE("delete"),
     UPDATE("update"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -28,6 +29,11 @@ public class Output {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
@@ -52,6 +58,7 @@ public class Output {
   private Source source;
   public enum Source {
     TENANT("tenant"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -63,6 +70,11 @@ public class Output {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

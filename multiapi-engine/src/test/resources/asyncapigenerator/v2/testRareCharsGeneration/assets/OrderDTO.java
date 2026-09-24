@@ -23,6 +23,7 @@ public class OrderDTO {
     ONE_PIECE_WORKS("one:piece:works"),
     TWO_PIECE_WORKS("two-piece-works"),
     THREE_PIECE_WORKS("three:piece:works"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -34,6 +35,11 @@ public class OrderDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

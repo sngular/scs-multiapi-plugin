@@ -29,6 +29,7 @@ public class Shipment {
   public enum Final {
     DRAFT("DRAFT"),
     SENT("SENT"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -40,6 +41,11 @@ public class Shipment {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
