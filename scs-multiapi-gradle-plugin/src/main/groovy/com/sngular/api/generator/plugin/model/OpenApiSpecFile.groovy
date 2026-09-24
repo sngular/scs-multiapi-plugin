@@ -36,6 +36,8 @@ class OpenApiSpecFile {
 
   Boolean usePactAnnotation
 
+  Boolean useUnknownEnumValue
+
   Boolean isReactive
 
   Boolean clientComponent

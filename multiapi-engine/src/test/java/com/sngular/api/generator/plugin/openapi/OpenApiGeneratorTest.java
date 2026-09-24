@@ -105,6 +105,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateRestClientWithRequestBodyGeneration()),
         Arguments.of("testApiEnumsGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_GENERATION,
             OpenApiGeneratorFixtures.validateEnumsGeneration()),
+        Arguments.of("testApiEnumsStrictGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_STRICT_GENERATION,
+            OpenApiGeneratorFixtures.validateEnumsStrictGeneration()),
         Arguments.of("testApiEnumsLombokGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,
             OpenApiGeneratorFixtures.validateEnumsLombokGeneration()),
         Arguments.of("testExternalRefsGeneration", OpenApiGeneratorFixtures.TEST_EXTERNAL_REF_GENERATION,

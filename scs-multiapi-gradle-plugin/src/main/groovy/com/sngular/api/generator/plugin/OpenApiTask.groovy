@@ -94,6 +94,10 @@ abstract class OpenApiTask extends DefaultTask {
     if (openApiSpecFile.usePactAnnotation) {
       builder.usePactAnnotation(openApiSpecFile.usePactAnnotation)
     }
+    // Checked against null, not truthiness: unset means true, so `false` is the value that changes the output.
+    if (openApiSpecFile.useUnknownEnumValue != null) {
+      builder.useUnknownEnumValue(openApiSpecFile.useUnknownEnumValue)
+    }
     if (openApiSpecFile.isReactive) {
       builder.isReactive(openApiSpecFile.isReactive)
     }

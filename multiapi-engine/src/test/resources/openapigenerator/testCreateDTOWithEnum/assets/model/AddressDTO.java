@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.testCreateDTOWithEnum.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Builder;
@@ -18,7 +19,8 @@ public class AddressDTO {
     COUNTRY_ES("Country ES"),
     COUNTRY_TR("Country TR"),
     COUNTRY_EN("Country EN"),
-    COUNTRY_PT("Country PT");
+    COUNTRY_PT("Country PT"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -29,6 +31,19 @@ public class AddressDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Country fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Country constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

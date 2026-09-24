@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,8 @@ public class StatusMsgDTO {
   private Status status;
   public enum Status {
     KO("KO"),
-    OK("OK");
+    OK("OK"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -26,6 +28,19 @@ public class StatusMsgDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Status fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Status constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

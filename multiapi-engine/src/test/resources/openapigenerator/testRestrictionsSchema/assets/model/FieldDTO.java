@@ -1,5 +1,6 @@
 package com.sngular.multifileplugin.testRestrictionsSchema.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Builder;
@@ -23,7 +24,8 @@ public class FieldDTO {
     OBJECTFIELD("ObjectField"),
     DATEFIELD("DateField"),
     SEQUENCEFIELD("SequenceField"),
-    UNIONFIELD("UnionField");
+    UNIONFIELD("UnionField"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -34,6 +36,19 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static TypeField fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (TypeField constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

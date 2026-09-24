@@ -171,6 +171,13 @@ public final class OpenApiGeneratorFixtures {
 					.clientPackage("com.sngular.multifileplugin.enumgeneration.client").modelNamePrefix("Api")
 					.modelNameSuffix("DTO").build());
 
+	static final List<SpecFile> TEST_ENUMS_STRICT_GENERATION = List
+			.of(SpecFile.builder().filePath("openapigenerator/testApiEnumsStrictGeneration/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.enumstrictgeneration")
+					.modelPackage("com.sngular.multifileplugin.enumstrictgeneration.model")
+					.clientPackage("com.sngular.multifileplugin.enumstrictgeneration.client").modelNamePrefix("Api")
+					.modelNameSuffix("DTO").useUnknownEnumValue(false).build());
+
 	static final List<SpecFile> TEST_ENUMS_LOMBOK_GENERATION = List
 			.of(SpecFile.builder().filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.enumlombokgeneration")
@@ -1129,6 +1136,27 @@ public final class OpenApiGeneratorFixtures {
 
 		final List<String> expectedExceptionFiles = List
 				.of("openapigenerator/testApiEnumsGeneration/assets/ModelClassException.java");
+
+		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+	}
+
+	static Function<Path, Boolean> validateEnumsStrictGeneration() {
+
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/enumstrictgeneration";
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/enumstrictgeneration/model";
+
+		final String DEFAULT_EXCEPTION_API = "generated/com/sngular/multifileplugin/enumstrictgeneration/model/exception";
+
+		final String ASSETS_PATH = "openapigenerator/testApiEnumsStrictGeneration/assets/";
+
+		final List<String> expectedTestApiFile = List.of(ASSETS_PATH + "TestApi.java");
+
+		final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "ApiErrorDTO.java",
+				ASSETS_PATH + "ApiTestDTO.java", ASSETS_PATH + "ApiTestInfoDTO.java");
+
+		final List<String> expectedExceptionFiles = List.of(ASSETS_PATH + "ModelClassException.java");
 
 		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);

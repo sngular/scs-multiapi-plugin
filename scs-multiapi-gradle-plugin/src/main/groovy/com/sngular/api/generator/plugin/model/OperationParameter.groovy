@@ -34,6 +34,8 @@ class OperationParameter {
 
   boolean usePactAnnotation
 
+  Boolean useUnknownEnumValue
+
   String getIds() {
     return ids
   }
@@ -132,6 +134,14 @@ class OperationParameter {
 
   void setUsePactAnnotation(final boolean usePactAnnotation) {
     this.usePactAnnotation = usePactAnnotation
+  }
+
+  Boolean getUseUnknownEnumValue() {
+    return useUnknownEnumValue
+  }
+
+  void setUseUnknownEnumValue(final Boolean useUnknownEnumValue) {
+    this.useUnknownEnumValue = useUnknownEnumValue
   }
 
 }

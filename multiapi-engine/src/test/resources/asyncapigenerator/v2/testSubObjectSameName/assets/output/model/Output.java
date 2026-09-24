@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,8 @@ public class Output {
   private Type type;
   public enum Type {
     DELETE("delete"),
-    UPDATE("update");
+    UPDATE("update"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -28,6 +30,19 @@ public class Output {
       return value;
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Type fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Type constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
     @Override
     public String toString() {
       return String.valueOf(value);
@@ -36,7 +51,8 @@ public class Output {
   @JsonProperty(value ="source")
   private Source source;
   public enum Source {
-    TENANT("tenant");
+    TENANT("tenant"),
+    UNKNOWN("UNKNOWN");
 
     private String value;
 
@@ -47,6 +63,19 @@ public class Output {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Source fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Source constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
     }
 
     @Override

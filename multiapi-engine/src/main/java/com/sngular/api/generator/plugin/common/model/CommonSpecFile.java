@@ -32,6 +32,13 @@ public class CommonSpecFile implements ExternalSpecSource {
 
   private boolean usePactAnnotation;
 
+  /**
+   * Whether every generated enum gets an {@code UNKNOWN} constant that reading any value outside the contract resolves to, instead of
+   * failing, and that is written back as {@code "UNKNOWN"}. Unset means {@code true}; {@code false} generates strict enums that reject
+   * unknown values. A contract that already declares an {@code UNKNOWN} value keeps it and gets no extra constant.
+   */
+  private Boolean useUnknownEnumValue;
+
   @Builder.Default
   private String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
@@ -50,6 +57,10 @@ public class CommonSpecFile implements ExternalSpecSource {
   private String fromArtifactId;
 
   private String fromVersion;
+
+  public boolean shouldUseUnknownEnumValue() {
+    return !Boolean.FALSE.equals(useUnknownEnumValue);
+  }
 
   public Map<String, String> getFormats() {
     return Map.of("DATE_TIME", dateTimeFormat, "DATE", dateFormat);

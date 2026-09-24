@@ -89,6 +89,12 @@ import java.util.Objects;
 <#if usePactAnnotation>
 import com.sngular.annotation.pact.PactDslBodyBuilder;
 </#if>
+<#list schema.fieldObjectList as field>
+    <#if field.dataType.baseType == "enum" && field.unknownEnumFallback>
+import com.fasterxml.jackson.annotation.JsonCreator;
+        <#break>
+    </#if>
+</#list>
 import com.fasterxml.jackson.annotation.JsonProperty;
 <#list schema.fieldObjectList as field>
     <#if field.dataType.baseType == "enum">
@@ -240,29 +246,84 @@ public class ${schema.className} {
   private ${field.fieldName?cap_first} ${field.fieldName?uncap_first};
 
   public enum ${field.fieldName?cap_first} {
+<#assign enumName = field.fieldName?cap_first>
+<#assign valueType = field.dataType.innerType?cap_first>
+<#assign stringEnum = valueType == "String">
+<#assign addUnknown = field.unknownEnumFallback && !field.enumValues?keys?seq_contains("UNKNOWN")>
 <#list field.enumValues as key, value>
   <#if key?matches("[0-9].*")>
     ${"_"+key}(${value})<#sep>,
   <#else>
     ${key}(${value})<#sep>,
   </#if>
-</#list>;
+</#list><#if addUnknown>,
+    UNKNOWN(<#if stringEnum>"UNKNOWN"<#else>null</#if>)</#if>;
 
-    private ${field.dataType.innerType?cap_first} value;
+    private ${valueType} value;
 
-    ${field.fieldName?cap_first}(${field.dataType.innerType?cap_first} value) {
+    ${enumName}(${valueType} value) {
       this.value = value;
     }
 
-    @JsonValue
-    public ${field.dataType.innerType?cap_first} getValue() {
+<#if field.unknownEnumFallback && !stringEnum>
+    public ${valueType} getValue() {
       return value;
     }
+
+    @JsonValue
+    public Object toJsonValue() {
+      return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static ${enumName} fromValue(Object value) {
+      if (value == null) {
+        return null;
+      }
+      final java.math.BigDecimal number;
+      try {
+        number = new java.math.BigDecimal(value.toString());
+      } catch (NumberFormatException e) {
+        return UNKNOWN;
+      }
+      for (${enumName} constant : values()) {
+        if (constant.value != null && number.compareTo(new java.math.BigDecimal(constant.value.toString())) == 0) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+      return this == UNKNOWN ? "UNKNOWN" : String.valueOf(value);
+    }
+<#else>
+    @JsonValue
+    public ${valueType} getValue() {
+      return value;
+    }
+<#if field.unknownEnumFallback>
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static ${enumName} fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (${enumName} constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+</#if>
 
     @Override
     public String toString() {
       return String.valueOf(value);
     }
+</#if>
   }
 <#elseif field.dataType.innerType?has_content && field.dataType.baseType == "object">
   private ${field.dataType.innerType?cap_first} ${field.fieldName?uncap_first};
