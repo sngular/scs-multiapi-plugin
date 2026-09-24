@@ -377,7 +377,8 @@ can be configured in the plugin.
   -  **useUnknownEnumValue**: Boolean value. When `true`, every generated enum reads
       a value outside the contract as `UNKNOWN` instead of failing, as described in
       [Unknown enum values](#unknown-enum-values-useunknownenumvalue).
-      **It's initialized to `true` by default** for AsyncAPI. Set it to `false` for strict enums.
+      **It's initialized to `true` by default** for AsyncAPI. Set it to
+      `false` for strict enums.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -1195,11 +1196,12 @@ throws a `NullPointerException` there.
 Tolerance only matters when reading JSON, so by default the fallback follows the
 side that reads what someone else wrote:
 
-| Generation                           | Default   | Why                                                                                 |
-|--------------------------------------|-----------|-------------------------------------------------------------------------------------|
-| OpenAPI with `callMode` (clients)    | `UNKNOWN` | Responses come from the provider, which may add values to its enums                 |
-| OpenAPI without `callMode` (servers) | strict    | A request body outside the contract keeps being rejected with a 400                 |
-| AsyncAPI (every section)             | `UNKNOWN` | Consumers read what others publish; suppliers only write their own messages        |
+- **OpenAPI with `callMode` (clients): `UNKNOWN`.** Responses come from the
+  provider, which may add values to its enums.
+- **OpenAPI without `callMode` (servers): strict.** A request body outside the
+  contract keeps being rejected with a 400.
+- **AsyncAPI (every section): `UNKNOWN`.** Consumers read what others publish;
+  suppliers only write their own messages.
 
 Set `useUnknownEnumValue` to force it either way on a spec file. `true` on a
 server accepts a request body with a value outside the contract as `UNKNOWN`,
@@ -1222,8 +1224,8 @@ With the fallback on, code that handles every constant of a generated enum has
 to handle `UNKNOWN` too:
 
 - A `switch` that lists every constant without a `default`.
-- A MapStruct mapper from a generated enum to a domain enum: MapStruct requires a
-  target for each source constant. Map `UNKNOWN` explicitly, to `null` or to a
+- A MapStruct mapper from a generated enum to a domain enum: MapStruct requires
+  a target for each source constant. Map `UNKNOWN` explicitly, to `null` or to a
   domain value:
 
   ```java
