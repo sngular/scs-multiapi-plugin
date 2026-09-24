@@ -33,6 +33,7 @@ public class UserSignedUpPayload {
     _1234("1234"),
     _2345("2345"),
     _3456("3456"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -44,6 +45,11 @@ public class UserSignedUpPayload {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

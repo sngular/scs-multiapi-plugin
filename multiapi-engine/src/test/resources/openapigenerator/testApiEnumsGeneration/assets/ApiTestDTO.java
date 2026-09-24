@@ -32,6 +32,11 @@ public class ApiTestDTO {
       return value;
     }
 
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
+
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static Status fromValue(String value) {
       if (value == null) {
@@ -57,6 +62,7 @@ public class ApiTestDTO {
     ONEOF("oneof"),
     ANYOF("anyof"),
     ALLOF("allof"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
     UNKNOWN("UNKNOWN");
 
     private String value;
@@ -68,6 +74,11 @@ public class ApiTestDTO {
     @JsonValue
     public String getValue() {
       return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
@@ -100,6 +111,7 @@ public class ApiTestDTO {
     LONG_1(1l),
     LONG_2(2l),
     LONG_3(3l),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}; {@link #getValue()} returns {@code null}. */
     UNKNOWN(null);
 
     private Long value;
@@ -108,6 +120,7 @@ public class ApiTestDTO {
       this.value = value;
     }
 
+    /** The contract value; {@code null} for {@link #UNKNOWN}. */
     public Long getValue() {
       return value;
     }
@@ -115,6 +128,11 @@ public class ApiTestDTO {
     @JsonValue
     public Object toJsonValue() {
       return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
@@ -147,6 +165,7 @@ public class ApiTestDTO {
     BIG_DECIMAL_1_DOT_1(new BigDecimal("1.1")),
     BIG_DECIMAL_2_DOT_2(new BigDecimal("2.2")),
     BIG_DECIMAL_4_DOT_4(new BigDecimal("4.4")),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}; {@link #getValue()} returns {@code null}. */
     UNKNOWN(null);
 
     private BigDecimal value;
@@ -155,6 +174,7 @@ public class ApiTestDTO {
       this.value = value;
     }
 
+    /** The contract value; {@code null} for {@link #UNKNOWN}. */
     public BigDecimal getValue() {
       return value;
     }
@@ -162,6 +182,11 @@ public class ApiTestDTO {
     @JsonValue
     public Object toJsonValue() {
       return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
