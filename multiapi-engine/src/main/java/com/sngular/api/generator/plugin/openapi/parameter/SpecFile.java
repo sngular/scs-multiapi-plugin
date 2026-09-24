@@ -6,6 +6,8 @@
 
 package com.sngular.api.generator.plugin.openapi.parameter;
 
+import java.util.Objects;
+
 import com.sngular.api.generator.plugin.common.model.CommonSpecFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +50,15 @@ public class SpecFile extends CommonSpecFile {
    * {@code false}: Java names are the contract names whenever they are legal identifiers.
    */
   private boolean useCamelCaseNames;
+
+  /**
+   * Unset, the fallback follows the side that reads: clients ({@code callMode}) tolerate values the provider adds, while a server keeps
+   * rejecting request bodies outside its contract.
+   */
+  @Override
+  public boolean shouldUseUnknownEnumValue() {
+    return Objects.isNull(getUseUnknownEnumValue()) ? callMode : getUseUnknownEnumValue();
+  }
 
   public boolean shouldRegisterClientComponent() {
     return !Boolean.FALSE.equals(clientComponent);

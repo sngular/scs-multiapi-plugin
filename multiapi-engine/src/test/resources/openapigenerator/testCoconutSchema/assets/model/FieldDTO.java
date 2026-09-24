@@ -1,7 +1,6 @@
 package com.sngular.multifileplugin.testCoconutSchema.model;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
@@ -77,9 +76,7 @@ public class FieldDTO {
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
-    ALLOF("allof"),
-    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
-    UNKNOWN("UNKNOWN");
+    ALLOF("allof");
 
     private String value;
 
@@ -90,24 +87,6 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
-    }
-
-    /** Whether this is the constant that values outside the contract resolve to. */
-    public boolean isUnknown() {
-      return this == UNKNOWN;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static UnionEnum fromValue(String value) {
-      if (value == null) {
-        return null;
-      }
-      for (UnionEnum constant : values()) {
-        if (value.equals(constant.value)) {
-          return constant;
-        }
-      }
-      return UNKNOWN;
     }
 
     @Override
@@ -125,9 +104,7 @@ public class FieldDTO {
     HOUR("HOUR"),
     MINUTE("MINUTE"),
     SECOND("SECOND"),
-    DAY("DAY"),
-    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
-    UNKNOWN("UNKNOWN");
+    DAY("DAY");
 
     private String value;
 
@@ -138,24 +115,6 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
-    }
-
-    /** Whether this is the constant that values outside the contract resolve to. */
-    public boolean isUnknown() {
-      return this == UNKNOWN;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static SeqEnum fromValue(String value) {
-      if (value == null) {
-        return null;
-      }
-      for (SeqEnum constant : values()) {
-        if (value.equals(constant.value)) {
-          return constant;
-        }
-      }
-      return UNKNOWN;
     }
 
     @Override
@@ -213,9 +172,7 @@ public class FieldDTO {
 
   public enum NumberEnum {
     FLOAT("float"),
-    INTEGER("integer"),
-    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
-    UNKNOWN("UNKNOWN");
+    INTEGER("integer");
 
     private String value;
 
@@ -226,24 +183,6 @@ public class FieldDTO {
     @JsonValue
     public String getValue() {
       return value;
-    }
-
-    /** Whether this is the constant that values outside the contract resolve to. */
-    public boolean isUnknown() {
-      return this == UNKNOWN;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static NumberEnum fromValue(String value) {
-      if (value == null) {
-        return null;
-      }
-      for (NumberEnum constant : values()) {
-        if (value.equals(constant.value)) {
-          return constant;
-        }
-      }
-      return UNKNOWN;
     }
 
     @Override

@@ -1,0 +1,364 @@
+package com.sngular.multifileplugin.enumclientgeneration.model;
+
+import java.util.Objects;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
+import com.sngular.multifileplugin.enumclientgeneration.model.exception.ModelClassException;
+import com.sngular.multifileplugin.enumclientgeneration.model.customvalidator.NotNull;
+
+@JsonDeserialize(builder = ApiTestDTO.ApiTestDTOBuilder.class)
+public class ApiTestDTO {
+
+  @JsonProperty(value ="status")
+  private Status status;
+  public enum Status {
+    UNKNOWN("unknown"),
+    OK("ok");
+
+    private String value;
+
+    Status(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Status fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (Status constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
+  @JsonProperty(value ="unionEnum")
+  @NotNull
+  private final UnionEnum unionEnum;
+  public enum UnionEnum {
+    ONEOF("oneof"),
+    ANYOF("anyof"),
+    ALLOF("allof"),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
+    UNKNOWN("UNKNOWN");
+
+    private String value;
+
+    UnionEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionEnum fromValue(String value) {
+      if (value == null) {
+        return null;
+      }
+      for (UnionEnum constant : values()) {
+        if (value.equals(constant.value)) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
+  @JsonProperty(value ="name")
+  @NotNull
+  private final String name;
+  @JsonProperty(value ="id")
+  @NotNull
+  private final Integer id;
+  @JsonProperty(value ="unionIntegerEnum")
+  private UnionIntegerEnum unionIntegerEnum;
+  public enum UnionIntegerEnum {
+    LONG_1(1l),
+    LONG_2(2l),
+    LONG_3(3l),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}; {@link #getValue()} returns {@code null}. */
+    UNKNOWN(null);
+
+    private Long value;
+
+    UnionIntegerEnum(Long value) {
+      this.value = value;
+    }
+
+    /** The contract value; {@code null} for {@link #UNKNOWN}. */
+    public Long getValue() {
+      return value;
+    }
+
+    @JsonValue
+    public Object toJsonValue() {
+      return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionIntegerEnum fromValue(Object value) {
+      if (value == null) {
+        return null;
+      }
+      final java.math.BigDecimal number;
+      try {
+        number = new java.math.BigDecimal(value.toString());
+      } catch (NumberFormatException e) {
+        return UNKNOWN;
+      }
+      for (UnionIntegerEnum constant : values()) {
+        if (constant.value != null && number.compareTo(new java.math.BigDecimal(constant.value.toString())) == 0) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+      return this == UNKNOWN ? "UNKNOWN" : String.valueOf(value);
+    }
+  }
+  @JsonProperty(value ="unionNumberEnum")
+  private UnionNumberEnum unionNumberEnum;
+  public enum UnionNumberEnum {
+    BIG_DECIMAL_1_DOT_1(new BigDecimal("1.1")),
+    BIG_DECIMAL_2_DOT_2(new BigDecimal("2.2")),
+    BIG_DECIMAL_4_DOT_4(new BigDecimal("4.4")),
+    /** A value the contract does not declare, written back as {@code "UNKNOWN"}; {@link #getValue()} returns {@code null}. */
+    UNKNOWN(null);
+
+    private BigDecimal value;
+
+    UnionNumberEnum(BigDecimal value) {
+      this.value = value;
+    }
+
+    /** The contract value; {@code null} for {@link #UNKNOWN}. */
+    public BigDecimal getValue() {
+      return value;
+    }
+
+    @JsonValue
+    public Object toJsonValue() {
+      return this == UNKNOWN ? "UNKNOWN" : value;
+    }
+
+    /** Whether this is the constant that values outside the contract resolve to. */
+    public boolean isUnknown() {
+      return this == UNKNOWN;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UnionNumberEnum fromValue(Object value) {
+      if (value == null) {
+        return null;
+      }
+      final java.math.BigDecimal number;
+      try {
+        number = new java.math.BigDecimal(value.toString());
+      } catch (NumberFormatException e) {
+        return UNKNOWN;
+      }
+      for (UnionNumberEnum constant : values()) {
+        if (constant.value != null && number.compareTo(new java.math.BigDecimal(constant.value.toString())) == 0) {
+          return constant;
+        }
+      }
+      return UNKNOWN;
+    }
+
+    @Override
+    public String toString() {
+      return this == UNKNOWN ? "UNKNOWN" : String.valueOf(value);
+    }
+  }
+
+  private ApiTestDTO(ApiTestDTOBuilder builder) {
+    this.status = builder.status;
+    this.unionEnum = builder.unionEnum;
+    this.name = builder.name;
+    this.id = builder.id;
+    this.unionIntegerEnum = builder.unionIntegerEnum;
+    this.unionNumberEnum = builder.unionNumberEnum;
+
+    validateRequiredAttributes();
+  }
+
+  public static ApiTestDTO.ApiTestDTOBuilder builder() {
+    return new ApiTestDTO.ApiTestDTOBuilder();
+  }
+
+  @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
+  public static class ApiTestDTOBuilder {
+
+    private Status status;
+    private UnionEnum unionEnum;
+    private String name;
+    private Integer id;
+    private UnionIntegerEnum unionIntegerEnum;
+    private UnionNumberEnum unionNumberEnum;
+
+    public ApiTestDTO.ApiTestDTOBuilder status(Status status) {
+      this.status = status;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder unionEnum(UnionEnum unionEnum) {
+      this.unionEnum = unionEnum;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder id(Integer id) {
+      this.id = id;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder unionIntegerEnum(UnionIntegerEnum unionIntegerEnum) {
+      this.unionIntegerEnum = unionIntegerEnum;
+      return this;
+    }
+
+    public ApiTestDTO.ApiTestDTOBuilder unionNumberEnum(UnionNumberEnum unionNumberEnum) {
+      this.unionNumberEnum = unionNumberEnum;
+      return this;
+    }
+
+    public ApiTestDTO build() {
+      ApiTestDTO apiTestDTO = new ApiTestDTO(this);
+      return apiTestDTO;
+    }
+  }
+
+  @Schema(name = "status", required = false)
+  public Status getStatus() {
+    return status;
+  }
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+
+  @Schema(name = "unionEnum", required = true)
+  public UnionEnum getUnionEnum() {
+    return unionEnum;
+  }
+
+  @Schema(name = "name", required = true)
+  public String getName() {
+    return name;
+  }
+
+  @Schema(name = "id", required = true)
+  public Integer getId() {
+    return id;
+  }
+
+  @Schema(name = "unionIntegerEnum", required = false)
+  public UnionIntegerEnum getUnionIntegerEnum() {
+    return unionIntegerEnum;
+  }
+  public void setUnionIntegerEnum(UnionIntegerEnum unionIntegerEnum) {
+    this.unionIntegerEnum = unionIntegerEnum;
+  }
+
+  @Schema(name = "unionNumberEnum", required = false)
+  public UnionNumberEnum getUnionNumberEnum() {
+    return unionNumberEnum;
+  }
+  public void setUnionNumberEnum(UnionNumberEnum unionNumberEnum) {
+    this.unionNumberEnum = unionNumberEnum;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ApiTestDTO apiTestDTO = (ApiTestDTO) o;
+    return Objects.equals(this.status, apiTestDTO.status) && Objects.equals(this.unionEnum, apiTestDTO.unionEnum) && Objects.equals(this.name, apiTestDTO.name) && Objects.equals(this.id, apiTestDTO.id) && Objects.equals(this.unionIntegerEnum, apiTestDTO.unionIntegerEnum) && Objects.equals(this.unionNumberEnum, apiTestDTO.unionNumberEnum);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(status, unionEnum, name, id, unionIntegerEnum, unionNumberEnum);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("ApiTestDTO{");
+    sb.append(" status:").append(status).append(",");
+    sb.append(" unionEnum:").append(unionEnum).append(",");
+    sb.append(" name:").append(name).append(",");
+    sb.append(" id:").append(id).append(",");
+    sb.append(" unionIntegerEnum:").append(unionIntegerEnum).append(",");
+    sb.append(" unionNumberEnum:").append(unionNumberEnum);
+    sb.append("}");
+    return sb.toString();
+  }
+
+  private void validateRequiredAttributes() {
+    boolean satisfiedCondition = true;
+
+    if (!Objects.nonNull(this.unionEnum)) {
+      satisfiedCondition = false;
+    } else if (!Objects.nonNull(this.name)) {
+      satisfiedCondition = false;
+    } else if (!Objects.nonNull(this.id)) {
+      satisfiedCondition = false;
+    }
+
+    if (!satisfiedCondition) {
+      throw new ModelClassException("ApiTestDTO");
+    }
+  }
+
+}

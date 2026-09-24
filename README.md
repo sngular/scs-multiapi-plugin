@@ -377,7 +377,8 @@ can be configured in the plugin.
   -  **useUnknownEnumValue**: Boolean value. When `true`, every generated enum reads
       a value outside the contract as `UNKNOWN` instead of failing, as described in
       [Unknown enum values](#unknown-enum-values-useunknownenumvalue).
-      **It's initialized to `true` by default**. Set it to `false` for strict enums.
+      **It's initialized to `true` by default** for AsyncAPI. Set it to
+      `false` for strict enums.
 
 The configuration of `consumer`, `supplier` and `streamBridge` are independent.
 If only one of them is configured in the pom file, only that one will be
@@ -762,7 +763,7 @@ that will be used. Each specFile has their own configuration:
 | clientComponent          | With `callMode`, whether the `*Api` client classes are `@Component`s. `false`: declare them yourself ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to true by default**   | false                                             |
 | useHttpExchange          | With `callMode`, generates `@HttpExchange` interfaces; needs `springBootVersion` >= 3 ([see](#calling-an-api-from-your-service-callmode)). **It´s initialized to false by default**                 | true                                              |
 | useCamelCaseNames | Camel-case Java names, JSON as-is. Default false | true |
-| useUnknownEnumValue | Enums read values outside the contract as `UNKNOWN` instead of failing ([see](#unknown-enum-values-useunknownenumvalue)). **It´s initialized to true by default** | false |
+| useUnknownEnumValue | Enums read values outside the contract as `UNKNOWN` instead of failing ([see](#unknown-enum-values-useunknownenumvalue)). **Unset, it's `true` with `callMode` (clients) and `false` otherwise (servers)** | true |
 
 As the configuration options already indicate, the data model will also be
 created within the specified path.This model will be created with the indicated
@@ -1117,10 +1118,10 @@ code that uses them has to be updated once.
 
 ### Unknown enum values (useUnknownEnumValue)
 
-Since 8.0.0 every generated enum, in OpenAPI and AsyncAPI models alike, has an
-extra `UNKNOWN` constant. Reading a value that the contract does not list
-resolves to `UNKNOWN` instead of failing, so a provider that adds a value to an
-enum no longer breaks the services that consume it:
+Since 8.0.0 generated enums can have an extra `UNKNOWN` constant. Reading a
+value that the contract does not list resolves to `UNKNOWN` instead of failing,
+so a provider that adds a value to an enum no longer breaks the services that
+consume it:
 
 ```java
 public enum Status {
@@ -1190,20 +1191,47 @@ throws a `NullPointerException` there.
   }
   ```
 
-This applies to the server side too: a request body with a value outside the
-contract is accepted as `UNKNOWN`, not rejected. A `switch` over a generated
-enum that lists every constant without a `default` no longer compiles until it
-handles `UNKNOWN`.
+#### Which side gets it (since 8.2.0)
 
-Set `useUnknownEnumValue` to `false` to generate strict enums that reject unknown
-values, as before 8.0.0:
+Tolerance only matters when reading JSON, so by default the fallback follows the
+side that reads what someone else wrote:
+
+- **OpenAPI with `callMode` (clients): `UNKNOWN`.** Responses come from the
+  provider, which may add values to its enums.
+- **OpenAPI without `callMode` (servers): strict.** A request body outside the
+  contract keeps being rejected with a 400.
+- **AsyncAPI (every section): `UNKNOWN`.** Consumers read what others publish;
+  suppliers only write their own messages.
+
+Set `useUnknownEnumValue` to force it either way on a spec file. `true` on a
+server accepts a request body with a value outside the contract as `UNKNOWN`,
+instead of rejecting it:
 
 ```xml
 <specFile>
   <filePath>openapi/openapi.yml</filePath>
-  <useUnknownEnumValue>false</useUnknownEnumValue>
+  <useUnknownEnumValue>true</useUnknownEnumValue>
 </specFile>
 ```
+
+In 8.0.0 and 8.1.0 the fallback was on for every spec file unless it was set to
+`false`. From 8.2.0, a server that did not set it gets strict enums again, as in
+7.x.
+
+#### What stops compiling
+
+With the fallback on, code that handles every constant of a generated enum has
+to handle `UNKNOWN` too:
+
+- A `switch` that lists every constant without a `default`.
+- A MapStruct mapper from a generated enum to a domain enum: MapStruct requires
+  a target for each source constant. Map `UNKNOWN` explicitly, to `null` or to a
+  domain value:
+
+  ```java
+  @ValueMapping(source = "UNKNOWN", target = MappingConstants.NULL)
+  DomainState toDomain(StateDTO state);
+  ```
 
 ### Usage considerations
 

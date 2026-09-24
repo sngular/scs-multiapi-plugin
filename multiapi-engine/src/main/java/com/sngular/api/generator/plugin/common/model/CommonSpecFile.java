@@ -34,8 +34,8 @@ public class CommonSpecFile implements ExternalSpecSource {
 
   /**
    * Whether every generated enum gets an {@code UNKNOWN} constant that reading any value outside the contract resolves to, instead of
-   * failing, and that is written back as {@code "UNKNOWN"}. Unset means {@code true}; {@code false} generates strict enums that reject
-   * unknown values. A contract that already declares an {@code UNKNOWN} value keeps it and gets no extra constant.
+   * failing, and that is written back as {@code "UNKNOWN"}. {@code false} generates strict enums that reject unknown values. A contract
+   * that already declares an {@code UNKNOWN} value keeps it and gets no extra constant. Unset, see {@link #shouldUseUnknownEnumValue()}.
    */
   private Boolean useUnknownEnumValue;
 
@@ -58,6 +58,10 @@ public class CommonSpecFile implements ExternalSpecSource {
 
   private String fromVersion;
 
+  /**
+   * Whether enums get the {@code UNKNOWN} fallback. Unset means {@code true}: tolerance only matters when reading, and AsyncAPI
+   * consumers read what others publish, while suppliers only write their own messages.
+   */
   public boolean shouldUseUnknownEnumValue() {
     return !Boolean.FALSE.equals(useUnknownEnumValue);
   }

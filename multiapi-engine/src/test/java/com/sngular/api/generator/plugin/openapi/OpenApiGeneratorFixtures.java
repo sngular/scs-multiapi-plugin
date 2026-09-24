@@ -169,7 +169,7 @@ public final class OpenApiGeneratorFixtures {
 					.apiPackage("com.sngular.multifileplugin.enumgeneration")
 					.modelPackage("com.sngular.multifileplugin.enumgeneration.model")
 					.clientPackage("com.sngular.multifileplugin.enumgeneration.client").modelNamePrefix("Api")
-					.modelNameSuffix("DTO").build());
+					.modelNameSuffix("DTO").useUnknownEnumValue(true).build());
 
 	static final List<SpecFile> TEST_ENUMS_STRICT_GENERATION = List
 			.of(SpecFile.builder().filePath("openapigenerator/testApiEnumsStrictGeneration/api-test.yml")
@@ -177,6 +177,13 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.enumstrictgeneration.model")
 					.clientPackage("com.sngular.multifileplugin.enumstrictgeneration.client").modelNamePrefix("Api")
 					.modelNameSuffix("DTO").useUnknownEnumValue(false).build());
+
+	static final List<SpecFile> TEST_ENUMS_CLIENT_GENERATION = List
+			.of(SpecFile.builder().filePath("openapigenerator/testApiEnumsClientGeneration/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.enumclientgeneration")
+					.modelPackage("com.sngular.multifileplugin.enumclientgeneration.model")
+					.clientPackage("com.sngular.multifileplugin.enumclientgeneration.client").modelNamePrefix("Api")
+					.modelNameSuffix("DTO").callMode(true).build());
 
 	static final List<SpecFile> TEST_ENUMS_LOMBOK_GENERATION = List
 			.of(SpecFile.builder().filePath("openapigenerator/testApiEnumsLombokGeneration/api-test.yml")
@@ -1160,6 +1167,19 @@ public final class OpenApiGeneratorFixtures {
 
 		return path -> commonTest(path, expectedTestApiFile, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, expectedExceptionFiles, DEFAULT_EXCEPTION_API);
+	}
+
+	static Function<Path, Boolean> validateEnumsClientGeneration() {
+
+		final String DEFAULT_MODEL_API = "generated/com/sngular/multifileplugin/enumclientgeneration/model";
+
+		final String ASSETS_PATH = "openapigenerator/testApiEnumsClientGeneration/assets/";
+
+		final List<String> expectedTestApiModelFiles = List.of(ASSETS_PATH + "ApiErrorDTO.java", ASSETS_PATH + "ApiTestDTO.java",
+				ASSETS_PATH + "ApiTestInfoDTO.java");
+
+		return path -> commonTest(path, expectedTestApiModelFiles, Collections.emptyList(), DEFAULT_MODEL_API, null,
+				Collections.emptyList(), null);
 	}
 
 	static Function<Path, Boolean> validateEnumsLombokGeneration() {
