@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,9 +37,7 @@ public class ApiNumberFieldDTO {
   private NumberEnum numberEnum;
   public enum NumberEnum {
     FLOAT("float"),
-    INTEGER("integer"),
-    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
-    UNKNOWN("UNKNOWN");
+    INTEGER("integer");
 
     private String value;
 
@@ -51,24 +48,6 @@ public class ApiNumberFieldDTO {
     @JsonValue
     public String getValue() {
       return value;
-    }
-
-    /** Whether this is the constant that values outside the contract resolve to. */
-    public boolean isUnknown() {
-      return this == UNKNOWN;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static NumberEnum fromValue(String value) {
-      if (value == null) {
-        return null;
-      }
-      for (NumberEnum constant : values()) {
-        if (value.equals(constant.value)) {
-          return constant;
-        }
-      }
-      return UNKNOWN;
     }
 
     @Override

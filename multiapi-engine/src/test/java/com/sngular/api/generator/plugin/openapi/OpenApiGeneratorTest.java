@@ -107,6 +107,8 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateEnumsGeneration()),
         Arguments.of("testApiEnumsStrictGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_STRICT_GENERATION,
             OpenApiGeneratorFixtures.validateEnumsStrictGeneration()),
+        Arguments.of("testApiEnumsClientGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_CLIENT_GENERATION,
+            OpenApiGeneratorFixtures.validateEnumsClientGeneration()),
         Arguments.of("testApiEnumsLombokGeneration", OpenApiGeneratorFixtures.TEST_ENUMS_LOMBOK_GENERATION,
             OpenApiGeneratorFixtures.validateEnumsLombokGeneration()),
         Arguments.of("testExternalRefsGeneration", OpenApiGeneratorFixtures.TEST_EXTERNAL_REF_GENERATION,

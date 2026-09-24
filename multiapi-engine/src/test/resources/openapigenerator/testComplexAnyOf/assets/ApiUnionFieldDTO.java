@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,9 +24,7 @@ public class ApiUnionFieldDTO {
   public enum UnionEnum {
     ONEOF("oneof"),
     ANYOF("anyof"),
-    ALLOF("allof"),
-    /** A value the contract does not declare, written back as {@code "UNKNOWN"}. */
-    UNKNOWN("UNKNOWN");
+    ALLOF("allof");
 
     private String value;
 
@@ -38,24 +35,6 @@ public class ApiUnionFieldDTO {
     @JsonValue
     public String getValue() {
       return value;
-    }
-
-    /** Whether this is the constant that values outside the contract resolve to. */
-    public boolean isUnknown() {
-      return this == UNKNOWN;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static UnionEnum fromValue(String value) {
-      if (value == null) {
-        return null;
-      }
-      for (UnionEnum constant : values()) {
-        if (value.equals(constant.value)) {
-          return constant;
-        }
-      }
-      return UNKNOWN;
     }
 
     @Override
