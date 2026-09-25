@@ -278,6 +278,41 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.parameterbindingreactive.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
 
+	static final List<SpecFile> TEST_REQUEST_BODY_REQUIRED = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRequestBodyRequired/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.requestbodyrequired")
+					.modelPackage("com.sngular.multifileplugin.requestbodyrequired.model")
+					.clientPackage("com.sngular.multifileplugin.requestbodyrequired.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_REQUEST_BODY_REQUIRED_REACTIVE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRequestBodyRequired/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.requestbodyrequiredreactive")
+					.modelPackage("com.sngular.multifileplugin.requestbodyrequiredreactive.model")
+					.clientPackage("com.sngular.multifileplugin.requestbodyrequiredreactive.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_REQUEST_BODY_REQUIRED_HTTP_EXCHANGE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRequestBodyRequired/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.requestbodyrequiredhttpexchange")
+					.modelPackage("com.sngular.multifileplugin.requestbodyrequiredhttpexchange.model")
+					.clientPackage("com.sngular.multifileplugin.requestbodyrequiredhttpexchange.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).build());
+
+	static final List<SpecFile> TEST_REQUEST_BODY_REQUIRED_REST_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRequestBodyRequired/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.requestbodyrequiredrestclient")
+					.modelPackage("com.sngular.multifileplugin.requestbodyrequiredrestclient.model")
+					.clientPackage("com.sngular.multifileplugin.requestbodyrequiredrestclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).build());
+
+	static final List<SpecFile> TEST_REQUEST_BODY_REQUIRED_WEB_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testRequestBodyRequired/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.requestbodyrequiredwebclient")
+					.modelPackage("com.sngular.multifileplugin.requestbodyrequiredwebclient.model")
+					.clientPackage("com.sngular.multifileplugin.requestbodyrequiredwebclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).isReactive(true).build());
+
 	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT = List
 			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.httpexchange")
@@ -2039,6 +2074,22 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_MODEL_API, Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateRequestBodyRequired(final String packageFolder, final String assetsFolder) {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
+
+		final String ASSETS_PATH = "openapigenerator/testRequestBodyRequired/assets/" + assetsFolder + "/";
+
+		final List<String> expectedTestApiFiles = List.of(ASSETS_PATH + "OrdersApi.java");
+
+		// The imperative variant also checks a model: Order.name declares only minLength, which @Size must not turn into max = 0.
+		final List<String> expectedModelFiles = "imperative".equals(assetsFolder)
+				? List.of(ASSETS_PATH + "FilterDTO.java", ASSETS_PATH + "OrderDTO.java", ASSETS_PATH + "RetryDTO.java")
+				: Collections.emptyList();
+
+		return path -> commonTest(path, expectedTestApiFiles, expectedModelFiles, DEFAULT_TARGET_API,
+				DEFAULT_TARGET_API + "/model", Collections.emptyList(), null);
 	}
 
 	static Function<Path, Boolean> validateHttpExchangeClient(final String packageFolder, final String assetsFolder) {

@@ -93,6 +93,22 @@ class DependencySpecMaterializerTest {
   }
 
   @Test
+  @DisplayName("drops what an earlier build of the same artifact carried when it re-unpacks")
+  void reExtractionDropsFilesTheNewBuildNoLongerCarries() throws IOException {
+    final File artifact = artifactContaining(Map.of("contract/openapi.yaml", SPEC_CONTENT));
+    materializer(artifact).materialize(specFile(null, VERSION), "openapi");
+
+    // A later build of the same SNAPSHOT moves its contract out of contract/ and carries two of them.
+    writeArtifact(artifact, new LinkedHashMap<>(Map.of("openapi/openapi.yml", "openapi: 3.1.0", "openapi/generated-openapi.yaml",
+        "openapi: 3.1.0")));
+    assertThat(artifact.setLastModified(System.currentTimeMillis() + 1000L)).isTrue();
+
+    assertThatThrownBy(() -> materializer(artifact).materialize(specFile(null, VERSION), "openapi"))
+        .isInstanceOf(SpecDependencyException.class)
+        .hasMessageContaining("carries 2 openapi contracts and none is at contract/openapi.yml or contract/openapi.yaml");
+  }
+
+  @Test
   @DisplayName("defaults filePath to the conventional contract/openapi.yml")
   void defaultsToTheConventionalPath() throws IOException {
     final File artifact = artifactContaining(new LinkedHashMap<>(Map.of(

@@ -40,7 +40,7 @@ public interface SalesPointsApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<InlineResponse200RegisterSalesPointDTO> registerSalesPoint(@Parameter(name = "newSalesPointDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody NewSalesPointDTO newSalesPointDTO) {
+  default ResponseEntity<InlineResponse200RegisterSalesPointDTO> registerSalesPoint(@Parameter(name = "newSalesPointDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody(required = false) NewSalesPointDTO newSalesPointDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

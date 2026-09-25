@@ -82,7 +82,7 @@ public interface V1Api {
   }
   /**
    * POST /v1/insurance: Request a quote to insure an invoice
-   * @param quoteRequestDTO
+   * @param quoteRequestDTO (required)
    * @return  successful operation; (status code 200)  Bad request; (status code 400)  Not found; (status code 404)
    */
 
@@ -102,13 +102,13 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<List<QuoteResponseDTO>> obtainInsuranceQuote(@Parameter(name = "quoteRequestDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody QuoteRequestDTO quoteRequestDTO) {
+  default ResponseEntity<List<QuoteResponseDTO>> obtainInsuranceQuote(@Parameter(name = "quoteRequestDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody QuoteRequestDTO quoteRequestDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
    * PUT /v1/insurance/update/{quoteId}: Update the invoice number and invoice date for a certain quote
    * @param quoteId true
-   * @param updateQuoteDTO
+   * @param updateQuoteDTO (required)
    * @return  Successful operation; (status code 200)  Bad request; (status code 400)  Not found; (status code 404)
    */
 
@@ -128,7 +128,7 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<QuoteUpdateResponseDTO> updateInvoiceNumberAndDateForInsurance(@Parameter(name = "quoteId", required = true, schema = @Schema(description = "")) @PathVariable("quoteId") Integer quoteId , @Parameter(name = "updateQuoteDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody UpdateQuoteDTO updateQuoteDTO) {
+  default ResponseEntity<QuoteUpdateResponseDTO> updateInvoiceNumberAndDateForInsurance(@Parameter(name = "quoteId", required = true, schema = @Schema(description = "")) @PathVariable("quoteId") Integer quoteId , @Parameter(name = "updateQuoteDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody UpdateQuoteDTO updateQuoteDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
@@ -154,13 +154,13 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<PolicyActivationDTO> activate(@Parameter(name = "quoteId", required = true, schema = @Schema(description = "")) @PathVariable("quoteId") Integer quoteId , @Parameter(name = "activatePolicyDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody ActivatePolicyDTO activatePolicyDTO) {
+  default ResponseEntity<PolicyActivationDTO> activate(@Parameter(name = "quoteId", required = true, schema = @Schema(description = "")) @PathVariable("quoteId") Integer quoteId , @Parameter(name = "activatePolicyDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody(required = false) ActivatePolicyDTO activatePolicyDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
    * POST /v1/insurance/settle/{policyId}: Settle a policy that was previously activated
    * @param policyIdInProvider ID of the policy for the specific insurance provider true
-   * @param policySettlementDTO
+   * @param policySettlementDTO (required)
    * @return  successful operation; (status code 200)  Bad request; (status code 400)  Not found; (status code 404)
    */
 
@@ -180,13 +180,13 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<List<PolicySettlementDTO>> settle(@Parameter(name = "policyIdInProvider", description = "ID of the policy for the specific insurance provider", required = true, schema = @Schema(description = "")) @PathVariable("policyIdInProvider") String policyIdInProvider , @Parameter(name = "policySettlementDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody PolicySettlementDTO policySettlementDTO) {
+  default ResponseEntity<List<PolicySettlementDTO>> settle(@Parameter(name = "policyIdInProvider", description = "ID of the policy for the specific insurance provider", required = true, schema = @Schema(description = "")) @PathVariable("policyIdInProvider") String policyIdInProvider , @Parameter(name = "policySettlementDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody PolicySettlementDTO policySettlementDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
   /**
    * POST /v1/insurance/claim/{policyId}: Claim a policy that was unpaid
    * @param operationId ID of the operation in our own records, for reconciliation purposes true @param provider Name of the insurance provider false @param policyId ID of the policy for the specific insurance provider true @param claimDate Date that we start the claim true
-   * @param policyClaimDTO
+   * @param policyClaimDTO (required)
    * @return  successful operation; (status code 200)  Bad request; (status code 400)  Not found; (status code 404)
    */
 
@@ -206,7 +206,7 @@ public interface V1Api {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<List<PolicySettlementDTO>> claim(@Parameter(name = "operationId", description = "ID of the operation in our own records, for reconciliation purposes", required = true, schema = @Schema(description = "")) @RequestParam(name = "operationId", required = true) Integer operationId , @Parameter(name = "provider", description = "Name of the insurance provider", required = false, schema = @Schema(description = "")) @RequestParam(name = "provider", required = false) String provider , @Parameter(name = "policyId", description = "ID of the policy for the specific insurance provider", required = true, schema = @Schema(description = "")) @PathVariable("policyId") String policyId , @Parameter(name = "claimDate", description = "Date that we start the claim", required = true, schema = @Schema(description = "")) @RequestParam(name = "claimDate", required = true) String claimDate , @Parameter(name = "policyClaimDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody PolicyClaimDTO policyClaimDTO) {
+  default ResponseEntity<List<PolicySettlementDTO>> claim(@Parameter(name = "operationId", description = "ID of the operation in our own records, for reconciliation purposes", required = true, schema = @Schema(description = "")) @RequestParam(name = "operationId", required = true) Integer operationId , @Parameter(name = "provider", description = "Name of the insurance provider", required = false, schema = @Schema(description = "")) @RequestParam(name = "provider", required = false) String provider , @Parameter(name = "policyId", description = "ID of the policy for the specific insurance provider", required = true, schema = @Schema(description = "")) @PathVariable("policyId") String policyId , @Parameter(name = "claimDate", description = "Date that we start the claim", required = true, schema = @Schema(description = "")) @RequestParam(name = "claimDate", required = true) String claimDate , @Parameter(name = "policyClaimDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody PolicyClaimDTO policyClaimDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

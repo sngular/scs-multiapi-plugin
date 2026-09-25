@@ -225,7 +225,7 @@ public class ${schema.className} {
   <#elseif field.restrictions.maxLength?has_content && !field.restrictions.minLength?has_content>
   @Size(max =${field.restrictions.maxLength?c}, min =0)
   <#elseif !field.restrictions.maxLength?has_content && field.restrictions.minLength?has_content>
-  @Size(max =0, min =${field.restrictions.minLength?c})
+  @Size(max =Integer.MAX_VALUE, min =${field.restrictions.minLength?c})
   </#if>
   <#if field.restrictions.pattern?has_content>
   @Pattern(regex = "${field.restrictions.pattern}")

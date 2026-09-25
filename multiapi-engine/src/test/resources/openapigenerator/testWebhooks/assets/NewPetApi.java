@@ -40,7 +40,7 @@ public interface NewPetApi {
     produces = {"application/json"}
   )
 
-  default ResponseEntity<Void> newPetWebhook(@Parameter(name = "petDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody PetDTO petDTO) {
+  default ResponseEntity<Void> newPetWebhook(@Parameter(name = "petDTO", description = "", required = false, schema = @Schema(description = "")) @Valid @RequestBody(required = false) PetDTO petDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 

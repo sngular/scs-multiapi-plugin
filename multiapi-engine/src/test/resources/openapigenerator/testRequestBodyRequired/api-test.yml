@@ -1,0 +1,89 @@
+openapi: "3.0.3"
+info:
+  title: Request body required
+  version: 1.0.0
+paths:
+  /orders/{orderId}/retry:
+    post:
+      tags: [orders]
+      operationId: retryOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Retry"
+      responses:
+        '204':
+          description: Retried
+  /orders/search:
+    post:
+      tags: [orders]
+      operationId: searchOrders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Filter"
+      responses:
+        '204':
+          description: Searched
+  /orders:
+    post:
+      tags: [orders]
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        '204':
+          description: Created
+  /orders/{orderId}:
+    put:
+      tags: [orders]
+      operationId: replaceOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/OrderBody"
+      responses:
+        '204':
+          description: Replaced
+components:
+  requestBodies:
+    OrderBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Order"
+  schemas:
+    Retry:
+      type: object
+      properties:
+        reason:
+          type: string
+    Filter:
+      type: object
+      properties:
+        status:
+          type: string
+    Order:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1

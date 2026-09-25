@@ -50,6 +50,8 @@ class OpenApiGeneratorSpringBoot4Test {
             OpenApiGeneratorFixtures.validateWebClientGenerationSpringBoot4()),
         Arguments.of("testHttpExchangeClient", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT,
             OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchange", "imperative")),
+        Arguments.of("testRequestBodyRequired_httpexchange", OpenApiGeneratorFixtures.TEST_REQUEST_BODY_REQUIRED_HTTP_EXCHANGE,
+            OpenApiGeneratorFixtures.validateRequestBodyRequired("requestbodyrequiredhttpexchange", "httpexchange")),
         Arguments.of("testHttpExchangeClientReactive", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT_REACTIVE,
             OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchangereactive", "reactive")),
         Arguments.of("testQueryObjectsHttpExchange", OpenApiGeneratorFixtures.TEST_QUERY_OBJECTS_HTTP_EXCHANGE,
