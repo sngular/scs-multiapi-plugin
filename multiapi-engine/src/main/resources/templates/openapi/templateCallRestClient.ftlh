@@ -205,7 +205,7 @@ public class ${className?cap_first}Api {
     <#else>ResponseEntity<Void></#if></@compress> ${operation.operationId}WithHttpInfo<#compress>(<#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if>)</#compress> throws RestClientException {
 
     Object postBody = <#if operation.requestObjects?has_content && !isMultipart(operation)>${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}<#else>null</#if>;
-    <#if operation.requestObjects?has_content && !isMultipart(operation)>
+    <#if operation.requestObjects?has_content && !isMultipart(operation) && operation.requestObjects[0].required>
     if (${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()} == null) {
       throw new RestClientException(HttpStatus.BAD_REQUEST + " Missing the required parameter ''${operation.requestObjects[0].contentObjects[0].dataType?api.getVariableNameString()}'' when calling ${operation.operationId}");
     }

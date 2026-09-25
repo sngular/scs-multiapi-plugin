@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,7 +90,7 @@ public class DependencySpecMaterializer {
           "Spec '%s' not found inside %s.%s", filePath, specSource.getDependencyCoordinate(), describeCandidates(artifactContent)));
     }
 
-    log.info("Loading spec '{}' from dependency {} ({})", filePath, specSource.getDependencyCoordinate(), artifact);
+    log.info("Loading spec '{}' from dependency {}, extracted to {}", filePath, specSource.getDependencyCoordinate(), specPath);
     return specPath;
   }
 
@@ -110,12 +111,16 @@ public class DependencySpecMaterializer {
     for (final String conventionalPath : SpecConventions.defaultFilePaths(rootMarker)) {
       final Path conventional = artifactContent.resolve(conventionalPath);
       if (Files.isRegularFile(conventional)) {
-        log.info("Loading spec '{}' from dependency {} ({}), the conventional location",
-            conventionalPath, specSource.getDependencyCoordinate(), artifact);
+        log.info("Loading spec '{}' from dependency {}, the conventional location, extracted to {}",
+            conventionalPath, specSource.getDependencyCoordinate(), conventional);
         return conventional;
       }
     }
     return theOnlyContractIn(artifactContent, specSource, artifact, rootMarker);
+  }
+
+  private static String conventionalPaths(final String rootMarker) {
+    return String.join(" or ", SpecConventions.defaultFilePaths(rootMarker));
   }
 
   private static Path theOnlyContractIn(
@@ -128,19 +133,19 @@ public class DependencySpecMaterializer {
     if (contracts.isEmpty()) {
       throw new SpecDependencyException(String.format(
           "No %s contract found inside %s: there is no %s and no file declares a top-level '%s' field.%s",
-          rootMarker, specSource.getDependencyCoordinate(), SpecConventions.defaultFilePath(rootMarker), rootMarker,
+          rootMarker, specSource.getDependencyCoordinate(), conventionalPaths(rootMarker), rootMarker,
           describeCandidates(artifactContent)));
     }
     if (contracts.size() > 1) {
       throw new SpecDependencyException(String.format(
           "filePath is required for %s: the artifact carries %d %s contracts and none is at %s.%s",
-          specSource.getDependencyCoordinate(), contracts.size(), rootMarker, SpecConventions.defaultFilePath(rootMarker),
+          specSource.getDependencyCoordinate(), contracts.size(), rootMarker, conventionalPaths(rootMarker),
           describe(artifactContent, contracts)));
     }
 
     final Path specPath = contracts.get(0);
-    log.info("Loading spec '{}' from dependency {} ({}), the only {} contract it carries",
-        toEntryName(artifactContent.relativize(specPath)), specSource.getDependencyCoordinate(), artifact, rootMarker);
+    log.info("Loading spec '{}' from dependency {}, the only {} contract it carries, extracted to {}",
+        toEntryName(artifactContent.relativize(specPath)), specSource.getDependencyCoordinate(), rootMarker, specPath);
     return specPath;
   }
 
@@ -181,6 +186,9 @@ public class DependencySpecMaterializer {
         log.debug("Reusing already extracted artifact {}", destination);
         return destination;
       }
+      // A SNAPSHOT keeps its file name across builds, so clear what an earlier build left: a file it no longer carries
+      // would otherwise still be found, and read, as if it came from this one.
+      deleteRecursively(destination);
       Files.createDirectories(destination);
       unzip(artifact, destination);
       Files.writeString(marker, stamp, StandardCharsets.UTF_8);
@@ -188,6 +196,17 @@ public class DependencySpecMaterializer {
       throw new SpecDependencyException(String.format("Could not unpack %s into %s.", artifact, destination), e);
     }
     return destination;
+  }
+
+  private static void deleteRecursively(final Path directory) throws IOException {
+    if (!Files.exists(directory)) {
+      return;
+    }
+    try (var paths = Files.walk(directory)) {
+      for (final Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
+        Files.delete(path);
+      }
+    }
   }
 
   private static void unzip(final File artifact, final Path destination) throws IOException {

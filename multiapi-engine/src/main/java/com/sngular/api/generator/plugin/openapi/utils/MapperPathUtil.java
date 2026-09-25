@@ -222,6 +222,14 @@ public class MapperPathUtil {
     return producesList;
   }
 
+  /**
+   * A request body is required only when the contract says {@code required: true}; OpenAPI defaults it to {@code false}. Reads the
+   * resolved body for a {@code $ref}, since {@code required} belongs to the referenced definition.
+   */
+  private static boolean isRequiredBody(final JsonNode requestBody) {
+    return ApiTool.hasNode(requestBody, REQUIRED) && ApiTool.getNode(requestBody, REQUIRED).asBoolean(false);
+  }
+
   private static boolean isInlineMultipart(final JsonNode content) {
     final JsonNode multipartSchema = content.path("multipart/form-data").path(SCHEMA);
     return !multipartSchema.isMissingNode() && !ApiTool.hasRef(multipartSchema);
@@ -240,7 +248,7 @@ public class MapperPathUtil {
       final var requestBody = ApiTool.getNode(operation, REQUEST_BODY);
       if (!ApiTool.hasRef(requestBody)) {
         requestObjects.add(RequestObject.builder()
-                                        .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .required(isRequiredBody(requestBody))
                                         .isFormData(ApiTool.getNode(requestBody, CONTENT).has("multipart/form-data"))
                                         .inlineMultipart(isInlineMultipart(ApiTool.getNode(requestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
@@ -253,7 +261,7 @@ public class MapperPathUtil {
         }
         final JsonNode actualRequestBody = requestBodyNode.get();
         requestObjects.add(RequestObject.builder()
-                                        .required(ApiTool.hasNode(requestBody, REQUIRED))
+                                        .required(isRequiredBody(actualRequestBody))
                                         .isFormData(ApiTool.getNode(actualRequestBody, CONTENT).has("multipart/form-data"))
                                         .inlineMultipart(isInlineMultipart(ApiTool.getNode(actualRequestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(actualRequestBody, CONTENT),
