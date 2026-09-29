@@ -30,6 +30,7 @@ Maven and Gradle
   - [Usage](#usage)
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
   - [Object-typed query parameters and multipart bodies](#object-typed-query-parameters-and-multipart-bodies)
+  - [Streaming endpoints (application/x-ndjson)](#streaming-endpoints-applicationx-ndjson)
   - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
   - [Unknown enum values (useUnknownEnumValue)](#unknown-enum-values-useunknownenumvalue)
 - [Property Validation](#property-validation)
@@ -1091,6 +1092,66 @@ A `multipart/form-data` request body with an inline schema has no model of its
 own: every generated API takes one argument per part (`MultipartFile file,
 String comment`). A multipart body that references a component schema keeps
 taking that model.
+
+### Streaming endpoints (application/x-ndjson)
+
+An operation whose successful response, or whose request body, is
+`application/x-ndjson` (or the older `application/stream+json`) streams one JSON
+document per line. Its schema is the type of each item, or an array of it, and
+an OpenAPI 3.2 `itemSchema` is read the same way:
+
+```yaml
+responses:
+  '200':
+    content:
+      application/x-ndjson:
+        schema:
+          $ref: "#/components/schemas/Item"
+```
+
+The operation is detected from the contract, so the rest of the API keeps its
+usual signatures, and a Spring MVC service does not have to become reactive
+for it.
+
+- **Spring MVC servers** (`reactive` off) split the operation in two. The
+  endpoint Spring maps sends what a plain Java method returns, and that method
+  is the one to implement:
+
+  ```java
+  @RestController
+  class ItemController implements ItemsApi {
+
+    @Override
+    public ResponseEntity<Stream<ItemDTO>> listItems(final String filter) {
+      return ResponseEntity.ok(itemRepository.streamByFilter(filter));
+    }
+  }
+  ```
+
+  Each item is sent as soon as the stream produces it, on Spring MVC's
+  asynchronous executor, with the application's `ObjectMapper`, and the stream
+  is closed once it is sent, also when sending fails. The status and headers of
+  the returned `ResponseEntity` are sent too. A streamed request body arrives as
+  a `Stream<ItemDTO>` read line by line as it is consumed. The generated
+  `NdjsonSupport` class, next to the interfaces, does the writing and reading.
+
+  When the response also declares `application/json`, which must then be the
+  array of the streamed items, a second endpoint sends the same items as a JSON
+  array, and Spring picks one or the other from the `Accept` header (a request
+  that accepts anything, or sends no `Accept`, gets the JSON array).
+
+  The response status is sent with the first item, so an error in the middle
+  of the stream can only end the response early. Configure
+  `spring.mvc.async.request-timeout` for streams that last long.
+- **WebFlux servers** (`reactive` on) take and return a `Flux<ItemDTO>`.
+- **WebClient clients** (`callMode` and `reactive`) return a `Flux<ItemDTO>`,
+  or a `Mono<ResponseEntity<Flux<ItemDTO>>>` from `...WithHttpInfo`, and send a
+  streamed body from a `Flux<ItemDTO>`. **Reactive `@HttpExchange` interfaces**
+  return a `Mono<ResponseEntity<Flux<ItemDTO>>>`.
+- The **blocking clients** (RestClient, and `@HttpExchange` without `reactive`)
+  read a response whole, so they cannot hand the items over as they arrive, and
+  the generation fails for a streaming operation: generate that client with
+  `reactive` on.
 
 ### Camel case Java names (useCamelCaseNames)
 

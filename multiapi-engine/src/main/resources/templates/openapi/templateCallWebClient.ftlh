@@ -5,6 +5,8 @@
   <#list operation.requestObjects as request>
     <#if request.inlineMultipart>
       <#list request.contentObjects[0].schemaObject.fieldObjectList as part><#local args = args + ["${part.dataType} ${part.fieldName}"]></#list>
+    <#elseif request.streaming>
+      <#local args = args + ["Flux<${request.contentObjects[0].dataType}> ${request.contentObjects[0].dataType?api.getVariableNameString()}"]>
     <#else>
       <#list request.contentObjects as content><#local args = args + ["${content.dataType} ${content.dataType?api.getVariableNameString()}"]></#list>
     </#if>
@@ -267,7 +269,7 @@ public class ${className?cap_first}Api {
         </#if>
       </#list>
     </#if>
-    final String[] localVarAccepts = {<#compress><#if operation.produces?has_content>
+    final String[] localVarAccepts = {<#compress><#if operation.streamingResponse>"${operation.streamingMediaType}"<#elseif operation.produces?has_content>
       <#list operation.produces as produce>"${produce}"<#if produce?has_next>, </#if></#list>
       </#if></#compress>};
     final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
@@ -282,7 +284,9 @@ public class ${className?cap_first}Api {
     <#list operation.securities as security>"${security}"<#if security?has_next>, </#if></#list>
     </#if></#compress>};
 
-    <#if operation.responseObjects[0].contentObjects[0]??>
+    <#if operation.streamingResponse>
+    ParameterizedTypeReference<${operation.streamingItemType}> localVarReturnType = new ParameterizedTypeReference<${operation.streamingItemType}>() {};
+    <#elseif operation.responseObjects[0].contentObjects[0]??>
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType}>() {};
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
@@ -313,13 +317,15 @@ public class ${className?cap_first}Api {
   </#if>
    * @throws WebClientResponseException if an error occurs while attempting to invoke the API
    */
-  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>
+  public <@compress single_line=true><#if operation.streamingResponse>Flux<${operation.streamingItemType}><#elseif operation.responseObjects[0].contentObjects[0]??>
   <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
   Flux<${operation.responseObjects[0].contentObjects[0].dataType.innerType}><#else>Mono<${operation.responseObjects[0].contentObjects[0].dataType}></#if>
   <#else>Mono<Void></#if></@compress> ${operation.operationId}(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter>${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if></@compress>) throws WebClientResponseException {
-  <#if operation.responseObjects[0].contentObjects[0]??>
+  <#if operation.streamingResponse>
+    ParameterizedTypeReference<${operation.streamingItemType}> localVarReturnType = new ParameterizedTypeReference<${operation.streamingItemType}>() {};
+  <#elseif operation.responseObjects[0].contentObjects[0]??>
     <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
     <#else>
@@ -331,14 +337,16 @@ public class ${className?cap_first}Api {
     return ${operation.operationId}RequestCreation(<@compress single_line=true>
       <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
       <#if operation.requestObjects?has_content>${requestArgNames(operation)}</#if>
-      </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
+      </@compress>).<#if operation.streamingResponse || operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>bodyToFlux<#else>bodyToMono</#if>(localVarReturnType);
   }
 
-  public <@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
+  public <@compress single_line=true><#if operation.streamingResponse> Mono<ResponseEntity<Flux<${operation.streamingItemType}>>><#elseif operation.responseObjects[0].contentObjects[0]??> <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "map"> Flux<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>> <#else> Mono<ResponseEntity<${operation.responseObjects[0].contentObjects[0].dataType}>></#if>
   <#else> Mono<ResponseEntity<Void>></#if></@compress> ${operation.operationId}WithHttpInfo(<@compress single_line=true>
   <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.dataType} ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>, </#if></#list></#if>
   <#if operation.requestObjects?has_content>${requestArgDecls(operation)}</#if></@compress>) throws WebClientResponseException {
-    <#if operation.responseObjects[0].contentObjects[0]??>
+    <#if operation.streamingResponse>
+    ParameterizedTypeReference<${operation.streamingItemType}> localVarReturnType = new ParameterizedTypeReference<${operation.streamingItemType}>() {};
+    <#elseif operation.responseObjects[0].contentObjects[0]??>
       <#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">
     ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}> localVarReturnType = new ParameterizedTypeReference<${operation.responseObjects[0].contentObjects[0].dataType.innerType}>() {};
       <#else>
@@ -351,7 +359,7 @@ public class ${className?cap_first}Api {
     <#if operation.parameterObjects?has_content><#list operation.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if><#if path.parameterObjects?has_content><#list path.parameterObjects as parameter> ${parameter.variableName}<#if parameter?has_next || operation.requestObjects?has_content>,</#if></#list> </#if>
 
     <#if operation.requestObjects?has_content>${requestArgNames(operation)}</#if>
-    </@compress>).<#if operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);
+    </@compress>).<#if operation.streamingResponse>toEntityFlux<#elseif operation.responseObjects[0].contentObjects[0]?? && (operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map")>toEntityList<#else>toEntity</#if>(localVarReturnType);
   }
 
     </#list>

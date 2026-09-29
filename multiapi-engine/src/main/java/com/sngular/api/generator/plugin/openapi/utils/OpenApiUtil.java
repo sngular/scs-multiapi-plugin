@@ -135,6 +135,27 @@ public class OpenApiUtil {
   }
 
   /**
+   * Declares the {@code itemSchema} of a media type (OpenAPI 3.2, for sequential media types such as
+   * {@code application/x-ndjson}) as its {@code schema}, so the rest of the pipeline reads the type of each streamed item
+   * as the type of the content, which is how a streamed {@code schema} is read too.
+   */
+  public static void promoteItemSchemas(final JsonNode node) {
+    if (node instanceof ObjectNode) {
+      final JsonNode content = node.get("content");
+      if (content instanceof ObjectNode) {
+        content.fields().forEachRemaining(mediaType -> {
+          if (mediaType.getValue() instanceof ObjectNode && mediaType.getValue().has("itemSchema") && !mediaType.getValue().has("schema")) {
+            ((ObjectNode) mediaType.getValue()).set("schema", mediaType.getValue().get("itemSchema"));
+          }
+        });
+      }
+    }
+    if (Objects.nonNull(node) && node.isContainerNode()) {
+      node.elements().forEachRemaining(OpenApiUtil::promoteItemSchemas);
+    }
+  }
+
+  /**
    * Ensures every operation of a webhook-derived Path Item carries a {@code tags} entry. Webhook
    * operations normally omit {@code tags}, but the path pipeline requires one; a missing/empty
    * {@code tags} is defaulted to the webhook name so generation works in both grouping modes.

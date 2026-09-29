@@ -313,6 +313,60 @@ public final class OpenApiGeneratorFixtures {
 					.clientPackage("com.sngular.multifileplugin.requestbodyrequiredwebclient.client")
 					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).isReactive(true).build());
 
+	static final List<SpecFile> TEST_NDJSON_STREAMING = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreaming")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreaming.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreaming.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_REACTIVE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreamingreactive")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreamingreactive.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreamingreactive.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_WEB_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreamingwebclient")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreamingwebclient.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreamingwebclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_HTTP_EXCHANGE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchange")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchange.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchange.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_REST_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreamingrestclient")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreamingrestclient.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreamingrestclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_HTTP_EXCHANGE_BLOCKING = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchangeblocking")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchangeblocking.model")
+					.clientPackage("com.sngular.multifileplugin.ndjsonstreaminghttpexchangeblocking.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_JSON_MISMATCH = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-json-mismatch.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonjsonmismatch")
+					.modelPackage("com.sngular.multifileplugin.ndjsonjsonmismatch.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_NDJSON_STREAMING_MIXED_REQUEST = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-mixed-request.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonmixedrequest")
+					.modelPackage("com.sngular.multifileplugin.ndjsonmixedrequest.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT = List
 			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.httpexchange")
@@ -2090,6 +2144,17 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 
 		return path -> commonTest(path, expectedTestApiFiles, expectedModelFiles, DEFAULT_TARGET_API,
 				DEFAULT_TARGET_API + "/model", Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateNdjsonStreaming(final String packageFolder, final String assetsFolder,
+			final List<String> apiFiles, final List<String> modelFiles) {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
+
+		final String ASSETS_PATH = "openapigenerator/testNdjsonStreaming/assets/" + assetsFolder + "/";
+
+		return path -> commonTest(path, apiFiles.stream().map(file -> ASSETS_PATH + file).toList(),
+				modelFiles.stream().map(file -> ASSETS_PATH + file).toList(), DEFAULT_TARGET_API, DEFAULT_TARGET_API + "/model",
+				Collections.emptyList(), null);
 	}
 
 	static Function<Path, Boolean> validateHttpExchangeClient(final String packageFolder, final String assetsFolder) {

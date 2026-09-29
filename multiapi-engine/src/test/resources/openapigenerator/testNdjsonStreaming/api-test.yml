@@ -1,0 +1,116 @@
+openapi: "3.2.0"
+info:
+  title: NDJSON streaming
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      tags: [items]
+      operationId: listItems
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: One item per line
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '400':
+          description: The filter is not valid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /items/export:
+    get:
+      tags: [items]
+      operationId: exportItems
+      responses:
+        '200':
+          description: The items, as a JSON array or one per line
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+            application/x-ndjson:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+  /items/import:
+    post:
+      tags: [items]
+      operationId: importItems
+      requestBody:
+        required: true
+        content:
+          application/x-ndjson:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        '200':
+          description: Import summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResult"
+  /items/{itemId}:
+    get:
+      tags: [items]
+      operationId: getItem
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+  /events:
+    get:
+      tags: [events]
+      operationId: streamEvents
+      responses:
+        '200':
+          description: One event per line
+          content:
+            application/x-ndjson:
+              itemSchema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    ImportResult:
+      type: object
+      properties:
+        imported:
+          type: integer
+          format: int32

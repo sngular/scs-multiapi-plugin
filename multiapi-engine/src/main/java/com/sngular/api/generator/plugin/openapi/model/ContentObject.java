@@ -27,4 +27,10 @@ public class ContentObject {
 
   private SchemaObject schemaObject;
 
+  /**
+   * Whether the media type streams a sequence of documents (such as {@code application/x-ndjson}). The data type is then the
+   * type of each streamed item.
+   */
+  private boolean streaming;
+
 }

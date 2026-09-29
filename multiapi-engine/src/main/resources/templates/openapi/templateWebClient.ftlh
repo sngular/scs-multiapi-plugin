@@ -47,6 +47,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.reactivestreams.Publisher;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
@@ -157,15 +158,17 @@ public class ApiWebClient {
   }
 
   private static WebClient buildWebClient(final ${mapperType} mapper) {
+    // application/x-ndjson is read and written with the same mapper, one item per line.
+    final MediaType ndjson = new MediaType("application", "x-ndjson");
     ExchangeStrategies strategies = ExchangeStrategies
       .builder()
       .codecs(clientDefaultCodecsConfigurer -> {
 <#if isJackson3>
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON));
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON));
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson));
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson));
 <#else>
-        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(mapper, MediaType.APPLICATION_JSON));
-        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(mapper, MediaType.APPLICATION_JSON));
+        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson));
+        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson));
 </#if>
       }).build();
     WebClient.Builder webClientBuilder = WebClient.builder().exchangeStrategies(strategies);
@@ -357,6 +360,11 @@ public class ApiWebClient {
       return BodyInserters.fromFormData(map);
     } else if(MediaType.MULTIPART_FORM_DATA.equals(contentType)) {
       return BodyInserters.fromMultipartData(formParams);
+    } else if (obj instanceof Publisher) {
+      // A streamed body, such as application/x-ndjson, is sent item by item as it is published.
+      @SuppressWarnings("unchecked")
+      final Publisher<Object> items = (Publisher<Object>) obj;
+      return BodyInserters.fromPublisher(items, Object.class);
     } else {
       return obj != null ? BodyInserters.fromValue(obj) : null;
     }

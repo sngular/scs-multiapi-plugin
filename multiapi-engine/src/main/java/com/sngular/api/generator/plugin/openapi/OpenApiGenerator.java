@@ -200,6 +200,7 @@ public class OpenApiGenerator {
     // Determine the actual base URI for resolving external references
     final URI specBaseUri = resolveSpecBaseUri(specFile);
     OpenApiUtil.solvePathRefs(openAPI, specBaseUri);
+    OpenApiUtil.promoteItemSchemas(openAPI);
     final String clientPackage = specFile.getClientPackage();
 
     validateClientOptions(specFile);

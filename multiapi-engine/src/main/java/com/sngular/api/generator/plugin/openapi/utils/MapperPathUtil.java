@@ -13,10 +13,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,6 +30,7 @@ import com.sngular.api.generator.plugin.common.tools.MapperContentUtil;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.exception.DuplicatedOperationException;
 import com.sngular.api.generator.plugin.openapi.exception.InvalidOpenAPIException;
 import com.sngular.api.generator.plugin.openapi.model.AuthSchemaObject;
@@ -56,6 +59,14 @@ public class MapperPathUtil {
   public static final String DESCRIPTION = "description";
 
   public static final String SCHEMA = "schema";
+
+  /**
+   * The media types that stream a sequence of JSON documents, one per line, which Spring reads and writes item by item. Their
+   * schema is the type of each item, or an array of it.
+   */
+  private static final Set<String> STREAMING_MEDIA_TYPES = Set.of("application/x-ndjson", "application/stream+json");
+
+  private static final String JSON_MEDIA_TYPE = "application/json";
 
   private MapperPathUtil() {
   }
@@ -152,7 +163,7 @@ public class MapperPathUtil {
       final JsonNode operation, final String operationType, final SpecFile specFile, final GlobalObject globalObject,
       final List<String> operationIdList, final Path baseDir) {
     final JsonNode tagsNode = operation.has("tags") ? operation.get("tags") : null;
-    return OperationObject.builder()
+    final OperationObject operationObject = OperationObject.builder()
                           .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
                           .summary(ApiTool.getNodeAsString(operation, "summary"))
@@ -165,6 +176,58 @@ public class MapperPathUtil {
                           .consumes(getRequestList(operation.at("/requestBody")))
                           .produces(getResponseList(operation.at("/responses")))
                           .build();
+    applyStreaming(operationObject, specFile);
+    return operationObject;
+  }
+
+  public static boolean isStreamingMediaType(final String mediaType) {
+    return Objects.nonNull(mediaType) && STREAMING_MEDIA_TYPES.contains(mediaType.toLowerCase(Locale.ROOT));
+  }
+
+  /**
+   * Marks the operation whose successful response streams its items, and checks that the contract can be generated as a
+   * stream: a JSON alternative of the same response must be the array of the streamed items, and a streamed body its only
+   * content.
+   */
+  private static void applyStreaming(final OperationObject operation, final SpecFile specFile) {
+    final Optional<ResponseObject> streamedResponse = operation.getResponseObjects().stream()
+                                                              .filter(response -> StringUtils.startsWith(response.getResponseName(), "2"))
+                                                              .filter(response -> response.getContentObjects().stream().anyMatch(ContentObject::isStreaming))
+                                                              .findFirst();
+    streamedResponse.ifPresent(response -> {
+      final ContentObject content = response.getContentObjects().stream().filter(ContentObject::isStreaming).findFirst().orElseThrow();
+      operation.setStreamingResponse(true);
+      operation.setStreamingItemType(content.getDataType());
+      operation.setStreamingMediaType(content.getName());
+      operation.setStreamingAlsoJson(hasJsonAlternative(operation.getOperationId(), response, content));
+    });
+    for (final RequestObject request : operation.getRequestObjects()) {
+      if (request.isStreaming() && request.getContentObjects().size() > 1) {
+        throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' streams its request body, which must then declare only the "
+                                          + "streamed media type, but it declares " + request.getContentObjects().stream().map(ContentObject::getName).toList());
+      }
+    }
+    final boolean streams = operation.isStreamingResponse() || operation.getRequestObjects().stream().anyMatch(RequestObject::isStreaming);
+    if (streams && specFile.isCallMode() && !specFile.isReactive()) {
+      throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' streams application/x-ndjson, which the blocking clients cannot "
+                                        + "consume: generate its client with reactive=true (a WebClient client or a reactive @HttpExchange interface)");
+    }
+  }
+
+  /** Whether the streamed response also declares JSON, which then has to be the array of the streamed items. */
+  private static boolean hasJsonAlternative(final String operationId, final ResponseObject response, final ContentObject streamed) {
+    final Optional<ContentObject> json = response.getContentObjects().stream()
+                                                 .filter(content -> JSON_MEDIA_TYPE.equalsIgnoreCase(content.getName()))
+                                                 .findFirst();
+    json.ifPresent(content -> {
+      final SchemaFieldObjectType jsonType = content.getDataType();
+      if (Objects.isNull(jsonType) || !TypeConstants.ARRAY.equals(jsonType.getBaseType()) || Objects.isNull(jsonType.getInnerType())
+          || !jsonType.getInnerType().toString().equals(String.valueOf(streamed.getDataType()))) {
+        throw new CodeGenerationException("Operation '" + operationId + "' streams " + streamed.getDataType() + " items as "
+                                          + streamed.getName() + ", so its application/json response must be the array of them, but it is " + jsonType);
+      }
+    });
+    return json.isPresent();
   }
 
   private static String getOperationId(final JsonNode operation) {
@@ -235,6 +298,10 @@ public class MapperPathUtil {
     return !multipartSchema.isMissingNode() && !ApiTool.hasRef(multipartSchema);
   }
 
+  private static boolean isStreamingContent(final JsonNode content) {
+    return Objects.nonNull(content) && IteratorUtils.toList(content.fieldNames()).stream().anyMatch(MapperPathUtil::isStreamingMediaType);
+  }
+
   private static List<RequestObject> mapRequestObject(
       final SpecFile specFile, final JsonNode operation,
       final GlobalObject globalObject, final Path baseDir) {
@@ -251,6 +318,7 @@ public class MapperPathUtil {
                                         .required(isRequiredBody(requestBody))
                                         .isFormData(ApiTool.getNode(requestBody, CONTENT).has("multipart/form-data"))
                                         .inlineMultipart(isInlineMultipart(ApiTool.getNode(requestBody, CONTENT)))
+                                        .streaming(isStreamingContent(ApiTool.getNode(requestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(requestBody, CONTENT),
                                                                          "InlineObject" + operationIdWithCap, globalObject, baseDir))
                                         .build());
@@ -264,6 +332,7 @@ public class MapperPathUtil {
                                         .required(isRequiredBody(actualRequestBody))
                                         .isFormData(ApiTool.getNode(actualRequestBody, CONTENT).has("multipart/form-data"))
                                         .inlineMultipart(isInlineMultipart(ApiTool.getNode(actualRequestBody, CONTENT)))
+                                        .streaming(isStreamingContent(ApiTool.getNode(actualRequestBody, CONTENT)))
                                         .contentObjects(mapContentObject(specFile, ApiTool.getNode(actualRequestBody, CONTENT),
                                                                          operationIdWithCap, globalObject, baseDir))
                                         .build());
@@ -500,7 +569,8 @@ public class MapperPathUtil {
     if (Objects.nonNull(content)) {
       for (final Iterator<String> it = content.fieldNames(); it.hasNext(); ) {
         final String mediaType = it.next();
-        final var schema = ApiTool.getNode(ApiTool.getNode(content, mediaType), SCHEMA);
+        final boolean streaming = isStreamingMediaType(mediaType);
+        final var schema = streamedItemSchema(ApiTool.getNode(ApiTool.getNode(content, mediaType), SCHEMA), streaming);
         final String pojoName = preparePojoName(inlineObject, schema, specFile);
         final SchemaFieldObjectType dataType = getSchemaType(schema, pojoName, specFile, globalObject, baseDir);
         final String importName = getImportFromType(dataType);
@@ -517,10 +587,16 @@ public class MapperPathUtil {
                                         .name(mediaType)
                                         .importName(importName)
                                         .schemaObject(schemaObject)
+                                        .streaming(streaming)
                                         .build());
       }
     }
     return contentObjects;
+  }
+
+  /** The schema of each item a streamed media type sends: its schema, or the items of it when it is declared as an array. */
+  private static JsonNode streamedItemSchema(final JsonNode schema, final boolean streaming) {
+    return streaming && Objects.nonNull(schema) && ApiTool.isArray(schema) && ApiTool.hasItems(schema) ? ApiTool.getItems(schema) : schema;
   }
 
   private static String preparePojoName(final String inlineObject, final JsonNode schema, final SpecFile specFile) {

@@ -1,0 +1,33 @@
+openapi: "3.0.3"
+info:
+  title: NDJSON items that the JSON alternative does not list
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      tags: [items]
+      operationId: listItems
+      responses:
+        '200':
+          description: A page of items, or the items one per line
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemPage"
+            application/x-ndjson:
+              schema:
+                $ref: "#/components/schemas/Item"
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+    ItemPage:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
