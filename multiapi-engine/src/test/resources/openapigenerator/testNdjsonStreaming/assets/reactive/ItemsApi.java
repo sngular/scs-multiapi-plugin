@@ -51,6 +51,50 @@ public interface ItemsApi {
   }
 
   /**
+   * GET /items/lines
+   * @return  One item per line, as JSON Lines; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  @Operation(
+     operationId = "listItemLines",
+     tags = {"items"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "One item per line, as JSON Lines", content = @Content(mediaType = "application/jsonl", schema = @Schema(implementation = ItemDTO.class)))
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = "/items/lines",
+    produces = {"application/jsonl"}
+  )
+  default ResponseEntity<Flux<ItemDTO>> listItemLines(@ApiIgnore final ServerWebExchange exchange) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * POST /items/lines
+   * @param itemDTO (required)
+   * @return  Import summary; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  @Operation(
+     operationId = "importItemLines",
+     tags = {"items"},
+     responses = {
+       @ApiResponse(responseCode = "200", description = "Import summary", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ImportResultDTO.class)))
+     }
+  )
+  @RequestMapping(
+    method = RequestMethod.POST,
+    value = "/items/lines",
+    produces = {"application/json"},
+    consumes = {"application/jsonl"}
+  )
+  default ResponseEntity<Mono<ImportResultDTO>> importItemLines(@Parameter(name = "itemDTO", description = "", required = true, schema = @Schema(description = "")) @Valid @RequestBody Flux<ItemDTO> itemDTO, @ApiIgnore final ServerWebExchange exchange) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
    * GET /items/export
    * @return  The items, as a JSON array or one per line; (status code 200)
    * @throws WebClientResponseException if an error occurs while attempting to invoke the API

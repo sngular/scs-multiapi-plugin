@@ -21,31 +21,29 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
- * Sends and reads application/x-ndjson, one JSON document per line, for the API interfaces of this package. Streamed
+ * Sends and reads application/x-ndjson and application/jsonl, one JSON document per line, for the API interfaces of this package. Streamed
  * responses are written by Spring MVC on its asynchronous executor, each item sent to the client as soon as it is produced,
  * and the stream the operation returns is closed once it is sent, also when sending fails. Items are serialized with the
  * application's ObjectMapper.
  */
 public final class NdjsonSupport {
 
-  private static final MediaType APPLICATION_NDJSON = MediaType.parseMediaType("application/x-ndjson");
-
   private NdjsonSupport() {
   }
 
   /**
-   * The response streaming the items of the given one, with its status and headers. A response without items, such as the
-   * NOT_IMPLEMENTED of an operation that is not implemented, is sent without a body.
+   * The response streaming the items of the given one as the given media type, with its status and headers. A response
+   * without items, such as the NOT_IMPLEMENTED of an operation that is not implemented, is sent without a body.
    */
-  public static <T> ResponseEntity<StreamingResponseBody> stream(final ResponseEntity<Stream<T>> response, final HttpServletRequest servletRequest,
-      final HttpServletResponse servletResponse) {
+  public static <T> ResponseEntity<StreamingResponseBody> stream(final ResponseEntity<Stream<T>> response, final String mediaType,
+      final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) {
     final ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode()).headers(response.getHeaders());
     final Stream<T> items = response.getBody();
     if (items == null) {
       return builder.build();
     }
     final ObjectMapper mapper = objectMapper(servletRequest);
-    return builder.contentType(APPLICATION_NDJSON).body(output -> write(items, mapper, output, servletResponse));
+    return builder.contentType(MediaType.parseMediaType(mediaType)).body(output -> write(items, mapper, output, servletResponse));
   }
 
   /** The response sending the items of the given one as a JSON array, with its status and headers. */

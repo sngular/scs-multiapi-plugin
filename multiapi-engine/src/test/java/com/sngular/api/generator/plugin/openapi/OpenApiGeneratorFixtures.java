@@ -367,6 +367,12 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.ndjsonmixedrequest.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).build());
 
+	static final List<SpecFile> TEST_NDJSON_STREAMING_STREAM_JSON = List
+			.of(SpecFile.builder().filePath("openapigenerator/testNdjsonStreaming/api-stream-json.yml")
+					.apiPackage("com.sngular.multifileplugin.ndjsonstreamjson")
+					.modelPackage("com.sngular.multifileplugin.ndjsonstreamjson.model")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT = List
 			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.httpexchange")

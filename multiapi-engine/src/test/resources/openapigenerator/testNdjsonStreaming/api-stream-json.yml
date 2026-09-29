@@ -1,0 +1,23 @@
+openapi: "3.0.3"
+info:
+  title: A stream declared as the deprecated application/stream+json
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      tags: [items]
+      operationId: listItems
+      responses:
+        '200':
+          description: One item per line
+          content:
+            application/stream+json:
+              schema:
+                $ref: "#/components/schemas/Item"
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string

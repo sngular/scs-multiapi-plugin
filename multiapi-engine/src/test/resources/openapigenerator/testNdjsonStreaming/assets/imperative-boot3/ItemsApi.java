@@ -45,13 +45,66 @@ public interface ItemsApi {
     produces = {"application/x-ndjson"}
   )
   default ResponseEntity<StreamingResponseBody> listItemsNdjson(@Parameter(name = "filter", required = false, schema = @Schema(description = "")) @RequestParam(name = "filter", required = false) String filter, @Parameter(hidden = true) final HttpServletRequest servletRequest, @Parameter(hidden = true) final HttpServletResponse servletResponse) {
-    return NdjsonSupport.stream(listItems(filter), servletRequest, servletResponse);
+    return NdjsonSupport.stream(listItems(filter), "application/x-ndjson", servletRequest, servletResponse);
   }
 
   /**
    * GET /items. Implement this method rather than the endpoint above: the items are sent as they are produced, and the stream is closed once they are sent.
    */
   default ResponseEntity<Stream<ItemDTO>> listItems(final String filter) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * GET /items/lines, sending the items {@link #listItemLines} returns as application/jsonl, one JSON document per line.
+   */
+  @Operation(
+    operationId = "listItemLines",
+    tags = {"items"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "One item per line, as JSON Lines", content = @Content(mediaType = "application/jsonl", schema = @Schema(implementation = ItemDTO.class)))
+    }
+  )
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = "/items/lines",
+    produces = {"application/jsonl"}
+  )
+  default ResponseEntity<StreamingResponseBody> listItemLinesNdjson(@Parameter(hidden = true) final HttpServletRequest servletRequest, @Parameter(hidden = true) final HttpServletResponse servletResponse) {
+    return NdjsonSupport.stream(listItemLines(), "application/jsonl", servletRequest, servletResponse);
+  }
+
+  /**
+   * GET /items/lines. Implement this method rather than the endpoint above: the items are sent as they are produced, and the stream is closed once they are sent.
+   */
+  default ResponseEntity<Stream<ItemDTO>> listItemLines() {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * POST /items/lines, reading the application/jsonl body, one JSON document per line, as the items {@link #importItemLines} receives.
+   */
+  @Operation(
+    operationId = "importItemLines",
+    tags = {"items"},
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Import summary", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ImportResultDTO.class)))
+    }
+  )
+  @RequestMapping(
+    method = RequestMethod.POST,
+    value = "/items/lines",
+    produces = {"application/json"},
+    consumes = {"application/jsonl"}
+  )
+  default ResponseEntity<ImportResultDTO> importItemLinesNdjson(@Parameter(hidden = true) final HttpServletRequest servletRequest) throws IOException {
+    return importItemLines(NdjsonSupport.read(servletRequest, new TypeReference<ItemDTO>() {}));
+  }
+
+  /**
+   * POST /items/lines. Implement this method rather than the endpoint above: the body items are read as the stream is consumed.
+   */
+  default ResponseEntity<ImportResultDTO> importItemLines(final Stream<ItemDTO> itemDTO) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
   }
 
@@ -71,7 +124,7 @@ public interface ItemsApi {
     produces = {"application/x-ndjson"}
   )
   default ResponseEntity<StreamingResponseBody> exportItemsNdjson(@Parameter(hidden = true) final HttpServletRequest servletRequest, @Parameter(hidden = true) final HttpServletResponse servletResponse) {
-    return NdjsonSupport.stream(exportItems(), servletRequest, servletResponse);
+    return NdjsonSupport.stream(exportItems(), "application/x-ndjson", servletRequest, servletResponse);
   }
 
   /**

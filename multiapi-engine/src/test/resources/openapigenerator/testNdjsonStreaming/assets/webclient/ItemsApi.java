@@ -115,6 +115,91 @@ public class ItemsApi {
   }
 
   /**
+   * GET /items/lines: ""
+   * @return One item per line, as JSON Lines; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  private ResponseSpec listItemLinesRequestCreation() throws WebClientResponseException {
+    Object postBody = null;
+    final Map<String, Object> pathParams = new HashMap<String, Object>();
+
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+    final String[] localVarAccepts = {"application/jsonl"};
+    final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {};
+    final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    ParameterizedTypeReference<ItemDTO> localVarReturnType = new ParameterizedTypeReference<ItemDTO>() {};
+    return apiWebClient.invokeAPI(basePath,"/items/lines", HttpMethod.GET, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+
+  }
+
+  /**
+   * GET /items/lines
+   * @return One item per line, as JSON Lines; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  public Flux<ItemDTO> listItemLines() throws WebClientResponseException {
+    ParameterizedTypeReference<ItemDTO> localVarReturnType = new ParameterizedTypeReference<ItemDTO>() {};
+    return listItemLinesRequestCreation().bodyToFlux(localVarReturnType);
+  }
+
+  public Mono<ResponseEntity<Flux<ItemDTO>>> listItemLinesWithHttpInfo() throws WebClientResponseException {
+    ParameterizedTypeReference<ItemDTO> localVarReturnType = new ParameterizedTypeReference<ItemDTO>() {};
+    return listItemLinesRequestCreation().toEntityFlux(localVarReturnType);
+  }
+
+  /**
+   * POST /items/lines: ""
+   * @param itemDTO (required)
+   * @return Import summary; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  private ResponseSpec importItemLinesRequestCreation(Flux<ItemDTO> itemDTO) throws WebClientResponseException {
+    Object postBody = itemDTO;
+    if (itemDTO == null) {
+    throw new WebClientResponseException("Missing the required parameter ''itemDTO'' when calling importItemLines", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
+  }
+    final Map<String, Object> pathParams = new HashMap<String, Object>();
+
+    final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+    final HttpHeaders headerParams = new HttpHeaders();
+    final MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap<String, String>();
+    final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+    final String[] localVarAccepts = {"application/json"};
+    final List<MediaType> localVarAccept = apiWebClient.selectHeaderAccept(localVarAccepts);
+    final String[] localVarContentTypes = {"application/jsonl"};
+    final MediaType localVarContentType = apiWebClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    ParameterizedTypeReference<ImportResultDTO> localVarReturnType = new ParameterizedTypeReference<ImportResultDTO>() {};
+    return apiWebClient.invokeAPI(basePath,"/items/lines", HttpMethod.POST, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+
+  }
+
+  /**
+   * POST /items/lines
+   * @param itemDTO   (required)
+   * @return Import summary; (status code 200)
+   * @throws WebClientResponseException if an error occurs while attempting to invoke the API
+   */
+  public Mono<ImportResultDTO> importItemLines(Flux<ItemDTO> itemDTO) throws WebClientResponseException {
+    ParameterizedTypeReference<ImportResultDTO> localVarReturnType = new ParameterizedTypeReference<ImportResultDTO>() {};
+    return importItemLinesRequestCreation(itemDTO).bodyToMono(localVarReturnType);
+  }
+
+  public Mono<ResponseEntity<ImportResultDTO>> importItemLinesWithHttpInfo(Flux<ItemDTO> itemDTO) throws WebClientResponseException {
+    ParameterizedTypeReference<ImportResultDTO> localVarReturnType = new ParameterizedTypeReference<ImportResultDTO>() {};
+    return importItemLinesRequestCreation(itemDTO).toEntity(localVarReturnType);
+  }
+
+  /**
    * GET /items/export: ""
    * @return The items, as a JSON array or one per line; (status code 200)
    * @throws WebClientResponseException if an error occurs while attempting to invoke the API

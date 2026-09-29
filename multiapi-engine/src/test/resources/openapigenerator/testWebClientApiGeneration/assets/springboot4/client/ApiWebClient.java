@@ -6,6 +6,7 @@ import java.text.ParsePosition;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -137,13 +138,16 @@ public class ApiWebClient {
   }
 
   private static WebClient buildWebClient(final JsonMapper mapper) {
-    // application/x-ndjson is read and written with the same mapper, one item per line.
+    // application/x-ndjson and application/jsonl are read and written with the same mapper, one item per line.
     final MediaType ndjson = new MediaType("application", "x-ndjson");
+    final MediaType jsonLines = new MediaType("application", "jsonl");
     ExchangeStrategies strategies = ExchangeStrategies
       .builder()
       .codecs(clientDefaultCodecsConfigurer -> {
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson));
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson));
+        final JacksonJsonEncoder encoder = new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines);
+        encoder.setStreamingMediaTypes(Arrays.asList(ndjson, jsonLines));
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(encoder);
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines));
       }).build();
     WebClient.Builder webClientBuilder = WebClient.builder().exchangeStrategies(strategies);
     return webClientBuilder.build();

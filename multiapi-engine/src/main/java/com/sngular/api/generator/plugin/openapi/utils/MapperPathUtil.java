@@ -61,10 +61,13 @@ public class MapperPathUtil {
   public static final String SCHEMA = "schema";
 
   /**
-   * The media types that stream a sequence of JSON documents, one per line, which Spring reads and writes item by item. Their
-   * schema is the type of each item, or an array of it.
+   * The media types that stream a sequence of JSON documents, one per line: NDJSON and JSON Lines, which are the same format.
+   * Their schema is the type of each item, or an array of it.
    */
-  private static final Set<String> STREAMING_MEDIA_TYPES = Set.of("application/x-ndjson", "application/stream+json");
+  private static final Set<String> STREAMING_MEDIA_TYPES = Set.of("application/x-ndjson", "application/jsonl");
+
+  /** Deprecated for application/x-ndjson, and no longer streamed by Spring Framework 7. */
+  private static final String STREAM_JSON_MEDIA_TYPE = "application/stream+json";
 
   private static final String JSON_MEDIA_TYPE = "application/json";
 
@@ -190,6 +193,10 @@ public class MapperPathUtil {
    * content.
    */
   private static void applyStreaming(final OperationObject operation, final SpecFile specFile) {
+    if (operation.getProduces().contains(STREAM_JSON_MEDIA_TYPE) || operation.getConsumes().contains(STREAM_JSON_MEDIA_TYPE)) {
+      throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' declares " + STREAM_JSON_MEDIA_TYPE + ", which is deprecated and "
+                                        + "which Spring Framework 7 no longer streams: declare the stream as application/x-ndjson or application/jsonl");
+    }
     final Optional<ResponseObject> streamedResponse = operation.getResponseObjects().stream()
                                                               .filter(response -> StringUtils.startsWith(response.getResponseName(), "2"))
                                                               .filter(response -> response.getContentObjects().stream().anyMatch(ContentObject::isStreaming))
@@ -209,7 +216,7 @@ public class MapperPathUtil {
     }
     final boolean streams = operation.isStreamingResponse() || operation.getRequestObjects().stream().anyMatch(RequestObject::isStreaming);
     if (streams && specFile.isCallMode() && !specFile.isReactive()) {
-      throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' streams application/x-ndjson, which the blocking clients cannot "
+      throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' streams its items, which the blocking clients cannot "
                                         + "consume: generate its client with reactive=true (a WebClient client or a reactive @HttpExchange interface)");
     }
   }

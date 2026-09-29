@@ -43,6 +43,21 @@ public interface ItemsApi {
   Mono<ResponseEntity<Flux<ItemDTO>>> listItems(@RequestParam(name = "filter", required = false) String filter);
 
   /**
+   * GET /items/lines
+   * @return One item per line, as JSON Lines (status code 200);
+   */
+  @GetExchange(url = "/items/lines", accept = {"application/jsonl"})
+  Mono<ResponseEntity<Flux<ItemDTO>>> listItemLines();
+
+  /**
+   * POST /items/lines
+   * @param itemDTO  (required)
+   * @return Import summary (status code 200);
+   */
+  @PostExchange(url = "/items/lines", accept = {"application/json"}, contentType = "application/jsonl")
+  Mono<ResponseEntity<ImportResultDTO>> importItemLines(@RequestBody(required = true) Flux<ItemDTO> itemDTO);
+
+  /**
    * GET /items/export
    * @return The items, as a JSON array or one per line (status code 200);
    */

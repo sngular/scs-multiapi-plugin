@@ -6,6 +6,7 @@ import java.text.ParsePosition;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -158,17 +159,22 @@ public class ApiWebClient {
   }
 
   private static WebClient buildWebClient(final ${mapperType} mapper) {
-    // application/x-ndjson is read and written with the same mapper, one item per line.
+    // application/x-ndjson and application/jsonl are read and written with the same mapper, one item per line.
     final MediaType ndjson = new MediaType("application", "x-ndjson");
+    final MediaType jsonLines = new MediaType("application", "jsonl");
     ExchangeStrategies strategies = ExchangeStrategies
       .builder()
       .codecs(clientDefaultCodecsConfigurer -> {
 <#if isJackson3>
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson));
-        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson));
+        final JacksonJsonEncoder encoder = new JacksonJsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines);
+        encoder.setStreamingMediaTypes(Arrays.asList(ndjson, jsonLines));
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonEncoder(encoder);
+        clientDefaultCodecsConfigurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines));
 <#else>
-        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson));
-        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson));
+        final Jackson2JsonEncoder encoder = new Jackson2JsonEncoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines);
+        encoder.setStreamingMediaTypes(Arrays.asList(ndjson, jsonLines));
+        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(encoder);
+        clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(mapper, MediaType.APPLICATION_JSON, ndjson, jsonLines));
 </#if>
       }).build();
     WebClient.Builder webClientBuilder = WebClient.builder().exchangeStrategies(strategies);
