@@ -133,6 +133,16 @@ class OpenApiGeneratorTest {
             OpenApiGeneratorFixtures.validateExternalComponentSchemaRefs()),
         Arguments.of("testInlineSchemaNameClashes", OpenApiGeneratorFixtures.TEST_INLINE_SCHEMA_NAME_CLASHES,
             OpenApiGeneratorFixtures.validateInlineSchemaNameClashes()),
+        Arguments.of("testNdjsonStreaming_imperative", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING,
+            OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreaming", "imperative",
+                List.of("EventsApi.java", "ItemsApi.java", "NdjsonSupport.java"),
+                List.of("ErrorDTO.java", "ImportResultDTO.java", "InlineResponse200StreamEventsDTO.java", "ItemDTO.java"))),
+        Arguments.of("testNdjsonStreaming_reactive", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_REACTIVE,
+            OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreamingreactive", "reactive",
+                List.of("EventsApi.java", "ItemsApi.java"), List.of())),
+        Arguments.of("testNdjsonStreaming_webclient", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_WEB_CLIENT,
+            OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreamingwebclient", "webclient",
+                List.of("EventsApi.java", "ItemsApi.java"), List.of())),
         Arguments.of("testRequestBodyRequired_imperative", OpenApiGeneratorFixtures.TEST_REQUEST_BODY_REQUIRED,
             OpenApiGeneratorFixtures.validateRequestBodyRequired("requestbodyrequired", "imperative")),
         Arguments.of("testRequestBodyRequired_reactive", OpenApiGeneratorFixtures.TEST_REQUEST_BODY_REQUIRED_REACTIVE,
@@ -246,6 +256,31 @@ class OpenApiGeneratorTest {
   void testExceptionForTestGenerationWithNoOperationId() {
     Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
         .isInstanceOf(InvalidAPIException.class);
+  }
+
+  @Test
+  void testNdjsonStreamingNeedsReactiveClient() {
+    // RestTemplate and RestClient read a response whole, so they cannot hand the items over as they are streamed.
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_REST_CLIENT))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("listItems")
+        .hasMessageContaining("reactive=true");
+  }
+
+  @Test
+  void testNdjsonStreamingJsonAlternativeMustListTheItems() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_JSON_MISMATCH))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("listItems")
+        .hasMessageContaining("must be the array of them");
+  }
+
+  @Test
+  void testNdjsonStreamedBodyMustBeItsOnlyContent() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_MIXED_REQUEST))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("importItems")
+        .hasMessageContaining("only the streamed media type");
   }
 
   @Test

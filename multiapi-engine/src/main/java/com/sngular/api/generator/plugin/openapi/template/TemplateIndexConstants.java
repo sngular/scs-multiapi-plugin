@@ -20,6 +20,8 @@ public class TemplateIndexConstants extends CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_CALL_HTTP_EXCHANGE_API = "templateCallHttpExchange.ftlh";
 
+  public static final String TEMPLATE_NDJSON_SUPPORT = "templateNdjsonSupport.ftlh";
+
   public static final String TEMPLATE_REST_CLIENT = "templateRestClient.ftlh";
 
   public static final String TEMPLATE_WEB_CLIENT = "templateWebClient.ftlh";

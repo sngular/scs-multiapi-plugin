@@ -61,7 +61,9 @@ import ${import};
   </#switch>
 </#function>
 <#function returnType operation>
-  <#if operation.responseObjects?has_content && operation.responseObjects[0].contentObjects[0]??>
+  <#if operation.streamingResponse>
+    <#assign entity = "ResponseEntity<Flux<" + operation.streamingItemType + ">>">
+  <#elseif operation.responseObjects?has_content && operation.responseObjects[0].contentObjects[0]??>
     <#assign entity = "ResponseEntity<" + operation.responseObjects[0].contentObjects[0].dataType + ">">
   <#else>
     <#assign entity = "ResponseEntity<Void>">
@@ -100,6 +102,11 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PatchExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
+<#assign useFlux = false>
+<#list pathObjects as path><#list path.operationObjects as operation><#if operation.streamingResponse><#assign useFlux = true></#if><#list operation.requestObjects as request><#if request.streaming><#assign useFlux = true></#if></#list></#list></#list>
+<#if isReactive && useFlux>
+import reactor.core.publisher.Flux;
+</#if>
 <#if isReactive>
 import reactor.core.publisher.Mono;
 </#if>
@@ -138,8 +145,8 @@ public interface ${className?cap_first}Api {
   </#list>
    * @return<#list operation.responseObjects as response><#if response.responseName != "default"> ${response.description!""} (status code ${response.responseName});</#if></#list>
    */
-  @${exchangeAnnotation(operation.operationType)}(<#if exchangeAnnotation(operation.operationType) == "HttpExchange">method = "${operation.operationType?upper_case}", </#if>url = "${path.pathName}"<#if operation.produces?has_content>, accept = {<#list operation.produces as produce>"${produce}"<#sep>, </#list>}</#if><#if operation.requestObjects?has_content && operation.consumes?has_content>, contentType = "${operation.consumes[0]}"</#if>)
-  ${returnType(operation)} ${operation.operationId}(<#list (operation.parameterObjects![]) + (path.parameterObjects![]) as parameter><@parameterBinding parameter/><#sep>, </#list><#if operation.requestObjects?has_content><#if (operation.parameterObjects![])?has_content || (path.parameterObjects![])?has_content>, </#if><#list operation.requestObjects as request><#if request.isFormData><#list request.contentObjects[0].schemaObject.fieldObjectList as part>@RequestPart(name = "${part.baseName}", required = ${part.required?c}) ${part.dataType} ${part.fieldName}<#sep>, </#list><#else>@RequestBody(required = ${request.required?c}) ${request.contentObjects[0].dataType} ${request.contentObjects[0].dataType?api.getVariableNameString()}</#if><#sep>, </#list></#if>);
+  @${exchangeAnnotation(operation.operationType)}(<#if exchangeAnnotation(operation.operationType) == "HttpExchange">method = "${operation.operationType?upper_case}", </#if>url = "${path.pathName}"<#if operation.streamingResponse>, accept = {"${operation.streamingMediaType}"}<#elseif operation.produces?has_content>, accept = {<#list operation.produces as produce>"${produce}"<#sep>, </#list>}</#if><#if operation.requestObjects?has_content && operation.consumes?has_content>, contentType = "${operation.consumes[0]}"</#if>)
+  ${returnType(operation)} ${operation.operationId}(<#list (operation.parameterObjects![]) + (path.parameterObjects![]) as parameter><@parameterBinding parameter/><#sep>, </#list><#if operation.requestObjects?has_content><#if (operation.parameterObjects![])?has_content || (path.parameterObjects![])?has_content>, </#if><#list operation.requestObjects as request><#if request.isFormData><#list request.contentObjects[0].schemaObject.fieldObjectList as part>@RequestPart(name = "${part.baseName}", required = ${part.required?c}) ${part.dataType} ${part.fieldName}<#sep>, </#list><#else>@RequestBody(required = ${request.required?c}) <#if request.streaming>Flux<${request.contentObjects[0].dataType}><#else>${request.contentObjects[0].dataType}</#if> ${request.contentObjects[0].dataType?api.getVariableNameString()}</#if><#sep>, </#list></#if>);
   </#list>
 </#list>
 }

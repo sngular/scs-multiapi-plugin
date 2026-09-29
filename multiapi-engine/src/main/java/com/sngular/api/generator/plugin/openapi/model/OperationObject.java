@@ -9,6 +9,8 @@ package com.sngular.api.generator.plugin.openapi.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sngular.api.generator.plugin.common.model.SchemaFieldObjectType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +39,18 @@ public final class OperationObject {
   private List<String> consumes;
 
   private List<String> securities;
+
+  /** Whether the successful response streams its items (such as {@code application/x-ndjson}). */
+  private boolean streamingResponse;
+
+  /** The type of each item the successful response streams. */
+  private SchemaFieldObjectType streamingItemType;
+
+  /** The media type the successful response streams its items as. */
+  private String streamingMediaType;
+
+  /** Whether the successful response can also be sent as a JSON array of the streamed items. */
+  private boolean streamingAlsoJson;
 
   public static final class OperationObjectBuilder {
 

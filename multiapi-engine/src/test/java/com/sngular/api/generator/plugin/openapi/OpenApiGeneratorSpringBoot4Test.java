@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -54,9 +56,23 @@ class OpenApiGeneratorSpringBoot4Test {
             OpenApiGeneratorFixtures.validateRequestBodyRequired("requestbodyrequiredhttpexchange", "httpexchange")),
         Arguments.of("testHttpExchangeClientReactive", OpenApiGeneratorFixtures.TEST_HTTP_EXCHANGE_CLIENT_REACTIVE,
             OpenApiGeneratorFixtures.validateHttpExchangeClient("httpexchangereactive", "reactive")),
+        Arguments.of("testNdjsonStreaming_imperative", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING,
+            OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreaming", "imperative-boot4",
+                List.of("EventsApi.java", "ItemsApi.java", "NdjsonSupport.java"), List.of())),
+        Arguments.of("testNdjsonStreaming_httpexchange", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_HTTP_EXCHANGE,
+            OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreaminghttpexchange", "httpexchange",
+                List.of("EventsApi.java", "ItemsApi.java"), List.of())),
         Arguments.of("testQueryObjectsHttpExchange", OpenApiGeneratorFixtures.TEST_QUERY_OBJECTS_HTTP_EXCHANGE,
             OpenApiGeneratorFixtures.validateQueryObjectsHttpExchange())
     );
+  }
+
+  @Test
+  void testNdjsonStreamingNeedsReactiveHttpExchange() {
+    // A blocking @HttpExchange interface is backed by RestClient, which reads a response whole.
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_HTTP_EXCHANGE_BLOCKING))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("reactive=true");
   }
 
   @ParameterizedTest(name = "Test {index} - Spring Boot 4 File Spec for case {0}")

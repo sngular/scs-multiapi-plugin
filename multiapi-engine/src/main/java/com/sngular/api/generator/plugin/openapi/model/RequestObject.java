@@ -32,6 +32,9 @@ public class RequestObject {
    */
   private boolean inlineMultipart;
 
+  /** Whether the body streams its items (such as {@code application/x-ndjson}); its content's data type is then the item's. */
+  private boolean streaming;
+
   public static final class RequestObjectBuilder {
 
     private final List<ContentObject> contentObjects = new ArrayList<>();

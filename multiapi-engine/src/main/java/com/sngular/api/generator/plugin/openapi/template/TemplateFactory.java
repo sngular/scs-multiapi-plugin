@@ -14,6 +14,7 @@ import java.util.Objects;
 import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
+import com.sngular.api.generator.plugin.openapi.model.RequestObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.lang3.StringUtils;
 
@@ -89,6 +90,18 @@ public class TemplateFactory extends CommonTemplateFactory {
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile),
                         StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE), className + "Api");
+
+    // Spring MVC interfaces send and read application/x-ndjson through a helper written next to them.
+    if (!specFile.isCallMode() && !specFile.isReactive() && streams(pathObjects)) {
+      writeTemplateToFile(TemplateIndexConstants.TEMPLATE_NDJSON_SUPPORT, StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE),
+                          "NdjsonSupport");
+    }
+  }
+
+  private static boolean streams(final List<PathObject> pathObjects) {
+    return pathObjects.stream()
+                      .flatMap(path -> path.getOperationObjects().stream())
+                      .anyMatch(operation -> operation.isStreamingResponse() || operation.getRequestObjects().stream().anyMatch(RequestObject::isStreaming));
   }
 
   private String getTemplateClientApi(final SpecFile specFile) {

@@ -1,0 +1,29 @@
+openapi: "3.0.3"
+info:
+  title: A body sent either streamed or as JSON
+  version: 1.0.0
+paths:
+  /items:
+    post:
+      tags: [items]
+      operationId: importItems
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Item"
+          application/x-ndjson:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        '204':
+          description: Imported
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
