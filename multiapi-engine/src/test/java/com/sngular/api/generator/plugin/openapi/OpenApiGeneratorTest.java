@@ -276,6 +276,14 @@ class OpenApiGeneratorTest {
   }
 
   @Test
+  void testDeprecatedStreamJsonIsRefused() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_STREAM_JSON))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("listItems")
+        .hasMessageContaining("application/stream+json");
+  }
+
+  @Test
   void testNdjsonStreamedBodyMustBeItsOnlyContent() {
     Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_MIXED_REQUEST))
         .isInstanceOf(CodeGenerationException.class)

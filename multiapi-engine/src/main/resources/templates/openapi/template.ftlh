@@ -74,7 +74,7 @@
     produces = {"${operation.streamingMediaType}"}${consumesStream}
   )
   default ResponseEntity<StreamingResponseBody> ${operation.operationId}Ndjson(${streamingEndpointArgs(operation, path, true, true)})${throwsIo} {
-    return NdjsonSupport.stream(${streamingMethodCall(operation, path)}, servletRequest, servletResponse);
+    return NdjsonSupport.stream(${streamingMethodCall(operation, path)}, "${operation.streamingMediaType}", servletRequest, servletResponse);
   }
 
   <#if operation.streamingAlsoJson>

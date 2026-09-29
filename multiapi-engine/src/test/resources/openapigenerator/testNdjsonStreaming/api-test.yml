@@ -26,6 +26,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /items/lines:
+    get:
+      tags: [items]
+      operationId: listItemLines
+      responses:
+        '200':
+          description: One item per line, as JSON Lines
+          content:
+            application/jsonl:
+              schema:
+                $ref: "#/components/schemas/Item"
+    post:
+      tags: [items]
+      operationId: importItemLines
+      requestBody:
+        required: true
+        content:
+          application/jsonl:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        '200':
+          description: Import summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResult"
   /items/export:
     get:
       tags: [items]

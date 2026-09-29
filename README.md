@@ -30,7 +30,7 @@ Maven and Gradle
   - [Usage](#usage)
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
   - [Object-typed query parameters and multipart bodies](#object-typed-query-parameters-and-multipart-bodies)
-  - [Streaming endpoints (application/x-ndjson)](#streaming-endpoints-applicationx-ndjson)
+  - [Streaming endpoints (NDJSON and JSON Lines)](#streaming-endpoints-ndjson-and-json-lines)
   - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
   - [Unknown enum values (useUnknownEnumValue)](#unknown-enum-values-useunknownenumvalue)
 - [Property Validation](#property-validation)
@@ -1093,12 +1093,14 @@ own: every generated API takes one argument per part (`MultipartFile file,
 String comment`). A multipart body that references a component schema keeps
 taking that model.
 
-### Streaming endpoints (application/x-ndjson)
+### Streaming endpoints (NDJSON and JSON Lines)
 
 An operation whose successful response, or whose request body, is
-`application/x-ndjson` (or the older `application/stream+json`) streams one JSON
+`application/x-ndjson` or `application/jsonl` (the same format) streams one JSON
 document per line. Its schema is the type of each item, or an array of it, and
-an OpenAPI 3.2 `itemSchema` is read the same way:
+an OpenAPI 3.2 `itemSchema` is read the same way. The deprecated
+`application/stream+json`, which Spring Framework 7 no longer streams, fails the
+generation:
 
 ```yaml
 responses:
@@ -1148,6 +1150,34 @@ for it.
   or a `Mono<ResponseEntity<Flux<ItemDTO>>>` from `...WithHttpInfo`, and send a
   streamed body from a `Flux<ItemDTO>`. **Reactive `@HttpExchange` interfaces**
   return a `Mono<ResponseEntity<Flux<ItemDTO>>>`.
+- Spring's codecs stream `application/x-ndjson` only. The generated
+  `ApiWebClient` registers `application/jsonl` too, but a WebFlux server or a
+  reactive `@HttpExchange` interface uses the application's codecs, which need
+  it registered for JSON Lines:
+
+  ```java
+  @Bean
+  CodecCustomizer jsonLinesCodecCustomizer(final JsonMapper mapper) {
+    final MediaType jsonLines = new MediaType("application", "jsonl");
+    return configurer -> {
+      final JacksonJsonEncoder encoder = new JacksonJsonEncoder(mapper,
+          MediaType.APPLICATION_JSON, MediaType.APPLICATION_NDJSON, jsonLines);
+      encoder.setStreamingMediaTypes(
+          List.of(MediaType.APPLICATION_NDJSON, jsonLines));
+      configurer.defaultCodecs().jacksonJsonEncoder(encoder);
+      configurer.defaultCodecs().jacksonJsonDecoder(new JacksonJsonDecoder(
+          mapper, MediaType.APPLICATION_JSON, MediaType.APPLICATION_NDJSON,
+          jsonLines));
+    };
+  }
+  ```
+
+  This is Spring Boot 4 (`org.springframework.boot.http.codec.CodecCustomizer`).
+  On Spring Boot 2 and 3 it is
+  `org.springframework.boot.web.codec.CodecCustomizer`, with an `ObjectMapper`
+  and `Jackson2JsonEncoder`/`Jackson2JsonDecoder` set through
+  `jackson2JsonEncoder`/`jackson2JsonDecoder`. The customizer applies to the
+  WebFlux server and to the WebClients built from Boot's `WebClient.Builder`.
 - The **blocking clients** (RestClient, and `@HttpExchange` without `reactive`)
   read a response whole, so they cannot hand the items over as they arrive, and
   the generation fails for a streaming operation: generate that client with

@@ -40,7 +40,7 @@ public interface EventsApi {
     produces = {"application/x-ndjson"}
   )
   default ResponseEntity<StreamingResponseBody> streamEventsNdjson(@Parameter(hidden = true) final HttpServletRequest servletRequest, @Parameter(hidden = true) final HttpServletResponse servletResponse) {
-    return NdjsonSupport.stream(streamEvents(), servletRequest, servletResponse);
+    return NdjsonSupport.stream(streamEvents(), "application/x-ndjson", servletRequest, servletResponse);
   }
 
   /**
