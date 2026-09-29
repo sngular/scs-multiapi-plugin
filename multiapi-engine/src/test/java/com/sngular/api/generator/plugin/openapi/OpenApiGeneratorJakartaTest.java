@@ -42,6 +42,8 @@ class OpenApiGeneratorJakartaTest {
         Arguments.of("testNdjsonStreaming_imperative", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING,
             OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreaming", "imperative-boot3",
                 List.of("EventsApi.java", "ItemsApi.java", "NdjsonSupport.java"), List.of())),
+        Arguments.of("testOpenApi32_reactive", OpenApiGeneratorFixtures.TEST_OPENAPI_32_REACTIVE,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32reactive", "reactive-boot3", List.of("HttpMethodMapping.java", "HttpMethodMappingConfiguration.java", "ItemsApi.java"), List.of())),
         Arguments.of("testValidationAnnotations", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS,
             OpenApiGeneratorFixtures.validateValidationAnnotations(SPRING_BOOT_VERSION)),
         Arguments.of("testValidationAnnotationsLombok", OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS_LOMBOK,

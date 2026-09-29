@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import com.sngular.api.generator.plugin.common.template.CommonTemplateFactory;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
+import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.model.RequestObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
@@ -81,21 +82,30 @@ public class TemplateFactory extends CommonTemplateFactory {
       addToRoot("exceptionPackage", specFile.getModelPackage());
     }
 
+    addToRoot("isReactive", specFile.isReactive());
     if (specFile.isCallMode()) {
       addToRoot("authObject", authObject);
       addToRoot("clientPackage", specFile.getClientPackage());
       addToRoot("clientComponent", specFile.shouldRegisterClientComponent());
-      addToRoot("isReactive", specFile.isReactive());
     }
 
     writeTemplateToFile(specFile.isCallMode() ? getTemplateClientApi(specFile) : getTemplateApi(specFile),
                         StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE), className + "Api");
 
+    final String apiPackage = StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE);
     // Spring MVC interfaces send and read application/x-ndjson through a helper written next to them.
     if (!specFile.isCallMode() && !specFile.isReactive() && streams(pathObjects)) {
-      writeTemplateToFile(TemplateIndexConstants.TEMPLATE_NDJSON_SUPPORT, StringUtils.defaultIfEmpty(specFile.getApiPackage(), DEFAULT_API_PACKAGE),
-                          "NdjsonSupport");
+      writeTemplateToFile(TemplateIndexConstants.TEMPLATE_NDJSON_SUPPORT, apiPackage, "NdjsonSupport");
     }
+    // Servers map the HTTP methods Spring's RequestMethod has no constant for through an annotation and a handler mapping of their own.
+    if (!specFile.isCallMode() && usesCustomMethods(pathObjects)) {
+      writeTemplateToFile(TemplateIndexConstants.TEMPLATE_HTTP_METHOD_MAPPING, apiPackage, "HttpMethodMapping");
+      writeTemplateToFile(TemplateIndexConstants.TEMPLATE_HTTP_METHOD_MAPPING_CONFIGURATION, apiPackage, "HttpMethodMappingConfiguration");
+    }
+  }
+
+  public static boolean usesCustomMethods(final List<PathObject> pathObjects) {
+    return pathObjects.stream().flatMap(path -> path.getOperationObjects().stream()).anyMatch(OperationObject::isCustomMethod);
   }
 
   private static boolean streams(final List<PathObject> pathObjects) {

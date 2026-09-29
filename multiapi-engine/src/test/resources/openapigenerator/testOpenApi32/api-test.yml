@@ -1,0 +1,108 @@
+openapi: "3.2.0"
+info:
+  title: OpenAPI 3.2 operations
+  version: 1.0.0
+paths:
+  /items:
+    query:
+      tags: [items]
+      operationId: queryItems
+      summary: Finds the items that match a filter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Filter"
+      responses:
+        '200':
+          description: The matching items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    options:
+      tags: [items]
+      operationId: itemsOptions
+      responses:
+        '204':
+          summary: The methods allowed
+  /items/search:
+    get:
+      tags: [items]
+      operationId: searchItems
+      parameters:
+        - name: criteria
+          in: querystring
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/Criteria"
+      responses:
+        '200':
+          description: The items found
+          content:
+            application/json:
+              $ref: "#/components/mediaTypes/ItemList"
+  /items/{itemId}:
+    parameters:
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [items]
+      operationId: getItem
+      responses:
+        '200':
+          description: The item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '404':
+          summary: No such item
+    head:
+      tags: [items]
+      operationId: checkItem
+      responses:
+        '200':
+          summary: The item exists
+    additionalOperations:
+      PURGE:
+        tags: [items]
+        operationId: purgeItem
+        responses:
+          '204':
+            summary: Purged from the caches
+components:
+  mediaTypes:
+    ItemList:
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/Item"
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Filter:
+      type: object
+      properties:
+        name:
+          type: string
+    Criteria:
+      type: object
+      properties:
+        name:
+          type: string
+        page:
+          type: integer
+          format: int32

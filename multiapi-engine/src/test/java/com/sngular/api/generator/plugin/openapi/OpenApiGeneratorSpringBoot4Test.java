@@ -62,6 +62,14 @@ class OpenApiGeneratorSpringBoot4Test {
         Arguments.of("testNdjsonStreaming_httpexchange", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_HTTP_EXCHANGE,
             OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreaminghttpexchange", "httpexchange",
                 List.of("EventsApi.java", "ItemsApi.java"), List.of())),
+        Arguments.of("testOpenApi32_imperative", OpenApiGeneratorFixtures.TEST_OPENAPI_32,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32", "imperative-boot4", List.of("HttpMethodMapping.java", "HttpMethodMappingConfiguration.java", "ItemsApi.java"), List.of())),
+        Arguments.of("testOpenApi32_restclient", OpenApiGeneratorFixtures.TEST_OPENAPI_32_REST_CLIENT,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32restclient", "restclient", List.of("ItemsApi.java"), List.of())),
+        Arguments.of("testOpenApi32_webclient", OpenApiGeneratorFixtures.TEST_OPENAPI_32_WEB_CLIENT,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32webclient", "webclient", List.of("ItemsApi.java"), List.of())),
+        Arguments.of("testOpenApi32_httpexchange", OpenApiGeneratorFixtures.TEST_OPENAPI_32_HTTP_EXCHANGE,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32httpexchange", "httpexchange", List.of("ItemsApi.java"), List.of())),
         Arguments.of("testQueryObjectsHttpExchange", OpenApiGeneratorFixtures.TEST_QUERY_OBJECTS_HTTP_EXCHANGE,
             OpenApiGeneratorFixtures.validateQueryObjectsHttpExchange())
     );

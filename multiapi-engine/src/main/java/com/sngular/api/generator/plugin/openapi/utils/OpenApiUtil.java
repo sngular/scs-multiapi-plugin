@@ -26,6 +26,7 @@ import com.sngular.api.generator.plugin.common.tools.ApiTool;
 import com.sngular.api.generator.plugin.common.tools.MapperUtil;
 import com.sngular.api.generator.plugin.common.tools.SchemaUtil;
 import com.sngular.api.generator.plugin.common.tools.StringCaseUtils;
+import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationException;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -38,7 +39,24 @@ public class OpenApiUtil {
 
   public static final String WEBHOOKS = "webhooks";
 
-  static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put");
+  /** The operations a Path Item declares by their HTTP method, {@code query} being OpenAPI 3.2's. */
+  static final Set<String> REST_VERB_SET = Set.of("get", "post", "delete", "patch", "put", "head", "options", "trace", "query");
+
+  /**
+   * The key an operation of the OpenAPI 3.2 {@code additionalOperations} map is moved to in its Path Item, followed by its
+   * method as the contract spells it, so it is read as the other operations are.
+   */
+  static final String ADDITIONAL_OPERATION_PREFIX = "x-additional-operation-";
+
+  private static final String ADDITIONAL_OPERATIONS = "additionalOperations";
+
+  private static final String MEDIA_TYPES_REF = "#/components/mediaTypes/";
+
+  private static final int MAX_MEDIA_TYPE_REF_DEPTH = 16;
+
+  private static final String CONTENT = "content";
+
+  private static final String FORM_URLENCODED = "application/x-www-form-urlencoded";
 
   private OpenApiUtil() {
   }
@@ -79,7 +97,7 @@ public class OpenApiUtil {
 
   private static MultiValuedMap<String, Map<String, JsonNode>> getMapMethodsByTag(final Entry<String, JsonNode> pathItem) {
     final MultiValuedMap<String, Map<String, JsonNode>> mapByTag = new ArrayListValuedHashMap<>();
-    final var operations = IteratorUtils.filteredIterator(pathItem.getValue().fields(), opProperty -> REST_VERB_SET.contains(opProperty.getKey()));
+    final var operations = IteratorUtils.filteredIterator(pathItem.getValue().fields(), opProperty -> isOperation(opProperty.getKey()));
     while (operations.hasNext()) {
       final var method = operations.next();
       if (ApiTool.hasNode(method.getValue(), "tags")) {
@@ -94,7 +112,7 @@ public class OpenApiUtil {
     final var taggedPathItem = JsonNodeFactory.instance.objectNode();
     taggedPathItem.set(method.getKey(), method.getValue());
     pathItem.fields().forEachRemaining(field -> {
-      if (!REST_VERB_SET.contains(field.getKey()) && !taggedPathItem.has(field.getKey())) {
+      if (!isOperation(field.getKey()) && !taggedPathItem.has(field.getKey())) {
         taggedPathItem.set(field.getKey(), field.getValue());
       }
     });
@@ -134,6 +152,92 @@ public class OpenApiUtil {
     }
   }
 
+  /** Whether a Path Item field is an operation. */
+  public static boolean isOperation(final String pathItemField) {
+    return REST_VERB_SET.contains(pathItemField) || StringUtils.startsWith(pathItemField, ADDITIONAL_OPERATION_PREFIX);
+  }
+
+  /** The HTTP method of the operation a Path Item declares under the given field. */
+  public static String httpMethod(final String pathItemField) {
+    return StringUtils.startsWith(pathItemField, ADDITIONAL_OPERATION_PREFIX)
+        ? pathItemField.substring(ADDITIONAL_OPERATION_PREFIX.length())
+        : pathItemField.toUpperCase(Locale.ROOT);
+  }
+
+  /**
+   * Moves each operation of an OpenAPI 3.2 {@code additionalOperations} map (HTTP methods OpenAPI has no field for, such
+   * as {@code PURGE}) into its Path Item, so it is grouped and generated as the other operations are.
+   */
+  public static void flattenAdditionalOperations(final JsonNode openApi) {
+    final JsonNode paths = openApi.get(PATHS);
+    if (paths instanceof ObjectNode) {
+      paths.elements().forEachRemaining(pathItem -> {
+        if (pathItem instanceof ObjectNode && pathItem.get(ADDITIONAL_OPERATIONS) instanceof ObjectNode) {
+          final JsonNode additional = ((ObjectNode) pathItem).remove(ADDITIONAL_OPERATIONS);
+          additional.fields().forEachRemaining(operation -> ((ObjectNode) pathItem).set(ADDITIONAL_OPERATION_PREFIX + operation.getKey(), operation.getValue()));
+        }
+      });
+    }
+  }
+
+  /**
+   * Replaces each Media Type Object that is a {@code $ref} to an OpenAPI 3.2 {@code components/mediaTypes} entry by that
+   * entry, so its schema is read where it is used.
+   */
+  public static void resolveMediaTypeRefs(final JsonNode openApi) {
+    final JsonNode mediaTypes = openApi.path("components").path("mediaTypes");
+    if (mediaTypes instanceof ObjectNode) {
+      resolveMediaTypeRefs(openApi, (ObjectNode) mediaTypes, 0);
+    }
+  }
+
+  private static void resolveMediaTypeRefs(final JsonNode node, final ObjectNode mediaTypes, final int depth) {
+    if (node instanceof ObjectNode && node.get(CONTENT) instanceof ObjectNode) {
+      final ObjectNode content = (ObjectNode) node.get(CONTENT);
+      content.fieldNames().forEachRemaining(mediaType -> content.set(mediaType, resolveMediaType(content.get(mediaType), mediaTypes, depth)));
+    }
+    if (Objects.nonNull(node) && node.isContainerNode()) {
+      node.elements().forEachRemaining(child -> resolveMediaTypeRefs(child, mediaTypes, depth));
+    }
+  }
+
+  private static JsonNode resolveMediaType(final JsonNode mediaType, final ObjectNode mediaTypes, final int depth) {
+    final String ref = ApiTool.hasRef(mediaType) ? ApiTool.getRefValue(mediaType) : null;
+    if (Objects.isNull(ref) || !ref.startsWith(MEDIA_TYPES_REF)) {
+      return mediaType;
+    }
+    final JsonNode resolved = mediaTypes.get(ref.substring(MEDIA_TYPES_REF.length()));
+    if (Objects.isNull(resolved) || depth > MAX_MEDIA_TYPE_REF_DEPTH) {
+      throw new CodeGenerationException("The media type " + ref + " is not declared in components/mediaTypes");
+    }
+    return resolveMediaType(resolved.deepCopy(), mediaTypes, depth + 1);
+  }
+
+  /**
+   * Declares each OpenAPI 3.2 {@code in: querystring} parameter, whose {@code application/x-www-form-urlencoded} schema
+   * describes the whole query string, as the {@code form}-exploded query object it serializes as: one query parameter per
+   * property. Server and {@code @HttpExchange} interfaces then take one argument per property, and the client classes
+   * send each of them, as for any exploded query object.
+   */
+  public static void normalizeQuerystringParameters(final JsonNode node) {
+    if (node instanceof ObjectNode && "querystring".equals(ApiTool.getNodeAsString(node, "in"))) {
+      final ObjectNode parameter = (ObjectNode) node;
+      final JsonNode content = parameter.get(CONTENT);
+      if (Objects.isNull(content) || content.size() != 1 || !content.has(FORM_URLENCODED) || !content.get(FORM_URLENCODED).has("schema")) {
+        throw new CodeGenerationException("The querystring parameter '" + ApiTool.getName(parameter) + "' must describe the query string as a single "
+                                          + FORM_URLENCODED + " schema, but its content is " + (Objects.isNull(content) ? "missing" : content.toString()));
+      }
+      parameter.put("in", "query");
+      parameter.set("schema", content.get(FORM_URLENCODED).get("schema"));
+      parameter.put("style", "form");
+      parameter.put("explode", true);
+      parameter.remove(CONTENT);
+    }
+    if (Objects.nonNull(node) && node.isContainerNode()) {
+      node.elements().forEachRemaining(OpenApiUtil::normalizeQuerystringParameters);
+    }
+  }
+
   /**
    * Declares the {@code itemSchema} of a media type (OpenAPI 3.2, for sequential media types such as
    * {@code application/x-ndjson}) as its {@code schema}, so the rest of the pipeline reads the type of each streamed item
@@ -163,7 +267,7 @@ public class OpenApiUtil {
   private static void defaultOperationTags(final JsonNode pathItem, final String defaultTag) {
     if (pathItem instanceof ObjectNode) {
       pathItem.fields().forEachRemaining(field -> {
-        if (REST_VERB_SET.contains(field.getKey()) && field.getValue() instanceof ObjectNode) {
+        if (isOperation(field.getKey()) && field.getValue() instanceof ObjectNode) {
           final ObjectNode operation = (ObjectNode) field.getValue();
           if (!ApiTool.hasNode(operation, "tags") || !operation.get("tags").isArray() || operation.get("tags").isEmpty()) {
             operation.putArray("tags").add(defaultTag);
@@ -213,7 +317,7 @@ public class OpenApiUtil {
       final var pathDefinition = pathElement.next();
       for (Iterator<String> it = pathDefinition.fieldNames(); it.hasNext(); ) {
         final var pathDefElement = it.next();
-        if (REST_VERB_SET.contains(pathDefElement)) {
+        if (isOperation(pathDefElement)) {
           processPathContent(schemaMap, ApiTool.getNode(pathDefinition, pathDefElement), specFile);
         }
       }

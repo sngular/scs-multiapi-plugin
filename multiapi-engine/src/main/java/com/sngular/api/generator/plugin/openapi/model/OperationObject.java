@@ -22,6 +22,12 @@ public final class OperationObject {
 
   private String operationType;
 
+  /**
+   * Whether the HTTP method is one Spring's {@code RequestMethod} has no constant for, such as OpenAPI 3.2's {@code QUERY}, so
+   * servers map it through the generated {@code @HttpMethodMapping}.
+   */
+  private boolean customMethod;
+
   private String summary;
 
   private String operationId;

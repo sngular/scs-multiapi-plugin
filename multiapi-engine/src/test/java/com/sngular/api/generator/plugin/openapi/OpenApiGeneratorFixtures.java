@@ -373,6 +373,62 @@ public final class OpenApiGeneratorFixtures {
 					.modelPackage("com.sngular.multifileplugin.ndjsonstreamjson.model")
 					.modelNameSuffix("DTO").useTagsGroup(true).build());
 
+	static final List<SpecFile> TEST_OPENAPI_32 = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32")
+					.modelPackage("com.sngular.multifileplugin.openapi32.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_REACTIVE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32reactive")
+					.modelPackage("com.sngular.multifileplugin.openapi32reactive.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32reactive.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_REST_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32restclient")
+					.modelPackage("com.sngular.multifileplugin.openapi32restclient.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32restclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_WEB_CLIENT = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32webclient")
+					.modelPackage("com.sngular.multifileplugin.openapi32webclient.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32webclient.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).isReactive(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_HTTP_EXCHANGE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-test.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32httpexchange")
+					.modelPackage("com.sngular.multifileplugin.openapi32httpexchange.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32httpexchange.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).callMode(true).useHttpExchange(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_JSON_SEQ = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-json-seq.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32jsonseq")
+					.modelPackage("com.sngular.multifileplugin.openapi32jsonseq.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32jsonseq.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_SSE = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-sse.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32sse")
+					.modelPackage("com.sngular.multifileplugin.openapi32sse.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32sse.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
+	static final List<SpecFile> TEST_OPENAPI_32_QUERYSTRING_JSON = List
+			.of(SpecFile.builder().filePath("openapigenerator/testOpenApi32/api-querystring-json.yml")
+					.apiPackage("com.sngular.multifileplugin.openapi32querystringjson")
+					.modelPackage("com.sngular.multifileplugin.openapi32querystringjson.model")
+					.clientPackage("com.sngular.multifileplugin.openapi32querystringjson.client")
+					.modelNameSuffix("DTO").useTagsGroup(true).build());
+
 	static final List<SpecFile> TEST_HTTP_EXCHANGE_CLIENT = List
 			.of(SpecFile.builder().filePath("openapigenerator/testHttpExchangeClient/api-test.yml")
 					.apiPackage("com.sngular.multifileplugin.httpexchange")
@@ -2157,6 +2213,17 @@ return path -> commonTest(path, expectedTestApiFiles, expectedTestApiModelFiles,
 		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
 
 		final String ASSETS_PATH = "openapigenerator/testNdjsonStreaming/assets/" + assetsFolder + "/";
+
+		return path -> commonTest(path, apiFiles.stream().map(file -> ASSETS_PATH + file).toList(),
+				modelFiles.stream().map(file -> ASSETS_PATH + file).toList(), DEFAULT_TARGET_API, DEFAULT_TARGET_API + "/model",
+				Collections.emptyList(), null);
+	}
+
+	static Function<Path, Boolean> validateOpenApi32(final String packageFolder, final String assetsFolder, final List<String> apiFiles,
+			final List<String> modelFiles) {
+		final String DEFAULT_TARGET_API = "generated/com/sngular/multifileplugin/" + packageFolder;
+
+		final String ASSETS_PATH = "openapigenerator/testOpenApi32/assets/" + assetsFolder + "/";
 
 		return path -> commonTest(path, apiFiles.stream().map(file -> ASSETS_PATH + file).toList(),
 				modelFiles.stream().map(file -> ASSETS_PATH + file).toList(), DEFAULT_TARGET_API, DEFAULT_TARGET_API + "/model",

@@ -39,6 +39,7 @@ import com.sngular.api.generator.plugin.openapi.exception.CodeGenerationExceptio
 import com.sngular.api.generator.plugin.openapi.exception.DuplicateModelClassException;
 import com.sngular.api.generator.plugin.openapi.model.AuthObject;
 import com.sngular.api.generator.plugin.openapi.model.GlobalObject;
+import com.sngular.api.generator.plugin.openapi.model.OperationObject;
 import com.sngular.api.generator.plugin.openapi.model.PathObject;
 import com.sngular.api.generator.plugin.openapi.parameter.SpecFile;
 import com.sngular.api.generator.plugin.openapi.template.TemplateFactory;
@@ -200,6 +201,9 @@ public class OpenApiGenerator {
     // Determine the actual base URI for resolving external references
     final URI specBaseUri = resolveSpecBaseUri(specFile);
     OpenApiUtil.solvePathRefs(openAPI, specBaseUri);
+    OpenApiUtil.flattenAdditionalOperations(openAPI);
+    OpenApiUtil.resolveMediaTypeRefs(openAPI);
+    OpenApiUtil.normalizeQuerystringParameters(openAPI);
     OpenApiUtil.promoteItemSchemas(openAPI);
     final String clientPackage = specFile.getClientPackage();
 
@@ -268,6 +272,7 @@ public class OpenApiGenerator {
       final String javaFileName = OpenApiUtil.processJavaFileName(apisKey);
       final List<PathObject> pathObjects = MapperPathUtil.mapPathObjects(specFile, apis.get(apisKey), globalObject, baseDir);
       final AuthObject authObject = MapperAuthUtil.getApiAuthObject(globalObject.getAuthSchemas(), pathObjects);
+      validateCustomMethods(specFile, pathObjects);
 
       try {
         templateFactory.fillTemplate(specFile, javaFileName, pathObjects, authObject);
@@ -281,6 +286,19 @@ public class OpenApiGenerator {
     }
 
     return globalObject;
+  }
+
+  /**
+   * Spring Framework 5's {@code HttpMethod} is an enum of the methods it knows, so clients generated for Spring Boot 2 cannot
+   * send any other one, such as OpenAPI 3.2's {@code QUERY}.
+   */
+  private void validateCustomMethods(final SpecFile specFile, final List<PathObject> pathObjects) {
+    if (specFile.isCallMode() && !bootVersion.isAtLeast(3, 0)) {
+      pathObjects.stream().flatMap(path -> path.getOperationObjects().stream()).filter(OperationObject::isCustomMethod).findFirst().ifPresent(operation -> {
+        throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' uses the HTTP method " + operation.getOperationType()
+                                          + ", which Spring Framework 5 clients cannot send: generate its client with springBootVersion 3 or later");
+      });
+    }
   }
 
   private void createModelTemplate(final SpecFile specFile, final JsonNode openAPI, final GlobalObject globalObject) {

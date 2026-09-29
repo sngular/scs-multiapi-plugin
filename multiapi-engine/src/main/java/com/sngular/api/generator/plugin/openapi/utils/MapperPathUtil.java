@@ -71,6 +71,19 @@ public class MapperPathUtil {
 
   private static final String JSON_MEDIA_TYPE = "application/json";
 
+  /**
+   * Sequential media types OpenAPI 3.2 names that are not generated yet, whose items would otherwise be read as a single JSON
+   * document.
+   */
+  private static final Set<String> UNSUPPORTED_SEQUENTIAL_MEDIA_TYPES = Set.of("application/json-seq", "text/event-stream");
+
+  /**
+   * The HTTP methods Spring's {@code RequestMethod} and Spring Framework 5's {@code HttpMethod} name. Any other one, such as
+   * OpenAPI 3.2's {@code QUERY} or an {@code additionalOperations} method, is mapped through the generated
+   * {@code @HttpMethodMapping}.
+   */
+  private static final Set<String> SPRING_REQUEST_METHODS = Set.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE");
+
   private MapperPathUtil() {
   }
 
@@ -137,19 +150,10 @@ public class MapperPathUtil {
     final var pathParameters = new ArrayList<ParameterObject>();
     for (final Iterator<Entry<String, JsonNode>> it = pathNode.fields(); it.hasNext(); ) {
       final var field = it.next();
-      switch (field.getKey()) {
-        case "get":
-        case "post":
-        case "delete":
-        case "put":
-        case "patch":
-          operationObjects.add(createOperation(field.getValue(), field.getKey().toUpperCase(), specFile, globalObject, operationIdList, baseDir));
-          break;
-        case "parameters":
-          pathParameters.addAll(mapParameterObjects(IteratorUtils.toList(field.getValue().elements()), specFile, null, globalObject, baseDir));
-          break;
-        default:
-          break;
+      if (OpenApiUtil.isOperation(field.getKey())) {
+        operationObjects.add(createOperation(field.getValue(), OpenApiUtil.httpMethod(field.getKey()), specFile, globalObject, operationIdList, baseDir));
+      } else if ("parameters".equals(field.getKey())) {
+        pathParameters.addAll(mapParameterObjects(IteratorUtils.toList(field.getValue().elements()), specFile, null, globalObject, baseDir));
       }
     }
     if (!pathParameters.isEmpty()) {
@@ -169,6 +173,7 @@ public class MapperPathUtil {
     final OperationObject operationObject = OperationObject.builder()
                           .operationId(mapOperationId(getOperationId(operation), operationIdList))
                           .operationType(operationType)
+                          .customMethod(!SPRING_REQUEST_METHODS.contains(operationType))
                           .summary(ApiTool.getNodeAsString(operation, "summary"))
                           .tags(elementsToStrList(Objects.nonNull(tagsNode) ? tagsNode.elements() : null))
                           .requestObjects(mapRequestObject(specFile, operation, globalObject, baseDir))
@@ -193,6 +198,12 @@ public class MapperPathUtil {
    * content.
    */
   private static void applyStreaming(final OperationObject operation, final SpecFile specFile) {
+    for (final String mediaType : UNSUPPORTED_SEQUENTIAL_MEDIA_TYPES) {
+      if (operation.getProduces().contains(mediaType) || operation.getConsumes().contains(mediaType)) {
+        throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' declares " + mediaType + ", a sequential media type that is "
+                                          + "not generated yet: its items would be read as a single JSON document");
+      }
+    }
     if (operation.getProduces().contains(STREAM_JSON_MEDIA_TYPE) || operation.getConsumes().contains(STREAM_JSON_MEDIA_TYPE)) {
       throw new CodeGenerationException("Operation '" + operation.getOperationId() + "' declares " + STREAM_JSON_MEDIA_TYPE + ", which is deprecated and "
                                         + "which Spring Framework 7 no longer streams: declare the stream as application/x-ndjson or application/jsonl");
@@ -560,7 +571,10 @@ public class MapperPathUtil {
     }
     final String operationIdWithCap = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
     final JsonNode content = Objects.nonNull(realResponse) ? ApiTool.getNode(realResponse, CONTENT) : null;
-    final String description = Objects.nonNull(realResponse) ? StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(realResponse, DESCRIPTION), "") : "";
+    // OpenAPI 3.2 makes the description optional, next to a short summary.
+    final String description = Objects.nonNull(realResponse)
+        ? StringUtils.defaultIfEmpty(ApiTool.getNodeAsString(realResponse, DESCRIPTION), StringUtils.defaultString(ApiTool.getNodeAsString(realResponse, "summary")))
+        : "";
     responseObjects.add(ResponseObject
                             .builder()
                             .responseName(responseCode)

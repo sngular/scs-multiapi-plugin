@@ -130,12 +130,14 @@ public interface ${className?cap_first}Api {
 </#list>
      }</#if>
   )
-  @RequestMapping(
-    method = RequestMethod.${operation.operationType},
+  <#if operation.customMethod>@HttpMethodMapping(
+    method = "${operation.operationType}",<#else>@RequestMapping(
+    method = RequestMethod.${operation.operationType},</#if>
     value = "${path.pathName}",
     produces = {<#if operation.streamingResponse><#if operation.streamingAlsoJson>"application/json", </#if>"${operation.streamingMediaType}"<#else>"application/json"</#if>}<#if operation.requestObjects?has_content && operation.requestObjects[0].isFormData>,
     consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}<#elseif operation.requestObjects?has_content && operation.requestObjects[0].streaming>,
-    consumes = {"${operation.consumes[0]}"}</#if>
+    consumes = {"${operation.consumes[0]}"}<#elseif operation.customMethod && operation.requestObjects?has_content && operation.consumes?has_content>,
+    consumes = {<#list operation.consumes as consume>"${consume}"<#sep>, </#list>}</#if>
   )
 <#if operation.securities?has_content>
   default Mono<ResponseEntity<#if operation.streamingResponse><Flux<${operation.streamingItemType}>>><#else><@compress single_line=true><<#if operation.responseObjects[0].contentObjects[0]??><#if operation.responseObjects[0].contentObjects[0].dataType.baseType == "array" || operation.responseObjects[0].contentObjects[0].dataType.baseType == "map">Flux<${operation.responseObjects[0].contentObjects[0].dataType.innerType}><#else>${operation.responseObjects[0].contentObjects[0].dataType}></#if><#else>Void</#if>></@compress></#if> ${operation.operationId}(<@compress single_line=true>

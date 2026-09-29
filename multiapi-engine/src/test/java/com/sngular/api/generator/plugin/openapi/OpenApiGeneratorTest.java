@@ -143,6 +143,10 @@ class OpenApiGeneratorTest {
         Arguments.of("testNdjsonStreaming_webclient", OpenApiGeneratorFixtures.TEST_NDJSON_STREAMING_WEB_CLIENT,
             OpenApiGeneratorFixtures.validateNdjsonStreaming("ndjsonstreamingwebclient", "webclient",
                 List.of("EventsApi.java", "ItemsApi.java"), List.of())),
+        Arguments.of("testOpenApi32_imperative", OpenApiGeneratorFixtures.TEST_OPENAPI_32,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32", "imperative", List.of("HttpMethodMapping.java", "HttpMethodMappingConfiguration.java", "ItemsApi.java"), List.of("CriteriaDTO.java", "FilterDTO.java", "ItemDTO.java"))),
+        Arguments.of("testOpenApi32_reactive", OpenApiGeneratorFixtures.TEST_OPENAPI_32_REACTIVE,
+            OpenApiGeneratorFixtures.validateOpenApi32("openapi32reactive", "reactive", List.of("HttpMethodMapping.java", "HttpMethodMappingConfiguration.java", "ItemsApi.java"), List.of())),
         Arguments.of("testRequestBodyRequired_imperative", OpenApiGeneratorFixtures.TEST_REQUEST_BODY_REQUIRED,
             OpenApiGeneratorFixtures.validateRequestBodyRequired("requestbodyrequired", "imperative")),
         Arguments.of("testRequestBodyRequired_reactive", OpenApiGeneratorFixtures.TEST_REQUEST_BODY_REQUIRED_REACTIVE,
@@ -256,6 +260,37 @@ class OpenApiGeneratorTest {
   void testExceptionForTestGenerationWithNoOperationId() {
     Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_GENERATION_WITH_NO_OPERATION_ID))
         .isInstanceOf(InvalidAPIException.class);
+  }
+
+  @Test
+  void testCustomHttpMethodsNeedSpringBoot3Clients() {
+    // Spring Framework 5's HttpMethod is an enum, so its clients cannot send QUERY or PURGE.
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_OPENAPI_32_REST_CLIENT))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("queryItems")
+        .hasMessageContaining("springBootVersion 3");
+  }
+
+  @Test
+  void testJsonSeqIsNotGeneratedYet() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_OPENAPI_32_JSON_SEQ))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("application/json-seq");
+  }
+
+  @Test
+  void testServerSentEventsAreNotGeneratedYet() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_OPENAPI_32_SSE))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("text/event-stream");
+  }
+
+  @Test
+  void testQuerystringMustBeFormEncoded() {
+    Assertions.assertThatThrownBy(() -> openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_OPENAPI_32_QUERYSTRING_JSON))
+        .isInstanceOf(CodeGenerationException.class)
+        .hasMessageContaining("criteria")
+        .hasMessageContaining("application/x-www-form-urlencoded");
   }
 
   @Test
