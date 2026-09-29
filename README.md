@@ -1131,8 +1131,8 @@ for it.
   Each item is sent as soon as the stream produces it, on Spring MVC's
   asynchronous executor, with the application's `ObjectMapper`, and the stream
   is closed once it is sent, also when sending fails. The status and headers of
-  the returned `ResponseEntity` are sent too. A streamed request body arrives as a
-  `Stream<ItemDTO>` read line by line as it is consumed. The generated
+  the returned `ResponseEntity` are sent too. A streamed request body arrives as
+  a `Stream<ItemDTO>` read line by line as it is consumed. The generated
   `NdjsonSupport` class, next to the interfaces, does the writing and reading.
 
   When the response also declares `application/json`, which must then be the
