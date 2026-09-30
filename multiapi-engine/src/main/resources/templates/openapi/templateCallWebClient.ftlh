@@ -291,7 +291,7 @@ public class ${className?cap_first}Api {
     <#else>
     ParameterizedTypeReference<Void> localVarReturnType = new ParameterizedTypeReference<Void>() {};
     </#if>
-    return apiWebClient.invokeAPI(basePath,"${path.pathName}", HttpMethod.${operation.operationType}, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+    return apiWebClient.invokeAPI(basePath,"${path.pathName}", <#if operation.customMethod>HttpMethod.valueOf("${operation.operationType}")<#else>HttpMethod.${operation.operationType}</#if>, pathParams, queryParams, postBody, headerParams, cookieParams, formParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
 
   }
 

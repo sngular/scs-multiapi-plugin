@@ -68,8 +68,9 @@
    * ${operation.operationType} ${path.pathName}<#if operation.summary?has_content>: ${operation.summary}</#if>, sending the items {@link #${operation.operationId}} returns as ${operation.streamingMediaType}, one JSON document per line.
    */
 <@operationAnnotation path operation/>
-  @RequestMapping(
-    method = RequestMethod.${operation.operationType},
+  <#if operation.customMethod>@HttpMethodMapping(
+    method = "${operation.operationType}",<#else>@RequestMapping(
+    method = RequestMethod.${operation.operationType},</#if>
     value = "${path.pathName}",
     produces = {"${operation.streamingMediaType}"}${consumesStream}
   )
@@ -82,8 +83,9 @@
    * ${operation.operationType} ${path.pathName}<#if operation.summary?has_content>: ${operation.summary}</#if>, sending the items {@link #${operation.operationId}} returns as a JSON array.
    */
 <@operationAnnotation path operation/>
-  @RequestMapping(
-    method = RequestMethod.${operation.operationType},
+  <#if operation.customMethod>@HttpMethodMapping(
+    method = "${operation.operationType}",<#else>@RequestMapping(
+    method = RequestMethod.${operation.operationType},</#if>
     value = "${path.pathName}",
     produces = {"application/json"}${consumesStream}
   )
@@ -97,8 +99,9 @@
    * ${operation.operationType} ${path.pathName}<#if operation.summary?has_content>: ${operation.summary}</#if>, reading the ${operation.consumes[0]} body, one JSON document per line, as the items {@link #${operation.operationId}} receives.
    */
 <@operationAnnotation path operation/>
-  @RequestMapping(
-    method = RequestMethod.${operation.operationType},
+  <#if operation.customMethod>@HttpMethodMapping(
+    method = "${operation.operationType}",<#else>@RequestMapping(
+    method = RequestMethod.${operation.operationType},</#if>
     value = "${path.pathName}",
     produces = {"application/json"}${consumesStream}
   )
@@ -270,11 +273,13 @@ public interface ${className?cap_first}Api {
        </#list>
     }</#if>
   )
-  @RequestMapping(
-    method = RequestMethod.${operation.operationType},
+  <#if operation.customMethod>@HttpMethodMapping(
+    method = "${operation.operationType}",<#else>@RequestMapping(
+    method = RequestMethod.${operation.operationType},</#if>
     value = "${path.pathName}",
     produces = {"application/json"}<#if operation.requestObjects?has_content && operation.requestObjects[0].isFormData>,
-    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}</#if>
+    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}<#elseif operation.customMethod && operation.requestObjects?has_content && operation.consumes?has_content>,
+    consumes = {<#list operation.consumes as consume>"${consume}"<#sep>, </#list>}</#if>
   )
 
   default ResponseEntity<@compress single_line=true><#if operation.responseObjects[0].contentObjects[0]??>

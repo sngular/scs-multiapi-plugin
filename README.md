@@ -31,6 +31,7 @@ Maven and Gradle
   - [Calling an API from your service (callMode)](#calling-an-api-from-your-service-callmode)
   - [Object-typed query parameters and multipart bodies](#object-typed-query-parameters-and-multipart-bodies)
   - [Streaming endpoints (NDJSON and JSON Lines)](#streaming-endpoints-ndjson-and-json-lines)
+  - [OpenAPI 3.2 operations](#openapi-32-operations)
   - [Camel case Java names (useCamelCaseNames)](#camel-case-java-names-usecamelcasenames)
   - [Unknown enum values (useUnknownEnumValue)](#unknown-enum-values-useunknownenumvalue)
 - [Property Validation](#property-validation)
@@ -1182,6 +1183,59 @@ for it.
   read a response whole, so they cannot hand the items over as they arrive, and
   the generation fails for a streaming operation: generate that client with
   `reactive` on.
+
+### OpenAPI 3.2 operations
+
+Every operation a Path Item declares is generated: `get`, `put`, `post`,
+`delete`, `patch`, `head`, `options` and `trace`, OpenAPI 3.2's `query`, and the
+methods of its `additionalOperations` map, such as `PURGE`.
+
+Spring's `@RequestMapping` only takes the methods of `RequestMethod`, so the
+server interfaces map `QUERY` and the `additionalOperations` methods with a
+generated annotation instead:
+
+```java
+@HttpMethodMapping(method = "QUERY", value = "/items",
+    produces = {"application/json"}, consumes = {"application/json"})
+default ResponseEntity<List<ItemDTO>> queryItems(
+    @Valid @RequestBody FilterDTO filterDTO) {
+```
+
+The interfaces are implemented as usual. The generated
+`HttpMethodMappingConfiguration`, next to them, adds a handler mapping of those
+operations, and of nothing else, next to Spring MVC's or WebFlux's own, so it
+does not interfere with the rest of the application's configuration. It is
+picked up by component scanning when the API package is under the
+application's; otherwise add `@Import(HttpMethodMappingConfiguration.class)`.
+Other methods of the same paths are still answered by Spring, 405 included.
+
+- The clients send any method on Spring Boot 3 or later. Spring Framework 5's
+  `HttpMethod` is an enum of the methods it knows, so the generation of a Spring
+  Boot 2 client fails for `QUERY` or an `additionalOperations` method.
+- The generated RestClient class sends them through an `ApiRestClient` built on
+  a `RestClient`, or on a `RestTemplate` whose request factory supports them
+  (JDK `HttpClient`, Apache HttpComponents, Jetty, Reactor Netty). The default
+  `RestTemplate` factory, the JDK's `HttpURLConnection`, rejects them.
+- springdoc documents the operations Spring maps, so the `@HttpMethodMapping`
+  ones are missing from the OpenAPI document it serves.
+- Spring MVC does not dispatch `TRACE` requests unless
+  `spring.mvc.dispatch-trace-request` is on, and Tomcat refuses them unless its
+  connector allows them.
+
+The other OpenAPI 3.2 additions that change the generated code:
+
+- A parameter `in: querystring`, whose `application/x-www-form-urlencoded`
+  schema describes the whole query string, is generated as that object sent
+  `form`-exploded: one argument per property in the server and `@HttpExchange`
+  interfaces, and the object, sent as its properties, in the client classes. Any
+  other media type fails the generation.
+- A media type declared as a `$ref` to `components/mediaTypes` is resolved.
+- A response without `description` is documented with its `summary`.
+- `application/json-seq` and `text/event-stream` fail the generation, since
+  their items would be read as a single JSON document.
+
+`$self`, the new Tag, Server and Example fields, and the new security scheme
+fields do not change the generated code.
 
 ### Camel case Java names (useCamelCaseNames)
 
