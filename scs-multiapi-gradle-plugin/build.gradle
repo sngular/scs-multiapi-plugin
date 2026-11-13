@@ -82,7 +82,7 @@ gradlePlugin {
       displayName = 'SCS MultiApi Plugin'
       description = 'OpenApi/Asyncapi Generator tool for Spring Boot applications'
       implementationClass = 'com.sngular.api.generator.plugin.ScsMultiApi'
-      tags.set(['openapi', 'asyncapi', 'spring', 'spring boot', 'generator', 'tool'])
+      tags.set(['openapi', 'asyncapi', 'spring', 'spring-boot', 'generator', 'tool'])
     }
   }
 }
