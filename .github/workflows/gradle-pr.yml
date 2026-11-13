@@ -16,6 +16,13 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'release') || contains(github.event.pull_request.labels.*.name, 'gradle') }}
     steps:
       - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        # Gradle 8.5 cannot load a build script compiled by the runner's default JDK 25
+        # ("Unsupported class file major version 69"), which left the version output empty.
+        uses: actions/setup-java@v2
+        with:
+          java-version: "21"
+          distribution: "adopt"
       - name: Gradle version
         id: get-version
         run: |

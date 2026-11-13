@@ -83,6 +83,22 @@ class OpenApiGeneratorSpringBoot4Test {
         .hasMessageContaining("reactive=true");
   }
 
+  /**
+   * A {@code type: integer} with {@code format: int64} and numeric bounds is legal OpenAPI, but the templates only
+   * knew how to map minimum/maximum annotations for BigDecimal, Integer, Float and Double, so generation aborted with
+   * a FreeMarker error. Long must get its own {@code @MinLong}/{@code @MaxLong} constraints. See issue #475.
+   */
+  @Test
+  void testLongNumericRestrictionsAreGenerated() {
+    openApiGenerator.processFileSpec(OpenApiGeneratorFixtures.TEST_VALIDATION_ANNOTATIONS);
+
+    final Path errorModel = Path.of(baseDir.toString(), OpenApiGeneratorFixtures.TARGET, OpenApiGeneratorFixtures.GENERATED,
+        "com/sngular/multifileplugin/testapi/model/ApiErrorDTO.java");
+    Assertions.assertThat(errorModel).exists();
+    Assertions.assertThat(errorModel).content()
+        .contains("@MinLong(minimum = \"0\", exclusive = false)", "@MaxLong(maximum = \"100\", exclusive = true)");
+  }
+
   @ParameterizedTest(name = "Test {index} - Spring Boot 4 File Spec for case {0}")
   @MethodSource("fileSpecToProcess")
   void processFileSpec(final String type, final List<SpecFile> specFileList, final Function<Path, Boolean> validation) {

@@ -18,6 +18,10 @@ public abstract class CommonTemplateIndexConstants {
 
   public static final String TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION = "templateMinIntegerValidator.ftlh";
 
+  public static final String TEMPLATE_MIN_LONG_ANNOTATION = "templateMinLong.ftlh";
+
+  public static final String TEMPLATE_MIN_LONG_VALIDATOR_ANNOTATION = "templateMinLongValidator.ftlh";
+
   public static final String TEMPLATE_MIN_BIG_DECIMAL_ANNOTATION = "templateMinBigDecimal.ftlh";
 
   public static final String TEMPLATE_MIN_BIG_DECIMAL_VALIDATOR_ANNOTATION = "templateMinBigDecimalValidator.ftlh";
@@ -33,6 +37,10 @@ public abstract class CommonTemplateIndexConstants {
   public static final String TEMPLATE_MAX_INTEGER_ANNOTATION = "templateMaxInteger.ftlh";
 
   public static final String TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION = "templateMaxIntegerValidator.ftlh";
+
+  public static final String TEMPLATE_MAX_LONG_ANNOTATION = "templateMaxLong.ftlh";
+
+  public static final String TEMPLATE_MAX_LONG_VALIDATOR_ANNOTATION = "templateMaxLongValidator.ftlh";
 
   public static final String TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION = "templateMaxBigDecimal.ftlh";
 
