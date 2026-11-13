@@ -107,6 +107,17 @@ components:
           multipleOf: 10.55
         intCode:
           type: integer
+        longCode:
+          type: integer
+          format: int64
+          minimum: 0
+          exclusiveMinimum: false
+          maximum: 100
+          exclusiveMaximum: true
+        pendingOperations:
+          type: integer
+          format: int64
+          minimum: 0
         message:
           type: string
           minLength: 1050

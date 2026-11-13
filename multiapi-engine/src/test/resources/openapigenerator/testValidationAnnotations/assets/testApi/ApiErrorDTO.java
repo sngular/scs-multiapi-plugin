@@ -13,6 +13,8 @@ import com.sngular.multifileplugin.testapi.model.customvalidator.MinInteger;
 import com.sngular.multifileplugin.testapi.model.exception.ModelClassException;
 import com.sngular.multifileplugin.testapi.model.customvalidator.MultipleOf;
 import com.sngular.multifileplugin.testapi.model.customvalidator.NotNull;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MaxLong;
+import com.sngular.multifileplugin.testapi.model.customvalidator.MinLong;
 import com.sngular.multifileplugin.testapi.model.customvalidator.Size;
 import com.sngular.multifileplugin.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.testapi.model.customvalidator.MaxItems;
@@ -30,6 +32,10 @@ public class ApiErrorDTO {
   @MultipleOf(multiple = "10.55")
   @NotNull
   private final Integer code;
+  @JsonProperty(value ="longCode")
+  @MinLong(minimum = "0", exclusive = false)
+  @MaxLong(maximum = "100", exclusive = true)
+  private Long longCode;
   @JsonProperty(value ="message")
   @Size(min =1050, max =4000)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
@@ -40,12 +46,17 @@ public class ApiErrorDTO {
   @MinItems(minimum = 1000)
   @UniqueItems
   private List<Integer> test;
+  @JsonProperty(value ="pendingOperations")
+  @MinLong(minimum = "0", exclusive = false)
+  private Long pendingOperations;
 
   private ApiErrorDTO(ApiErrorDTOBuilder builder) {
     this.intCode = builder.intCode;
     this.code = builder.code;
+    this.longCode = builder.longCode;
     this.message = builder.message;
     this.test = builder.test;
+    this.pendingOperations = builder.pendingOperations;
 
     validateRequiredAttributes();
   }
@@ -59,8 +70,10 @@ public class ApiErrorDTO {
 
     private Integer intCode;
     private Integer code;
+    private Long longCode;
     private String message;
     private List<Integer> test = new ArrayList<Integer>();
+    private Long pendingOperations;
 
     public ApiErrorDTO.ApiErrorDTOBuilder intCode(Integer intCode) {
       this.intCode = intCode;
@@ -69,6 +82,11 @@ public class ApiErrorDTO {
 
     public ApiErrorDTO.ApiErrorDTOBuilder code(Integer code) {
       this.code = code;
+      return this;
+    }
+
+    public ApiErrorDTO.ApiErrorDTOBuilder longCode(Long longCode) {
+      this.longCode = longCode;
       return this;
     }
 
@@ -91,6 +109,11 @@ public class ApiErrorDTO {
       return this;
     }
 
+    public ApiErrorDTO.ApiErrorDTOBuilder pendingOperations(Long pendingOperations) {
+      this.pendingOperations = pendingOperations;
+      return this;
+    }
+
     public ApiErrorDTO build() {
       ApiErrorDTO apiErrorDTO = new ApiErrorDTO(this);
       return apiErrorDTO;
@@ -110,6 +133,14 @@ public class ApiErrorDTO {
     return code;
   }
 
+  @Schema(name = "longCode", required = false)
+  public Long getLongCode() {
+    return longCode;
+  }
+  public void setLongCode(Long longCode) {
+    this.longCode = longCode;
+  }
+
   @Schema(name = "message", required = true)
   public String getMessage() {
     return message;
@@ -123,6 +154,14 @@ public class ApiErrorDTO {
     this.test = test;
   }
 
+  @Schema(name = "pendingOperations", required = false)
+  public Long getPendingOperations() {
+    return pendingOperations;
+  }
+  public void setPendingOperations(Long pendingOperations) {
+    this.pendingOperations = pendingOperations;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -132,12 +171,12 @@ public class ApiErrorDTO {
       return false;
     }
     ApiErrorDTO apiErrorDTO = (ApiErrorDTO) o;
-    return Objects.equals(this.intCode, apiErrorDTO.intCode) && Objects.equals(this.code, apiErrorDTO.code) && Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.test, apiErrorDTO.test);
+    return Objects.equals(this.intCode, apiErrorDTO.intCode) && Objects.equals(this.code, apiErrorDTO.code) && Objects.equals(this.longCode, apiErrorDTO.longCode) && Objects.equals(this.message, apiErrorDTO.message) && Objects.equals(this.test, apiErrorDTO.test) && Objects.equals(this.pendingOperations, apiErrorDTO.pendingOperations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(intCode, code, message, test);
+    return Objects.hash(intCode, code, longCode, message, test, pendingOperations);
   }
 
   @Override
@@ -146,8 +185,10 @@ public class ApiErrorDTO {
     sb.append("ApiErrorDTO{");
     sb.append(" intCode:").append(intCode).append(",");
     sb.append(" code:").append(code).append(",");
+    sb.append(" longCode:").append(longCode).append(",");
     sb.append(" message:").append(message).append(",");
-    sb.append(" test:").append(test);
+    sb.append(" test:").append(test).append(",");
+    sb.append(" pendingOperations:").append(pendingOperations);
     sb.append("}");
     return sb.toString();
   }

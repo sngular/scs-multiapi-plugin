@@ -62,6 +62,8 @@
 <#function calculateMaxAnnotation dataType>
     <#if dataType.baseType?lower_case == "bigdecimal">
         <#return "@MaxBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "long">
+        <#return "@MaxLong" >
     <#elseif dataType.baseType?lower_case == "integer">
         <#return "@MaxInteger" >
     <#elseif dataType.baseType?lower_case == "float">
@@ -73,6 +75,8 @@
 <#function calculateMinAnnotation dataType>
     <#if dataType.baseType?lower_case == "bigdecimal">
         <#return "@MinBigDecimal" >
+    <#elseif dataType.baseType?lower_case == "long">
+        <#return "@MinLong" >
     <#elseif dataType.baseType?lower_case == "integer">
         <#return "@MinInteger" >
     <#elseif dataType.baseType?lower_case == "float">
@@ -115,6 +119,9 @@ import ${packageModel}.customvalidator.Size;
     <#if field.dataType.baseType?lower_case == "bigdecimal" && !(visited?contains("maxBigDecimal"))>
         <#assign visited += "maxBigDecimal," />
 import ${packageModel}.customvalidator.MaxBigDecimal;
+    <#elseif field.dataType.baseType?lower_case == "long" && !(visited?contains("maxLong"))>
+        <#assign visited += "maxLong," />
+import ${packageModel}.customvalidator.MaxLong;
     <#elseif field.dataType.baseType?lower_case == "integer" &&  !(visited?contains("maxInteger"))>
         <#assign visited += "maxInteger," />
 import ${packageModel}.customvalidator.MaxInteger;
@@ -130,6 +137,9 @@ import ${packageModel}.customvalidator.MaxDouble;
       <#if field.dataType.baseType?lower_case == "bigdecimal" &&  !(visited?contains("minBigDecimal"))>
           <#assign visited += "minBigDecimal," />
 import ${packageModel}.customvalidator.MinBigDecimal;
+      <#elseif field.dataType.baseType?lower_case == "long" &&  !(visited?contains("minLong"))>
+          <#assign visited += "minLong," />
+import ${packageModel}.customvalidator.MinLong;
       <#elseif field.dataType.baseType?lower_case == "integer" &&  !(visited?contains("minInteger"))>
           <#assign visited += "minInteger," />
 import ${packageModel}.customvalidator.MinInteger;
@@ -195,16 +205,28 @@ public class ${schema.className} {
 <#list schema.fieldObjectList as field>
   @JsonProperty(value ="${field.baseName?uncap_first}")
 <#if field.restrictions.minimum?has_content && (!field.restrictions.exclusiveMinimum?has_content)>
-  ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = false)
+  <#assign minAnnotation = (calculateMinAnnotation(field.dataType))!"">
+  <#if minAnnotation?has_content>
+  ${minAnnotation}(minimum = "${field.restrictions.minimum}", exclusive = false)
+  </#if>
 </#if>
 <#if field.restrictions.minimum?has_content && field.restrictions.exclusiveMinimum?has_content>
-  ${calculateMinAnnotation (field.dataType)}(minimum = "${field.restrictions.minimum}", exclusive = ${field.restrictions.exclusiveMinimum?string})
+  <#assign minAnnotation = (calculateMinAnnotation(field.dataType))!"">
+  <#if minAnnotation?has_content>
+  ${minAnnotation}(minimum = "${field.restrictions.minimum}", exclusive = ${field.restrictions.exclusiveMinimum?string})
+  </#if>
 </#if>
 <#if field.restrictions.maximum?has_content && (!field.restrictions.exclusiveMaximum?has_content)>
-  ${calculateMaxAnnotation (field.dataType)}(maximum = "${field.restrictions.maximum}", exclusive = false)
+  <#assign maxAnnotation = (calculateMaxAnnotation(field.dataType))!"">
+  <#if maxAnnotation?has_content>
+  ${maxAnnotation}(maximum = "${field.restrictions.maximum}", exclusive = false)
+  </#if>
 </#if>
 <#if field.restrictions.maximum?has_content && field.restrictions.exclusiveMaximum?has_content>
-  ${calculateMaxAnnotation (field.dataType)}(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
+  <#assign maxAnnotation = (calculateMaxAnnotation(field.dataType))!"">
+  <#if maxAnnotation?has_content>
+  ${maxAnnotation}(maximum = "${field.restrictions.maximum}", exclusive = ${field.restrictions.exclusiveMaximum?string})
+  </#if>
 </#if>
 <#if field.restrictions.maxItems?has_content>
   @MaxItems(maximum = ${field.restrictions.maxItems?c})

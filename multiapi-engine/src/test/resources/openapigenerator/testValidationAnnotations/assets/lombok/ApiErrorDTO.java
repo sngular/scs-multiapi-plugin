@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxInteger;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinInteger;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MultipleOf;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxLong;
+import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MinLong;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Size;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.Pattern;
 import com.sngular.multifileplugin.lombok.testapi.model.customvalidator.MaxItems;
@@ -30,6 +32,11 @@ public class ApiErrorDTO {
   @NonNull
   private Integer code;
 
+  @JsonProperty(value ="longCode")
+  @MinLong(minimum = "0", exclusive = false)
+  @MaxLong(maximum = "100", exclusive = true)
+  private Long longCode;
+
   @JsonProperty(value ="message")
   @Size(min =1050, max =4000)
   @Pattern(regex = "^[a-zA-Z0-9_.-]*$")
@@ -43,14 +50,20 @@ public class ApiErrorDTO {
   @Singular(value = "_test", ignoreNullCollections = true)
   private List<Integer> test;
 
+  @JsonProperty(value ="pendingOperations")
+  @MinLong(minimum = "0", exclusive = false)
+  private Long pendingOperations;
+
 
   @Builder
   @Jacksonized
-  private ApiErrorDTO(Integer intCode, @NonNull Integer code, @NonNull String message, List<Integer> test) {
+  private ApiErrorDTO(Integer intCode, @NonNull Integer code, Long longCode, @NonNull String message, List<Integer> test, Long pendingOperations) {
     this.intCode = intCode;
     this.code = code;
+    this.longCode = longCode;
     this.message = message;
     this.test = test;
+    this.pendingOperations = pendingOperations;
 
   }
 

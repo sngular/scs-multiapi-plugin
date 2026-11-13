@@ -142,6 +142,8 @@ public abstract class CommonTemplateFactory {
         case "Maximum":
           fillTemplateCustom(filePathToSave, modelPackage, "MaxInteger", CommonTemplateIndexConstants.TEMPLATE_MAX_INTEGER_ANNOTATION,
                              "MaxIntegerValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MaxLong", CommonTemplateIndexConstants.TEMPLATE_MAX_LONG_ANNOTATION,
+                             "MaxLongValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_LONG_VALIDATOR_ANNOTATION);
           fillTemplateCustom(filePathToSave, modelPackage, "MaxBigDecimal", CommonTemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_ANNOTATION,
                              "MaxBigDecimalValidator", CommonTemplateIndexConstants.TEMPLATE_MAX_BIG_DECIMAL_VALIDATOR_ANNOTATION);
           fillTemplateCustom(filePathToSave, modelPackage, "MaxDouble", CommonTemplateIndexConstants.TEMPLATE_MAX_DOUBLE_ANNOTATION,
@@ -152,6 +154,8 @@ public abstract class CommonTemplateFactory {
         case "Minimum":
           fillTemplateCustom(filePathToSave, modelPackage, "MinInteger", CommonTemplateIndexConstants.TEMPLATE_MIN_INTEGER_ANNOTATION,
                              "MinIntegerValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_INTEGER_VALIDATOR_ANNOTATION);
+          fillTemplateCustom(filePathToSave, modelPackage, "MinLong", CommonTemplateIndexConstants.TEMPLATE_MIN_LONG_ANNOTATION,
+                             "MinLongValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_LONG_VALIDATOR_ANNOTATION);
           fillTemplateCustom(filePathToSave, modelPackage, "MinDouble", CommonTemplateIndexConstants.TEMPLATE_MIN_DOUBLE_ANNOTATION,
                              "MinDoubleValidator", CommonTemplateIndexConstants.TEMPLATE_MIN_DOUBLE_VALIDATOR_ANNOTATION);
           fillTemplateCustom(filePathToSave, modelPackage, "MinFloat", CommonTemplateIndexConstants.TEMPLATE_MIN_FLOAT_ANNOTATION,
